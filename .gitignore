@@ -6,7 +6,9 @@
 # IntelliJ config
 .idea/
 *.iml
-#test
+
+# ignore target directory with binary files
+target/
 
 # Package Files #
 *.jar
