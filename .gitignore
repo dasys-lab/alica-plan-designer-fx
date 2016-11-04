@@ -6,6 +6,7 @@
 # IntelliJ config
 .idea/
 *.iml
+#test
 
 # Package Files #
 *.jar
