@@ -7,11 +7,12 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController">
+<?import de.uni_kassel.vs.cn.planDesigner.ui.PLDFileTreeView?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.EditorTabPane?>
+<AnchorPane prefHeight="759.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController">
    <children>
       <MenuBar AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -34,13 +35,13 @@
       </MenuBar>
       <SplitPane dividerPositions="0.32274247491638797" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="773.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-scale-shape: true;">
+          <AnchorPane fx:id="leftOuterAnchor" minHeight="0.0" minWidth="0.0" prefHeight="506.0" prefWidth="551.0">
                <children>
-                  <ScrollPane layoutX="23.0" layoutY="137.0" prefHeight="233.0" prefWidth="200.0" style="-fx-scale-shape: true;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <ScrollPane fx:id="leftScrollPane" fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="538.0" prefWidth="234.0" style="-fx-scale-shape: true;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <AnchorPane fx:id="leftAnchor" minHeight="0.0" minWidth="0.0">
                            <children>
-                              <TreeView fx:id="fileTreeView" layoutX="38.0" layoutY="59.0" prefHeight="500.0" prefWidth="244.0" AnchorPane.bottomAnchor="-153.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="0.0" />
+                              <PLDFileTreeView fx:id="fileTreeView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                     </content>
@@ -57,7 +58,7 @@
                                 <items>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                        <children>
-                                          <TabPane layoutX="14.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <EditorTabPane fx:id="editorTabPane" layoutX="14.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <tabs>
                                               <Tab text="Untitled Tab 1">
                                                 <content>
@@ -70,7 +71,7 @@
                                                 </content>
                                               </Tab>
                                             </tabs>
-                                          </TabPane>
+                                          </EditorTabPane>
                                        </children>
                                     </AnchorPane>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
