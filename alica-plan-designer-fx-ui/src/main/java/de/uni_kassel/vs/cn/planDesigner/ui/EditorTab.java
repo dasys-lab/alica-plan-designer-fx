@@ -10,8 +10,8 @@ import java.io.File;
  */
 public abstract class EditorTab<T extends EObject> extends Tab {
 
-    protected T editable;
-    protected File file;
+    private T editable;
+    private File file;
 
     public EditorTab(T editable, File file) {
         super(file.getName());
@@ -24,4 +24,8 @@ public abstract class EditorTab<T extends EObject> extends Tab {
     }
 
     public abstract void save();
+
+    public T getEditable() {
+        return editable;
+    }
 }

@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner;
  * Created by marci on 16.10.16.
  */
 
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +21,7 @@ public class PlanDesigner extends Application {
 
     @SuppressWarnings("unused")
     public static void main(String[] args) {
-
+        EMFModelUtils.initializeEMF();
         launch(args);
     }
 

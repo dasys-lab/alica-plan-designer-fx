@@ -3,7 +3,9 @@ package de.uni_kassel.vs.cn.planDesigner.ui;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +15,17 @@ import java.io.IOException;
  */
 public class PlanTab extends EditorTab<Plan> {
 
-    private final Canvas planVisualization;
+    private final HBox planVisualization;
+    private final PLDToolBar pldToolBar;
+    private final PlanEditorPane planContent;
     private PmlUiExtensionMap pmlUiExtensionMap;
+    private final String uiExtensionMapPath;
 
     public PlanTab(Plan editable, File file) {
         super(editable, file);
         String absolutePath = file.getAbsolutePath();
-        String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
+        uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
+        pldToolBar = new PLDToolBar();
 
         try {
             pmlUiExtensionMap = EMFModelUtils.loadAlicaFileFromDisk(new File(uiExtensionMapPath));
@@ -27,12 +33,18 @@ public class PlanTab extends EditorTab<Plan> {
             // TODO create message window if file could not be opened
             e.printStackTrace();
         }
-        planVisualization = new Canvas(500, 500);
+        planContent = new PlanEditorPane();
+        planVisualization = new HBox(new ScrollPane(planContent),pldToolBar);
         setContent(planVisualization);
     }
 
     @Override
     public void save() {
-
+        try {
+            EMFModelUtils.saveAlicaFile(getFile(),getEditable());
+            EMFModelUtils.saveAlicaFile(new File(uiExtensionMapPath), pmlUiExtensionMap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
