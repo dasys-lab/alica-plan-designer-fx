@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.configuration;
 
+import java.io.File;
 import java.util.ResourceBundle;
 
 /**
@@ -45,12 +46,23 @@ public class Configuration {
         }
     }
 
+    private String replaceBashConstants(String pathWithConstants) {
+        try {
+            String bashConstant = pathWithConstants
+                    .substring(pathWithConstants.indexOf("$"), pathWithConstants.indexOf(File.separator));
+            String bashConstantValue = System.getenv().get(bashConstant.substring(1));
+            return pathWithConstants.replace(bashConstant, bashConstantValue);
+        } catch (Exception e) {
+            return pathWithConstants;
+        }
+    }
+
     public String getRolesPath() {
         return rolesPath;
     }
 
     public void setRolesPath(String rolesPath) {
-        this.rolesPath = rolesPath;
+        this.rolesPath = replaceBashConstants(rolesPath);
     }
 
     public String getRootPath() {
@@ -58,7 +70,7 @@ public class Configuration {
     }
 
     public void setRootPath(String rootPath) {
-        this.rootPath = rootPath;
+        this.rootPath = replaceBashConstants(rootPath);
     }
 
     public String getPlansPath() {
@@ -66,7 +78,7 @@ public class Configuration {
     }
 
     public void setPlansPath(String plansPath) {
-        this.plansPath = plansPath;
+        this.plansPath = replaceBashConstants(plansPath);
     }
 
     public String getExpressionValidatorsPath() {
@@ -74,7 +86,7 @@ public class Configuration {
     }
 
     public void setExpressionValidatorsPath(String expressionValidatorsPath) {
-        this.expressionValidatorsPath = expressionValidatorsPath;
+        this.expressionValidatorsPath = replaceBashConstants(expressionValidatorsPath);
     }
 
     public String getMiscPath() {
@@ -82,7 +94,7 @@ public class Configuration {
     }
 
     public void setMiscPath(String miscPath) {
-        this.miscPath = miscPath;
+        this.miscPath = replaceBashConstants(miscPath);
     }
 
     public boolean isPathsInitialized() {

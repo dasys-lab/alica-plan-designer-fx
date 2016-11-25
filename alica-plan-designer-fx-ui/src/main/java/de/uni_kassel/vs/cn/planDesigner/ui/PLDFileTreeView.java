@@ -34,26 +34,11 @@ class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
     private static final Configuration configuration  = new Configuration();
     public VirtualDirectoryTreeItem() {
         super();
-        this.getChildren().add(new PLDTreeItem(replaceBashVariablesWithActualPath(configuration.getPlansPath()),
+        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getPlansPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        this.getChildren().add(new PLDTreeItem(replaceBashVariablesWithActualPath(configuration.getRolesPath()),
+        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getRolesPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        this.getChildren().add(new PLDTreeItem(replaceBashVariablesWithActualPath(configuration.getMiscPath()),
+        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getMiscPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-    }
-
-    private FileWrapper replaceBashVariablesWithActualPath(String path) {
-
-        String config_folder_bash_constant = "$DOMAIN_CONFIG_FOLDER";
-        if(path.contains(config_folder_bash_constant)) {
-            String domain_config_folder = System.getenv("DOMAIN_CONFIG_FOLDER");
-            if (domain_config_folder == null) {
-                throw new NullPointerException("DOMAIN CONFIG FOLDER NOT SET");
-            }
-
-            return new FileWrapper(new File(path.replace(config_folder_bash_constant, domain_config_folder)));
-        } else {
-            return new FileWrapper(new File(path));
-        }
     }
 }

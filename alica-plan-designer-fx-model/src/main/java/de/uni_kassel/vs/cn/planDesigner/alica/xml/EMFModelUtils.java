@@ -36,6 +36,9 @@ public class EMFModelUtils {
         Map<String, Object> m = reg.getExtensionToFactoryMap();
         m.put("pml", new XMIResourceFactoryImpl());
         m.put("pmlex", new PmlUIExtensionModelResourceFactoryImpl());
+        m.put("beh", new XMIResourceFactoryImpl());
+        m.put("pty", new XMIResourceFactoryImpl());
+        m.put("tsk", new XMIResourceFactoryImpl());
     }
 
     /**
@@ -62,7 +65,7 @@ public class EMFModelUtils {
      * @param file the given file
      * @param alicaObject the object to save
      * @param <T> The type of {@link EObject} to save
-     * @throws IOException 
+     * @throws IOException
      */
     public static <T extends EObject> void saveAlicaFile(File file, T alicaObject) throws IOException {
         // create a resource

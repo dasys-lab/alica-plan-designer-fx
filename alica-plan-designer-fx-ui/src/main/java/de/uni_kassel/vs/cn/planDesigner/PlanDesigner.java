@@ -4,6 +4,7 @@ package de.uni_kassel.vs.cn.planDesigner;
  */
 
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.common.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,14 +15,17 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class PlanDesigner extends Application {
 
     private MainController mainController;
+    public static final AllAlicaFiles allAlicaFiles = new AllAlicaFiles();
 
     @SuppressWarnings("unused")
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         EMFModelUtils.initializeEMF();
+        allAlicaFiles.init();
         launch(args);
     }
 

@@ -6,10 +6,15 @@ import java.io.File;
  * Created by marci on 18.11.16.
  */
 public class FileWrapper {
+
     private File file;
 
     public FileWrapper(File file) {
         this.file = file;
+    }
+
+    public static FileWrapper wrap(String path) {
+        return new FileWrapper(new File(path));
     }
 
     public File unwrap() {
