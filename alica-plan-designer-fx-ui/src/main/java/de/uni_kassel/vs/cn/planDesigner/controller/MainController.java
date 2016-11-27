@@ -16,7 +16,10 @@ import java.util.ResourceBundle;
 /**
  * Created by marci on 16.10.16.
  */
-public class MainController implements Initializable{
+public class MainController implements Initializable {
+
+    private static MainController MAIN_CONTROLLER;
+
     @FXML
     private PLDFileTreeView fileTreeView;
 
@@ -37,6 +40,15 @@ public class MainController implements Initializable{
 
     @FXML
     private EditorTabPane editorTabPane;
+
+    public MainController() {
+        super();
+        MAIN_CONTROLLER = this;
+    }
+
+    public static MainController getInstance() {
+        return MAIN_CONTROLLER;
+    }
 
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.setController(this);

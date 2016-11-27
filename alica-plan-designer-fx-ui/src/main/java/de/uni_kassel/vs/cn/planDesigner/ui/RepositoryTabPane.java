@@ -1,10 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import javafx.scene.control.TabPane;
 
 /**
@@ -14,10 +10,10 @@ public class RepositoryTabPane extends TabPane {
 
     public void init() {
         getTabs().clear();
-        getTabs().addAll(new RepositoryTab<Plan>(PlanDesigner.allAlicaFiles.getPlans()),
-                new RepositoryTab<PlanType>(PlanDesigner.allAlicaFiles.getPlanTypes()),
-                new RepositoryTab<Behaviour>(PlanDesigner.allAlicaFiles.getBehaviours()),
-                new RepositoryTab<Task>(PlanDesigner.allAlicaFiles.getTasks()));
+        getTabs().addAll(new RepositoryTab<>(PlanDesigner.allAlicaFiles.getPlans()),
+                new RepositoryTab<>(PlanDesigner.allAlicaFiles.getPlanTypes()),
+                new RepositoryTab<>(PlanDesigner.allAlicaFiles.getBehaviours()),
+                new RepositoryTab<>(PlanDesigner.allAlicaFiles.getTasks()));
 
     }
 }
