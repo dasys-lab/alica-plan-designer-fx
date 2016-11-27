@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import javafx.scene.control.Tab;

@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.planDesigner.ui.EditorTabPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.RepositoryTabPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -32,11 +33,15 @@ public class MainController implements Initializable{
     private AnchorPane leftOuterAnchor;
 
     @FXML
+    RepositoryTabPane repositoryTabPane;
+
+    @FXML
     private EditorTabPane editorTabPane;
 
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.setController(this);
         editorTabPane.getTabs().clear();
+        repositoryTabPane.init();
     }
 
     /**

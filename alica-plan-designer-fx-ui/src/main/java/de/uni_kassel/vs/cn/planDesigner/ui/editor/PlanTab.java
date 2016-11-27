@@ -1,10 +1,9 @@
-package de.uni_kassel.vs.cn.planDesigner.ui;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 
 import java.io.File;
@@ -34,7 +33,12 @@ public class PlanTab extends EditorTab<Plan> {
             e.printStackTrace();
         }
         planContent = new PlanEditorPane();
-        planVisualization = new HBox(new ScrollPane(planContent),pldToolBar);
+        planContent.setManaged(true);
+        ScrollPane scrollPane = new ScrollPane(planContent);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setManaged(true);
+        planVisualization = new HBox(scrollPane,pldToolBar);
         setContent(planVisualization);
     }
 

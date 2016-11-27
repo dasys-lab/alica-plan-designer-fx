@@ -1,8 +1,6 @@
-package de.uni_kassel.vs.cn.planDesigner.ui;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
@@ -11,7 +9,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Sphere;
-import javafx.scene.text.Text;
 
 /**
  * Created by marci on 23.11.16.

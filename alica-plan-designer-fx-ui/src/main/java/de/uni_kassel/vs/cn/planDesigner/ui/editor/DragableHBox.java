@@ -1,6 +1,7 @@
-package de.uni_kassel.vs.cn.planDesigner.ui;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.common.DragableAlicaType;
+import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,12 +13,13 @@ import javafx.scene.text.Text;
  * Created by marci on 23.11.16.
  */
 public class DragableHBox extends HBox {
-    public DragableHBox(String resourceName, DragableAlicaType alicaType) {
+    public DragableHBox(DragableAlicaType alicaType) {
         super();
-        getChildren().addAll(new ImageView(
-                new Image(this.getClass().getClassLoader().getResourceAsStream("images/" + resourceName + "16x16.png"))),
+        ImageView imageView = new ImageView(
+                new AlicaIcon(alicaType.getAssociatedClass()));
+        getChildren().addAll(imageView,
                 new Text(alicaType.toString()));
-        this.setOnDragDetected(event -> {
+        EventHandler<MouseEvent> onDragDetectedHandler = event -> {
     /* drag was detected, start a drag-and-drop gesture*/
     /* allow any transfer mode */
             Dragboard db = startDragAndDrop(TransferMode.ANY);
@@ -28,12 +30,16 @@ public class DragableHBox extends HBox {
             db.setContent(content);
 
             event.consume();
-        });
+        };
 
-        this.setOnDragDone(event -> {
+        EventHandler<DragEvent> onDragDoneHandler = event -> {
     /* the drag and drop gesture ended */
     /* if the data was successfully moved, clear it */
             event.consume();
-        });
+        };
+        this.setOnDragDetected(onDragDetectedHandler);
+        imageView.setOnDragDetected(onDragDetectedHandler);
+        this.setOnDragDone(onDragDoneHandler);
+        imageView.setOnDragDone(onDragDoneHandler);
     }
 }

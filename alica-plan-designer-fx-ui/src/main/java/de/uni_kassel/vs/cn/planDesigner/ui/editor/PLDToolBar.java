@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.common.DragableAlicaType;
 import javafx.geometry.Orientation;
@@ -17,14 +17,7 @@ public class PLDToolBar extends ToolBar {
         getItems().addAll(
                 Stream.of(
                         DragableAlicaType.values())
-                        .map(e -> {
-                            try {
-                                return new DragableHBox(PLDToolBar.class.getClassLoader()
-                                        .loadClass(e.getAssociatedClass().getName()).getSimpleName().toLowerCase(), e);
-                            } catch (ClassNotFoundException e1) {
-                                return null;
-                            }
-                        })
+                        .map(DragableHBox::new)
                         .collect(Collectors.toList())
         );
     }

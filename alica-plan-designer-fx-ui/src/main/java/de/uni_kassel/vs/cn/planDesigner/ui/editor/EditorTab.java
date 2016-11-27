@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import javafx.scene.control.Tab;
 import org.eclipse.emf.ecore.EObject;
