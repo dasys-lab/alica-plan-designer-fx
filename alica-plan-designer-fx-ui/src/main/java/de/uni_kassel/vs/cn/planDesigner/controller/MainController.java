@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.planDesigner.ui.RepositoryTabPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.PropertyTabPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,7 +25,7 @@ public class MainController implements Initializable {
     private PLDFileTreeView fileTreeView;
 
     @FXML
-    private TabPane propertyAndStatusTabPane;
+    private PropertyTabPane propertyAndStatusTabPane;
 
     @FXML
     private ScrollPane leftScrollPane;
@@ -54,6 +55,7 @@ public class MainController implements Initializable {
         fileTreeView.setController(this);
         editorTabPane.getTabs().clear();
         repositoryTabPane.init();
+        propertyAndStatusTabPane.init(editorTabPane);
     }
 
     /**

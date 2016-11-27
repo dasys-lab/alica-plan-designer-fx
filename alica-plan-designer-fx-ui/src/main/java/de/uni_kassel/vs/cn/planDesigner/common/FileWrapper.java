@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui;
+package de.uni_kassel.vs.cn.planDesigner.common;
 
 import java.io.File;
 

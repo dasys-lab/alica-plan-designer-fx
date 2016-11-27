@@ -6,13 +6,13 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <?import de.uni_kassel.vs.cn.planDesigner.ui.PLDFileTreeView?>
 <?import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane?>
-<?import de.uni_kassel.vs.cn.planDesigner.ui.RepositoryTabPane?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.PropertyTabPane?>
 <AnchorPane prefHeight="759.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController">
    <children>
       <MenuBar AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -112,7 +112,7 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <TabPane fx:id="propertyAndStatusTabPane" layoutX="70.0" layoutY="34.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <PropertyTabPane fx:id="propertyAndStatusTabPane" layoutX="70.0" layoutY="34.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <tabs>
                                   <Tab text="Untitled Tab 1">
                                     <content>
@@ -125,7 +125,7 @@
                                     </content>
                                   </Tab>
                                 </tabs>
-                              </TabPane>
+                              </PropertyTabPane>
                            </children>
                         </AnchorPane>
                     </items>

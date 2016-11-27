@@ -1,13 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.ui;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import java.io.File;
 
 /**
  * Created by marci on 16.10.16.
