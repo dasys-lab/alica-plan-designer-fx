@@ -21,6 +21,9 @@ public class EditorTabPane extends TabPane {
 
         if(this.getTabs().contains(tab) == false) {
             getTabs().add(tab);
+            getSelectionModel().select(tab);
+        } else {
+            getSelectionModel().select(getTabs().stream().filter(e -> e.equals(tab)).findFirst().orElse(null));
         }
 
     }
