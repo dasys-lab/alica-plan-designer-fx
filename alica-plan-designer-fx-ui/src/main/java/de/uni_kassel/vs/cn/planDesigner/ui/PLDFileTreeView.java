@@ -22,6 +22,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 controller.openFile(newValue.getValue().unwrap());
             }
         });
+        this.setShowRoot(false);
     }
 
     public void setController(MainController controller) {
@@ -31,7 +32,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
 class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
     private static final Configuration configuration  = new Configuration();
-    public VirtualDirectoryTreeItem() {
+    VirtualDirectoryTreeItem() {
         super();
         this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getPlansPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
