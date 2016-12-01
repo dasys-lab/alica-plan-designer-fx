@@ -62,9 +62,4 @@ public class PlanEditorPane extends AnchorPane {
         });
 
     }
-
-    @Override
-    protected double computePrefWidth(double height) {
-        return super.computePrefWidth(((Pane)getParent()).widthProperty().doubleValue());
-    }
 }
