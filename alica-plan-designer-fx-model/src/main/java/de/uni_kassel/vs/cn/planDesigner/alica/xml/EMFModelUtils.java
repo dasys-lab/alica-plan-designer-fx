@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,12 +52,7 @@ public class EMFModelUtils {
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource loadedResource = resourceSet.createResource(URI
                 .createURI(file.getAbsolutePath()));
-        // XXX This part is strange PmlUIExtensionModelResourceImpl implements XMIResourceImpl, but a cast to it causes a exception
-        if (loadedResource instanceof PmlUIExtensionModelResourceImpl) {
-            loadedResource.load(((PmlUIExtensionModelResourceImpl) loadedResource).getDefaultLoadOptions());
-        } else {
-            loadedResource.load(((XMIResourceImpl) loadedResource).getDefaultLoadOptions());
-        }
+        loadedResource.load(((XMLResourceImpl) loadedResource).getDefaultLoadOptions());
         return (T) loadedResource.getContents().get(0);
     }
 

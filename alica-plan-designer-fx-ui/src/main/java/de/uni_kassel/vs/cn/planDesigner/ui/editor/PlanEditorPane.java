@@ -3,10 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 import javafx.geometry.Insets;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Sphere;
 
@@ -64,5 +61,10 @@ public class PlanEditorPane extends AnchorPane {
             event.consume();
         });
 
+    }
+
+    @Override
+    protected double computePrefWidth(double height) {
+        return super.computePrefWidth(((Pane)getParent()).widthProperty().doubleValue());
     }
 }

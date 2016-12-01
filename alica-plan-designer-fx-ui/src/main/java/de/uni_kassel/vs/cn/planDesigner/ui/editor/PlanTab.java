@@ -3,8 +3,11 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,16 +39,18 @@ public class PlanTab extends EditorTab<Plan> {
         planContent.setManaged(true);
         ScrollPane scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setManaged(true);
-        planVisualization = new HBox(scrollPane,pldToolBar);
+        HBox hBox = new HBox(scrollPane, pldToolBar);
+        hBox.setHgrow(scrollPane, Priority.ALWAYS);
+
+        planVisualization = hBox;
+        planVisualization.setBackground(new Background(new BackgroundFill(Color.BLUE,CornerRadii.EMPTY, Insets.EMPTY)));
         setContent(planVisualization);
     }
 
     @Override
     public void save() {
         try {
-            EMFModelUtils.saveAlicaFile(getFile(),getEditable());
+            EMFModelUtils.saveAlicaFile(getFile(), getEditable());
             EMFModelUtils.saveAlicaFile(new File(uiExtensionMapPath), pmlUiExtensionMap);
         } catch (IOException e) {
             e.printStackTrace();
