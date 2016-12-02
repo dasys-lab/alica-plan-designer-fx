@@ -1,10 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -35,7 +35,7 @@ public class PlanTab extends EditorTab<Plan> {
             // TODO create message window if file could not be opened
             e.printStackTrace();
         }
-        planContent = new PlanEditorPane();
+        planContent = new PlanEditorPane(new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap));
         planContent.setManaged(true);
         ScrollPane scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);

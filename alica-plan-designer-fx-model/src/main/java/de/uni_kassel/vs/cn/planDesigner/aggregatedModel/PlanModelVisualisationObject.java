@@ -7,22 +7,19 @@ import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExten
  * Created by marci on 01.12.16.
  */
 public class PlanModelVisualisationObject {
-    private Plan plan;
-    private PmlUiExtensionMap pmlUiExtensionMap;
+    private final Plan plan;
+    private final PmlUiExtensionMap pmlUiExtensionMap;
+
+    public PlanModelVisualisationObject(Plan plan, PmlUiExtensionMap pmlUiExtensionMap) {
+        this.plan = plan;
+        this.pmlUiExtensionMap = pmlUiExtensionMap;
+    }
 
     public Plan getPlan() {
         return plan;
     }
 
-    public void setPlan(Plan plan) {
-        this.plan = plan;
-    }
-
     public PmlUiExtensionMap getPmlUiExtensionMap() {
         return pmlUiExtensionMap;
-    }
-
-    public void setPmlUiExtensionMap(PmlUiExtensionMap pmlUiExtensionMap) {
-        this.pmlUiExtensionMap = pmlUiExtensionMap;
     }
 }
