@@ -1,9 +1,10 @@
-package de.uni_kassel.vs.cn.planDesigner.aggregatedModel;
+package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import org.eclipse.emf.ecore.EObject;
 
 import java.util.AbstractMap;
 import java.util.List;
@@ -27,6 +28,20 @@ public class DeleteStateInPlan extends Command<State> {
     @Override
     public void doCommand() {
         // save for later retrieval if needed
+        saveForLaterRetrieval();
+
+        // Delete
+        delete();
+
+    }
+
+    private void delete() {
+        parentOfDeleted.getPlan().getStates().remove(getElementToEdit());
+        parentOfDeleted.getPlan().getTransitions().removeAll(deletedInTransitions);
+        parentOfDeleted.getPlan().getTransitions().removeAll(deletedOutTransitions);
+    }
+
+    private void saveForLaterRetrieval() {
         deletedInTransitions = parentOfDeleted.getPlan()
                 .getTransitions()
                 .stream()
@@ -39,10 +54,6 @@ public class DeleteStateInPlan extends Command<State> {
                 .filter(e -> e.getOutState().equals(getElementToEdit()))
                 .collect(Collectors.toList());
 
-        // Delete
-        parentOfDeleted.getPlan().getStates().remove(getElementToEdit());
-        parentOfDeleted.getPlan().getTransitions().removeAll(deletedInTransitions);
-        parentOfDeleted.getPlan().getTransitions().removeAll(deletedOutTransitions);
         pmlUiExtension = parentOfDeleted.getPmlUiExtensionMap().getExtension().get(getElementToEdit());
     }
 
@@ -52,5 +63,10 @@ public class DeleteStateInPlan extends Command<State> {
         parentOfDeleted.getPlan().getTransitions().addAll(deletedInTransitions);
         parentOfDeleted.getPlan().getTransitions().addAll(deletedOutTransitions);
         parentOfDeleted.getPmlUiExtensionMap().getExtension().add(new AbstractMap.SimpleEntry<>(getElementToEdit(), pmlUiExtension));
+    }
+
+    @Override
+    public String getCommandString() {
+        return "Delete State " + getElementToEdit().getName() + " in Plan " + parentOfDeleted.getPlan().getName();
     }
 }

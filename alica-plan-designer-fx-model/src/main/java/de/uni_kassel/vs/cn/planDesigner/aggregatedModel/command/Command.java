@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.aggregatedModel;
+package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 
@@ -11,6 +11,7 @@ public abstract class Command<T extends PlanElement> {
 
     public abstract void doCommand();
     public abstract void undoCommand();
+    public abstract String getCommandString();
 
     public Command(T element) {
         this.elementToEdit = element;
