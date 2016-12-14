@@ -2,16 +2,22 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.SuccessState;
+import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import javafx.geometry.Insets;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +27,8 @@ import java.util.stream.Collectors;
 public class PlanEditorPane extends AnchorPane {
 
     private PlanModelVisualisationObject planModelVisualisationObject;
+    private List<StateContainer> stateContainers;
+    private List<TransitionContainer> transitionContainers;
 
     public PlanEditorPane(PlanModelVisualisationObject planModelVisualisationObject) {
         super();
@@ -30,12 +38,60 @@ public class PlanEditorPane extends AnchorPane {
     }
 
     private void visualize() {
-        List<Circle> collect = planModelVisualisationObject
+        stateContainers = createStateContainers();
+        transitionContainers = createTransitionContainers();
+        //getChildren().addAll(stateContainers);
+        getChildren().addAll(transitionContainers.stream().map(e -> e.getLine()).collect(Collectors.toList()));
+    }
+
+    private List<TransitionContainer> createTransitionContainers() {
+        List<TransitionContainer> transitions = new ArrayList<>();
+        // there is something whacky about the ids of states in transitions,
+        // from the perspective of transitions they don't match up which forced me to program this nightmare
+        // 14.12.2016 Scratch that the problem is only solvable via means off EMF
+        /*planModelVisualisationObject
+                .getPlan()
+                .getTransitions()
+                .forEach(f -> {
+                    planModelVisualisationObject
+                            .getPlan()
+                            .getStates()
+                            .forEach( state -> {
+                                if (f.getInState().eIsProxy() && state.getId() == Long.valueOf(((InternalEObject) f.getInState()).eProxyURI().fragment())) {
+                                    f.setOutState(state);
+                                }
+
+                                if (f.getOutState().eIsProxy() && state.getId() == Long.valueOf(((InternalEObject) f.getOutState()).eProxyURI().fragment())) {
+                                    f.setInState(state);
+                                }
+                            });
+                });
+
+        for (Transition transition : planModelVisualisationObject.getPlan().getTransitions()) {
+
+            TransitionContainer transitionContainer = new TransitionContainer(transition, null);
+
+            transitionContainer.setFromState(stateContainers.stream()
+                    .filter(e -> e.getState().equals(transition.getInState()))
+                    .findFirst()
+                    .orElse(null));
+
+            transitionContainer.setToState(stateContainers.stream()
+                    .filter(e -> e.getState().equals(transition.getOutState()))
+                    .findFirst()
+                    .orElse(null));
+            transitionContainer.initLine();
+            transitions.add(transitionContainer);
+        }*/
+        return  transitions;/*
+        return planModelVisualisationObject
                 .getPlan()
                 .getStates()
+                .forEach()
                 .stream()
+                .map(e -> e.getOutTransitions().stream())
+                .
                 .map(e -> {
-                    Circle sphere = new Circle(20);
                     PmlUiExtension pmlUiExtension = planModelVisualisationObject
                             .getPmlUiExtensionMap()
                             .getExtension()
@@ -45,15 +101,45 @@ public class PlanEditorPane extends AnchorPane {
                                 return Long.valueOf(s.substring(0, s.lastIndexOf(')'))) == e.getId();
                             })
                             .findFirst().get().getValue();
-                    if (e instanceof SuccessState) {
-                        sphere.setFill(Color.GREEN);
+                    StateContainer fromState = stateContainers
+                            .stream()
+                            .filter(t -> t.getState().getId() == e.getOutState().getId())
+                            .findFirst().orElse(null);
+                    if (fromState == null) {
+                        return null;
+                    } else {
+                        StateContainer toState = stateContainers
+                                .stream()
+                                .filter(t -> t.getState().getId() == e.getInState().getId())
+                                .findFirst().get();
+                        return new TransitionContainer(e, fromState, toState, pmlUiExtension);
                     }
-                    sphere.setLayoutX(pmlUiExtension.getXPos() * 1.8);
-                    sphere.setLayoutY(pmlUiExtension.getYPos() * 1.8);
-                    return sphere;
+
                 })
-                .collect(Collectors.toList());
-        getChildren().addAll(collect);
+                .filter(e -> e != null)
+                .collect(Collectors.toList());*/
+    }
+
+    private List<StateContainer> createStateContainers() {
+        return planModelVisualisationObject
+                    .getPlan()
+                    .getStates()
+                    .stream()
+                    .map(e -> {
+                        PmlUiExtension pmlUiExtension = planModelVisualisationObject
+                                .getPmlUiExtensionMap()
+                                .getExtension()
+                                .stream()
+                                .filter(f -> {
+                                    if (f.getKey() instanceof State == false) {
+                                        return false;
+                                    }
+                                    return ((State)f.getKey()).getId() == e.getId();
+                                })
+                                .findFirst().get().getValue();
+                        return new StateContainer(pmlUiExtension, e);
+                    })
+                    .collect(Collectors.toList());
     }
 
     private void addDragDropSupport() {

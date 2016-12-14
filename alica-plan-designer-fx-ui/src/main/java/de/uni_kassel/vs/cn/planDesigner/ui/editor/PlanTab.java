@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Created by marci on 23.11.16.
@@ -23,9 +24,9 @@ public class PlanTab extends EditorTab<Plan> {
     private PmlUiExtensionMap pmlUiExtensionMap;
     private final String uiExtensionMapPath;
 
-    public PlanTab(Plan editable, File file) {
-        super(editable, file);
-        String absolutePath = file.getAbsolutePath();
+    public PlanTab(Plan editable, Path filePath) {
+        super(editable, filePath);
+        String absolutePath = filePath.toString();
         uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
         pldToolBar = new PLDToolBar();
 
@@ -50,8 +51,8 @@ public class PlanTab extends EditorTab<Plan> {
     @Override
     public void save() {
         try {
-            EMFModelUtils.saveAlicaFile(getFile(), getEditable());
-            EMFModelUtils.saveAlicaFile(new File(uiExtensionMapPath), pmlUiExtensionMap);
+            EMFModelUtils.saveAlicaFile(getEditable());
+            EMFModelUtils.saveAlicaFile(pmlUiExtensionMap);
         } catch (IOException e) {
             e.printStackTrace();
         }

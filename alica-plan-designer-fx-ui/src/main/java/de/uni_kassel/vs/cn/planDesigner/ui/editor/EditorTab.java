@@ -2,9 +2,9 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import javafx.scene.control.Tab;
-import org.eclipse.emf.ecore.EObject;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Created by marci on 18.11.16.
@@ -12,18 +12,18 @@ import java.io.File;
 public abstract class EditorTab<T extends PlanElement> extends Tab {
 
     private T editable;
-    private File file;
+    private Path filePath;
     private PlanElement selectedPlanElement;
 
-    public EditorTab(T editable, File file) {
-        super(file.getName());
+    public EditorTab(T editable, Path filePath) {
+        super(filePath.getFileName().toString());
         this.editable = editable;
-        this.file = file;
+        this.filePath = filePath;
         selectedPlanElement = editable;
     }
 
-    public File getFile() {
-        return file;
+    public Path getFilePath() {
+        return filePath;
     }
 
     public abstract void save();

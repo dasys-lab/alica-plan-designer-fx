@@ -5,13 +5,18 @@ import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -60,15 +65,29 @@ public class AllAlicaFiles {
     }
 
     private <T extends EObject> List<Pair<T,Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException, URISyntaxException {
-        return Files.walk(Paths.get(plansPath))
-                    .filter(p -> p.toString().endsWith("." + filePostfix))
-                    .map(p -> {
-                        try {
-                            return new Pair<>((T) EMFModelUtils.loadAlicaFileFromDisk(p.toFile()),p);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+        List<Pair<T, Path>> collect = Files.walk(Paths.get(plansPath))
+                .filter(p -> p.toString().endsWith("." + filePostfix))
+                .map(p -> {
+                    try {
+                        Pair<T, Path> tPathPair = new Pair<>((T) EMFModelUtils.loadAlicaFileFromDisk(p.toFile()), p);
+                        for (Iterator k= tPathPair.getKey().eCrossReferences().iterator(); k.hasNext();) {
+                            k.next();
                         }
-                    })
-                    .collect(Collectors.toList());
+                        return tPathPair;
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
+        //EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
+        //Map<EObject, Collection<EStructuralFeature.Setting>> eObjectCollectionMap = EcoreUtil.UnresolvedProxyCrossReferencer.find(EMFModelUtils.getAlicaResourceSet());
+        /*for (Map.Entry<EObject, Collection<EStructuralFeature.Setting>> entry : eObjectCollectionMap.entrySet()) {
+            System.out.println("Key : " + entry.getKey() + " Value: ");
+            for (EStructuralFeature.Setting setting : entry.getValue()) {
+                System.out.print(setting + " ");
+            }
+            System.out.println();
+        }*/
+        return collect;
     }
 }

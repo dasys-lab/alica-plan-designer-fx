@@ -15,5 +15,6 @@
     <orderEntry type="library" name="Maven: org.eclipse.emf:org.eclipse.emf.ecore:2.11.1-v20150805-0538" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.emf:org.eclipse.emf.ecore.xmi:2.11.1-v20150805-0538" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.emf:org.eclipse.emf.common:2.11.0-v20150805-0538" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.emf:org.eclipse.emf.edit:2.11.1-v20150806-0404" level="project" />
   </component>
 </module>

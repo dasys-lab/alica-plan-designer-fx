@@ -59,12 +59,12 @@ public class MainController implements Initializable {
     }
 
     /**
-     * delegate to {@link EditorTabPane#openTab(File)}
+     * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}
      * @param toOpen
      */
     public void openFile(File toOpen) {
         try {
-            editorTabPane.openTab(toOpen);
+            editorTabPane.openTab(toOpen.toPath());
         } catch (IOException e) {
             e.printStackTrace();
         }

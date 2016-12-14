@@ -1,22 +1,26 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.xml;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelPackage;
+import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUIExtensionModelPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.util.PmlUIExtensionModelResourceFactoryImpl;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.util.PmlUIExtensionModelResourceImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -24,6 +28,17 @@ import java.util.Map;
  */
 public class EMFModelUtils {
 
+    private static AlicaResourceSet alicaResourceSet;
+
+    private static void initAlicaResourceSet() {
+        alicaResourceSet = new AlicaResourceSet();
+        AlicaResourceSet alicaResourceSet = new AlicaResourceSet();
+		URIConverter uriConverter = ExtensibleURIConverterImpl.INSTANCE;
+		//	uriConverter.getURIMap().put(URI.createURI("platform:/resource/Misc/", true),
+										// URI.createURI(new Configuration().getMiscPath(), true));
+//
+       // alicaResourceSet.setURIConverter(uriConverter);
+    }
 
     /**
      * Initializes EMF context, adds filetypes which can be read via means of EMF
@@ -34,12 +49,19 @@ public class EMFModelUtils {
         EClass alicaPackageEClass = AlicaPackage.eINSTANCE.eClass();
         EClass uiExtensionEClass = PmlUIExtensionModelPackage.eINSTANCE.eClass();
         Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+        URIConverter extensibleURIConverter = ExtensibleURIConverterImpl.INSTANCE;
         Map<String, Object> m = reg.getExtensionToFactoryMap();
+        // Initialize the model and the extensionUI package
+        AlicaPackageImpl.init();
+        PmlUIExtensionModelPackageImpl.init();
         m.put("pml", new XMIResourceFactoryImpl());
         m.put("pmlex", new PmlUIExtensionModelResourceFactoryImpl());
         m.put("beh", new XMIResourceFactoryImpl());
         m.put("pty", new XMIResourceFactoryImpl());
         m.put("tsk", new XMIResourceFactoryImpl());
+        if (alicaResourceSet == null) {
+            initAlicaResourceSet();
+        }
     }
 
     /**
@@ -49,10 +71,9 @@ public class EMFModelUtils {
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */
      public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
-        ResourceSet resourceSet = new ResourceSetImpl();
-        Resource loadedResource = resourceSet.createResource(URI
+        Resource loadedResource = alicaResourceSet.createResource(URI
                 .createURI(file.getAbsolutePath()));
-        loadedResource.load(((XMLResourceImpl) loadedResource).getDefaultLoadOptions());
+        loadedResource.load(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         return (T) loadedResource.getContents().get(0);
     }
 
@@ -63,16 +84,24 @@ public class EMFModelUtils {
      * @param <T> The type of {@link EObject} to save
      * @throws IOException
      */
-    public static <T extends EObject> void saveAlicaFile(File file, T alicaObject) throws IOException {
+    public static <T extends EObject> void saveAlicaFile(T alicaObject) throws IOException {
+        // TODO This outcommented code is resource creation it happens ONLY on file/resource creation
         // create a resource
-        ResourceSet resourceSet = new ResourceSetImpl();
-        Resource resource = resourceSet.createResource(URI
-                .createURI(file.getAbsolutePath()));
+        //Resource resource = alicaResourceSet.createResource(URI
+        //        .createURI(file.getAbsolutePath()));
         // Get the first model element and cast it to the right type, in my
         // example everything is hierarchical included in this first node
-        resource.getContents().add(alicaObject);
+
+        //resource.getContents().add(alicaObject);
 
         // now save the content.
-        resource.save(Collections.EMPTY_MAP);
+        alicaObject.eResource().save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+    }
+
+    public static AlicaResourceSet getAlicaResourceSet() {
+        if (alicaResourceSet == null) {
+            initAlicaResourceSet();
+        }
+        return alicaResourceSet;
     }
 }

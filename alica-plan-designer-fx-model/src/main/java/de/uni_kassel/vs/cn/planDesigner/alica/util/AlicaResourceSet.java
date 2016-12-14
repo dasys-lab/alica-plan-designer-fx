@@ -14,12 +14,56 @@
 //    GNU Lesser General Public License for more details.
 package de.uni_kassel.vs.cn.planDesigner.alica.util;
 
+import java.io.File;
 import java.util.Map;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 
 public class AlicaResourceSet extends ResourceSetImpl {
+
+	public AlicaResourceSet() {
+		super();
+		this.setURIConverter(new ExtensibleURIConverterImpl() {
+			@Override
+			public URI normalize(URI uri) {
+				String fragment = uri.fragment();
+				String query = uri.query();
+				URI trimmedURI = uri.trimFragment().trimQuery();
+				URI result = this.getInternalURIMap().getURI(trimmedURI);
+				String scheme = result.scheme();
+				if(scheme == null) {
+					if(result.hasAbsolutePath()) {
+						result = URI.createURI("file:" + result);
+					} else {
+						if(result.toString().contains(".beh") || result.toString().contains(".pml")) {
+							result = URI.createFileURI((new File(new Configuration().getPlansPath() + "/" + result)).getAbsolutePath());
+						} else {
+							// TODO XXX: THIS WILL NOT WORK REPLACE THIS SNIPPET IF THIS CASE IS USED
+							result = URI.createFileURI((new File(new Configuration().getPlansPath() + "/" + result)).getAbsolutePath());
+						}
+					}
+				}
+
+				if(result == trimmedURI) {
+					return uri;
+				} else {
+					if(query != null) {
+						result = result.appendQuery(query);
+					}
+
+					if(fragment != null) {
+						result = result.appendFragment(fragment);
+					}
+
+					return this.normalize(result);
+				}
+			}
+		});
+	}
 	
 	@Override
 	public Map<Object, Object> getLoadOptions() {
