@@ -14,11 +14,13 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Sphere;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -40,84 +42,28 @@ public class PlanEditorPane extends AnchorPane {
     private void visualize() {
         stateContainers = createStateContainers();
         transitionContainers = createTransitionContainers();
-        //getChildren().addAll(stateContainers);
-        getChildren().addAll(transitionContainers.stream().map(e -> e.getLine()).collect(Collectors.toList()));
+        getChildren().addAll(stateContainers);
+        getChildren().addAll(transitionContainers);
     }
 
     private List<TransitionContainer> createTransitionContainers() {
         List<TransitionContainer> transitions = new ArrayList<>();
-        // there is something whacky about the ids of states in transitions,
-        // from the perspective of transitions they don't match up which forced me to program this nightmare
-        // 14.12.2016 Scratch that the problem is only solvable via means off EMF
-        /*planModelVisualisationObject
-                .getPlan()
-                .getTransitions()
-                .forEach(f -> {
-                    planModelVisualisationObject
-                            .getPlan()
-                            .getStates()
-                            .forEach( state -> {
-                                if (f.getInState().eIsProxy() && state.getId() == Long.valueOf(((InternalEObject) f.getInState()).eProxyURI().fragment())) {
-                                    f.setOutState(state);
-                                }
-
-                                if (f.getOutState().eIsProxy() && state.getId() == Long.valueOf(((InternalEObject) f.getOutState()).eProxyURI().fragment())) {
-                                    f.setInState(state);
-                                }
-                            });
-                });
-
         for (Transition transition : planModelVisualisationObject.getPlan().getTransitions()) {
 
-            TransitionContainer transitionContainer = new TransitionContainer(transition, null);
-
-            transitionContainer.setFromState(stateContainers.stream()
+            StateContainer fromState = stateContainers.stream()
                     .filter(e -> e.getState().equals(transition.getInState()))
                     .findFirst()
-                    .orElse(null));
+                    .orElse(null);
 
-            transitionContainer.setToState(stateContainers.stream()
+            StateContainer toState = stateContainers.stream()
                     .filter(e -> e.getState().equals(transition.getOutState()))
                     .findFirst()
-                    .orElse(null));
-            transitionContainer.initLine();
-            transitions.add(transitionContainer);
-        }*/
-        return  transitions;/*
-        return planModelVisualisationObject
-                .getPlan()
-                .getStates()
-                .forEach()
-                .stream()
-                .map(e -> e.getOutTransitions().stream())
-                .
-                .map(e -> {
-                    PmlUiExtension pmlUiExtension = planModelVisualisationObject
-                            .getPmlUiExtensionMap()
-                            .getExtension()
-                            .stream()
-                            .filter(f -> {
-                                String s = f.getKey().toString().split("#")[1];
-                                return Long.valueOf(s.substring(0, s.lastIndexOf(')'))) == e.getId();
-                            })
-                            .findFirst().get().getValue();
-                    StateContainer fromState = stateContainers
-                            .stream()
-                            .filter(t -> t.getState().getId() == e.getOutState().getId())
-                            .findFirst().orElse(null);
-                    if (fromState == null) {
-                        return null;
-                    } else {
-                        StateContainer toState = stateContainers
-                                .stream()
-                                .filter(t -> t.getState().getId() == e.getInState().getId())
-                                .findFirst().get();
-                        return new TransitionContainer(e, fromState, toState, pmlUiExtension);
-                    }
+                    .orElse(null);
 
-                })
-                .filter(e -> e != null)
-                .collect(Collectors.toList());*/
+            TransitionContainer transitionContainer = new TransitionContainer(transition, null, fromState, toState);
+            transitions.add(transitionContainer);
+        }
+        return  transitions;
     }
 
     private List<StateContainer> createStateContainers() {
@@ -126,17 +72,22 @@ public class PlanEditorPane extends AnchorPane {
                     .getStates()
                     .stream()
                     .map(e -> {
-                        PmlUiExtension pmlUiExtension = planModelVisualisationObject
-                                .getPmlUiExtensionMap()
-                                .getExtension()
-                                .stream()
-                                .filter(f -> {
-                                    if (f.getKey() instanceof State == false) {
-                                        return false;
-                                    }
-                                    return ((State)f.getKey()).getId() == e.getId();
-                                })
-                                .findFirst().get().getValue();
+                        PmlUiExtension pmlUiExtension = null;
+                        for (Map.Entry<EObject, PmlUiExtension> entry : planModelVisualisationObject.getPmlUiExtensionMap().getExtension()) {
+                            EObject temp = null;
+                            if(entry.getKey().eIsProxy()) {
+                                temp = EcoreUtil.resolve(entry.getKey(), planModelVisualisationObject.getPmlUiExtensionMap());
+                            }
+
+                            EObject expressionVar = entry.getKey();
+                            if(temp != null) {
+                                expressionVar = temp;
+                            }
+                            if (expressionVar instanceof State && ((State)expressionVar).getId() == e.getId()) {
+                                pmlUiExtension = entry.getValue();
+                                break;
+                            }
+                        }
                         return new StateContainer(pmlUiExtension, e);
                     })
                     .collect(Collectors.toList());

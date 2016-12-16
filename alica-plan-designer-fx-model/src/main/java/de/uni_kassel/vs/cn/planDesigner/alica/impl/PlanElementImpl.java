@@ -4,14 +4,19 @@ package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaProxyResolvationHelper;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * <!-- begin-user-doc -->
@@ -51,6 +56,11 @@ public abstract class PlanElementImpl extends MinimalEObjectImpl.Container imple
 	 * @ordered
 	 */
 	protected long id = ID_EDEFAULT;
+
+	@Override
+	public EObject eResolveProxy(InternalEObject proxy) {
+		return AlicaProxyResolvationHelper.doResolve(this, proxy);
+	}
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.

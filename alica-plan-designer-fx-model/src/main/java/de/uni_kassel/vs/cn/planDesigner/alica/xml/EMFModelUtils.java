@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.xml;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
@@ -71,10 +72,22 @@ public class EMFModelUtils {
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */
      public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
-        Resource loadedResource = alicaResourceSet.createResource(URI
-                .createURI(file.getAbsolutePath()));
-        loadedResource.load(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
-        return (T) loadedResource.getContents().get(0);
+         URI uri = URI
+                 .createURI(file.getAbsolutePath());
+         Resource resourceFromPool = alicaResourceSet.getResource(uri, false);
+         if (resourceFromPool == null) {
+             Resource loadedResource = alicaResourceSet.createResource(uri);
+             loadedResource.load(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+             T t = (T) loadedResource.getContents().get(0);
+             if (t instanceof Plan) {
+                 Resource loadedPmlUiExtension = alicaResourceSet.createResource(URI
+                         .createURI(file.getAbsolutePath().replace("pml","pmlex")));
+                 loadedPmlUiExtension.load(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+             }
+             return t;
+         } else {
+             return (T) resourceFromPool.getContents().get(0);
+         }
     }
 
     /**
