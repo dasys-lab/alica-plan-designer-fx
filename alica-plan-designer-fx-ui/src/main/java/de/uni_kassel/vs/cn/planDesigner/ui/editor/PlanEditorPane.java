@@ -44,6 +44,13 @@ public class PlanEditorPane extends AnchorPane {
         transitionContainers = createTransitionContainers();
         getChildren().addAll(stateContainers);
         getChildren().addAll(transitionContainers);
+        getChildren()
+                .stream()
+                .filter(e -> e instanceof StateContainer)
+                .forEach(e -> {
+                    e.setLayoutY(e.getLayoutY()+50);
+                    e.setLayoutX(e.getLayoutX()+50);
+                });
     }
 
     private List<TransitionContainer> createTransitionContainers() {
@@ -51,16 +58,17 @@ public class PlanEditorPane extends AnchorPane {
         for (Transition transition : planModelVisualisationObject.getPlan().getTransitions()) {
 
             StateContainer fromState = stateContainers.stream()
-                    .filter(e -> e.getState().equals(transition.getInState()))
+                    .filter(e -> e.getContainedElement().equals(transition.getInState()))
                     .findFirst()
                     .orElse(null);
 
             StateContainer toState = stateContainers.stream()
-                    .filter(e -> e.getState().equals(transition.getOutState()))
+                    .filter(e -> e.getContainedElement().equals(transition.getOutState()))
                     .findFirst()
                     .orElse(null);
 
-            TransitionContainer transitionContainer = new TransitionContainer(transition, null, fromState, toState);
+            PmlUiExtension pmlUiExtension = planModelVisualisationObject.getPmlUiExtensionMap().getExtension().get(transition);
+            TransitionContainer transitionContainer = new TransitionContainer(transition, pmlUiExtension, fromState, toState);
             transitions.add(transitionContainer);
         }
         return  transitions;

@@ -7,6 +7,9 @@ import javafx.scene.control.TabPane;
  * Created by marci on 25.11.16.
  */
 public class RepositoryTabPane extends TabPane {
+    public RepositoryTabPane() {
+        getTabs().clear();
+    }
 
     public void init() {
         getTabs().clear();
