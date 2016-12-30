@@ -48,8 +48,8 @@ public class PlanEditorPane extends AnchorPane {
                 .stream()
                 .filter(e -> e instanceof StateContainer)
                 .forEach(e -> {
-                    e.setLayoutY(e.getLayoutY()+50);
-                    e.setLayoutX(e.getLayoutX()+50);
+                    e.setLayoutY(e.getLayoutY() + EditorConstants.PLAN_SHIFTING_PARAMETER);
+                    e.setLayoutX(e.getLayoutX() + EditorConstants.PLAN_SHIFTING_PARAMETER);
                 });
     }
 

@@ -18,19 +18,20 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
         this.fromState = fromState;
         this.toState = toState;
         if (pmlUiExtension.getBendpoints().size() == 0) {
-            visualRepresentation = new Line(fromState.getPmlUiExtension().getXPos()+50, fromState.getPmlUiExtension().getYPos()+50,
-                    toState.getPmlUiExtension().getXPos()+50, toState.getPmlUiExtension().getYPos()+50);
+            visualRepresentation = new Line(fromState.getPmlUiExtension().getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER,
+                    fromState.getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER,
+                    toState.getPmlUiExtension().getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER,
+                    toState.getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER);
         } else {
             double[] points = new double[pmlUiExtension.getBendpoints().size()*2+4];
-            points[0] = fromState.getPmlUiExtension().getXPos()+50;
-            points[1] = fromState.getPmlUiExtension().getYPos()+50;
+            points[0] = fromState.getPmlUiExtension().getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
+            points[1] = fromState.getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
             for (int i = 0, j = 2; i < points.length/2-2; i++,j+=2) {
-                // TODO remove the magic numbers
-                points[j] = pmlUiExtension.getBendpoints().get(i).getXPos()-180+50;
-                points[j+1] = pmlUiExtension.getBendpoints().get(i).getYPos()-140+50;
+                points[j] = pmlUiExtension.getBendpoints().get(i).getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
+                points[j+1] = pmlUiExtension.getBendpoints().get(i).getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
             }
-            points[points.length-2] = toState.getPmlUiExtension().getXPos()+50;
-            points[points.length-1] = toState.getPmlUiExtension().getYPos()+50;
+            points[points.length-2] = toState.getPmlUiExtension().getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
+            points[points.length-1] = toState.getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
 
             visualRepresentation = new Polyline(points);
             visualRepresentation.setFill(Color.TRANSPARENT);
