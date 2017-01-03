@@ -1,11 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import org.eclipse.emf.ecore.EObject;
 
 /**
- * Created by marci on 01.12.16.
+ * Base class for command pattern.
+ * @param <T>
  */
-public abstract class Command<T extends PlanElement> {
+public abstract class Command<T extends EObject> {
 
     private T elementToEdit;
 
