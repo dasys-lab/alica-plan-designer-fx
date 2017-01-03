@@ -19,7 +19,11 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
         super(new VirtualDirectoryTreeItem());
         this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue instanceof PLDTreeItem) {
-                controller.openFile(newValue.getValue().unwrap());
+                if(newValue.getValue().unwrap().isDirectory()) {
+                    newValue.setExpanded(!newValue.isExpanded());
+                } else {
+                    controller.openFile(newValue.getValue().unwrap());
+                }
             }
         });
         this.setShowRoot(false);
