@@ -1,10 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import javafx.geometry.Insets;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -15,8 +17,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Sphere;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +31,12 @@ public class PlanEditorPane extends AnchorPane {
     private PlanModelVisualisationObject planModelVisualisationObject;
     private List<StateContainer> stateContainers;
     private List<TransitionContainer> transitionContainers;
+    private CommandStack commandStack;
 
     public PlanEditorPane(PlanModelVisualisationObject planModelVisualisationObject) {
         super();
         this.planModelVisualisationObject = planModelVisualisationObject;
+        commandStack = new CommandStack();
         addDragDropSupport();
         visualize();
     }
@@ -42,8 +44,8 @@ public class PlanEditorPane extends AnchorPane {
     private void visualize() {
         stateContainers = createStateContainers();
         transitionContainers = createTransitionContainers();
-        getChildren().addAll(stateContainers);
         getChildren().addAll(transitionContainers);
+        getChildren().addAll(stateContainers);
         getChildren()
                 .stream()
                 .filter(e -> e instanceof StateContainer)
@@ -51,6 +53,7 @@ public class PlanEditorPane extends AnchorPane {
                     e.setLayoutY(e.getLayoutY() + EditorConstants.PLAN_SHIFTING_PARAMETER);
                     e.setLayoutX(e.getLayoutX() + EditorConstants.PLAN_SHIFTING_PARAMETER);
                 });
+        this.setOnMouseClicked(new MouseClickHandler(transitionContainers));
     }
 
     private List<TransitionContainer> createTransitionContainers() {
@@ -68,7 +71,7 @@ public class PlanEditorPane extends AnchorPane {
                     .orElse(null);
 
             PmlUiExtension pmlUiExtension = planModelVisualisationObject.getPmlUiExtensionMap().getExtension().get(transition);
-            TransitionContainer transitionContainer = new TransitionContainer(transition, pmlUiExtension, fromState, toState);
+            TransitionContainer transitionContainer = new TransitionContainer(transition, pmlUiExtension, commandStack, fromState, toState);
             transitions.add(transitionContainer);
         }
         return  transitions;
@@ -82,21 +85,14 @@ public class PlanEditorPane extends AnchorPane {
                     .map(e -> {
                         PmlUiExtension pmlUiExtension = null;
                         for (Map.Entry<EObject, PmlUiExtension> entry : planModelVisualisationObject.getPmlUiExtensionMap().getExtension()) {
-                            EObject temp = null;
-                            if(entry.getKey().eIsProxy()) {
-                                temp = EcoreUtil.resolve(entry.getKey(), planModelVisualisationObject.getPmlUiExtensionMap());
-                            }
-
                             EObject expressionVar = entry.getKey();
-                            if(temp != null) {
-                                expressionVar = temp;
-                            }
+
                             if (expressionVar instanceof State && ((State)expressionVar).getId() == e.getId()) {
                                 pmlUiExtension = entry.getValue();
                                 break;
                             }
                         }
-                        return new StateContainer(pmlUiExtension, e);
+                        return new StateContainer(pmlUiExtension, e, commandStack);
                     })
                     .collect(Collectors.toList());
     }
