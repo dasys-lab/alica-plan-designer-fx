@@ -23,6 +23,7 @@ public abstract class PlanElementContainer<T extends PlanElement> extends Pane {
         this.pmlUiExtension = pmlUiExtension;
         this.commandStack = commandStack;
         setBackground(Background.EMPTY);
+        setPickOnBounds(false);
     }
 
 

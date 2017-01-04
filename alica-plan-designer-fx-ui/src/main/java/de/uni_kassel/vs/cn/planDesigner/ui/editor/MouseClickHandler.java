@@ -37,14 +37,6 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
         Polyline polyline = null;
         if (event.getTarget() instanceof Polyline) {
             polyline = (Polyline) event.getTarget();
-        } else if(event.getTarget() instanceof TransitionContainer) {
-            // TODO weird behaviour after redrawing of transitions
-            ((TransitionContainer)event.getTarget()).getDraggableNodes().forEach(d -> d.setVisible(true));
-            transitionContainers
-                    .stream()
-                    .filter(t -> t.equals(event.getTarget()) == false)
-                    .forEach(t -> t.getDraggableNodes().forEach(d -> d.setVisible(false)));
-            return;
         }
 
         final Polyline finalPolyline = polyline;

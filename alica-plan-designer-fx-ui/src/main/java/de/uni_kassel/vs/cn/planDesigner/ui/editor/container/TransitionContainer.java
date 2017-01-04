@@ -63,6 +63,7 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
         }
         visualRepresentation.setStrokeWidth(3);
         visualRepresentation.setStroke(Color.RED);
+        visualRepresentation.setPickOnBounds(false);
         this.getChildren().add(visualRepresentation);
         this.getChildren().addAll(draggableNodes);
     }
