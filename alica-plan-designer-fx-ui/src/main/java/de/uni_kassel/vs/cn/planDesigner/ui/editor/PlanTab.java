@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationOb
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.PLDToolBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;

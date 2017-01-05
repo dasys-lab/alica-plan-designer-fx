@@ -1,9 +1,8 @@
-package de.uni_kassel.vs.cn.planDesigner.ui.editor;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.common.DragableAlicaType;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.event.EventHandler;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
@@ -12,13 +11,17 @@ import javafx.scene.text.Text;
 /**
  * Created by marci on 23.11.16.
  */
-public class DragableHBox extends HBox {
-    public DragableHBox(DragableAlicaType alicaType) {
-        super();
+public class DragableHBox<T extends PlanElement> extends HBox {
+    private Tool<T> controller;
+
+    public DragableHBox(T alicaType, Tool<T> controller) {
+        this.controller = controller;
+        Class<?> superclass = alicaType.getClass().getSuperclass();
         ImageView imageView = new ImageView(
-                new AlicaIcon(alicaType.getAssociatedClass()));
+                new AlicaIcon(superclass));
+        String superClassName = superclass.getSimpleName().toLowerCase().toString();
         getChildren().addAll(imageView,
-                new Text(alicaType.toString()));
+                new Text(superClassName));
         EventHandler<MouseEvent> onDragDetectedHandler = event -> {
     /* drag was detected, start a drag-and-drop gesture*/
     /* allow any transfer mode */
@@ -26,7 +29,7 @@ public class DragableHBox extends HBox {
 
     /* Put a string on a dragboard */
             ClipboardContent content = new ClipboardContent();
-            content.putString(alicaType.name());
+            content.putString(superClassName);
             db.setContent(content);
 
             event.consume();

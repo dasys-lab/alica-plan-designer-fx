@@ -1,6 +1,7 @@
-package de.uni_kassel.vs.cn.planDesigner.common;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import javafx.scene.layout.Pane;
 import org.eclipse.emf.ecore.EObject;
 
 import java.util.stream.Stream;

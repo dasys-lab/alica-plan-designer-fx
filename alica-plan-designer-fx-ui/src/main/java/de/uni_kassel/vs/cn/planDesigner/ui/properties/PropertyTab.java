@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui;
+package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
@@ -8,7 +8,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by marci on 27.11.16.

@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui;
+package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;

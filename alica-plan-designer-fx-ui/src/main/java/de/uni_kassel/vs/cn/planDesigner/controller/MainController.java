@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.planDesigner.ui.PropertyTabPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane;
 import javafx.fxml.FXML;

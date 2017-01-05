@@ -1,8 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.xml;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
@@ -116,5 +118,9 @@ public class EMFModelUtils {
             initAlicaResourceSet();
         }
         return alicaResourceSet;
+    }
+
+    public static AlicaFactory getAlicaFactory() {
+        return AlicaFactoryImpl.init();
     }
 }
