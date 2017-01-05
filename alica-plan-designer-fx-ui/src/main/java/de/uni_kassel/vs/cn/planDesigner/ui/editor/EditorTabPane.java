@@ -39,7 +39,7 @@ public class EditorTabPane extends TabPane {
                 .stream()
                 .filter(e -> e.getValue().equals(filePath))
                 .findFirst()
-                .get();
+                .orElse(null);
         return new PlanTab(planPathPair.getKey(), planPathPair.getValue());
     }
 
