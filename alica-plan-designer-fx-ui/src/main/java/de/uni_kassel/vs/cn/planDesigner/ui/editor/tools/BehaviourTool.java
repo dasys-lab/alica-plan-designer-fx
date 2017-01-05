@@ -1,17 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
 
 /**
- * The {@link StateTool} is used for adding new states to the currently edited {@link de.uni_kassel.vs.cn.planDesigner.alica.Plan}.
+ * Created by marci on 05.01.17.
  */
-public class StateTool implements Tool<State> {
-
+public class BehaviourTool implements Tool<Behaviour> {
     @Override
-    public State createNewObject() {
-        return getAlicaFactory().createState();
+    public Behaviour createNewObject() {
+        return getAlicaFactory().createBehaviour();
     }
 
     @Override

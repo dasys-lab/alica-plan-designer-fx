@@ -1,17 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
 
 /**
- * The {@link StateTool} is used for adding new states to the currently edited {@link de.uni_kassel.vs.cn.planDesigner.alica.Plan}.
+ * Created by marci on 05.01.17.
  */
-public class StateTool implements Tool<State> {
-
+public class TransitionTool implements Tool<Transition> {
     @Override
-    public State createNewObject() {
-        return getAlicaFactory().createState();
+    public Transition createNewObject() {
+        return getAlicaFactory().createTransition();
     }
 
     @Override

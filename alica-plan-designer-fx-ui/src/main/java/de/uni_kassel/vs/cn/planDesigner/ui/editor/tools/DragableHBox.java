@@ -23,7 +23,7 @@ public class DragableHBox<T extends PlanElement> extends HBox {
         EventHandler<MouseEvent> onDragDetectedHandler = event -> {
     /* drag was detected, start a drag-and-drop gesture*/
     /* allow any transfer mode */
-            Dragboard db = startDragAndDrop(TransferMode.ANY);
+            Dragboard db = DragableHBox.this.startDragAndDrop(TransferMode.ANY);
 
     /* Put a string on a dragboard */
             ClipboardContent content = new ClipboardContent();

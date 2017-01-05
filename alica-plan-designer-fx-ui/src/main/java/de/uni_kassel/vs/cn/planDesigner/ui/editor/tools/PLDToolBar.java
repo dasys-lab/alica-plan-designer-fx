@@ -11,11 +11,8 @@ public class PLDToolBar extends ToolBar {
         super();
         setOrientation(Orientation.VERTICAL);
         getItems().add(new StateTool().createToolUI());
-        /*getItems().addAll(
-                Stream.of(
-                        DragableAlicaType.values())
-                        .map(DragableHBox::new)
-                        .collect(Collectors.toList())
-        );*/
+        getItems().add(new TransitionTool().createToolUI());
+        getItems().add(new BehaviourTool().createToolUI());
+        getItems().add(new EntryPointTool().createToolUI());
     }
 }

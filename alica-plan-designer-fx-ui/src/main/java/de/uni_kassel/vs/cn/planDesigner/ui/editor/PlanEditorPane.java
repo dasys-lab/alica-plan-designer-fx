@@ -10,6 +10,7 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import javafx.geometry.Insets;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
@@ -40,8 +41,9 @@ public class PlanEditorPane extends AnchorPane {
         super();
         this.planModelVisualisationObject = planModelVisualisationObject;
         commandStack = new CommandStack();
-        addDragDropSupport();
         visualize();
+        addDragDropSupport();
+        setBackground(new Background(new BackgroundFill(Color.BROWN, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     public void visualize() {
@@ -130,14 +132,15 @@ public class PlanEditorPane extends AnchorPane {
     }
 
     private void addDragDropSupport() {
-        setOnDragOver(event -> {
+
+        this.getChildren().forEach(e-> {setOnDragOver(event -> {
     /* data is dragged over the target */
     /* accept it only if it is not dragged from the same node
      * and if it has a string data */
             if (event.getGestureSource() != PlanEditorPane.this &&
                     event.getDragboard().hasString()) {
         /* allow for both copying and moving, whatever user chooses */
-                event.acceptTransferModes(TransferMode.ANY);
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
 
             event.consume();
@@ -175,6 +178,6 @@ public class PlanEditorPane extends AnchorPane {
             event.setDropCompleted(success);
 
             event.consume();
-        });
+        });});
     }
 }

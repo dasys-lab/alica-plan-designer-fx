@@ -14,7 +14,9 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 public interface Tool<T extends PlanElement> {
     T createNewObject();
 
-    DragableHBox<T> createToolUI();
+    default DragableHBox<T> createToolUI() {
+        return new DragableHBox<>(createNewObject(), this);
+    }
 
     void startPhase();
 
