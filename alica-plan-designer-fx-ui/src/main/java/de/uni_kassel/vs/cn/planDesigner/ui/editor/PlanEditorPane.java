@@ -41,7 +41,8 @@ public class PlanEditorPane extends AnchorPane {
         visualize();
     }
 
-    private void visualize() {
+    public void visualize() {
+        getChildren().clear();
         stateContainers = createStateContainers();
         transitionContainers = createTransitionContainers();
         getChildren().addAll(transitionContainers);

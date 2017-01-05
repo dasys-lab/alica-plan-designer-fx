@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorConstants;
 import javafx.scene.Node;
@@ -37,26 +38,32 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
         getChildren().clear();
         draggableNodes.clear();
         potentialDraggableNodes.clear();
+        int fromY = fromState.getPmlUiExtension().getYPos();
+        int toX = toState.getPmlUiExtension().getXPos();
+        int toY = toState.getPmlUiExtension().getYPos();
+        int fromX = fromState.getPmlUiExtension().getXPos();
+        int shifting = EditorConstants.PLAN_SHIFTING_PARAMETER;
         if (getPmlUiExtension().getBendpoints().size() == 0) {
-            visualRepresentation = new Line(fromState.getPmlUiExtension().getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER,
-                    fromState.getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER,
-                    toState.getPmlUiExtension().getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER,
-                    toState.getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER);
+            visualRepresentation = new Line(fromX + shifting,
+                    fromY + shifting,
+                    toX + shifting,
+                    toY + shifting);
             potentialDraggableNodes.add(new Pane());
         } else {
             double[] points = new double[getPmlUiExtension().getBendpoints().size()*2+4];
-            points[0] = fromState.getPmlUiExtension().getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
-            points[1] = fromState.getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
+            points[0] = fromX + shifting;
+            points[1] = fromY + shifting;
+
             for (int i = 0, j = 2; i < points.length/2-2; i++,j+=2) {
-                points[j] = getPmlUiExtension().getBendpoints().get(i).getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
-                points[j+1] = getPmlUiExtension().getBendpoints().get(i).getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
-                BendpointContainer bendpointContainer = new BendpointContainer(getPmlUiExtension().getBendpoints().get(i),
-                        getPmlUiExtension(), commandStack);
+                Bendpoint currentBendpoint = getPmlUiExtension().getBendpoints().get(i);
+                points[j] = currentBendpoint.getXPos() + shifting;
+                points[j+1] = currentBendpoint.getYPos() + shifting;
+                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getPmlUiExtension(), commandStack);
                 bendpointContainer.getWrapGroup().setVisible(false);
                 draggableNodes.add(bendpointContainer.getWrapGroup());
             }
-            points[points.length-2] = toState.getPmlUiExtension().getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
-            points[points.length-1] = toState.getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER;
+            points[points.length-2] = toX + shifting;
+            points[points.length-1] = toY + shifting;
 
             visualRepresentation = new Polyline(points);
             visualRepresentation.setFill(null);
@@ -66,6 +73,10 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
         visualRepresentation.setPickOnBounds(false);
         this.getChildren().add(visualRepresentation);
         this.getChildren().addAll(draggableNodes);
+    }
+
+    public void setBendpointContainerVisibility(boolean isVisible) {
+        getDraggableNodes().forEach(d -> d.setVisible(isVisible));
     }
 
     public List<Node> getDraggableNodes() {

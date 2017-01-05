@@ -38,4 +38,6 @@ public abstract class PlanElementContainer<T extends PlanElement> extends Pane {
     public PmlUiExtension getPmlUiExtension() {
         return pmlUiExtension;
     }
+
+    public abstract void draw();
 }
