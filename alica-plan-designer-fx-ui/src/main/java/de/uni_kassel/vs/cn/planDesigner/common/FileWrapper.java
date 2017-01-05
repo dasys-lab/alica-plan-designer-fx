@@ -24,6 +24,6 @@ public class FileWrapper {
     @Override
     public String toString() {
         String[] split = file.getAbsolutePath().split(File.separator);
-        return split[split.length-1];
+        return split[split.length - 1];
     }
 }

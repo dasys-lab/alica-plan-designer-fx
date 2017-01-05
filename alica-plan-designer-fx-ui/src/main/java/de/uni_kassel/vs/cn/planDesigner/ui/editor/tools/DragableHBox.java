@@ -16,12 +16,10 @@ public class DragableHBox<T extends PlanElement> extends HBox {
 
     public DragableHBox(T alicaType, Tool<T> controller) {
         this.controller = controller;
-        Class<?> superclass = alicaType.getClass().getSuperclass();
-        ImageView imageView = new ImageView(
-                new AlicaIcon(superclass));
-        String superClassName = superclass.getSimpleName().toLowerCase().toString();
-        getChildren().addAll(imageView,
-                new Text(superClassName));
+        Class<?> alicaTypeClass = alicaType.getClass();
+        ImageView imageView = new ImageView(new AlicaIcon(alicaTypeClass));
+        String className = alicaTypeClass.getSimpleName().replace("Impl", "").toString();
+        getChildren().addAll(imageView, new Text(className));
         EventHandler<MouseEvent> onDragDetectedHandler = event -> {
     /* drag was detected, start a drag-and-drop gesture*/
     /* allow any transfer mode */
@@ -29,7 +27,7 @@ public class DragableHBox<T extends PlanElement> extends HBox {
 
     /* Put a string on a dragboard */
             ClipboardContent content = new ClipboardContent();
-            content.putString(superClassName);
+            content.putString(className);
             db.setContent(content);
 
             event.consume();

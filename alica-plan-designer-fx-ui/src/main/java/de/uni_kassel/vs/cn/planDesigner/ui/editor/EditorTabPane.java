@@ -2,12 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.util.Pair;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -23,7 +21,7 @@ public class EditorTabPane extends TabPane {
                 .findFirst()
                 .orElse(createNewTab(filePath));
 
-        if(this.getTabs().contains(tab) == false) {
+        if (this.getTabs().contains(tab) == false) {
             getTabs().add(tab);
             getSelectionModel().select(tab);
         } else {

@@ -25,7 +25,7 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
     @Override
     public void draw() {
         getChildren().clear();
-        visualRepresentation= new Circle(getPmlUiExtension().getXPos(), getPmlUiExtension().getYPos(),20, Color.BLUE);
+        visualRepresentation = new Circle(getPmlUiExtension().getXPos(), getPmlUiExtension().getYPos(), 20, Color.BLUE);
         Line line = new Line(getPmlUiExtension().getXPos(),
                 getPmlUiExtension().getYPos(),
                 pmlUiExtensionOfReferencedState.getXPos(),

@@ -47,13 +47,13 @@ public class StateContainer extends PlanElementContainer<State> implements Dragg
 
     @Override
     public void redrawElement() {
-        ((PlanEditorPane)getParent()).visualize();
+        ((PlanEditorPane) getParent()).visualize();
     }
 
     @Override
     public Command createMoveElementCommand() {
-        return new ChangePosition(getPmlUiExtension(),getContainedElement(),
-                (int)(getLayoutX() + getTranslateX() - EditorConstants.PLAN_SHIFTING_PARAMETER),
-                (int)(getLayoutY() + getTranslateY() - EditorConstants.PLAN_SHIFTING_PARAMETER));
+        return new ChangePosition(getPmlUiExtension(), getContainedElement(),
+                (int) (getLayoutX() + getTranslateX() - EditorConstants.PLAN_SHIFTING_PARAMETER),
+                (int) (getLayoutY() + getTranslateY() - EditorConstants.PLAN_SHIFTING_PARAMETER));
     }
 }

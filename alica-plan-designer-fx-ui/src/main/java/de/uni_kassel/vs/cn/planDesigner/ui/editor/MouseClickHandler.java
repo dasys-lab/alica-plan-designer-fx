@@ -18,7 +18,7 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
-        if(event.getTarget() instanceof BendpointContainer) {
+        if (event.getTarget() instanceof BendpointContainer) {
             return;
         }
 

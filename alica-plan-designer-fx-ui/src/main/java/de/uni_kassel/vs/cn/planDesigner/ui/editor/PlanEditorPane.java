@@ -73,7 +73,7 @@ public class PlanEditorPane extends AnchorPane {
                     for (Map.Entry<EObject, PmlUiExtension> entry : planModelVisualisationObject.getPmlUiExtensionMap().getExtension()) {
                         EObject expressionVar = entry.getKey();
 
-                        if (expressionVar instanceof EntryPoint && ((EntryPoint)expressionVar).getId() == e.getId()) {
+                        if (expressionVar instanceof EntryPoint && ((EntryPoint) expressionVar).getId() == e.getId()) {
                             pmlUiExtension = entry.getValue();
                             break;
                         }
@@ -84,7 +84,7 @@ public class PlanEditorPane extends AnchorPane {
                             .findFirst()
                             .orElse(null)
                             .getPmlUiExtension();
-                    return new EntryPointContainer(e,pmlUiExtension, uiExtensionOfRefState, commandStack);
+                    return new EntryPointContainer(e, pmlUiExtension, uiExtensionOfRefState, commandStack);
                 }).collect(Collectors.toList());
     }
 
@@ -106,27 +106,27 @@ public class PlanEditorPane extends AnchorPane {
             TransitionContainer transitionContainer = new TransitionContainer(transition, pmlUiExtension, commandStack, fromState, toState);
             transitions.add(transitionContainer);
         }
-        return  transitions;
+        return transitions;
     }
 
     private List<StateContainer> createStateContainers() {
         return planModelVisualisationObject
-                    .getPlan()
-                    .getStates()
-                    .stream()
-                    .map(e -> {
-                        PmlUiExtension pmlUiExtension = null;
-                        for (Map.Entry<EObject, PmlUiExtension> entry : planModelVisualisationObject.getPmlUiExtensionMap().getExtension()) {
-                            EObject expressionVar = entry.getKey();
+                .getPlan()
+                .getStates()
+                .stream()
+                .map(e -> {
+                    PmlUiExtension pmlUiExtension = null;
+                    for (Map.Entry<EObject, PmlUiExtension> entry : planModelVisualisationObject.getPmlUiExtensionMap().getExtension()) {
+                        EObject expressionVar = entry.getKey();
 
-                            if (expressionVar instanceof State && ((State)expressionVar).getId() == e.getId()) {
-                                pmlUiExtension = entry.getValue();
-                                break;
-                            }
+                        if (expressionVar instanceof State && ((State) expressionVar).getId() == e.getId()) {
+                            pmlUiExtension = entry.getValue();
+                            break;
                         }
-                        return new StateContainer(pmlUiExtension, e, commandStack);
-                    })
-                    .collect(Collectors.toList());
+                    }
+                    return new StateContainer(pmlUiExtension, e, commandStack);
+                })
+                .collect(Collectors.toList());
     }
 
     private void addDragDropSupport() {

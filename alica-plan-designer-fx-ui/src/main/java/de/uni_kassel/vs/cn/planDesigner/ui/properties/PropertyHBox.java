@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class PropertyHBox<T extends PlanElement> extends HBox {
     // TODO resolve problem of not getting value by property reference
-    public PropertyHBox(T object,String propertyName) {
+    public PropertyHBox(T object, String propertyName) {
         try {
             getChildren().addAll(new Text(I18NRepo.getInstance().getString("alicatype.property." + propertyName)),
                     new Separator(Orientation.VERTICAL),

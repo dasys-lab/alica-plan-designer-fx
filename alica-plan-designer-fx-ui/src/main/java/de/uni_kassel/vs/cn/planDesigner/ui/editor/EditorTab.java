@@ -3,7 +3,6 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import javafx.scene.control.Tab;
 
-import java.io.File;
 import java.nio.file.Path;
 
 /**

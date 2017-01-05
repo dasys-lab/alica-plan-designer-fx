@@ -45,7 +45,7 @@ public class PlanTab extends EditorTab<Plan> {
         hBox.setHgrow(scrollPane, Priority.ALWAYS);
 
         planVisualization = hBox;
-        planVisualization.setBackground(new Background(new BackgroundFill(Color.BLUE,CornerRadii.EMPTY, Insets.EMPTY)));
+        planVisualization.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         setContent(planVisualization);
     }
 

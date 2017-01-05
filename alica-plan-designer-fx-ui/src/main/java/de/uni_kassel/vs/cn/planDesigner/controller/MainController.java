@@ -1,12 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.ui.PLDFileTreeView;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import de.uni_kassel.vs.cn.planDesigner.ui.PLDFileTreeView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.File;
@@ -60,6 +60,7 @@ public class MainController implements Initializable {
 
     /**
      * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}
+     *
      * @param toOpen
      */
     public void openFile(File toOpen) {

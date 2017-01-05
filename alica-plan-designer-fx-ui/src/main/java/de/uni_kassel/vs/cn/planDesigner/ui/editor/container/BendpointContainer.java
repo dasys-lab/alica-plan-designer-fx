@@ -11,12 +11,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- *  The {@link BendpointContainer} class holds a visual representation of a {@link de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint}.
- *  It also contains an object of type {@link Bendpoint} to hold modifications to it.
- *  This modifications are later written back to the actual Resource.
+ * The {@link BendpointContainer} class holds a visual representation of a {@link de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint}.
+ * It also contains an object of type {@link Bendpoint} to hold modifications to it.
+ * This modifications are later written back to the actual Resource.
  */
 public class BendpointContainer extends Rectangle implements DraggableEditorElement {
-    private static final double SHIFTING_CONSTANT = EditorConstants.PLAN_SHIFTING_PARAMETER-2.5;
+    private static final double SQUARE_SIZE = 5;
+    private static final double SHIFTING_CONSTANT = EditorConstants.PLAN_SHIFTING_PARAMETER - (SQUARE_SIZE / 2);
     private Bendpoint containedElement;
     private PmlUiExtension pmlUiExtension;
     private CommandStack commandStack;
@@ -24,7 +25,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
 
     public BendpointContainer(Bendpoint containedElement, PmlUiExtension pmlUiExtension, CommandStack commandStack) {
         super(containedElement.getXPos() + SHIFTING_CONSTANT,
-                containedElement.getYPos() + SHIFTING_CONSTANT, 10,10);
+                containedElement.getYPos() + SHIFTING_CONSTANT, 10, 10);
         this.containedElement = containedElement;
         this.pmlUiExtension = pmlUiExtension;
         this.commandStack = commandStack;
@@ -52,8 +53,8 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
 
     @Override
     public Command createMoveElementCommand() {
-        return new ChangePositionForBendpoint(containedElement, (int)(getX() + getTranslateX() - SHIFTING_CONSTANT),
-                (int)(getY() + getTranslateY() - SHIFTING_CONSTANT));
+        return new ChangePositionForBendpoint(containedElement, (int) (getX() + getTranslateX() - SHIFTING_CONSTANT),
+                (int) (getY() + getTranslateY() - SHIFTING_CONSTANT));
     }
 
     public Group getWrapGroup() {

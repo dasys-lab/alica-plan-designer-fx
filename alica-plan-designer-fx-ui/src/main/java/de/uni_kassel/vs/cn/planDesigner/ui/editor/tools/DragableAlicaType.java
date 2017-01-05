@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import javafx.scene.layout.Pane;
 import org.eclipse.emf.ecore.EObject;
 
 import java.util.stream.Stream;
@@ -23,8 +22,7 @@ public enum DragableAlicaType {
     PRECONDITION(PreCondition.class),
     POSTCONDITION(PostCondition.class),
     RUNTIMECONDITION(RuntimeCondition.class),
-    TRANSITION(Transition.class)
-    ;
+    TRANSITION(Transition.class);
 
     private Class<? extends EObject> associatedClass;
 

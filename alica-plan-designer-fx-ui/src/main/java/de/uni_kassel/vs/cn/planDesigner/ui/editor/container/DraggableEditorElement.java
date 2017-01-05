@@ -12,8 +12,11 @@ import javafx.scene.input.MouseEvent;
 public interface DraggableEditorElement {
 
     CommandStack getCommandStackForDrag();
+
     void redrawElement();
+
     Command createMoveElementCommand();
+
     default Node createWrapper(Node node) {
         return new Group(node);
     }

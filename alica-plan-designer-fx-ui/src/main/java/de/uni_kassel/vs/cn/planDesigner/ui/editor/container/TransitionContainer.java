@@ -50,20 +50,20 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
                     toY + shifting);
             potentialDraggableNodes.add(new Pane());
         } else {
-            double[] points = new double[getPmlUiExtension().getBendpoints().size()*2+4];
+            double[] points = new double[getPmlUiExtension().getBendpoints().size() * 2 + 4];
             points[0] = fromX + shifting;
             points[1] = fromY + shifting;
 
-            for (int i = 0, j = 2; i < points.length/2-2; i++,j+=2) {
+            for (int i = 0, j = 2; i < points.length / 2 - 2; i++, j += 2) {
                 Bendpoint currentBendpoint = getPmlUiExtension().getBendpoints().get(i);
                 points[j] = currentBendpoint.getXPos() + shifting;
-                points[j+1] = currentBendpoint.getYPos() + shifting;
+                points[j + 1] = currentBendpoint.getYPos() + shifting;
                 BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getPmlUiExtension(), commandStack);
                 bendpointContainer.getWrapGroup().setVisible(false);
                 draggableNodes.add(bendpointContainer.getWrapGroup());
             }
-            points[points.length-2] = toX + shifting;
-            points[points.length-1] = toY + shifting;
+            points[points.length - 2] = toX + shifting;
+            points[points.length - 1] = toY + shifting;
 
             visualRepresentation = new Polyline(points);
             visualRepresentation.setFill(null);
