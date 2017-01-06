@@ -29,7 +29,6 @@ public class PlanTab extends EditorTab<Plan> {
         super(editable, filePath);
         String absolutePath = filePath.toString();
         uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
-        pldToolBar = new PLDToolBar();
 
         try {
             pmlUiExtensionMap = EMFModelUtils.loadAlicaFileFromDisk(new File(uiExtensionMapPath));
@@ -39,6 +38,7 @@ public class PlanTab extends EditorTab<Plan> {
         }
         planContent = new PlanEditorPane(new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap));
         planContent.setManaged(true);
+        pldToolBar = new PLDToolBar(planContent);
         ScrollPane scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);

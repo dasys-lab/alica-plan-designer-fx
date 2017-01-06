@@ -1,6 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
+
+import java.util.Map;
 
 /**
  * The {@link Tool} interface provides methods for the tools in the {@link PLDToolBar}.
@@ -11,16 +16,32 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
  *
  * @param <T> type of the model object this tool is associated with
  */
-public interface Tool<T extends PlanElement> {
-    T createNewObject();
+public abstract class Tool<T extends PlanElement> {
 
-    default DragableHBox<T> createToolUI() {
+    protected PlanEditorPane workbench;
+
+    public Tool(PlanEditorPane workbench) {
+        this.workbench = workbench;
+    }
+
+    public abstract T createNewObject();
+    public abstract void draw();
+    protected abstract Map<EventType, EventHandler> toolRequiredHandlers();
+
+    public DragableHBox<T> createToolUI() {
         return new DragableHBox<>(createNewObject(), this);
     }
 
-    void startPhase();
+    public void startPhase() {
+        toolRequiredHandlers()
+                .entrySet()
+                .forEach(entry -> workbench.addEventFilter(entry.getKey(), entry.getValue()));
+    }
 
-    void endPhase();
-
-    void draw();
+    public void endPhase() {
+        toolRequiredHandlers()
+                .entrySet()
+                .forEach(entry -> workbench.removeEventFilter(entry.getKey(), entry.getValue()));
+        draw();
+    }
 }

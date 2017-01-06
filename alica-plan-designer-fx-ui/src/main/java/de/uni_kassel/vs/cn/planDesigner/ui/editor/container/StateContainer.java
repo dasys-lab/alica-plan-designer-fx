@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.alica.SuccessState;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorConstants;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
@@ -32,7 +33,11 @@ public class StateContainer extends PlanElementContainer<State> implements Dragg
         setLayoutX(getPmlUiExtension().getXPos() * 1);
         setLayoutY(getPmlUiExtension().getYPos() * 1);
         // TODO fix slow dragging
-        makeDraggable(this);
+        if(getContainedElement() instanceof SuccessState) {
+            visualRepresentation.setFill(Color.GREEN);
+        } else {
+            makeDraggable(this);
+        }
     }
 
     @Override

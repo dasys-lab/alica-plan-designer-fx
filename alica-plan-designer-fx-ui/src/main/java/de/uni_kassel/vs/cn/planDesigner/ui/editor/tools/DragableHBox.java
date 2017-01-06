@@ -4,7 +4,8 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
@@ -18,24 +19,15 @@ public class DragableHBox<T extends PlanElement> extends HBox {
         this.controller = controller;
         Class<?> alicaTypeClass = alicaType.getClass();
         ImageView imageView = new ImageView(new AlicaIcon(alicaTypeClass));
-        String className = alicaTypeClass.getSimpleName().replace("Impl", "").toString();
+        String className = alicaTypeClass.getSimpleName().replace("Impl", "");
         getChildren().addAll(imageView, new Text(className));
         EventHandler<MouseEvent> onDragDetectedHandler = event -> {
-    /* drag was detected, start a drag-and-drop gesture*/
-    /* allow any transfer mode */
-            Dragboard db = DragableHBox.this.startDragAndDrop(TransferMode.ANY);
-
-    /* Put a string on a dragboard */
-            ClipboardContent content = new ClipboardContent();
-            content.putString(className);
-            db.setContent(content);
-
+            startFullDrag();
+            this.controller.startPhase();
             event.consume();
         };
 
         EventHandler<DragEvent> onDragDoneHandler = event -> {
-    /* the drag and drop gesture ended */
-    /* if the data was successfully moved, clear it */
             event.consume();
         };
         this.setOnDragDetected(onDragDetectedHandler);
