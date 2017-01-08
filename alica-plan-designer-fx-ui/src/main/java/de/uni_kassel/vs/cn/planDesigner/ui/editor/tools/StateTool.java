@@ -1,6 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPlan;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelFactory;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
@@ -84,16 +86,15 @@ public class StateTool extends Tool<State> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     workbench.getChildren().remove(visualRepresentation);
-                    visualRepresentation = null;
-                    PlanModelVisualisationObject planModelVisualisationObject = workbench.getPlanModelVisualisationObject();
-                    State newState = createNewObject();
-                    newState.setName("MISSING NAME");
-                    planModelVisualisationObject.getPlan().getStates().add(newState);
-
-                    PmlUiExtension pmlUiExtension = PmlUIExtensionModelFactory.eINSTANCE.createPmlUiExtension();
-                    pmlUiExtension.setXPos((int) (event.getX() - EditorConstants.PLAN_SHIFTING_PARAMETER));
-                    pmlUiExtension.setYPos((int) (event.getY() - EditorConstants.PLAN_SHIFTING_PARAMETER));
-                    planModelVisualisationObject.getPmlUiExtensionMap().getExtension().put(newState, pmlUiExtension);
+                    AddStateInPlan command = new AddStateInPlan(workbench.getPlanModelVisualisationObject());
+                    workbench
+                            .getCommandStack()
+                            .storeAndExecute(command);
+                    workbench
+                            .getCommandStack()
+                            .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(),command.getElementToEdit(),
+                                    (int) (event.getX() - EditorConstants.PLAN_SHIFTING_PARAMETER),
+                                    (int) (event.getY() - EditorConstants.PLAN_SHIFTING_PARAMETER)));
                     endPhase();
                     initial = true;
                 }

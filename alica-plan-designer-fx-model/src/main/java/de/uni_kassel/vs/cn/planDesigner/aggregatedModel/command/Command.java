@@ -18,7 +18,7 @@ public abstract class Command<T extends EObject> {
         this.elementToEdit = element;
     }
 
-    protected T getElementToEdit() {
+    public T getElementToEdit() {
         return elementToEdit;
     }
 }

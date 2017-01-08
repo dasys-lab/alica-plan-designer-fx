@@ -60,8 +60,16 @@ public class PlanEditorPane extends AnchorPane {
         this.setOnMouseClicked(new MouseClickHandler(transitionContainers));
     }
 
+    public CommandStack getCommandStack() {
+        return commandStack;
+    }
+
     public PlanModelVisualisationObject getPlanModelVisualisationObject() {
         return planModelVisualisationObject;
+    }
+
+    public List<StateContainer> getStateContainers() {
+        return stateContainers;
     }
 
     private List<EntryPointContainer> createEntryPointContainers() {
