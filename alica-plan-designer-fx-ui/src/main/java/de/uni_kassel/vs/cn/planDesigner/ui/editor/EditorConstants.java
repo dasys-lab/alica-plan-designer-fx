@@ -11,4 +11,9 @@ public class EditorConstants {
      * Under no circumstances should this be written back anywhere!
      */
     public static int PLAN_SHIFTING_PARAMETER = 50;
+
+    /**
+     * Describes the number of pixels that things are moved away from start and end section.
+     */
+    public static int SECTION_MARGIN = 20;
 }

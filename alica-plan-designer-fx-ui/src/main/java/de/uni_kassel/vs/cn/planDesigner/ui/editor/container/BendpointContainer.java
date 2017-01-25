@@ -17,7 +17,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class BendpointContainer extends Rectangle implements DraggableEditorElement {
     private static final double SQUARE_SIZE = 5;
-    private static final double SHIFTING_CONSTANT = EditorConstants.PLAN_SHIFTING_PARAMETER - (SQUARE_SIZE / 2);
+    private static final double SHIFTING_CONSTANT = EditorConstants.PLAN_SHIFTING_PARAMETER + EditorConstants.SECTION_MARGIN - (SQUARE_SIZE / 2);
     private Bendpoint containedElement;
     private PmlUiExtension pmlUiExtension;
     private CommandStack commandStack;

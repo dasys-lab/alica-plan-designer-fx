@@ -93,8 +93,8 @@ public class StateTool extends Tool<State> {
                     workbench
                             .getCommandStack()
                             .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(),command.getElementToEdit(),
-                                    (int) (event.getX() - EditorConstants.PLAN_SHIFTING_PARAMETER),
-                                    (int) (event.getY() - EditorConstants.PLAN_SHIFTING_PARAMETER)));
+                                    (int) (event.getX() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN),
+                                    (int) (event.getY() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN)));
                     endPhase();
                     initial = true;
                 }

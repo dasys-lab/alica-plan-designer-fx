@@ -18,6 +18,7 @@ import javafx.scene.text.Text;
  */
 public class StateContainer extends PlanElementContainer<State> implements DraggableEditorElement {
 
+    public static final double STATE_RADIUS = 20.0;
 
     public StateContainer(PmlUiExtension pmlUiExtension, State state, CommandStack commandStack) {
         super(state, pmlUiExtension, commandStack);
@@ -58,7 +59,7 @@ public class StateContainer extends PlanElementContainer<State> implements Dragg
     @Override
     public Command createMoveElementCommand() {
         return new ChangePosition(getPmlUiExtension(), getContainedElement(),
-                (int) (getLayoutX() + getTranslateX() - EditorConstants.PLAN_SHIFTING_PARAMETER),
-                (int) (getLayoutY() + getTranslateY() - EditorConstants.PLAN_SHIFTING_PARAMETER));
+                (int) (getLayoutX() + getTranslateX() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN),
+                (int) (getLayoutY() + getTranslateY() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN));
     }
 }

@@ -9,12 +9,8 @@ import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExten
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
-import javafx.geometry.Insets;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import org.eclipse.emf.ecore.EObject;
 
 import java.util.ArrayList;
@@ -38,7 +34,6 @@ public class PlanEditorPane extends AnchorPane {
         this.planModelVisualisationObject = planModelVisualisationObject;
         commandStack = new CommandStack();
         visualize();
-        setBackground(new Background(new BackgroundFill(Color.BROWN, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     public void visualize() {
@@ -52,12 +47,13 @@ public class PlanEditorPane extends AnchorPane {
         getChildren().addAll(entryPointContainers);
         getChildren()
                 .stream()
-                .filter(e -> e instanceof StateContainer || e instanceof EntryPointContainer)
+                .filter(e -> e instanceof StateContainer)
                 .forEach(e -> {
-                    e.setLayoutY(e.getLayoutY() + EditorConstants.PLAN_SHIFTING_PARAMETER);
-                    e.setLayoutX(e.getLayoutX() + EditorConstants.PLAN_SHIFTING_PARAMETER);
+                    e.setLayoutY(e.getLayoutY() + EditorConstants.PLAN_SHIFTING_PARAMETER + EditorConstants.SECTION_MARGIN);
+                    e.setLayoutX(e.getLayoutX() + EditorConstants.PLAN_SHIFTING_PARAMETER + EditorConstants.SECTION_MARGIN);
                 });
         this.setOnMouseClicked(new MouseClickHandler(transitionContainers));
+        getChildren().add(new Line(EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, 0d, EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, getHeight()));
     }
 
     public CommandStack getCommandStack() {
