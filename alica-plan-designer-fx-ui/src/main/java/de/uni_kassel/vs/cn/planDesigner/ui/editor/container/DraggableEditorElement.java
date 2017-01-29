@@ -17,6 +17,10 @@ public interface DraggableEditorElement {
 
     Command createMoveElementCommand();
 
+    void setDragged(boolean dragged);
+
+    boolean wasDragged();
+
     default Node createWrapper(Node node) {
         return new Group(node);
     }
@@ -26,16 +30,17 @@ public interface DraggableEditorElement {
         final DragContext dragContext = new DragContext();
         final Node wrapGroup = createWrapper(node);
 
-        wrapGroup.addEventFilter(
+        wrapGroup.addEventHandler(
                 MouseEvent.ANY,
                 mouseEvent -> {
                     // disable mouse events for all children
                     mouseEvent.consume();
                 });
 
-        wrapGroup.addEventFilter(
+        wrapGroup.addEventHandler(
                 MouseEvent.MOUSE_PRESSED,
                 mouseEvent -> {
+                    setDragged(false);
                     // remember initial mouse cursor coordinates
                     // and node position
                     dragContext.mouseAnchorX = mouseEvent.getX();
@@ -44,20 +49,23 @@ public interface DraggableEditorElement {
                     dragContext.initialTranslateY = node.getTranslateY();
                 });
 
-        wrapGroup.addEventFilter(
+        wrapGroup.addEventHandler(
                 MouseEvent.MOUSE_DRAGGED,
                 mouseEvent -> {
                     // shift node from its initial position by delta
                     // calculated from mouse cursor movement
+                    setDragged(true);
                     node.setTranslateX(dragContext.initialTranslateX + mouseEvent.getX() - dragContext.mouseAnchorX);
                     node.setTranslateY(dragContext.initialTranslateY + mouseEvent.getY() - dragContext.mouseAnchorY);
                 });
 
-        wrapGroup.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+        wrapGroup.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
             // save final position in actual bendpoint
-            getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
-            event.consume();
-            redrawElement();
+            if (wasDragged()) {
+                getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
+                event.consume();
+                redrawElement();
+            }
         });
 
         return wrapGroup;

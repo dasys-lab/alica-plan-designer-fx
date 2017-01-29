@@ -47,8 +47,6 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
         int toY = toState.getPmlUiExtension().getYPos();
         int fromX = fromState.getPmlUiExtension().getXPos();
         int shifting = PLAN_SHIFTING_PARAMETER + SECTION_MARGIN;
-        double centerMarginX = fromState.getVisualRepresentation().getLayoutBounds().getWidth()/3;
-        double centerMarginY = fromState.getVisualRepresentation().getLayoutBounds().getWidth()/4;
 
         Polygon polygon = null;
         double _toX = toX + shifting;
@@ -110,7 +108,6 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
                     _toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
                     _toX, _toY,
                     _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
-            //polygon = new Polygon(toX + shifting + xEnd - 20, toY + shifting + yEnd, toX + shifting + xEnd, toY + shifting + yEnd, toX + shifting + xEnd, toY + shifting + yEnd + 20);
         }
 
         polygon.setFill(Color.RED);

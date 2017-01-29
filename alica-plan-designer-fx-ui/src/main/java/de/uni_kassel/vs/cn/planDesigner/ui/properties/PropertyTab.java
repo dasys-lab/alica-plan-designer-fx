@@ -2,6 +2,9 @@ package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTab;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -15,11 +18,20 @@ import java.util.ArrayList;
 public class PropertyTab extends Tab {
 
     private PlanElement selectedPlanElement;
+    private EditorTab<PlanElement> activeEditorTab;
 
-    public PropertyTab(PlanElement selectedPlanElement) {
-        this.selectedPlanElement = selectedPlanElement;
+    public PropertyTab(EditorTab<PlanElement> activeEditorTab) {
+        this.activeEditorTab = activeEditorTab;
+        this.selectedPlanElement = activeEditorTab.getSelectedPlanElement().getValue();
         setText("Properties");
+        activeEditorTab.getSelectedPlanElement().addListener((observable, oldValue, newValue) -> {
+            selectedPlanElement = newValue;
+            createTabContent();
+        });
+        createTabContent();
+    }
 
+    private void createTabContent() {
         ObservableList<PropertyHBox<PlanElement>> propertyHBoxList = getStandardPropertyHBoxes(selectedPlanElement);
 
         if (selectedPlanElement instanceof Plan) {

@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Tab;
 
 import java.nio.file.Path;
@@ -12,13 +13,13 @@ public abstract class EditorTab<T extends PlanElement> extends Tab {
 
     private T editable;
     private Path filePath;
-    private PlanElement selectedPlanElement;
+    protected SimpleObjectProperty<PlanElement> selectedPlanElement;
 
     public EditorTab(T editable, Path filePath) {
         super(filePath.getFileName().toString());
         this.editable = editable;
         this.filePath = filePath;
-        selectedPlanElement = editable;
+        selectedPlanElement = new SimpleObjectProperty<>(editable);
     }
 
     public Path getFilePath() {
@@ -31,7 +32,7 @@ public abstract class EditorTab<T extends PlanElement> extends Tab {
         return editable;
     }
 
-    public PlanElement getSelectedPlanElement() {
+    public SimpleObjectProperty<PlanElement> getSelectedPlanElement() {
         return selectedPlanElement;
     }
 }

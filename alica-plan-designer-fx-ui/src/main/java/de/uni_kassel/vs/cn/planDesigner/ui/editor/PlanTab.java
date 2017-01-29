@@ -36,7 +36,7 @@ public class PlanTab extends EditorTab<Plan> {
             // TODO create message window if file could not be opened
             e.printStackTrace();
         }
-        planContent = new PlanEditorPane(new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap));
+        planContent = new PlanEditorPane(new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap), this);
         planContent.setManaged(true);
         pldToolBar = new PLDToolBar(planContent);
         ScrollPane scrollPane = new ScrollPane(planContent);

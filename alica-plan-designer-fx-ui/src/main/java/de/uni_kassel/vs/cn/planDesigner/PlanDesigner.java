@@ -22,7 +22,6 @@ public class PlanDesigner extends Application {
     private MainController mainController;
     public static final AllAlicaFiles allAlicaFiles = new AllAlicaFiles();
 
-    @SuppressWarnings("unused")
     public static void main(String[] args) throws IOException, URISyntaxException {
         EMFModelUtils.initializeEMF();
         allAlicaFiles.init();

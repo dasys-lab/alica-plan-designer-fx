@@ -22,6 +22,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     private PmlUiExtension pmlUiExtension;
     private CommandStack commandStack;
     private Group wrapGroup;
+    private boolean dragged;
 
     public BendpointContainer(Bendpoint containedElement, PmlUiExtension pmlUiExtension, CommandStack commandStack) {
         super(containedElement.getXPos() + SHIFTING_CONSTANT,
@@ -55,6 +56,16 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     public Command createMoveElementCommand() {
         return new ChangePositionForBendpoint(containedElement, (int) (getX() + getTranslateX() - SHIFTING_CONSTANT),
                 (int) (getY() + getTranslateY() - SHIFTING_CONSTANT));
+    }
+
+    @Override
+    public void setDragged(boolean dragged) {
+        this.dragged = dragged;
+    }
+
+    @Override
+    public boolean wasDragged() {
+        return dragged;
     }
 
     public Group getWrapGroup() {

@@ -16,7 +16,7 @@ public class PropertyTabPane extends TabPane {
         editorTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             activeEditorTab = (EditorTab<PlanElement>) newValue;
             getTabs().clear();
-            getTabs().add(new PropertyTab(activeEditorTab.getSelectedPlanElement()));
+            getTabs().add(new PropertyTab(activeEditorTab));
         });
     }
 }

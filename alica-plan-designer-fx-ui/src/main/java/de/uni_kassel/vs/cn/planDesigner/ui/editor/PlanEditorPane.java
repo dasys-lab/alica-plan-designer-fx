@@ -2,9 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
@@ -28,10 +26,12 @@ public class PlanEditorPane extends AnchorPane {
     private List<TransitionContainer> transitionContainers;
     private List<EntryPointContainer> entryPointContainers;
     private CommandStack commandStack;
+    private EditorTab<Plan> planEditorTab;
 
-    public PlanEditorPane(PlanModelVisualisationObject planModelVisualisationObject) {
+    public PlanEditorPane(PlanModelVisualisationObject planModelVisualisationObject, EditorTab<Plan> planEditorTab) {
         super();
         this.planModelVisualisationObject = planModelVisualisationObject;
+        this.planEditorTab = planEditorTab;
         commandStack = new CommandStack();
         visualize();
     }
@@ -66,6 +66,10 @@ public class PlanEditorPane extends AnchorPane {
 
     public List<StateContainer> getStateContainers() {
         return stateContainers;
+    }
+
+    public EditorTab<Plan> getPlanEditorTab() {
+        return planEditorTab;
     }
 
     private List<EntryPointContainer> createEntryPointContainers() {
