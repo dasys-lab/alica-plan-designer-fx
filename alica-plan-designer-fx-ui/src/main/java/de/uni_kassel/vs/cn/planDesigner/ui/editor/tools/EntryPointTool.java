@@ -2,8 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanTab;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.scene.control.TabPane;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +16,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
  * Created by marci on 05.01.17.
  */
 public class EntryPointTool extends Tool<EntryPoint> {
-    public EntryPointTool(PlanEditorPane workbench) {
+    public EntryPointTool(TabPane workbench) {
         super(workbench);
     }
 

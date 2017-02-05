@@ -1,8 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.PLDToolBar;
 import javafx.geometry.Insets;
@@ -21,12 +23,12 @@ public class PlanTab extends EditorTab<Plan> {
 
     private final HBox planVisualization;
     private final PLDToolBar pldToolBar;
-    private final PlanEditorPane planContent;
+    private final PlanEditorPane planEditorPane;
     private PmlUiExtensionMap pmlUiExtensionMap;
     private final String uiExtensionMapPath;
 
-    public PlanTab(Plan editable, Path filePath) {
-        super(editable, filePath);
+    public PlanTab(Plan editable, Path filePath, CommandStack commandStack) {
+        super(editable, filePath, commandStack);
         String absolutePath = filePath.toString();
         uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
 
@@ -36,9 +38,15 @@ public class PlanTab extends EditorTab<Plan> {
             // TODO create message window if file could not be opened
             e.printStackTrace();
         }
-        planContent = new PlanEditorPane(new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap), this);
+        planEditorPane = new PlanEditorPane(new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap), this);
+
+        StackPane planContent = new StackPane(planEditorPane);
+        planContent.setPadding(new Insets(50, 50, 50, 50));
         planContent.setManaged(true);
-        pldToolBar = new PLDToolBar(planContent);
+
+        planEditorPane.setManaged(true);
+
+        pldToolBar = new PLDToolBar(MainController.getInstance().getEditorTabPane());
         ScrollPane scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);
@@ -47,6 +55,10 @@ public class PlanTab extends EditorTab<Plan> {
         planVisualization = hBox;
         planVisualization.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         setContent(planVisualization);
+    }
+
+    public PlanEditorPane getPlanEditorPane() {
+        return planEditorPane;
     }
 
     @Override

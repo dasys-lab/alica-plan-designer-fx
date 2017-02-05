@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
+import javafx.beans.InvalidationListener;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -14,8 +15,6 @@ import javafx.scene.shape.Polyline;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorConstants.PLAN_SHIFTING_PARAMETER;
-import static de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorConstants.SECTION_MARGIN;
 
 /**
  * Created by marci on 03.12.16.
@@ -31,33 +30,30 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
         super(transition, pmlUiExtension, commandStack);
         this.fromState = fromState;
         this.toState = toState;
+        InvalidationListener invalidationListener = observable -> setupContainer();
+        fromState.addListener(invalidationListener);
+        toState.addListener(invalidationListener);
         draggableNodes = new ArrayList<>();
         potentialDraggableNodes = new ArrayList<>();
-        draw();
-
+        setupContainer();
     }
 
     @Override
-    public void draw() {
+    public void setupContainer() {
         getChildren().clear();
         draggableNodes.clear();
         potentialDraggableNodes.clear();
-        int fromY = fromState.getPmlUiExtension().getYPos();
-        int toX = toState.getPmlUiExtension().getXPos();
-        int toY = toState.getPmlUiExtension().getYPos();
-        int fromX = fromState.getPmlUiExtension().getXPos();
-        int shifting = PLAN_SHIFTING_PARAMETER + SECTION_MARGIN;
 
         Polygon polygon = null;
-        double _toX = toX + shifting;
-        double _toY = toY + shifting;
-        double _fromX = fromX + shifting;
-        double _fromY = fromY + shifting;
+        double _toX = toState.getLayoutX() + toState.getTranslateX();
+        double _toY = toState.getLayoutY() + toState.getTranslateY();
+        double _fromX = fromState.getLayoutX() + fromState.getTranslateX();
+        double _fromY = fromState.getLayoutY() + fromState.getTranslateY();
 
         double vecX = _toX - _fromX;
         double vecY = _toY - _fromY;
         double vecLen = Math.sqrt(vecX*vecX + vecY*vecY);
-        _toX = _toX - StateContainer.STATE_RADIUS*1.1*(vecX/vecLen);
+        _toX = _toX - StateContainer.STATE_RADIUS*(vecX/vecLen);
         _toY = _toY - StateContainer.STATE_RADIUS*(vecY/vecLen);
         vecX = _toX - _fromX;
         vecY = _toY - _fromY;
@@ -83,13 +79,13 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
 
             for (int i = 0, j = 2; i < points.length / 2 - 2; i++, j += 2) {
                 Bendpoint currentBendpoint = getPmlUiExtension().getBendpoints().get(i);
-                points[j] = currentBendpoint.getXPos() + shifting;
-                points[j + 1] = currentBendpoint.getYPos() + shifting;
+                points[j] = currentBendpoint.getXPos();
+                points[j + 1] = currentBendpoint.getYPos();
                 BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getPmlUiExtension(), commandStack);
                 bendpointContainer.getWrapGroup().setVisible(false);
                 draggableNodes.add(bendpointContainer.getWrapGroup());
-                _fromX = points[j] + shifting;
-                _fromY = points[j+1] + shifting;
+                _fromX = points[j];
+                _fromY = points[j+1];
                 vecX = _toX - _fromX;
                 vecY = _toY - _fromY;
                 vecLen = Math.sqrt(vecX*vecX + vecY*vecY);

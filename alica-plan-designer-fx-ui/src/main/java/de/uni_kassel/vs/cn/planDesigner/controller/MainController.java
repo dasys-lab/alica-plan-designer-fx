@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.ui.PLDFileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane;
@@ -28,19 +29,12 @@ public class MainController implements Initializable {
     private PropertyTabPane propertyAndStatusTabPane;
 
     @FXML
-    private ScrollPane leftScrollPane;
-
-    @FXML
-    private AnchorPane leftAnchor;
-
-    @FXML
-    private AnchorPane leftOuterAnchor;
-
-    @FXML
     RepositoryTabPane repositoryTabPane;
 
     @FXML
     private EditorTabPane editorTabPane;
+
+    private CommandStack commandStack = new CommandStack();
 
     public MainController() {
         super();
@@ -53,6 +47,7 @@ public class MainController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.setController(this);
+        editorTabPane.setCommandStack(commandStack);
         editorTabPane.getTabs().clear();
         repositoryTabPane.init();
         propertyAndStatusTabPane.init(editorTabPane);
@@ -69,5 +64,13 @@ public class MainController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public CommandStack getCommandStack() {
+        return commandStack;
+    }
+
+    public EditorTabPane getEditorTabPane() {
+        return editorTabPane;
     }
 }

@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -13,6 +14,8 @@ import java.nio.file.Path;
  * Created by marci on 18.11.16.
  */
 public class EditorTabPane extends TabPane {
+
+    private CommandStack commandStack;
 
     public void openTab(Path filePath) throws IOException {
         Tab tab = getTabs()
@@ -38,7 +41,10 @@ public class EditorTabPane extends TabPane {
                 .filter(e -> e.getValue().equals(filePath))
                 .findFirst()
                 .orElse(null);
-        return new PlanTab(planPathPair.getKey(), planPathPair.getValue());
+        return new PlanTab(planPathPair.getKey(), planPathPair.getValue(), commandStack);
     }
 
+    public void setCommandStack(CommandStack commandStack) {
+        this.commandStack = commandStack;
+    }
 }

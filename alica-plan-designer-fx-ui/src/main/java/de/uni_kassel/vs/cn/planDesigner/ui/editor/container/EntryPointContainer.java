@@ -4,9 +4,14 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
+import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorConstants;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -17,39 +22,38 @@ import javafx.scene.text.Text;
 /**
  *
  */
-public class EntryPointContainer extends PlanElementContainer<EntryPoint> implements DraggableEditorElement {
+public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
 
-    private PmlUiExtension pmlUiExtensionOfReferencedState;
+    private StateContainer stateContainer;
     private boolean dragged;
 
     public EntryPointContainer(EntryPoint containedElement, PmlUiExtension pmlUiExtension,
-                               PmlUiExtension pmlUiExtensionOfReferencedState, CommandStack commandStack) {
+                               StateContainer stateContainer, CommandStack commandStack) {
         super(containedElement, pmlUiExtension, commandStack);
-        this.pmlUiExtensionOfReferencedState = pmlUiExtensionOfReferencedState;
-        draw();
+        this.stateContainer = stateContainer;
+        stateContainer.addListener(observable -> setupContainer());
+        makeDraggable(this);
+        setupContainer();
     }
 
     @Override
-    public void draw() {
+    public void setupContainer() {
         getChildren().clear();
-        visualRepresentation = new Circle(EditorConstants.PLAN_SHIFTING_PARAMETER, getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER, 20, Color.BLUE);
-        Line line = new Line(EditorConstants.PLAN_SHIFTING_PARAMETER,
-                getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER,
-                pmlUiExtensionOfReferencedState.getXPos() + EditorConstants.PLAN_SHIFTING_PARAMETER + EditorConstants.SECTION_MARGIN,
-                pmlUiExtensionOfReferencedState.getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER + EditorConstants.SECTION_MARGIN);
+        visualRepresentation = new Circle(getPmlUiExtension().getXPos(), getPmlUiExtension().getYPos(), StateContainer.STATE_RADIUS, Color.BLUE);
+        Line line = new Line(getPmlUiExtension().getXPos(),
+                getPmlUiExtension().getYPos(),
+                stateContainer.getLayoutX(),
+                stateContainer.getLayoutY());
         line.getStrokeDashArray().addAll(2d, 10d);
         getChildren().add(line);
         getChildren().add(visualRepresentation);
-        getChildren().add(new Text(EditorConstants.PLAN_SHIFTING_PARAMETER, getPmlUiExtension().getYPos() + EditorConstants.PLAN_SHIFTING_PARAMETER,
+        getChildren().add(new Text(getPmlUiExtension().getXPos()- StateContainer.STATE_RADIUS, getPmlUiExtension().getYPos() - StateContainer.STATE_RADIUS,
                 getContainedElement().getTask().getName()));
-        makeDraggable(this);
     }
 
-
-
     @Override
-    public Node createWrapper(Node node) {
-        return this;
+    protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPoint containedElement) {
+        return event -> ((PlanEditorPane) getParent().getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(containedElement);
     }
 
     @Override
@@ -59,14 +63,14 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> implem
 
     @Override
     public void redrawElement() {
-        ((PlanEditorPane) getParent()).visualize();
+        setupContainer();
     }
 
     @Override
     public Command createMoveElementCommand() {
         return new ChangePosition(getPmlUiExtension(), getContainedElement(),
-                (int) (getLayoutX() + getTranslateX() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN),
-                (int) (getLayoutY() + getTranslateY() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN));
+                (int) (getLayoutX()),
+                (int) (getLayoutY()));
     }
 
     @Override
@@ -98,8 +102,8 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> implem
                     // and node position
                     dragContext.mouseAnchorX = mouseEvent.getX();
                     dragContext.mouseAnchorY = mouseEvent.getY();
-                    dragContext.initialTranslateX = node.getTranslateX();
-                    dragContext.initialTranslateY = node.getTranslateY();
+                    dragContext.initialLayoutX = node.getTranslateX();
+                    dragContext.initialLayoutY = node.getTranslateY();
                 });
 
         wrapGroup.addEventFilter(
@@ -107,8 +111,8 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> implem
                 mouseEvent -> {
                     // shift node from its initial position by delta
                     // calculated from mouse cursor movement
-                    node.setTranslateX(dragContext.initialTranslateX + mouseEvent.getX() - dragContext.mouseAnchorX);
-                    node.setTranslateY(dragContext.initialTranslateY + mouseEvent.getY() - dragContext.mouseAnchorY);
+                    node.setTranslateX(dragContext.initialLayoutX + mouseEvent.getX() - dragContext.mouseAnchorX);
+                    node.setTranslateY(dragContext.initialLayoutY + mouseEvent.getY() - dragContext.mouseAnchorY);
                 });
 
         wrapGroup.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {

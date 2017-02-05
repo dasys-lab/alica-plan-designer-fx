@@ -1,16 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPlan;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelFactory;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorConstants;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanTab;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -29,7 +27,7 @@ public class StateTool extends Tool<State> {
     private Node visualRepresentation;
     private boolean initial = true;
 
-    public StateTool(PlanEditorPane workbench) {
+    public StateTool(TabPane workbench) {
         super(workbench);
     }
 
@@ -40,7 +38,7 @@ public class StateTool extends Tool<State> {
 
     @Override
     public void draw() {
-        workbench.visualize();
+        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
     }
 
     @Override
@@ -59,6 +57,7 @@ public class StateTool extends Tool<State> {
                         visualRepresentation.setTranslateX(event.getX());
                         visualRepresentation.setTranslateY(event.getY());
                     }
+                    System.out.println("X: " + event.getX() + " Y: " + event.getY());
                     event.consume();
                 }
             });
@@ -67,7 +66,7 @@ public class StateTool extends Tool<State> {
                 public void handle(MouseDragEvent event) {
                     if (event.getGestureSource() != workbench && visualRepresentation == null) {
                         visualRepresentation = new Circle(event.getX(),event.getY(), 10, Color.YELLOW);
-                        workbench.getChildren().add(visualRepresentation);
+                        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().add(visualRepresentation);
                     }
                     event.consume();
                 }
@@ -76,7 +75,7 @@ public class StateTool extends Tool<State> {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
-                    workbench.getChildren().remove(visualRepresentation);
+                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
                     visualRepresentation = null;
                 }
             });
@@ -85,16 +84,16 @@ public class StateTool extends Tool<State> {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
-                    workbench.getChildren().remove(visualRepresentation);
-                    AddStateInPlan command = new AddStateInPlan(workbench.getPlanModelVisualisationObject());
-                    workbench
+                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
+                    AddStateInPlan command = new AddStateInPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject());
+                    MainController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
-                    workbench
+                    MainController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(),command.getElementToEdit(),
-                                    (int) (event.getX() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN),
-                                    (int) (event.getY() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN)));
+                                    (int) (event.getX()),
+                                    (int) (event.getY())));
                     endPhase();
                     initial = true;
                 }

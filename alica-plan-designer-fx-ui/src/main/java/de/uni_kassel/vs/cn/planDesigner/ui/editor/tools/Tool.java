@@ -2,8 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanTab;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.scene.control.TabPane;
 
 import java.util.Map;
 
@@ -18,9 +20,9 @@ import java.util.Map;
  */
 public abstract class Tool<T extends PlanElement> {
 
-    protected PlanEditorPane workbench;
+    protected TabPane workbench;
 
-    public Tool(PlanEditorPane workbench) {
+    public Tool(TabPane workbench) {
         this.workbench = workbench;
     }
 

@@ -1,14 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanTab;
 import javafx.geometry.Orientation;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
 
 /**
  * {@link PLDToolBar} is the toolbar on the side of the editor to add states, transitions and various other tools
  */
 public class PLDToolBar extends ToolBar {
-    public PLDToolBar(PlanEditorPane workbench) {
+    public PLDToolBar(TabPane workbench) {
         super();
         setOrientation(Orientation.VERTICAL);
         getItems().add(new StateTool(workbench).createToolUI());

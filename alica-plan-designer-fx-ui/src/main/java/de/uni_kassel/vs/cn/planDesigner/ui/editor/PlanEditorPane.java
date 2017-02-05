@@ -6,7 +6,9 @@ import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.SuccessStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
+import javafx.scene.Group;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 import org.eclipse.emf.ecore.EObject;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Created by marci on 23.11.16.
  */
-public class PlanEditorPane extends AnchorPane {
+public class PlanEditorPane extends Group {
 
     private PlanModelVisualisationObject planModelVisualisationObject;
     private List<StateContainer> stateContainers;
@@ -32,11 +34,12 @@ public class PlanEditorPane extends AnchorPane {
         super();
         this.planModelVisualisationObject = planModelVisualisationObject;
         this.planEditorTab = planEditorTab;
-        commandStack = new CommandStack();
-        visualize();
+        commandStack = planEditorTab.getCommandStack();
+        setMouseTransparent(false);
+        setupPlanVisualisation();
     }
 
-    public void visualize() {
+    public void setupPlanVisualisation() {
         getChildren().clear();
         stateContainers = createStateContainers();
         transitionContainers = createTransitionContainers();
@@ -45,15 +48,9 @@ public class PlanEditorPane extends AnchorPane {
         getChildren().addAll(transitionContainers);
         getChildren().addAll(stateContainers);
         getChildren().addAll(entryPointContainers);
-        getChildren()
-                .stream()
-                .filter(e -> e instanceof StateContainer)
-                .forEach(e -> {
-                    e.setLayoutY(e.getLayoutY() + EditorConstants.PLAN_SHIFTING_PARAMETER + EditorConstants.SECTION_MARGIN);
-                    e.setLayoutX(e.getLayoutX() + EditorConstants.PLAN_SHIFTING_PARAMETER + EditorConstants.SECTION_MARGIN);
-                });
+
         this.setOnMouseClicked(new MouseClickHandler(transitionContainers));
-        getChildren().add(new Line(EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, 0d, EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, getHeight()));
+        //getChildren().add(new Line(EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, 0d, EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, getHeight()));
     }
 
     public CommandStack getCommandStack() {
@@ -87,13 +84,12 @@ public class PlanEditorPane extends AnchorPane {
                             break;
                         }
                     }
-                    PmlUiExtension uiExtensionOfRefState = stateContainers
+                    StateContainer stateContainer = stateContainers
                             .stream()
                             .filter(s -> s.getContainedElement().getId() == e.getState().getId())
                             .findFirst()
-                            .orElse(null)
-                            .getPmlUiExtension();
-                    return new EntryPointContainer(e, pmlUiExtension, uiExtensionOfRefState, commandStack);
+                            .orElse(null);
+                    return new EntryPointContainer(e, pmlUiExtension, stateContainer, commandStack);
                 }).collect(Collectors.toList());
     }
 
@@ -133,7 +129,11 @@ public class PlanEditorPane extends AnchorPane {
                             break;
                         }
                     }
-                    return new StateContainer(pmlUiExtension, e, commandStack);
+                    if (e instanceof SuccessState) {
+                        return new SuccessStateContainer(pmlUiExtension, e, commandStack);
+                    } else {
+                        return new StateContainer(pmlUiExtension, e, commandStack);
+                    }
                 })
                 .collect(Collectors.toList());
     }

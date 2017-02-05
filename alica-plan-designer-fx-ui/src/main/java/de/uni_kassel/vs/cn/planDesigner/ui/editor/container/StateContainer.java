@@ -4,47 +4,59 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.SuccessState;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorConstants;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
-import javafx.scene.Node;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by marci on 02.12.16.
  */
-public class StateContainer extends PlanElementContainer<State> implements DraggableEditorElement {
+public class StateContainer extends PlanElementContainer<State> implements Observable {
 
     public static final double STATE_RADIUS = 20.0;
     private boolean dragged;
+    private List<InvalidationListener> invalidationListeners;
 
     public StateContainer(PmlUiExtension pmlUiExtension, State state, CommandStack commandStack) {
         super(state, pmlUiExtension, commandStack);
-        draw();
+        invalidationListeners = new ArrayList<>();
+        makeDraggable(this);
+        //setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
+        setupContainer();
     }
 
     @Override
-    public void draw() {
+    public void setupContainer() {
         getChildren().clear();
-        visualRepresentation = new Circle(20, Color.YELLOW);
+        setLayoutX(getPmlUiExtension().getXPos());
+        setLayoutY(getPmlUiExtension().getYPos());
+        visualRepresentation = new Circle(STATE_RADIUS, getStateColor());
         getChildren().add(visualRepresentation);
         getChildren().add(new Text(getContainedElement().getName()));
-        setLayoutX(getPmlUiExtension().getXPos() * 1);
-        setLayoutY(getPmlUiExtension().getYPos() * 1);
+
         // TODO fix slow dragging
-        if(getContainedElement() instanceof SuccessState) {
-            visualRepresentation.setFill(Color.GREEN);
-        } else {
-            makeDraggable(this);
-        }
+    }
+
+    protected Color getStateColor() {
+        return Color.YELLOW;
     }
 
     @Override
-    public Node createWrapper(Node node) {
-        return this;
+    protected EventHandler<MouseEvent> getMouseClickedEventHandler(State containedElement) {
+        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(containedElement);
     }
 
     @Override
@@ -54,14 +66,16 @@ public class StateContainer extends PlanElementContainer<State> implements Dragg
 
     @Override
     public void redrawElement() {
-        ((PlanEditorPane) getParent()).visualize();
+        //((PlanEditorPane) getParent()).setupPlanVisualisation();
+        setupContainer();
+        invalidationListeners.forEach(listener -> listener.invalidated(this));
     }
 
     @Override
     public Command createMoveElementCommand() {
         return new ChangePosition(getPmlUiExtension(), getContainedElement(),
-                (int) (getLayoutX() + getTranslateX() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN),
-                (int) (getLayoutY() + getTranslateY() - EditorConstants.PLAN_SHIFTING_PARAMETER - EditorConstants.SECTION_MARGIN));
+                (int) (getLayoutX()),
+                (int) (getLayoutY()));
     }
 
     @Override
@@ -72,5 +86,15 @@ public class StateContainer extends PlanElementContainer<State> implements Dragg
     @Override
     public boolean wasDragged() {
         return dragged;
+    }
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+        invalidationListeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+        invalidationListeners.remove(listener);
     }
 }
