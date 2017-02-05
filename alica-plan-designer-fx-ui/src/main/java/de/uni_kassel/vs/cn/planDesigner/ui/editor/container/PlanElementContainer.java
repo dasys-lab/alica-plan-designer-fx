@@ -46,7 +46,7 @@ public abstract class PlanElementContainer<T extends PlanElement> extends Pane i
     }
 
     @Override
-    public Node makeDraggable(Node node) {
+    public void makeDraggable(Node node) {
         final DragContext dragContext = new DragContext();
 
         node.addEventHandler(
@@ -98,8 +98,6 @@ public abstract class PlanElementContainer<T extends PlanElement> extends Pane i
                 redrawElement();
             }
         });
-
-        return node;
     }
 
     /**

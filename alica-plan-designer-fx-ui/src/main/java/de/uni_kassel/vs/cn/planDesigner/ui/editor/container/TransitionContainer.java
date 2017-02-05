@@ -82,8 +82,8 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
                 points[j] = currentBendpoint.getXPos();
                 points[j + 1] = currentBendpoint.getYPos();
                 BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getPmlUiExtension(), commandStack);
-                bendpointContainer.getWrapGroup().setVisible(false);
-                draggableNodes.add(bendpointContainer.getWrapGroup());
+                bendpointContainer.setVisible(false);
+                draggableNodes.add(bendpointContainer);
                 _fromX = points[j];
                 _fromY = points[j+1];
                 vecX = _toX - _fromX;

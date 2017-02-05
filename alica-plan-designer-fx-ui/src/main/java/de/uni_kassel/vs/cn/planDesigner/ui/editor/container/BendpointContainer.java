@@ -21,7 +21,6 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     private Bendpoint containedElement;
     private PmlUiExtension pmlUiExtension;
     private CommandStack commandStack;
-    private Node wrapGroup;
     private boolean dragged;
 
     public BendpointContainer(Bendpoint containedElement, PmlUiExtension pmlUiExtension, CommandStack commandStack) {
@@ -32,7 +31,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
         this.pmlUiExtension = pmlUiExtension;
         this.commandStack = commandStack;
         setFill(Color.BLACK);
-        this.wrapGroup = makeDraggable(this);
+        makeDraggable(this);
     }
 
 //    @Override
@@ -89,7 +88,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
 //    }
 
     @Override
-    public Node makeDraggable(Node node) {
+    public void makeDraggable(Node node) {
         final DragContext dragContext = new DragContext();
 
         node.addEventHandler(
@@ -141,8 +140,6 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
                 redrawElement();
             }
         });
-
-        return node;
     }
 
     public Bendpoint getContainedElement() {
@@ -177,9 +174,5 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     @Override
     public boolean wasDragged() {
         return dragged;
-    }
-
-    public Node getWrapGroup() {
-        return wrapGroup;
     }
 }

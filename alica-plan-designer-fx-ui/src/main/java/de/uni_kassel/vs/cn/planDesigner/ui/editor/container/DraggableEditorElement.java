@@ -22,7 +22,7 @@ public interface DraggableEditorElement {
     boolean wasDragged();
 
 
-    Node makeDraggable(Node node);
+    void makeDraggable(Node node);
 
     final class DragContext {
         public double mouseAnchorX;
