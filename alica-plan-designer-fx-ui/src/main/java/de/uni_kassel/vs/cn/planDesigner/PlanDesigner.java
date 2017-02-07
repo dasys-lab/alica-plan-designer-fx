@@ -35,7 +35,10 @@ public class PlanDesigner extends Application {
         Parent root = fxmlLoader.load();
         mainController = fxmlLoader.getController();
         primaryStage.setTitle("Carpe Noctem Plan Designer");
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        String cssPath = PlanDesigner.class.getResource("/styles.css").toExternalForm();
+        scene.getStylesheets().add(cssPath);
+        primaryStage.setScene(scene);
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();

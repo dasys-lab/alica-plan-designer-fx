@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExten
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
