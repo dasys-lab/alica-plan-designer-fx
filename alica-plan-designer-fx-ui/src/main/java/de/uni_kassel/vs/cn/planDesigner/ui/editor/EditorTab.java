@@ -2,8 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.PlanElementContainer;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Tab;
+import javafx.util.Pair;
 
 import java.nio.file.Path;
 
@@ -15,13 +17,13 @@ public abstract class EditorTab<T extends PlanElement> extends Tab {
     private T editable;
     private Path filePath;
     private CommandStack commandStack;
-    protected SimpleObjectProperty<PlanElement> selectedPlanElement;
+    protected SimpleObjectProperty<Pair<PlanElement, PlanElementContainer>> selectedPlanElement;
 
     public EditorTab(T editable, Path filePath, CommandStack commandStack) {
         super(filePath.getFileName().toString());
         this.editable = editable;
         this.filePath = filePath;
-        selectedPlanElement = new SimpleObjectProperty<>(editable);
+        selectedPlanElement = new SimpleObjectProperty<>(new Pair<>(editable, null));
         this.commandStack = commandStack;
     }
 
@@ -35,7 +37,7 @@ public abstract class EditorTab<T extends PlanElement> extends Tab {
         return editable;
     }
 
-    public SimpleObjectProperty<PlanElement> getSelectedPlanElement() {
+    public SimpleObjectProperty<Pair<PlanElement, PlanElementContainer>> getSelectedPlanElement() {
         return selectedPlanElement;
     }
 

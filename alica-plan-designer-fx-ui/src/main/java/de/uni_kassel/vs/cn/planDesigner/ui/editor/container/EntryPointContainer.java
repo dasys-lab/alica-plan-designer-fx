@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 
 /**
  *
@@ -47,7 +48,7 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
 
     @Override
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPoint containedElement) {
-        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(containedElement);
+        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(new Pair<>(containedElement, null));
     }
 
     @Override

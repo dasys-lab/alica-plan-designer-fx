@@ -21,10 +21,10 @@ public class PropertyTab extends Tab {
 
     public PropertyTab(EditorTab<PlanElement> activeEditorTab) {
         this.activeEditorTab = activeEditorTab;
-        this.selectedPlanElement = activeEditorTab.getSelectedPlanElement().getValue();
+        this.selectedPlanElement = activeEditorTab.getSelectedPlanElement().getValue().getKey();
         setText("Properties");
         activeEditorTab.getSelectedPlanElement().addListener((observable, oldValue, newValue) -> {
-            selectedPlanElement = newValue;
+            selectedPlanElement = newValue.getKey();
             createTabContent();
         });
         createTabContent();

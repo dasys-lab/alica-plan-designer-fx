@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
+import javafx.util.Pair;
 
 /**
  * The {@link PlanElementContainer} is a base class for visual representations, with a model object to hold changes from the visualisation
@@ -41,7 +42,7 @@ public abstract class PlanElementContainer<T extends PlanElement> extends Pane i
     }
 
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(T containedElement) {
-        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(containedElement);
+        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(new Pair<>(containedElement, this));
     }
 
     @Override

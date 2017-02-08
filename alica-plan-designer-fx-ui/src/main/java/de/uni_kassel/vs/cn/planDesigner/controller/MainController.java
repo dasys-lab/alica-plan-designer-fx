@@ -1,13 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteAbstractPlansFromState;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteEntryPointInPlan;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteStateInPlan;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteTransitionInPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
@@ -87,7 +85,7 @@ public class MainController implements Initializable {
         MenuItem deleteElementItem = new MenuItem(I18NRepo.getInstance().getString("label.menu.edit.delete"));
         deleteElementItem.setOnAction(event -> {
             PlanTab planTab = (PlanTab) editorTabPane.getSelectionModel().getSelectedItem();
-            PlanElement selectedPlanElement = planTab.getSelectedPlanElement().getValue();
+            PlanElement selectedPlanElement = planTab.getSelectedPlanElement().getValue().getKey();
             if(selectedPlanElement != null) {
                 if(selectedPlanElement instanceof StateImpl) {
                     commandStack.storeAndExecute(new DeleteStateInPlan((State) selectedPlanElement,
@@ -98,10 +96,13 @@ public class MainController implements Initializable {
                 } else if (selectedPlanElement instanceof EntryPointImpl) {
                     commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
                             planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
+                } else if (planTab.getSelectedPlanElement().getValue().getValue() != null) {
+                    State state = (State) planTab.getSelectedPlanElement().getValue().getValue().getContainedElement();
+                    commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
                 }
                 planTab.getPlanEditorPane().setupPlanVisualisation();
                     //selectedPlanElement
-                    //commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, ((AbstractPlan) selectedPlanElement));
+                    //
 
                 //commandStack.storeAndExecute();
             }

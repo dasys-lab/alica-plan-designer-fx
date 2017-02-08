@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +117,7 @@ public class StateContainer extends PlanElementContainer<State> implements Obser
             setLayoutY(getContainedElement().getPlans().indexOf(p)*20);
             setPickOnBounds(false);
             addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorPane) getParent().getParent())
-                    .getPlanEditorTab().getSelectedPlanElement().setValue(abstractPlan));
+                    .getPlanEditorTab().getSelectedPlanElement().setValue(new Pair<>(abstractPlan, StateContainer.this)));
         }
     }
 
