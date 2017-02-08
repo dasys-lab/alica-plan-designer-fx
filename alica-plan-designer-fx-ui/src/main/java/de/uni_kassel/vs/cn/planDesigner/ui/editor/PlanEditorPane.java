@@ -9,8 +9,6 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.SuccessStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import javafx.scene.Group;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Line;
 import org.eclipse.emf.ecore.EObject;
 
 import java.util.ArrayList;

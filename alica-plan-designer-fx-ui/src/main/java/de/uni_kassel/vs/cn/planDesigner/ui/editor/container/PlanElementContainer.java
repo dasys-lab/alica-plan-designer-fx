@@ -6,8 +6,6 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -38,7 +36,7 @@ public abstract class PlanElementContainer<T extends PlanElement> extends Pane i
         this.commandStack = commandStack;
         setBackground(Background.EMPTY);
         setPickOnBounds(false);
-        addEventHandler(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(containedElement));
+        addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(containedElement));
         wrapper = this;
     }
 

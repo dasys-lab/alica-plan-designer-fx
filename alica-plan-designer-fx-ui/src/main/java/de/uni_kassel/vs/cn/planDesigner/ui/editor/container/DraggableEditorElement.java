@@ -2,9 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 
 /**
  * This interface defines functions for draggable editor elements.

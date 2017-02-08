@@ -3,18 +3,15 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
+import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
-import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -57,10 +54,7 @@ public class StateContainer extends PlanElementContainer<State> implements Obser
                 .getPlans()
                 .stream()
                 .map(p -> {
-                    ImageView imageView = new ImageView(new AlicaIcon(p.getClass()));
-                    HBox hBox = new HBox(imageView, new Text(p.getName()));
-                    hBox.setLayoutY(getContainedElement().getPlans().indexOf(p)*20);
-                    hBox.setPickOnBounds(false);
+                    HBox hBox = new AbstractPlanHBox(p);
                     return hBox;
                 })
                 .collect(Collectors.toList());
@@ -109,4 +103,21 @@ public class StateContainer extends PlanElementContainer<State> implements Obser
     public void removeListener(InvalidationListener listener) {
         invalidationListeners.remove(listener);
     }
+
+    private class AbstractPlanHBox extends HBox {
+        private AbstractPlan abstractPlan;
+
+        public AbstractPlanHBox(AbstractPlan p) {
+            super();
+            this.abstractPlan = p;
+            ImageView imageView = new ImageView(new AlicaIcon(p.getClass()));
+            Text text = new Text(p.getName());
+            getChildren().addAll(imageView, text);
+            setLayoutY(getContainedElement().getPlans().indexOf(p)*20);
+            setPickOnBounds(false);
+            addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorPane) getParent().getParent())
+                    .getPlanEditorTab().getSelectedPlanElement().setValue(abstractPlan));
+        }
+    }
+
 }

@@ -1,8 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanTab;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.control.TabPane;

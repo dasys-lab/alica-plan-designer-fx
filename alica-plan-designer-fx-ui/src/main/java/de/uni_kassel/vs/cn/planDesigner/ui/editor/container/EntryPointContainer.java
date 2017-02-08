@@ -4,15 +4,9 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorConstants;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -53,7 +47,7 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
 
     @Override
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPoint containedElement) {
-        return event -> ((PlanEditorPane) getParent().getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(containedElement);
+        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(containedElement);
     }
 
     @Override

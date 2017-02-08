@@ -39,6 +39,7 @@ public class DeleteStateInPlan extends Command<State> {
         parentOfDeleted.getPlan().getStates().remove(getElementToEdit());
         parentOfDeleted.getPlan().getTransitions().removeAll(deletedInTransitions);
         parentOfDeleted.getPlan().getTransitions().removeAll(deletedOutTransitions);
+        parentOfDeleted.getPmlUiExtensionMap().getExtension().remove(getElementToEdit());
     }
 
     private void saveForLaterRetrieval() {
