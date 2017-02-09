@@ -18,7 +18,7 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
     // TODO resolve problem of not getting value by property reference
     public PropertyHBox(T object, String propertyName) {
         try {
-            Text text = new Text(I18NRepo.getInstance().getString("alicatype.property." + propertyName));
+            Text text = new Text(I18NRepo.getString("alicatype.property." + propertyName));
             text.setWrappingWidth(100);
             PropertyTextField propertyTextField = new PropertyTextField(object, propertyName);
             getChildren().addAll(text, propertyTextField);

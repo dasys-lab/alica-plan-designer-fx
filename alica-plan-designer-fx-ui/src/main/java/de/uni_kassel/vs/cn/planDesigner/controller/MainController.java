@@ -9,6 +9,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.PLDFileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane;
@@ -78,14 +79,24 @@ public class MainController implements Initializable {
      */
     private List<Menu> createMenus() {
         List<Menu> menus = new ArrayList<>();
-        Menu fileMenu = new Menu(I18NRepo.getInstance().getString("label.menu.file"));
-        fileMenu.getItems().add(new MenuItem(I18NRepo.getInstance().getString("label.menu.file.newPlan")));
+        Menu fileMenu = new Menu(I18NRepo.getString("label.menu.file"));
+        fileMenu.getItems().add(new MenuItem(I18NRepo.getString("label.menu.file.newPlan")));
+        MenuItem saveItem = new MenuItem(I18NRepo.getString("label.menu.file.save"));
+        saveItem.setOnAction(event -> {
+            try {
+                EMFModelUtils.saveAlicaFile(((PlanTab) editorTabPane.getSelectionModel().getSelectedItem()).getEditable());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        fileMenu.getItems().add(saveItem);
         menus.add(fileMenu);
-        Menu editMenu = new Menu(I18NRepo.getInstance().getString("label.menu.edit"));
-        MenuItem deleteElementItem = new MenuItem(I18NRepo.getInstance().getString("label.menu.edit.delete"));
+        Menu editMenu = new Menu(I18NRepo.getString("label.menu.edit"));
+        MenuItem deleteElementItem = new MenuItem(I18NRepo.getString("label.menu.edit.delete"));
         deleteElementItem.setOnAction(event -> {
             PlanTab planTab = (PlanTab) editorTabPane.getSelectionModel().getSelectedItem();
             PlanElement selectedPlanElement = planTab.getSelectedPlanElement().getValue().getKey();
+
             if(selectedPlanElement != null) {
                 if(selectedPlanElement instanceof StateImpl) {
                     commandStack.storeAndExecute(new DeleteStateInPlan((State) selectedPlanElement,

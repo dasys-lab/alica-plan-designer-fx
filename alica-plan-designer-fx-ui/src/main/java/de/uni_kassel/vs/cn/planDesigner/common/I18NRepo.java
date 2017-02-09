@@ -21,7 +21,7 @@ public class I18NRepo {
         resourceBundle = ResourceBundle.getBundle("pld_globals");
     }
 
-    public String getString(String key) {
-        return resourceBundle.getString(key);
+    public static String getString(String key) {
+        return getInstance().resourceBundle.getString(key);
     }
 }
