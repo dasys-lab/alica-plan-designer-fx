@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -75,17 +76,23 @@ public class EMFModelUtils {
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */
      public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
+         String relativePath = file.getAbsolutePath()
+                 .replace(new Configuration().getPlansPath() + "/","")
+                 .replace(new Configuration().getRolesPath()+ "/","")
+                 .replace(new Configuration().getMiscPath()+ "/","");
          URI uri = URI
-                 .createURI(file.getAbsolutePath());
+                 .createURI(relativePath);
+
          Resource resourceFromPool = alicaResourceSet.getResource(uri, false);
          if (resourceFromPool == null) {
              Resource loadedResource = alicaResourceSet.createResource(uri);
-             loadedResource.load(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+             loadedResource.load(new FileInputStream(file), AlicaSerializationHelper.getInstance().getLoadSaveOptions());
              T t = (T) loadedResource.getContents().get(0);
              if (t instanceof Plan) {
-                 Resource loadedPmlUiExtension = alicaResourceSet.createResource(URI
-                         .createURI(file.getAbsolutePath().replace("pml","pmlex")));
-                 loadedPmlUiExtension.load(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+                 URI pmlExURI = URI
+                         .createURI(relativePath.replace("pml", "pmlex"));
+                 Resource loadedPmlUiExtension = alicaResourceSet.createResource(pmlExURI);
+                 loadedPmlUiExtension.load(new FileInputStream(file.getAbsolutePath().replace("pml", "pmlex")), AlicaSerializationHelper.getInstance().getLoadSaveOptions());
              }
              return t;
          } else {
@@ -95,7 +102,6 @@ public class EMFModelUtils {
 
     /**
      * Saves the given alicaObject in the file.
-     * @param file the given file
      * @param alicaObject the object to save
      * @param <T> The type of {@link EObject} to save
      * @throws IOException

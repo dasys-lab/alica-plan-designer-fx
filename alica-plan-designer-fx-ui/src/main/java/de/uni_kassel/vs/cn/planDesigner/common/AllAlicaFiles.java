@@ -58,8 +58,10 @@ public class AllAlicaFiles {
         planTypes = getRepositoryOf(plansPath, "pty");
 
         List<Pair<TaskRepository, Path>> tsk = getRepositoryOf(configuration.getMiscPath(), "tsk");
-        EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
+
         tasks = new Pair<>(tsk.get(0).getKey().getTasks(), tsk.get(0).getValue());
+        EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
+
     }
 
     private <T extends EObject> List<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException, URISyntaxException {
@@ -77,15 +79,6 @@ public class AllAlicaFiles {
                     }
                 })
                 .collect(Collectors.toList());
-        EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
-        //Map<EObject, Collection<EStructuralFeature.Setting>> eObjectCollectionMap = EcoreUtil.UnresolvedProxyCrossReferencer.find(EMFModelUtils.getAlicaResourceSet());
-        /*for (Map.Entry<EObject, Collection<EStructuralFeature.Setting>> entry : eObjectCollectionMap.entrySet()) {
-            System.out.println("Key : " + entry.getKey() + " Value: ");
-            for (EStructuralFeature.Setting setting : entry.getValue()) {
-                System.out.print(setting + " ");
-            }
-            System.out.println();
-        }*/
         return collect;
     }
 }
