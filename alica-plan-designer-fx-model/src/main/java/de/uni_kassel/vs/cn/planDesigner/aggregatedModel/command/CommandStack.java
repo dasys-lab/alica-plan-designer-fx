@@ -1,11 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command;
 
+import java.util.Observable;
 import java.util.Stack;
 
 /**
  * Created by marci on 03.01.17.
  */
-public class CommandStack {
+public class CommandStack extends Observable {
     private Stack<Command> undoStack = new Stack<>();
     private Stack<Command> redoStack = new Stack<>();
 
@@ -17,6 +18,7 @@ public class CommandStack {
         command.doCommand();
         undoStack.push(command);
         redoStack.clear();
+        notifyObservers();
     }
 
     /**
@@ -26,6 +28,7 @@ public class CommandStack {
         Command undone = undoStack.pop();
         undone.undoCommand();
         redoStack.push(undone);
+        notifyObservers();
     }
 
     /**
@@ -35,6 +38,7 @@ public class CommandStack {
         Command redone = redoStack.pop();
         redone.doCommand();
         undoStack.push(redone);
+        notifyObservers();
     }
 
     /**
@@ -43,5 +47,13 @@ public class CommandStack {
      */
     boolean isCurrentCommandSaved() {
         return undoStack.peek().isSaved();
+    }
+
+    public Stack<Command> getUndoStack() {
+        return undoStack;
+    }
+
+    public Stack<Command> getRedoStack() {
+        return redoStack;
     }
 }

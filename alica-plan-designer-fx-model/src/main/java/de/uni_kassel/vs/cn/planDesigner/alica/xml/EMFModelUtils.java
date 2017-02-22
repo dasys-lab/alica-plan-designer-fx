@@ -6,6 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
+import de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelFactory;
@@ -16,11 +17,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.io.File;
@@ -39,10 +37,6 @@ public class EMFModelUtils {
         alicaResourceSet = new AlicaResourceSet();
         AlicaResourceSet alicaResourceSet = new AlicaResourceSet();
 		URIConverter uriConverter = ExtensibleURIConverterImpl.INSTANCE;
-		//	uriConverter.getURIMap().put(URI.createURI("platform:/resource/Misc/", true),
-										// URI.createURI(new Configuration().getMiscPath(), true));
-//
-       // alicaResourceSet.setURIConverter(uriConverter);
     }
 
     /**
@@ -117,6 +111,15 @@ public class EMFModelUtils {
         //resource.getContents().add(alicaObject);
 
         // now save the content.
+
+        // For plans also save the .pmlex! If they are out of sync, plans cannot be loaded
+        if (alicaObject instanceof PlanImpl) {
+            String pmlExURI = alicaObject.eResource().getURI().toString().replace("pml", "pmlex");
+            getAlicaResourceSet()
+                    .getResources()
+                    .stream()
+                    .filter(e -> e.getURI().toString().equals(pmlExURI)).findAny().get().save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        }
         alicaObject.eResource().save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
     }
 

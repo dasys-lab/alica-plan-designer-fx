@@ -23,6 +23,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +81,8 @@ public class MainController implements Initializable {
     private List<Menu> createMenus() {
         List<Menu> menus = new ArrayList<>();
         Menu fileMenu = new Menu(I18NRepo.getString("label.menu.file"));
-        fileMenu.getItems().add(new MenuItem(I18NRepo.getString("label.menu.file.newPlan")));
+        MenuItem newPlanItem = new MenuItem(I18NRepo.getString("label.menu.file.newPlan"));
+        fileMenu.getItems().add(newPlanItem);
         MenuItem saveItem = new MenuItem(I18NRepo.getString("label.menu.file.save"));
         saveItem.setOnAction(event -> {
             try {
@@ -93,6 +95,32 @@ public class MainController implements Initializable {
         menus.add(fileMenu);
         Menu editMenu = new Menu(I18NRepo.getString("label.menu.edit"));
         MenuItem deleteElementItem = new MenuItem(I18NRepo.getString("label.menu.edit.delete"));
+        MenuItem undoItem = new MenuItem(I18NRepo.getString("label.menu.edit.undo"));
+        undoItem.setDisable(false);
+        commandStack.addObserver((a,b) -> {
+            if (((CommandStack)a).getUndoStack().isEmpty()) {
+               undoItem.setDisable(true);
+            } else {
+                undoItem.setDisable(false);
+            }
+        });
+        undoItem.setOnAction(event -> {
+            commandStack.undo();
+            ((PlanTab)editorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+        });
+        MenuItem redoItem = new MenuItem(I18NRepo.getString("label.menu.edit.redo"));
+        commandStack.addObserver((a,b) -> {
+            if (((CommandStack)a).getRedoStack().isEmpty()) {
+                redoItem.setDisable(true);
+            } else {
+                redoItem.setDisable(false);
+            }
+        });
+        redoItem.setOnAction(event -> {
+            commandStack.redo();
+            ((PlanTab)editorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+        });
+        redoItem.setDisable(false);
         deleteElementItem.setOnAction(event -> {
             PlanTab planTab = (PlanTab) editorTabPane.getSelectionModel().getSelectedItem();
             PlanElement selectedPlanElement = planTab.getSelectedPlanElement().getValue().getKey();
@@ -119,7 +147,10 @@ public class MainController implements Initializable {
             }
         });
         deleteElementItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
-        editMenu.getItems().add(deleteElementItem);
+        saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
+        editMenu.getItems().addAll(undoItem, redoItem, deleteElementItem);
+        undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
+        redoItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
         menus.add(editMenu);
         return menus;
     }
