@@ -6,9 +6,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextInputControl;
 import org.eclipse.emf.ecore.impl.EAttributeImpl;
 import org.eclipse.emf.ecore.impl.EReferenceImpl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 /**
@@ -39,7 +41,16 @@ public class PropertyTab extends Tab {
                 .forEach(eStructuralFeature -> {
                     if (!eStructuralFeature.getName().equalsIgnoreCase("parametrisation") && !eStructuralFeature.getName().equalsIgnoreCase("inplan")) {
                         if(eStructuralFeature.getClass().equals(EAttributeImpl.class)) {
-                            propertyHBoxList.add(new PropertyHBox<>(selectedPlanElement, eStructuralFeature.getName()));
+                            if (eStructuralFeature.getName().equalsIgnoreCase("comment")) {
+                                propertyHBoxList.add(new PropertyHBox<PlanElement>(selectedPlanElement, eStructuralFeature.getName()){
+                                    @Override
+                                    protected TextInputControl createTextField(PlanElement object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+                                        return new PropertyTextArea(object, propertyName);
+                                    }
+                                });
+                            } else {
+                                propertyHBoxList.add(new PropertyHBox<>(selectedPlanElement, eStructuralFeature.getName()));
+                            }
                         } else if (eStructuralFeature.getClass().equals(EReferenceImpl.class)) {
 
                         }
@@ -66,4 +77,5 @@ public class PropertyTab extends Tab {
         propertyHBoxList.add(new PropertyHBox<>(selectedPlanElement, "comment"));
         return propertyHBoxList;
     }
+
 }
