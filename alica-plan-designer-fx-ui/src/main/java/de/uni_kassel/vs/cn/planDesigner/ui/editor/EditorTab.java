@@ -25,6 +25,7 @@ public abstract class EditorTab<T extends PlanElement> extends Tab {
         this.filePath = filePath;
         selectedPlanElement = new SimpleObjectProperty<>(new Pair<>(editable, null));
         this.commandStack = commandStack;
+        setClosable(true);
     }
 
     public Path getFilePath() {

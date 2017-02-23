@@ -15,7 +15,7 @@
                <PLDFileTreeView fx:id="fileTreeView" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="300.0" />
             <SplitPane dividerPositions="0.9">
                <items>
-                         <EditorTabPane fx:id="editorTabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" tabClosingPolicy="UNAVAILABLE" />
+                         <EditorTabPane fx:id="editorTabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" tabClosingPolicy="ALL_TABS" />
                   <SplitPane dividerPositions="0.5" maxWidth="1.7976931348623157E308" minWidth="100.0" orientation="VERTICAL" prefWidth="300.0">
                      <items>
                                  <RepositoryTabPane fx:id="repositoryTabPane" tabClosingPolicy="UNAVAILABLE">
