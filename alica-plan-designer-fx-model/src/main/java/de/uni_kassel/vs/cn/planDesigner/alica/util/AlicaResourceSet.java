@@ -39,11 +39,11 @@ public class AlicaResourceSet extends ResourceSetImpl {
 					if(result.hasAbsolutePath()) {
 						result = URI.createURI("file:" + result);
 					} else {
-						if(result.toString().contains(".beh") || result.toString().contains(".pml")) {
+						if(result.toString().contains(".beh") || result.toString().contains(".pml") || result.toString().contains(".pty")) {
 							result = URI.createFileURI((new File(new Configuration().getPlansPath() + "/" + result)).getAbsolutePath());
 						} else {
 							// TODO XXX: THIS WILL NOT WORK REPLACE THIS SNIPPET IF THIS CASE IS USED
-							result = URI.createFileURI((new File(new Configuration().getPlansPath() + "/" + result)).getAbsolutePath());
+							result = URI.createFileURI((new File(new Configuration().getMiscPath() + "/" + result)).getAbsolutePath());
 						}
 					}
 				}

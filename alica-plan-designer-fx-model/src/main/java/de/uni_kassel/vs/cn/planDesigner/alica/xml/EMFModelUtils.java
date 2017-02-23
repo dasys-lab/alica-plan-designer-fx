@@ -111,15 +111,6 @@ public class EMFModelUtils {
         //resource.getContents().add(alicaObject);
 
         // now save the content.
-
-        // For plans also save the .pmlex! If they are out of sync, plans cannot be loaded
-        if (alicaObject instanceof PlanImpl) {
-            String pmlExURI = alicaObject.eResource().getURI().toString().replace("pml", "pmlex");
-            getAlicaResourceSet()
-                    .getResources()
-                    .stream()
-                    .filter(e -> e.getURI().toString().equals(pmlExURI)).findAny().get().save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
-        }
         alicaObject.eResource().save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
     }
 

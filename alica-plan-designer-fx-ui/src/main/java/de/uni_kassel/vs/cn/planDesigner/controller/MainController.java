@@ -9,9 +9,9 @@ import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.PLDFileTreeView;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane;
@@ -84,13 +84,7 @@ public class MainController implements Initializable {
         MenuItem newPlanItem = new MenuItem(I18NRepo.getString("label.menu.file.newPlan"));
         fileMenu.getItems().add(newPlanItem);
         MenuItem saveItem = new MenuItem(I18NRepo.getString("label.menu.file.save"));
-        saveItem.setOnAction(event -> {
-            try {
-                EMFModelUtils.saveAlicaFile(((PlanTab) editorTabPane.getSelectionModel().getSelectedItem()).getEditable());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        saveItem.setOnAction(event -> ((EditorTab<?>) editorTabPane.getSelectionModel().getSelectedItem()).save());
         fileMenu.getItems().add(saveItem);
         menus.add(fileMenu);
         Menu editMenu = new Menu(I18NRepo.getString("label.menu.edit"));

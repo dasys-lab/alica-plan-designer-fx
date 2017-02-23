@@ -32,6 +32,13 @@ public class AllAlicaFiles {
 
     private Pair<List<Task>, Path> tasks;
 
+
+    private List<Pair<TaskRepository, Path>> taskRepository;
+
+    public List<Pair<TaskRepository, Path>> getTaskRepository() {
+        return taskRepository;
+    }
+
     public List<Pair<Plan, Path>> getPlans() {
         return plans;
     }
@@ -57,9 +64,9 @@ public class AllAlicaFiles {
 
         planTypes = getRepositoryOf(plansPath, "pty");
 
-        List<Pair<TaskRepository, Path>> tsk = getRepositoryOf(configuration.getMiscPath(), "tsk");
+        taskRepository = getRepositoryOf(configuration.getMiscPath(), "tsk");
 
-        tasks = new Pair<>(tsk.get(0).getKey().getTasks(), tsk.get(0).getValue());
+        tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
         EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
 
     }
