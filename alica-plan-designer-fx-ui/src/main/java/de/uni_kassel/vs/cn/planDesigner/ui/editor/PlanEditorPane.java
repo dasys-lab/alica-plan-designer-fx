@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -82,12 +83,15 @@ public class PlanEditorPane extends Group {
                             break;
                         }
                     }
-                    StateContainer stateContainer = stateContainers
+                    Optional<StateContainer> first = stateContainers
                             .stream()
-                            .filter(s -> s.getContainedElement().getId() == e.getState().getId())
-                            .findFirst()
-                            .orElse(null);
-                    return new EntryPointContainer(e, pmlUiExtension, stateContainer, commandStack);
+                            .filter(s -> e.getState() != null && s.getContainedElement().getId() == e.getState().getId())
+                            .findFirst();
+                    if (first.isPresent()) {
+                        return new EntryPointContainer(e, pmlUiExtension, first.get(), commandStack);
+                    } else {
+                        return new EntryPointContainer(e, pmlUiExtension, null, commandStack);
+                    }
                 }).collect(Collectors.toList());
     }
 

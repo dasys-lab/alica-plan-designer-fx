@@ -14,7 +14,7 @@ public class SuccessStateContainer extends StateContainer {
     }
 
     @Override
-    protected Color getStateColor() {
+    public Color getVisualisationColor() {
         return Color.GREEN;
     }
 }

@@ -22,11 +22,26 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
     private StateContainer stateContainer;
     private boolean dragged;
 
+    /**
+     * This constructor is for dummy containers. NEVER use in real UI
+     */
+    public EntryPointContainer() {
+        super(null, null, null);
+
+    }
+
+    /**
+     * @param containedElement
+     * @param pmlUiExtension
+     * @param stateContainer
+     * @param commandStack
+     */
     public EntryPointContainer(EntryPoint containedElement, PmlUiExtension pmlUiExtension,
                                StateContainer stateContainer, CommandStack commandStack) {
         super(containedElement, pmlUiExtension, commandStack);
-        this.stateContainer = stateContainer;
-        stateContainer.addListener(observable -> setupContainer());
+        if (stateContainer != null) {
+            setStateContainer(stateContainer);
+        }
         makeDraggable(this);
         setupContainer();
     }
@@ -34,16 +49,26 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
     @Override
     public void setupContainer() {
         getChildren().clear();
-        visualRepresentation = new Circle(getPmlUiExtension().getXPos(), getPmlUiExtension().getYPos(), StateContainer.STATE_RADIUS, Color.BLUE);
-        Line line = new Line(getPmlUiExtension().getXPos(),
-                getPmlUiExtension().getYPos(),
-                stateContainer.getLayoutX(),
-                stateContainer.getLayoutY());
-        line.getStrokeDashArray().addAll(2d, 10d);
-        getChildren().add(line);
+        visualRepresentation = new Circle(getPmlUiExtension().getXPos(), getPmlUiExtension().getYPos(), StateContainer.STATE_RADIUS,
+                getVisualisationColor());
+
+        if (stateContainer != null) {
+            Line line = new Line(getPmlUiExtension().getXPos(),
+                    getPmlUiExtension().getYPos(),
+                    stateContainer.getLayoutX(),
+                    stateContainer.getLayoutY());
+            line.getStrokeDashArray().addAll(2d, 10d);
+            getChildren().add(line);
+        }
+
         getChildren().add(visualRepresentation);
         getChildren().add(new Text(getPmlUiExtension().getXPos()- StateContainer.STATE_RADIUS, getPmlUiExtension().getYPos() - StateContainer.STATE_RADIUS,
                 getContainedElement().getTask().getName()));
+    }
+
+    @Override
+    public Color getVisualisationColor() {
+        return Color.BLUE;
     }
 
     @Override
@@ -76,47 +101,10 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
     @Override
     public boolean wasDragged() {
         return dragged;
-    }/*
+    }
 
-    @Override
-    public Node makeDraggable(Node node) {
-        final DragContext dragContext = new DragContext();
-        final Node wrapGroup = createWrapper(node);
-
-        wrapGroup.addEventFilter(
-                MouseEvent.ANY,
-                mouseEvent -> {
-                    // disable mouse events for all children
-                    mouseEvent.consume();
-                });
-
-        wrapGroup.addEventFilter(
-                MouseEvent.MOUSE_PRESSED,
-                mouseEvent -> {
-                    // remember initial mouse cursor coordinates
-                    // and node position
-                    dragContext.mouseAnchorX = mouseEvent.getX();
-                    dragContext.mouseAnchorY = mouseEvent.getY();
-                    dragContext.initialLayoutX = node.getTranslateX();
-                    dragContext.initialLayoutY = node.getTranslateY();
-                });
-
-        wrapGroup.addEventFilter(
-                MouseEvent.MOUSE_DRAGGED,
-                mouseEvent -> {
-                    // shift node from its initial position by delta
-                    // calculated from mouse cursor movement
-                    node.setTranslateX(dragContext.initialLayoutX + mouseEvent.getX() - dragContext.mouseAnchorX);
-                    node.setTranslateY(dragContext.initialLayoutY + mouseEvent.getY() - dragContext.mouseAnchorY);
-                });
-
-        wrapGroup.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-            // save final position in actual bendpoint
-            getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
-            event.consume();
-            redrawElement();
-        });
-
-        return wrapGroup;
-    }*/
+    public void setStateContainer(StateContainer stateContainer) {
+        this.stateContainer = stateContainer;
+        stateContainer.addListener(observable -> setupContainer());
+    }
 }

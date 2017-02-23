@@ -35,6 +35,13 @@ public class StateContainer extends PlanElementContainer<State> implements Obser
     private boolean dragged;
     private List<InvalidationListener> invalidationListeners;
 
+    /**
+     * This constructor is for dummy containers. NEVER use in real UI
+     */
+    public StateContainer() {
+        super(null, null, null);
+    }
+
     public StateContainer(PmlUiExtension pmlUiExtension, State state, CommandStack commandStack) {
         super(state, pmlUiExtension, commandStack);
         invalidationListeners = new ArrayList<>();
@@ -48,7 +55,7 @@ public class StateContainer extends PlanElementContainer<State> implements Obser
         getChildren().clear();
         setLayoutX(getPmlUiExtension().getXPos());
         setLayoutY(getPmlUiExtension().getYPos());
-        visualRepresentation = new Circle(STATE_RADIUS, getStateColor());
+        visualRepresentation = new Circle(STATE_RADIUS, getVisualisationColor());
         getChildren().add(visualRepresentation);
         Text e = new Text(getContainedElement().getName());
         getChildren().add(e);
@@ -66,7 +73,8 @@ public class StateContainer extends PlanElementContainer<State> implements Obser
         getChildren().addAll(statePlans);
     }
 
-    protected Color getStateColor() {
+    @Override
+    public Color getVisualisationColor() {
         return Color.YELLOW;
     }
 

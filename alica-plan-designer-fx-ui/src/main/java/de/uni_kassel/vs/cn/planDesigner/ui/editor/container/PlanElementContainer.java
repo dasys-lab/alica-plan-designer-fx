@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.util.Pair;
 
@@ -132,6 +133,8 @@ public abstract class PlanElementContainer<T extends PlanElement> extends Pane i
      *
      */
     public abstract void setupContainer();
+
+    public abstract Color getVisualisationColor();
 
     @Override
     public CommandStack getCommandStackForDrag() {

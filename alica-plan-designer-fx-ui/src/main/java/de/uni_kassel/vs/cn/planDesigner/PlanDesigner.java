@@ -22,6 +22,12 @@ public class PlanDesigner extends Application {
     private MainController mainController;
     public static final AllAlicaFiles allAlicaFiles = new AllAlicaFiles();
 
+    private static Stage primaryStage;
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     public static void main(String[] args) throws IOException, URISyntaxException {
         EMFModelUtils.initializeEMF();
         allAlicaFiles.init();
@@ -38,7 +44,8 @@ public class PlanDesigner extends Application {
         Scene scene = new Scene(root);
         String cssPath = PlanDesigner.class.getResource("/styles.css").toExternalForm();
         scene.getStylesheets().add(cssPath);
-        primaryStage.setScene(scene);
+        PlanDesigner.primaryStage = primaryStage;
+        PlanDesigner.primaryStage.setScene(scene);
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();

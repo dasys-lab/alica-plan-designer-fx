@@ -106,16 +106,21 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
                     _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
         }
 
-        polygon.setFill(Color.RED);
-        polygon.setStroke(Color.RED);
+        polygon.setFill(getVisualisationColor());
+        polygon.setStroke(getVisualisationColor());
         polygon.setStrokeWidth(4);
         polygon.setVisible(true);
         visualRepresentation.setStrokeWidth(3);
-        visualRepresentation.setStroke(Color.RED);
+        visualRepresentation.setStroke(getVisualisationColor());
         visualRepresentation.setPickOnBounds(false);
         this.getChildren().add(visualRepresentation);
         this.getChildren().add(polygon);
         this.getChildren().addAll(draggableNodes);
+    }
+
+    @Override
+    public Color getVisualisationColor() {
+        return Color.RED;
     }
 
     public void setBendpointContainerVisibility(boolean isVisible) {

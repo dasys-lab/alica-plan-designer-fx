@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePos
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
@@ -65,7 +66,7 @@ public class StateTool extends Tool<State> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (event.getGestureSource() != workbench && visualRepresentation == null) {
-                        visualRepresentation = new Circle(event.getX(),event.getY(), 10, Color.YELLOW);
+                        visualRepresentation = new Circle(event.getX(),event.getY(), 10, new StateContainer().getVisualisationColor());
                         ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().add(visualRepresentation);
                     }
                     event.consume();

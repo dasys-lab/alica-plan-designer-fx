@@ -2,31 +2,28 @@ package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getPmlUiExtensionModelFactory;
 
 /**
- * Created by marci on 02.12.16.
+ * Created by marci on 23.02.17.
  */
-public class AddStateInPlan extends Command<State> {
+public class AddEntryPointInPlan extends Command<EntryPoint> {
+    private final PlanModelVisualisationObject parentOfElement;
+    private final PmlUiExtension newlyCreatedPmlUiExtension;
 
-    public static final String DEFAULT_STATE_NAME = "MISSING NAME";
-    private PlanModelVisualisationObject parentOfElement;
-    private PmlUiExtension newlyCreatedPmlUiExtension;
-
-    public AddStateInPlan(PlanModelVisualisationObject parentOfElement) {
-        super(getAlicaFactory().createState());
-        getElementToEdit().setName(DEFAULT_STATE_NAME);
+    public AddEntryPointInPlan(PlanModelVisualisationObject parentOfElement) {
+        super(getAlicaFactory().createEntryPoint());
         this.parentOfElement = parentOfElement;
         this.newlyCreatedPmlUiExtension = getPmlUiExtensionModelFactory().createPmlUiExtension();
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.getPlan().getStates().add(getElementToEdit());
+        parentOfElement.getPlan().getEntryPoints().add(getElementToEdit());
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
@@ -35,7 +32,8 @@ public class AddStateInPlan extends Command<State> {
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlan().getStates().remove(getElementToEdit());
+        parentOfElement.getPlan().getEntryPoints().remove(getElementToEdit());
+        //noinspection SuspiciousMethodCalls
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
@@ -44,7 +42,7 @@ public class AddStateInPlan extends Command<State> {
 
     @Override
     public String getCommandString() {
-        return "Add State to Plan " + getElementToEdit();
+        return "Create new EntryPoint";
     }
 
     public PmlUiExtension getNewlyCreatedPmlUiExtension() {
