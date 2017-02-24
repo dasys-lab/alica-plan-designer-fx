@@ -4,10 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationOb
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.SuccessStateContainer;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.*;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTab;
 import javafx.scene.Group;
 import org.eclipse.emf.ecore.EObject;
@@ -134,6 +131,8 @@ public class PlanEditorPane extends Group {
                     }
                     if (e instanceof SuccessState) {
                         return new SuccessStateContainer(pmlUiExtension, e, commandStack);
+                    } else if (e instanceof FailureState) {
+                        return new FailureStateContainer(pmlUiExtension, e, commandStack);
                     } else {
                         return new StateContainer(pmlUiExtension, e, commandStack);
                     }
