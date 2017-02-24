@@ -2,7 +2,12 @@ package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
@@ -18,18 +23,19 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class PropertyHBox<T extends PlanElement> extends HBox {
 
-    private TextInputControl textField;
+    private static final int wrappingWidth = 100;
+    private Node inputField;
 
     // TODO resolve problem of not getting value by property reference
-    public PropertyHBox(T object, String propertyName) {
+    public PropertyHBox(T object, String propertyName, Class<?> propertyClass) {
         try {
             Text text = new Text(I18NRepo.getString("alicatype.property." + propertyName));
-            text.setWrappingWidth(100);
-            textField = createTextField(object, propertyName);
-            getChildren().addAll(text, textField);
-            setHgrow(textField, Priority.ALWAYS);
+            text.setWrappingWidth(wrappingWidth);
+            inputField = getInputField(object, propertyName, propertyClass);
+            getChildren().addAll(text, inputField);
+            setHgrow(inputField, Priority.ALWAYS);
             setHgrow(text, Priority.ALWAYS);
-            setMargin(textField,new Insets(0,100,0,50));
+            setMargin(inputField,new Insets(0,100,0,50));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -37,6 +43,48 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
+    }
+
+    private Node getInputField(T object, String propertyName, Class<?> propertyClass) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        if (propertyClass.equals(String.class)) {
+            return createTextField(object, propertyName);
+        }
+
+        if (propertyClass.equals(long.class) || propertyClass.equals(int.class)) {
+            TextInputControl textField = createTextField(object, propertyName);
+            textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.matches("\\d*") == false) {
+                    textField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            });
+            return textField;
+        }
+
+        if (propertyClass.equals(double.class) || propertyClass.equals(float.class)) {
+            TextInputControl textField = createTextField(object, propertyName);
+            textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.matches("\\d*\\.?\\d*") == false) {
+                    textField.setText(oldValue);
+                }
+            });
+            return textField;
+        }
+
+        if (propertyClass.equals(boolean.class)) {
+            ComboBox<Boolean> booleanComboBox = new ComboBox<>();
+            booleanComboBox.setItems(FXCollections.observableArrayList(true,false));
+            booleanComboBox.getSelectionModel().select(Boolean.parseBoolean(BeanUtils.getProperty(object, propertyName)));
+            booleanComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    BeanUtils.setProperty(object, propertyName, newValue);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            });
+            return booleanComboBox;
+        }
+
+        return createTextField(object, propertyName);
     }
 
     protected TextInputControl createTextField(T object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
@@ -50,9 +98,7 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
             textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
                     BeanUtils.setProperty(object, propertyName, newValue);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             });

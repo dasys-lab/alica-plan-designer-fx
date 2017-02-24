@@ -42,14 +42,16 @@ public class PropertyTab extends Tab {
                     if (!eStructuralFeature.getName().equalsIgnoreCase("parametrisation") && !eStructuralFeature.getName().equalsIgnoreCase("inplan")) {
                         if(eStructuralFeature.getClass().equals(EAttributeImpl.class)) {
                             if (eStructuralFeature.getName().equalsIgnoreCase("comment")) {
-                                propertyHBoxList.add(new PropertyHBox<PlanElement>(selectedPlanElement, eStructuralFeature.getName()){
+                                propertyHBoxList.add(new PropertyHBox<PlanElement>(selectedPlanElement, eStructuralFeature.getName(),
+                                        ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass()){
                                     @Override
                                     protected TextInputControl createTextField(PlanElement object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
                                         return new PropertyTextArea(object, propertyName);
                                     }
                                 });
                             } else {
-                                propertyHBoxList.add(new PropertyHBox<>(selectedPlanElement, eStructuralFeature.getName()));
+                                propertyHBoxList.add(new PropertyHBox<>(selectedPlanElement, eStructuralFeature.getName(),
+                                        ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass()));
                             }
                         } else if (eStructuralFeature.getClass().equals(EReferenceImpl.class)) {
 
@@ -57,25 +59,7 @@ public class PropertyTab extends Tab {
                     }
                 });
 
-        setContent(new ListView<>(propertyHBoxList));/*
-        if (selectedPlanElement instanceof Plan) {
-            ListView<PropertyHBox<Plan>> propertyListView = new ListView<>();
-            ObservableList<PropertyHBox<Plan>> newList = getStandardPropertyHBoxes((Plan) selectedPlanElement);
-            newList.add(new PropertyHBox<>((Plan) selectedPlanElement, "masterPlan"));
-            newList.add(new PropertyHBox<>((Plan) selectedPlanElement, "priority"));
-            propertyListView.setItems(newList);
-            setContent(propertyListView);
-        } else {
-            setContent(new ListView<>(propertyHBoxList));
-        }*/
-    }
-
-    private <T extends PlanElement> ObservableList<PropertyHBox<T>> getStandardPropertyHBoxes(T selectedPlanElement) {
-        ObservableList<PropertyHBox<T>> propertyHBoxList = FXCollections.observableList(new ArrayList<>());
-        propertyHBoxList.add(new PropertyHBox<>(selectedPlanElement, "id"));
-        propertyHBoxList.add(new PropertyHBox<>(selectedPlanElement, "name"));
-        propertyHBoxList.add(new PropertyHBox<>(selectedPlanElement, "comment"));
-        return propertyHBoxList;
+        setContent(new ListView<>(propertyHBoxList));
     }
 
 }
