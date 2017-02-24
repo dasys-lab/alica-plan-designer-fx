@@ -2,8 +2,6 @@ package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -24,14 +22,13 @@ import java.lang.reflect.InvocationTargetException;
 public class PropertyHBox<T extends PlanElement> extends HBox {
 
     private static final int wrappingWidth = 100;
-    private Node inputField;
 
     // TODO resolve problem of not getting value by property reference
     public PropertyHBox(T object, String propertyName, Class<?> propertyClass) {
         try {
             Text text = new Text(I18NRepo.getString("alicatype.property." + propertyName));
             text.setWrappingWidth(wrappingWidth);
-            inputField = getInputField(object, propertyName, propertyClass);
+            Node inputField = getInputField(object, propertyName, propertyClass);
             getChildren().addAll(text, inputField);
             setHgrow(inputField, Priority.ALWAYS);
             setHgrow(text, Priority.ALWAYS);

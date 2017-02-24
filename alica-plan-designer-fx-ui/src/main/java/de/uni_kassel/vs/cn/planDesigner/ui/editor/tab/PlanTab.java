@@ -22,16 +22,13 @@ import java.nio.file.Path;
  */
 public class PlanTab extends EditorTab<Plan> {
 
-    private final HBox planVisualization;
-    private final PLDToolBar pldToolBar;
     private final PlanEditorPane planEditorPane;
     private PmlUiExtensionMap pmlUiExtensionMap;
-    private final String uiExtensionMapPath;
 
     public PlanTab(Plan editable, Path filePath, CommandStack commandStack) {
         super(editable, filePath, commandStack);
         String absolutePath = filePath.toString();
-        uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
+        String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
 
         try {
             pmlUiExtensionMap = EMFModelUtils.loadAlicaFileFromDisk(new File(uiExtensionMapPath));
@@ -47,15 +44,14 @@ public class PlanTab extends EditorTab<Plan> {
 
         planEditorPane.setManaged(true);
 
-        pldToolBar = new PLDToolBar(MainController.getInstance().getEditorTabPane());
+        PLDToolBar pldToolBar = new PLDToolBar(MainController.getInstance().getEditorTabPane());
         ScrollPane scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);
-        hBox.setHgrow(scrollPane, Priority.ALWAYS);
+        HBox.setHgrow(scrollPane, Priority.ALWAYS);
 
-        planVisualization = hBox;
-        planVisualization.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-        setContent(planVisualization);
+        hBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        setContent(hBox);
     }
 
     public PlanEditorPane getPlanEditorPane() {

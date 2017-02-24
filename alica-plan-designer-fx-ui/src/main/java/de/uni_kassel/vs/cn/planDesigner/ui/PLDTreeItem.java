@@ -17,7 +17,7 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
         if (value.unwrap().isDirectory()) {
             setExpanded(true);
             for (File content : value.unwrap().listFiles()) {
-                Image listItemImage = null;
+                Image listItemImage;
                 if (content.getName().endsWith(".beh")) {
                     listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
                 } else if (content.getName().endsWith(".pml")) {

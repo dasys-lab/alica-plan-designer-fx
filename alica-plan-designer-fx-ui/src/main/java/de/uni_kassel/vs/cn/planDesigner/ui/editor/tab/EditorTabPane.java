@@ -19,7 +19,7 @@ public class EditorTabPane extends TabPane {
 
     private CommandStack commandStack;
 
-    public void openTab(Path filePath) throws IOException {
+    public void openTab(Path filePath) {
         Tab tab = getTabs()
                 .stream()
                 .filter(e -> ((EditorTab) e).getFilePath().equals(filePath))

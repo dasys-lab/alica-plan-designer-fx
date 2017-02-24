@@ -19,7 +19,6 @@ import java.net.URISyntaxException;
 
 public class PlanDesigner extends Application {
 
-    private MainController mainController;
     public static final AllAlicaFiles allAlicaFiles = new AllAlicaFiles();
 
     private static Stage primaryStage;
@@ -39,7 +38,6 @@ public class PlanDesigner extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("test.fxml"));
         Parent root = fxmlLoader.load();
-        mainController = fxmlLoader.getController();
         primaryStage.setTitle("Carpe Noctem Plan Designer");
         Scene scene = new Scene(root);
         String cssPath = PlanDesigner.class.getResource("/styles.css").toExternalForm();

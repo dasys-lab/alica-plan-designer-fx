@@ -71,12 +71,12 @@ public class AllAlicaFiles {
 
     }
 
-    private <T extends EObject> List<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException, URISyntaxException {
-        List<Pair<T, Path>> collect = Files.walk(Paths.get(plansPath))
+    private <T extends EObject> List<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException {
+        return Files.walk(Paths.get(plansPath))
                 .filter(p -> p.toString().endsWith("." + filePostfix))
                 .map(p -> {
                     try {
-                        Pair<T, Path> tPathPair = new Pair<>((T) EMFModelUtils.loadAlicaFileFromDisk(p.toFile()), p);
+                        Pair<T, Path> tPathPair = new Pair<>(EMFModelUtils.<T>loadAlicaFileFromDisk(p.toFile()), p);
                         for (Iterator k = tPathPair.getKey().eCrossReferences().iterator(); k.hasNext(); ) {
                             k.next();
                         }
@@ -86,6 +86,5 @@ public class AllAlicaFiles {
                     }
                 })
                 .collect(Collectors.toList());
-        return collect;
     }
 }

@@ -155,11 +155,7 @@ public class MainController implements Initializable {
      * @param toOpen
      */
     public void openFile(File toOpen) {
-        try {
-            editorTabPane.openTab(toOpen.toPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        editorTabPane.openTab(toOpen.toPath());
     }
 
     public CommandStack getCommandStack() {

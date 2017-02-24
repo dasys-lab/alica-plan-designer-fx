@@ -15,11 +15,9 @@ import java.nio.file.Path;
  */
 public class RepositoryHBox<T extends PlanElement> extends HBox {
     private T object;
-    private Path pathToObject;
 
     public RepositoryHBox(T object, Path pathToObject) {
         this.object = object;
-        this.pathToObject = pathToObject;
 
         getChildren().addAll(new ImageView(new AlicaIcon(object.getClass())),
                 new Text(object.getName()));

@@ -66,8 +66,7 @@ public class StateContainer extends PlanElementContainer<State> implements Obser
                 .getPlans()
                 .stream()
                 .map(p -> {
-                    HBox hBox = new AbstractPlanHBox(p);
-                    return hBox;
+                    return (HBox) new AbstractPlanHBox(p);
                 })
                 .collect(Collectors.toList());
         getChildren().addAll(statePlans);

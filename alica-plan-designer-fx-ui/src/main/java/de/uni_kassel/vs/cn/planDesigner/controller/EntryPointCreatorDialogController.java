@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -67,7 +66,7 @@ public class EntryPointCreatorDialogController implements Initializable {
         taskComboBox.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
             @Override
             public ListCell<Task> call(ListView<Task> param) {
-                final ListCell<Task> listCell = new ListCell<Task>() {
+                return new ListCell<Task>() {
                     @Override
                     protected void updateItem(Task item, boolean empty) {
                         super.updateItem(item, empty);
@@ -78,7 +77,6 @@ public class EntryPointCreatorDialogController implements Initializable {
                         }
                     }
                 };
-                return listCell;
             }
         });
 

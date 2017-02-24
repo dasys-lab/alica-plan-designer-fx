@@ -44,7 +44,7 @@ public class TransitionContainer extends PlanElementContainer<Transition> {
         draggableNodes.clear();
         potentialDraggableNodes.clear();
 
-        Polygon polygon = null;
+        Polygon polygon;
         double _toX = toState.getLayoutX() + toState.getTranslateX();
         double _toY = toState.getLayoutY() + toState.getTranslateY();
         double _fromX = fromState.getLayoutX() + fromState.getTranslateX();
