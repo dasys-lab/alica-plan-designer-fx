@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui.editor;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
@@ -6,6 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.PLDToolBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;

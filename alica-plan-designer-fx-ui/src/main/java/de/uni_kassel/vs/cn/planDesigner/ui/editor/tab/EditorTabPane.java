@@ -1,9 +1,8 @@
-package de.uni_kassel.vs.cn.planDesigner.ui.editor;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -12,7 +11,6 @@ import javafx.util.Pair;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by marci on 18.11.16.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.uni_kassel.vs.cn.planDesigner.ui.editor.EditorTabPane?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane?>
 <?import de.uni_kassel.vs.cn.planDesigner.ui.PLDFileTreeView?>
 <?import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane?>
 <?import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane?>

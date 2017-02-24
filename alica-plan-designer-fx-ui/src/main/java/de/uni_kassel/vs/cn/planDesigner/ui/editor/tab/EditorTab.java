@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui.editor;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;

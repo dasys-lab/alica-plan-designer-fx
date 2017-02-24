@@ -1,27 +1,24 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddEntryPointInPlan;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
-import de.uni_kassel.vs.cn.planDesigner.ui.components.TaskComboBox;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanTab;
+import de.uni_kassel.vs.cn.planDesigner.controller.EntryPointCreatorDialogController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,34 +91,28 @@ public class EntryPointTool extends Tool<EntryPoint> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     endPhase();
-                    Stage stage = new Stage();
-                    stage.setTitle(I18NRepo.getString("label.choose.task"));
-                    TaskComboBox taskComboBox = new TaskComboBox();
-                    Button button = new Button();
-                    button.setText(I18NRepo.getString("action.confirm"));
-                    button.setOnAction(e -> {
-                        Task selectedItem = taskComboBox.getSelectionModel().getSelectedItem();
-                        if (selectedItem != null) {
-                            ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
-                            AddEntryPointInPlan command = new AddEntryPointInPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject());
-                            MainController.getInstance()
-                                    .getCommandStack()
-                                    .storeAndExecute(command);
-                            command.getElementToEdit().setTask(selectedItem);
-                            MainController.getInstance()
-                                    .getCommandStack()
-                                    .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(),command.getElementToEdit(),
-                                            (int) (event.getX()),
-                                            (int) (event.getY())));
-                            stage.close();
-                            draw();
-                        }
-                    });
-                    stage.setScene(new Scene(new HBox(taskComboBox, button)));
-                    stage.initModality(Modality.WINDOW_MODAL);
-                    stage.initOwner(PlanDesigner.getPrimaryStage());
-                    stage.showAndWait();
-                    initial = true;
+                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("entryPointCreatorDialog.fxml"));
+                    try {
+                        Parent rootOfDialog = fxmlLoader.load();
+                        EntryPointCreatorDialogController controller = fxmlLoader.getController();
+                        controller.setX((int) event.getX());
+                        controller.setY((int) event.getY());
+                        Stage stage = new Stage();
+                        stage.setResizable(false);
+                        stage.setTitle(I18NRepo.getString("label.choose.task"));
+                        stage.setScene(new Scene(rootOfDialog));
+                        stage.initModality(Modality.WINDOW_MODAL);
+                        stage.initOwner(PlanDesigner.getPrimaryStage());
+                        stage.showAndWait();
+                        draw();
+                        initial = true;
+                    } catch (IOException e) {
+                        // if the helper window is not loadable something is really wrong here
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
+
                 }
             });
         }

@@ -1,16 +1,13 @@
-package de.uni_kassel.vs.cn.planDesigner.ui.editor;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTaskToRepository;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskImpl;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.PlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;

@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTransitionInPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import javafx.event.Event;
 import javafx.event.EventHandler;

@@ -8,6 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.SuccessStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTab;
 import javafx.scene.Group;
 import org.eclipse.emf.ecore.EObject;
 
