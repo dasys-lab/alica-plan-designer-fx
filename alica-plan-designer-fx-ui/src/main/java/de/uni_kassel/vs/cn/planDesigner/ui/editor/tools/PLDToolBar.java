@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.FailureStateContainer;
 import javafx.geometry.Orientation;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
@@ -15,5 +16,7 @@ public class PLDToolBar extends ToolBar {
         getItems().add(new TransitionTool(workbench).createToolUI());
         getItems().add(new BehaviourTool(workbench).createToolUI());
         getItems().add(new EntryPointTool(workbench).createToolUI());
+        getItems().add(new SuccessStateTool(workbench).createToolUI());
+        getItems().add(new FailureStateTool(workbench).createToolUI());
     }
 }

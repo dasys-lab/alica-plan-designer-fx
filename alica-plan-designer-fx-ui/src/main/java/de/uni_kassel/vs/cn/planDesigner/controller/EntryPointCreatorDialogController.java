@@ -5,7 +5,6 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddEntryPoin
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTaskToRepository;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.collections.FXCollections;
@@ -13,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -34,23 +34,14 @@ public class EntryPointCreatorDialogController implements Initializable {
     @FXML
     private ComboBox<Task> taskComboBox;
 
-    private int x;
-    private int y;
+    private int x = 0;
+    private int y = 0;
+    boolean createEntryPoint = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         createTaskButton.setText(I18NRepo.getString("action.create.task"));
-        createTaskButton.setOnAction(e -> {
-            if (newTaskNameTextField.getText() != null && newTaskNameTextField.getText().isEmpty() == false) {
-                MainController
-                        .getInstance()
-                        .getCommandStack()
-                        .storeAndExecute(new AddTaskToRepository(PlanDesigner.allAlicaFiles
-                                .getTaskRepository().get(0).getKey(), newTaskNameTextField.getText()));
-                taskComboBox.setItems(FXCollections.observableArrayList(PlanDesigner.allAlicaFiles.getTasks().getKey()));
-                newTaskNameTextField.setText("");
-            }
-        });
+        createTaskButton.setOnAction(e -> createTask());
         confirmTaskChoiceButton.setText(I18NRepo.getString("action.confirm"));
         confirmTaskChoiceButton.setOnAction(e -> {
             Stage window = (Stage) confirmTaskChoiceButton.getScene().getWindow();
@@ -91,6 +82,29 @@ public class EntryPointCreatorDialogController implements Initializable {
             }
         });
 
+        if (createEntryPoint == false) {
+            taskComboBox.setVisible(false);
+            confirmTaskChoiceButton.setVisible(false);
+            Stage window = (Stage) newTaskNameTextField.getScene().getWindow();
+            window.setTitle(I18NRepo.getString("action.create.task"));
+            createTaskButton.setOnAction(e -> {
+                createTask();
+                window.close();
+            });
+        }
+
+    }
+
+    private void createTask() {
+        if (newTaskNameTextField.getText() != null && newTaskNameTextField.getText().isEmpty() == false) {
+            MainController
+                    .getInstance()
+                    .getCommandStack()
+                    .storeAndExecute(new AddTaskToRepository(PlanDesigner.allAlicaFiles
+                            .getTaskRepository().get(0).getKey(), newTaskNameTextField.getText()));
+            taskComboBox.setItems(FXCollections.observableArrayList(PlanDesigner.allAlicaFiles.getTasks().getKey()));
+            newTaskNameTextField.setText("");
+        }
     }
 
     private void createNewEntryPoint(Task selectedItem) {
@@ -108,9 +122,11 @@ public class EntryPointCreatorDialogController implements Initializable {
 
     public void setX(int x) {
         this.x = x;
+        createEntryPoint = true;
     }
 
     public void setY(int y) {
         this.y = y;
+        createEntryPoint = true;
     }
 }

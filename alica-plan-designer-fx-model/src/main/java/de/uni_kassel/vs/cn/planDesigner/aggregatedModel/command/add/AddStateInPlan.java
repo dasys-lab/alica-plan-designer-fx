@@ -17,8 +17,8 @@ public class AddStateInPlan extends Command<State> {
     private PlanModelVisualisationObject parentOfElement;
     private PmlUiExtension newlyCreatedPmlUiExtension;
 
-    public AddStateInPlan(PlanModelVisualisationObject parentOfElement) {
-        super(getAlicaFactory().createState());
+    public AddStateInPlan(PlanModelVisualisationObject parentOfElement, State newObject) {
+        super(newObject);
         getElementToEdit().setName(DEFAULT_STATE_NAME);
         this.parentOfElement = parentOfElement;
         this.newlyCreatedPmlUiExtension = getPmlUiExtensionModelFactory().createPmlUiExtension();

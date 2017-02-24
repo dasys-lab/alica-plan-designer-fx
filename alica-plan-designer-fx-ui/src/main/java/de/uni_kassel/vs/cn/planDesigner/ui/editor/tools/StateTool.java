@@ -85,7 +85,8 @@ public class StateTool extends Tool<State> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
-                    AddStateInPlan command = new AddStateInPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject());
+                    AddStateInPlan command = new AddStateInPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject(),
+                            createNewObject());
                     MainController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
