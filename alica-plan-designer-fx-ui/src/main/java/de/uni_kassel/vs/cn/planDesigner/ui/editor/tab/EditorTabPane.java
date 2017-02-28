@@ -8,7 +8,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.util.Pair;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 

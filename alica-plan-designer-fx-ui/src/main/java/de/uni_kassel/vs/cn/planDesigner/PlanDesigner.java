@@ -5,7 +5,6 @@ package de.uni_kassel.vs.cn.planDesigner;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.AllAlicaFiles;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;

@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -21,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class PropertyHBox<T extends PlanElement> extends HBox {
 
-    private static final int wrappingWidth = 100;
+    public static final int wrappingWidth = 100;
 
     // TODO resolve problem of not getting value by property reference
     public PropertyHBox(T object, String propertyName, Class<?> propertyClass) {
@@ -85,7 +84,7 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
     }
 
     protected TextInputControl createTextField(T object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        return new PropertyTextField(object, propertyName);
+        return new PropertyTextField<>(object, propertyName);
     }
 
     static class PropertyTextArea extends TextArea {
@@ -96,21 +95,6 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
                 try {
                     BeanUtils.setProperty(object, propertyName, newValue);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-    }
-
-    private class PropertyTextField extends TextField {
-        public PropertyTextField(T object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-            setText(BeanUtils.getProperty(object, propertyName));
-            textProperty().addListener((observable, oldValue, newValue) -> {
-                try {
-                    BeanUtils.setProperty(object, propertyName, newValue);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
             });

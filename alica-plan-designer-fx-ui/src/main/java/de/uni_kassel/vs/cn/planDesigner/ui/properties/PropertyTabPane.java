@@ -2,10 +2,9 @@ package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane;
-import javafx.scene.control.Tab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.scene.control.TabPane;
 
 /**
@@ -20,10 +19,12 @@ public class PropertyTabPane extends TabPane {
             activeEditorTab = (EditorTab<PlanElement>) newValue;
             getTabs().clear();
             try {
-                getTabs().add(new PropertyTab(activeEditorTab));
-                if (newValue instanceof Plan || newValue instanceof Transition) {
-                    getTabs().add(new Tab());
+                getTabs().add(new PropertyTab(activeEditorTab, activeEditorTab.getCommandStack()));
+                if (newValue instanceof PlanTab &&
+                        ((PlanTab) newValue).getSelectedPlanElement().get().getKey() instanceof Plan) {
+                    getTabs().add(new VariablesTab(activeEditorTab, activeEditorTab.getCommandStack()));
                 }
+                // TODO this seems like bad code
             } catch (NullPointerException ignored) {
             }
         });

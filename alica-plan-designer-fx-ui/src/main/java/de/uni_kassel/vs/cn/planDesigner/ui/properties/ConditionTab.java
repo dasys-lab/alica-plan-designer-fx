@@ -9,7 +9,7 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTab;
 public class ConditionTab extends AbstractPropertyTab {
 
     public ConditionTab(EditorTab<PlanElement> activeEditorTab) {
-        super(activeEditorTab);
+        super(activeEditorTab, null);
 
     }
 
