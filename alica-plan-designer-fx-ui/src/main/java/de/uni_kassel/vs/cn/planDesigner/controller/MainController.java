@@ -1,10 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteAbstractPlansFromState;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteEntryPointInPlan;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteStateInPlan;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteTransitionInPlan;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
@@ -100,6 +97,7 @@ public class MainController implements Initializable {
         undoItem.setOnAction(event -> {
             commandStack.undo();
             ((PlanTab)editorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+            ((PlanTab)editorTabPane.getSelectionModel().getSelectedItem()).getConditionHBox().setupConditionVisualisation();
         });
         MenuItem redoItem = new MenuItem(I18NRepo.getString("label.menu.edit.redo"));
         commandStack.addObserver((a,b) -> {
@@ -128,11 +126,15 @@ public class MainController implements Initializable {
                 } else if (selectedPlanElement instanceof EntryPointImpl) {
                     commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
                             planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
-                } else if (planTab.getSelectedPlanElement().getValue().getValue() != null) {
+                } else if (selectedPlanElement instanceof State && planTab.getSelectedPlanElement().getValue().getValue() != null) {
                     State state = (State) planTab.getSelectedPlanElement().getValue().getValue().getContainedElement();
                     commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
+                } else if (selectedPlanElement instanceof Condition) {
+                    Condition condition = (Condition) planTab.getSelectedPlanElement().getValue().getKey();
+                    commandStack.storeAndExecute(new DeleteConditionFromAbstractPlan(planTab.getPlanEditorPane().getPlanModelVisualisationObject().getPlan(), condition));
                 }
                 planTab.getPlanEditorPane().setupPlanVisualisation();
+                planTab.getConditionHBox().setupConditionVisualisation();
                     //selectedPlanElement
                     //
 

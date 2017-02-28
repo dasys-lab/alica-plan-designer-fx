@@ -23,6 +23,7 @@ import java.nio.file.Path;
 public class PlanTab extends EditorTab<Plan> {
 
     private final PlanEditorPane planEditorPane;
+    private final ConditionHBox conditionHBox;
     private PmlUiExtensionMap pmlUiExtensionMap;
 
     public PlanTab(Plan editable, Path filePath, CommandStack commandStack) {
@@ -37,7 +38,6 @@ public class PlanTab extends EditorTab<Plan> {
             e.printStackTrace();
         }
         planEditorPane = new PlanEditorPane(new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap), this);
-
         StackPane planContent = new StackPane(planEditorPane);
         planContent.setPadding(new Insets(50, 50, 50, 50));
         planContent.setManaged(true);
@@ -48,14 +48,22 @@ public class PlanTab extends EditorTab<Plan> {
         ScrollPane scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);
+        conditionHBox = new ConditionHBox(editable, selectedPlanElement, commandStack);
+        VBox vBox = new VBox(conditionHBox,hBox);
+        VBox.setVgrow(scrollPane,Priority.ALWAYS);
+        VBox.setVgrow(hBox,Priority.ALWAYS);
         HBox.setHgrow(scrollPane, Priority.ALWAYS);
 
         hBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-        setContent(hBox);
+        setContent(vBox);
     }
 
     public PlanEditorPane getPlanEditorPane() {
         return planEditorPane;
+    }
+
+    public ConditionHBox getConditionHBox() {
+        return conditionHBox;
     }
 
     @Override
