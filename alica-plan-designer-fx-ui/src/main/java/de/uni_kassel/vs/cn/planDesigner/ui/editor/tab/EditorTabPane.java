@@ -10,6 +10,7 @@ import javafx.util.Pair;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by marci on 18.11.16.
@@ -29,7 +30,10 @@ public class EditorTabPane extends TabPane {
             getTabs().add(tab);
             getSelectionModel().select(tab);
         } else {
-            getSelectionModel().select(getTabs().stream().filter(e -> e.equals(tab)).findFirst().orElse(null));
+            Optional<Tab> result = getTabs().stream().filter(e -> e.equals(tab)).findFirst();
+            if (result.isPresent()) {
+                getSelectionModel().select(result.get());
+            }
         }
 
     }

@@ -70,6 +70,7 @@ public class PropertyTab extends AbstractPropertyTab {
                 @Override
                 public void changed(ObservableValue<? extends Task> observable, Task oldValue, Task newValue) {
                     ((EntryPoint) selectedPlanElement).setTask(newValue);
+                    selectedElementContainerProperty().getValue().getValue().setupContainer();
                 }
             });
             taskComboBox.setItems(FXCollections.observableArrayList(PlanDesigner.allAlicaFiles.getTasks().getKey()));

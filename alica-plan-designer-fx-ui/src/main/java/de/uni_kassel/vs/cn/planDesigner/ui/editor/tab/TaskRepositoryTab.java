@@ -31,7 +31,7 @@ public class TaskRepositoryTab extends EditorTab<TaskRepository> {
         createContentView();
     }
 
-    private void createContentView() {
+    public void createContentView() {
         VBox contentContainer = new VBox();
         ListView<Task> taskListView = new ListView<Task>(FXCollections.observableArrayList(getEditable().getTasks()));
         taskListView.setCellFactory(param -> new TaskListCell());

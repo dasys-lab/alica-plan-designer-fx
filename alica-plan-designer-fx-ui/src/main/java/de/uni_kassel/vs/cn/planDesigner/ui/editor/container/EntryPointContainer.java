@@ -73,7 +73,7 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
 
     @Override
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPoint containedElement) {
-        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(new Pair<>(containedElement, null));
+        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(new Pair<>(containedElement, this));
     }
 
     @Override
