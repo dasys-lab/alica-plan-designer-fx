@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 
@@ -9,7 +9,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
 /**
  * Created by marci on 26.02.17.
  */
-public class AddVariableToAbstractPlan extends Command<Variable> {
+public class AddVariableToAbstractPlan extends AbstractCommand<Variable> {
 
     private final AbstractPlan parentOfElement;
 

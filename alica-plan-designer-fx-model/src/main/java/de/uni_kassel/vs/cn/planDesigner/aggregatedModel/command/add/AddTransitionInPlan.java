@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
@@ -12,7 +12,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getPmlUiE
 /**
  * Created by marci on 02.12.16.
  */
-public class AddTransitionInPlan extends Command<Transition> {
+public class AddTransitionInPlan extends AbstractCommand<Transition> {
     private final PmlUiExtension newlyCreatedPmlUiExtension;
     private PlanModelVisualisationObject parentOfElement;
     private State from;

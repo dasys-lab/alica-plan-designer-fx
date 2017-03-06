@@ -1,17 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getPmlUiExtensionModelFactory;
 
 /**
  * Created by marci on 02.12.16.
  */
-public class AddStateInPlan extends Command<State> {
+public class AddStateInPlan extends AbstractCommand<State> {
 
     public static final String DEFAULT_STATE_NAME = "MISSING NAME";
     private PlanModelVisualisationObject parentOfElement;

@@ -1,13 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 
 /**
  * Created by marci on 26.02.17.
  */
-public class DeleteVariableFromAbstractPlan extends Command<Variable> {
+public class DeleteVariableFromAbstractPlan extends AbstractCommand<Variable> {
 
     private final AbstractPlan parentOfElement;
 

@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePositionForBendpoint;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint;
@@ -159,7 +159,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     }
 
     @Override
-    public Command createMoveElementCommand() {
+    public AbstractCommand createMoveElementCommand() {
         return new ChangePositionForBendpoint(containedElement, (int) (getLayoutX()),
                 (int) (getLayoutY()));
     }

@@ -13,7 +13,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
 /**
  * Created by marci on 05.01.17.
  */
-public class BehaviourTool extends Tool<Behaviour> {
+public class BehaviourTool extends AbstractTool<Behaviour> {
 
     public BehaviourTool(TabPane workbench) {
         super(workbench);

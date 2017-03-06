@@ -20,7 +20,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
 /**
  * Created by marci on 05.01.17.
  */
-public class TransitionTool extends Tool<Transition> {
+public class TransitionTool extends AbstractTool<Transition> {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private boolean initial = true;

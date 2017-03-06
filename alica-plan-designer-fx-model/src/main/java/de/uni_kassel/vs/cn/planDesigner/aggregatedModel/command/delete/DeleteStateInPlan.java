@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by marci on 01.12.16.
  */
-public class DeleteStateInPlan extends Command<State> {
+public class DeleteStateInPlan extends AbstractCommand<State> {
 
     private PlanModelVisualisationObject parentOfDeleted;
 

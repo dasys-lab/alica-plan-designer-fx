@@ -7,14 +7,14 @@ import java.util.Stack;
  * Created by marci on 03.01.17.
  */
 public class CommandStack extends Observable {
-    private Stack<Command> undoStack = new Stack<>();
-    private Stack<Command> redoStack = new Stack<>();
+    private Stack<AbstractCommand> undoStack = new Stack<>();
+    private Stack<AbstractCommand> redoStack = new Stack<>();
 
     /**
      *
      * @param command
      */
-    public void storeAndExecute(Command command) {
+    public void storeAndExecute(AbstractCommand command) {
         command.doCommand();
         undoStack.push(command);
         redoStack.clear();
@@ -25,7 +25,7 @@ public class CommandStack extends Observable {
      *
      */
     public void undo() {
-        Command undone = undoStack.pop();
+        AbstractCommand undone = undoStack.pop();
         undone.undoCommand();
         redoStack.push(undone);
         notifyObservers();
@@ -35,7 +35,7 @@ public class CommandStack extends Observable {
      * executes first command on redo stack and puts it from there to the undo stack.
      */
     public void redo() {
-        Command redone = redoStack.pop();
+        AbstractCommand redone = redoStack.pop();
         redone.doCommand();
         undoStack.push(redone);
         notifyObservers();
@@ -49,11 +49,11 @@ public class CommandStack extends Observable {
         return undoStack.peek().isSaved();
     }
 
-    public Stack<Command> getUndoStack() {
+    public Stack<AbstractCommand> getUndoStack() {
         return undoStack;
     }
 
-    public Stack<Command> getRedoStack() {
+    public Stack<AbstractCommand> getRedoStack() {
         return redoStack;
     }
 }

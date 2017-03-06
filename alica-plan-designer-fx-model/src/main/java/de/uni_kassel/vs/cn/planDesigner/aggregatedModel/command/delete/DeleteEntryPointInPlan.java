@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
@@ -11,7 +11,7 @@ import java.util.AbstractMap;
 /**
  * Created by marci on 08.02.17.
  */
-public class DeleteEntryPointInPlan extends Command<EntryPoint> {
+public class DeleteEntryPointInPlan extends AbstractCommand<EntryPoint> {
 
     private State associatedState;
     private final PlanModelVisualisationObject parentOfElement;

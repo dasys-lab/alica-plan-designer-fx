@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPlan;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
@@ -6,6 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
@@ -21,7 +22,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
 /**
  * The {@link StateTool} is used for adding new states to the currently edited {@link de.uni_kassel.vs.cn.planDesigner.alica.Plan}.
  */
-public class StateTool extends Tool<State> {
+public class StateTool extends AbstractTool<State> {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private Node visualRepresentation;

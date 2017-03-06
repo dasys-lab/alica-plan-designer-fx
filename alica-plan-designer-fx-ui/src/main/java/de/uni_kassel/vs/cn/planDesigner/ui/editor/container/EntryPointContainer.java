@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
@@ -17,7 +17,7 @@ import javafx.util.Pair;
 /**
  *
  */
-public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
+public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint> {
 
     private StateContainer stateContainer;
     private boolean dragged;
@@ -87,7 +87,7 @@ public class EntryPointContainer extends PlanElementContainer<EntryPoint> {
     }
 
     @Override
-    public Command createMoveElementCommand() {
+    public AbstractCommand createMoveElementCommand() {
         return new ChangePosition(getPmlUiExtension(), getContainedElement(),
                 (int) (getLayoutX()),
                 (int) (getLayoutY()));

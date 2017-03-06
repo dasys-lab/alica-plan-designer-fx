@@ -1,13 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 
 /**
  * Created by marci on 03.01.17.
  */
-public class ChangePosition extends Command<PmlUiExtension> {
+public class ChangePosition extends AbstractCommand<PmlUiExtension> {
 
     private PlanElement planElement;
     private int newX;

@@ -1,12 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint;
 
 /**
  * Created by marci on 03.01.17.
  */
-public class ChangePositionForBendpoint extends Command<Bendpoint> {
+public class ChangePositionForBendpoint extends AbstractCommand<Bendpoint> {
 
     private int newX;
     private int newY;

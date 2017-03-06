@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
+import javafx.scene.Cursor;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.util.Pair;
@@ -22,7 +23,7 @@ public class EditorTabPane extends TabPane {
     public void openTab(Path filePath) {
         Tab tab = getTabs()
                 .stream()
-                .filter(e -> ((EditorTab) e).getFilePath().equals(filePath))
+                .filter(e -> ((AbstractEditorTab) e).getFilePath().equals(filePath))
                 .findFirst()
                 .orElse(createNewTab(filePath));
 

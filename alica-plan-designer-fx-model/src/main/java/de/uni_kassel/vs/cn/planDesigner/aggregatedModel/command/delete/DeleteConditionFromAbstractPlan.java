@@ -1,13 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 
 /**
  * Created by marci on 28.02.17.
  */
-public class DeleteConditionFromAbstractPlan extends Command<Condition> {
+public class DeleteConditionFromAbstractPlan extends AbstractCommand<Condition> {
     private final AbstractPlan parentOfElement;
 
     public DeleteConditionFromAbstractPlan(AbstractPlan parentOfElement, Condition toDelete) {

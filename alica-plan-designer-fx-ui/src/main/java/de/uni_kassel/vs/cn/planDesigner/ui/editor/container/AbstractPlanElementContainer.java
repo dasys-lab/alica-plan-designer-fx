@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
@@ -15,10 +15,10 @@ import javafx.scene.shape.Shape;
 import javafx.util.Pair;
 
 /**
- * The {@link PlanElementContainer} is a base class for visual representations, with a model object to hold changes from the visualisation
+ * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a model object to hold changes from the visualisation
  * that will be written back to resource later.
  */
-public abstract class PlanElementContainer<T extends PlanElement> extends Pane implements DraggableEditorElement {
+public abstract class AbstractPlanElementContainer<T extends PlanElement> extends Pane implements DraggableEditorElement {
 
     private T containedElement;
     private PmlUiExtension pmlUiExtension;
@@ -32,7 +32,7 @@ public abstract class PlanElementContainer<T extends PlanElement> extends Pane i
      * @param pmlUiExtension
      * @param commandStack
      */
-    public PlanElementContainer(T containedElement, PmlUiExtension pmlUiExtension, CommandStack commandStack) {
+    public AbstractPlanElementContainer(T containedElement, PmlUiExtension pmlUiExtension, CommandStack commandStack) {
         this.containedElement = containedElement;
         this.pmlUiExtension = pmlUiExtension;
         this.commandStack = commandStack;
@@ -147,7 +147,7 @@ public abstract class PlanElementContainer<T extends PlanElement> extends Pane i
     }
 
     @Override
-    public Command createMoveElementCommand() {
+    public AbstractCommand createMoveElementCommand() {
         return null;
     }
 

@@ -8,7 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ObservableValueBase;
 import javafx.collections.FXCollections;
@@ -29,14 +29,14 @@ public class VariablesTab extends AbstractPropertyTab {
 
     private TableView<Variable> textFieldTableView;
 
-    public VariablesTab(EditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
+    public VariablesTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         super(activeEditorTab, commandStack);
         setText(I18NRepo.getString("label.variables"));
 
     }
 
     @Override
-    protected void addListenersForActiveTab(EditorTab<PlanElement> activeEditorTab) {
+    protected void addListenersForActiveTab(AbstractEditorTab<PlanElement> activeEditorTab) {
         activeEditorTab.getSelectedPlanElement().addListener((observable, oldValue, newValue) -> {
             selectedPlanElement = newValue.getKey();
             if (selectedPlanElement instanceof Plan) {

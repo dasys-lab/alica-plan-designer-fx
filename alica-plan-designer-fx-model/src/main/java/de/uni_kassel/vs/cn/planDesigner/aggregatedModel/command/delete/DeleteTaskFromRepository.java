@@ -1,13 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 
 /**
  * Created by marci on 01.03.17.
  */
-public class DeleteTaskFromRepository extends Command<Task> {
+public class DeleteTaskFromRepository extends AbstractCommand<Task> {
     private final TaskRepository parentOfElement;
 
     public DeleteTaskFromRepository(TaskRepository parentOfElement, Task toDelete) {

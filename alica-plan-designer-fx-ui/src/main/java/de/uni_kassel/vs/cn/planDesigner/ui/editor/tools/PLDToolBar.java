@@ -1,5 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.condition.PostConditionTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.condition.PreConditionTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.condition.RuntimeConditionTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state.FailureStateTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state.StateTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state.SuccessStateTool;
 import javafx.geometry.Orientation;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
@@ -17,5 +23,8 @@ public class PLDToolBar extends ToolBar {
         getItems().add(new EntryPointTool(workbench).createToolUI());
         getItems().add(new SuccessStateTool(workbench).createToolUI());
         getItems().add(new FailureStateTool(workbench).createToolUI());
+        getItems().add(new RuntimeConditionTool(workbench).createToolUI());
+        getItems().add(new PreConditionTool(workbench).createToolUI());
+        getItems().add(new PostConditionTool(workbench).createToolUI());
     }
 }

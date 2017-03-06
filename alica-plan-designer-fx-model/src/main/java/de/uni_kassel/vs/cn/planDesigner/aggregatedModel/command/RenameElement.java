@@ -5,7 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 /**
  * Created by marci on 02.12.16.
  */
-public class RenameElement extends Command<PlanElement> {
+public class RenameElement extends AbstractCommand<PlanElement> {
     private String newName;
     private String oldName;
 

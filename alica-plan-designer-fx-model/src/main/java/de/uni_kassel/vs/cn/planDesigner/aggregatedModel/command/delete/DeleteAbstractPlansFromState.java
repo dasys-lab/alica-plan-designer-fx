@@ -1,13 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 
 /**
  * Created by marci on 01.12.16.
  */
-public class DeleteAbstractPlansFromState extends Command<AbstractPlan> {
+public class DeleteAbstractPlansFromState extends AbstractCommand<AbstractPlan> {
 
     private final State parentStateOfElement;
 

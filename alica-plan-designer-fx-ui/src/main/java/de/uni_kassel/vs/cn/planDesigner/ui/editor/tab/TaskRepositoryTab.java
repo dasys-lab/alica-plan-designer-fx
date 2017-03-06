@@ -6,7 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskImpl;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.PlanElementContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
@@ -24,7 +24,7 @@ import java.nio.file.Path;
 /**
  * Created by marci on 23.02.17.
  */
-public class TaskRepositoryTab extends EditorTab<TaskRepository> {
+public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
 
     public TaskRepositoryTab(TaskRepository editable, Path filePath, CommandStack commandStack) {
         super(editable, filePath, commandStack);
@@ -37,7 +37,7 @@ public class TaskRepositoryTab extends EditorTab<TaskRepository> {
         taskListView.setCellFactory(param -> new TaskListCell());
         taskListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
                 selectedPlanElement.setValue(new Pair<>(observable.getValue(),
-                        new PlanElementContainer<Task>(observable.getValue(), null, getCommandStack()) {
+                        new AbstractPlanElementContainer<Task>(observable.getValue(), null, getCommandStack()) {
             @Override
             public void setupContainer() {
 

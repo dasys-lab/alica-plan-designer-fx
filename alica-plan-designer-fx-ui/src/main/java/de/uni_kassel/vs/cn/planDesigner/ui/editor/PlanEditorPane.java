@@ -5,7 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.*;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.scene.Group;
 import org.eclipse.emf.ecore.EObject;
 
@@ -25,9 +25,9 @@ public class PlanEditorPane extends Group {
     private List<TransitionContainer> transitionContainers;
     private List<EntryPointContainer> entryPointContainers;
     private CommandStack commandStack;
-    private EditorTab<Plan> planEditorTab;
+    private AbstractEditorTab<Plan> planEditorTab;
 
-    public PlanEditorPane(PlanModelVisualisationObject planModelVisualisationObject, EditorTab<Plan> planEditorTab) {
+    public PlanEditorPane(PlanModelVisualisationObject planModelVisualisationObject, AbstractEditorTab<Plan> planEditorTab) {
         super();
         this.planModelVisualisationObject = planModelVisualisationObject;
         this.planEditorTab = planEditorTab;
@@ -62,7 +62,7 @@ public class PlanEditorPane extends Group {
         return stateContainers;
     }
 
-    public EditorTab<Plan> getPlanEditorTab() {
+    public AbstractEditorTab<Plan> getPlanEditorTab() {
         return planEditorTab;
     }
 

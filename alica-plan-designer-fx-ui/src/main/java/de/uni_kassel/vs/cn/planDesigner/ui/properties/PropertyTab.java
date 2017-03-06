@@ -6,7 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 public class PropertyTab extends AbstractPropertyTab {
 
-    public PropertyTab(EditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
+    public PropertyTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         super(activeEditorTab, commandStack);
         setText(I18NRepo.getString("label.properties"));
     }

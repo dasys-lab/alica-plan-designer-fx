@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 
@@ -9,7 +9,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
 /**
  * Created by marci on 23.02.17.
  */
-public class AddTaskToRepository extends Command<Task> {
+public class AddTaskToRepository extends AbstractCommand<Task> {
 
     private final TaskRepository parentOfElement;
     private final String name;

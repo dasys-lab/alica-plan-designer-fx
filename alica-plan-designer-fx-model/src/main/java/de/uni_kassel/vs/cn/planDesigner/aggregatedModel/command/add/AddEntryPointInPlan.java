@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 
@@ -11,7 +11,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getPmlUiE
 /**
  * Created by marci on 23.02.17.
  */
-public class AddEntryPointInPlan extends Command<EntryPoint> {
+public class AddEntryPointInPlan extends AbstractCommand<EntryPoint> {
     private final PlanModelVisualisationObject parentOfElement;
     private final PmlUiExtension newlyCreatedPmlUiExtension;
 

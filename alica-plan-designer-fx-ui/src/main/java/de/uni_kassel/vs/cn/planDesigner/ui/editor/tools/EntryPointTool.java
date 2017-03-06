@@ -27,7 +27,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
 /**
  * Created by marci on 05.01.17.
  */
-public class EntryPointTool extends Tool<EntryPoint> {
+public class EntryPointTool extends AbstractTool<EntryPoint> {
 
     private Map<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private boolean initial = true;

@@ -13,7 +13,7 @@ import javafx.util.Pair;
 /**
  * Created by marci on 28.02.17.
  */
-public class ConditionContainer extends PlanElementContainer<Condition> {
+public class ConditionContainer extends AbstractPlanElementContainer<Condition> {
 
     /**
      * @param containedElement

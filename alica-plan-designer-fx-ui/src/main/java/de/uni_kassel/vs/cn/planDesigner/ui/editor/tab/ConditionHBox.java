@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.ConditionContainer;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.PlanElementContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
@@ -16,11 +16,11 @@ import javafx.util.Pair;
  */
 public class ConditionHBox extends HBox {
 
-    private final SimpleObjectProperty<Pair<PlanElement, PlanElementContainer>> selectedPlanElement;
+    private final SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedPlanElement;
     private final CommandStack commandStack;
     private final AbstractPlan abstractPlan;
 
-    public ConditionHBox(AbstractPlan abstractPlan, SimpleObjectProperty<Pair<PlanElement, PlanElementContainer>> selectedPlanElement, CommandStack commandStack) {
+    public ConditionHBox(AbstractPlan abstractPlan, SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedPlanElement, CommandStack commandStack) {
         this.abstractPlan = abstractPlan;
         this.selectedPlanElement = selectedPlanElement;
         this.commandStack = commandStack;
@@ -36,11 +36,11 @@ public class ConditionHBox extends HBox {
         abstractPlan.getConditions().forEach(c -> getChildren().add(new ConditionContainer(c, commandStack)));
     }
 
-    public Pair<PlanElement, PlanElementContainer> getSelectedPlanElement() {
+    public Pair<PlanElement, AbstractPlanElementContainer> getSelectedPlanElement() {
         return selectedPlanElement.get();
     }
 
-    public SimpleObjectProperty<Pair<PlanElement, PlanElementContainer>> selectedPlanElementProperty() {
+    public SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedPlanElementProperty() {
         return selectedPlanElement;
     }
 }

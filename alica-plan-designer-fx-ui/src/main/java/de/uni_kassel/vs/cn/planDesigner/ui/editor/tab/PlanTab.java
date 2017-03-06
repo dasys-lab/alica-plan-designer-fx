@@ -20,7 +20,7 @@ import java.nio.file.Path;
 /**
  * Created by marci on 23.11.16.
  */
-public class PlanTab extends EditorTab<Plan> {
+public class PlanTab extends AbstractEditorTab<Plan> {
 
     private final PlanEditorPane planEditorPane;
     private final ConditionHBox conditionHBox;

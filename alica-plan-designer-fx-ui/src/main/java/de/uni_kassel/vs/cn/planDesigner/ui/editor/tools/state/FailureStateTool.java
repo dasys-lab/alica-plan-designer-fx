@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import javafx.scene.control.TabPane;

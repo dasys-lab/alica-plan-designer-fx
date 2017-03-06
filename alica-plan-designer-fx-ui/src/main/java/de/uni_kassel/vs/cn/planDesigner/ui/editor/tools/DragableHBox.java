@@ -13,9 +13,9 @@ import javafx.scene.text.Text;
  * Created by marci on 23.11.16.
  */
 public class DragableHBox<T extends PlanElement> extends HBox {
-    private Tool<T> controller;
+    private AbstractTool<T> controller;
 
-    public DragableHBox(T alicaType, Tool<T> controller) {
+    public DragableHBox(T alicaType, AbstractTool<T> controller) {
         this.controller = controller;
         Class<?> alicaTypeClass = alicaType.getClass();
         ImageView imageView = new ImageView(new AlicaIcon(alicaTypeClass));

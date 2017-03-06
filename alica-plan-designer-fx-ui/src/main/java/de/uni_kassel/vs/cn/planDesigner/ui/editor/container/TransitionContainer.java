@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by marci on 03.12.16.
  */
-public class TransitionContainer extends PlanElementContainer<Transition> {
+public class TransitionContainer extends AbstractPlanElementContainer<Transition> {
     private StateContainer fromState;
     private StateContainer toState;
     private List<Node> draggableNodes;

@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import javafx.scene.Node;
 
@@ -13,7 +13,7 @@ public interface DraggableEditorElement {
 
     void redrawElement();
 
-    Command createMoveElementCommand();
+    AbstractCommand createMoveElementCommand();
 
     void setDragged(boolean dragged);
 

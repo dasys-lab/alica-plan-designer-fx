@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.Command;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Created by marci on 02.12.16.
  */
-public class StateContainer extends PlanElementContainer<State> implements Observable {
+public class StateContainer extends AbstractPlanElementContainer<State> implements Observable {
 
     public static final double STATE_RADIUS = 20.0;
     private boolean dragged;
@@ -90,7 +90,7 @@ public class StateContainer extends PlanElementContainer<State> implements Obser
     }
 
     @Override
-    public Command createMoveElementCommand() {
+    public AbstractCommand createMoveElementCommand() {
         return new ChangePosition(getPmlUiExtension(), getContainedElement(),
                 (int) (getLayoutX()),
                 (int) (getLayoutY()));
