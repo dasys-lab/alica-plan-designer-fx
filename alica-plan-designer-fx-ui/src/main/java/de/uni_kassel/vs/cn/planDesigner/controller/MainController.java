@@ -140,7 +140,7 @@ public class MainController implements Initializable {
                     } else if (selectedPlanElement instanceof EntryPointImpl) {
                         commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
                                 planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
-                    } else if (selectedPlanElement instanceof State && planTab.getSelectedPlanElement().getValue().getValue() != null) {
+                    } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElement().getValue().getValue() != null) {
                         State state = (State) planTab.getSelectedPlanElement().getValue().getValue().getContainedElement();
                         commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
                     } else if (selectedPlanElement instanceof Condition) {
