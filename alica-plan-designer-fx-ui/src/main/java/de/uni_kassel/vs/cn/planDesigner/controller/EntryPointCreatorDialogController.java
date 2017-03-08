@@ -7,7 +7,11 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePos
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -80,16 +84,18 @@ public class EntryPointCreatorDialogController implements Initializable {
             }
         });
 
-        if (createEntryPoint == false) {
-            taskComboBox.setVisible(false);
-            confirmTaskChoiceButton.setVisible(false);
-            Stage window = (Stage) newTaskNameTextField.getScene().getWindow();
-            window.setTitle(I18NRepo.getString("action.create.task"));
-            createTaskButton.setOnAction(e -> {
-                createTask();
-                window.close();
-            });
-        }
+        taskComboBox.onShownProperty().addListener((observable, oldValue, newValue) -> {
+            if (createEntryPoint == false) {
+                taskComboBox.setVisible(false);
+                confirmTaskChoiceButton.setVisible(false);
+                Stage window = (Stage) newTaskNameTextField.getScene().getWindow();
+                window.setTitle(I18NRepo.getString("action.create.task"));
+                createTaskButton.setOnAction(e -> {
+                    createTask();
+                    window.close();
+                });
+            }
+        });
 
     }
 

@@ -20,6 +20,7 @@ public class EditorTabPane extends TabPane {
 
     private CommandStack commandStack;
 
+    //FIXME closing tabs leads to NPE
     public void openTab(Path filePath) {
         Tab tab = getTabs()
                 .stream()

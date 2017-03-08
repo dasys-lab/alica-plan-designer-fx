@@ -42,6 +42,7 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
         wrapper = this;
     }
 
+    //FIXME here is an NPE something is very wrong here
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(T containedElement) {
         return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(new Pair<>(containedElement, this));
     }
