@@ -1,10 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -42,9 +46,9 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
         wrapper = this;
     }
 
-    //FIXME here is an NPE something is very wrong here
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(T containedElement) {
-        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(new Pair<>(containedElement, this));
+        return event -> ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
+                .getSelectedItem()).getSelectedPlanElement().setValue(new Pair<>(containedElement, this));
     }
 
     @Override

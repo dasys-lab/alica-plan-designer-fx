@@ -26,5 +26,6 @@ public class PLDToolBar extends ToolBar {
         getItems().add(new RuntimeConditionTool(workbench).createToolUI());
         getItems().add(new PreConditionTool(workbench).createToolUI());
         getItems().add(new PostConditionTool(workbench).createToolUI());
+        getItems().add(new InitTransitionTool(workbench).createToolUI());
     }
 }
