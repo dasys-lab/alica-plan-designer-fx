@@ -24,7 +24,7 @@ public class EditorTabPane extends TabPane {
     public void openTab(Path filePath) {
         Tab tab = getTabs()
                 .stream()
-                .filter(e -> ((AbstractEditorTab) e).getFilePath().equals(filePath))
+                .filter(e -> e != null && ((AbstractEditorTab) e).getFilePath().equals(filePath))
                 .findFirst()
                 .orElse(createNewTab(filePath));
 

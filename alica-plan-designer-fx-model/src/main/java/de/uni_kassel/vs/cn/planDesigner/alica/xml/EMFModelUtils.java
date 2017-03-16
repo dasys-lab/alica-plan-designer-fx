@@ -95,22 +95,30 @@ public class EMFModelUtils {
     }
 
     /**
+     * Creates the best files, Alica Files. Or to be more specific {@link Resource} objects (which are written to disk).
+     * @param emptyObject
+     * @param file
+     * @param <T>
+     * @throws IOException
+     */
+    public static <T extends EObject> void createAlicaFile(T emptyObject, File file) throws IOException {
+        Resource resource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath()));
+        resource.getContents().add(emptyObject);
+        if (emptyObject instanceof Plan) {
+            Resource pmlexResource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath().replace(".pml", ".pmlex")));
+            pmlexResource.getContents().add(getPmlUiExtensionModelFactory().createPmlUiExtensionMap());
+            pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        }
+        resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+    }
+
+    /**
      * Saves the given alicaObject in the file.
      * @param alicaObject the object to save
      * @param <T> The type of {@link EObject} to save
      * @throws IOException
      */
     public static <T extends EObject> void saveAlicaFile(T alicaObject) throws IOException {
-        // TODO This outcommented code is resource creation it happens ONLY on file/resource creation
-        // create a resource
-        //Resource resource = alicaResourceSet.createResource(URI
-        //        .createURI(file.getAbsolutePath()));
-        // Get the first model element and cast it to the right type, in my
-        // example everything is hierarchical included in this first node
-
-        //resource.getContents().add(alicaObject);
-
-        // now save the content.
         alicaObject.eResource().save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
     }
 

@@ -7,7 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.ui.PLDFileTreeView;
+import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.PLDFileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
