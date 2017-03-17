@@ -12,6 +12,8 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.TaskRepositoryTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.menu.EditMenu;
+import de.uni_kassel.vs.cn.planDesigner.ui.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
 import javafx.fxml.FXML;
@@ -44,7 +46,7 @@ public class MainController implements Initializable {
     private PropertyTabPane propertyAndStatusTabPane;
 
     @FXML
-    RepositoryTabPane repositoryTabPane;
+    private RepositoryTabPane repositoryTabPane;
 
     @FXML
     private EditorTabPane editorTabPane;
@@ -80,94 +82,13 @@ public class MainController implements Initializable {
         // TODO this desperately needs refactoring
         List<Menu> menus = new ArrayList<>();
         Menu fileMenu = new Menu(I18NRepo.getString("label.menu.file"));
-        MenuItem newPlanItem = new MenuItem(I18NRepo.getString("label.menu.file.newPlan"));
-        fileMenu.getItems().add(newPlanItem);
+        fileMenu.getItems().add(new NewResourceMenu());
         MenuItem saveItem = new MenuItem(I18NRepo.getString("label.menu.file.save"));
         saveItem.setOnAction(event -> ((AbstractEditorTab<?>) editorTabPane.getSelectionModel().getSelectedItem()).save());
+        saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
         menus.add(fileMenu);
-        Menu editMenu = new Menu(I18NRepo.getString("label.menu.edit"));
-        MenuItem deleteElementItem = new MenuItem(I18NRepo.getString("label.menu.edit.delete"));
-        MenuItem undoItem = new MenuItem(I18NRepo.getString("label.menu.edit.undo"));
-        undoItem.setDisable(false);
-        commandStack.addObserver((a,b) -> {
-            if (((CommandStack)a).getUndoStack().isEmpty()) {
-               undoItem.setDisable(true);
-            } else {
-                undoItem.setDisable(false);
-            }
-        });
-        undoItem.setOnAction(event -> {
-            commandStack.undo();
-            Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
-            if (selectedItem instanceof PlanTab) {
-                ((PlanTab)selectedItem).getPlanEditorPane().setupPlanVisualisation();
-                ((PlanTab)selectedItem).getConditionHBox().setupConditionVisualisation();
-            } else if (selectedItem instanceof TaskRepositoryTab) {
-                ((TaskRepositoryTab)selectedItem).createContentView();
-            }
-        });
-        MenuItem redoItem = new MenuItem(I18NRepo.getString("label.menu.edit.redo"));
-        commandStack.addObserver((a,b) -> {
-            if (((CommandStack)a).getRedoStack().isEmpty()) {
-                redoItem.setDisable(true);
-            } else {
-                redoItem.setDisable(false);
-            }
-        });
-        redoItem.setOnAction(event -> {
-            commandStack.redo();
-            ((PlanTab)editorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
-        });
-        redoItem.setDisable(false);
-        deleteElementItem.setOnAction(event -> {
-            Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
-            if (selectedItem == null) {
-                return;
-            }
-
-            if (selectedItem instanceof PlanTab) {
-                PlanTab planTab = (PlanTab) selectedItem;
-                PlanElement selectedPlanElement = planTab.getSelectedPlanElement().getValue().getKey();
-
-                if(selectedPlanElement != null) {
-                    if(selectedPlanElement instanceof StateImpl) {
-                        commandStack.storeAndExecute(new DeleteStateInPlan((State) selectedPlanElement,
-                                planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
-                    } else if (selectedPlanElement instanceof TransitionImpl) {
-                        commandStack.storeAndExecute(new DeleteTransitionInPlan((Transition) selectedPlanElement,
-                                planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
-                    } else if (selectedPlanElement instanceof EntryPointImpl) {
-                        commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
-                                planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
-                    } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElement().getValue().getValue() != null) {
-                        State state = (State) planTab.getSelectedPlanElement().getValue().getValue().getContainedElement();
-                        commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
-                    } else if (selectedPlanElement instanceof Condition) {
-                        Condition condition = (Condition) planTab.getSelectedPlanElement().getValue().getKey();
-                        commandStack.storeAndExecute(new DeleteConditionFromAbstractPlan(planTab.getPlanEditorPane().getPlanModelVisualisationObject().getPlan(), condition));
-                    }
-                    planTab.getPlanEditorPane().setupPlanVisualisation();
-                    planTab.getConditionHBox().setupConditionVisualisation();
-                    //selectedPlanElement
-                    //
-
-                    //commandStack.storeAndExecute();
-                }
-            } else if (selectedItem instanceof TaskRepositoryTab) {
-                TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab) selectedItem;
-                if (taskRepositoryTab.getSelectedPlanElement() != null) {
-                    commandStack.storeAndExecute(new DeleteTaskFromRepository(taskRepositoryTab.getEditable(), (Task) taskRepositoryTab.getSelectedPlanElement().getValue().getKey()));
-                    taskRepositoryTab.createContentView();
-                }
-            }
-        });
-        deleteElementItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
-        saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
-        editMenu.getItems().addAll(undoItem, redoItem, deleteElementItem);
-        undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
-        redoItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
-        menus.add(editMenu);
+        menus.add(new EditMenu(commandStack, editorTabPane));
         return menus;
     }
 
