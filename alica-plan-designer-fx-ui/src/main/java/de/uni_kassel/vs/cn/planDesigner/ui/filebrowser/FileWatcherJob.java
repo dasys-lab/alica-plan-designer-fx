@@ -8,6 +8,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
@@ -15,6 +16,8 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
  * Created by marci on 16.03.17.
  */
 public class FileWatcherJob implements Runnable {
+
+    public static boolean stayAlive = true;
 
     private final PLDFileTreeView fileTreeView;
     private final Map<WatchKey,Path> keys = new HashMap<>();
@@ -80,9 +83,13 @@ public class FileWatcherJob implements Runnable {
                 // wait for key to be signalled
                 WatchKey key;
                 try {
-                    key = watcher.take();
+                    key = watcher.poll(500, TimeUnit.MILLISECONDS);
                 } catch (InterruptedException x) {
                     return;
+                }
+
+                if (stayAlive == false) {
+                    break;
                 }
 
                 Path dir = keys.get(key);

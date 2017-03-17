@@ -5,6 +5,7 @@ package de.uni_kassel.vs.cn.planDesigner;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.FileWatcherJob;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -30,6 +31,7 @@ public class PlanDesigner extends Application {
         EMFModelUtils.initializeEMF();
         allAlicaFiles.init();
         launch(args);
+        FileWatcherJob.stayAlive = false;
     }
 
     @Override
