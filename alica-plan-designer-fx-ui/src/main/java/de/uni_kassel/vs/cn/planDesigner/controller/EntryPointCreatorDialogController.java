@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddEntryPoin
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTaskToRepository;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.beans.value.ChangeListener;
@@ -55,7 +56,7 @@ public class EntryPointCreatorDialogController implements Initializable {
             }
         });
 
-        taskComboBox.setItems(FXCollections.observableArrayList(PlanDesigner.allAlicaFiles.getTasks().getKey()));
+        taskComboBox.setItems(FXCollections.observableArrayList(AllAlicaFiles.getInstance().getTasks().getKey()));
         taskComboBox.setButtonCell(new ListCell<Task>() {
             @Override
             protected void updateItem(Task item, boolean empty) {
@@ -104,9 +105,9 @@ public class EntryPointCreatorDialogController implements Initializable {
             MainController
                     .getInstance()
                     .getCommandStack()
-                    .storeAndExecute(new AddTaskToRepository(PlanDesigner.allAlicaFiles
+                    .storeAndExecute(new AddTaskToRepository(AllAlicaFiles.getInstance()
                             .getTaskRepository().get(0).getKey(), newTaskNameTextField.getText()));
-            taskComboBox.setItems(FXCollections.observableArrayList(PlanDesigner.allAlicaFiles.getTasks().getKey()));
+            taskComboBox.setItems(FXCollections.observableArrayList(AllAlicaFiles.getInstance().getTasks().getKey()));
             newTaskNameTextField.setText("");
         }
     }

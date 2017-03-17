@@ -4,6 +4,8 @@ import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import javafx.scene.Cursor;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -30,9 +32,10 @@ public class EditorTabPane extends TabPane {
 
         if (this.getTabs().contains(tab) == false) {
             getTabs().add(tab);
+            getSelectionModel().clearSelection();
             getSelectionModel().select(tab);
         } else {
-            Optional<Tab> result = getTabs().stream().filter(e -> e.equals(tab)).findFirst();
+            Optional<Tab> result = getTabs().stream().filter(e ->  e != null && e.equals(tab)).findFirst();
             if (result.isPresent()) {
                 getSelectionModel().select(result.get());
             }
@@ -44,15 +47,15 @@ public class EditorTabPane extends TabPane {
         String filePathAsString = filePath.toString();
         switch (filePathAsString.substring(filePathAsString.indexOf('.') + 1)) {
             case "pml":
-                Pair<Plan, Path> planPathPair = PlanDesigner
-                        .allAlicaFiles
+                Pair<Plan, Path> planPathPair = AllAlicaFiles
+                        .getInstance()
                         .getPlans()
                         .stream()
                         .filter(e -> e.getValue().equals(filePath))
                         .findFirst().get();
                 return new PlanTab(planPathPair.getKey(), planPathPair.getValue(), commandStack);
             case "tsk":
-                List<Pair<TaskRepository, Path>> taskRepositoryPathPair = PlanDesigner.allAlicaFiles.getTaskRepository();
+                List<Pair<TaskRepository, Path>> taskRepositoryPathPair = AllAlicaFiles.getInstance().getTaskRepository();
                 return new TaskRepositoryTab(taskRepositoryPathPair.get(0).getKey(),
                         taskRepositoryPathPair.get(0).getValue(), commandStack);
             default:

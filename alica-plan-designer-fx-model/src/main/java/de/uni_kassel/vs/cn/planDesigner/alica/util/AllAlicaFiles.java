@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.common;
+package de.uni_kassel.vs.cn.planDesigner.alica.util;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
  */
 public class AllAlicaFiles {
 
+    private static AllAlicaFiles instance;
+
     private List<Pair<Plan, Path>> plans;
 
     private List<Pair<PlanType, Path>> planTypes;
@@ -34,6 +36,19 @@ public class AllAlicaFiles {
 
 
     private List<Pair<TaskRepository, Path>> taskRepository;
+
+    public static AllAlicaFiles getInstance() {
+        if (instance == null) {
+            instance = new AllAlicaFiles();
+            try {
+                instance.init();
+            } catch (URISyntaxException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return instance;
+    }
 
     public List<Pair<TaskRepository, Path>> getTaskRepository() {
         return taskRepository;

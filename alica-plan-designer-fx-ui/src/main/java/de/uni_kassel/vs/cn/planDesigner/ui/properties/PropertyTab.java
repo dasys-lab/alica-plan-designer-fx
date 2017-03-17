@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ChangeListener;
@@ -73,7 +74,7 @@ public class PropertyTab extends AbstractPropertyTab {
                     selectedElementContainerProperty().getValue().getValue().setupContainer();
                 }
             });
-            taskComboBox.setItems(FXCollections.observableArrayList(PlanDesigner.allAlicaFiles.getTasks().getKey()));
+            taskComboBox.setItems(FXCollections.observableArrayList(AllAlicaFiles.getInstance().getTasks().getKey()));
             taskComboBox.setButtonCell(new ListCell<Task>() {
                 @Override
                 protected void updateItem(Task item, boolean empty) {
