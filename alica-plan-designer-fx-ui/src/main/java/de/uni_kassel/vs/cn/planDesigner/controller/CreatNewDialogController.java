@@ -59,8 +59,8 @@ public class CreatNewDialogController implements Initializable {
             Node source = (Node) e.getSource();
             openFileChooser((Stage) source.getScene().getWindow());
         });
-        openFileChooserButton.setText("action.choose");
-        createButton.setText("action.create");
+        openFileChooserButton.setText(I18NRepo.getString("action.choose"));
+        createButton.setText(I18NRepo.getString("action.create"));
         createButton.setOnAction(e -> createFile());
     }
 

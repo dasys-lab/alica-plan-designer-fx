@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import javafx.application.Platform;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,7 +126,7 @@ public class FileWatcherJob implements Runnable {
                             throw new RuntimeException(x);
                         }
                     }
-                    fileTreeView.updateTreeView(kind, child);
+                    Platform.runLater(() ->fileTreeView.updateTreeView(kind, child));
                 }
 
                 // reset key and remove from set if directory no longer accessible

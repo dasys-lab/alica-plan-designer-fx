@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
@@ -58,6 +59,14 @@ public class EditorTabPane extends TabPane {
                 List<Pair<TaskRepository, Path>> taskRepositoryPathPair = AllAlicaFiles.getInstance().getTaskRepository();
                 return new TaskRepositoryTab(taskRepositoryPathPair.get(0).getKey(),
                         taskRepositoryPathPair.get(0).getValue(), commandStack);
+            case "pty":
+                Pair<PlanType, Path> plantypePathPair = AllAlicaFiles
+                        .getInstance()
+                        .getPlanTypes()
+                        .stream()
+                        .filter(e -> e.getValue().equals(filePath))
+                        .findFirst().get();
+                return new PlanTypeTab(plantypePathPair.getKey(), plantypePathPair.getValue(), commandStack);
             default:
                 return null;
 

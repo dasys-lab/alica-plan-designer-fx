@@ -74,6 +74,7 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
         } else {
             collect.forEach(e -> ((PLDTreeItem)e).updateDirectory(kind, child));
         }
+        setExpanded(true);
     }
 
     private Image getImageForFileType(File content) {
