@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.RenameElement;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddPlanToPlanType;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangeAttributeValue;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemoveAllPlansFromPlanType;
@@ -14,7 +13,6 @@ import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryHBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -71,7 +69,11 @@ public class PlanTypeWindowController implements Initializable {
                 .getInstance()
                 .getPlans()
                 .stream()
-                .map(e -> new RepositoryHBox<>(e.getKey(), e.getValue()))
+                .map(e -> {
+                    RepositoryHBox<Plan> planRepositoryHBox = new RepositoryHBox<>(e.getKey(), e.getValue(), null);
+                    planRepositoryHBox.setOnMouseClicked(null);
+                    return planRepositoryHBox;
+                })
                 .collect(Collectors.toList());
 
         planListView.setItems(FXCollections.observableArrayList(allPlans));
@@ -149,7 +151,9 @@ public class PlanTypeWindowController implements Initializable {
                                         .stream()
                                         .filter(f -> f.getKey().equals(e.getPlan()))
                                         .findFirst().get();
-                                planListView.getItems().add(new RepositoryHBox<>(planPathPair.getKey(), planPathPair.getValue()));
+                                RepositoryHBox<Plan> e1 = new RepositoryHBox<>(planPathPair.getKey(), planPathPair.getValue(), null);
+                                e1.setOnMouseClicked(null);
+                                planListView.getItems().add(e1);
                             });
                 }
             }

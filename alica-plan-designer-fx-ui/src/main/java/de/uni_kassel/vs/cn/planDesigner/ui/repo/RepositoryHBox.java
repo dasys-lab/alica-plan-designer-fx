@@ -1,7 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.repo;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractPlanTool;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -15,9 +17,11 @@ import java.nio.file.Path;
  */
 public class RepositoryHBox<T extends PlanElement> extends HBox {
     private T object;
+    private AbstractPlanTool dragTool;
 
-    public RepositoryHBox(T object, Path pathToObject) {
+    public RepositoryHBox(T object, Path pathToObject, AbstractPlanTool dragTool) {
         this.object = object;
+        this.dragTool = dragTool;
 
         getChildren().addAll(new ImageView(new AlicaIcon(object.getClass())),
                 new Text(object.getName()));
@@ -26,9 +30,24 @@ public class RepositoryHBox<T extends PlanElement> extends HBox {
                 MainController.getInstance().openFile(pathToObject.toFile());
             }
         });
+
+        if (dragTool != null) {
+            initDragSupport();
+        }
     }
 
     public T getObject() {
         return object;
     }
+
+    protected void initDragSupport() {
+        setOnDragDetected(e -> {
+            startFullDrag();
+            dragTool.setActiveElement((AbstractPlan) getObject());
+            dragTool.setVisualRepresentation(this);
+            dragTool.startPhase();
+        });
+    }
+
+
 }

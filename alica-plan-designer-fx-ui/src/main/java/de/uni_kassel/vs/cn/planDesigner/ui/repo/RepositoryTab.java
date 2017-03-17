@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractPlanTool;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -16,10 +17,16 @@ import java.util.stream.Collectors;
  * Created by marci on 25.11.16.
  */
 public class RepositoryTab<T extends PlanElement> extends Tab {
-    public RepositoryTab(List<Pair<T, Path>> objects) {
+    private AbstractPlanTool dragTool;
+
+    public RepositoryTab(List<Pair<T, Path>> objects, AbstractPlanTool dragTool) {
+        this.dragTool = dragTool;
         List<RepositoryHBox<T>> hBoxes = objects
                 .stream()
-                .map(pair -> new RepositoryHBox<>(pair.getKey(), pair.getValue()))
+                .map(pair -> {
+                    RepositoryHBox<T> tRepositoryHBox = new RepositoryHBox<>(pair.getKey(), pair.getValue(), dragTool);
+                    return tRepositoryHBox;
+                })
                 .collect(Collectors.toList());
         String name = objects.get(0).getKey().eClass().getName();
         setText(name);
@@ -28,10 +35,14 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
         setContent(new ListView<>(hBoxObservableList));
     }
 
-    public RepositoryTab(Pair<List<T>, Path> pair) {
+    public RepositoryTab(Pair<List<T>, Path> pair, AbstractPlanTool dragTool) {
+        this.dragTool = dragTool;
         List<RepositoryHBox<T>> hBoxes = pair.getKey()
                 .stream()
-                .map(t -> new RepositoryHBox<>(t, pair.getValue()))
+                .map(t -> {
+                    RepositoryHBox<T> tRepositoryHBox = new RepositoryHBox<>(t, pair.getValue(), dragTool);
+                    return tRepositoryHBox;
+                })
                 .collect(Collectors.toList());
         String name = pair.getKey().get(0).eClass().getName();
         setText(name);
