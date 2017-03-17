@@ -28,6 +28,9 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
             Text text = new Text(I18NRepo.getString("alicatype.property." + propertyName));
             text.setWrappingWidth(wrappingWidth);
             Node inputField = getInputField(object, propertyName, propertyClass);
+            if (propertyName.equals("id")) {
+                inputField.setDisable(true);
+            }
             getChildren().addAll(text, inputField);
             setHgrow(inputField, Priority.ALWAYS);
             setHgrow(text, Priority.ALWAYS);

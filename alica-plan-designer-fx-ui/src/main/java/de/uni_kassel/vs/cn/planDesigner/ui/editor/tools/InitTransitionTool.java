@@ -1,18 +1,18 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTransitionInPlan;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.SetStateForEntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 
@@ -40,7 +40,13 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+        PlanTab selectedItem = (PlanTab) workbench.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) {
+            ChangeListener<Tab> listener = new TabChangeListener();
+            workbench.getSelectionModel().selectedItemProperty().addListener(listener);
+        } else {
+            (selectedItem).getPlanEditorPane().setupPlanVisualisation();
+        }
     }
 
     @Override
@@ -85,5 +91,15 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
      */
     static final class InitStateConnection extends PlanElementImpl {
 
+    }
+
+    private class TabChangeListener implements ChangeListener<Tab> {
+        @Override
+        public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+            if (newValue != null) {
+                ((PlanTab) newValue).getPlanEditorPane().setupPlanVisualisation();
+                workbench.getSelectionModel().selectedItemProperty().removeListener(this);
+            }
+        }
     }
 }

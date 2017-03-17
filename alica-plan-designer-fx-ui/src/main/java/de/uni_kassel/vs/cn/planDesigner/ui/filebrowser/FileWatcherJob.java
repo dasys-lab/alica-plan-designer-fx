@@ -95,7 +95,6 @@ public class FileWatcherJob implements Runnable {
 
                 Path dir = keys.get(key);
                 if (dir == null) {
-                    System.err.println("WatchKey not recognized!!");
                     continue;
                 }
 
