@@ -26,6 +26,7 @@ public class PlanEditorPane extends Group {
     private List<EntryPointContainer> entryPointContainers;
     private CommandStack commandStack;
     private AbstractEditorTab<Plan> planEditorTab;
+    private List<SynchronisationContainer> synchronisationContainers;
 
     public PlanEditorPane(PlanModelVisualisationObject planModelVisualisationObject, AbstractEditorTab<Plan> planEditorTab) {
         super();
@@ -41,10 +42,12 @@ public class PlanEditorPane extends Group {
         stateContainers = createStateContainers();
         transitionContainers = createTransitionContainers();
         entryPointContainers = createEntryPointContainers();
+        synchronisationContainers = createSynchronisationContainers();
 
         getChildren().addAll(transitionContainers);
         getChildren().addAll(stateContainers);
         getChildren().addAll(entryPointContainers);
+        getChildren().addAll(synchronisationContainers);
 
         this.setOnMouseClicked(new MouseClickHandler(transitionContainers));
         //getChildren().add(new Line(EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, 0d, EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, getHeight()));
@@ -136,6 +139,26 @@ public class PlanEditorPane extends Group {
                     } else {
                         return new StateContainer(pmlUiExtension, e, commandStack);
                     }
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<SynchronisationContainer> createSynchronisationContainers() {
+        return planModelVisualisationObject
+                .getPlan()
+                .getSynchronisations()
+                .stream()
+                .map(e -> {
+                    PmlUiExtension pmlUiExtension = null;
+                    for (Map.Entry<EObject, PmlUiExtension> entry : planModelVisualisationObject.getPmlUiExtensionMap().getExtension()) {
+                        EObject expressionVar = entry.getKey();
+
+                        if (expressionVar instanceof Synchronisation && ((Synchronisation) expressionVar).getId() == e.getId()) {
+                            pmlUiExtension = entry.getValue();
+                            break;
+                        }
+                    }
+                    return new SynchronisationContainer(e, pmlUiExtension, commandStack);
                 })
                 .collect(Collectors.toList());
     }

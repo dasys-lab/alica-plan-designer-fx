@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
+import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +100,7 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
             points[points.length - 1] = _toY;
 
             visualRepresentation = new Polyline(points);
-            visualRepresentation.setFill(null);
+            ((Shape)visualRepresentation).setFill(null);
             polygon = new Polygon(
                     _toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
                     _toX, _toY,
@@ -110,8 +111,8 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
         polygon.setStroke(getVisualisationColor());
         polygon.setStrokeWidth(4);
         polygon.setVisible(true);
-        visualRepresentation.setStrokeWidth(3);
-        visualRepresentation.setStroke(getVisualisationColor());
+        ((Shape)visualRepresentation).setStrokeWidth(3);
+        ((Shape)visualRepresentation).setStroke(getVisualisationColor());
         visualRepresentation.setPickOnBounds(false);
         this.getChildren().add(visualRepresentation);
         this.getChildren().add(polygon);

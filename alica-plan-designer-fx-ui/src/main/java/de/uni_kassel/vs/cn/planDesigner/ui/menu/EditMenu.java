@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
+import de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane;
@@ -83,6 +84,9 @@ public class EditMenu extends Menu {
                     } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElement().getValue().getValue() != null) {
                         State state = (State) planTab.getSelectedPlanElement().getValue().getValue().getContainedElement();
                         commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
+                    } else if(selectedPlanElement instanceof SynchronisationImpl) {
+                        commandStack.storeAndExecute(new DeleteSynchronisationFromPlan((Synchronisation) selectedPlanElement,
+                                planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
                     } else if (selectedPlanElement instanceof Condition) {
                         Condition condition = (Condition) planTab.getSelectedPlanElement().getValue().getKey();
                         commandStack.storeAndExecute(new DeleteConditionFromAbstractPlan(planTab.getPlanEditorPane().getPlanModelVisualisationObject().getPlan(), condition));

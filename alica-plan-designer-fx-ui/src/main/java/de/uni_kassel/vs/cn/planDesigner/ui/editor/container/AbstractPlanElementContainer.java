@@ -26,7 +26,7 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
 
     private T containedElement;
     private PmlUiExtension pmlUiExtension;
-    protected Shape visualRepresentation;
+    protected Node visualRepresentation;
     protected CommandStack commandStack;
     protected Node wrapper;
 
@@ -110,7 +110,7 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
      *
      * @return
      */
-    public Shape getVisualRepresentation() {
+    public Node getVisualRepresentation() {
         return visualRepresentation;
     }
 
