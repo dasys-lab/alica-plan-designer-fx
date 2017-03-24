@@ -51,6 +51,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
         getChildren().clear();
         visualRepresentation = new Circle(getPmlUiExtension().getXPos(), getPmlUiExtension().getYPos(), StateContainer.STATE_RADIUS,
                 getVisualisationColor());
+        visualRepresentation.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
 
         if (stateContainer != null) {
             Line line = new Line(getPmlUiExtension().getXPos(),

@@ -5,7 +5,10 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.scene.Node;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -20,11 +23,12 @@ import java.util.List;
 /**
  * Created by marci on 03.12.16.
  */
-public class TransitionContainer extends AbstractPlanElementContainer<Transition> {
+public class TransitionContainer extends AbstractPlanElementContainer<Transition> implements Observable {
     private StateContainer fromState;
     private StateContainer toState;
     private List<Node> draggableNodes;
     private List<Node> potentialDraggableNodes;
+    private List<InvalidationListener> invalidationListeners = new ArrayList<>();
 
     public TransitionContainer(Transition transition, PmlUiExtension pmlUiExtension, CommandStack commandStack,
                                StateContainer fromState, StateContainer toState) {
@@ -41,6 +45,7 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
 
     @Override
     public void setupContainer() {
+        //setBackground(new Background(new BackgroundFill(Color.GREEN,null,null)));
         getChildren().clear();
         draggableNodes.clear();
         potentialDraggableNodes.clear();
@@ -117,6 +122,7 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
         this.getChildren().add(visualRepresentation);
         this.getChildren().add(polygon);
         this.getChildren().addAll(draggableNodes);
+        invalidationListeners.forEach(e-> e.invalidated(this));
     }
 
     @Override
@@ -130,5 +136,15 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
 
     public List<Node> getDraggableNodes() {
         return draggableNodes;
+    }
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+        invalidationListeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+        invalidationListeners.remove(listener);
     }
 }

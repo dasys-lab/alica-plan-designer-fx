@@ -42,7 +42,7 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
     public void draw() {
         PlanTab selectedItem = (PlanTab) workbench.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
-            ChangeListener<Tab> listener = new TabChangeListener();
+            ChangeListener<Tab> listener = new TabChangeListener(workbench);
             workbench.getSelectionModel().selectedItemProperty().addListener(listener);
         } else {
             (selectedItem).getPlanEditorPane().setupPlanVisualisation();
@@ -91,15 +91,5 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
      */
     static final class InitStateConnection extends PlanElementImpl {
 
-    }
-
-    private class TabChangeListener implements ChangeListener<Tab> {
-        @Override
-        public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-            if (newValue != null) {
-                ((PlanTab) newValue).getPlanEditorPane().setupPlanVisualisation();
-                workbench.getSelectionModel().selectedItemProperty().removeListener(this);
-            }
-        }
     }
 }

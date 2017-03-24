@@ -56,6 +56,7 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
         setLayoutX(getPmlUiExtension().getXPos());
         setLayoutY(getPmlUiExtension().getYPos());
         visualRepresentation = new Circle(STATE_RADIUS, getVisualisationColor());
+        visualRepresentation.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
         getChildren().add(visualRepresentation);
         Text e = new Text(getContainedElement().getName());
         getChildren().add(e);
@@ -65,9 +66,7 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
         List<HBox> statePlans = getContainedElement()
                 .getPlans()
                 .stream()
-                .map(p -> {
-                    return (HBox) new AbstractPlanHBox(p);
-                })
+                .map(AbstractPlanHBox::new)
                 .collect(Collectors.toList());
         getChildren().addAll(statePlans);
     }

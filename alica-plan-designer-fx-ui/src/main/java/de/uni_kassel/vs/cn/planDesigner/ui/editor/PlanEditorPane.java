@@ -158,7 +158,11 @@ public class PlanEditorPane extends Group {
                             break;
                         }
                     }
-                    return new SynchronisationContainer(e, pmlUiExtension, commandStack);
+                    List<TransitionContainer> collect = transitionContainers
+                            .stream()
+                            .filter(f -> e.getSynchedTransitions().contains(f.getContainedElement()))
+                            .collect(Collectors.toList());
+                    return new SynchronisationContainer(e,collect, pmlUiExtension, commandStack);
                 })
                 .collect(Collectors.toList());
     }

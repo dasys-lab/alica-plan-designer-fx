@@ -28,5 +28,6 @@ public class PLDToolBar extends ToolBar {
         getItems().add(new PostConditionTool(workbench).createToolUI());
         getItems().add(new InitTransitionTool(workbench).createToolUI());
         getItems().add(new SynchronisationTool(workbench).createToolUI());
+        getItems().add(new SyncTransitionTool(workbench).createToolUI());
     }
 }
