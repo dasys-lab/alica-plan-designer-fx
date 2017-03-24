@@ -33,7 +33,6 @@ public class EditorTabPane extends TabPane {
 
         if (this.getTabs().contains(tab) == false) {
             getTabs().add(tab);
-            getSelectionModel().clearSelection();
             getSelectionModel().select(tab);
         } else {
             Optional<Tab> result = getTabs().stream().filter(e ->  e != null && e.equals(tab)).findFirst();
