@@ -6,14 +6,20 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Constant;
 import de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription;
 import de.uni_kassel.vs.cn.planDesigner.alica.Fluent;
+
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -121,34 +127,6 @@ public class DomainDescriptionImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Constant> getConstants() {
-		if (constants == null) {
-			constants = new EObjectContainmentEList<Constant>(Constant.class, this, AlicaPackage.DOMAIN_DESCRIPTION__CONSTANTS);
-		}
-		return constants;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case AlicaPackage.DOMAIN_DESCRIPTION__FLUENTS:
-				return ((InternalEList<?>)getFluents()).basicRemove(otherEnd, msgs);
-			case AlicaPackage.DOMAIN_DESCRIPTION__CONSTANTS:
-				return ((InternalEList<?>)getConstants()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<String> getTypes() {
 		if (types == null) {
 			types = new EDataTypeUniqueEList<String>(String.class, this, AlicaPackage.DOMAIN_DESCRIPTION__TYPES);
@@ -175,6 +153,34 @@ public class DomainDescriptionImpl extends MinimalEObjectImpl.Container implemen
 		name = newName;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.DOMAIN_DESCRIPTION__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<Constant> getConstants() {
+		if (constants == null) {
+			constants = new EObjectContainmentEList<Constant>(Constant.class, this, AlicaPackage.DOMAIN_DESCRIPTION__CONSTANTS);
+		}
+		return constants;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case AlicaPackage.DOMAIN_DESCRIPTION__FLUENTS:
+				return ((InternalEList<?>)getFluents()).basicRemove(otherEnd, msgs);
+			case AlicaPackage.DOMAIN_DESCRIPTION__CONSTANTS:
+				return ((InternalEList<?>)getConstants()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

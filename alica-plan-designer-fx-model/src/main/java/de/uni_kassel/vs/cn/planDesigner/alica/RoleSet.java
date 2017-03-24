@@ -12,9 +12,9 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#isDefault <em>Default</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getMappings <em>Mappings</em>}</li>
+ *   <li>{@link alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}</li>
+ *   <li>{@link alica.RoleSet#isDefault <em>Default</em>}</li>
+ *   <li>{@link alica.RoleSet#getMappings <em>Mappings</em>}</li>
  * </ul>
  * </p>
  *
@@ -41,7 +41,7 @@ public interface RoleSet extends PlanElement {
 	long getUsableWithPlanID();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}' attribute.
+	 * Sets the value of the '{@link alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Usable With Plan ID</em>' attribute.
@@ -68,7 +68,7 @@ public interface RoleSet extends PlanElement {
 	boolean isDefault();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#isDefault <em>Default</em>}' attribute.
+	 * Sets the value of the '{@link alica.RoleSet#isDefault <em>Default</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Default</em>' attribute.
@@ -79,7 +79,7 @@ public interface RoleSet extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Mappings</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping}.
+	 * The list contents are of type {@link alica.RoleTaskMapping}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Mappings</em>' containment reference list isn't clear,

@@ -12,8 +12,8 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getName <em>Name</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getType <em>Type</em>}</li>
+ *   <li>{@link alica.Constant#getName <em>Name</em>}</li>
+ *   <li>{@link alica.Constant#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -39,7 +39,7 @@ public interface Constant extends EObject {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link alica.Constant#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -65,7 +65,7 @@ public interface Constant extends EObject {
 	String getType();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getType <em>Type</em>}' attribute.
+	 * Sets the value of the '{@link alica.Constant#getType <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Type</em>' attribute.

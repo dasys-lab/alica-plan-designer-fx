@@ -2,20 +2,18 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourConfiguration;
+import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
+import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
+import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
+
+import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,42 +22,65 @@ import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourConfiguration;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getConfigurations <em>Configurations</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getDestinationPath <em>Destination Path</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getPostCondition <em>Post Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getFrequency <em>Frequency</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class BehaviourImpl extends PlanElementImpl implements Behaviour {
+public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	/**
-	 * The cached value of the '{@link #getConfigurations() <em>Configurations</em>}' containment reference list.
+	 * The cached value of the '{@link #getPreCondition() <em>Pre Condition</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getConfigurations()
+	 * @see #getPreCondition()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<BehaviourConfiguration> configurations;
+	protected PreCondition preCondition;
 
 	/**
-	 * The default value of the '{@link #getDestinationPath() <em>Destination Path</em>}' attribute.
+	 * The cached value of the '{@link #getRuntimeCondition() <em>Runtime Condition</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDestinationPath()
+	 * @see #getRuntimeCondition()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String DESTINATION_PATH_EDEFAULT = "";
+	protected RuntimeCondition runtimeCondition;
+
 	/**
-	 * The cached value of the '{@link #getDestinationPath() <em>Destination Path</em>}' attribute.
+	 * The cached value of the '{@link #getPostCondition() <em>Post Condition</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDestinationPath()
+	 * @see #getPostCondition()
 	 * @generated
 	 * @ordered
 	 */
-	protected String destinationPath = DESTINATION_PATH_EDEFAULT;
+	protected PostCondition postCondition;
+
+	/**
+	 * The default value of the '{@link #getFrequency() <em>Frequency</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFrequency()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int FREQUENCY_EDEFAULT = 30;
+
+	/**
+	 * The cached value of the '{@link #getFrequency() <em>Frequency</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFrequency()
+	 * @generated
+	 * @ordered
+	 */
+	protected int frequency = FREQUENCY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -85,11 +106,16 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<BehaviourConfiguration> getConfigurations() {
-		if (configurations == null) {
-			configurations = new EObjectContainmentWithInverseEList<BehaviourConfiguration>(BehaviourConfiguration.class, this, AlicaPackage.BEHAVIOUR__CONFIGURATIONS, AlicaPackage.BEHAVIOUR_CONFIGURATION__BEHAVIOUR);
+	public PreCondition getPreCondition() {
+		if (preCondition != null && preCondition.eIsProxy()) {
+			InternalEObject oldPreCondition = (InternalEObject)preCondition;
+			preCondition = (PreCondition)eResolveProxy(oldPreCondition);
+			if (preCondition != oldPreCondition) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AlicaPackage.BEHAVIOUR__PRE_CONDITION, oldPreCondition, preCondition));
+			}
 		}
-		return configurations;
+		return preCondition;
 	}
 
 	/**
@@ -97,8 +123,8 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getDestinationPath() {
-		return destinationPath;
+	public PreCondition basicGetPreCondition() {
+		return preCondition;
 	}
 
 	/**
@@ -106,11 +132,11 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setDestinationPath(String newDestinationPath) {
-		String oldDestinationPath = destinationPath;
-		destinationPath = newDestinationPath;
+	public void setPreCondition(PreCondition newPreCondition) {
+		PreCondition oldPreCondition = preCondition;
+		preCondition = newPreCondition;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__DESTINATION_PATH, oldDestinationPath, destinationPath));
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__PRE_CONDITION, oldPreCondition, preCondition));
 	}
 
 	/**
@@ -118,14 +144,16 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case AlicaPackage.BEHAVIOUR__CONFIGURATIONS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getConfigurations()).basicAdd(otherEnd, msgs);
+	public RuntimeCondition getRuntimeCondition() {
+		if (runtimeCondition != null && runtimeCondition.eIsProxy()) {
+			InternalEObject oldRuntimeCondition = (InternalEObject)runtimeCondition;
+			runtimeCondition = (RuntimeCondition)eResolveProxy(oldRuntimeCondition);
+			if (runtimeCondition != oldRuntimeCondition) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION, oldRuntimeCondition, runtimeCondition));
+			}
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
+		return runtimeCondition;
 	}
 
 	/**
@@ -133,13 +161,79 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case AlicaPackage.BEHAVIOUR__CONFIGURATIONS:
-				return ((InternalEList<?>)getConfigurations()).basicRemove(otherEnd, msgs);
+	public RuntimeCondition basicGetRuntimeCondition() {
+		return runtimeCondition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRuntimeCondition(RuntimeCondition newRuntimeCondition) {
+		RuntimeCondition oldRuntimeCondition = runtimeCondition;
+		runtimeCondition = newRuntimeCondition;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION, oldRuntimeCondition, runtimeCondition));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PostCondition getPostCondition() {
+		if (postCondition != null && postCondition.eIsProxy()) {
+			InternalEObject oldPostCondition = (InternalEObject)postCondition;
+			postCondition = (PostCondition)eResolveProxy(oldPostCondition);
+			if (postCondition != oldPostCondition) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AlicaPackage.BEHAVIOUR__POST_CONDITION, oldPostCondition, postCondition));
+			}
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
+		return postCondition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PostCondition basicGetPostCondition() {
+		return postCondition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPostCondition(PostCondition newPostCondition) {
+		PostCondition oldPostCondition = postCondition;
+		postCondition = newPostCondition;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__POST_CONDITION, oldPostCondition, postCondition));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getFrequency() {
+		return frequency;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFrequency(int newFrequency) {
+		int oldFrequency = frequency;
+		frequency = newFrequency;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__FREQUENCY, oldFrequency, frequency));
 	}
 
 	/**
@@ -150,10 +244,17 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AlicaPackage.BEHAVIOUR__CONFIGURATIONS:
-				return getConfigurations();
-			case AlicaPackage.BEHAVIOUR__DESTINATION_PATH:
-				return getDestinationPath();
+			case AlicaPackage.BEHAVIOUR__PRE_CONDITION:
+				if (resolve) return getPreCondition();
+				return basicGetPreCondition();
+			case AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION:
+				if (resolve) return getRuntimeCondition();
+				return basicGetRuntimeCondition();
+			case AlicaPackage.BEHAVIOUR__POST_CONDITION:
+				if (resolve) return getPostCondition();
+				return basicGetPostCondition();
+			case AlicaPackage.BEHAVIOUR__FREQUENCY:
+				return getFrequency();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -163,16 +264,20 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AlicaPackage.BEHAVIOUR__CONFIGURATIONS:
-				getConfigurations().clear();
-				getConfigurations().addAll((Collection<? extends BehaviourConfiguration>)newValue);
+			case AlicaPackage.BEHAVIOUR__PRE_CONDITION:
+				setPreCondition((PreCondition)newValue);
 				return;
-			case AlicaPackage.BEHAVIOUR__DESTINATION_PATH:
-				setDestinationPath((String)newValue);
+			case AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION:
+				setRuntimeCondition((RuntimeCondition)newValue);
+				return;
+			case AlicaPackage.BEHAVIOUR__POST_CONDITION:
+				setPostCondition((PostCondition)newValue);
+				return;
+			case AlicaPackage.BEHAVIOUR__FREQUENCY:
+				setFrequency((Integer)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -186,11 +291,17 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AlicaPackage.BEHAVIOUR__CONFIGURATIONS:
-				getConfigurations().clear();
+			case AlicaPackage.BEHAVIOUR__PRE_CONDITION:
+				setPreCondition((PreCondition)null);
 				return;
-			case AlicaPackage.BEHAVIOUR__DESTINATION_PATH:
-				setDestinationPath(DESTINATION_PATH_EDEFAULT);
+			case AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION:
+				setRuntimeCondition((RuntimeCondition)null);
+				return;
+			case AlicaPackage.BEHAVIOUR__POST_CONDITION:
+				setPostCondition((PostCondition)null);
+				return;
+			case AlicaPackage.BEHAVIOUR__FREQUENCY:
+				setFrequency(FREQUENCY_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -204,10 +315,14 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AlicaPackage.BEHAVIOUR__CONFIGURATIONS:
-				return configurations != null && !configurations.isEmpty();
-			case AlicaPackage.BEHAVIOUR__DESTINATION_PATH:
-				return DESTINATION_PATH_EDEFAULT == null ? destinationPath != null : !DESTINATION_PATH_EDEFAULT.equals(destinationPath);
+			case AlicaPackage.BEHAVIOUR__PRE_CONDITION:
+				return preCondition != null;
+			case AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION:
+				return runtimeCondition != null;
+			case AlicaPackage.BEHAVIOUR__POST_CONDITION:
+				return postCondition != null;
+			case AlicaPackage.BEHAVIOUR__FREQUENCY:
+				return frequency != FREQUENCY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -222,8 +337,8 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (destinationPath: ");
-		result.append(destinationPath);
+		result.append(" (frequency: ");
+		result.append(frequency);
 		result.append(')');
 		return result.toString();
 	}

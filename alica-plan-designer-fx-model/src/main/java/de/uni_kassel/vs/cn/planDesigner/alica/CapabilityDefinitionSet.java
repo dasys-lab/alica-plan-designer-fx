@@ -12,7 +12,7 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet#getCapabilities <em>Capabilities</em>}</li>
+ *   <li>{@link alica.CapabilityDefinitionSet#getCapabilities <em>Capabilities</em>}</li>
  * </ul>
  * </p>
  *
@@ -23,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
 public interface CapabilityDefinitionSet extends PlanElement {
 	/**
 	 * Returns the value of the '<em><b>Capabilities</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Capability}.
+	 * The list contents are of type {@link alica.Capability}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Capabilities</em>' containment reference list isn't clear,

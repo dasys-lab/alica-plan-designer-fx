@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator#getBehaviours <em>Behaviours</em>}</li>
+ *   <li>{@link alica.BehaviourCreator#getBehaviours <em>Behaviours</em>}</li>
  * </ul>
  * </p>
  *
@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface BehaviourCreator extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Behaviours</b></em>' reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour}.
+	 * The list contents are of type {@link alica.Behaviour}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Behaviours</em>' reference list isn't clear,

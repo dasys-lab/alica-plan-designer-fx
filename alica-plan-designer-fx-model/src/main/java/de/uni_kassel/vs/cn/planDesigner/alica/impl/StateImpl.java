@@ -2,21 +2,6 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.InternalEList;
-
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
@@ -24,6 +9,26 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+
+import java.lang.reflect.InvocationTargetException;
+
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -132,7 +137,7 @@ public class StateImpl extends PlanElementImpl implements State {
 	 */
 	public Plan getInPlan() {
 		if (eContainerFeatureID() != AlicaPackage.STATE__IN_PLAN) return null;
-		return (Plan)eContainer();
+		return (Plan)eInternalContainer();
 	}
 
 	/**
@@ -265,30 +270,12 @@ public class StateImpl extends PlanElementImpl implements State {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public void ensureParametrisationConsistency() {
-		boolean dirty = false;
-		if (this.parametrisation==null) return;
-		for(int i=0; i<this.parametrisation.size(); i++) {
-			boolean remove = false;
-			if(!this.getInPlan().getVars().contains(this.parametrisation.get(i).getVar())) {
-				remove = true;
-			} else if (!this.parametrisation.get(i).getSubplan().getVars().contains(this.parametrisation.get(i).getSubvar())) {
-				remove = true;
-			}
-			else if(!this.getPlans().contains(this.parametrisation.get(i).getSubplan())) {
-				remove = true;
-			}
-			if (remove) {
-				this.parametrisation.remove(i);
-				i--;
-				dirty = true;
-			}
-		}
-		if (dirty) {
-			//eNotify(new ENotificationImpl(this, Notification.REMOVE_MANY, AlicaPackage.STATE__PARAMETRISATION,this.parametrisation,this.parametrisation,true));
-		}
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -464,6 +451,21 @@ public class StateImpl extends PlanElementImpl implements State {
 				return entryPoint != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case AlicaPackage.STATE___ENSURE_PARAMETRISATION_CONSISTENCY:
+				ensureParametrisationConsistency();
+				return null;
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //StateImpl

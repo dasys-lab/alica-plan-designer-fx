@@ -2,15 +2,17 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping;
 import de.uni_kassel.vs.cn.planDesigner.alica.Role;
+
+import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->

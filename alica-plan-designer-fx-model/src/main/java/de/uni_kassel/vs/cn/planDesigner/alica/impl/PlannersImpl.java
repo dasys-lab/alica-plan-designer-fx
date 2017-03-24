@@ -5,14 +5,20 @@ package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Planner;
 import de.uni_kassel.vs.cn.planDesigner.alica.Planners;
+
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -50,6 +56,7 @@ public class PlannersImpl extends MinimalEObjectImpl.Container implements Planne
 	 * @ordered
 	 */
 	protected static final String NAME_EDEFAULT = null;
+
 	/**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->

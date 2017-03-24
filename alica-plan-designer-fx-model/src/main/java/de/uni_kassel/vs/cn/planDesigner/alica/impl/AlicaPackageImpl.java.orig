@@ -1,6 +1,6 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alica.impl;;
 
 import java.util.Map;
 

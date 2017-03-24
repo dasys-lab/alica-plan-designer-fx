@@ -67,14 +67,16 @@ public class VariablesTab extends AbstractPropertyTab {
         HBox hBox = new HBox();
         Button addButton = new Button(I18NRepo.getString("action.list.add"));
         addButton.setOnAction(e -> {
-            commandStack.storeAndExecute(new AddVariableToAbstractPlan((AbstractPlan) selectedPlanElement));
-            textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
+            if (selectedPlanElement instanceof Plan) {
+                commandStack.storeAndExecute(new AddVariableToAbstractPlan((Plan) selectedPlanElement));
+                textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
+            }
         });
         Button deleteButton = new Button(I18NRepo.getString("action.list.remove"));
         deleteButton.setOnAction(e -> {
             Variable selectedItem = textFieldTableView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                commandStack.storeAndExecute(new DeleteVariableFromAbstractPlan(selectedItem, (AbstractPlan) selectedPlanElement));
+            if (selectedItem != null && selectedPlanElement instanceof Plan) {
+                commandStack.storeAndExecute(new DeleteVariableFromAbstractPlan(selectedItem, (Plan) selectedPlanElement));
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
             }
         });

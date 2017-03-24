@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface Edge extends EObject {
 	/**
 	 * Returns the value of the '<em><b>From</b></em>' reference.
-	 * It is bidirectional and its opposite is '{@link de.uni_kassel.vs.cn.planDesigner.alica.Node#getOutEdge <em>Out Edge</em>}'.
+	 * It is bidirectional and its opposite is '{@link alica.Node#getOutEdge <em>Out Edge</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>From</em>' reference isn't clear,
@@ -34,7 +34,7 @@ public interface Edge extends EObject {
 	 * @return the value of the '<em>From</em>' reference.
 	 * @see #setFrom(Node)
 	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getEdge_From()
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Node#getOutEdge
+	 * @see alica.Node#getOutEdge
 	 * @model opposite="outEdge"
 	 * @generated
 	 */
@@ -52,7 +52,7 @@ public interface Edge extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>To</b></em>' reference.
-	 * It is bidirectional and its opposite is '{@link de.uni_kassel.vs.cn.planDesigner.alica.Node#getInEdge <em>In Edge</em>}'.
+	 * It is bidirectional and its opposite is '{@link alica.Node#getInEdge <em>In Edge</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>To</em>' reference isn't clear,
@@ -62,7 +62,7 @@ public interface Edge extends EObject {
 	 * @return the value of the '<em>To</em>' reference.
 	 * @see #setTo(Node)
 	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getEdge_To()
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Node#getInEdge
+	 * @see alica.Node#getInEdge
 	 * @model opposite="inEdge"
 	 * @generated
 	 */

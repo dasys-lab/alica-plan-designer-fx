@@ -2,22 +2,11 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import java.util.Map;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EOperation;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourConfiguration;
 import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator;
 import de.uni_kassel.vs.cn.planDesigner.alica.CapValue;
 import de.uni_kassel.vs.cn.planDesigner.alica.Capability;
@@ -67,6 +56,17 @@ import de.uni_kassel.vs.cn.planDesigner.alica.TerminalState;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+
+import java.util.Map;
+
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EOperation;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+
+import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -200,13 +200,6 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * @generated
 	 */
 	private EClass eStringToEStringMapEntryEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass behaviourConfigurationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -650,6 +643,15 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getCondition__EnsureVariableConsistency__AbstractPlan() {
+		return conditionEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getPreCondition() {
 		return preConditionEClass;
 	}
@@ -776,62 +778,8 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getAbstractPlan_Rating() {
-		return (EReference)abstractPlanEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getAbstractPlan_Conditions() {
-		return (EReference)abstractPlanEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getAbstractPlan_MasterPlan() {
-		return (EAttribute)abstractPlanEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getAbstractPlan_UtilityFunction() {
-		return (EAttribute)abstractPlanEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getAbstractPlan_UtilityThreshold() {
-		return (EAttribute)abstractPlanEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getAbstractPlan_Vars() {
-		return (EReference)abstractPlanEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getAbstractPlan_DestinationPath() {
-		return (EAttribute)abstractPlanEClass.getEStructuralFeatures().get(6);
+		return (EAttribute)abstractPlanEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -848,7 +796,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getBehaviour_Configurations() {
+	public EReference getBehaviour_PreCondition() {
 		return (EReference)behaviourEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -857,8 +805,26 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getBehaviour_DestinationPath() {
-		return (EAttribute)behaviourEClass.getEStructuralFeatures().get(1);
+	public EReference getBehaviour_RuntimeCondition() {
+		return (EReference)behaviourEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBehaviour_PostCondition() {
+		return (EReference)behaviourEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getBehaviour_Frequency() {
+		return (EAttribute)behaviourEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -922,6 +888,15 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 */
 	public EReference getState_EntryPoint() {
 		return (EReference)stateEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getState__EnsureParametrisationConsistency() {
+		return stateEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -1001,6 +976,78 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getPlan_MasterPlan() {
+		return (EAttribute)planEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPlan_UtilityFunction() {
+		return (EAttribute)planEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPlan_UtilityThreshold() {
+		return (EAttribute)planEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPlan_Vars() {
+		return (EReference)planEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPlan_PreCondition() {
+		return (EReference)planEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPlan_RuntimeCondition() {
+		return (EReference)planEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getPlan__CalculateCardinalities() {
+		return planEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getPlan__EnsureParametrisationConsistency() {
+		return planEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getPlanType() {
 		return planTypeEClass;
 	}
@@ -1021,6 +1068,15 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 */
 	public EReference getPlanType_Plans() {
 		return (EReference)planTypeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getPlanType__EnsureParametrisationConsistency() {
+		return planTypeEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -1091,6 +1147,15 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getPlanElement__GenerateID() {
+		return planElementEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTask() {
 		return taskEClass;
 	}
@@ -1129,69 +1194,6 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 */
 	public EAttribute getEStringToEStringMapEntry_Value() {
 		return (EAttribute)eStringToEStringMapEntryEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getBehaviourConfiguration() {
-		return behaviourConfigurationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getBehaviourConfiguration_Parameters() {
-		return (EReference)behaviourConfigurationEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getBehaviourConfiguration_Deferring() {
-		return (EAttribute)behaviourConfigurationEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getBehaviourConfiguration_Frequency() {
-		return (EAttribute)behaviourConfigurationEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getBehaviourConfiguration_Behaviour() {
-		return (EReference)behaviourConfigurationEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getBehaviourConfiguration_EventDriven() {
-		return (EAttribute)behaviourConfigurationEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getBehaviourConfiguration_PostCondition() {
-		return (EReference)behaviourConfigurationEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -1516,6 +1518,15 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 */
 	public EReference getTaskRepository_DefaultTask() {
 		return (EReference)taskRepositoryEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getTaskRepository__CreateDefaultTask() {
+		return taskRepositoryEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -1919,15 +1930,6 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getDomainDescription_Constants() {
-		return (EReference)domainDescriptionEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getDomainDescription_Types() {
 		return (EAttribute)domainDescriptionEClass.getEStructuralFeatures().get(1);
 	}
@@ -1939,6 +1941,15 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 */
 	public EAttribute getDomainDescription_Name() {
 		return (EAttribute)domainDescriptionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDomainDescription_Constants() {
+		return (EReference)domainDescriptionEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2217,6 +2228,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		createEReference(conditionEClass, CONDITION__QUANTIFIERS);
 		createEAttribute(conditionEClass, CONDITION__PLUGIN_NAME);
 		createEReference(conditionEClass, CONDITION__PARAMETERS);
+		createEOperation(conditionEClass, CONDITION___ENSURE_VARIABLE_CONSISTENCY__ABSTRACTPLAN);
 
 		preConditionEClass = createEClass(PRE_CONDITION);
 		createEAttribute(preConditionEClass, PRE_CONDITION__ENABLED);
@@ -2237,17 +2249,13 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		failureStateEClass = createEClass(FAILURE_STATE);
 
 		abstractPlanEClass = createEClass(ABSTRACT_PLAN);
-		createEReference(abstractPlanEClass, ABSTRACT_PLAN__RATING);
-		createEReference(abstractPlanEClass, ABSTRACT_PLAN__CONDITIONS);
-		createEAttribute(abstractPlanEClass, ABSTRACT_PLAN__MASTER_PLAN);
-		createEAttribute(abstractPlanEClass, ABSTRACT_PLAN__UTILITY_FUNCTION);
-		createEAttribute(abstractPlanEClass, ABSTRACT_PLAN__UTILITY_THRESHOLD);
-		createEReference(abstractPlanEClass, ABSTRACT_PLAN__VARS);
 		createEAttribute(abstractPlanEClass, ABSTRACT_PLAN__DESTINATION_PATH);
 
 		behaviourEClass = createEClass(BEHAVIOUR);
-		createEReference(behaviourEClass, BEHAVIOUR__CONFIGURATIONS);
-		createEAttribute(behaviourEClass, BEHAVIOUR__DESTINATION_PATH);
+		createEReference(behaviourEClass, BEHAVIOUR__PRE_CONDITION);
+		createEReference(behaviourEClass, BEHAVIOUR__RUNTIME_CONDITION);
+		createEReference(behaviourEClass, BEHAVIOUR__POST_CONDITION);
+		createEAttribute(behaviourEClass, BEHAVIOUR__FREQUENCY);
 
 		stateEClass = createEClass(STATE);
 		createEReference(stateEClass, STATE__PLANS);
@@ -2256,6 +2264,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		createEReference(stateEClass, STATE__IN_TRANSITIONS);
 		createEReference(stateEClass, STATE__OUT_TRANSITIONS);
 		createEReference(stateEClass, STATE__ENTRY_POINT);
+		createEOperation(stateEClass, STATE___ENSURE_PARAMETRISATION_CONSISTENCY);
 
 		planEClass = createEClass(PLAN);
 		createEAttribute(planEClass, PLAN__PRIORITY);
@@ -2265,10 +2274,19 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		createEAttribute(planEClass, PLAN__MAX_CARDINALITY);
 		createEReference(planEClass, PLAN__SYNCHRONISATIONS);
 		createEReference(planEClass, PLAN__ENTRY_POINTS);
+		createEAttribute(planEClass, PLAN__MASTER_PLAN);
+		createEAttribute(planEClass, PLAN__UTILITY_FUNCTION);
+		createEAttribute(planEClass, PLAN__UTILITY_THRESHOLD);
+		createEReference(planEClass, PLAN__VARS);
+		createEReference(planEClass, PLAN__PRE_CONDITION);
+		createEReference(planEClass, PLAN__RUNTIME_CONDITION);
+		createEOperation(planEClass, PLAN___CALCULATE_CARDINALITIES);
+		createEOperation(planEClass, PLAN___ENSURE_PARAMETRISATION_CONSISTENCY);
 
 		planTypeEClass = createEClass(PLAN_TYPE);
 		createEReference(planTypeEClass, PLAN_TYPE__PARAMETRISATION);
 		createEReference(planTypeEClass, PLAN_TYPE__PLANS);
+		createEOperation(planTypeEClass, PLAN_TYPE___ENSURE_PARAMETRISATION_CONSISTENCY);
 
 		ratingEClass = createEClass(RATING);
 
@@ -2280,6 +2298,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		createEAttribute(planElementEClass, PLAN_ELEMENT__ID);
 		createEAttribute(planElementEClass, PLAN_ELEMENT__NAME);
 		createEAttribute(planElementEClass, PLAN_ELEMENT__COMMENT);
+		createEOperation(planElementEClass, PLAN_ELEMENT___GENERATE_ID);
 
 		taskEClass = createEClass(TASK);
 		createEAttribute(taskEClass, TASK__DESCRIPTION);
@@ -2287,14 +2306,6 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		eStringToEStringMapEntryEClass = createEClass(ESTRING_TO_ESTRING_MAP_ENTRY);
 		createEAttribute(eStringToEStringMapEntryEClass, ESTRING_TO_ESTRING_MAP_ENTRY__KEY);
 		createEAttribute(eStringToEStringMapEntryEClass, ESTRING_TO_ESTRING_MAP_ENTRY__VALUE);
-
-		behaviourConfigurationEClass = createEClass(BEHAVIOUR_CONFIGURATION);
-		createEReference(behaviourConfigurationEClass, BEHAVIOUR_CONFIGURATION__PARAMETERS);
-		createEAttribute(behaviourConfigurationEClass, BEHAVIOUR_CONFIGURATION__DEFERRING);
-		createEAttribute(behaviourConfigurationEClass, BEHAVIOUR_CONFIGURATION__FREQUENCY);
-		createEReference(behaviourConfigurationEClass, BEHAVIOUR_CONFIGURATION__BEHAVIOUR);
-		createEAttribute(behaviourConfigurationEClass, BEHAVIOUR_CONFIGURATION__EVENT_DRIVEN);
-		createEReference(behaviourConfigurationEClass, BEHAVIOUR_CONFIGURATION__POST_CONDITION);
 
 		roleEClass = createEClass(ROLE);
 		createEReference(roleEClass, ROLE__CHARACTERISTICS);
@@ -2343,6 +2354,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		taskRepositoryEClass = createEClass(TASK_REPOSITORY);
 		createEReference(taskRepositoryEClass, TASK_REPOSITORY__TASKS);
 		createEReference(taskRepositoryEClass, TASK_REPOSITORY__DEFAULT_TASK);
+		createEOperation(taskRepositoryEClass, TASK_REPOSITORY___CREATE_DEFAULT_TASK);
 
 		synchronisationEClass = createEClass(SYNCHRONISATION);
 		createEReference(synchronisationEClass, SYNCHRONISATION__SYNCHED_TRANSITIONS);
@@ -2481,7 +2493,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		failureStateEClass.getESuperTypes().add(this.getTerminalState());
 		abstractPlanEClass.getESuperTypes().add(this.getPlanElement());
 		abstractPlanEClass.getESuperTypes().add(this.getIInhabitable());
-		behaviourEClass.getESuperTypes().add(this.getPlanElement());
+		behaviourEClass.getESuperTypes().add(this.getAbstractPlan());
 		stateEClass.getESuperTypes().add(this.getPlanElement());
 		stateEClass.getESuperTypes().add(this.getIInhabitable());
 		planEClass.getESuperTypes().add(this.getAbstractPlan());
@@ -2491,7 +2503,6 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		runtimeConditionEClass.getESuperTypes().add(this.getCondition());
 		taskEClass.getESuperTypes().add(this.getPlanElement());
 		eStringToEStringMapEntryEClass.getESuperTypes().add(this.getPlanElement());
-		behaviourConfigurationEClass.getESuperTypes().add(this.getAbstractPlan());
 		roleEClass.getESuperTypes().add(this.getPlanElement());
 		roleSetEClass.getESuperTypes().add(this.getPlanElement());
 		eLongToDoubleMapEntryEClass.getESuperTypes().add(this.getPlanElement());
@@ -2513,7 +2524,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		planningProblemEClass.getESuperTypes().add(this.getAbstractPlan());
 		eStringToEObjectMapEntryEClass.getESuperTypes().add(this.getPlanElement());
 
-		// Initialize classes and features; add operations and parameters
+		// Initialize classes, features, and operations; add parameters
 		initEClass(transitionEClass, Transition.class, "Transition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTransition_Msg(), ecorePackage.getEString(), "msg", "", 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTransition_PreCondition(), this.getPreCondition(), null, "preCondition", null, 1, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2523,13 +2534,13 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 
 		initEClass(conditionEClass, Condition.class, "Condition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCondition_ConditionString(), ecorePackage.getEString(), "conditionString", "", 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCondition_AbstractPlan(), this.getAbstractPlan(), this.getAbstractPlan_Conditions(), "abstractPlan", null, 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCondition_AbstractPlan(), this.getAbstractPlan(), null, "abstractPlan", null, 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCondition_Vars(), this.getVariable(), null, "vars", null, 0, -1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCondition_Quantifiers(), this.getQuantifier(), null, "quantifiers", null, 0, -1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCondition_PluginName(), ecorePackage.getEString(), "pluginName", "DefaultPlugin", 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCondition_Parameters(), this.getEStringToEObjectMapEntry(), null, "parameters", null, 0, -1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = addEOperation(conditionEClass, null, "ensureVariableConsistency", 0, 1, IS_UNIQUE, IS_ORDERED);
+		EOperation op = initEOperation(getCondition__EnsureVariableConsistency__AbstractPlan(), null, "ensureVariableConsistency", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getAbstractPlan(), "parentPlan", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(preConditionEClass, PreCondition.class, "PreCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2551,17 +2562,13 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEClass(failureStateEClass, FailureState.class, "FailureState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(abstractPlanEClass, AbstractPlan.class, "AbstractPlan", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAbstractPlan_Rating(), this.getRating(), null, "rating", null, 0, 1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAbstractPlan_Conditions(), this.getCondition(), this.getCondition_AbstractPlan(), "conditions", null, 0, -1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAbstractPlan_MasterPlan(), ecorePackage.getEBoolean(), "masterPlan", "false", 0, 1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAbstractPlan_UtilityFunction(), ecorePackage.getEString(), "utilityFunction", "", 0, 1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAbstractPlan_UtilityThreshold(), ecorePackage.getEDouble(), "utilityThreshold", "0.1", 0, 1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAbstractPlan_Vars(), this.getVariable(), null, "vars", null, 0, -1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAbstractPlan_DestinationPath(), ecorePackage.getEString(), "destinationPath", "", 0, 1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(behaviourEClass, Behaviour.class, "Behaviour", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBehaviour_Configurations(), this.getBehaviourConfiguration(), this.getBehaviourConfiguration_Behaviour(), "configurations", null, 1, -1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getBehaviour_DestinationPath(), ecorePackage.getEString(), "destinationPath", "", 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBehaviour_PreCondition(), this.getPreCondition(), null, "preCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBehaviour_RuntimeCondition(), this.getRuntimeCondition(), null, "runtimeCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBehaviour_PostCondition(), this.getPostCondition(), null, "postCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBehaviour_Frequency(), ecorePackage.getEInt(), "frequency", "30", 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(stateEClass, State.class, "State", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getState_Plans(), this.getAbstractPlan(), null, "plans", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2571,7 +2578,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEReference(getState_OutTransitions(), this.getTransition(), this.getTransition_InState(), "outTransitions", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getState_EntryPoint(), this.getEntryPoint(), this.getEntryPoint_State(), "entryPoint", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		addEOperation(stateEClass, null, "ensureParametrisationConsistency", 0, 1, IS_UNIQUE, IS_ORDERED);
+		initEOperation(getState__EnsureParametrisationConsistency(), null, "ensureParametrisationConsistency", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(planEClass, Plan.class, "Plan", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPlan_Priority(), ecorePackage.getEDouble(), "priority", "0.0", 0, 1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2581,16 +2588,22 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEAttribute(getPlan_MaxCardinality(), ecorePackage.getEInt(), "maxCardinality", "2147483647", 0, 1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPlan_Synchronisations(), this.getSynchronisation(), null, "synchronisations", null, 0, -1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPlan_EntryPoints(), this.getEntryPoint(), this.getEntryPoint_Plan(), "entryPoints", null, 0, -1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPlan_MasterPlan(), ecorePackage.getEBoolean(), "masterPlan", "false", 0, 1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPlan_UtilityFunction(), ecorePackage.getEString(), "utilityFunction", "", 0, 1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPlan_UtilityThreshold(), ecorePackage.getEDouble(), "utilityThreshold", "0.1", 0, 1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPlan_Vars(), this.getVariable(), null, "vars", null, 0, -1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPlan_PreCondition(), this.getPreCondition(), null, "preCondition", null, 0, 1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPlan_RuntimeCondition(), this.getRuntimeCondition(), null, "runtimeCondition", null, 0, 1, Plan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		addEOperation(planEClass, null, "calculateCardinalities", 0, 1, IS_UNIQUE, IS_ORDERED);
+		initEOperation(getPlan__CalculateCardinalities(), null, "calculateCardinalities", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		addEOperation(planEClass, null, "ensureParametrisationConsistency", 0, 1, IS_UNIQUE, IS_ORDERED);
+		initEOperation(getPlan__EnsureParametrisationConsistency(), null, "ensureParametrisationConsistency", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(planTypeEClass, PlanType.class, "PlanType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPlanType_Parametrisation(), this.getParametrisation(), null, "parametrisation", null, 0, -1, PlanType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPlanType_Plans(), this.getAnnotatedPlan(), null, "plans", null, 0, -1, PlanType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		addEOperation(planTypeEClass, null, "ensureParametrisationConsistency", 0, 1, IS_UNIQUE, IS_ORDERED);
+		initEOperation(getPlanType__EnsureParametrisationConsistency(), null, "ensureParametrisationConsistency", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(ratingEClass, Rating.class, "Rating", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2603,7 +2616,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEAttribute(getPlanElement_Name(), ecorePackage.getEString(), "name", "MISSING_NAME", 0, 1, PlanElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPlanElement_Comment(), ecorePackage.getEString(), "comment", "", 0, 1, PlanElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		addEOperation(planElementEClass, ecorePackage.getELong(), "generateID", 0, 1, IS_UNIQUE, IS_ORDERED);
+		initEOperation(getPlanElement__GenerateID(), ecorePackage.getELong(), "generateID", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(taskEClass, Task.class, "Task", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTask_Description(), ecorePackage.getEString(), "description", "", 0, 1, Task.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2611,14 +2624,6 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEClass(eStringToEStringMapEntryEClass, Map.Entry.class, "EStringToEStringMapEntry", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEStringToEStringMapEntry_Key(), ecorePackage.getEString(), "key", "", 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEStringToEStringMapEntry_Value(), ecorePackage.getEString(), "value", "", 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(behaviourConfigurationEClass, BehaviourConfiguration.class, "BehaviourConfiguration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBehaviourConfiguration_Parameters(), this.getEStringToEStringMapEntry(), null, "parameters", null, 0, -1, BehaviourConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getBehaviourConfiguration_Deferring(), ecorePackage.getEInt(), "deferring", "0", 0, 1, BehaviourConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getBehaviourConfiguration_Frequency(), ecorePackage.getEInt(), "frequency", "30", 0, 1, BehaviourConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBehaviourConfiguration_Behaviour(), this.getBehaviour(), this.getBehaviour_Configurations(), "behaviour", null, 1, 1, BehaviourConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getBehaviourConfiguration_EventDriven(), ecorePackage.getEBoolean(), "eventDriven", "false", 0, 1, BehaviourConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBehaviourConfiguration_PostCondition(), this.getPostCondition(), null, "postCondition", null, 0, 1, BehaviourConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(roleEClass, Role.class, "Role", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRole_Characteristics(), this.getCharacteristic(), null, "characteristics", null, 0, -1, Role.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2668,7 +2673,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEReference(getTaskRepository_Tasks(), this.getTask(), null, "tasks", null, 0, -1, TaskRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTaskRepository_DefaultTask(), this.getTask(), null, "defaultTask", null, 0, 1, TaskRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		addEOperation(taskRepositoryEClass, this.getTask(), "createDefaultTask", 0, 1, IS_UNIQUE, IS_ORDERED);
+		initEOperation(getTaskRepository__CreateDefaultTask(), this.getTask(), "createDefaultTask", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(synchronisationEClass, Synchronisation.class, "Synchronisation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSynchronisation_SynchedTransitions(), this.getTransition(), this.getTransition_Synchronisation(), "synchedTransitions", null, 0, -1, Synchronisation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

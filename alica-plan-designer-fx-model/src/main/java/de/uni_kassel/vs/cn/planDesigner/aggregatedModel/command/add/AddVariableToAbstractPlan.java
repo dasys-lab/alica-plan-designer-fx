@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
@@ -11,9 +12,9 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
  */
 public class AddVariableToAbstractPlan extends AbstractCommand<Variable> {
 
-    private final AbstractPlan parentOfElement;
+    private final Plan parentOfElement;
 
-    public AddVariableToAbstractPlan(AbstractPlan parentOfElement) {
+    public AddVariableToAbstractPlan(Plan parentOfElement) {
         super(getAlicaFactory().createVariable());
         this.parentOfElement = parentOfElement;
     }

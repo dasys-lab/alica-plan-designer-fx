@@ -12,8 +12,8 @@ import org.eclipse.emf.common.util.EMap;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping#getTaskPriorities <em>Task Priorities</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping#getRole <em>Role</em>}</li>
+ *   <li>{@link alica.RoleTaskMapping#getTaskPriorities <em>Task Priorities</em>}</li>
+ *   <li>{@link alica.RoleTaskMapping#getRole <em>Role</em>}</li>
  * </ul>
  * </p>
  *
@@ -34,7 +34,7 @@ public interface RoleTaskMapping extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Task Priorities</em>' map.
 	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleTaskMapping_TaskPriorities()
-	 * @model mapType="de.uni_kassel.vs.cn.planDesigner.alica.ELongToDoubleMapEntry<org.eclipse.emf.ecore.ELongObject, org.eclipse.emf.ecore.EDoubleObject>"
+	 * @model mapType="alica.ELongToDoubleMapEntry<org.eclipse.emf.ecore.ELongObject, org.eclipse.emf.ecore.EDoubleObject>"
 	 * @generated
 	 */
 	EMap<Long, Double> getTaskPriorities();
@@ -56,7 +56,7 @@ public interface RoleTaskMapping extends PlanElement {
 	Role getRole();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping#getRole <em>Role</em>}' reference.
+	 * Sets the value of the '{@link alica.RoleTaskMapping#getRole <em>Role</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Role</em>' reference.

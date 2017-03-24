@@ -89,7 +89,7 @@ public class EditMenu extends Menu {
                                 planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
                     } else if (selectedPlanElement instanceof Condition) {
                         Condition condition = (Condition) planTab.getSelectedPlanElement().getValue().getKey();
-                        commandStack.storeAndExecute(new DeleteConditionFromAbstractPlan(planTab.getPlanEditorPane().getPlanModelVisualisationObject().getPlan(), condition));
+                        commandStack.storeAndExecute(new DeleteConditionFromPlan(planTab.getPlanEditorPane().getPlanModelVisualisationObject().getPlan(), condition));
                     }
                     planTab.getPlanEditorPane().setupPlanVisualisation();
                     planTab.getConditionHBox().setupConditionVisualisation();

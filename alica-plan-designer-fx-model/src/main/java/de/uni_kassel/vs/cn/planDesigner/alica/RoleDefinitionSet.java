@@ -12,7 +12,7 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet#getRoles <em>Roles</em>}</li>
+ *   <li>{@link alica.RoleDefinitionSet#getRoles <em>Roles</em>}</li>
  * </ul>
  * </p>
  *
@@ -23,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
 public interface RoleDefinitionSet extends PlanElement {
 	/**
 	 * Returns the value of the '<em><b>Roles</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Role}.
+	 * The list contents are of type {@link alica.Role}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Roles</em>' containment reference list isn't clear,

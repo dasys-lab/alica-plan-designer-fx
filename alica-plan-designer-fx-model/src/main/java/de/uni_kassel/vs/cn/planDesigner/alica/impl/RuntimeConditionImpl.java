@@ -2,10 +2,10 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import org.eclipse.emf.ecore.EClass;
-
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
+
+import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->

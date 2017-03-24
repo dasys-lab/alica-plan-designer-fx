@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 
 /**
@@ -9,9 +10,9 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
  */
 public class DeleteVariableFromAbstractPlan extends AbstractCommand<Variable> {
 
-    private final AbstractPlan parentOfElement;
+    private final Plan parentOfElement;
 
-    public DeleteVariableFromAbstractPlan(Variable toDelete, AbstractPlan parentOfElement) {
+    public DeleteVariableFromAbstractPlan(Variable toDelete, Plan parentOfElement) {
         super(toDelete);
         this.parentOfElement = parentOfElement;
     }

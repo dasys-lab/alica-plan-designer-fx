@@ -13,12 +13,12 @@ import org.eclipse.emf.common.util.EMap;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getConditionString <em>Condition String</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getAbstractPlan <em>Abstract Plan</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getVars <em>Vars</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getQuantifiers <em>Quantifiers</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getPluginName <em>Plugin Name</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getParameters <em>Parameters</em>}</li>
+ *   <li>{@link alica.Condition#getConditionString <em>Condition String</em>}</li>
+ *   <li>{@link alica.Condition#getAbstractPlan <em>Abstract Plan</em>}</li>
+ *   <li>{@link alica.Condition#getVars <em>Vars</em>}</li>
+ *   <li>{@link alica.Condition#getQuantifiers <em>Quantifiers</em>}</li>
+ *   <li>{@link alica.Condition#getPluginName <em>Plugin Name</em>}</li>
+ *   <li>{@link alica.Condition#getParameters <em>Parameters</em>}</li>
  * </ul>
  * </p>
  *
@@ -45,7 +45,7 @@ public interface Condition extends PlanElement {
 	String getConditionString();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getConditionString <em>Condition String</em>}' attribute.
+	 * Sets the value of the '{@link alica.Condition#getConditionString <em>Condition String</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Condition String</em>' attribute.
@@ -55,28 +55,26 @@ public interface Condition extends PlanElement {
 	void setConditionString(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Abstract Plan</b></em>' container reference.
-	 * It is bidirectional and its opposite is '{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getConditions <em>Conditions</em>}'.
+	 * Returns the value of the '<em><b>Abstract Plan</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Abstract Plan</em>' container reference isn't clear,
+	 * If the meaning of the '<em>Abstract Plan</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Abstract Plan</em>' container reference.
+	 * @return the value of the '<em>Abstract Plan</em>' reference.
 	 * @see #setAbstractPlan(AbstractPlan)
 	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_AbstractPlan()
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getConditions
-	 * @model opposite="conditions" transient="false"
+	 * @model
 	 * @generated
 	 */
 	AbstractPlan getAbstractPlan();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getAbstractPlan <em>Abstract Plan</em>}' container reference.
+	 * Sets the value of the '{@link alica.Condition#getAbstractPlan <em>Abstract Plan</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Abstract Plan</em>' container reference.
+	 * @param value the new value of the '<em>Abstract Plan</em>' reference.
 	 * @see #getAbstractPlan()
 	 * @generated
 	 */
@@ -100,7 +98,7 @@ public interface Condition extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Quantifiers</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier}.
+	 * The list contents are of type {@link alica.Quantifier}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Quantifiers</em>' containment reference list isn't clear,
@@ -132,7 +130,7 @@ public interface Condition extends PlanElement {
 	String getPluginName();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getPluginName <em>Plugin Name</em>}' attribute.
+	 * Sets the value of the '{@link alica.Condition#getPluginName <em>Plugin Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Plugin Name</em>' attribute.
@@ -153,7 +151,7 @@ public interface Condition extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parameters</em>' map.
 	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_Parameters()
-	 * @model mapType="de.uni_kassel.vs.cn.planDesigner.alica.EStringToEObjectMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EJavaObject>"
+	 * @model mapType="alica.EStringToEObjectMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EJavaObject>"
 	 * @generated
 	 */
 	EMap<String, Object> getParameters();

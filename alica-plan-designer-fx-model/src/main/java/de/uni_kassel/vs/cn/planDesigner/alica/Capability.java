@@ -12,7 +12,7 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Capability#getCapValues <em>Cap Values</em>}</li>
+ *   <li>{@link alica.Capability#getCapValues <em>Cap Values</em>}</li>
  * </ul>
  * </p>
  *
@@ -23,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
 public interface Capability extends PlanElement {
 	/**
 	 * Returns the value of the '<em><b>Cap Values</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.CapValue}.
+	 * The list contents are of type {@link alica.CapValue}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Cap Values</em>' containment reference list isn't clear,

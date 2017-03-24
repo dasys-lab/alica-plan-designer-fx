@@ -50,7 +50,7 @@ public interface TaskWrapper extends Node {
 
 	/**
 	 * Returns the value of the '<em><b>Mappings</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping}.
+	 * The list contents are of type {@link alica.InternalRoleTaskMapping}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Mappings</em>' containment reference list isn't clear,

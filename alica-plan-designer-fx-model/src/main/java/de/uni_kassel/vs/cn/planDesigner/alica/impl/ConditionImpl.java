@@ -2,26 +2,32 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.EMap;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.EcoreEMap;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.InternalEList;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Quantifier;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+
+import java.lang.reflect.InvocationTargetException;
+
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EcoreEMap;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -61,6 +67,16 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 	 * @ordered
 	 */
 	protected String conditionString = CONDITION_STRING_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getAbstractPlan() <em>Abstract Plan</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAbstractPlan()
+	 * @generated
+	 * @ordered
+	 */
+	protected AbstractPlan abstractPlan;
 
 	/**
 	 * The cached value of the '{@link #getVars() <em>Vars</em>}' reference list.
@@ -158,8 +174,15 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 	 * @generated
 	 */
 	public AbstractPlan getAbstractPlan() {
-		if (eContainerFeatureID() != AlicaPackage.CONDITION__ABSTRACT_PLAN) return null;
-		return (AbstractPlan)eContainer();
+		if (abstractPlan != null && abstractPlan.eIsProxy()) {
+			InternalEObject oldAbstractPlan = (InternalEObject)abstractPlan;
+			abstractPlan = (AbstractPlan)eResolveProxy(oldAbstractPlan);
+			if (abstractPlan != oldAbstractPlan) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AlicaPackage.CONDITION__ABSTRACT_PLAN, oldAbstractPlan, abstractPlan));
+			}
+		}
+		return abstractPlan;
 	}
 
 	/**
@@ -167,9 +190,8 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetAbstractPlan(AbstractPlan newAbstractPlan, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject)newAbstractPlan, AlicaPackage.CONDITION__ABSTRACT_PLAN, msgs);
-		return msgs;
+	public AbstractPlan basicGetAbstractPlan() {
+		return abstractPlan;
 	}
 
 	/**
@@ -178,19 +200,10 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 	 * @generated
 	 */
 	public void setAbstractPlan(AbstractPlan newAbstractPlan) {
-		if (newAbstractPlan != eInternalContainer() || (eContainerFeatureID() != AlicaPackage.CONDITION__ABSTRACT_PLAN && newAbstractPlan != null)) {
-			if (EcoreUtil.isAncestor(this, newAbstractPlan))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
-			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			if (newAbstractPlan != null)
-				msgs = ((InternalEObject)newAbstractPlan).eInverseAdd(this, AlicaPackage.ABSTRACT_PLAN__CONDITIONS, AbstractPlan.class, msgs);
-			msgs = basicSetAbstractPlan(newAbstractPlan, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.CONDITION__ABSTRACT_PLAN, newAbstractPlan, newAbstractPlan));
+		AbstractPlan oldAbstractPlan = abstractPlan;
+		abstractPlan = newAbstractPlan;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.CONDITION__ABSTRACT_PLAN, oldAbstractPlan, abstractPlan));
 	}
 
 	/**
@@ -267,26 +280,8 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case AlicaPackage.CONDITION__ABSTRACT_PLAN:
-				if (eInternalContainer() != null)
-					msgs = eBasicRemoveFromContainer(msgs);
-				return basicSetAbstractPlan((AbstractPlan)otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case AlicaPackage.CONDITION__ABSTRACT_PLAN:
-				return basicSetAbstractPlan(null, msgs);
 			case AlicaPackage.CONDITION__QUANTIFIERS:
 				return ((InternalEList<?>)getQuantifiers()).basicRemove(otherEnd, msgs);
 			case AlicaPackage.CONDITION__PARAMETERS:
@@ -301,26 +296,13 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-		switch (eContainerFeatureID()) {
-			case AlicaPackage.CONDITION__ABSTRACT_PLAN:
-				return eInternalContainer().eInverseRemove(this, AlicaPackage.ABSTRACT_PLAN__CONDITIONS, AbstractPlan.class, msgs);
-		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case AlicaPackage.CONDITION__CONDITION_STRING:
 				return getConditionString();
 			case AlicaPackage.CONDITION__ABSTRACT_PLAN:
-				return getAbstractPlan();
+				if (resolve) return getAbstractPlan();
+				return basicGetAbstractPlan();
 			case AlicaPackage.CONDITION__VARS:
 				return getVars();
 			case AlicaPackage.CONDITION__QUANTIFIERS:
@@ -408,7 +390,7 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 			case AlicaPackage.CONDITION__CONDITION_STRING:
 				return CONDITION_STRING_EDEFAULT == null ? conditionString != null : !CONDITION_STRING_EDEFAULT.equals(conditionString);
 			case AlicaPackage.CONDITION__ABSTRACT_PLAN:
-				return getAbstractPlan() != null;
+				return abstractPlan != null;
 			case AlicaPackage.CONDITION__VARS:
 				return vars != null && !vars.isEmpty();
 			case AlicaPackage.CONDITION__QUANTIFIERS:
@@ -419,6 +401,21 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 				return parameters != null && !parameters.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case AlicaPackage.CONDITION___ENSURE_VARIABLE_CONSISTENCY__ABSTRACTPLAN:
+				ensureVariableConsistency((AbstractPlan)arguments.get(0));
+				return null;
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

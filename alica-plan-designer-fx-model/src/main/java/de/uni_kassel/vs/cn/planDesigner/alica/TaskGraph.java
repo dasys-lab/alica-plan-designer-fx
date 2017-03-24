@@ -3,6 +3,7 @@
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -25,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface TaskGraph extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Nodes</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Node}.
+	 * The list contents are of type {@link alica.Node}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Nodes</em>' containment reference list isn't clear,

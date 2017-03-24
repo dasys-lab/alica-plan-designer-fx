@@ -2,15 +2,17 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.TerminalState;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -35,6 +37,7 @@ public abstract class TerminalStateImpl extends StateImpl implements TerminalSta
 	 * @ordered
 	 */
 	protected PostCondition postCondition;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -11,9 +11,9 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getWeight <em>Weight</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getCapability <em>Capability</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getValue <em>Value</em>}</li>
+ *   <li>{@link alica.Characteristic#getWeight <em>Weight</em>}</li>
+ *   <li>{@link alica.Characteristic#getCapability <em>Capability</em>}</li>
+ *   <li>{@link alica.Characteristic#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *
@@ -40,7 +40,7 @@ public interface Characteristic extends PlanElement {
 	double getWeight();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getWeight <em>Weight</em>}' attribute.
+	 * Sets the value of the '{@link alica.Characteristic#getWeight <em>Weight</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Weight</em>' attribute.
@@ -66,7 +66,7 @@ public interface Characteristic extends PlanElement {
 	Capability getCapability();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getCapability <em>Capability</em>}' reference.
+	 * Sets the value of the '{@link alica.Characteristic#getCapability <em>Capability</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Capability</em>' reference.
@@ -92,7 +92,7 @@ public interface Characteristic extends PlanElement {
 	CapValue getValue();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getValue <em>Value</em>}' reference.
+	 * Sets the value of the '{@link alica.Characteristic#getValue <em>Value</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Value</em>' reference.

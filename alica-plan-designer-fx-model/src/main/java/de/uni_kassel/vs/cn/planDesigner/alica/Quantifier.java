@@ -12,8 +12,8 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getScope <em>Scope</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getSorts <em>Sorts</em>}</li>
+ *   <li>{@link alica.Quantifier#getScope <em>Scope</em>}</li>
+ *   <li>{@link alica.Quantifier#getSorts <em>Sorts</em>}</li>
  * </ul>
  * </p>
  *
@@ -39,7 +39,7 @@ public interface Quantifier extends PlanElement {
 	IInhabitable getScope();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getScope <em>Scope</em>}' reference.
+	 * Sets the value of the '{@link alica.Quantifier#getScope <em>Scope</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Scope</em>' reference.

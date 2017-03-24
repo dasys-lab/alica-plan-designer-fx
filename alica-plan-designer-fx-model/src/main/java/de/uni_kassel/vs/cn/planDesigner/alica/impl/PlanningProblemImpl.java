@@ -2,20 +2,24 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Planner;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanningType;
+
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.EList;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -58,6 +62,7 @@ public class PlanningProblemImpl extends AbstractPlanImpl implements PlanningPro
 	 * @ordered
 	 */
 	protected Planner planner;
+
 	/**
 	 * The cached value of the '{@link #getAlternativePlan() <em>Alternative Plan</em>}' reference.
 	 * <!-- begin-user-doc -->

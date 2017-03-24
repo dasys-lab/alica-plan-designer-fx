@@ -2,25 +2,33 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
+import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
+import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
+import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 
 /**
  * <!-- begin-user-doc -->
@@ -36,6 +44,12 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getMaxCardinality <em>Max Cardinality</em>}</li>
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getSynchronisations <em>Synchronisations</em>}</li>
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getEntryPoints <em>Entry Points</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#isMasterPlan <em>Master Plan</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getUtilityFunction <em>Utility Function</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getUtilityThreshold <em>Utility Threshold</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
  * </ul>
  * </p>
  *
@@ -141,6 +155,96 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 	 * @ordered
 	 */
 	protected EList<EntryPoint> entryPoints;
+
+	/**
+	 * The default value of the '{@link #isMasterPlan() <em>Master Plan</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isMasterPlan()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean MASTER_PLAN_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isMasterPlan() <em>Master Plan</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isMasterPlan()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean masterPlan = MASTER_PLAN_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getUtilityFunction() <em>Utility Function</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUtilityFunction()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String UTILITY_FUNCTION_EDEFAULT = "";
+
+	/**
+	 * The cached value of the '{@link #getUtilityFunction() <em>Utility Function</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUtilityFunction()
+	 * @generated
+	 * @ordered
+	 */
+	protected String utilityFunction = UTILITY_FUNCTION_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getUtilityThreshold() <em>Utility Threshold</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUtilityThreshold()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final double UTILITY_THRESHOLD_EDEFAULT = 0.1;
+
+	/**
+	 * The cached value of the '{@link #getUtilityThreshold() <em>Utility Threshold</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUtilityThreshold()
+	 * @generated
+	 * @ordered
+	 */
+	protected double utilityThreshold = UTILITY_THRESHOLD_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getVars() <em>Vars</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVars()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Variable> vars;
+
+	/**
+	 * The cached value of the '{@link #getPreCondition() <em>Pre Condition</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPreCondition()
+	 * @generated
+	 * @ordered
+	 */
+	protected PreCondition preCondition;
+
+	/**
+	 * The cached value of the '{@link #getRuntimeCondition() <em>Runtime Condition</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRuntimeCondition()
+	 * @generated
+	 * @ordered
+	 */
+	protected RuntimeCondition runtimeCondition;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -275,38 +379,184 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
-	public void calculateCardinalities() {
-		int min = 0;
-		int max = 0;
-		for(EntryPoint ep : getEntryPoints()){
-			min += ep.getMinCardinality();
-			int tmp = max + ep.getMaxCardinality();
-			max = tmp < 0 ? Integer.MAX_VALUE : tmp;
-		}
-		
-		setMaxCardinality(max);
-		setMinCardinality(min);
+	public boolean isMasterPlan() {
+		return masterPlan;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
+	 */
+	public void setMasterPlan(boolean newMasterPlan) {
+		boolean oldMasterPlan = masterPlan;
+		masterPlan = newMasterPlan;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.PLAN__MASTER_PLAN, oldMasterPlan, masterPlan));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getUtilityFunction() {
+		return utilityFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUtilityFunction(String newUtilityFunction) {
+		String oldUtilityFunction = utilityFunction;
+		utilityFunction = newUtilityFunction;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.PLAN__UTILITY_FUNCTION, oldUtilityFunction, utilityFunction));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public double getUtilityThreshold() {
+		return utilityThreshold;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUtilityThreshold(double newUtilityThreshold) {
+		double oldUtilityThreshold = utilityThreshold;
+		utilityThreshold = newUtilityThreshold;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.PLAN__UTILITY_THRESHOLD, oldUtilityThreshold, utilityThreshold));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<Variable> getVars() {
+		if (vars == null) {
+			vars = new EObjectContainmentEList<Variable>(Variable.class, this, AlicaPackage.PLAN__VARS);
+		}
+		return vars;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PreCondition getPreCondition() {
+		return preCondition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetPreCondition(PreCondition newPreCondition, NotificationChain msgs) {
+		PreCondition oldPreCondition = preCondition;
+		preCondition = newPreCondition;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AlicaPackage.PLAN__PRE_CONDITION, oldPreCondition, newPreCondition);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPreCondition(PreCondition newPreCondition) {
+		if (newPreCondition != preCondition) {
+			NotificationChain msgs = null;
+			if (preCondition != null)
+				msgs = ((InternalEObject)preCondition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.PLAN__PRE_CONDITION, null, msgs);
+			if (newPreCondition != null)
+				msgs = ((InternalEObject)newPreCondition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.PLAN__PRE_CONDITION, null, msgs);
+			msgs = basicSetPreCondition(newPreCondition, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.PLAN__PRE_CONDITION, newPreCondition, newPreCondition));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RuntimeCondition getRuntimeCondition() {
+		return runtimeCondition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetRuntimeCondition(RuntimeCondition newRuntimeCondition, NotificationChain msgs) {
+		RuntimeCondition oldRuntimeCondition = runtimeCondition;
+		runtimeCondition = newRuntimeCondition;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AlicaPackage.PLAN__RUNTIME_CONDITION, oldRuntimeCondition, newRuntimeCondition);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRuntimeCondition(RuntimeCondition newRuntimeCondition) {
+		if (newRuntimeCondition != runtimeCondition) {
+			NotificationChain msgs = null;
+			if (runtimeCondition != null)
+				msgs = ((InternalEObject)runtimeCondition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.PLAN__RUNTIME_CONDITION, null, msgs);
+			if (newRuntimeCondition != null)
+				msgs = ((InternalEObject)newRuntimeCondition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.PLAN__RUNTIME_CONDITION, null, msgs);
+			msgs = basicSetRuntimeCondition(newRuntimeCondition, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.PLAN__RUNTIME_CONDITION, newRuntimeCondition, newRuntimeCondition));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void calculateCardinalities() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
 	 */
 	public void ensureParametrisationConsistency() {
-		/*for(State s: this.getStates()) {
-		s.ensureParametrisationConsistency();
-		}
-		for(Transition t: this.getTransitions()) {
-			if (t.getPreCondition()!=null) {
-				t.getPreCondition().ensureVariableConsistency(this);
-			}
-		}
-		for(Condition c : this.getConditions()) {
-			c.ensureVariableConsistency(this);
-		}*/
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -342,6 +592,12 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 				return ((InternalEList<?>)getSynchronisations()).basicRemove(otherEnd, msgs);
 			case AlicaPackage.PLAN__ENTRY_POINTS:
 				return ((InternalEList<?>)getEntryPoints()).basicRemove(otherEnd, msgs);
+			case AlicaPackage.PLAN__VARS:
+				return ((InternalEList<?>)getVars()).basicRemove(otherEnd, msgs);
+			case AlicaPackage.PLAN__PRE_CONDITION:
+				return basicSetPreCondition(null, msgs);
+			case AlicaPackage.PLAN__RUNTIME_CONDITION:
+				return basicSetRuntimeCondition(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -368,6 +624,18 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 				return getSynchronisations();
 			case AlicaPackage.PLAN__ENTRY_POINTS:
 				return getEntryPoints();
+			case AlicaPackage.PLAN__MASTER_PLAN:
+				return isMasterPlan();
+			case AlicaPackage.PLAN__UTILITY_FUNCTION:
+				return getUtilityFunction();
+			case AlicaPackage.PLAN__UTILITY_THRESHOLD:
+				return getUtilityThreshold();
+			case AlicaPackage.PLAN__VARS:
+				return getVars();
+			case AlicaPackage.PLAN__PRE_CONDITION:
+				return getPreCondition();
+			case AlicaPackage.PLAN__RUNTIME_CONDITION:
+				return getRuntimeCondition();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -406,6 +674,25 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 				getEntryPoints().clear();
 				getEntryPoints().addAll((Collection<? extends EntryPoint>)newValue);
 				return;
+			case AlicaPackage.PLAN__MASTER_PLAN:
+				setMasterPlan((Boolean)newValue);
+				return;
+			case AlicaPackage.PLAN__UTILITY_FUNCTION:
+				setUtilityFunction((String)newValue);
+				return;
+			case AlicaPackage.PLAN__UTILITY_THRESHOLD:
+				setUtilityThreshold((Double)newValue);
+				return;
+			case AlicaPackage.PLAN__VARS:
+				getVars().clear();
+				getVars().addAll((Collection<? extends Variable>)newValue);
+				return;
+			case AlicaPackage.PLAN__PRE_CONDITION:
+				setPreCondition((PreCondition)newValue);
+				return;
+			case AlicaPackage.PLAN__RUNTIME_CONDITION:
+				setRuntimeCondition((RuntimeCondition)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -439,6 +726,24 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 			case AlicaPackage.PLAN__ENTRY_POINTS:
 				getEntryPoints().clear();
 				return;
+			case AlicaPackage.PLAN__MASTER_PLAN:
+				setMasterPlan(MASTER_PLAN_EDEFAULT);
+				return;
+			case AlicaPackage.PLAN__UTILITY_FUNCTION:
+				setUtilityFunction(UTILITY_FUNCTION_EDEFAULT);
+				return;
+			case AlicaPackage.PLAN__UTILITY_THRESHOLD:
+				setUtilityThreshold(UTILITY_THRESHOLD_EDEFAULT);
+				return;
+			case AlicaPackage.PLAN__VARS:
+				getVars().clear();
+				return;
+			case AlicaPackage.PLAN__PRE_CONDITION:
+				setPreCondition((PreCondition)null);
+				return;
+			case AlicaPackage.PLAN__RUNTIME_CONDITION:
+				setRuntimeCondition((RuntimeCondition)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -465,8 +770,38 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 				return synchronisations != null && !synchronisations.isEmpty();
 			case AlicaPackage.PLAN__ENTRY_POINTS:
 				return entryPoints != null && !entryPoints.isEmpty();
+			case AlicaPackage.PLAN__MASTER_PLAN:
+				return masterPlan != MASTER_PLAN_EDEFAULT;
+			case AlicaPackage.PLAN__UTILITY_FUNCTION:
+				return UTILITY_FUNCTION_EDEFAULT == null ? utilityFunction != null : !UTILITY_FUNCTION_EDEFAULT.equals(utilityFunction);
+			case AlicaPackage.PLAN__UTILITY_THRESHOLD:
+				return utilityThreshold != UTILITY_THRESHOLD_EDEFAULT;
+			case AlicaPackage.PLAN__VARS:
+				return vars != null && !vars.isEmpty();
+			case AlicaPackage.PLAN__PRE_CONDITION:
+				return preCondition != null;
+			case AlicaPackage.PLAN__RUNTIME_CONDITION:
+				return runtimeCondition != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case AlicaPackage.PLAN___CALCULATE_CARDINALITIES:
+				calculateCardinalities();
+				return null;
+			case AlicaPackage.PLAN___ENSURE_PARAMETRISATION_CONSISTENCY:
+				ensureParametrisationConsistency();
+				return null;
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -485,6 +820,12 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 		result.append(minCardinality);
 		result.append(", maxCardinality: ");
 		result.append(maxCardinality);
+		result.append(", masterPlan: ");
+		result.append(masterPlan);
+		result.append(", utilityFunction: ");
+		result.append(utilityFunction);
+		result.append(", utilityThreshold: ");
+		result.append(utilityThreshold);
 		result.append(')');
 		return result.toString();
 	}

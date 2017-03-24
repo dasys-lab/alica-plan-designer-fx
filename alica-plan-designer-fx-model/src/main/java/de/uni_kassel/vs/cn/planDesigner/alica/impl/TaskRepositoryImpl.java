@@ -2,22 +2,26 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alica.Task;
+import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
+
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 
 /**
  * <!-- begin-user-doc -->
@@ -126,13 +130,12 @@ public class TaskRepositoryImpl extends PlanElementImpl implements TaskRepositor
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public Task createDefaultTask() {
-		Task defaultTask = AlicaFactory.eINSTANCE.createTask();
-		defaultTask.setName("DefaultTask");
-		defaultTask.setDescription("Default Task.");
-		return defaultTask;
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -218,6 +221,20 @@ public class TaskRepositoryImpl extends PlanElementImpl implements TaskRepositor
 				return defaultTask != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case AlicaPackage.TASK_REPOSITORY___CREATE_DEFAULT_TASK:
+				return createDefaultTask();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //TaskRepositoryImpl

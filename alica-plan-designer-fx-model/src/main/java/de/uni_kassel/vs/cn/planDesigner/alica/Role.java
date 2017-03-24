@@ -12,7 +12,7 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Role#getCharacteristics <em>Characteristics</em>}</li>
+ *   <li>{@link alica.Role#getCharacteristics <em>Characteristics</em>}</li>
  * </ul>
  * </p>
  *
@@ -23,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
 public interface Role extends PlanElement {
 	/**
 	 * Returns the value of the '<em><b>Characteristics</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic}.
+	 * The list contents are of type {@link alica.Characteristic}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Characteristics</em>' containment reference list isn't clear,

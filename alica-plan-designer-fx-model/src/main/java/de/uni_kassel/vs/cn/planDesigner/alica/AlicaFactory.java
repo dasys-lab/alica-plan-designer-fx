@@ -2,6 +2,7 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
 import org.eclipse.emf.ecore.EFactory;
 
 /**
@@ -19,7 +20,7 @@ public interface AlicaFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	AlicaFactory eINSTANCE = de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl.init();
+	AlicaFactory eINSTANCE = AlicaFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Transition</em>'.
@@ -137,15 +138,6 @@ public interface AlicaFactory extends EFactory {
 	 * @generated
 	 */
 	Task createTask();
-
-	/**
-	 * Returns a new object of class '<em>Behaviour Configuration</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Behaviour Configuration</em>'.
-	 * @generated
-	 */
-	BehaviourConfiguration createBehaviourConfiguration();
 
 	/**
 	 * Returns a new object of class '<em>Role</em>'.

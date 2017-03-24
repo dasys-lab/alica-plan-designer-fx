@@ -14,8 +14,8 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getConditions <em>Conditions</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getPlans <em>Plans</em>}</li>
+ *   <li>{@link alica.UtilityFunctionCreator#getConditions <em>Conditions</em>}</li>
+ *   <li>{@link alica.UtilityFunctionCreator#getPlans <em>Plans</em>}</li>
  * </ul>
  * </p>
  *
@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface UtilityFunctionCreator extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Conditions</b></em>' reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Condition}.
+	 * The list contents are of type {@link alica.Condition}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Conditions</em>' reference list isn't clear,

@@ -1,55 +1,15 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.util;
+package alica.util;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import java.util.List;
+
 import java.util.Map;
-import org.eclipse.emf.ecore.EClass;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.util.Switch;
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourConfiguration;
-import de.uni_kassel.vs.cn.planDesigner.alica.CapValue;
-import de.uni_kassel.vs.cn.planDesigner.alica.Capability;
-import de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.Characteristic;
-import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Edge;
-import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.FailureState;
-import de.uni_kassel.vs.cn.planDesigner.alica.ForallAgents;
-import de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable;
-import de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping;
-import de.uni_kassel.vs.cn.planDesigner.alica.Node;
-import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem;
-import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Quantifier;
-import de.uni_kassel.vs.cn.planDesigner.alica.Rating;
-import de.uni_kassel.vs.cn.planDesigner.alica.Role;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping;
-import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.SuccessState;
-import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper;
-import de.uni_kassel.vs.cn.planDesigner.alica.TerminalState;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 
 /**
  * <!-- begin-user-doc -->
@@ -64,7 +24,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
  * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage
  * @generated
  */
-public class AlicaSwitch<T> extends Switch<T>{
+public class AlicaSwitch<T> extends Switch<T> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -86,34 +46,16 @@ public class AlicaSwitch<T> extends Switch<T>{
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * Checks whether this is a switch for the given package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the first non-null result returned by a <code>caseXXX</code> call.
+	 * @parameter ePackage the package in question.
+	 * @return whether this is a switch for the given package.
 	 * @generated
 	 */
-	public T doSwitch(EObject theEObject) {
-		return doSwitch(theEObject.eClass(), theEObject);
-	}
-
-	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the first non-null result returned by a <code>caseXXX</code> call.
-	 * @generated
-	 */
-	protected T doSwitch(EClass theEClass, EObject theEObject) {
-		if (theEClass.eContainer() == modelPackage) {
-			return doSwitch(theEClass.getClassifierID(), theEObject);
-		}
-		else {
-			List<EClass> eSuperTypes = theEClass.getESuperTypes();
-			return
-				eSuperTypes.isEmpty() ?
-					defaultCase(theEObject) :
-					doSwitch(eSuperTypes.get(0), theEObject);
-		}
+	@Override
+	protected boolean isSwitchFor(EPackage ePackage) {
+		return ePackage == modelPackage;
 	}
 
 	/**
@@ -196,6 +138,8 @@ public class AlicaSwitch<T> extends Switch<T>{
 			case AlicaPackage.BEHAVIOUR: {
 				Behaviour behaviour = (Behaviour)theEObject;
 				T result = caseBehaviour(behaviour);
+				if (result == null) result = caseAbstractPlan(behaviour);
+				if (result == null) result = caseIInhabitable(behaviour);
 				if (result == null) result = casePlanElement(behaviour);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -266,15 +210,6 @@ public class AlicaSwitch<T> extends Switch<T>{
 				@SuppressWarnings("unchecked") Map.Entry<String, String> eStringToEStringMapEntry = (Map.Entry<String, String>)theEObject;
 				T result = caseEStringToEStringMapEntry(eStringToEStringMapEntry);
 				if (result == null) result = casePlanElement((PlanElement)eStringToEStringMapEntry);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AlicaPackage.BEHAVIOUR_CONFIGURATION: {
-				BehaviourConfiguration behaviourConfiguration = (BehaviourConfiguration)theEObject;
-				T result = caseBehaviourConfiguration(behaviourConfiguration);
-				if (result == null) result = caseAbstractPlan(behaviourConfiguration);
-				if (result == null) result = caseIInhabitable(behaviourConfiguration);
-				if (result == null) result = casePlanElement(behaviourConfiguration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -788,21 +723,6 @@ public class AlicaSwitch<T> extends Switch<T>{
 	 * @generated
 	 */
 	public T caseEStringToEStringMapEntry(Map.Entry<String, String> object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Behaviour Configuration</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Behaviour Configuration</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseBehaviourConfiguration(BehaviourConfiguration object) {
 		return null;
 	}
 
@@ -1360,11 +1280,6 @@ public class AlicaSwitch<T> extends Switch<T>{
 	@Override
 	public T defaultCase(EObject object) {
 		return null;
-	}
-
-	@Override
-	protected boolean isSwitchFor(EPackage ePackage) {
-		return ePackage == modelPackage;
 	}
 
 } //AlicaSwitch

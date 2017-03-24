@@ -2,18 +2,21 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * <!-- begin-user-doc -->
@@ -301,7 +304,7 @@ public class EntryPointImpl extends PlanElementImpl implements EntryPoint {
 	 */
 	public Plan getPlan() {
 		if (eContainerFeatureID() != AlicaPackage.ENTRY_POINT__PLAN) return null;
-		return (Plan)eContainer();
+		return (Plan)eInternalContainer();
 	}
 
 	/**

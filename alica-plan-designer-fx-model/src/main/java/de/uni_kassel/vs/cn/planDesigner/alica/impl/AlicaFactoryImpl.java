@@ -3,49 +3,17 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
+
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourConfiguration;
-import de.uni_kassel.vs.cn.planDesigner.alica.CapValue;
-import de.uni_kassel.vs.cn.planDesigner.alica.Capability;
-import de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.Characteristic;
-import de.uni_kassel.vs.cn.planDesigner.alica.Edge;
-import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.FailureState;
-import de.uni_kassel.vs.cn.planDesigner.alica.ForallAgents;
-import de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping;
-import de.uni_kassel.vs.cn.planDesigner.alica.Node;
-import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem;
-import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Rating;
-import de.uni_kassel.vs.cn.planDesigner.alica.Role;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping;
-import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.SuccessState;
-import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 
 /**
  * <!-- begin-user-doc -->
@@ -62,7 +30,7 @@ public class AlicaFactoryImpl extends EFactoryImpl implements AlicaFactory {
 	 */
 	public static AlicaFactory init() {
 		try {
-			AlicaFactory theAlicaFactory = (AlicaFactory)EPackage.Registry.INSTANCE.getEFactory("http:///de.uni_kassel.vs.cn"); 
+			AlicaFactory theAlicaFactory = (AlicaFactory)EPackage.Registry.INSTANCE.getEFactory(AlicaPackage.eNS_URI);
 			if (theAlicaFactory != null) {
 				return theAlicaFactory;
 			}
@@ -105,7 +73,6 @@ public class AlicaFactoryImpl extends EFactoryImpl implements AlicaFactory {
 			case AlicaPackage.RUNTIME_CONDITION: return createRuntimeCondition();
 			case AlicaPackage.TASK: return createTask();
 			case AlicaPackage.ESTRING_TO_ESTRING_MAP_ENTRY: return (EObject)createEStringToEStringMapEntry();
-			case AlicaPackage.BEHAVIOUR_CONFIGURATION: return createBehaviourConfiguration();
 			case AlicaPackage.ROLE: return createRole();
 			case AlicaPackage.ROLE_SET: return createRoleSet();
 			case AlicaPackage.ELONG_TO_DOUBLE_MAP_ENTRY: return (EObject)createELongToDoubleMapEntry();
@@ -313,16 +280,6 @@ public class AlicaFactoryImpl extends EFactoryImpl implements AlicaFactory {
 	public Map.Entry<String, String> createEStringToEStringMapEntry() {
 		EStringToEStringMapEntryImpl eStringToEStringMapEntry = new EStringToEStringMapEntryImpl();
 		return eStringToEStringMapEntry;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public BehaviourConfiguration createBehaviourConfiguration() {
-		BehaviourConfigurationImpl behaviourConfiguration = new BehaviourConfigurationImpl();
-		return behaviourConfiguration;
 	}
 
 	/**
