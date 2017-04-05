@@ -7,12 +7,15 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 
 import java.lang.reflect.InvocationTargetException;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaProxyResolvationHelper;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -32,6 +35,9 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * @generated
  */
 public abstract class PlanElementImpl extends MinimalEObjectImpl.Container implements PlanElement {
+
+	protected static int OBJECT_COUNTER = 0;
+
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -51,6 +57,11 @@ public abstract class PlanElementImpl extends MinimalEObjectImpl.Container imple
 	 * @ordered
 	 */
 	protected long id = ID_EDEFAULT;
+
+	@Override
+	public EObject eResolveProxy(InternalEObject proxy) {
+		return AlicaProxyResolvationHelper.doResolve(this, proxy);
+	}
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -95,10 +106,11 @@ public abstract class PlanElementImpl extends MinimalEObjectImpl.Container imple
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	protected PlanElementImpl() {
 		super();
+		setId(generateID());
 	}
 
 	/**
@@ -177,12 +189,10 @@ public abstract class PlanElementImpl extends MinimalEObjectImpl.Container imple
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public long generateID() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		return System.currentTimeMillis() + OBJECT_COUNTER++;
 	}
 
 	/**
@@ -261,20 +271,6 @@ public abstract class PlanElementImpl extends MinimalEObjectImpl.Container imple
 				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case AlicaPackage.PLAN_ELEMENT___GENERATE_ID:
-				return generateID();
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

@@ -10,6 +10,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -125,6 +126,9 @@ public class ParametrisationImpl extends PlanElementImpl implements Parametrisat
 	public Variable getSubvar() {
 		if (subvar != null && subvar.eIsProxy()) {
 			InternalEObject oldSubvar = (InternalEObject)subvar;
+			if (eResolveProxy(oldSubvar) instanceof  Variable == false) {
+				System.out.println("ParametrisationId: " +  this.getId() + " wrong var id = " + eResolveProxy(oldSubvar));
+			}
 			subvar = (Variable)eResolveProxy(oldSubvar);
 			if (subvar != oldSubvar) {
 				if (eNotificationRequired())

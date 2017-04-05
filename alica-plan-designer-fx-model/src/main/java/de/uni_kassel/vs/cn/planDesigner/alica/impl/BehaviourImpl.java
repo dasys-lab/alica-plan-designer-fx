@@ -2,18 +2,20 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import java.util.Collection;
 
 /**
  * <!-- begin-user-doc -->
@@ -81,6 +83,16 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * @ordered
 	 */
 	protected int frequency = FREQUENCY_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getVars() <em>Vars</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVars()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Variable> vars;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -241,6 +253,32 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Variable> getVars() {
+		if (vars == null) {
+			vars = new EObjectContainmentEList<Variable>(Variable.class, this, AlicaPackage.BEHAVIOUR__VARS);
+		}
+		return vars;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case AlicaPackage.BEHAVIOUR__VARS:
+				return ((InternalEList<?>)getVars()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -255,6 +293,8 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 				return basicGetPostCondition();
 			case AlicaPackage.BEHAVIOUR__FREQUENCY:
 				return getFrequency();
+			case AlicaPackage.BEHAVIOUR__VARS:
+				return getVars();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -264,6 +304,7 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -278,6 +319,10 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 				return;
 			case AlicaPackage.BEHAVIOUR__FREQUENCY:
 				setFrequency((Integer)newValue);
+				return;
+			case AlicaPackage.BEHAVIOUR__VARS:
+				getVars().clear();
+				getVars().addAll((Collection<? extends Variable>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -303,6 +348,9 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 			case AlicaPackage.BEHAVIOUR__FREQUENCY:
 				setFrequency(FREQUENCY_EDEFAULT);
 				return;
+			case AlicaPackage.BEHAVIOUR__VARS:
+				getVars().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -323,6 +371,8 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 				return postCondition != null;
 			case AlicaPackage.BEHAVIOUR__FREQUENCY:
 				return frequency != FREQUENCY_EDEFAULT;
+			case AlicaPackage.BEHAVIOUR__VARS:
+				return vars != null && !vars.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

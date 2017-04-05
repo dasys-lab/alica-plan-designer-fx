@@ -471,7 +471,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#eNS_URI
+	 * @see alica.AlicaPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
@@ -488,7 +488,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link AlicaPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -515,7 +515,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		// Mark meta-data to indicate it can't be changed
 		theAlicaPackage.freeze();
 
-  
+
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(AlicaPackage.eNS_URI, theAlicaPackage);
 		return theAlicaPackage;
@@ -825,6 +825,15 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 */
 	public EAttribute getBehaviour_Frequency() {
 		return (EAttribute)behaviourEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBehaviour_Vars() {
+		return (EReference)behaviourEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2256,6 +2265,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		createEReference(behaviourEClass, BEHAVIOUR__RUNTIME_CONDITION);
 		createEReference(behaviourEClass, BEHAVIOUR__POST_CONDITION);
 		createEAttribute(behaviourEClass, BEHAVIOUR__FREQUENCY);
+		createEReference(behaviourEClass, BEHAVIOUR__VARS);
 
 		stateEClass = createEClass(STATE);
 		createEReference(stateEClass, STATE__PLANS);
@@ -2569,6 +2579,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEReference(getBehaviour_RuntimeCondition(), this.getRuntimeCondition(), null, "runtimeCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBehaviour_PostCondition(), this.getPostCondition(), null, "postCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getBehaviour_Frequency(), ecorePackage.getEInt(), "frequency", "30", 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBehaviour_Vars(), this.getVariable(), null, "vars", null, 0, -1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(stateEClass, State.class, "State", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getState_Plans(), this.getAbstractPlan(), null, "plans", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2780,5 +2791,4 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		// Create resource
 		createResource(eNS_URI);
 	}
-
 } //AlicaPackageImpl

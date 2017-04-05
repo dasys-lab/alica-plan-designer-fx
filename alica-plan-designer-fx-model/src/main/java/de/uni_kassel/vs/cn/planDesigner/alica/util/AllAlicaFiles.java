@@ -83,7 +83,14 @@ public class AllAlicaFiles {
 
         tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
         EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
-
+        EMFModelUtils.getAlicaResourceSet()
+                .getResources().forEach(e -> {
+            try {
+                EMFModelUtils.saveAlicaFile(e.getContents().get(0));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     private <T extends EObject> List<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException {

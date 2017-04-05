@@ -543,20 +543,35 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 	 * @generated
 	 */
 	public void calculateCardinalities() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		int min = 0;
+		int max = 0;
+		for(EntryPoint ep : getEntryPoints()){
+			min += ep.getMinCardinality();
+			int tmp = max + ep.getMaxCardinality();
+			max = tmp < 0 ? Integer.MAX_VALUE : tmp;
+		}
+
+		setMaxCardinality(max);
+		setMinCardinality(min);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public void ensureParametrisationConsistency() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		/*for(State s: this.getStates()) {
+		s.ensureParametrisationConsistency();
+		}
+		for(Transition t: this.getTransitions()) {
+			if (t.getPreCondition()!=null) {
+				t.getPreCondition().ensureVariableConsistency(this);
+			}
+		}
+		for(Condition c : this.getConditions()) {
+			c.ensureVariableConsistency(this);
+		}*/
 	}
 
 	/**
@@ -784,24 +799,6 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 				return runtimeCondition != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case AlicaPackage.PLAN___CALCULATE_CARDINALITIES:
-				calculateCardinalities();
-				return null;
-			case AlicaPackage.PLAN___ENSURE_PARAMETRISATION_CONSISTENCY:
-				ensureParametrisationConsistency();
-				return null;
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.util;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -35,8 +36,32 @@ public class AlicaProxyResolvationHelper {
                         .stream()
                         .filter(e -> e.getURI().toString().contains("/" + eProxyURI.replaceAll("#.*", "")))
                         .findAny();
-                Resource resource = resourceOptional.get();
-                proxy.eSetProxyURI(URI.createURI(resource.getURI().toString() + eProxyURI.replaceAll(".*#","#")));
+                Resource resource = null;
+
+                if (eProxyURI.toString().contains(".beh")) {
+                    Optional<Resource> first = EMFModelUtils
+                            .getAlicaResourceSet()
+                            .getResources()
+                            .stream()
+                            .filter(e -> {
+                                String s = eProxyURI;
+                                s = s.substring(0, s.lastIndexOf('#'));
+                                return e.getURI().toFileString().contains(s);
+                            })
+                            .findFirst();
+                    long id;
+                    resource = first.get();
+                    String idString = eProxyURI.substring(eProxyURI.lastIndexOf('#') + 1);
+                    proxy.eSetProxyURI(URI.createURI(resource.getURI().toString() + "#" + idString));
+                    if (EcoreUtil.resolve(proxy, resource).eIsProxy()) {
+                        id = ((Behaviour) first.get().getContents().get(0)).getId();
+                        proxy.eSetProxyURI(URI.createURI(resource.getURI().toString() + "#" + id));
+                    }
+
+                } else {
+                    resource = resourceOptional.get();
+                    proxy.eSetProxyURI(URI.createURI(resource.getURI().toString() + eProxyURI.replaceAll(".*#","#")));
+                }
                 return EcoreUtil.resolve(proxy, resource);
             }
         }
