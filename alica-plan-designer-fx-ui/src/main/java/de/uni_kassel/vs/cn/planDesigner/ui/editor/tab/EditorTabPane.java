@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
@@ -45,7 +46,7 @@ public class EditorTabPane extends TabPane {
 
     private Tab createNewTab(Path filePath) {
         String filePathAsString = filePath.toString();
-        switch (filePathAsString.substring(filePathAsString.indexOf('.') + 1)) {
+        switch (filePathAsString.substring(filePathAsString.lastIndexOf('.') + 1)) {
             case "pml":
                 Pair<Plan, Path> planPathPair = AllAlicaFiles
                         .getInstance()
@@ -66,6 +67,14 @@ public class EditorTabPane extends TabPane {
                         .filter(e -> e.getValue().equals(filePath))
                         .findFirst().get();
                 return new PlanTypeTab(plantypePathPair.getKey(), plantypePathPair.getValue(), commandStack);
+            case "beh":
+                Pair<Behaviour, Path> behaviourPathPair = AllAlicaFiles
+                        .getInstance()
+                        .getBehaviours()
+                        .stream()
+                        .filter(e -> e.getValue().equals(filePath))
+                        .findFirst().get();
+                return new BehaviourTab(behaviourPathPair.getKey(), behaviourPathPair.getValue(), commandStack);
             default:
                 return null;
 

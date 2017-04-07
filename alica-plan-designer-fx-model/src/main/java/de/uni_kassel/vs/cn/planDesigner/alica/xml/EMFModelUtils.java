@@ -104,7 +104,7 @@ public class EMFModelUtils {
      * @param <T>
      * @throws IOException
      */
-    public static <T extends EObject> void createAlicaFile(T emptyObject, File file) throws IOException {
+    public static <T extends EObject> Resource createAlicaFile(T emptyObject, File file) throws IOException {
         Resource resource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath()));
         resource.getContents().add(emptyObject);
         if (emptyObject instanceof Plan) {
@@ -116,6 +116,7 @@ public class EMFModelUtils {
             pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         }
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        return resource;
     }
 
     /**

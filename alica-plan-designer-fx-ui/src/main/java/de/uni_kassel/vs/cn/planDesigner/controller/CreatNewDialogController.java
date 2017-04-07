@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
@@ -16,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.resource.Resource;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,7 +109,9 @@ public class CreatNewDialogController implements Initializable {
                     });
                     return;
                 }
-                EMFModelUtils.createAlicaFile(getAlicaFactory().create(alicaType) , new File(pathTextField.getText() + fileName));
+                Resource alicaFile = EMFModelUtils.createAlicaFile(getAlicaFactory().create(alicaType), new File(pathTextField.getText() + fileName));
+                ((AbstractPlan)alicaFile.getContents().get(0)).setName(fileName.replace(".beh","")
+                        .replace(".pty","").replace(".pml", ""));
                 ((Stage)pathTextField.getScene().getWindow()).close();
             } catch (IOException e) {
                 e.printStackTrace();

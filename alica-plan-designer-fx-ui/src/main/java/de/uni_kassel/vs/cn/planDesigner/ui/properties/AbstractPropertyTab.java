@@ -33,6 +33,10 @@ public abstract class AbstractPropertyTab extends Tab {
 
     protected abstract void createTabContent();
 
+    public PlanElement getSelectedEditorTabPlanElement() {
+        return selectedPlanElement;
+    }
+
     public Pair<PlanElement, AbstractPlanElementContainer> getSelectedElementContainer() {
         return selectedElementContainer.get();
     }

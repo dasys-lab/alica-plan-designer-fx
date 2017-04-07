@@ -3,10 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddVariableToAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteVariableFromAbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ObservableValue;
@@ -43,6 +40,9 @@ public class VariablesTab extends AbstractPropertyTab {
                 this.setDisable(false);
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Plan) selectedPlanElement).getVars()));
                 createTabContent();
+            } else if (selectedPlanElement instanceof Behaviour) {
+                textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour) selectedPlanElement).getVars()));
+                createTabContent();
             } else {
                 this.setDisable(true);
             }
@@ -52,7 +52,12 @@ public class VariablesTab extends AbstractPropertyTab {
     @Override
     protected void createTabContent() {
         textFieldTableView = new TableView<>();
-        textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
+        if (selectedPlanElement instanceof Plan) {
+            textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
+        } else {
+            textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour)selectedPlanElement).getVars()));
+        }
+
         TableColumn<Variable, TextField> nameColumn = new TableColumn<>(I18NRepo.getString("label.column.name"));
         nameColumn.setCellValueFactory(new CellColumnCreatorCallback("name"));
         textFieldTableView.getColumns().add(nameColumn);
@@ -67,17 +72,25 @@ public class VariablesTab extends AbstractPropertyTab {
         HBox hBox = new HBox();
         Button addButton = new Button(I18NRepo.getString("action.list.add"));
         addButton.setOnAction(e -> {
+            commandStack.storeAndExecute(new AddVariableToAbstractPlan(selectedPlanElement));
             if (selectedPlanElement instanceof Plan) {
-                commandStack.storeAndExecute(new AddVariableToAbstractPlan((Plan) selectedPlanElement));
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
+            } else if (selectedPlanElement instanceof Behaviour) {
+                textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour)selectedPlanElement).getVars()));
             }
         });
+
         Button deleteButton = new Button(I18NRepo.getString("action.list.remove"));
         deleteButton.setOnAction(e -> {
             Variable selectedItem = textFieldTableView.getSelectionModel().getSelectedItem();
             if (selectedItem != null && selectedPlanElement instanceof Plan) {
                 commandStack.storeAndExecute(new DeleteVariableFromAbstractPlan(selectedItem, (Plan) selectedPlanElement));
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
+            }
+
+            if (selectedItem != null && selectedPlanElement instanceof Behaviour) {
+                commandStack.storeAndExecute(new DeleteVariableFromAbstractPlan(selectedItem, (Behaviour) selectedPlanElement));
+                textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour)selectedPlanElement).getVars()));
             }
         });
         hBox.getChildren().addAll(addButton, deleteButton);

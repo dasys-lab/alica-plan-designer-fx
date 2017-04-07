@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.controller.BehaviourWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
  */
 public class PropertyTab extends AbstractPropertyTab {
 
+    private ObservableList<Node> propertyHBoxList;
+
     public PropertyTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         super(activeEditorTab, commandStack);
         setText(I18NRepo.getString("label.properties"));
@@ -39,16 +42,18 @@ public class PropertyTab extends AbstractPropertyTab {
 
     @Override
     protected void createTabContent() {
-        ObservableList<Node> propertyHBoxList = FXCollections.observableList(new ArrayList<>());//getStandardPropertyHBoxes(selectedPlanElement);
-
-        selectedPlanElement
+        if (propertyHBoxList == null) {
+            propertyHBoxList = FXCollections.observableList(new ArrayList<>());
+        }
+        propertyHBoxList.clear();
+        getSelectedEditorTabPlanElement()
                 .eClass()
                 .getEAllStructuralFeatures()
                 .forEach(eStructuralFeature -> {
                     if (!eStructuralFeature.getName().equalsIgnoreCase("parametrisation") && !eStructuralFeature.getName().equalsIgnoreCase("inplan")) {
                         if(eStructuralFeature.getClass().equals(EAttributeImpl.class)) {
                             if (eStructuralFeature.getName().equalsIgnoreCase("comment")) {
-                                propertyHBoxList.add(new PropertyHBox<PlanElement>(selectedPlanElement, eStructuralFeature.getName(),
+                                propertyHBoxList.add(new PropertyHBox<PlanElement>(getSelectedEditorTabPlanElement(), eStructuralFeature.getName(),
                                         ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass()){
                                     @Override
                                     protected TextInputControl createTextField(PlanElement object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
@@ -56,21 +61,21 @@ public class PropertyTab extends AbstractPropertyTab {
                                     }
                                 });
                             } else {
-                                propertyHBoxList.add(new PropertyHBox<>(selectedPlanElement, eStructuralFeature.getName(),
+                                propertyHBoxList.add(new PropertyHBox<>(getSelectedEditorTabPlanElement(), eStructuralFeature.getName(),
                                         ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass()));
                             }
                         }
                     }
                 });
 
-        if (selectedPlanElement instanceof EntryPoint) {
+        if (getSelectedEditorTabPlanElement() instanceof EntryPoint) {
             Text text = new Text(I18NRepo.getString("alicatype.property.task"));
             ComboBox<Task> taskComboBox = new ComboBox<>();
-            taskComboBox.getSelectionModel().select(((EntryPoint) selectedPlanElement).getTask());
+            taskComboBox.getSelectionModel().select(((EntryPoint) getSelectedEditorTabPlanElement()).getTask());
             taskComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Task>() {
                 @Override
                 public void changed(ObservableValue<? extends Task> observable, Task oldValue, Task newValue) {
-                    ((EntryPoint) selectedPlanElement).setTask(newValue);
+                    ((EntryPoint) getSelectedEditorTabPlanElement()).setTask(newValue);
                     selectedElementContainerProperty().getValue().getValue().setupContainer();
                 }
             });
@@ -115,4 +120,11 @@ public class PropertyTab extends AbstractPropertyTab {
         setContent(new ListView<>(propertyHBoxList));
     }
 
+    public void setPropertyHBoxList(ObservableList<Node> propertyHBoxList) {
+        this.propertyHBoxList = propertyHBoxList;
+    }
+
+    public ObservableList<Node> getPropertyHBoxList() {
+        return propertyHBoxList;
+    }
 }
