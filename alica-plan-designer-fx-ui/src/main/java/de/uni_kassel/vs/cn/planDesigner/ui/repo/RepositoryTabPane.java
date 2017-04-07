@@ -12,14 +12,12 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
  */
 public class RepositoryTabPane extends TabPane {
 
-    private AbstractPlanTool abstractPlanTool;
-
     public RepositoryTabPane() {
         getTabs().clear();
     }
 
     public void init() {
-        abstractPlanTool = new AbstractPlanTool(MainController.getInstance().getEditorTabPane());
+        AbstractPlanTool abstractPlanTool = new AbstractPlanTool(MainController.getInstance().getEditorTabPane());
         getTabs().clear();
         getTabs().addAll(new RepositoryTab<>(AllAlicaFiles.getInstance().getPlans(), abstractPlanTool, getAlicaFactory().createPlan().eClass().getName()),
                 new RepositoryTab<>(AllAlicaFiles.getInstance().getPlanTypes(), abstractPlanTool, getAlicaFactory().createPlanType().eClass().getName()) ,

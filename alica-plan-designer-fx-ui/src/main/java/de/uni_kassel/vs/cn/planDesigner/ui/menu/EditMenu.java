@@ -10,6 +10,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.TaskRepositoryTab;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -23,11 +24,8 @@ import javafx.scene.input.KeyCombination;
  */
 public class EditMenu extends Menu {
 
-    private CommandStack commandStack;
-
     public EditMenu(CommandStack commandStack, EditorTabPane editorTabPane) {
         super(I18NRepo.getString("label.menu.edit"));
-        this.commandStack = commandStack;
         MenuItem deleteElementItem = new MenuItem(I18NRepo.getString("label.menu.edit.delete"));
         MenuItem undoItem = new MenuItem(I18NRepo.getString("label.menu.edit.undo"));
         undoItem.setDisable(false);
@@ -44,6 +42,8 @@ public class EditMenu extends Menu {
             if (selectedItem instanceof PlanTab) {
                 ((PlanTab)selectedItem).getPlanEditorPane().setupPlanVisualisation();
                 ((PlanTab)selectedItem).getConditionHBox().setupConditionVisualisation();
+            } else if (selectedItem instanceof PlanTypeTab) {
+                ((PlanTypeTab)selectedItem).refresh();
             } else if (selectedItem instanceof TaskRepositoryTab) {
                 ((TaskRepositoryTab)selectedItem).createContentView();
             }
@@ -58,7 +58,15 @@ public class EditMenu extends Menu {
         });
         redoItem.setOnAction(event -> {
             commandStack.redo();
-            ((PlanTab)editorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+            Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
+            if (selectedItem instanceof PlanTab) {
+                ((PlanTab)selectedItem).getPlanEditorPane().setupPlanVisualisation();
+                ((PlanTab)selectedItem).getConditionHBox().setupConditionVisualisation();
+            } else if (selectedItem instanceof PlanTypeTab) {
+                ((PlanTypeTab)selectedItem).refresh();
+            } else if (selectedItem instanceof TaskRepositoryTab) {
+                ((TaskRepositoryTab) selectedItem).createContentView();
+            }
         });
         redoItem.setDisable(false);
         deleteElementItem.setOnAction(event -> {

@@ -99,7 +99,7 @@ public class VariablesTab extends AbstractPropertyTab {
 
     }
 
-    private static class CellColumnCreatorCallback implements Callback<TableColumn.CellDataFeatures<Variable, TextField>, ObservableValue<TextField>> {
+    private class CellColumnCreatorCallback implements Callback<TableColumn.CellDataFeatures<Variable, TextField>, ObservableValue<TextField>> {
 
         private final String propertyName;
 
@@ -113,7 +113,7 @@ public class VariablesTab extends AbstractPropertyTab {
                 @Override
                 public TextField getValue() {
                     try {
-                        return new PropertyTextField<>(param.getValue(), propertyName);
+                        return new PropertyTextField<>(param.getValue(), propertyName, commandStack);
                     } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                         throw new RuntimeException(e);
                     }

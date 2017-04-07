@@ -64,6 +64,10 @@ public class PlanTypeWindowController implements Initializable {
         initButtons();
     }
 
+    public void refresh() {
+        plantypeTableView.refresh();
+    }
+
     private void initPlanListView() {
         List<RepositoryHBox<Plan>> allPlans = AllAlicaFiles
                 .getInstance()
@@ -203,7 +207,7 @@ public class PlanTypeWindowController implements Initializable {
         plantypeTableView.setRowFactory(tv -> {
             TableRow<AnnotatedPlan> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
-                commandStack.storeAndExecute(new ChangeAttributeValue<Boolean>(annotatedPlanTableRow.getItem(),
+                commandStack.storeAndExecute(new ChangeAttributeValue<>(annotatedPlanTableRow.getItem(),
                         "activated", Boolean.class, !annotatedPlanTableRow.getItem().isActivated()));
                 plantypeTableView.refresh();
             });

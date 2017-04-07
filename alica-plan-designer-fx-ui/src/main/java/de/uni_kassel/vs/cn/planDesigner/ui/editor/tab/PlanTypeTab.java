@@ -14,17 +14,23 @@ import java.nio.file.Path;
  */
 public class PlanTypeTab extends AbstractEditorTab<PlanType> {
 
+    private PlanTypeWindowController controller;
+
     public PlanTypeTab(PlanType editable, Path filePath, CommandStack commandStack) {
         super(editable, filePath, commandStack);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("plantypeWindow.fxml"));
         try {
             Parent window = fxmlLoader.load();
-            PlanTypeWindowController controller = fxmlLoader.getController();
+            controller = fxmlLoader.getController();
             controller.setCommandStack(commandStack);
             controller.setPlanType(editable);
             setContent(window);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void refresh() {
+        controller.refresh();
     }
 }

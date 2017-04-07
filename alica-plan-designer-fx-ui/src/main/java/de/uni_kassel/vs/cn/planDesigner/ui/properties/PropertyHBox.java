@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangeAttributeValue;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.collections.FXCollections;
@@ -21,9 +23,11 @@ import java.lang.reflect.InvocationTargetException;
 public class PropertyHBox<T extends PlanElement> extends HBox {
 
     public static final int wrappingWidth = 100;
+    private CommandStack commandStack;
 
     // TODO resolve problem of not getting value by property reference
-    public PropertyHBox(T object, String propertyName, Class<?> propertyClass) {
+    public PropertyHBox(T object, String propertyName, Class<?> propertyClass, CommandStack commandStack) {
+        this.commandStack = commandStack;
         try {
             Text text = new Text(I18NRepo.getString("alicatype.property." + propertyName));
             text.setWrappingWidth(wrappingWidth);
@@ -73,13 +77,9 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
             ComboBox<Boolean> booleanComboBox = new ComboBox<>();
             booleanComboBox.setItems(FXCollections.observableArrayList(true,false));
             booleanComboBox.getSelectionModel().select(Boolean.parseBoolean(BeanUtils.getProperty(object, propertyName)));
-            booleanComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                try {
-                    BeanUtils.setProperty(object, propertyName, newValue);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            });
+            booleanComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> commandStack
+                    .storeAndExecute(
+                            new ChangeAttributeValue<>(object, propertyName, object.getClass(), (T) ((Object) newValue))));
             return booleanComboBox;
         }
 
@@ -87,7 +87,7 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
     }
 
     protected TextInputControl createTextField(T object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        return new PropertyTextField<>(object, propertyName);
+        return new PropertyTextField<>(object, propertyName, commandStack);
     }
 
     static class PropertyTextArea extends TextArea {

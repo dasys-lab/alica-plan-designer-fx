@@ -16,6 +16,7 @@ public class PropertyTabPane extends TabPane {
 
     private AbstractEditorTab<PlanElement> activeEditorTab;
 
+    @SuppressWarnings("unchecked")
     public void init(EditorTabPane editorTabPane) {
         editorTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             activeEditorTab = (AbstractEditorTab<PlanElement>) newValue;

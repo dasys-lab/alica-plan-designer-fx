@@ -42,6 +42,7 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
         wrapper = this;
     }
 
+    @SuppressWarnings("unchecked")
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(T containedElement) {
         return event -> ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
                 .getSelectedItem()).getSelectedPlanElement().setValue(new Pair<>(containedElement, this));

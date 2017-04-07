@@ -23,7 +23,6 @@ public class FileWatcherJob implements Runnable {
     private final PLDFileTreeView fileTreeView;
     private final Map<WatchKey,Path> keys = new HashMap<>();
     private boolean trace = false;
-    private final boolean recursive = true;
     private WatchService watcher;
 
     public FileWatcherJob(PLDFileTreeView fileTreeView) {
@@ -116,7 +115,7 @@ public class FileWatcherJob implements Runnable {
 
                     // if directory is created, and watching recursively, then
                     // register it and its sub-directories
-                    if (recursive && (kind == StandardWatchEventKinds.ENTRY_CREATE)) {
+                    if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                         try {
                             if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
                                 registerAll(child);

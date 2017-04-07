@@ -17,6 +17,7 @@ import java.util.Map;
  *
  * @param <T> type of the model object this tool is associated with
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractTool<T extends PlanElement> {
 
     protected TabPane workbench;

@@ -1,13 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.SetTaskOfEntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.controller.BehaviourWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -54,7 +53,7 @@ public class PropertyTab extends AbstractPropertyTab {
                         if(eStructuralFeature.getClass().equals(EAttributeImpl.class)) {
                             if (eStructuralFeature.getName().equalsIgnoreCase("comment")) {
                                 propertyHBoxList.add(new PropertyHBox<PlanElement>(getSelectedEditorTabPlanElement(), eStructuralFeature.getName(),
-                                        ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass()){
+                                        ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass(), commandStack){
                                     @Override
                                     protected TextInputControl createTextField(PlanElement object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
                                         return new PropertyTextArea(object, propertyName);
@@ -62,7 +61,7 @@ public class PropertyTab extends AbstractPropertyTab {
                                 });
                             } else {
                                 propertyHBoxList.add(new PropertyHBox<>(getSelectedEditorTabPlanElement(), eStructuralFeature.getName(),
-                                        ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass()));
+                                        ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass(), commandStack));
                             }
                         }
                     }
@@ -75,6 +74,7 @@ public class PropertyTab extends AbstractPropertyTab {
             taskComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Task>() {
                 @Override
                 public void changed(ObservableValue<? extends Task> observable, Task oldValue, Task newValue) {
+                    commandStack.storeAndExecute(new SetTaskOfEntryPoint(newValue, (EntryPoint) getSelectedEditorTabPlanElement()));
                     ((EntryPoint) getSelectedEditorTabPlanElement()).setTask(newValue);
                     selectedElementContainerProperty().getValue().getValue().setupContainer();
                 }
@@ -109,9 +109,9 @@ public class PropertyTab extends AbstractPropertyTab {
             });
             text.setWrappingWidth(100);
             HBox hBox = new HBox(text, taskComboBox);
-            hBox.setHgrow(taskComboBox, Priority.ALWAYS);
-            hBox.setHgrow(text, Priority.ALWAYS);
-            hBox.setMargin(taskComboBox, new Insets(0,100,0,50));
+            HBox.setHgrow(taskComboBox, Priority.ALWAYS);
+            HBox.setHgrow(text, Priority.ALWAYS);
+            HBox.setMargin(taskComboBox, new Insets(0,100,0,50));
 
             propertyHBoxList.add(hBox);
         }

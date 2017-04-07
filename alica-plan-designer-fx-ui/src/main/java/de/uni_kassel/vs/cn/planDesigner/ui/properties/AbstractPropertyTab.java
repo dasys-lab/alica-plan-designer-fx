@@ -13,10 +13,12 @@ import javafx.util.Pair;
  */
 public abstract class AbstractPropertyTab extends Tab {
     private final SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedElementContainer;
+    protected final AbstractEditorTab<PlanElement> activeEditorTab;
     protected PlanElement selectedPlanElement;
     protected CommandStack commandStack;
 
     public AbstractPropertyTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
+        this.activeEditorTab = activeEditorTab;
         this.selectedPlanElement = activeEditorTab.getSelectedPlanElement().getValue().getKey();
         this.selectedElementContainer = activeEditorTab.getSelectedPlanElement();
         this.commandStack = commandStack;

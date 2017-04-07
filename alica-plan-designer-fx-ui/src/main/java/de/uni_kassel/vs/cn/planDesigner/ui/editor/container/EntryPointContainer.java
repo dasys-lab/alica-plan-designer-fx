@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -50,22 +51,30 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
     @Override
     public void setupContainer() {
         getChildren().clear();
-        visualRepresentation = new Circle(getPmlUiExtension().getXPos(), getPmlUiExtension().getYPos(), StateContainer.STATE_RADIUS,
+        setLayoutX(getPmlUiExtension().getXPos());
+        setLayoutY(getPmlUiExtension().getYPos());
+        visualRepresentation = new Circle(StateContainer.STATE_RADIUS,
                 getVisualisationColor());
         visualRepresentation.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
 
         if (stateContainer != null) {
-            Line line = new Line(getPmlUiExtension().getXPos(),
-                    getPmlUiExtension().getYPos(),
-                    stateContainer.getLayoutX(),
-                    stateContainer.getLayoutY());
+            double localX = stateContainer.getVisualRepresentation().getLayoutX();
+            double localY = stateContainer.getVisualRepresentation().getLayoutY();
+            Point2D planXY = stateContainer.localToParent(localX, localY);
+            Point2D localXY = parentToLocal(planXY);
+            Line line = new Line(visualRepresentation.getLayoutX(),
+                    visualRepresentation.getLayoutY(),
+                    localXY.getX(),
+                    localXY.getY());
             line.getStrokeDashArray().addAll(2d, 10d);
             getChildren().add(line);
         }
 
         getChildren().add(visualRepresentation);
-        getChildren().add(new Text(getPmlUiExtension().getXPos()- StateContainer.STATE_RADIUS, getPmlUiExtension().getYPos() - StateContainer.STATE_RADIUS,
-                getContainedElement().getTask().getName()));
+        Text e = new Text(getContainedElement().getTask().getName());
+        getChildren().add(e);
+        e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth()/2);
+        e.setLayoutY(e.getLayoutY() - StateContainer.STATE_RADIUS);
     }
 
     @Override

@@ -35,8 +35,6 @@ import java.util.stream.Collectors;
  * Created by marci on 19.03.17.
  */
 public class SynchronisationContainer extends AbstractPlanElementContainer<Synchronisation> implements Observable {
-
-    public static final double STATE_RADIUS = 20.0;
     private boolean dragged;
     private List<InvalidationListener> invalidationListeners;
     private List<TransitionContainer> transitionContainers;
@@ -65,7 +63,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
         getChildren().clear();
         setLayoutX(getPmlUiExtension().getXPos());
         setLayoutY(getPmlUiExtension().getYPos());
-        visualRepresentation = new Circle(STATE_RADIUS, getVisualisationColor());
+        visualRepresentation = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
         visualRepresentation.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
         ((Circle)visualRepresentation).setFill(new ImagePattern(new Image(getClass().getClassLoader()
                 .getResourceAsStream("images/synchronisation36x24.png"))));
