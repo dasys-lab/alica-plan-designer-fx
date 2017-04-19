@@ -40,7 +40,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
         setCellFactory(new Callback<TreeView<FileWrapper>, TreeCell<FileWrapper>>() {
             @Override
             public TreeCell<FileWrapper> call(TreeView<FileWrapper> param) {
-                TreeCell<FileWrapper> fileWrapperTreeCell = new PLDTreeCell();
+                TreeCell<FileWrapper> fileWrapperTreeCell = new PLDTreeCell(controller.getCommandStack());
                 fileWrapperTreeCell.setContextMenu(new PLDFileTreeViewContextMenu());
                 fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
@@ -62,7 +62,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
         new Thread(new FileWatcherJob(this)).start();
     }
 
-    public void updateTreeView(WatchEvent.Kind kind, Path child) {
+    public synchronized void updateTreeView(WatchEvent.Kind kind, Path child) {
 
         ((VirtualDirectoryTreeItem) getRoot()).updateDirectory(kind, child);
     }

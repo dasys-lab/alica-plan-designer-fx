@@ -55,13 +55,23 @@ public class PropertyTab extends AbstractPropertyTab {
                                 propertyHBoxList.add(new PropertyHBox<PlanElement>(getSelectedEditorTabPlanElement(), eStructuralFeature.getName(),
                                         ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass(), commandStack){
                                     @Override
+                                    public CommandStack getCommandStack() {
+                                        return PropertyTab.this.getCommandStack();
+                                    }
+
+                                    @Override
                                     protected TextInputControl createTextField(PlanElement object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
                                         return new PropertyTextArea(object, propertyName);
                                     }
                                 });
                             } else {
-                                propertyHBoxList.add(new PropertyHBox<>(getSelectedEditorTabPlanElement(), eStructuralFeature.getName(),
-                                        ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass(), commandStack));
+                                propertyHBoxList.add(new PropertyHBox<PlanElement>(getSelectedEditorTabPlanElement(), eStructuralFeature.getName(),
+                                        ((EAttributeImpl) eStructuralFeature).getEAttributeType().getInstanceClass(), commandStack) {
+                                    @Override
+                                    public CommandStack getCommandStack() {
+                                        return PropertyTab.this.getCommandStack();
+                                    }
+                                });
                             }
                         }
                     }

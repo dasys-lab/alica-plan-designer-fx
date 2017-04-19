@@ -3,6 +3,8 @@ package de.uni_kassel.vs.cn.planDesigner.alica.util;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -26,11 +28,11 @@ public class AllAlicaFiles {
 
     private static AllAlicaFiles instance;
 
-    private List<Pair<Plan, Path>> plans;
+    private ObservableList<Pair<Plan, Path>> plans;
 
-    private List<Pair<PlanType, Path>> planTypes;
+    private ObservableList<Pair<PlanType, Path>> planTypes;
 
-    private List<Pair<Behaviour, Path>> behaviours;
+    private ObservableList<Pair<Behaviour, Path>> behaviours;
 
     private Pair<List<Task>, Path> tasks;
 
@@ -54,11 +56,11 @@ public class AllAlicaFiles {
         return taskRepository;
     }
 
-    public List<Pair<Plan, Path>> getPlans() {
+    public ObservableList<Pair<Plan, Path>> getPlans() {
         return plans;
     }
 
-    public List<Pair<PlanType, Path>> getPlanTypes() {
+    public ObservableList<Pair<PlanType, Path>> getPlanTypes() {
         return planTypes;
     }
 
@@ -66,7 +68,7 @@ public class AllAlicaFiles {
         return tasks;
     }
 
-    public List<Pair<Behaviour, Path>> getBehaviours() {
+    public ObservableList<Pair<Behaviour, Path>> getBehaviours() {
         return behaviours;
     }
 
@@ -83,18 +85,10 @@ public class AllAlicaFiles {
 
         tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
         EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
-        EMFModelUtils.getAlicaResourceSet()
-                .getResources().forEach(e -> {
-            try {
-                EMFModelUtils.saveAlicaFile(e.getContents().get(0));
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
     }
 
-    private <T extends EObject> List<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException {
-        return Files.walk(Paths.get(plansPath))
+    private <T extends EObject> ObservableList<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException {
+        List<Pair<T, Path>> collectedList = Files.walk(Paths.get(plansPath))
                 .filter(p -> p.toString().endsWith("." + filePostfix))
                 .map(p -> {
                     try {
@@ -108,5 +102,6 @@ public class AllAlicaFiles {
                     }
                 })
                 .collect(Collectors.toList());
+        return FXCollections.observableList(collectedList);
     }
 }

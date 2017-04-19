@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 public class PropertyHBox<T extends PlanElement> extends HBox {
 
     public static final int wrappingWidth = 100;
+
     private CommandStack commandStack;
 
     // TODO resolve problem of not getting value by property reference
@@ -46,6 +47,10 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
+    }
+
+    public CommandStack getCommandStack() {
+        return commandStack;
     }
 
     private Node getInputField(T object, String propertyName, Class<?> propertyClass) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
@@ -77,7 +82,7 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
             ComboBox<Boolean> booleanComboBox = new ComboBox<>();
             booleanComboBox.setItems(FXCollections.observableArrayList(true,false));
             booleanComboBox.getSelectionModel().select(Boolean.parseBoolean(BeanUtils.getProperty(object, propertyName)));
-            booleanComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> commandStack
+            booleanComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> getCommandStack()
                     .storeAndExecute(
                             new ChangeAttributeValue<>(object, propertyName, object.getClass(), (T) ((Object) newValue))));
             return booleanComboBox;
@@ -87,7 +92,12 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
     }
 
     protected TextInputControl createTextField(T object, String propertyName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        return new PropertyTextField<>(object, propertyName, commandStack);
+        return new PropertyTextField<T>(object, propertyName, commandStack) {
+            @Override
+            public CommandStack getCommandStack() {
+                return PropertyHBox.this.getCommandStack();
+            }
+        };
     }
 
     static class PropertyTextArea extends TextArea {

@@ -139,6 +139,11 @@ public class BehaviourWindowController implements Initializable {
                 }
 
                 @Override
+                public CommandStack getCommandStack() {
+                    return BehaviourWindowController.this.getCommandStack();
+                }
+
+                @Override
                 protected void createTabContent() {
                     if (getPropertyHBoxList() == null) {
                         setPropertyHBoxList(FXCollections.observableList(new ArrayList<>()));

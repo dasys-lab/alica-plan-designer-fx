@@ -12,12 +12,17 @@ import java.lang.reflect.InvocationTargetException;
  * Created by marci on 26.02.17.
  */
 class PropertyTextField<T extends PlanElement> extends TextField {
+
     private CommandStack commandStack;
 
     public PropertyTextField(T object, String propertyName, CommandStack commandStack) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         this.commandStack = commandStack;
         setText(BeanUtils.getProperty(object, propertyName));
-        textProperty().addListener((observable, oldValue, newValue) -> commandStack.storeAndExecute(
+        textProperty().addListener((observable, oldValue, newValue) -> getCommandStack().storeAndExecute(
                 new ChangeAttributeValue<>(object, propertyName, object.getClass(), newValue)));
+    }
+
+    public CommandStack getCommandStack() {
+        return commandStack;
     }
 }

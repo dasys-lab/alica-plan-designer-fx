@@ -46,4 +46,8 @@ public abstract class AbstractPropertyTab extends Tab {
     public SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedElementContainerProperty() {
         return selectedElementContainer;
     }
+
+    public CommandStack getCommandStack() {
+        return commandStack;
+    }
 }

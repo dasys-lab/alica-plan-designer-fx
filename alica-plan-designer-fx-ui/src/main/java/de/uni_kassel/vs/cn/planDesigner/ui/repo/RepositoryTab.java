@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.repo;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractPlanTool;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
@@ -18,8 +19,9 @@ import java.util.stream.Collectors;
  */
 public class RepositoryTab<T extends PlanElement> extends Tab {
     private AbstractPlanTool dragTool;
+    private ObservableList<RepositoryHBox<T>> hBoxObservableList;
 
-    public RepositoryTab(List<Pair<T, Path>> objects, AbstractPlanTool dragTool, String typeName) {
+    public RepositoryTab(ObservableList<Pair<T, Path>> objects, AbstractPlanTool dragTool, String typeName) {
         this.dragTool = dragTool;
         List<RepositoryHBox<T>> hBoxes = objects
                 .stream()
@@ -28,8 +30,26 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
                     return tRepositoryHBox;
                 })
                 .collect(Collectors.toList());
+        objects.addListener(new ListChangeListener<Pair<T, Path>>() {
+            @Override
+            public void onChanged(Change<? extends Pair<T, Path>> c) {
+                c.next();
+                if (c.getAddedSize() > 0) {
+                    hBoxObservableList.add(new RepositoryHBox<T>(c.getAddedSubList().get(0).getKey(), c.getAddedSubList().get(0).getValue(), dragTool));
+                }
+
+                if (c.getRemovedSize() > 0) {
+                    RepositoryHBox<T> tRepositoryHBox = hBoxObservableList.stream().filter(e -> e.getObject().equals(c.getRemoved().get(0).getKey()))
+                            .findFirst().get();
+                    hBoxObservableList.remove(tRepositoryHBox);
+                }
+
+                hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
+                setContent(new ListView<>(hBoxObservableList));
+            }
+        });
         setText(typeName);
-        ObservableList<RepositoryHBox<T>> hBoxObservableList = FXCollections.observableArrayList(hBoxes);
+        hBoxObservableList = FXCollections.observableArrayList(hBoxes);
         hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
         setContent(new ListView<>(hBoxObservableList));
     }

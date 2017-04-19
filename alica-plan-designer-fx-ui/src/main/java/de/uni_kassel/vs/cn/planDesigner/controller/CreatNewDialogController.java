@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.fxml.FXML;
@@ -16,13 +17,17 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Pair;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
@@ -109,9 +114,20 @@ public class CreatNewDialogController implements Initializable {
                     });
                     return;
                 }
-                Resource alicaFile = EMFModelUtils.createAlicaFile(getAlicaFactory().create(alicaType), new File(pathTextField.getText() + fileName));
+                EObject emptyObject = getAlicaFactory().create(alicaType);
+                Resource alicaFile = EMFModelUtils.createAlicaFile(emptyObject, new File(pathTextField.getText() + fileName));
                 ((AbstractPlan)alicaFile.getContents().get(0)).setName(fileName.replace(".beh","")
                         .replace(".pty","").replace(".pml", ""));
+                if (emptyObject instanceof Plan) {
+                    AllAlicaFiles.getInstance().getPlans().add(new Pair<>((Plan) emptyObject,
+                            Paths.get(pathTextField.getText() + fileName)));
+                } else if (emptyObject instanceof PlanType) {
+                    AllAlicaFiles.getInstance().getPlanTypes().add(new Pair<>((PlanType) emptyObject,
+                            Paths.get(pathTextField.getText() + fileName)));
+                } else if (emptyObject instanceof Behaviour) {
+                    AllAlicaFiles.getInstance().getBehaviours().add(new Pair<>((Behaviour) emptyObject,
+                            Paths.get(pathTextField.getText() + fileName)));
+                }
                 ((Stage)pathTextField.getScene().getWindow()).close();
             } catch (IOException e) {
                 e.printStackTrace();
