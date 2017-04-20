@@ -47,6 +47,8 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                         if (newValue) {
                             ((PLDFileTreeViewContextMenu)fileWrapperTreeCell.getContextMenu())
+                                    .setCommandStack(controller.getCommandStack());
+                            ((PLDFileTreeViewContextMenu)fileWrapperTreeCell.getContextMenu())
                                     .setHintFile(fileWrapperTreeCell.getTreeItem().getValue().unwrap());
                         }
                     }
