@@ -27,6 +27,17 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         this.filePath = filePath;
         selectedPlanElement = new SimpleObjectProperty<>(new Pair<>(editable, null));
         this.commandStack = commandStack;
+        if (commandStack != null) {
+            commandStack.addObserver((o, arg) -> {
+                if(((CommandStack) o).isCurrentCommandSaved()) {
+                    setText(getText().replace("*",""));
+                } else {
+                    if (getText().contains("*") == false) {
+                        setText(getText() + "*");
+                    }
+                }
+            });
+        }
         setClosable(true);
     }
 
@@ -36,6 +47,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
 
     public void save() {
         try {
+            setText(getText().replace("*",""));
             EMFModelUtils.saveAlicaFile(getEditable());
         } catch (IOException e) {
             e.printStackTrace();

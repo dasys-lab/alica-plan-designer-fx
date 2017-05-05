@@ -16,9 +16,10 @@ public class CommandStack extends Observable {
      */
     public void storeAndExecute(AbstractCommand command) {
         command.doCommand();
+        command.setSaved(false);
         undoStack.push(command);
         redoStack.clear();
-        notifyObservers();
+        notifyObserversCompound();
     }
 
     /**
@@ -27,8 +28,9 @@ public class CommandStack extends Observable {
     public void undo() {
         AbstractCommand undone = undoStack.pop();
         undone.undoCommand();
+        undone.setSaved(false);
         redoStack.push(undone);
-        notifyObservers();
+        notifyObserversCompound();
     }
 
     /**
@@ -37,7 +39,13 @@ public class CommandStack extends Observable {
     public void redo() {
         AbstractCommand redone = redoStack.pop();
         redone.doCommand();
+        redone.setSaved(false);
         undoStack.push(redone);
+        notifyObserversCompound();
+    }
+
+    private void notifyObserversCompound() {
+        this.setChanged();
         notifyObservers();
     }
 
@@ -45,8 +53,12 @@ public class CommandStack extends Observable {
      *
      * @return saved
      */
-    boolean isCurrentCommandSaved() {
-        return undoStack.peek().isSaved();
+    public boolean isCurrentCommandSaved() {
+        if (undoStack.empty()) {
+            return true;
+        } else {
+            return undoStack.peek().isSaved();
+        }
     }
 
     public Stack<AbstractCommand> getUndoStack() {

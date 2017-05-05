@@ -1,20 +1,40 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import javafx.util.Pair;
+import org.eclipse.emf.ecore.EObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
+import java.util.Optional;
 
 /**
  * Created by marci on 16.10.16.
@@ -23,8 +43,100 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
     private MainController controller;
 
+    private boolean wasDragged;
+    private TreeItem<FileWrapper> draggedItem;
+
     public PLDFileTreeView() {
         super(new VirtualDirectoryTreeItem());
+
+
+        addEventHandler(MouseDragEvent.DRAG_DETECTED, e-> {
+            System.out.println("Source: " + e.getSource() + " Target: " +e.getTarget());
+            if (((Node)e.getTarget()).getParent() instanceof PLDTreeCell) {
+                draggedItem = ((PLDTreeCell) ((Node) e.getTarget()).getParent()).getTreeItem();
+                wasDragged = true;
+            }
+            e.consume();
+        });
+
+        addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+            if (wasDragged) {//
+                wasDragged = false;
+                if (e.getPickResult() != null) {
+                    PLDTreeCell treeCell = (PLDTreeCell) e.getPickResult().getIntersectedNode().getParent();
+                    // TODO auslagern
+                    File parent = treeCell.getTreeItem().getValue().unwrap();
+
+                    if (parent.isDirectory() == false) {
+                        parent = treeCell.getTreeItem().getParent().getValue().unwrap();
+                    }
+
+                    try {
+                        if (draggedItem.getValue().unwrap().getName().endsWith("pml")) {
+                            Files.move(new File(draggedItem.getValue().unwrap().toString() + "ex").toPath(),
+                                    new File(parent, draggedItem.getValue().unwrap().getName() + "ex").toPath());
+                        }
+                        Files.move(draggedItem.getValue().unwrap().toPath(),
+                                new File(parent, draggedItem.getValue().unwrap().getName()).toPath());
+
+                        EObject result = null;
+                        Optional<Pair<Plan, Path>> first = AllAlicaFiles
+                                .getInstance()
+                                .getPlans()
+                                .stream()
+                                .filter(f -> f.getValue().toFile().equals(draggedItem.getValue().unwrap()))
+                                .findFirst();
+
+                        if (result != null) {
+                            AllAlicaFiles
+                                    .getInstance()
+                                    .getPlanTypes().remove(result);
+                        }
+
+                        result = first.isPresent() ? first.get().getKey() : null;
+
+                        if (result == null) {
+                            Optional<Pair<Behaviour, Path>> second = AllAlicaFiles
+                                    .getInstance()
+                                    .getBehaviours()
+                                    .stream()
+                                    .filter(f -> f.getValue().toFile().equals(draggedItem.getValue().unwrap()))
+                                    .findFirst();
+                            result = second.isPresent() ? second.get().getKey() : null;
+                            if (result != null) {
+                                AllAlicaFiles
+                                        .getInstance()
+                                        .getBehaviours().remove(result);
+                            }
+                        }
+
+                        if (result == null) {
+                            Optional<Pair<PlanType, Path>> third = AllAlicaFiles
+                                    .getInstance()
+                                    .getPlanTypes()
+                                    .stream()
+                                    .filter(f -> f.getValue().toFile().equals(draggedItem.getValue().unwrap()))
+                                    .findFirst();
+                            result = third.isPresent() ? third.get().getKey() : null;
+                            if (result != null) {
+                                AllAlicaFiles
+                                        .getInstance()
+                                        .getPlanTypes().remove(result);
+                            }
+                        }
+
+                        EObject pmlExObject = EMFModelUtils.loadAlicaFileFromDisk(new File(draggedItem.getValue().unwrap().toString() + "ex"));
+
+                        EMFModelUtils.moveAlicaFile(result, (PmlUiExtensionMap) pmlExObject,
+                                new File(parent, draggedItem.getValue().unwrap().getName()));
+                    } catch (IOException e1) {
+                        throw new RuntimeException(e1);
+                    }
+                }
+            }
+            e.consume();
+        });
+
         this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue instanceof PLDTreeItem) {
                 if (newValue.getValue().unwrap().isDirectory()) {
@@ -58,6 +170,13 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                     fileWrapperTreeCell.setText(param.getEditingItem().getValue().unwrap().getName());
                     fileWrapperTreeCell.setGraphic(param.getEditingItem().getGraphic());
                 }
+
+                fileWrapperTreeCell.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        
+                    }
+                });
                 return fileWrapperTreeCell;
             }
         });

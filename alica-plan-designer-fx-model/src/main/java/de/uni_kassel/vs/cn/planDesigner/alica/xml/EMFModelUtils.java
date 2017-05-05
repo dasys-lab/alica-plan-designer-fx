@@ -12,6 +12,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelFactory;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelPackage;
+import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUIExtensionModelPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.util.PmlUIExtensionModelResourceFactoryImpl;
 import javafx.util.Pair;
@@ -116,6 +117,38 @@ public class EMFModelUtils {
             pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         }
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        return resource;
+    }
+
+    /**
+     * Creates the best files, Alica Files. Or to be more specific {@link Resource} objects (which are written to disk).
+     * @param emptyObject
+     * @param targetDir
+     * @param pmlex
+     * @param <T>
+     * @throws IOException
+     */
+    public static <T extends EObject> Resource moveAlicaFile(T emptyObject, PmlUiExtensionMap pmlex, File targetDir) throws IOException {
+        Resource resource = emptyObject.eResource();
+        resource.setURI(URI.createURI(targetDir.getAbsolutePath()));
+        if (emptyObject instanceof Plan) {
+            AllAlicaFiles.getInstance()
+                    .getPlans()
+                    .add(new Pair<>((Plan) emptyObject, targetDir.toPath()));
+            Resource pmlexResource = pmlex.eResource();
+            pmlexResource.setURI(URI.createURI(targetDir.getAbsolutePath().replace(".pml", ".pmlex")));
+            pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        }
+        resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        getAlicaResourceSet()
+                .getResources()
+                .forEach(e -> {
+                    try {
+                        EMFModelUtils.saveAlicaFile(e.getContents().get(0));
+                    } catch (IOException e1) {
+                        throw new RuntimeException(e1);
+                    }
+                });
         return resource;
     }
 
