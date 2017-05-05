@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class RepositoryTab<T extends PlanElement> extends Tab {
     private AbstractPlanTool dragTool;
     private ObservableList<RepositoryHBox<T>> hBoxObservableList;
+    private ListView<RepositoryHBox<T>> contentsListView;
 
     public RepositoryTab(ObservableList<Pair<T, Path>> objects, AbstractPlanTool dragTool, String typeName) {
         this.dragTool = dragTool;
@@ -51,7 +52,8 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
         setText(typeName);
         hBoxObservableList = FXCollections.observableArrayList(hBoxes);
         hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
-        setContent(new ListView<>(hBoxObservableList));
+        contentsListView = new ListView<>(hBoxObservableList);
+        setContent(contentsListView);
     }
 
     public RepositoryTab(Pair<List<T>, Path> pair, AbstractPlanTool dragTool, String typeName) {
@@ -66,6 +68,11 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
         setText(typeName);
         ObservableList<RepositoryHBox<T>> hBoxObservableList = FXCollections.observableArrayList(hBoxes);
         hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
-        setContent(new ListView<>(hBoxObservableList));
+        contentsListView = new ListView<>(hBoxObservableList);
+        setContent(contentsListView);
+    }
+
+    public ListView<RepositoryHBox<T>> getContentsListView() {
+        return contentsListView;
     }
 }

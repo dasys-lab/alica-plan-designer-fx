@@ -9,7 +9,9 @@ import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExten
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +31,9 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
     private Map<PmlUiExtensionMap, List<PmlUiExtension>> referencesInStyleFiles;
     private Map<PlanType, List<AnnotatedPlan>> referencedAnnotatedPlansForBackup;
     private Path path;
+
+    // not always used
+    private PmlUiExtensionMap pmlUiExtensionMap;
 
     public DeleteAbstractPlan(AbstractPlan element) {
         super(element);
@@ -93,7 +98,12 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         .collect(Collectors.toList());
                 if (pmlUiExtensions.size() > 0) {
                     referencesInStyleFiles.put(pmlUiExtensionMap, pmlUiExtensions);
-                    pmlUiExtensionMap.getExtension().removeKey(getElementToEdit());
+                    // HACK the pmluiextensionmap is more of a list of pairs,
+                    // which means removing a key removes only one entry with the named key.
+                    // The EMF documentation hints at this with the description of removeKey() which says it removes an entry.
+                    while(pmlUiExtensionMap.getExtension().containsKey(getElementToEdit())) {
+                        pmlUiExtensionMap.getExtension().removeKey(getElementToEdit());
+                    }
                     saveForDeletionConfirmation[0] = true;
                 }
             }
@@ -116,8 +126,19 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         .findFirst()
                         .get();
                 path = planPathPair.getValue();
+                AllAlicaFiles.getInstance().getPlans().remove(planPathPair);
+                File pmlEx = new File(path.toFile().toString() + "ex");
+                List<Resource> pmlUiExt = EMFModelUtils.getAlicaResourceSet()
+                        .getResources()
+                        .stream()
+                        .filter(e -> new File(path.toFile().toString() + "ex").toString()
+                                .endsWith(e.getURI().toFileString()))
+                        .collect(Collectors.toList());
+                pmlUiExtensionMap = (PmlUiExtensionMap) pmlUiExt.get(0).getContents().get(0);
+                EMFModelUtils.getAlicaResourceSet().getResources().remove(pmlUiExt.get(0));
                 try {
                     Files.delete(planPathPair.getValue());
+                    Files.delete(pmlEx.toPath());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -129,6 +150,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         .findFirst()
                         .get();
                 path = planTypePathPair.getValue();
+                AllAlicaFiles.getInstance().getPlans().remove(planTypePathPair);
                 try {
                     Files.delete(planTypePathPair.getValue());
                 } catch (IOException e) {
@@ -142,6 +164,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         .findFirst()
                         .get();
                 path = behaviourPathPair.getValue();
+                AllAlicaFiles.getInstance().getBehaviours().remove(behaviourPathPair);
                 try {
                     Files.delete(behaviourPathPair.getValue());
                 } catch (IOException e) {
@@ -154,7 +177,10 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
     @Override
     public void undoCommand() {
         try {
-            EMFModelUtils.createAlicaFile(getElementToEdit(), path.toFile());
+            EMFModelUtils.createAlicaFile(getElementToEdit(), false, path.toFile());
+            if (pmlUiExtensionMap != null) {
+                EMFModelUtils.createAlicaFile(pmlUiExtensionMap, false, new File(path.toFile().toString() + "ex"));
+            }
             referencedStateListForBackup
                     .entrySet()
                     .forEach(e -> {

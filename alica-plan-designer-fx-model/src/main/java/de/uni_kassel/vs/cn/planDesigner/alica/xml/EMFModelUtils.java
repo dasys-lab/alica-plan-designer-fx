@@ -105,16 +105,19 @@ public class EMFModelUtils {
      * @param <T>
      * @throws IOException
      */
-    public static <T extends EObject> Resource createAlicaFile(T emptyObject, File file) throws IOException {
+    public static <T extends EObject> Resource createAlicaFile(T emptyObject, boolean createPmlEx, File file) throws IOException {
         Resource resource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath()));
         resource.getContents().add(emptyObject);
         if (emptyObject instanceof Plan) {
+            // TODO ALLALICAFILES IS BROKEN WITHOUT UNIQUE KEYS
             AllAlicaFiles.getInstance()
                     .getPlans()
                     .add(new Pair<>((Plan) emptyObject, file.toPath()));
-            Resource pmlexResource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath().replace(".pml", ".pmlex")));
-            pmlexResource.getContents().add(getPmlUiExtensionModelFactory().createPmlUiExtensionMap());
-            pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+            if (createPmlEx) {
+                Resource pmlexResource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath().replace(".pml", ".pmlex")));
+                pmlexResource.getContents().add(getPmlUiExtensionModelFactory().createPmlUiExtensionMap());
+                pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+            }
         }
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         return resource;

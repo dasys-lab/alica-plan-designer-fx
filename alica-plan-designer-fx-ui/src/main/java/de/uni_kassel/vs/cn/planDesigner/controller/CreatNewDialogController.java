@@ -115,7 +115,7 @@ public class CreatNewDialogController implements Initializable {
                     return;
                 }
                 EObject emptyObject = getAlicaFactory().create(alicaType);
-                Resource alicaFile = EMFModelUtils.createAlicaFile(emptyObject, new File(pathTextField.getText() + fileName));
+                Resource alicaFile = EMFModelUtils.createAlicaFile(emptyObject, true, new File(pathTextField.getText() + fileName));
                 ((AbstractPlan)alicaFile.getContents().get(0)).setName(fileName.replace(".beh","")
                         .replace(".pty","").replace(".pml", ""));
                 if (emptyObject instanceof Plan) {

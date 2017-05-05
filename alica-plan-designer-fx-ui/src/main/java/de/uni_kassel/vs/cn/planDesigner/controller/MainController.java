@@ -108,4 +108,12 @@ public class MainController implements Initializable {
     public EditorTabPane getEditorTabPane() {
         return editorTabPane;
     }
+
+    public RepositoryTabPane getRepositoryTabPane() {
+        return repositoryTabPane;
+    }
+
+    public PLDFileTreeView getFileTreeView() {
+        return fileTreeView;
+    }
 }

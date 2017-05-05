@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import javafx.scene.control.MenuItem;
 import javafx.util.Pair;
 
@@ -24,38 +25,41 @@ public class DeleteFileMenuItem extends MenuItem {
     public DeleteFileMenuItem(File toDelete) {
         super(I18NRepo.getString("label.menu.edit.delete"));
         this.toDelete = toDelete;
-        setOnAction(e -> {
-            Optional<Pair<Plan, Path>> first = AllAlicaFiles
+        setOnAction(e -> deleteFile());
+    }
+
+    public void deleteFile() {
+        Optional<Pair<Plan, Path>> first = AllAlicaFiles
+                .getInstance()
+                .getPlans()
+                .stream()
+                .filter(f -> f.getValue().toFile().equals(this.toDelete))
+                .findFirst();
+        if (first.isPresent()) {
+            commandStack.storeAndExecute(new DeleteAbstractPlan(first.get().getKey()));
+        } else {
+            Optional<Pair<PlanType, Path>> planTypePathPair = AllAlicaFiles
                     .getInstance()
-                    .getPlans()
+                    .getPlanTypes()
                     .stream()
                     .filter(f -> f.getValue().toFile().equals(this.toDelete))
                     .findFirst();
-            if (first.isPresent()) {
-                commandStack.storeAndExecute(new DeleteAbstractPlan(first.get().getKey()));
+            if (planTypePathPair.isPresent()) {
+                commandStack.storeAndExecute(new DeleteAbstractPlan(planTypePathPair.get().getKey()));
             } else {
-                Optional<Pair<PlanType, Path>> planTypePathPair = AllAlicaFiles
-                        .getInstance()
-                        .getPlanTypes()
+                Optional<Pair<Behaviour, Path>> behaviourPathPair = AllAlicaFiles.getInstance()
+                        .getBehaviours()
                         .stream()
                         .filter(f -> f.getValue().toFile().equals(this.toDelete))
                         .findFirst();
-                if (planTypePathPair.isPresent()) {
-                    commandStack.storeAndExecute(new DeleteAbstractPlan(planTypePathPair.get().getKey()));
+                if (behaviourPathPair.isPresent()) {
+                    commandStack.storeAndExecute(new DeleteAbstractPlan(behaviourPathPair.get().getKey()));
                 } else {
-                    Optional<Pair<Behaviour, Path>> behaviourPathPair = AllAlicaFiles.getInstance()
-                            .getBehaviours()
-                            .stream()
-                            .filter(f -> f.getValue().toFile().equals(this.toDelete))
-                            .findFirst();
-                    if (behaviourPathPair.isPresent()) {
-                        commandStack.storeAndExecute(new DeleteAbstractPlan(behaviourPathPair.get().getKey()));
-                    } else {
-                        throw new RuntimeException("EAT SHIT AND DIE");
-                    }
+                    throw new RuntimeException("EAT SHIT AND DIE");
                 }
             }
-        });
+        }
+        MainController.getInstance().getRepositoryTabPane().init();
     }
 
     public void setToDelete(File toDelete) {
