@@ -5,6 +5,8 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractPlanTool;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.ui.menu.ShowUsagesMenuItem;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
@@ -22,6 +24,10 @@ public class RepositoryHBox<T extends PlanElement> extends HBox {
     public RepositoryHBox(T object, Path pathToObject, AbstractPlanTool dragTool) {
         this.object = object;
         this.dragTool = dragTool;
+        setOnContextMenuRequested(e -> {
+            ContextMenu contextMenu = new ContextMenu(new ShowUsagesMenuItem(object));
+            contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
+        });
 
         getChildren().addAll(new ImageView(new AlicaIcon(object.getClass())),
                 new Text(object.getName()));

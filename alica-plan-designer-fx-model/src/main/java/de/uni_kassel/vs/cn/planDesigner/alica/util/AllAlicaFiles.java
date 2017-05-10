@@ -87,6 +87,31 @@ public class AllAlicaFiles {
         EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
     }
 
+    public Path getPathForAbstractPlan(AbstractPlan abstractPlan) {
+        if (abstractPlan instanceof Plan) {
+            return getPlans()
+                    .stream()
+                    .filter(e -> e.getKey().equals(abstractPlan))
+                    .findFirst().get().getValue();
+
+        }
+
+        if (abstractPlan instanceof Behaviour) {
+            return getBehaviours()
+                    .stream()
+                    .filter(e -> e.getKey().equals(abstractPlan))
+                    .findFirst().get().getValue();
+        }
+
+        if (abstractPlan instanceof PlanType) {
+            return getPlanTypes()
+                    .stream()
+                    .filter(e -> e.getKey().equals(abstractPlan))
+                    .findFirst().get().getValue();
+        }
+        return null;
+    }
+
     private <T extends EObject> ObservableList<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException {
         List<Pair<T, Path>> collectedList = Files.walk(Paths.get(plansPath))
                 .filter(p -> p.toString().endsWith("." + filePostfix))

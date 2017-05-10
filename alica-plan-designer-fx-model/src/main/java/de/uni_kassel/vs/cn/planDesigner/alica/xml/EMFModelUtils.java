@@ -1,12 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.xml;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
@@ -27,8 +24,10 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by marci on 08.11.16.
@@ -178,5 +177,45 @@ public class EMFModelUtils {
 
     public static PmlUIExtensionModelFactory getPmlUiExtensionModelFactory() {
         return PmlUIExtensionModelFactory.eINSTANCE;
+    }
+
+    /**
+     * Returns a list of distinct {@link AbstractPlan}s in which the given plan element is used.
+     * @param planToGetUsageInformationAbout
+     * @return
+     */
+    public static List<AbstractPlan> getUsages(PlanElement planToGetUsageInformationAbout) {
+
+        List<AbstractPlan> references = new ArrayList<>();
+
+        EMFModelUtils
+                .getAlicaResourceSet().getResources().forEach(e -> {
+            EObject eObject = e.getContents().get(0);
+            if (eObject instanceof Plan) {
+                ArrayList<State> states = new ArrayList<>();
+                ((Plan) eObject).getStates().forEach(f -> {
+                    if (f.getPlans().contains(planToGetUsageInformationAbout) && references.contains(eObject) == false) {
+                        references.add((AbstractPlan) eObject);
+
+                    }
+                });
+
+                ((Plan) eObject).getEntryPoints().forEach(f -> {
+                    if (f.getTask().equals(planToGetUsageInformationAbout) && references.contains(eObject) == false) {
+                        references.add((AbstractPlan) eObject);
+                    }
+                });
+            }
+
+            if (eObject instanceof PlanType) {
+                PlanType planType = (PlanType) eObject;
+                planType.getPlans().forEach(f -> {
+                    if (f.getPlan().equals(planToGetUsageInformationAbout) && references.contains(eObject) == false) {
+                        references.add((AbstractPlan) eObject);
+                    }
+                });
+            }
+        });
+        return references;
     }
 }
