@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by marci on 08.11.16.
@@ -117,6 +116,11 @@ public class EMFModelUtils {
                 pmlexResource.getContents().add(getPmlUiExtensionModelFactory().createPmlUiExtensionMap());
                 pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
             }
+        }
+
+        // set destinationPath when resource is created
+        if (emptyObject instanceof AbstractPlan) {
+            ((AbstractPlan) emptyObject).setDestinationPath(file.getAbsolutePath().replace(new Configuration().getPlansPath(),"Plans/"));
         }
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         return resource;

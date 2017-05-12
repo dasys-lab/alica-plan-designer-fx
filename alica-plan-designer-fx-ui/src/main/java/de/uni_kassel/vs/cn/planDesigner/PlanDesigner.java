@@ -4,7 +4,6 @@ package de.uni_kassel.vs.cn.planDesigner;
  */
 
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.FileWatcherJob;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
