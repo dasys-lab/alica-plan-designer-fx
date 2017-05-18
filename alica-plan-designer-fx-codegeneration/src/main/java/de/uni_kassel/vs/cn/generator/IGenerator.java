@@ -9,12 +9,11 @@ import java.util.List;
 /**
  * Created by marci on 12.05.17.
  */
-public interface Generator {
+public interface IGenerator {
     void createBehaviourCreator(List<Behaviour> behaviours);
     void createBehaviour(Behaviour behaviour);
-    void createConditionCreator(List<Condition> conditions);
-    void createCondition(Condition condition);
-    void createConstraintCreator(List<Plan> plans);
+    void createConditionCreator(List<Plan> plans, List<Condition> conditions);
+    void createConstraintCreator(List<Plan> plans, List<Condition> conditions);
     void createConstraints(List<Plan> plans);
     void createPlans(List<Plan> plans);
     void createUtilityFunctionCreator(List<Plan> plans);
