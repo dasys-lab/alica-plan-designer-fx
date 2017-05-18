@@ -21,4 +21,6 @@ public interface IGenerator {
     // TODO do we really need these? They're just empty unused dummies!
     void createDomainCondition();
     void createDomainBehaviour();
+
+    IConstraintCodeGenerator getActiveConstraintCodeGenerator();
 }

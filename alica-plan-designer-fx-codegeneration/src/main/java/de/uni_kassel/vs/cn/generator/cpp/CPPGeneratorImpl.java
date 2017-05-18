@@ -21,8 +21,6 @@ public class CPPGeneratorImpl implements IGenerator {
 
     private XtendTemplates xtendTemplates;
 
-    private IConstraintCodeGenerator activeConstraintCodeGenerator;
-
     public CPPGeneratorImpl() {
         xtendTemplates = new XtendTemplates();
     }
@@ -133,7 +131,7 @@ public class CPPGeneratorImpl implements IGenerator {
 
             String srcPath = getSrcDir() + plan.getDestinationPath() +
                     "/" + plan.getName() + plan.getId() + "Constraints.cpp";
-            String fileContentSource = xtendTemplates.constraintsSource(plan, activeConstraintCodeGenerator);
+            String fileContentSource = xtendTemplates.constraintsSource(plan, getActiveConstraintCodeGenerator());
             try {
                 Files.write(Paths.get(srcPath), fileContentSource.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
@@ -159,7 +157,7 @@ public class CPPGeneratorImpl implements IGenerator {
 
             String srcPath = getSrcDir() + plan.getDestinationPath() +
                     "/" + plan.getName() + plan.getId() + ".cpp";
-            String fileContentSource = xtendTemplates.planSource(plan, activeConstraintCodeGenerator);
+            String fileContentSource = xtendTemplates.planSource(plan, getActiveConstraintCodeGenerator());
             try {
                 Files.write(Paths.get(srcPath), fileContentSource.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
@@ -233,6 +231,12 @@ public class CPPGeneratorImpl implements IGenerator {
             // TODO handle exception
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public IConstraintCodeGenerator getActiveConstraintCodeGenerator() {
+        // TODO plugin
+        return null;
     }
 
     private String getIncludeDir() {
