@@ -72,6 +72,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
             EMFModelUtils.saveAlicaFile(getEditable());
             EMFModelUtils.saveAlicaFile(pmlUiExtensionMap);
         } catch (IOException e) {
+            // TODO show error dialog
             e.printStackTrace();
         }
     }

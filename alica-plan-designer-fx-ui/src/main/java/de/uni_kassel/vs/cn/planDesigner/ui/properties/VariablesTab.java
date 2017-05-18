@@ -2,7 +2,9 @@ package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddVariableToAbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddVariableToCondition;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteVariableFromAbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteVariableFromCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
@@ -43,6 +45,12 @@ public class VariablesTab extends AbstractPropertyTab {
             } else if (selectedPlanElement instanceof Behaviour) {
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour) selectedPlanElement).getVars()));
                 createTabContent();
+            } else if(selectedPlanElement instanceof Condition) {
+                // TODO make this work! Conditions have no own variables. They hold references to that of plans or behaviours
+                this.setDisable(true);
+                /*this.setDisable(false);
+                textFieldTableView.setItems(FXCollections.observableArrayList(((Condition) selectedPlanElement).getVars()));
+                createTabContent();*/
             } else {
                 this.setDisable(true);
             }
@@ -54,8 +62,10 @@ public class VariablesTab extends AbstractPropertyTab {
         textFieldTableView = new TableView<>();
         if (selectedPlanElement instanceof Plan) {
             textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
-        } else {
+        } else if (selectedPlanElement instanceof Behaviour) {
             textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour)selectedPlanElement).getVars()));
+        } else if(selectedPlanElement instanceof Condition) {
+            textFieldTableView.setItems(FXCollections.observableArrayList(((Condition)selectedPlanElement).getVars()));
         }
 
         TableColumn<Variable, TextField> nameColumn = new TableColumn<>(I18NRepo.getString("label.column.name"));
@@ -72,26 +82,40 @@ public class VariablesTab extends AbstractPropertyTab {
         HBox hBox = new HBox();
         Button addButton = new Button(I18NRepo.getString("action.list.add"));
         addButton.setOnAction(e -> {
-            commandStack.storeAndExecute(new AddVariableToAbstractPlan(selectedPlanElement));
-            if (selectedPlanElement instanceof Plan) {
-                textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
-            } else if (selectedPlanElement instanceof Behaviour) {
-                textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour)selectedPlanElement).getVars()));
+            if (selectedPlanElement instanceof AbstractPlan) {
+                commandStack.storeAndExecute(new AddVariableToAbstractPlan(selectedPlanElement));
+                if (selectedPlanElement instanceof Plan) {
+                    textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
+                } else if (selectedPlanElement instanceof Behaviour) {
+                    textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour)selectedPlanElement).getVars()));
+                }
+            } else if (selectedPlanElement instanceof Condition) {
+                commandStack.storeAndExecute(new AddVariableToCondition((Condition) selectedPlanElement));
+                textFieldTableView.setItems(FXCollections.observableArrayList(((Condition)selectedPlanElement).getVars()));
             }
+
         });
 
         Button deleteButton = new Button(I18NRepo.getString("action.list.remove"));
         deleteButton.setOnAction(e -> {
             Variable selectedItem = textFieldTableView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null && selectedPlanElement instanceof Plan) {
-                commandStack.storeAndExecute(new DeleteVariableFromAbstractPlan(selectedItem, (Plan) selectedPlanElement));
-                textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
+            if (selectedItem != null) {
+                if (selectedPlanElement instanceof Plan) {
+                    commandStack.storeAndExecute(new DeleteVariableFromAbstractPlan(selectedItem, selectedPlanElement));
+                    textFieldTableView.setItems(FXCollections.observableArrayList(((Plan)selectedPlanElement).getVars()));
+                }
+
+                if (selectedPlanElement instanceof Behaviour) {
+                    commandStack.storeAndExecute(new DeleteVariableFromAbstractPlan(selectedItem, selectedPlanElement));
+                    textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour)selectedPlanElement).getVars()));
+                }
+
+                if (selectedPlanElement instanceof Condition) {
+                    commandStack.storeAndExecute(new DeleteVariableFromCondition(selectedItem, (Condition) selectedPlanElement));
+                    textFieldTableView.setItems(FXCollections.observableArrayList(((Condition)selectedPlanElement).getVars()));
+                }
             }
 
-            if (selectedItem != null && selectedPlanElement instanceof Behaviour) {
-                commandStack.storeAndExecute(new DeleteVariableFromAbstractPlan(selectedItem, (Behaviour) selectedPlanElement));
-                textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour)selectedPlanElement).getVars()));
-            }
         });
         hBox.getChildren().addAll(addButton, deleteButton);
         vBox.getChildren().addAll(hBox, textFieldTableView);

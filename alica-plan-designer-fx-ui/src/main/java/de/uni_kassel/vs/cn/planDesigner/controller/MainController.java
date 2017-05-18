@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import com.sun.org.apache.bcel.internal.generic.CodeExceptionGen;
+import de.uni_kassel.vs.cn.generator.Codegenerator;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
@@ -89,6 +91,12 @@ public class MainController implements Initializable {
         fileMenu.getItems().add(saveItem);
         menus.add(fileMenu);
         menus.add(new EditMenu(commandStack, editorTabPane));
+        Menu codegenerationMenu = new Menu(I18NRepo.getString("label.menu.generation"));
+        MenuItem regenerateItem = new MenuItem(I18NRepo.getString("label.menu.generation.regenerate"));
+        regenerateItem.setOnAction(e -> new Codegenerator().generate());
+        codegenerationMenu.getItems().add(regenerateItem);
+        menus.add(codegenerationMenu);
+
         return menus;
     }
 
