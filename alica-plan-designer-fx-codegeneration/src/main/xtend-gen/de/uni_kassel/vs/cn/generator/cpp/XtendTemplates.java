@@ -1006,8 +1006,8 @@ public class XtendTemplates {
     _builder.newLine();
     {
       PreCondition _preCondition = plan.getPreCondition();
-      boolean _notEquals = (!Objects.equal(_preCondition, null));
-      if (_notEquals) {
+      boolean _tripleNotEquals = (_preCondition != null);
+      if (_tripleNotEquals) {
         {
           PreCondition _preCondition_1 = plan.getPreCondition();
           AbstractPlan _abstractPlan = _preCondition_1.getAbstractPlan();
@@ -1059,8 +1059,8 @@ public class XtendTemplates {
     }
     {
       RuntimeCondition _runtimeCondition = plan.getRuntimeCondition();
-      boolean _notEquals_1 = (!Objects.equal(_runtimeCondition, null));
-      if (_notEquals_1) {
+      boolean _tripleNotEquals_1 = (_runtimeCondition != null);
+      if (_tripleNotEquals_1) {
         {
           if (((plan.getRuntimeCondition().getVars().size() > 0) || (plan.getRuntimeCondition().getQuantifiers().size() > 0))) {
             _builder.append("    ");
@@ -1089,8 +1089,8 @@ public class XtendTemplates {
       for(final Transition transition : _transitions) {
         {
           PreCondition _preCondition_4 = transition.getPreCondition();
-          boolean _notEquals_2 = (!Objects.equal(_preCondition_4, null));
-          if (_notEquals_2) {
+          boolean _tripleNotEquals_2 = (_preCondition_4 != null);
+          if (_tripleNotEquals_2) {
             {
               if (((transition.getPreCondition().getVars().size() > 0) || (transition.getPreCondition().getQuantifiers().size() > 0))) {
                 _builder.append("    ");
@@ -1462,8 +1462,8 @@ public class XtendTemplates {
     _builder.newLine();
     {
       PreCondition _preCondition = plan.getPreCondition();
-      boolean _notEquals = (!Objects.equal(_preCondition, null));
-      if (_notEquals) {
+      boolean _tripleNotEquals = (_preCondition != null);
+      if (_tripleNotEquals) {
         _builder.append("    ");
         _builder.append("class PreCondition");
         PreCondition _preCondition_1 = plan.getPreCondition();
@@ -1485,8 +1485,8 @@ public class XtendTemplates {
     }
     {
       RuntimeCondition _runtimeCondition = plan.getRuntimeCondition();
-      boolean _notEquals_1 = (!Objects.equal(_runtimeCondition, null));
-      if (_notEquals_1) {
+      boolean _tripleNotEquals_1 = (_runtimeCondition != null);
+      if (_tripleNotEquals_1) {
         _builder.append("    ");
         _builder.append("class RunTimeCondition");
         RuntimeCondition _runtimeCondition_1 = plan.getRuntimeCondition();

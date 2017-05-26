@@ -1,19 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import com.sun.org.apache.bcel.internal.generic.CodeExceptionGen;
 import de.uni_kassel.vs.cn.generator.Codegenerator;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.PLDFileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.TaskRepositoryTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.PLDFileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.EditMenu;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane;
@@ -23,7 +15,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;

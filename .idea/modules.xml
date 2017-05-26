@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/alica-plan-designer-fx-default-plugin/alica-plan-designer-fx-default-plugin.iml" filepath="$PROJECT_DIR$/alica-plan-designer-fx-default-plugin/alica-plan-designer-fx-default-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/alica-plan-designer-fx-codegeneration/codegeneration.iml" filepath="$PROJECT_DIR$/alica-plan-designer-fx-codegeneration/codegeneration.iml" />
       <module fileurl="file://$PROJECT_DIR$/alica-plan-designer-fx-model/model.iml" filepath="$PROJECT_DIR$/alica-plan-designer-fx-model/model.iml" />
       <module fileurl="file://$PROJECT_DIR$/plan_designer.iml" filepath="$PROJECT_DIR$/plan_designer.iml" />

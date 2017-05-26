@@ -21,16 +21,19 @@ public class Configuration {
 
     private String miscPath;
 
+    private String pluginPath;
+
     private boolean pathsInitialized;
 
     public Configuration() {
         try {
             ResourceBundle resourceBundle = ResourceBundle.getBundle("test");
             if (resourceBundle != null) {
-                setPlansPath(String.valueOf(resourceBundle.getObject("plansPath")));
-                setExpressionValidatorsPath(String.valueOf(resourceBundle.getObject("expressionValidatorsPath")));
-                setMiscPath(String.valueOf(resourceBundle.getObject("miscPath")));
-                setRolesPath(String.valueOf(resourceBundle.getObject("rolesPath")));
+                setPlansPath(resourceBundle.getString("plansPath"));
+                setExpressionValidatorsPath(resourceBundle.getString("expressionValidatorsPath"));
+                setMiscPath(resourceBundle.getString("miscPath"));
+                setRolesPath(resourceBundle.getString("rolesPath"));
+                setPluginPath(resourceBundle.getString("pluginPath"));
                 pathsInitialized = true;
             } else {
                 pathsInitialized = false;
@@ -99,5 +102,13 @@ public class Configuration {
 
     public boolean isPathsInitialized() {
         return pathsInitialized;
+    }
+
+    public String getPluginPath() {
+        return pluginPath;
+    }
+
+    public void setPluginPath(String pluginPath) {
+        this.pluginPath = replaceBashConstants(pluginPath);
     }
 }

@@ -1,3 +1,5 @@
+package de.uni_kassel.vs.cn.generator;
+
 import de.uni_kassel.vs.cn.generator.Codegenerator;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 

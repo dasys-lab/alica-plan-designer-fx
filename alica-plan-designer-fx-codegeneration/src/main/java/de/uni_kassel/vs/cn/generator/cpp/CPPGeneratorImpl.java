@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.generator.cpp;
 
 import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator;
 import de.uni_kassel.vs.cn.generator.IGenerator;
+import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
@@ -120,7 +121,7 @@ public class CPPGeneratorImpl implements IGenerator {
     public void createConstraints(List<Plan> plans) {
         for (Plan plan : plans) {
             String headerPath = getIncludeDir() + plan.getDestinationPath() +
-                    "/" + plan.getName() + plan.getId() + "Constraints.h";
+                    "/" + "constraints/" + plan.getName() + plan.getId() + "Constraints.h";
             String fileContentHeader = xtendTemplates.constraintsHeader(plan);
             try {
                 Files.write(Paths.get(headerPath), fileContentHeader.getBytes(StandardCharsets.UTF_8));
@@ -130,7 +131,7 @@ public class CPPGeneratorImpl implements IGenerator {
             }
 
             String srcPath = getSrcDir() + plan.getDestinationPath() +
-                    "/" + plan.getName() + plan.getId() + "Constraints.cpp";
+                    "/" + "constraints/" + plan.getName() + plan.getId() + "Constraints.cpp";
             String fileContentSource = xtendTemplates.constraintsSource(plan, getActiveConstraintCodeGenerator());
             try {
                 Files.write(Paths.get(srcPath), fileContentSource.getBytes(StandardCharsets.UTF_8));
@@ -236,7 +237,7 @@ public class CPPGeneratorImpl implements IGenerator {
     @Override
     public IConstraintCodeGenerator getActiveConstraintCodeGenerator() {
         // TODO plugin
-        return null;
+        return PluginManager.getInstance().getActivePlugin().getConstraintCodeGenerator();
     }
 
     private String getIncludeDir() {
