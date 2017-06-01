@@ -12,6 +12,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
 
@@ -20,6 +21,12 @@ import org.eclipse.xtend2.lib.StringConcatenation;
  */
 @SuppressWarnings("all")
 public class DefaultTemplate {
+  private Map<String, String> protectedRegions;
+  
+  public void setProtectedRegions(final Map<String, String> regions) {
+    this.protectedRegions = regions;
+  }
+  
   public String expressionsStateCheckingMethods(final State state) {
     StringConcatenation _builder = new StringConcatenation();
     {
@@ -141,9 +148,23 @@ public class DefaultTemplate {
             _builder.append(_id_6, "\t");
             _builder.append(") ENABLED START*/");
             _builder.newLineIfNotEmpty();
-            _builder.append("\t\t");
-            _builder.append("return false;");
-            _builder.newLine();
+            {
+              long _id_7 = transition.getId();
+              String _plus = (Long.valueOf(_id_7) + "");
+              boolean _containsKey = this.protectedRegions.containsKey(_plus);
+              if (_containsKey) {
+                _builder.append("                ");
+                long _id_8 = transition.getId();
+                String _plus_1 = (Long.valueOf(_id_8) + "");
+                String _get = this.protectedRegions.get(_plus_1);
+                _builder.append(_get, "                ");
+                _builder.newLineIfNotEmpty();
+              } else {
+                _builder.append("                ");
+                _builder.append("return false;");
+                _builder.newLine();
+              }
+            }
             _builder.append("\t");
             _builder.append("/*PROTECTED REGION END*/");
             _builder.newLine();
@@ -215,9 +236,25 @@ public class DefaultTemplate {
         _builder.append(_id_2, "    ");
         _builder.append(") ENABLED START*/");
         _builder.newLineIfNotEmpty();
-        _builder.append("     ");
-        _builder.append("return true;");
-        _builder.newLine();
+        {
+          RuntimeCondition _runtimeCondition_6 = plan.getRuntimeCondition();
+          long _id_3 = _runtimeCondition_6.getId();
+          String _plus = (Long.valueOf(_id_3) + "");
+          boolean _containsKey = this.protectedRegions.containsKey(_plus);
+          if (_containsKey) {
+            _builder.append("   ");
+            RuntimeCondition _runtimeCondition_7 = plan.getRuntimeCondition();
+            long _id_4 = _runtimeCondition_7.getId();
+            String _plus_1 = (Long.valueOf(_id_4) + "");
+            String _get = this.protectedRegions.get(_plus_1);
+            _builder.append(_get, "   ");
+            _builder.newLineIfNotEmpty();
+          } else {
+            _builder.append("   ");
+            _builder.append("return true;");
+            _builder.newLine();
+          }
+        }
         _builder.append("    ");
         _builder.append("/*PROTECTED REGION END*/");
         _builder.newLine();
@@ -258,8 +295,8 @@ public class DefaultTemplate {
             String _name_3 = variable_1.getName();
             _builder.append(_name_3, " ");
             _builder.append(" (");
-            long _id_3 = variable_1.getId();
-            _builder.append(_id_3, " ");
+            long _id_5 = variable_1.getId();
+            _builder.append(_id_5, " ");
             _builder.append(")");
           }
         }
@@ -269,8 +306,8 @@ public class DefaultTemplate {
         _builder.newLine();
         _builder.append("bool PreCondition");
         PreCondition _preCondition_4 = plan.getPreCondition();
-        long _id_4 = _preCondition_4.getId();
-        _builder.append(_id_4, "");
+        long _id_6 = _preCondition_4.getId();
+        _builder.append(_id_6, "");
         _builder.append("::evaluate(shared_ptr<RunningPlan> rp)");
         _builder.newLineIfNotEmpty();
         _builder.append("{");
@@ -278,20 +315,36 @@ public class DefaultTemplate {
         _builder.append("    ");
         _builder.append("/*PROTECTED REGION ID(");
         PreCondition _preCondition_5 = plan.getPreCondition();
-        long _id_5 = _preCondition_5.getId();
-        _builder.append(_id_5, "    ");
+        long _id_7 = _preCondition_5.getId();
+        _builder.append(_id_7, "    ");
         _builder.append(") ENABLED START*/");
         _builder.newLineIfNotEmpty();
-        _builder.append("       ");
-        _builder.append("//--> \"PreCondition:");
-        PreCondition _preCondition_6 = plan.getPreCondition();
-        long _id_6 = _preCondition_6.getId();
-        _builder.append(_id_6, "       ");
-        _builder.append("  not implemented\";");
-        _builder.newLineIfNotEmpty();
-        _builder.append("       ");
-        _builder.append("return true;");
-        _builder.newLine();
+        {
+          PreCondition _preCondition_6 = plan.getPreCondition();
+          long _id_8 = _preCondition_6.getId();
+          String _plus_2 = (Long.valueOf(_id_8) + "");
+          boolean _containsKey_1 = this.protectedRegions.containsKey(_plus_2);
+          if (_containsKey_1) {
+            _builder.append("    ");
+            PreCondition _preCondition_7 = plan.getPreCondition();
+            long _id_9 = _preCondition_7.getId();
+            String _plus_3 = (Long.valueOf(_id_9) + "");
+            String _get_1 = this.protectedRegions.get(_plus_3);
+            _builder.append(_get_1, "    ");
+            _builder.newLineIfNotEmpty();
+          } else {
+            _builder.append("    ");
+            _builder.append("//--> \"PreCondition:");
+            PreCondition _preCondition_8 = plan.getPreCondition();
+            long _id_10 = _preCondition_8.getId();
+            _builder.append(_id_10, "    ");
+            _builder.append("  not implemented\";");
+            _builder.newLineIfNotEmpty();
+            _builder.append("    ");
+            _builder.append("return true;");
+            _builder.newLine();
+          }
+        }
         _builder.append("    ");
         _builder.append("/*PROTECTED REGION END*/");
         _builder.newLine();
@@ -376,9 +429,25 @@ public class DefaultTemplate {
         _builder.append(_id_1, "");
         _builder.append(") ENABLED START*/");
         _builder.newLineIfNotEmpty();
-        _builder.append("    ");
-        _builder.append("//Proteced");
-        _builder.newLine();
+        {
+          RuntimeCondition _runtimeCondition_8 = plan.getRuntimeCondition();
+          long _id_2 = _runtimeCondition_8.getId();
+          String _plus = ("cc" + Long.valueOf(_id_2));
+          boolean _containsKey = this.protectedRegions.containsKey(_plus);
+          if (_containsKey) {
+            _builder.append("    ");
+            RuntimeCondition _runtimeCondition_9 = plan.getRuntimeCondition();
+            long _id_3 = _runtimeCondition_9.getId();
+            String _plus_1 = ("cc" + Long.valueOf(_id_3));
+            String _get = this.protectedRegions.get(_plus_1);
+            _builder.append(_get, "    ");
+            _builder.newLineIfNotEmpty();
+          } else {
+            _builder.append("    ");
+            _builder.append("//Proteced");
+            _builder.newLine();
+          }
+        }
         _builder.append("/*PROTECTED REGION END*/");
         _builder.newLine();
         _builder.append("}");
@@ -433,19 +502,35 @@ public class DefaultTemplate {
         _builder.newLine();
         _builder.append("void Constraint");
         PreCondition _preCondition_4 = plan.getPreCondition();
-        long _id_2 = _preCondition_4.getId();
-        _builder.append(_id_2, "");
+        long _id_4 = _preCondition_4.getId();
+        _builder.append(_id_4, "");
         _builder.append("::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp) {");
         _builder.newLineIfNotEmpty();
         _builder.append("/*PROTECTED REGION ID(cc");
         PreCondition _preCondition_5 = plan.getPreCondition();
-        long _id_3 = _preCondition_5.getId();
-        _builder.append(_id_3, "");
+        long _id_5 = _preCondition_5.getId();
+        _builder.append(_id_5, "");
         _builder.append(") ENABLED START*/");
         _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("//Proteced");
-        _builder.newLine();
+        {
+          PreCondition _preCondition_6 = plan.getPreCondition();
+          long _id_6 = _preCondition_6.getId();
+          String _plus_2 = ("cc" + Long.valueOf(_id_6));
+          boolean _containsKey_1 = this.protectedRegions.containsKey(_plus_2);
+          if (_containsKey_1) {
+            _builder.append("    ");
+            PreCondition _preCondition_7 = plan.getPreCondition();
+            long _id_7 = _preCondition_7.getId();
+            String _plus_3 = ("cc" + Long.valueOf(_id_7));
+            String _get_1 = this.protectedRegions.get(_plus_3);
+            _builder.append(_get_1, "    ");
+            _builder.newLineIfNotEmpty();
+          } else {
+            _builder.append("    ");
+            _builder.append("//Proteced");
+            _builder.newLine();
+          }
+        }
         _builder.append("/*PROTECTED REGION END*/");
         _builder.newLine();
         _builder.append("}");
@@ -543,9 +628,23 @@ public class DefaultTemplate {
             _builder.append(_id_2, "");
             _builder.append(") ENABLED START*/");
             _builder.newLineIfNotEmpty();
-            _builder.append("\t");
-            _builder.append("//Proteced");
-            _builder.newLine();
+            {
+              PreCondition _preCondition_6 = transition.getPreCondition();
+              long _id_3 = _preCondition_6.getId();
+              String _plus = ("cc" + Long.valueOf(_id_3));
+              boolean _containsKey = this.protectedRegions.containsKey(_plus);
+              if (_containsKey) {
+                PreCondition _preCondition_7 = transition.getPreCondition();
+                long _id_4 = _preCondition_7.getId();
+                String _plus_1 = ("cc" + Long.valueOf(_id_4));
+                String _get = this.protectedRegions.get(_plus_1);
+                _builder.append(_get, "");
+                _builder.newLineIfNotEmpty();
+              } else {
+                _builder.append("//Proteced");
+                _builder.newLine();
+              }
+            }
             _builder.append("/*PROTECTED REGION END*/");
             _builder.newLine();
             _builder.append("}");

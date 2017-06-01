@@ -1,9 +1,21 @@
 package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.generator.cpp.CPPGeneratorImpl;
+import de.uni_kassel.vs.cn.generator.cpp.GeneratedSourcesManager;
+import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsBaseListener;
+import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsLexer;
+import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsParser;
+import de.uni_kassel.vs.cn.generator.cpp.parser.ProtectedRegionsVisitor;
+import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -24,8 +36,50 @@ public class Codegenerator {
     public void generate() {
         initialze();
 
+
         // TODO document this! Here can the programming language be changed
         IGenerator actualGenerator = new CPPGeneratorImpl();
+
+        GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager();
+        ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
+        for (Plan plan : allPlans) {
+            generatedSourcesManager
+                    .getAllGeneratedFilesForAbstractPlan(plan)
+                    .forEach(e -> {
+
+                        try {
+                            if (e.exists()) {
+                                CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e.toPath()));
+                                CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+                                CommentsParser parser = new CommentsParser(commonTokenStream);
+                                CommentsParser.All_textContext all_textContext = parser.all_text();
+                                protectedRegionsVisitor.visit(all_textContext);
+                            }
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    });
+        }
+
+        for (Behaviour behaviour : allBehaviours) {
+            generatedSourcesManager
+                    .getAllGeneratedFilesForAbstractPlan(behaviour)
+                    .forEach(e -> {
+
+                        try {
+                            CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e.toPath()));
+                            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+                            CommentsParser parser = new CommentsParser(commonTokenStream);
+                            CommentsParser.All_textContext all_textContext = parser.all_text();
+                            protectedRegionsVisitor.visit(all_textContext);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    });
+        }
+
+        PluginManager.getInstance().getActivePlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
+        actualGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
 
         actualGenerator.createDomainBehaviour();
         actualGenerator.createDomainCondition();

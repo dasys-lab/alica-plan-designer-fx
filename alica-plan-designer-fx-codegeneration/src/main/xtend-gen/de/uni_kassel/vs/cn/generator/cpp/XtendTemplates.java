@@ -15,6 +15,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 import java.util.List;
+import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
 
@@ -23,6 +24,12 @@ import org.eclipse.xtend2.lib.StringConcatenation;
  */
 @SuppressWarnings("all")
 public class XtendTemplates {
+  private Map<String, String> protectedRegions;
+  
+  public void setProtectedRegions(final Map<String, String> regions) {
+    this.protectedRegions = regions;
+  }
+  
   public String behaviourCreatorHeader() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("#ifndef BEHAVIOURCREATOR_H_");
@@ -198,9 +205,21 @@ public class XtendTemplates {
     _builder.append(_id, "");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("    ");
-    _builder.append("//Add additional includes here");
-    _builder.newLine();
+    {
+      long _id_1 = behaviour.getId();
+      String _plus = ("inc" + Long.valueOf(_id_1));
+      boolean _containsKey = this.protectedRegions.containsKey(_plus);
+      if (_containsKey) {
+        long _id_2 = behaviour.getId();
+        String _plus_1 = ("inc" + Long.valueOf(_id_2));
+        String _get = this.protectedRegions.get(_plus_1);
+        _builder.append(_get, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional includes here");
+        _builder.newLine();
+      }
+    }
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.newLine();
@@ -236,13 +255,26 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("            ");
     _builder.append("/*PROTECTED REGION ID(pub");
-    long _id_1 = behaviour.getId();
-    _builder.append(_id_1, "            ");
+    long _id_3 = behaviour.getId();
+    _builder.append(_id_3, "            ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("            ");
-    _builder.append("//Add additional public methods here");
-    _builder.newLine();
+    {
+      long _id_4 = behaviour.getId();
+      String _plus_2 = ("pub" + Long.valueOf(_id_4));
+      boolean _containsKey_1 = this.protectedRegions.containsKey(_plus_2);
+      if (_containsKey_1) {
+        long _id_5 = behaviour.getId();
+        String _plus_3 = ("pub" + Long.valueOf(_id_5));
+        String _get_1 = this.protectedRegions.get(_plus_3);
+        _builder.append(_get_1, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("            ");
+        _builder.append("//Add additional public methods here");
+        _builder.newLine();
+      }
+    }
     _builder.append("            ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
@@ -254,13 +286,26 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("            ");
     _builder.append("/*PROTECTED REGION ID(pro");
-    long _id_2 = behaviour.getId();
-    _builder.append(_id_2, "            ");
+    long _id_6 = behaviour.getId();
+    _builder.append(_id_6, "            ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("            ");
-    _builder.append("//Add additional protected methods here");
-    _builder.newLine();
+    {
+      long _id_7 = behaviour.getId();
+      String _plus_4 = ("pro" + Long.valueOf(_id_7));
+      boolean _containsKey_2 = this.protectedRegions.containsKey(_plus_4);
+      if (_containsKey_2) {
+        long _id_8 = behaviour.getId();
+        String _plus_5 = ("pro" + Long.valueOf(_id_8));
+        String _get_2 = this.protectedRegions.get(_plus_5);
+        _builder.append(_get_2, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("            ");
+        _builder.append("//Add additional protected methods here");
+        _builder.newLine();
+      }
+    }
     _builder.append("            ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
@@ -269,13 +314,26 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION ID(priv");
-    long _id_3 = behaviour.getId();
-    _builder.append(_id_3, "        ");
+    long _id_9 = behaviour.getId();
+    _builder.append(_id_9, "        ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("            ");
-    _builder.append("//Add additional private methods here");
-    _builder.newLine();
+    {
+      long _id_10 = behaviour.getId();
+      String _plus_6 = ("priv" + Long.valueOf(_id_10));
+      boolean _containsKey_3 = this.protectedRegions.containsKey(_plus_6);
+      if (_containsKey_3) {
+        long _id_11 = behaviour.getId();
+        String _plus_7 = ("priv" + Long.valueOf(_id_11));
+        String _get_3 = this.protectedRegions.get(_plus_7);
+        _builder.append(_get_3, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("            ");
+        _builder.append("//Add additional private methods here");
+        _builder.newLine();
+      }
+    }
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
@@ -314,6 +372,22 @@ public class XtendTemplates {
     _builder.append("    ");
     _builder.append("//Add additional includes here");
     _builder.newLine();
+    {
+      long _id_1 = behaviour.getId();
+      String _plus = ("inccpp" + Long.valueOf(_id_1));
+      boolean _containsKey = this.protectedRegions.containsKey(_plus);
+      if (_containsKey) {
+        long _id_2 = behaviour.getId();
+        String _plus_1 = ("inccpp" + Long.valueOf(_id_2));
+        String _get = this.protectedRegions.get(_plus_1);
+        _builder.append(_get, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("    ");
+        _builder.append("//Add additional includes here");
+        _builder.newLine();
+      }
+    }
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.newLine();
@@ -323,13 +397,26 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("    ");
     _builder.append("/*PROTECTED REGION ID(staticVars");
-    long _id_1 = behaviour.getId();
-    _builder.append(_id_1, "    ");
+    long _id_3 = behaviour.getId();
+    _builder.append(_id_3, "    ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("    ");
-    _builder.append("//initialise static variables here");
-    _builder.newLine();
+    {
+      long _id_4 = behaviour.getId();
+      String _plus_2 = ("staticVars" + Long.valueOf(_id_4));
+      boolean _containsKey_1 = this.protectedRegions.containsKey(_plus_2);
+      if (_containsKey_1) {
+        long _id_5 = behaviour.getId();
+        String _plus_3 = ("staticVars" + Long.valueOf(_id_5));
+        String _get_1 = this.protectedRegions.get(_plus_3);
+        _builder.append(_get_1, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("    ");
+        _builder.append("//initialise static variables here");
+        _builder.newLine();
+      }
+    }
     _builder.append("    ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
@@ -350,13 +437,26 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION ID(con");
-    long _id_2 = behaviour.getId();
-    _builder.append(_id_2, "        ");
+    long _id_6 = behaviour.getId();
+    _builder.append(_id_6, "        ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("        ");
-    _builder.append("//Add additional options here");
-    _builder.newLine();
+    {
+      long _id_7 = behaviour.getId();
+      String _plus_4 = ("con" + Long.valueOf(_id_7));
+      boolean _containsKey_2 = this.protectedRegions.containsKey(_plus_4);
+      if (_containsKey_2) {
+        long _id_8 = behaviour.getId();
+        String _plus_5 = ("con" + Long.valueOf(_id_8));
+        String _get_2 = this.protectedRegions.get(_plus_5);
+        _builder.append(_get_2, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("        ");
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
@@ -377,13 +477,26 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION ID(dcon");
-    long _id_3 = behaviour.getId();
-    _builder.append(_id_3, "        ");
+    long _id_9 = behaviour.getId();
+    _builder.append(_id_9, "        ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("        ");
-    _builder.append("//Add additional options here");
-    _builder.newLine();
+    {
+      long _id_10 = behaviour.getId();
+      String _plus_6 = ("dcon" + Long.valueOf(_id_10));
+      boolean _containsKey_3 = this.protectedRegions.containsKey(_plus_6);
+      if (_containsKey_3) {
+        long _id_11 = behaviour.getId();
+        String _plus_7 = ("dcon" + Long.valueOf(_id_11));
+        String _get_3 = this.protectedRegions.get(_plus_7);
+        _builder.append(_get_3, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("        ");
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
@@ -402,13 +515,26 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION ID(run");
-    long _id_4 = behaviour.getId();
-    _builder.append(_id_4, "        ");
+    long _id_12 = behaviour.getId();
+    _builder.append(_id_12, "        ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("        ");
-    _builder.append("//Add additional options here");
-    _builder.newLine();
+    {
+      long _id_13 = behaviour.getId();
+      String _plus_8 = ("run" + Long.valueOf(_id_13));
+      boolean _containsKey_4 = this.protectedRegions.containsKey(_plus_8);
+      if (_containsKey_4) {
+        long _id_14 = behaviour.getId();
+        String _plus_9 = ("run" + Long.valueOf(_id_14));
+        String _get_4 = this.protectedRegions.get(_plus_9);
+        _builder.append(_get_4, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("        ");
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
@@ -427,12 +553,26 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION ID(initialiseParameters");
-    long _id_5 = behaviour.getId();
-    _builder.append(_id_5, "        ");
+    long _id_15 = behaviour.getId();
+    _builder.append(_id_15, "        ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("        ");
-    _builder.append("//Add additional options here");
+    {
+      long _id_16 = behaviour.getId();
+      String _plus_10 = ("run" + Long.valueOf(_id_16));
+      boolean _containsKey_5 = this.protectedRegions.containsKey(_plus_10);
+      if (_containsKey_5) {
+        long _id_17 = behaviour.getId();
+        String _plus_11 = ("run" + Long.valueOf(_id_17));
+        String _get_5 = this.protectedRegions.get(_plus_11);
+        _builder.append(_get_5, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("        ");
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.newLine();
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION END*/");
@@ -443,13 +583,26 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("    ");
     _builder.append("/*PROTECTED REGION ID(methods");
-    long _id_6 = behaviour.getId();
-    _builder.append(_id_6, "    ");
+    long _id_18 = behaviour.getId();
+    _builder.append(_id_18, "    ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("        ");
-    _builder.append("//Add additional methods here");
-    _builder.newLine();
+    {
+      long _id_19 = behaviour.getId();
+      String _plus_12 = ("methods" + Long.valueOf(_id_19));
+      boolean _containsKey_6 = this.protectedRegions.containsKey(_plus_12);
+      if (_containsKey_6) {
+        long _id_20 = behaviour.getId();
+        String _plus_13 = ("methods" + Long.valueOf(_id_20));
+        String _get_6 = this.protectedRegions.get(_plus_13);
+        _builder.append(_get_6, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("        ");
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.append("    ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
@@ -1148,9 +1301,22 @@ public class XtendTemplates {
     _builder.append(_id_1, "");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("    ");
-    _builder.append("//Add additional using directives here");
-    _builder.newLine();
+    {
+      long _id_2 = plan.getId();
+      String _plus = ("ch" + Long.valueOf(_id_2));
+      boolean _containsKey = this.protectedRegions.containsKey(_plus);
+      if (_containsKey) {
+        long _id_3 = plan.getId();
+        String _plus_1 = ("ch" + Long.valueOf(_id_3));
+        String _get = this.protectedRegions.get(_plus_1);
+        _builder.append(_get, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("        ");
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.newLine();
@@ -1175,16 +1341,16 @@ public class XtendTemplates {
         _builder.newLineIfNotEmpty();
         _builder.append("    ");
         _builder.append("* - EP:");
-        long _id_2 = planEntryPoint.getId();
-        _builder.append(_id_2, "    ");
+        long _id_4 = planEntryPoint.getId();
+        _builder.append(_id_4, "    ");
         _builder.append(" : ");
         Task _task = planEntryPoint.getTask();
         String _name_2 = _task.getName();
         _builder.append(_name_2, "    ");
         _builder.append(" (");
         Task _task_1 = planEntryPoint.getTask();
-        long _id_3 = _task_1.getId();
-        _builder.append(_id_3, "    ");
+        long _id_5 = _task_1.getId();
+        _builder.append(_id_5, "    ");
         _builder.append(")");
       }
     }
@@ -1203,8 +1369,8 @@ public class XtendTemplates {
         String _name_3 = state.getName();
         _builder.append(_name_3, "    ");
         _builder.append(" (");
-        long _id_4 = state.getId();
-        _builder.append(_id_4, "    ");
+        long _id_6 = state.getId();
+        _builder.append(_id_6, "    ");
         _builder.append(")");
       }
     }
@@ -1223,8 +1389,8 @@ public class XtendTemplates {
         String _name_4 = variable.getName();
         _builder.append(_name_4, "    ");
         _builder.append(" (");
-        long _id_5 = variable.getId();
-        _builder.append(_id_5, "    ");
+        long _id_7 = variable.getId();
+        _builder.append(_id_7, "    ");
         _builder.append(") ");
       }
     }
@@ -1422,8 +1588,21 @@ public class XtendTemplates {
     _builder.append(_id, "");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("//Add inlcudes here");
-    _builder.newLine();
+    {
+      long _id_1 = plan.getId();
+      String _plus = ("incl" + Long.valueOf(_id_1));
+      boolean _containsKey = this.protectedRegions.containsKey(_plus);
+      if (_containsKey) {
+        long _id_2 = plan.getId();
+        String _plus_1 = ("incl" + Long.valueOf(_id_2));
+        String _get = this.protectedRegions.get(_plus_1);
+        _builder.append(_get, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.append("using namespace alica;");
@@ -1435,20 +1614,33 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("    ");
     _builder.append("/*PROTECTED REGION ID(meth");
-    long _id_1 = plan.getId();
-    _builder.append(_id_1, "    ");
+    long _id_3 = plan.getId();
+    _builder.append(_id_3, "    ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("    ");
-    _builder.append("//Add other things here");
-    _builder.newLine();
+    {
+      long _id_4 = plan.getId();
+      String _plus_2 = ("meth" + Long.valueOf(_id_4));
+      boolean _containsKey_1 = this.protectedRegions.containsKey(_plus_2);
+      if (_containsKey_1) {
+        long _id_5 = plan.getId();
+        String _plus_3 = ("meth" + Long.valueOf(_id_5));
+        String _get_1 = this.protectedRegions.get(_plus_3);
+        _builder.append(_get_1, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("    ");
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.append("    ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("class UtilityFunction");
-    long _id_2 = plan.getId();
-    _builder.append(_id_2, "    ");
+    long _id_6 = plan.getId();
+    _builder.append(_id_6, "    ");
     _builder.append(" : public BasicUtilityFunction");
     _builder.newLineIfNotEmpty();
     _builder.append("    ");
@@ -1467,8 +1659,8 @@ public class XtendTemplates {
         _builder.append("    ");
         _builder.append("class PreCondition");
         PreCondition _preCondition_1 = plan.getPreCondition();
-        long _id_3 = _preCondition_1.getId();
-        _builder.append(_id_3, "    ");
+        long _id_7 = _preCondition_1.getId();
+        _builder.append(_id_7, "    ");
         _builder.append(" : public DomainCondition");
         _builder.newLineIfNotEmpty();
         _builder.append("    ");
@@ -1490,8 +1682,8 @@ public class XtendTemplates {
         _builder.append("    ");
         _builder.append("class RunTimeCondition");
         RuntimeCondition _runtimeCondition_1 = plan.getRuntimeCondition();
-        long _id_4 = _runtimeCondition_1.getId();
-        _builder.append(_id_4, "    ");
+        long _id_8 = _runtimeCondition_1.getId();
+        _builder.append(_id_8, "    ");
         _builder.append(" : public DomainCondition");
         _builder.newLineIfNotEmpty();
         _builder.append("    ");
@@ -1515,8 +1707,8 @@ public class XtendTemplates {
             _builder.append("    ");
             _builder.append("class TransitionCondition");
             PreCondition _preCondition_2 = transition.getPreCondition();
-            long _id_5 = _preCondition_2.getId();
-            _builder.append(_id_5, "    ");
+            long _id_9 = _preCondition_2.getId();
+            _builder.append(_id_9, "    ");
             _builder.append(" : public DomainCondition");
             _builder.newLineIfNotEmpty();
             _builder.append("    ");
@@ -1560,9 +1752,21 @@ public class XtendTemplates {
     _builder.append(_id_1, "");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("    ");
-    _builder.append("//Add additional using directives here");
-    _builder.newLine();
+    {
+      long _id_2 = plan.getId();
+      String _plus = ("eph" + Long.valueOf(_id_2));
+      boolean _containsKey = this.protectedRegions.containsKey(_plus);
+      if (_containsKey) {
+        long _id_3 = plan.getId();
+        String _plus_1 = ("eph" + Long.valueOf(_id_3));
+        String _get = this.protectedRegions.get(_plus_1);
+        _builder.append(_get, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.newLine();
@@ -1591,8 +1795,8 @@ public class XtendTemplates {
         String _name_2 = _task.getName();
         _builder.append(_name_2, "        ");
         _builder.append("  -> EntryPoint-ID: ");
-        long _id_2 = entryPoint.getId();
-        _builder.append(_id_2, "        ");
+        long _id_4 = entryPoint.getId();
+        _builder.append(_id_4, "        ");
         _builder.newLineIfNotEmpty();
       }
     }
@@ -1601,8 +1805,8 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("    ");
     _builder.append("shared_ptr<UtilityFunction> UtilityFunction");
-    long _id_3 = plan.getId();
-    _builder.append(_id_3, "    ");
+    long _id_5 = plan.getId();
+    _builder.append(_id_5, "    ");
     _builder.append("::getUtilityFunction(Plan* plan)");
     _builder.newLineIfNotEmpty();
     _builder.append("    ");
@@ -1610,26 +1814,37 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("       ");
     _builder.append("/*PROTECTED REGION ID(");
-    long _id_4 = plan.getId();
-    _builder.append(_id_4, "       ");
+    long _id_6 = plan.getId();
+    _builder.append(_id_6, "       ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
     {
-      boolean _isInstance = Plan.class.isInstance(this);
-      if (_isInstance) {
-        _builder.append("        ");
-        _builder.append("shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);");
-        _builder.newLine();
-        _builder.append("        ");
-        _builder.append("return defaultFunction;");
-        _builder.newLine();
+      long _id_7 = plan.getId();
+      String _plus_2 = ("eph" + Long.valueOf(_id_7));
+      boolean _containsKey_1 = this.protectedRegions.containsKey(_plus_2);
+      if (_containsKey_1) {
+        long _id_8 = plan.getId();
+        String _get_1 = this.protectedRegions.get(Long.valueOf(_id_8));
+        _builder.append(_get_1, "");
+        _builder.newLineIfNotEmpty();
       } else {
-        _builder.append("        ");
-        _builder.append("return null;");
-        _builder.newLine();
+        {
+          boolean _isInstance = Plan.class.isInstance(this);
+          if (_isInstance) {
+            _builder.append("       ");
+            _builder.append("shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);");
+            _builder.newLine();
+            _builder.append("       ");
+            _builder.append("return defaultFunction;");
+            _builder.newLine();
+          } else {
+            _builder.append("       ");
+            _builder.append("return null;");
+            _builder.newLine();
+          }
+        }
       }
     }
-    _builder.newLine();
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();

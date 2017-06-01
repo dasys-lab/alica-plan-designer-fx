@@ -5,11 +5,14 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marci on 12.05.17.
  */
 public interface IGenerator {
+
+    void setProtectedRegions(Map<String, String> protectedRegions);
     void createBehaviourCreator(List<Behaviour> behaviours);
     void createBehaviour(Behaviour behaviour);
     void createConditionCreator(List<Plan> plans, List<Condition> conditions);

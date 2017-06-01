@@ -4,6 +4,8 @@ import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 
+import java.util.Map;
+
 /**
  * Created by marci on 19.05.17.
  */
@@ -12,6 +14,10 @@ public class DefaultConstraintCodeGenerator implements IConstraintCodeGenerator 
 
     public DefaultConstraintCodeGenerator() {
         defaultTemplate = new DefaultTemplate();
+    }
+
+    public void setProtectedRegions(Map<String, String> protectedRegions) {
+        defaultTemplate.setProtectedRegions(protectedRegions);
     }
 
     @Override

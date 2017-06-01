@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by marci on 19.05.17.
@@ -15,10 +16,15 @@ import java.io.IOException;
 public class DefaultPlugin implements IPlugin<Void> {
 
     private File pluginJar;
+    private DefaultConstraintCodeGenerator defaultConstraintCodeGenerator;
+
+    public DefaultPlugin() {
+        defaultConstraintCodeGenerator = new DefaultConstraintCodeGenerator();
+    }
 
     @Override
     public IConstraintCodeGenerator getConstraintCodeGenerator() {
-        return new DefaultConstraintCodeGenerator();
+        return defaultConstraintCodeGenerator;
     }
 
     @Override
@@ -56,5 +62,10 @@ public class DefaultPlugin implements IPlugin<Void> {
     @Override
     public File getPluginFile() {
         return pluginJar;
+    }
+
+    @Override
+    public void setProtectedRegions(Map<String, String> protectedRegions) {
+        defaultConstraintCodeGenerator.setProtectedRegions(protectedRegions);
     }
 }

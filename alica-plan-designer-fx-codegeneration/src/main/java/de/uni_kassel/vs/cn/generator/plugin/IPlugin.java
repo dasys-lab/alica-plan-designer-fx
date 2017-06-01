@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import javafx.scene.Parent;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * Created by marci on 19.05.17.
@@ -21,6 +22,8 @@ public interface IPlugin<T> {
     String getPluginName();
 
     File getPluginFile();
+
+    void setProtectedRegions(Map<String, String> protectedRegions);
 
     void setPluginFile(File pluginFile);
 }

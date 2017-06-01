@@ -72,7 +72,6 @@ public class MainController implements Initializable {
      * @return
      */
     private List<Menu> createMenus() {
-        // TODO this desperately needs refactoring
         List<Menu> menus = new ArrayList<>();
         Menu fileMenu = new Menu(I18NRepo.getString("label.menu.file"));
         fileMenu.getItems().add(new NewResourceMenu());

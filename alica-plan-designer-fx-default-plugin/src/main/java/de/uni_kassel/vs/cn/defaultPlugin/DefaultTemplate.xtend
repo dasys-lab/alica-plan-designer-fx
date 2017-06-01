@@ -2,11 +2,19 @@ package de.uni_kassel.vs.cn.defaultPlugin;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.State
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan
+import java.util.Map
 
 /**
  * Created by marci on 19.05.17.
  */
 class DefaultTemplate {
+
+    private Map<String, String> protectedRegions;
+
+    public def void setProtectedRegions (Map<String, String> regions) {
+        protectedRegions = regions;
+    }
+
     def String expressionsStateCheckingMethods(State state) '''
 «FOR transition : state.outTransitions»
 «IF (transition.preCondition.pluginName == "DefaultPlugin")»
@@ -30,7 +38,11 @@ class DefaultTemplate {
 			bool TransitionCondition«transition.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
 			 {
 				/*PROTECTED REGION ID(«transition.id») ENABLED START*/
-					return false;
+                «IF (protectedRegions.containsKey(transition.id + ""))»
+                    «protectedRegions.get(transition.id + "")»
+                «ELSE»
+                    return false;
+                «ENDIF»
 				/*PROTECTED REGION END*/
 
 			}
@@ -49,7 +61,11 @@ class DefaultTemplate {
          bool RunTimeCondition«plan.runtimeCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
          {
              /*PROTECTED REGION ID(«plan.runtimeCondition.id») ENABLED START*/
-              return true;
+            «IF (protectedRegions.containsKey(plan.runtimeCondition.id + ""))»
+                «protectedRegions.get(plan.runtimeCondition.id + "")»
+            «ELSE»
+                return true;
+            «ENDIF»
              /*PROTECTED REGION END*/
           }
 «ENDIF»
@@ -63,8 +79,12 @@ class DefaultTemplate {
          bool PreCondition«plan.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
          {
              /*PROTECTED REGION ID(«plan.preCondition.id») ENABLED START*/
+             «IF (protectedRegions.containsKey(plan.preCondition.id + ""))»
+                «protectedRegions.get(plan.preCondition.id + "")»
+            «ELSE»
                 //--> "PreCondition:«plan.preCondition.id»  not implemented";
                 return true;
+            «ENDIF»
              /*PROTECTED REGION END*/
           }
 «ENDIF»
@@ -88,7 +108,11 @@ class DefaultTemplate {
 */
 void Constraint«plan.runtimeCondition.id»::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp) {
 /*PROTECTED REGION ID(cc«plan.runtimeCondition.id») ENABLED START*/
-    //Proteced
+    «IF (protectedRegions.containsKey("cc" + plan.runtimeCondition.id))»
+        «protectedRegions.get("cc" + plan.runtimeCondition.id)»
+    «ELSE»
+        //Proteced
+    «ENDIF»
 /*PROTECTED REGION END*/
 }
 «ENDIF»
@@ -106,7 +130,11 @@ void Constraint«plan.runtimeCondition.id»::getConstraint(shared_ptr<Constraint
 */
 void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp) {
 /*PROTECTED REGION ID(cc«plan.preCondition.id») ENABLED START*/
-	//Proteced
+    «IF (protectedRegions.containsKey("cc" + plan.preCondition.id))»
+        «protectedRegions.get("cc" + plan.preCondition.id)»
+    «ELSE»
+        //Proteced
+    «ENDIF»
 /*PROTECTED REGION END*/
 }
 «ENDIF»
@@ -134,7 +162,11 @@ void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ConstraintDesc
 */
 void Constraint«transition.preCondition.id»::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp) {
 /*PROTECTED REGION ID(cc«transition.preCondition.id») ENABLED START*/
-	//Proteced
+	«IF (protectedRegions.containsKey("cc" + transition.preCondition.id))»
+        «protectedRegions.get("cc" + transition.preCondition.id)»
+    «ELSE»
+        //Proteced
+    «ENDIF»
 /*PROTECTED REGION END*/
 }
 «ENDIF»

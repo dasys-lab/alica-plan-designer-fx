@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.generator.cpp
 
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour
 import java.util.List
+import java.util.Map
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition
 import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition
@@ -13,6 +14,12 @@ import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator
  * Created by marci on 11.05.17.
  */
 class XtendTemplates {
+
+    private Map<String, String> protectedRegions;
+
+    public def void setProtectedRegions (Map<String, String> regions) {
+        protectedRegions = regions;
+    }
 
     def String behaviourCreatorHeader()'''
 #ifndef BEHAVIOURCREATOR_H_
@@ -84,7 +91,11 @@ namespace alica
 
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc«behaviour.id») ENABLED START*/
-    //Add additional includes here
+«IF (protectedRegions.containsKey("inc" + behaviour.id))»
+«protectedRegions.get("inc" + behaviour.id)»
+«ELSE»
+//Add additional includes here
+«ENDIF»
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -96,16 +107,28 @@ namespace alica
             virtual ~«behaviour.name»();
             virtual void run(void* msg);
             /*PROTECTED REGION ID(pub«behaviour.id») ENABLED START*/
-            //Add additional public methods here
+            «IF (protectedRegions.containsKey("pub" + behaviour.id))»
+«protectedRegions.get("pub" + behaviour.id)»
+            «ELSE»
+                //Add additional public methods here
+            «ENDIF»
             /*PROTECTED REGION END*/
         protected:
             virtual void initialiseParameters();
             /*PROTECTED REGION ID(pro«behaviour.id») ENABLED START*/
-            //Add additional protected methods here
+            «IF (protectedRegions.containsKey("pro" + behaviour.id))»
+«protectedRegions.get("pro" + behaviour.id)»
+            «ELSE»
+                //Add additional protected methods here
+            «ENDIF»
             /*PROTECTED REGION END*/
         private:
         /*PROTECTED REGION ID(priv«behaviour.id») ENABLED START*/
-            //Add additional private methods here
+            «IF (protectedRegions.containsKey("priv" + behaviour.id))»
+«protectedRegions.get("priv" + behaviour.id)»
+            «ELSE»
+                //Add additional private methods here
+            «ENDIF»
         /*PROTECTED REGION END*/
     };
 } /* namespace alica */
@@ -119,44 +142,74 @@ using namespace std;
 
 /*PROTECTED REGION ID(inccpp«behaviour.id») ENABLED START*/
     //Add additional includes here
+    «IF (protectedRegions.containsKey("inccpp" + behaviour.id))»
+«protectedRegions.get("inccpp" + behaviour.id)»
+    «ELSE»
+        //Add additional includes here
+    «ENDIF»
 /*PROTECTED REGION END*/
 
 namespace alica
 {
     /*PROTECTED REGION ID(staticVars«behaviour.id») ENABLED START*/
-    //initialise static variables here
+    «IF (protectedRegions.containsKey("staticVars" + behaviour.id))»
+«protectedRegions.get("staticVars" + behaviour.id)»
+    «ELSE»
+        //initialise static variables here
+    «ENDIF»
     /*PROTECTED REGION END*/
 
     «behaviour.name»::«behaviour.name»() : DomainBehaviour("«behaviour.name»")
     {
         /*PROTECTED REGION ID(con«behaviour.id») ENABLED START*/
-        //Add additional options here
+        «IF (protectedRegions.containsKey("con" + behaviour.id))»
+«protectedRegions.get("con" + behaviour.id)»
+        «ELSE»
+            //Add additional options here
+        «ENDIF»
         /*PROTECTED REGION END*/
 
     }
     «behaviour.name»::~«behaviour.name»()
     {
         /*PROTECTED REGION ID(dcon«behaviour.id») ENABLED START*/
-        //Add additional options here
+        «IF (protectedRegions.containsKey("dcon" + behaviour.id))»
+«protectedRegions.get("dcon" + behaviour.id)»
+        «ELSE»
+            //Add additional options here
+        «ENDIF»
         /*PROTECTED REGION END*/
 
     }
     void «behaviour.name»::run(void* msg)
     {
         /*PROTECTED REGION ID(run«behaviour.id») ENABLED START*/
-        //Add additional options here
+        «IF (protectedRegions.containsKey("run" + behaviour.id))»
+«protectedRegions.get("run" + behaviour.id)»
+        «ELSE»
+            //Add additional options here
+        «ENDIF»
         /*PROTECTED REGION END*/
 
     }
     void «behaviour.name»::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters«behaviour.id») ENABLED START*/
-        //Add additional options here
+        «IF (protectedRegions.containsKey("run" + behaviour.id))»
+«protectedRegions.get("run" + behaviour.id)»
+        «ELSE»
+            //Add additional options here
+        «ENDIF»
+
         /*PROTECTED REGION END*/
 
     }
     /*PROTECTED REGION ID(methods«behaviour.id») ENABLED START*/
-        //Add additional methods here
+        «IF (protectedRegions.containsKey("methods" + behaviour.id))»
+«protectedRegions.get("methods" + behaviour.id)»
+        «ELSE»
+            //Add additional options here
+        «ENDIF»
     /*PROTECTED REGION END*/
 
 } /* namespace alica */
@@ -428,7 +481,11 @@ namespace alicaAutogenerated
 using namespace std;
 using namespace alica;
 /*PROTECTED REGION ID(ch«plan.id») ENABLED START*/
-    //Add additional using directives here
+        «IF (protectedRegions.containsKey("ch" + plan.id))»
+«protectedRegions.get("ch" + plan.id)»
+        «ELSE»
+            //Add additional options here
+        «ENDIF»
 /*PROTECTED REGION END*/
 
 
@@ -529,14 +586,22 @@ namespace alica
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"
 /*PROTECTED REGION ID(incl«plan.id») ENABLED START*/
-//Add inlcudes here
+«IF (protectedRegions.containsKey("incl" + plan.id))»
+«protectedRegions.get("incl" + plan.id)»
+«ELSE»
+//Add additional options here
+«ENDIF»
 /*PROTECTED REGION END*/
 using namespace alica;
 
 namespace alicaAutogenerated
 {
     /*PROTECTED REGION ID(meth«plan.id») ENABLED START*/
-    //Add other things here
+    «IF (protectedRegions.containsKey("meth" + plan.id))»
+«protectedRegions.get("meth" + plan.id)»
+    «ELSE»
+        //Add additional options here
+    «ENDIF»
     /*PROTECTED REGION END*/
     class UtilityFunction«plan.id» : public BasicUtilityFunction
     {
@@ -571,7 +636,11 @@ namespace alicaAutogenerated
 #include "«plan.destinationPath»/«plan.name»«plan.id».h"
 using namespace alica;
 /*PROTECTED REGION ID(eph«plan.id») ENABLED START*/
-    //Add additional using directives here
+«IF (protectedRegions.containsKey("eph" + plan.id))»
+«protectedRegions.get("eph" + plan.id)»
+«ELSE»
+    //Add additional options here
+«ENDIF»
 /*PROTECTED REGION END*/
 
 namespace alicaAutogenerated
@@ -586,13 +655,16 @@ namespace alicaAutogenerated
     shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(Plan* plan)
     {
        /*PROTECTED REGION ID(«plan.id») ENABLED START*/
-        «IF Plan.isInstance(this)»
+       «IF (protectedRegions.containsKey("eph" + plan.id))»
+«protectedRegions.get(plan.id)»
+       «ELSE»
+       «IF Plan.isInstance(this)»
             shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
             return defaultFunction;
         «ELSE»
             return null;
         «ENDIF»
-
+       «ENDIF»
         /*PROTECTED REGION END*/
     }
     «FOR state : plan.states»

@@ -144,11 +144,6 @@ public class PlanTypeWindowController implements Initializable {
                     List<? extends AnnotatedPlan> removedSubList = c.getRemoved();
                     removedSubList
                             .forEach(e -> {
-                                List<RepositoryHBox<Plan>> toRemove = planListView
-                                        .getItems()
-                                        .stream()
-                                        .filter(f -> f.getObject().equals(e.getPlan()))
-                                        .collect(Collectors.toList());
                                 Pair<Plan, Path> planPathPair = AllAlicaFiles
                                         .getInstance()
                                         .getPlans()
