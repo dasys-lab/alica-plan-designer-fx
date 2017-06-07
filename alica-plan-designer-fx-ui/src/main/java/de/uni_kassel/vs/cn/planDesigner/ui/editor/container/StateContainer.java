@@ -92,7 +92,7 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
     public AbstractCommand createMoveElementCommand() {
         return new ChangePosition(getPmlUiExtension(), getContainedElement(),
                 (int) (getLayoutX()),
-                (int) (getLayoutY()));
+                (int) (getLayoutY()), getContainedElement().getInPlan());
     }
 
     @Override

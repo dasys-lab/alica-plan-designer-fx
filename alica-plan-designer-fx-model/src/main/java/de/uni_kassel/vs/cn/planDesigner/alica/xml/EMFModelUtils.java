@@ -13,6 +13,9 @@ import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExten
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUIExtensionModelPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.util.PmlUIExtensionModelResourceFactoryImpl;
 import javafx.util.Pair;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -39,6 +42,8 @@ public class EMFModelUtils {
         alicaResourceSet = new AlicaResourceSet();
         AlicaResourceSet alicaResourceSet = new AlicaResourceSet();
 		URIConverter uriConverter = ExtensibleURIConverterImpl.INSTANCE;
+
+		alicaResourceSet.getResources().forEach(e -> e.setTrackingModification(true));
     }
 
     /**
@@ -89,6 +94,7 @@ public class EMFModelUtils {
                          .createURI(relativePath.replace("pml", "pmlex"));
                  Resource loadedPmlUiExtension = alicaResourceSet.createResource(pmlExURI);
                  loadedPmlUiExtension.load(new FileInputStream(file.getAbsolutePath().replace("pml", "pmlex")), AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+                 loadedPmlUiExtension.setURI(pmlExURI);
              }
              return t;
          } else {
@@ -106,6 +112,15 @@ public class EMFModelUtils {
     public static <T extends EObject> Resource createAlicaFile(T emptyObject, boolean createPmlEx, File file) throws IOException {
         Resource resource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath()));
         resource.getContents().add(emptyObject);
+        String relativePath = file.getAbsolutePath()
+                .replace(new Configuration().getPlansPath() + "/","")
+                .replace(new Configuration().getRolesPath()+ "/","")
+                .replace(new Configuration().getMiscPath()+ "/","");
+        URI relativeURI = URI
+                .createURI(relativePath);
+
+        resource.setURI(relativeURI);
+
         if (emptyObject instanceof Plan) {
             // TODO ALLALICAFILES IS BROKEN WITHOUT UNIQUE KEYS
             AllAlicaFiles.getInstance()
@@ -114,6 +129,7 @@ public class EMFModelUtils {
             if (createPmlEx) {
                 Resource pmlexResource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath().replace(".pml", ".pmlex")));
                 pmlexResource.getContents().add(getPmlUiExtensionModelFactory().createPmlUiExtensionMap());
+                pmlexResource.setURI(URI.createURI(relativeURI.toString().replace(".pml", ".pmlex")));
                 pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
             }
         }
@@ -122,6 +138,7 @@ public class EMFModelUtils {
         if (emptyObject instanceof AbstractPlan) {
             ((AbstractPlan) emptyObject).setDestinationPath(file.getAbsolutePath().replace(new Configuration().getPlansPath(),"Plans/"));
         }
+        resource.setTrackingModification(true);
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         return resource;
     }

@@ -14,7 +14,7 @@ public class DeleteSynchronisationFromPlan extends AbstractCommand<Synchronisati
     private PmlUiExtension pmlUiExtension;
 
     public DeleteSynchronisationFromPlan(Synchronisation element, PlanModelVisualisationObject parentOfElement) {
-        super(element);
+        super(element, parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
     }
 

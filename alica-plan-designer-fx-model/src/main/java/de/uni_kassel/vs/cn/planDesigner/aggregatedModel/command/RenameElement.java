@@ -10,7 +10,7 @@ public class RenameElement extends AbstractCommand<PlanElement> {
     private String oldName;
 
     public RenameElement(PlanElement element, String newName) {
-        super(element);
+        super(element, (PlanElement) element.eResource().getContents().get(0));
         this.newName = newName;
         oldName = getElementToEdit().getName();
     }

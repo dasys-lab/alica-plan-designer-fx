@@ -1,20 +1,16 @@
 package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.generator.cpp.CPPGeneratorImpl;
-import de.uni_kassel.vs.cn.generator.cpp.GeneratedSourcesManager;
-import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsBaseListener;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsLexer;
 import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsParser;
 import de.uni_kassel.vs.cn.generator.cpp.parser.ProtectedRegionsVisitor;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state;
 
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPlan;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
@@ -86,7 +87,8 @@ public class StateTool extends AbstractTool<State> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
-                    AddStateInPlan command = new AddStateInPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject(),
+                    PlanModelVisualisationObject planModelVisualisationObject = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject();
+                    AddStateInPlan command = new AddStateInPlan(planModelVisualisationObject,
                             createNewObject());
                     MainController.getInstance()
                             .getCommandStack()
@@ -95,7 +97,7 @@ public class StateTool extends AbstractTool<State> {
                             .getCommandStack()
                             .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(),command.getElementToEdit(),
                                     (int) (event.getX()),
-                                    (int) (event.getY())));
+                                    (int) (event.getY()), planModelVisualisationObject.getPlan()));
                     endPhase();
                     initial = true;
                 }

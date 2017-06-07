@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.EAbstractPlanType;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
@@ -36,7 +37,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
     private PmlUiExtensionMap pmlUiExtensionMap;
 
     public DeleteAbstractPlan(AbstractPlan element) {
-        super(element);
+        super(element, null);
         if (element instanceof Behaviour) {
             planType = EAbstractPlanType.BEHAVIOUR;
         }
@@ -118,6 +119,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
         });
         EMFModelUtils.getAlicaResourceSet().getResources().remove(getElementToEdit().eResource());
 
+        GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager();
         switch (planType) {
             case PLAN:
                 Pair<Plan, Path> planPathPair = AllAlicaFiles.getInstance().getPlans()
@@ -142,6 +144,9 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+
+                generatedSourcesManager.getAllGeneratedFilesForAbstractPlan(planPathPair.getKey())
+                .forEach(File::delete);
                 break;
             case PLANTYPE:
                 Pair<PlanType, Path> planTypePathPair = AllAlicaFiles.getInstance().getPlanTypes()
@@ -170,6 +175,8 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                generatedSourcesManager.getAllGeneratedFilesForAbstractPlan(behaviourPathPair.getKey())
+                    .forEach(File::delete);
                 break;
         }
     }

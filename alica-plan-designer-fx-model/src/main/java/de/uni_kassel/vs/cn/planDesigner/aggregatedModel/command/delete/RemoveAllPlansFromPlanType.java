@@ -15,7 +15,7 @@ public class RemoveAllPlansFromPlanType extends AbstractCommand<PlanType> {
     private List<AnnotatedPlan> backupPlans;
 
     public RemoveAllPlansFromPlanType(PlanType element) {
-        super(element);
+        super(element, element);
     }
 
     @Override

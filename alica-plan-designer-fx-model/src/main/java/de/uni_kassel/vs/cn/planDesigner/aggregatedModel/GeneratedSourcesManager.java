@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.generator.cpp;
+package de.uni_kassel.vs.cn.planDesigner.aggregatedModel;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;

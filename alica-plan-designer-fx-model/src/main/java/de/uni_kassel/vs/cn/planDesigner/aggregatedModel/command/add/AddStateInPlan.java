@@ -17,7 +17,7 @@ public class AddStateInPlan extends AbstractCommand<State> {
     private PmlUiExtension newlyCreatedPmlUiExtension;
 
     public AddStateInPlan(PlanModelVisualisationObject parentOfElement, State newObject) {
-        super(newObject);
+        super(newObject, parentOfElement.getPlan());
         getElementToEdit().setName(DEFAULT_STATE_NAME);
         this.parentOfElement = parentOfElement;
         this.newlyCreatedPmlUiExtension = getPmlUiExtensionModelFactory().createPmlUiExtension();

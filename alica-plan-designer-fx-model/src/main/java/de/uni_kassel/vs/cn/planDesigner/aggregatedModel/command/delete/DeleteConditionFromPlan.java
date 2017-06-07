@@ -10,7 +10,7 @@ public class DeleteConditionFromPlan extends AbstractCommand<Condition> {
     private final Plan parentOfElement;
 
     public DeleteConditionFromPlan(Plan parentOfElement, Condition toDelete) {
-        super(toDelete);
+        super(toDelete, parentOfElement);
         this.parentOfElement = parentOfElement;
     }
 

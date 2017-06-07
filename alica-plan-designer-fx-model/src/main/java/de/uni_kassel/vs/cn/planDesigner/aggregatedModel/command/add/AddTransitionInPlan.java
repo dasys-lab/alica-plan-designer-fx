@@ -19,7 +19,7 @@ public class AddTransitionInPlan extends AbstractCommand<Transition> {
     private State to;
 
     public AddTransitionInPlan(PlanModelVisualisationObject parentOfElement, State from, State to) {
-        super(getAlicaFactory().createTransition());
+        super(getAlicaFactory().createTransition(), parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
         this.from = from;
         this.to = to;

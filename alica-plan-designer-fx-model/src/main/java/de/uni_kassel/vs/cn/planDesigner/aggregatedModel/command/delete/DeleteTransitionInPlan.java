@@ -23,7 +23,7 @@ public class DeleteTransitionInPlan extends AbstractCommand<Transition> {
     private State outState;
 
     public DeleteTransitionInPlan(Transition element, PlanModelVisualisationObject parentOfElement) {
-        super(element);
+        super(element, parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
     }
 

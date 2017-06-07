@@ -11,7 +11,7 @@ public class DeleteVariableFromAbstractPlan extends AbstractCommand<Variable> {
     private final PlanElement parentOfElement;
 
     public DeleteVariableFromAbstractPlan(Variable toDelete, PlanElement parentOfElement) {
-        super(toDelete);
+        super(toDelete, parentOfElement);
         this.parentOfElement = parentOfElement;
     }
 

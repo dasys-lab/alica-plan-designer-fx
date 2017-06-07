@@ -101,7 +101,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
     public AbstractCommand createMoveElementCommand() {
         return new ChangePosition(getPmlUiExtension(), getContainedElement(),
                 (int) (getLayoutX()),
-                (int) (getLayoutY()));
+                (int) (getLayoutY()), getContainedElement().getPlan());
     }
 
     @Override

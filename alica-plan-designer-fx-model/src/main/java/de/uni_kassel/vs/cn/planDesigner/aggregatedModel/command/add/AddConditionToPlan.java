@@ -11,7 +11,7 @@ public class AddConditionToPlan extends AbstractCommand<Condition> {
     private Plan parentOfElement;
 
     public AddConditionToPlan(Plan parentOfElement, Condition element) {
-        super(element);
+        super(element, parentOfElement);
         this.parentOfElement = parentOfElement;
     }
 

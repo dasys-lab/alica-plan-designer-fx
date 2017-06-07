@@ -11,7 +11,7 @@ public class AddAbstractPlanToState extends AbstractCommand<AbstractPlan> {
     private State parentOfElement;
 
     public AddAbstractPlanToState(AbstractPlan element, State parentOfElement) {
-        super(element);
+        super(element, parentOfElement.getInPlan());
         this.parentOfElement = parentOfElement;
     }
 

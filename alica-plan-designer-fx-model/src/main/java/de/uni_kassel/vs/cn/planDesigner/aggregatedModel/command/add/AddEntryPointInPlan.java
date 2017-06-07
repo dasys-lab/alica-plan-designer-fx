@@ -16,7 +16,7 @@ public class AddEntryPointInPlan extends AbstractCommand<EntryPoint> {
     private final PmlUiExtension newlyCreatedPmlUiExtension;
 
     public AddEntryPointInPlan(PlanModelVisualisationObject parentOfElement) {
-        super(getAlicaFactory().createEntryPoint());
+        super(getAlicaFactory().createEntryPoint(), parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
         this.newlyCreatedPmlUiExtension = getPmlUiExtensionModelFactory().createPmlUiExtension();
     }

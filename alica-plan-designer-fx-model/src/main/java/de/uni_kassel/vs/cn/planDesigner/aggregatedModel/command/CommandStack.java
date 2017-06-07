@@ -1,6 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+
 import java.util.Observable;
+import java.util.Optional;
 import java.util.Stack;
 
 /**
@@ -47,6 +51,31 @@ public class CommandStack extends Observable {
     private void notifyObserversCompound() {
         this.setChanged();
         notifyObservers();
+    }
+
+
+    public boolean isAbstractPlanInItsCurrentFormSaved(PlanElement abstractPlan) {
+        Optional<AbstractCommand> abstractCommand = undoStack
+                .stream()
+                .filter(e -> e.getAffectedPlan().equals(abstractPlan))
+                .findFirst();
+        if (abstractCommand.isPresent()) {
+            return abstractCommand.get().isSaved();
+        } else {
+            return true;
+        }
+    }
+
+    public void setSavedForAbstractPlan(PlanElement abstractPlan) {
+        Optional<AbstractCommand> abstractCommand = undoStack
+                .stream()
+                .filter(e -> e.getAffectedPlan().equals(abstractPlan))
+                .findFirst();
+        if (abstractCommand.isPresent()) {
+            abstractCommand.get().setSaved(true);
+        } else {
+            throw new RuntimeException("WHAT");
+        }
     }
 
     /**

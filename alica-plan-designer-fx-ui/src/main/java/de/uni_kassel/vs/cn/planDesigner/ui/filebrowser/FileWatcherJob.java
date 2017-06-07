@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import javafx.application.Platform;
 
@@ -78,7 +79,7 @@ public class FileWatcherJob implements Runnable {
             Configuration configuration = new Configuration();
             registerAll(new File(configuration.getPlansPath()).toPath());
             this.trace = true;
-            while (true) {
+            while (PlanDesigner.isRunning()) {
 
                 // wait for key to be signalled
                 WatchKey key;

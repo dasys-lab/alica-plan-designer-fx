@@ -18,7 +18,7 @@ public class DeleteEntryPointInPlan extends AbstractCommand<EntryPoint> {
     private PmlUiExtension pmlUiExtension;
 
     public DeleteEntryPointInPlan(EntryPoint element, PlanModelVisualisationObject parentOfElement) {
-        super(element);
+        super(element, parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
         this.pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(getElementToEdit());
         this.associatedState = getElementToEdit().getState();

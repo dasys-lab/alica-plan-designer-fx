@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPlan;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddSynchronisationToPlan;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
@@ -87,8 +88,9 @@ public class SynchronisationTool extends AbstractTool<Synchronisation> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
+                    PlanModelVisualisationObject planModelVisualisationObject = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject();
                     AddSynchronisationToPlan command = new AddSynchronisationToPlan(createNewObject(),
-                            ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject());
+                            planModelVisualisationObject);
                     MainController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
@@ -96,7 +98,7 @@ public class SynchronisationTool extends AbstractTool<Synchronisation> {
                             .getCommandStack()
                             .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
                                     (int) (event.getX()),
-                                    (int) (event.getY())));
+                                    (int) (event.getY()), planModelVisualisationObject.getPlan()));
                     endPhase();
                     initial = true;
                 }

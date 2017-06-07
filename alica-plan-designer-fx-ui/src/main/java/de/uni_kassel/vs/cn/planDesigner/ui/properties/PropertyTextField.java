@@ -19,7 +19,7 @@ class PropertyTextField<T extends PlanElement> extends TextField {
         this.commandStack = commandStack;
         setText(BeanUtils.getProperty(object, propertyName));
         textProperty().addListener((observable, oldValue, newValue) -> getCommandStack().storeAndExecute(
-                new ChangeAttributeValue<>(object, propertyName, object.getClass(), newValue)));
+                new ChangeAttributeValue<>(object, propertyName, object.getClass(), newValue, object)));
     }
 
     public CommandStack getCommandStack() {

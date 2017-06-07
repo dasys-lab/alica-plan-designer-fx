@@ -10,12 +10,14 @@ import javafx.util.Pair;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Observer;
 
 /**
  * Created by marci on 18.11.16.
  */
 public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
 
+    private final Observer observer;
     private T editable;
     private Path filePath;
     private CommandStack commandStack;
@@ -27,18 +29,20 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         this.filePath = filePath;
         selectedPlanElement = new SimpleObjectProperty<>(new Pair<>(editable, null));
         this.commandStack = commandStack;
-        if (commandStack != null) {
-            commandStack.addObserver((o, arg) -> {
-                if(((CommandStack) o).isCurrentCommandSaved()) {
-                    setText(getText().replace("*",""));
-                } else {
-                    if (getText().contains("*") == false) {
-                        setText(getText() + "*");
-                    }
+        observer = (o, arg) -> {
+            if (((CommandStack) o).isAbstractPlanInItsCurrentFormSaved(getEditable())) {
+                setText(getText().replace("*", ""));
+            } else {
+                if (getText().contains("*") == false) {
+                    setText(getText() + "*");
                 }
-            });
+            }
+        };
+        if (commandStack != null) {
+            commandStack.addObserver(observer);
         }
         setClosable(true);
+        setOnCloseRequest(e -> commandStack.deleteObserver(observer));
     }
 
     public Path getFilePath() {
@@ -49,6 +53,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         try {
             setText(getText().replace("*",""));
             EMFModelUtils.saveAlicaFile(getEditable());
+            getCommandStack().setSavedForAbstractPlan(getEditable());
         } catch (IOException e) {
             e.printStackTrace();
         }

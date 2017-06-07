@@ -11,7 +11,7 @@ public class DeleteTaskFromRepository extends AbstractCommand<Task> {
     private final TaskRepository parentOfElement;
 
     public DeleteTaskFromRepository(TaskRepository parentOfElement, Task toDelete) {
-        super(toDelete);
+        super(toDelete, parentOfElement);
         this.parentOfElement = parentOfElement;
     }
 

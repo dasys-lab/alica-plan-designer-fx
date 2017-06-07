@@ -1,10 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTransitionToSynchronisation;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.SynchronisationContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
@@ -60,8 +62,10 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
                 } else if (((Node)event.getTarget()).getParent() instanceof TransitionContainer && initial == false) {
                     finish = (TransitionContainer) ((Node)event.getTarget()).getParent();
                     initial = true;
+
                     AddTransitionToSynchronisation command =
-                            new AddTransitionToSynchronisation(start.getContainedElement(), finish.getContainedElement());
+                            new AddTransitionToSynchronisation(start.getContainedElement(), finish.getContainedElement(),
+                                    ((AbstractEditorTab<PlanElement>)workbench.getSelectionModel().getSelectedItem()).getEditable());
                     MainController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);

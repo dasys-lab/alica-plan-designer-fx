@@ -15,7 +15,7 @@ public class AddTaskToRepository extends AbstractCommand<Task> {
     private final String name;
 
     public AddTaskToRepository(TaskRepository parentOfElement, String name) {
-        super(getAlicaFactory().createTask());
+        super(getAlicaFactory().createTask(), parentOfElement);
         this.parentOfElement = parentOfElement;
         this.name = name;
     }

@@ -11,7 +11,7 @@ public class DeleteVariableFromCondition extends AbstractCommand<Variable> {
     private final Condition parentOfElement;
 
     public DeleteVariableFromCondition(Variable toDelete, Condition parentOfElement) {
-        super(toDelete);
+        super(toDelete, parentOfElement.getAbstractPlan());
         this.parentOfElement = parentOfElement;
     }
 

@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 
@@ -12,7 +13,7 @@ public class RemoveTransitionFromSynchronisation extends AbstractCommand<Synchro
     private Transition toRemove;
 
     public RemoveTransitionFromSynchronisation(Synchronisation element, Transition toRemove) {
-        super(element);
+        super(element, (PlanElement) element.eResource().getContents().get(0));
         this.toRemove = toRemove;
     }
 

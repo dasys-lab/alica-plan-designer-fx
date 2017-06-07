@@ -13,7 +13,7 @@ public class SetTaskOfEntryPoint extends AbstractCommand<Task> {
     private Task previousTask;
 
     public SetTaskOfEntryPoint(Task element, EntryPoint parentOfElement) {
-        super(element);
+        super(element, parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
     }
 

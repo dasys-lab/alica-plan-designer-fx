@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -7,6 +8,8 @@ import org.eclipse.emf.ecore.EObject;
  * @param <T>
  */
 public abstract class AbstractCommand<T extends EObject> {
+
+    private PlanElement affectedPlan;
 
     private T elementToEdit;
 
@@ -16,9 +19,14 @@ public abstract class AbstractCommand<T extends EObject> {
     public abstract void undoCommand();
     public abstract String getCommandString();
 
-    public AbstractCommand(T element) {
+    public AbstractCommand(T element, PlanElement affectedPlan) {
         this.elementToEdit = element;
+        this.affectedPlan = affectedPlan;
         saved = false;
+    }
+
+    public PlanElement getAffectedPlan() {
+        return affectedPlan;
     }
 
     public T getElementToEdit() {

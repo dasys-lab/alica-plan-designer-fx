@@ -6,12 +6,14 @@ package de.uni_kassel.vs.cn.planDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.FileWatcherJob;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,6 +26,12 @@ public class PlanDesigner extends Application {
         return primaryStage;
     }
 
+    private static boolean running;
+
+    public static boolean isRunning() {
+        return running;
+    }
+
     public static void main(String[] args) throws IOException, URISyntaxException {
         EMFModelUtils.initializeEMF();
         launch(args);
@@ -33,9 +41,16 @@ public class PlanDesigner extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
+        running = true;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("test.fxml"));
         Parent root = fxmlLoader.load();
         primaryStage.setTitle("Carpe Noctem Plan Designer");
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                running = false;
+            }
+        });
         Scene scene = new Scene(root);
         String cssPath = PlanDesigner.class.getResource("/styles.css").toExternalForm();
         scene.getStylesheets().add(cssPath);

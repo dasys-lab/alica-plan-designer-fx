@@ -87,7 +87,8 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
                 Bendpoint currentBendpoint = getPmlUiExtension().getBendpoints().get(i);
                 points[j] = currentBendpoint.getXPos();
                 points[j + 1] = currentBendpoint.getYPos();
-                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getPmlUiExtension(), commandStack);
+                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint,
+                        getPmlUiExtension(), commandStack, fromState.getContainedElement().getInPlan());
                 bendpointContainer.setVisible(false);
                 draggableNodes.add(bendpointContainer);
                 _fromX = points[j];

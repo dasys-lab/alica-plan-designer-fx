@@ -13,7 +13,7 @@ public class AddVariableToAbstractPlan extends AbstractCommand<Variable> {
     private final PlanElement parentOfElement;
 
     public AddVariableToAbstractPlan(PlanElement parentOfElement) {
-        super(getAlicaFactory().createVariable());
+        super(getAlicaFactory().createVariable(), parentOfElement);
         this.parentOfElement = parentOfElement;
     }
 

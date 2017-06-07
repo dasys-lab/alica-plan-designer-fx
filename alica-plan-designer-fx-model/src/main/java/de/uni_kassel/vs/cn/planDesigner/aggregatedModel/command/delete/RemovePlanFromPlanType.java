@@ -15,7 +15,7 @@ public class RemovePlanFromPlanType extends AbstractCommand<AnnotatedPlan> {
     private PlanType parentOfElement;
 
     public RemovePlanFromPlanType(AnnotatedPlan element, PlanType parentOfElement) {
-        super(element);
+        super(element, parentOfElement);
         this.parentOfElement = parentOfElement;
     }
 

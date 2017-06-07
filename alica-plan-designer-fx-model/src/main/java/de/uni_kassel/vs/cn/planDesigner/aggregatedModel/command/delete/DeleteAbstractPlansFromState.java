@@ -12,7 +12,7 @@ public class DeleteAbstractPlansFromState extends AbstractCommand<AbstractPlan> 
     private final State parentStateOfElement;
 
     public DeleteAbstractPlansFromState(AbstractPlan element, State parentStateOfElement) {
-        super(element);
+        super(element, parentStateOfElement.getInPlan());
         this.parentStateOfElement = parentStateOfElement;
     }
 

@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.generator.cpp;
 import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator;
 import de.uni_kassel.vs.cn.generator.IGenerator;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;

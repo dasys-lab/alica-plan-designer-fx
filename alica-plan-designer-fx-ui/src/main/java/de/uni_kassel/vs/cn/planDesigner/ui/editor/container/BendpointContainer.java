@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePositionForBendpoint;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import javafx.scene.Node;
@@ -20,14 +21,17 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     private PmlUiExtension pmlUiExtension;
     private CommandStack commandStack;
     private boolean dragged;
+    private Plan parent;
 
-    public BendpointContainer(Bendpoint containedElement, PmlUiExtension pmlUiExtension, CommandStack commandStack) {
+    public BendpointContainer(Bendpoint containedElement, PmlUiExtension pmlUiExtension, CommandStack commandStack,
+                              Plan parent) {
         super(0, 0, 10, 10);
         this.setLayoutX(containedElement.getXPos());
         this.setLayoutY(containedElement.getYPos());
         this.containedElement = containedElement;
         this.pmlUiExtension = pmlUiExtension;
         this.commandStack = commandStack;
+        this.parent = parent;
         setFill(Color.BLACK);
         makeDraggable(this);
     }
@@ -161,7 +165,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     @Override
     public AbstractCommand createMoveElementCommand() {
         return new ChangePositionForBendpoint(containedElement, (int) (getLayoutX()),
-                (int) (getLayoutY()));
+                (int) (getLayoutY()), parent);
     }
 
     @Override

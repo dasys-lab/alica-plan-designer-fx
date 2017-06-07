@@ -31,8 +31,8 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
 
     private T oldValue;
 
-    public ChangeAttributeValue(PlanElement element, String attribute, Class type, T newValue) {
-        super(element);
+    public ChangeAttributeValue(PlanElement element, String attribute, Class type, T newValue, PlanElement affectedPlan) {
+        super(element, affectedPlan);
         this.attribute = attribute;
         this.type = type;
         this.newValue = newValue;

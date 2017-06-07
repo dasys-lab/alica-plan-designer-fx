@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint;
 
 /**
@@ -14,8 +15,8 @@ public class ChangePositionForBendpoint extends AbstractCommand<Bendpoint> {
     private int oldX;
     private int oldY;
 
-    public ChangePositionForBendpoint(Bendpoint element, int newX, int newY) {
-        super(element);
+    public ChangePositionForBendpoint(Bendpoint element, int newX, int newY, Plan parent) {
+        super(element, parent);
         this.newX = newX;
         this.newY = newY;
 

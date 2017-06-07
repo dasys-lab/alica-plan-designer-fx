@@ -122,7 +122,7 @@ public class EntryPointCreatorDialogController implements Initializable {
         MainController.getInstance()
                 .getCommandStack()
                 .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
-                        x, y));
+                        x, y,selectedPlanTab.getEditable()));
     }
 
     public void setX(int x) {

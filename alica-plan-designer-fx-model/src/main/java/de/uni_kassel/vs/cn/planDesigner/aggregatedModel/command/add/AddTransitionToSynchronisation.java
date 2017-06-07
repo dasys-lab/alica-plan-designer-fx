@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 
@@ -11,8 +12,8 @@ public class AddTransitionToSynchronisation extends AbstractCommand<Synchronisat
 
     private Transition transitionToAdd;
 
-    public AddTransitionToSynchronisation(Synchronisation element, Transition transitionToAdd) {
-        super(element);
+    public AddTransitionToSynchronisation(Synchronisation element, Transition transitionToAdd, PlanElement affectedPlan) {
+        super(element, affectedPlan);
         this.transitionToAdd = transitionToAdd;
     }
 

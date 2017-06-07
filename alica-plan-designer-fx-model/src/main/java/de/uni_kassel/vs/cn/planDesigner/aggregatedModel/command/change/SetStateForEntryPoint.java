@@ -13,7 +13,7 @@ public class SetStateForEntryPoint extends AbstractCommand<EntryPoint> {
     private State previousState;
 
     public SetStateForEntryPoint(EntryPoint elementToEdit, State stateToSet) {
-        super(elementToEdit);
+        super(elementToEdit, elementToEdit.getPlan());
         this.stateToSet = stateToSet;
     }
 

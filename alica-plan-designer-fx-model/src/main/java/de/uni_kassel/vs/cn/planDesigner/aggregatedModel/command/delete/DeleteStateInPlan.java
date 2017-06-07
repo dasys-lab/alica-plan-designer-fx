@@ -28,7 +28,7 @@ public class DeleteStateInPlan extends AbstractCommand<State> {
     private PmlUiExtension pmlUiExtension;
 
     public DeleteStateInPlan(State state, PlanModelVisualisationObject parentOfDeleted) {
-        super(state);
+        super(state, parentOfDeleted.getPlan());
         this.parentOfDeleted = parentOfDeleted;
     }
 

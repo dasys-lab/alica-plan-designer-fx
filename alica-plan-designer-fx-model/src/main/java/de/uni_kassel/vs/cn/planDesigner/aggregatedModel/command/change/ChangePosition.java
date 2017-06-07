@@ -16,8 +16,8 @@ public class ChangePosition extends AbstractCommand<PmlUiExtension> {
     private int oldX;
     private int oldY;
 
-    public ChangePosition(PmlUiExtension element, PlanElement planElement, int newX, int newY) {
-        super(element);
+    public ChangePosition(PmlUiExtension element, PlanElement planElement, int newX, int newY, PlanElement affectedPlan) {
+        super(element, affectedPlan);
         this.planElement = planElement;
         this.newX = newX;
         this.newY = newY;

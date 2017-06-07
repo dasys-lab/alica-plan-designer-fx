@@ -17,7 +17,7 @@ public class AddPlanToPlanType extends AbstractCommand<Plan> {
     private AnnotatedPlan copyForRemoval;
 
     public AddPlanToPlanType(Plan element, PlanType parentOfElement) {
-        super(element);
+        super(element, parentOfElement);
         this.parentOfElement = parentOfElement;
     }
 

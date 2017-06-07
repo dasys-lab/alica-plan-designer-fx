@@ -16,7 +16,7 @@ public class AddSynchronisationToPlan extends AbstractCommand<Synchronisation> {
     private PmlUiExtension newlyCreatedPmlUiExtension;
 
     public AddSynchronisationToPlan(Synchronisation element, PlanModelVisualisationObject parentOfElement) {
-        super(element);
+        super(element, parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
         this.newlyCreatedPmlUiExtension = getPmlUiExtensionModelFactory().createPmlUiExtension();
     }

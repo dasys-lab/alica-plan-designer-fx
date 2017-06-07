@@ -67,7 +67,8 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
             objectToChange = resource.getContents().get(0);
 
             String name = newValue.unwrap().getName().substring(0, newValue.unwrap().getName().lastIndexOf("."));
-            commandStack.storeAndExecute(new ChangeAttributeValue((PlanElement) objectToChange, "name", String.class, name));
+            commandStack.storeAndExecute(new ChangeAttributeValue((PlanElement) objectToChange, "name",
+                    String.class, name, (PlanElement)objectToChange));
             isPlanElement = true;
         }
 
