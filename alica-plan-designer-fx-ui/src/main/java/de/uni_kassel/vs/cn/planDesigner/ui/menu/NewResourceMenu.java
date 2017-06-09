@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.CreatNewDialogController;
 import javafx.fxml.FXMLLoader;
@@ -39,7 +40,7 @@ public class NewResourceMenu extends Menu {
     }
 
     protected File getHintFile() {
-        return new File(new Configuration().getPlansPath());
+        return new File(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPlansPath());
     }
 
     private void onElementClick(EClass resourceInstanceClass) {

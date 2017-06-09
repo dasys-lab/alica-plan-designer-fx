@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner;
  * Created by marci on 16.10.16.
  */
 
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.FileWatcherJob;
 import javafx.application.Application;
@@ -33,6 +34,7 @@ public class PlanDesigner extends Application {
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
+        new WorkspaceManager().init();
         EMFModelUtils.initializeEMF();
         launch(args);
         FileWatcherJob.stayAlive = false;

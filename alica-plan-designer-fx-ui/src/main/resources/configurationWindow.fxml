@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="742.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController">
+   <children>
+      <VBox layoutX="13.0" layoutY="13.0" prefHeight="180.0" prefWidth="337.0">
+         <children>
+            <HBox styleClass="cfgHbox">
+               <children>
+                  <Label fx:id="workspaceLabel" styleClass="cfgLabel" text="Label" />
+                  <ComboBox fx:id="workspaceComboBox" prefHeight="26.0" prefWidth="181.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
+               <children>
+                  <Label fx:id="plansPathLabel" styleClass="cfgLabel" text="Label" />
+                  <TextField fx:id="plansPathTextField" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
+               <children>
+                  <Label fx:id="rolesPathLabel" styleClass="cfgLabel" text="Label" />
+                  <TextField fx:id="rolesPathTextField" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
+               <children>
+                  <Label fx:id="miscPathLabel" styleClass="cfgLabel" text="Label" />
+                  <TextField fx:id="miscPathTextField" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
+               <children>
+                  <Label fx:id="expressionsPathLabel" styleClass="cfgLabel" text="Label" />
+                  <TextField fx:id="expressionsPathTextField" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
+               <children>
+                  <Label fx:id="pluginPathLabel" styleClass="cfgLabel" text="Label" />
+                  <TextField fx:id="pluginPathTextField" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Button fx:id="saveButton" layoutX="477.0" layoutY="117.0" mnemonicParsing="false" text="Button" />
+      <HBox layoutX="355.0" layoutY="18.0" prefHeight="36.0" prefWidth="382.0" style="-fx-padding: 5px;">
+         <children>
+            <Label fx:id="addWorkspaceLabel" prefWidth="50.0" styleClass="cfgLabel" text="Label" />
+            <TextField fx:id="workspaceNameField" />
+            <Button fx:id="addWorkspaceButton" mnemonicParsing="false" text="Button" />
+         </children>
+      </HBox>
+   </children>
+</Pane>

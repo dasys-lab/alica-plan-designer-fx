@@ -1,3 +1,13 @@
 .pane .text {
     -fx-text-alignment: center !important;
 }
+
+.cfgHbox {
+-fx-padding: 5px;
+-fx-spacing: 5px;
+}
+
+.cfgLabel {
+-fx-padding: 5px;
+-fx-min-width: 150px;
+}

@@ -5,12 +5,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="190.0" prefWidth="237.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController">
    <children>
       <ListView fx:id="listOfReferences" VBox.vgrow="ALWAYS" />
-      <HBox VBox.vgrow="ALWAYS">
+      <HBox alignment="CENTER" prefHeight="0.0" prefWidth="514.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button fx:id="continueButton" mnemonicParsing="false" text="Button" HBox.hgrow="ALWAYS" />
+            <Button fx:id="continueButton" contentDisplay="CENTER" mnemonicParsing="false" text="Button" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

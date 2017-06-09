@@ -26,6 +26,8 @@ import java.nio.file.Path;
  */
 public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
 
+    private ListView<Task> taskListView;
+
     public TaskRepositoryTab(TaskRepository editable, Path filePath, CommandStack commandStack) {
         super(editable, filePath, commandStack);
         createContentView();
@@ -33,7 +35,7 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
 
     public void createContentView() {
         VBox contentContainer = new VBox();
-        ListView<Task> taskListView = new ListView<Task>(FXCollections.observableArrayList(getEditable().getTasks()));
+        taskListView = new ListView<Task>(FXCollections.observableArrayList(getEditable().getTasks()));
         taskListView.setCellFactory(param -> new TaskListCell());
         taskListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
                 selectedPlanElement.setValue(new Pair<>(observable.getValue(),
@@ -64,6 +66,9 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         setContent(contentContainer);
     }
 
+    public ListView<Task> getTaskListView() {
+        return taskListView;
+    }
 
     private static class TaskListCell extends ListCell<Task> {
 

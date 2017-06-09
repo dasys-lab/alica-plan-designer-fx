@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.alica.xml;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
@@ -37,6 +38,7 @@ import java.util.Map;
 public class EMFModelUtils {
 
     private static AlicaResourceSet alicaResourceSet;
+    private static Configuration configuration;
 
     private static void initAlicaResourceSet() {
         alicaResourceSet = new AlicaResourceSet();
@@ -77,10 +79,11 @@ public class EMFModelUtils {
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */
      public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
+         configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
          String relativePath = file.getAbsolutePath()
-                 .replace(new Configuration().getPlansPath() + "/","")
-                 .replace(new Configuration().getRolesPath()+ "/","")
-                 .replace(new Configuration().getMiscPath()+ "/","");
+                 .replace(configuration.getPlansPath() + "/","")
+                 .replace(configuration.getRolesPath()+ "/","")
+                 .replace(configuration.getMiscPath()+ "/","");
          URI uri = URI
                  .createURI(relativePath);
 
@@ -113,9 +116,9 @@ public class EMFModelUtils {
         Resource resource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath()));
         resource.getContents().add(emptyObject);
         String relativePath = file.getAbsolutePath()
-                .replace(new Configuration().getPlansPath() + "/","")
-                .replace(new Configuration().getRolesPath()+ "/","")
-                .replace(new Configuration().getMiscPath()+ "/","");
+                .replace(configuration.getPlansPath() + "/","")
+                .replace(configuration.getRolesPath()+ "/","")
+                .replace(configuration.getMiscPath()+ "/","");
         URI relativeURI = URI
                 .createURI(relativePath);
 
@@ -136,7 +139,7 @@ public class EMFModelUtils {
 
         // set destinationPath when resource is created
         if (emptyObject instanceof AbstractPlan) {
-            ((AbstractPlan) emptyObject).setDestinationPath(file.getAbsolutePath().replace(new Configuration().getPlansPath(),"Plans/"));
+            ((AbstractPlan) emptyObject).setDestinationPath(file.getAbsolutePath().replace(configuration.getPlansPath(),"Plans/"));
         }
         resource.setTrackingModification(true);
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());

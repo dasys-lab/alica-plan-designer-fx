@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.aggregatedModel;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 
 import java.io.File;
 import java.util.Arrays;
@@ -16,7 +17,7 @@ public class GeneratedSourcesManager {
     private Configuration configuration;
 
     public GeneratedSourcesManager() {
-        configuration = new Configuration();
+        configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
     }
 
     public String getIncludeDir() {

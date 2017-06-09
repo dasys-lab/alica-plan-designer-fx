@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.generator.plugin;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +39,7 @@ public class PluginManager {
     private PluginManager() {
         availablePlugins = new ArrayList<>();
         try {
-            Files.list(Paths.get(new Configuration().getPluginPath()))
+            Files.list(Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath()))
                     .map(e -> e.toFile())
                     .filter(e -> e.isDirectory() == false && e.getName().endsWith(".jar"))
                     .forEach(f -> {

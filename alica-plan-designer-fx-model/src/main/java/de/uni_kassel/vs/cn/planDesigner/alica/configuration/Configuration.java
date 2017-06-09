@@ -10,8 +10,6 @@ public class Configuration {
 
     private String rolesPath;
 
-    private String rootPath;
-
     private String plansPath;
 
     /**
@@ -66,14 +64,6 @@ public class Configuration {
 
     public void setRolesPath(String rolesPath) {
         this.rolesPath = replaceBashConstants(rolesPath);
-    }
-
-    public String getRootPath() {
-        return rootPath;
-    }
-
-    public void setRootPath(String rootPath) {
-        this.rootPath = replaceBashConstants(rootPath);
     }
 
     public String getPlansPath() {

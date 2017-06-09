@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
@@ -7,16 +8,25 @@ import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTab;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  * Created by marci on 17.03.17.
@@ -118,6 +128,7 @@ public class EditMenu extends Menu {
                 boolean isRepoFocused = MainController.getInstance().getRepositoryTabPane().getTabs().stream()
                         .anyMatch(e -> ((RepositoryTab) e).getContentsListView().focusedProperty().get());
                 if (isRepoFocused) {
+                    // TODO make delete task possible here too
                     AbstractPlan selectedAbstractPlan = (AbstractPlan)
                             ((RepositoryTab<PlanElement>) MainController.getInstance()
                                     .getRepositoryTabPane()
@@ -131,6 +142,7 @@ public class EditMenu extends Menu {
                             .forEach(e -> editorTabPane.getTabs().remove(e));
                     commandStack.storeAndExecute(new DeleteAbstractPlan(selectedAbstractPlan));
                     MainController.getInstance().getRepositoryTabPane().init();
+                    return;
                 }
 
                 if (MainController.getInstance().getFileTreeView().focusedProperty().get()) {
@@ -141,12 +153,55 @@ public class EditMenu extends Menu {
                             .getValue().unwrap());
                     deleteFileMenuItem.setCommandStack(commandStack);
                     deleteFileMenuItem.deleteFile();
+                    return;
 
+                }
+
+                if (editorTabPane.getSelectionModel().getSelectedItem() instanceof TaskRepositoryTab) {
+                    TaskRepositoryTab repositoryTab = (TaskRepositoryTab) editorTabPane.getSelectionModel().getSelectedItem();
+                    Task taskToBeDeleted = repositoryTab
+                            .getTaskListView()
+                            .getSelectionModel()
+                            .getSelectedItem();
+                    if (EMFModelUtils.getUsages(taskToBeDeleted).size() > 0) {
+                        FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
+                        try {
+                            Parent infoWindow = fxmlLoader.load();
+                            UsagesWindowController controller = fxmlLoader.getController();
+                            controller.createReferencesList(EMFModelUtils.getUsages(taskToBeDeleted));
+                            Stage stage = new Stage();
+                            stage.setTitle(I18NRepo.getString("label.usage.nodelete"));
+                            stage.setScene(new Scene(infoWindow));
+                            stage.initModality(Modality.WINDOW_MODAL);
+                            stage.initOwner(PlanDesigner.getPrimaryStage());
+                            stage.showAndWait();
+                        } catch (IOException ignored) {
+                        }
+                    } else {
+                        commandStack.storeAndExecute(new DeleteTaskFromRepository(repositoryTab.getEditable(), taskToBeDeleted));
+                    }
                 }
             }
         });
+        MenuItem configItem = new MenuItem(I18NRepo.getString("label.menu.edit.config"));
+        configItem.setOnAction(event -> {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("configurationWindow.fxml"));
+
+            try {
+                Parent window = fxmlLoader.load();
+                //ConfigurationWindowController controller = fxmlLoader.getController();
+                Stage stage = new Stage();
+                stage.setResizable(false);
+                stage.setTitle(I18NRepo.getString("label.config.title"));
+                stage.setScene(new Scene(window));
+                stage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         deleteElementItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
-        getItems().addAll(undoItem, redoItem, deleteElementItem);
+        getItems().addAll(undoItem, redoItem, deleteElementItem, configItem);
         undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
         redoItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
     }
