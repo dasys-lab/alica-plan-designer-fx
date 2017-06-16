@@ -1,6 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddPostConditionToBehaviour;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddPreConditionToBehaviour;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddRuntimeConditionToBehaviour;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemovePostConditionFromBehaviour;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemovePreConditionFromBehaviour;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemoveRuntimeConditionFromBehaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.PostConditionImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.PreConditionImpl;
@@ -77,21 +83,21 @@ public class BehaviourWindowController implements Initializable {
             this.object = object;
             checkBox = new CheckBox(I18NRepo.getString("label.add.condition"));
             checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == true) {
+                if (newValue) {
                     if (object.getClass().equals(PreConditionImpl.class)) {
-                        getBehaviour().setPreCondition((PreCondition) object);
+                        commandStack.storeAndExecute(new AddPreConditionToBehaviour((PreCondition) object, getBehaviour()));
                     } else if (object.getClass().equals(PostConditionImpl.class)) {
-                        getBehaviour().setPostCondition((PostCondition) object);
+                        commandStack.storeAndExecute(new AddPostConditionToBehaviour((PostCondition) object, getBehaviour()));
                     } else if(object.getClass().equals(RuntimeConditionImpl.class)) {
-                        getBehaviour().setRuntimeCondition((RuntimeCondition) object);
+                        commandStack.storeAndExecute(new AddRuntimeConditionToBehaviour((RuntimeCondition) object, getBehaviour()));
                     }
                 } else {
                     if (object.getClass().equals(PreConditionImpl.class)) {
-                        getBehaviour().setPreCondition(null);
+                        commandStack.storeAndExecute(new RemovePreConditionFromBehaviour(getBehaviour()));
                     } else if (object.getClass().equals(PostConditionImpl.class)) {
-                        getBehaviour().setPostCondition(null);
+                        commandStack.storeAndExecute(new RemovePostConditionFromBehaviour(getBehaviour()));
                     } else if(object.getClass().equals(RuntimeConditionImpl.class)) {
-                        getBehaviour().setRuntimeCondition(null);
+                        commandStack.storeAndExecute(new RemoveRuntimeConditionFromBehaviour(getBehaviour()));
                     }
                 }
             });

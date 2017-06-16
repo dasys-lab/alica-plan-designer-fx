@@ -10,8 +10,10 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -39,6 +41,12 @@ public class ConfigurationWindowController implements Initializable {
     private TextField workspaceNameField;
 
     @FXML
+    private TextField eclipsePathTextField;
+
+    @FXML
+    private TextField clangFormatPathTextField;
+
+    @FXML
     private ComboBox<Workspace> workspaceComboBox;
 
     @FXML
@@ -63,6 +71,12 @@ public class ConfigurationWindowController implements Initializable {
     private Label addWorkspaceLabel;
 
     @FXML
+    private Label eclipsePathLabel;
+
+    @FXML
+    private Label clangFormatPathLabel;
+
+    @FXML
     private Button saveButton;
 
     @FXML
@@ -79,7 +93,13 @@ public class ConfigurationWindowController implements Initializable {
         pluginPathLabel.setText(I18NRepo.getString("label.config.plugin"));
         workspaceLabel.setText(I18NRepo.getString("label.config.workspace"));
         saveButton.setText(I18NRepo.getString("action.save"));
+        clangFormatPathLabel.setText(I18NRepo.getString("label.config.clangFormatPath"));
+        eclipsePathLabel.setText(I18NRepo.getString("label.config.eclipse"));
         addWorkspaceButton.setText(I18NRepo.getString("action.config.add"));
+        addWorkspaceButton.setOnAction(e -> {
+            new WorkspaceManager().addWorkspace(new Workspace(workspaceNameField.getText(), new Configuration()));
+            workspaceComboBox.setItems(FXCollections.observableArrayList(new WorkspaceManager().getWorkspaces()));
+        });
         workspaceComboBox.setButtonCell(new StringListCell());
         workspaceComboBox.setItems(FXCollections.observableArrayList(new WorkspaceManager().getWorkspaces()));
         workspaceComboBox.setButtonCell(new ListCell<Workspace>() {
@@ -134,6 +154,15 @@ public class ConfigurationWindowController implements Initializable {
                 }
             }
         });
+        clangFormatPathTextField.setText(new WorkspaceManager().getClangFormatPath());
+        eclipsePathTextField.setText(new WorkspaceManager().getEclipsePath());
+        clangFormatPathTextField.setOnMouseClicked(e -> makeFileChooserField(clangFormatPathTextField));
+        pluginPathTextField.setOnMouseClicked(e -> makeFileChooserField(pluginPathTextField));
+        plansPathTextField.setOnMouseClicked(e -> makeFileChooserField(plansPathTextField));
+        miscPathTextField.setOnMouseClicked(e -> makeFileChooserField(miscPathTextField));
+        eclipsePathTextField.setOnMouseClicked(e -> makeFileChooserField(eclipsePathTextField));
+        rolesPathTextField.setOnMouseClicked(e -> makeFileChooserField(rolesPathTextField));
+        expressionsPathTextField.setOnMouseClicked(e -> makeFileChooserField(expressionsPathTextField));
 
         saveButton.setOnAction(e -> {
             Workspace selectedWorkspace = workspaceComboBox.getSelectionModel().getSelectedItem();
@@ -145,6 +174,8 @@ public class ConfigurationWindowController implements Initializable {
             configuration.setExpressionValidatorsPath(expressionsPathTextField.getText());
             selectedWorkspace.setConfiguration(configuration);
             WorkspaceManager workspaceManager = new WorkspaceManager();
+            workspaceManager.setClangFormatPath(clangFormatPathTextField.getText());
+            workspaceManager.setEclipsePath(eclipsePathTextField.getText());
 
             if (workspaceManager.getWorkspaces().contains(selectedWorkspace)) {
                 workspaceManager.saveWorkspaceConfiguration(selectedWorkspace);
@@ -153,6 +184,13 @@ public class ConfigurationWindowController implements Initializable {
             }
             workspaceManager.setActiveWorkspace(selectedWorkspace);
         });
+    }
+
+    private void makeFileChooserField(TextField textField) {
+        File file = new FileChooser().showOpenDialog(null);
+        if (file != null) {
+            textField.setText(file.getAbsolutePath());
+        }
     }
 
     private static class StringListCell extends ListCell<Workspace> {

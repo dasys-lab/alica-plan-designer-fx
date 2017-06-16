@@ -6,8 +6,10 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.menu.ShowGeneratedSourcesMenuItem;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
@@ -40,6 +42,10 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
         setPickOnBounds(false);
         addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(containedElement));
         wrapper = this;
+        setOnContextMenuRequested(e -> {
+            ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem<T>(containedElement));
+            contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY());
+        });
     }
 
     @SuppressWarnings("unchecked")

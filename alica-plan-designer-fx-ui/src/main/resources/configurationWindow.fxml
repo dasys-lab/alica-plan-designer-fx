@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="742.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="365.0" prefWidth="744.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController">
    <children>
-      <VBox layoutX="13.0" layoutY="13.0" prefHeight="180.0" prefWidth="337.0">
+      <VBox layoutX="13.0" layoutY="133.0" prefHeight="180.0" prefWidth="337.0">
          <children>
             <HBox styleClass="cfgHbox">
                <children>
@@ -50,13 +50,29 @@
             </HBox>
          </children>
       </VBox>
-      <Button fx:id="saveButton" layoutX="477.0" layoutY="117.0" mnemonicParsing="false" text="Button" />
-      <HBox layoutX="355.0" layoutY="18.0" prefHeight="36.0" prefWidth="382.0" style="-fx-padding: 5px;">
+      <Button fx:id="saveButton" layoutX="477.0" layoutY="237.0" mnemonicParsing="false" text="Button" />
+      <HBox layoutX="355.0" layoutY="138.0" prefHeight="36.0" prefWidth="382.0" style="-fx-padding: 5px;">
          <children>
             <Label fx:id="addWorkspaceLabel" prefWidth="50.0" styleClass="cfgLabel" text="Label" />
             <TextField fx:id="workspaceNameField" />
             <Button fx:id="addWorkspaceButton" mnemonicParsing="false" text="Button" />
          </children>
       </HBox>
+      <VBox layoutX="17.0" layoutY="30.0" prefHeight="75.0" prefWidth="337.0">
+         <children>
+            <HBox prefHeight="36.0" prefWidth="337.0" styleClass="cfgHbox">
+               <children>
+                  <Label fx:id="eclipsePathLabel" styleClass="cfgLabel" text="Label" />
+                  <TextField fx:id="eclipsePathTextField" />
+               </children>
+            </HBox>
+            <HBox prefHeight="36.0" prefWidth="337.0" styleClass="cfgHbox">
+               <children>
+                  <Label fx:id="clangFormatPathLabel" styleClass="cfgLabel" text="Label" />
+                  <TextField fx:id="clangFormatPathTextField" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
    </children>
 </Pane>

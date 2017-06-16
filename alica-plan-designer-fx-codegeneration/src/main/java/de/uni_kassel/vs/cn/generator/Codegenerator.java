@@ -1,12 +1,13 @@
 package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.generator.cpp.CPPGeneratorImpl;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsLexer;
 import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsParser;
 import de.uni_kassel.vs.cn.generator.cpp.parser.ProtectedRegionsVisitor;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -35,8 +36,9 @@ public class Codegenerator {
 
         // TODO document this! Here can the programming language be changed
         IGenerator actualGenerator = new CPPGeneratorImpl();
+        actualGenerator.setFormatter(new WorkspaceManager().getClangFormatPath());
 
-        GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager();
+        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
         for (Plan plan : allPlans) {
             generatedSourcesManager

@@ -25,5 +25,6 @@ public interface IGenerator {
     void createDomainCondition();
     void createDomainBehaviour();
 
+    void setFormatter(String formatter);
     IConstraintCodeGenerator getActiveConstraintCodeGenerator();
 }

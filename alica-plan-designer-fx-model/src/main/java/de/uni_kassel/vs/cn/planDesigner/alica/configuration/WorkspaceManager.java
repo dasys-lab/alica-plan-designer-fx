@@ -22,7 +22,16 @@ public class WorkspaceManager {
     public void addWorkspace(Workspace workspace) {
         workspaces.add(workspace);
         workspacesProperties.setProperty("workspaces", workspacesProperties.getProperty("workspaces") + ","+ workspace.getName());
+        saveWorkspacesFile();
         saveWorkspaceConfiguration(workspace);
+    }
+
+    public void saveWorkspacesFile() {
+        try {
+            workspacesProperties.store(new FileOutputStream(new File("workspaces.properties")), "configuration file");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveWorkspaceConfiguration(Workspace workspace) {
@@ -160,4 +169,21 @@ public class WorkspaceManager {
 
     }
 
+    public String getClangFormatPath() {
+        return (String) workspacesProperties.get("clangFormatPath");
+    }
+
+    public void setClangFormatPath(String clangFormatPath) {
+        workspacesProperties.setProperty("clangFormatPath", clangFormatPath);
+        saveWorkspacesFile();
+    }
+
+    public String getEclipsePath() {
+        return (String) workspacesProperties.get("eclipsePath");
+    }
+
+    public void setEclipsePath(String eclipsePath) {
+        workspacesProperties.setProperty("eclipsePath", eclipsePath);
+        saveWorkspacesFile();
+    }
 }

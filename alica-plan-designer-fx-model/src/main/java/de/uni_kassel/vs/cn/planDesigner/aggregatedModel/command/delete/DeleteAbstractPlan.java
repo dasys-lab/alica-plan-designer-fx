@@ -119,7 +119,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
         });
         EMFModelUtils.getAlicaResourceSet().getResources().remove(getElementToEdit().eResource());
 
-        GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager();
+        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         switch (planType) {
             case PLAN:
                 Pair<Plan, Path> planPathPair = AllAlicaFiles.getInstance().getPlans()
