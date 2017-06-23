@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -16,7 +20,7 @@ import org.eclipse.emf.common.util.EList;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRole()
+ * @see alica.AlicaPackage#getRole()
  * @model
  * @generated
  */
@@ -31,7 +35,7 @@ public interface Role extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Characteristics</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRole_Characteristics()
+	 * @see alica.AlicaPackage#getRole_Characteristics()
 	 * @model containment="true"
 	 * @generated
 	 */

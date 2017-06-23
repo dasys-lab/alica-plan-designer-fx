@@ -1,7 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
+import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
 
 /**
  * Created by marci on 02.12.16.

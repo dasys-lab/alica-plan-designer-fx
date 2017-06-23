@@ -11,6 +11,8 @@ import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
  * Created by marci on 18.05.17.
  */
 public class Codegenerator {
+
+    private static final Logger LOG = LogManager.getLogger(Codegenerator.class);
 
     private List<Plan> allPlans;
     private List<Behaviour> allBehaviours;
@@ -54,7 +58,8 @@ public class Codegenerator {
                                 protectedRegionsVisitor.visit(all_textContext);
                             }
                         } catch (IOException e1) {
-                            e1.printStackTrace();
+                            LOG.error("Could not parse existing source file " + e.getAbsolutePath(), e1);
+                            throw new RuntimeException(e1);
                         }
                     });
         }
@@ -65,13 +70,16 @@ public class Codegenerator {
                     .forEach(e -> {
 
                         try {
-                            CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e.toPath()));
-                            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-                            CommentsParser parser = new CommentsParser(commonTokenStream);
-                            CommentsParser.All_textContext all_textContext = parser.all_text();
-                            protectedRegionsVisitor.visit(all_textContext);
+                            if (e.exists()) {
+                                CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e.toPath()));
+                                CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+                                CommentsParser parser = new CommentsParser(commonTokenStream);
+                                CommentsParser.All_textContext all_textContext = parser.all_text();
+                                protectedRegionsVisitor.visit(all_textContext);
+                            }
                         } catch (IOException e1) {
-                            e1.printStackTrace();
+                            LOG.error("Could not parse existing source file " + e.getAbsolutePath(), e1);
+                            throw new RuntimeException(e1);
                         }
                     });
         }
@@ -93,6 +101,7 @@ public class Codegenerator {
         for (Behaviour behaviour : allBehaviours) {
             actualGenerator.createBehaviour(behaviour);
         }
+        LOG.info("Generated all files successfully");
     }
 
     private void initialze() {

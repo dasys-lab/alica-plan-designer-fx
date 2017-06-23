@@ -1,7 +1,10 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
-
 
 import org.eclipse.emf.common.util.EList;
 
@@ -17,87 +20,88 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link alica.Behaviour#getRuntimeCondition <em>Runtime Condition</em>}</li>
  *   <li>{@link alica.Behaviour#getPostCondition <em>Post Condition</em>}</li>
  *   <li>{@link alica.Behaviour#getFrequency <em>Frequency</em>}</li>
+ *   <li>{@link alica.Behaviour#getVars <em>Vars</em>}</li>
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviour()
+ * @see alica.AlicaPackage#getBehaviour()
  * @model
  * @generated
  */
 public interface Behaviour extends AbstractPlan {
 	/**
-	 * Returns the value of the '<em><b>Pre Condition</b></em>' reference.
+	 * Returns the value of the '<em><b>Pre Condition</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Pre Condition</em>' reference isn't clear,
+	 * If the meaning of the '<em>Pre Condition</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Pre Condition</em>' reference.
+	 * @return the value of the '<em>Pre Condition</em>' containment reference.
 	 * @see #setPreCondition(PreCondition)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviour_PreCondition()
-	 * @model
+	 * @see alica.AlicaPackage#getBehaviour_PreCondition()
+	 * @model containment="true"
 	 * @generated
 	 */
 	PreCondition getPreCondition();
 
 	/**
-	 * Sets the value of the '{@link alica.Behaviour#getPreCondition <em>Pre Condition</em>}' reference.
+	 * Sets the value of the '{@link alica.Behaviour#getPreCondition <em>Pre Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Pre Condition</em>' reference.
+	 * @param value the new value of the '<em>Pre Condition</em>' containment reference.
 	 * @see #getPreCondition()
 	 * @generated
 	 */
 	void setPreCondition(PreCondition value);
 
 	/**
-	 * Returns the value of the '<em><b>Runtime Condition</b></em>' reference.
+	 * Returns the value of the '<em><b>Runtime Condition</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Runtime Condition</em>' reference isn't clear,
+	 * If the meaning of the '<em>Runtime Condition</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Runtime Condition</em>' reference.
+	 * @return the value of the '<em>Runtime Condition</em>' containment reference.
 	 * @see #setRuntimeCondition(RuntimeCondition)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviour_RuntimeCondition()
-	 * @model
+	 * @see alica.AlicaPackage#getBehaviour_RuntimeCondition()
+	 * @model containment="true"
 	 * @generated
 	 */
 	RuntimeCondition getRuntimeCondition();
 
 	/**
-	 * Sets the value of the '{@link alica.Behaviour#getRuntimeCondition <em>Runtime Condition</em>}' reference.
+	 * Sets the value of the '{@link alica.Behaviour#getRuntimeCondition <em>Runtime Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Runtime Condition</em>' reference.
+	 * @param value the new value of the '<em>Runtime Condition</em>' containment reference.
 	 * @see #getRuntimeCondition()
 	 * @generated
 	 */
 	void setRuntimeCondition(RuntimeCondition value);
 
 	/**
-	 * Returns the value of the '<em><b>Post Condition</b></em>' reference.
+	 * Returns the value of the '<em><b>Post Condition</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Post Condition</em>' reference isn't clear,
+	 * If the meaning of the '<em>Post Condition</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Post Condition</em>' reference.
+	 * @return the value of the '<em>Post Condition</em>' containment reference.
 	 * @see #setPostCondition(PostCondition)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviour_PostCondition()
-	 * @model
+	 * @see alica.AlicaPackage#getBehaviour_PostCondition()
+	 * @model containment="true"
 	 * @generated
 	 */
 	PostCondition getPostCondition();
 
 	/**
-	 * Sets the value of the '{@link alica.Behaviour#getPostCondition <em>Post Condition</em>}' reference.
+	 * Sets the value of the '{@link alica.Behaviour#getPostCondition <em>Post Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Post Condition</em>' reference.
+	 * @param value the new value of the '<em>Post Condition</em>' containment reference.
 	 * @see #getPostCondition()
 	 * @generated
 	 */
@@ -114,7 +118,7 @@ public interface Behaviour extends AbstractPlan {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Frequency</em>' attribute.
 	 * @see #setFrequency(int)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviour_Frequency()
+	 * @see alica.AlicaPackage#getBehaviour_Frequency()
 	 * @model default="30"
 	 * @generated
 	 */

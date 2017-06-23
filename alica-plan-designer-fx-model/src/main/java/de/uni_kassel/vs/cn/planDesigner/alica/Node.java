@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -19,15 +23,15 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getNode()
+ * @see alica.AlicaPackage#getNode()
  * @model
  * @generated
  */
 public interface Node extends EObject {
 	/**
 	 * Returns the value of the '<em><b>In Edge</b></em>' reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Edge}.
-	 * It is bidirectional and its opposite is '{@link de.uni_kassel.vs.cn.planDesigner.alica.Edge#getTo <em>To</em>}'.
+	 * The list contents are of type {@link alica.Edge}.
+	 * It is bidirectional and its opposite is '{@link alica.Edge#getTo <em>To</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>In Edge</em>' reference list isn't clear,
@@ -35,8 +39,8 @@ public interface Node extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>In Edge</em>' reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getNode_InEdge()
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Edge#getTo
+	 * @see alica.AlicaPackage#getNode_InEdge()
+	 * @see alica.Edge#getTo
 	 * @model opposite="to"
 	 * @generated
 	 */
@@ -44,8 +48,8 @@ public interface Node extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Out Edge</b></em>' reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Edge}.
-	 * It is bidirectional and its opposite is '{@link de.uni_kassel.vs.cn.planDesigner.alica.Edge#getFrom <em>From</em>}'.
+	 * The list contents are of type {@link alica.Edge}.
+	 * It is bidirectional and its opposite is '{@link alica.Edge#getFrom <em>From</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Out Edge</em>' reference list isn't clear,
@@ -53,8 +57,8 @@ public interface Node extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Out Edge</em>' reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getNode_OutEdge()
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Edge#getFrom
+	 * @see alica.AlicaPackage#getNode_OutEdge()
+	 * @see alica.Edge#getFrom
 	 * @model opposite="from"
 	 * @generated
 	 */

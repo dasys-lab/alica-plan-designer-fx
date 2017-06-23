@@ -47,13 +47,16 @@ public class BehaviourWindowController implements Initializable {
     private Behaviour behaviour;
 
     private CommandStack commandStack;
+    private BehaviourConditionVBox<PreCondition> preConditionVBox;
+    private BehaviourConditionVBox<PostCondition> postConditionVBox;
+    private BehaviourConditionVBox<RuntimeCondition> runtimeConditionVBox;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        new BehaviourConditionVBox<>(EMFModelUtils.getAlicaFactory().createPreCondition(), preConditionOptions);
-        new BehaviourConditionVBox<>(EMFModelUtils.getAlicaFactory().createPostCondition(), postConditionOptions);
-        new BehaviourConditionVBox<>(EMFModelUtils.getAlicaFactory().createRuntimeCondition(), runtimeConditionOptions);
+        preConditionVBox = new BehaviourConditionVBox<>(EMFModelUtils.getAlicaFactory().createPreCondition(), preConditionOptions);
+        postConditionVBox = new BehaviourConditionVBox<>(EMFModelUtils.getAlicaFactory().createPostCondition(), postConditionOptions);
+        runtimeConditionVBox = new BehaviourConditionVBox<>(EMFModelUtils.getAlicaFactory().createRuntimeCondition(), runtimeConditionOptions);
 
     }
 
@@ -63,6 +66,20 @@ public class BehaviourWindowController implements Initializable {
 
     public void setBehaviour(Behaviour behaviour) {
         this.behaviour = behaviour;
+        PreCondition preCondition = behaviour.getPreCondition();
+        if (preCondition != null) {
+            preConditionVBox.setCondition(preCondition);
+        }
+
+        PostCondition postCondition = behaviour.getPostCondition();
+        if (postCondition != null) {
+            postConditionVBox.setCondition(postCondition);
+        }
+
+        RuntimeCondition runtimeCondition = behaviour.getRuntimeCondition();
+        if (runtimeCondition != null) {
+            runtimeConditionVBox.setCondition(runtimeCondition);
+        }
     }
 
     public CommandStack getCommandStack() {
@@ -74,29 +91,35 @@ public class BehaviourWindowController implements Initializable {
     }
 
     private class BehaviourConditionVBox<T extends Condition> {
-        private T object;
         private final CheckBox checkBox;
+        private T condition;
 
         @SuppressWarnings("unchecked")
         public BehaviourConditionVBox(T object, VBox vBox) {
             super();
-            this.object = object;
+            condition = object;
             checkBox = new CheckBox(I18NRepo.getString("label.add.condition"));
             checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    if (object.getClass().equals(PreConditionImpl.class)) {
-                        commandStack.storeAndExecute(new AddPreConditionToBehaviour((PreCondition) object, getBehaviour()));
-                    } else if (object.getClass().equals(PostConditionImpl.class)) {
-                        commandStack.storeAndExecute(new AddPostConditionToBehaviour((PostCondition) object, getBehaviour()));
-                    } else if(object.getClass().equals(RuntimeConditionImpl.class)) {
-                        commandStack.storeAndExecute(new AddRuntimeConditionToBehaviour((RuntimeCondition) object, getBehaviour()));
+                    if (condition.getClass().equals(PreConditionImpl.class)) {
+                        if (condition != getBehaviour().getPreCondition()) {
+                            commandStack.storeAndExecute(new AddPreConditionToBehaviour((PreCondition) condition, getBehaviour()));
+                        }
+                    } else if (condition.getClass().equals(PostConditionImpl.class)) {
+                        if (condition != getBehaviour().getPostCondition()) {
+                            commandStack.storeAndExecute(new AddPostConditionToBehaviour((PostCondition) condition, getBehaviour()));
+                        }
+                    } else if(condition.getClass().equals(RuntimeConditionImpl.class)) {
+                        if (condition != getBehaviour().getRuntimeCondition()) {
+                            commandStack.storeAndExecute(new AddRuntimeConditionToBehaviour((RuntimeCondition) condition, getBehaviour()));
+                        }
                     }
                 } else {
-                    if (object.getClass().equals(PreConditionImpl.class)) {
+                    if (condition.getClass().equals(PreConditionImpl.class)) {
                         commandStack.storeAndExecute(new RemovePreConditionFromBehaviour(getBehaviour()));
-                    } else if (object.getClass().equals(PostConditionImpl.class)) {
+                    } else if (condition.getClass().equals(PostConditionImpl.class)) {
                         commandStack.storeAndExecute(new RemovePostConditionFromBehaviour(getBehaviour()));
-                    } else if(object.getClass().equals(RuntimeConditionImpl.class)) {
+                    } else if(condition.getClass().equals(RuntimeConditionImpl.class)) {
                         commandStack.storeAndExecute(new RemoveRuntimeConditionFromBehaviour(getBehaviour()));
                     }
                 }
@@ -138,7 +161,7 @@ public class BehaviourWindowController implements Initializable {
                 @Override
                 public PlanElement getSelectedEditorTabPlanElement() {
                     if (selected) {
-                        return object;
+                        return condition;
                     } else {
                         return null;
                     }
@@ -155,7 +178,7 @@ public class BehaviourWindowController implements Initializable {
                         setPropertyHBoxList(FXCollections.observableList(new ArrayList<>()));
                     }
                     if (getSelectedEditorTabPlanElement() != null &&
-                            getSelectedEditorTabPlanElement().getClass().equals(object.getClass())) {
+                            getSelectedEditorTabPlanElement().getClass().equals(condition.getClass())) {
                         super.createTabContent();
                     } else {
                         getPropertyHBoxList().clear();
@@ -176,8 +199,11 @@ public class BehaviourWindowController implements Initializable {
             VBox.setVgrow(nodeListView, Priority.ALWAYS);
         }
 
-        public void setObject(T object) {
-            this.object = object;
+        public void setCondition(T condition) {
+            if (condition != null) {
+                this.condition = condition;
+                checkBox.setSelected(true);
+            }
         }
     }
 }

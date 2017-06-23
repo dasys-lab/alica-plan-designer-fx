@@ -1,10 +1,13 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**

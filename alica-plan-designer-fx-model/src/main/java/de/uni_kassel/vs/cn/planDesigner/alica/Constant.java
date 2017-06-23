@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getConstant()
+ * @see alica.AlicaPackage#getConstant()
  * @model
  * @generated
  */
@@ -32,7 +32,7 @@ public interface Constant extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getConstant_Name()
+	 * @see alica.AlicaPackage#getConstant_Name()
 	 * @model required="true"
 	 * @generated
 	 */
@@ -58,7 +58,7 @@ public interface Constant extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type</em>' attribute.
 	 * @see #setType(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getConstant_Type()
+	 * @see alica.AlicaPackage#getConstant_Type()
 	 * @model required="true"
 	 * @generated
 	 */

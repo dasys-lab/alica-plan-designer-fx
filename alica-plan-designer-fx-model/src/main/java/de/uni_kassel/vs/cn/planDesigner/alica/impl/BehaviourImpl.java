@@ -1,21 +1,26 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
-
+import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
+import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
+import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
+import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
-import java.util.Collection;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,10 +29,11 @@ import java.util.Collection;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getPreCondition <em>Pre Condition</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getPostCondition <em>Post Condition</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getFrequency <em>Frequency</em>}</li>
+ *   <li>{@link alica.impl.BehaviourImpl#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link alica.impl.BehaviourImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
+ *   <li>{@link alica.impl.BehaviourImpl#getPostCondition <em>Post Condition</em>}</li>
+ *   <li>{@link alica.impl.BehaviourImpl#getFrequency <em>Frequency</em>}</li>
+ *   <li>{@link alica.impl.BehaviourImpl#getVars <em>Vars</em>}</li>
  * </ul>
  * </p>
  *
@@ -35,7 +41,7 @@ import java.util.Collection;
  */
 public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	/**
-	 * The cached value of the '{@link #getPreCondition() <em>Pre Condition</em>}' reference.
+	 * The cached value of the '{@link #getPreCondition() <em>Pre Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getPreCondition()
@@ -45,7 +51,7 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	protected PreCondition preCondition;
 
 	/**
-	 * The cached value of the '{@link #getRuntimeCondition() <em>Runtime Condition</em>}' reference.
+	 * The cached value of the '{@link #getRuntimeCondition() <em>Runtime Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getRuntimeCondition()
@@ -55,7 +61,7 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	protected RuntimeCondition runtimeCondition;
 
 	/**
-	 * The cached value of the '{@link #getPostCondition() <em>Post Condition</em>}' reference.
+	 * The cached value of the '{@link #getPostCondition() <em>Post Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getPostCondition()
@@ -119,14 +125,6 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * @generated
 	 */
 	public PreCondition getPreCondition() {
-		if (preCondition != null && preCondition.eIsProxy()) {
-			InternalEObject oldPreCondition = (InternalEObject)preCondition;
-			preCondition = (PreCondition)eResolveProxy(oldPreCondition);
-			if (preCondition != oldPreCondition) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AlicaPackage.BEHAVIOUR__PRE_CONDITION, oldPreCondition, preCondition));
-			}
-		}
 		return preCondition;
 	}
 
@@ -135,8 +133,14 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PreCondition basicGetPreCondition() {
-		return preCondition;
+	public NotificationChain basicSetPreCondition(PreCondition newPreCondition, NotificationChain msgs) {
+		PreCondition oldPreCondition = preCondition;
+		preCondition = newPreCondition;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__PRE_CONDITION, oldPreCondition, newPreCondition);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -145,10 +149,17 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * @generated
 	 */
 	public void setPreCondition(PreCondition newPreCondition) {
-		PreCondition oldPreCondition = preCondition;
-		preCondition = newPreCondition;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__PRE_CONDITION, oldPreCondition, preCondition));
+		if (newPreCondition != preCondition) {
+			NotificationChain msgs = null;
+			if (preCondition != null)
+				msgs = ((InternalEObject)preCondition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.BEHAVIOUR__PRE_CONDITION, null, msgs);
+			if (newPreCondition != null)
+				msgs = ((InternalEObject)newPreCondition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.BEHAVIOUR__PRE_CONDITION, null, msgs);
+			msgs = basicSetPreCondition(newPreCondition, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__PRE_CONDITION, newPreCondition, newPreCondition));
 	}
 
 	/**
@@ -157,14 +168,6 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * @generated
 	 */
 	public RuntimeCondition getRuntimeCondition() {
-		if (runtimeCondition != null && runtimeCondition.eIsProxy()) {
-			InternalEObject oldRuntimeCondition = (InternalEObject)runtimeCondition;
-			runtimeCondition = (RuntimeCondition)eResolveProxy(oldRuntimeCondition);
-			if (runtimeCondition != oldRuntimeCondition) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION, oldRuntimeCondition, runtimeCondition));
-			}
-		}
 		return runtimeCondition;
 	}
 
@@ -173,8 +176,14 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public RuntimeCondition basicGetRuntimeCondition() {
-		return runtimeCondition;
+	public NotificationChain basicSetRuntimeCondition(RuntimeCondition newRuntimeCondition, NotificationChain msgs) {
+		RuntimeCondition oldRuntimeCondition = runtimeCondition;
+		runtimeCondition = newRuntimeCondition;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION, oldRuntimeCondition, newRuntimeCondition);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -183,10 +192,17 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * @generated
 	 */
 	public void setRuntimeCondition(RuntimeCondition newRuntimeCondition) {
-		RuntimeCondition oldRuntimeCondition = runtimeCondition;
-		runtimeCondition = newRuntimeCondition;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION, oldRuntimeCondition, runtimeCondition));
+		if (newRuntimeCondition != runtimeCondition) {
+			NotificationChain msgs = null;
+			if (runtimeCondition != null)
+				msgs = ((InternalEObject)runtimeCondition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION, null, msgs);
+			if (newRuntimeCondition != null)
+				msgs = ((InternalEObject)newRuntimeCondition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION, null, msgs);
+			msgs = basicSetRuntimeCondition(newRuntimeCondition, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION, newRuntimeCondition, newRuntimeCondition));
 	}
 
 	/**
@@ -195,14 +211,6 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * @generated
 	 */
 	public PostCondition getPostCondition() {
-		if (postCondition != null && postCondition.eIsProxy()) {
-			InternalEObject oldPostCondition = (InternalEObject)postCondition;
-			postCondition = (PostCondition)eResolveProxy(oldPostCondition);
-			if (postCondition != oldPostCondition) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AlicaPackage.BEHAVIOUR__POST_CONDITION, oldPostCondition, postCondition));
-			}
-		}
 		return postCondition;
 	}
 
@@ -211,8 +219,14 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PostCondition basicGetPostCondition() {
-		return postCondition;
+	public NotificationChain basicSetPostCondition(PostCondition newPostCondition, NotificationChain msgs) {
+		PostCondition oldPostCondition = postCondition;
+		postCondition = newPostCondition;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__POST_CONDITION, oldPostCondition, newPostCondition);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -221,10 +235,17 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	 * @generated
 	 */
 	public void setPostCondition(PostCondition newPostCondition) {
-		PostCondition oldPostCondition = postCondition;
-		postCondition = newPostCondition;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__POST_CONDITION, oldPostCondition, postCondition));
+		if (newPostCondition != postCondition) {
+			NotificationChain msgs = null;
+			if (postCondition != null)
+				msgs = ((InternalEObject)postCondition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.BEHAVIOUR__POST_CONDITION, null, msgs);
+			if (newPostCondition != null)
+				msgs = ((InternalEObject)newPostCondition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AlicaPackage.BEHAVIOUR__POST_CONDITION, null, msgs);
+			msgs = basicSetPostCondition(newPostCondition, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__POST_CONDITION, newPostCondition, newPostCondition));
 	}
 
 	/**
@@ -268,6 +289,12 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case AlicaPackage.BEHAVIOUR__PRE_CONDITION:
+				return basicSetPreCondition(null, msgs);
+			case AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION:
+				return basicSetRuntimeCondition(null, msgs);
+			case AlicaPackage.BEHAVIOUR__POST_CONDITION:
+				return basicSetPostCondition(null, msgs);
 			case AlicaPackage.BEHAVIOUR__VARS:
 				return ((InternalEList<?>)getVars()).basicRemove(otherEnd, msgs);
 		}
@@ -283,14 +310,11 @@ public class BehaviourImpl extends AbstractPlanImpl implements Behaviour {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case AlicaPackage.BEHAVIOUR__PRE_CONDITION:
-				if (resolve) return getPreCondition();
-				return basicGetPreCondition();
+				return getPreCondition();
 			case AlicaPackage.BEHAVIOUR__RUNTIME_CONDITION:
-				if (resolve) return getRuntimeCondition();
-				return basicGetRuntimeCondition();
+				return getRuntimeCondition();
 			case AlicaPackage.BEHAVIOUR__POST_CONDITION:
-				if (resolve) return getPostCondition();
-				return basicGetPostCondition();
+				return getPostCondition();
 			case AlicaPackage.BEHAVIOUR__FREQUENCY:
 				return getFrequency();
 			case AlicaPackage.BEHAVIOUR__VARS:

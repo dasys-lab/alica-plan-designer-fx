@@ -18,12 +18,10 @@ import java.util.stream.Collectors;
  * Created by marci on 25.11.16.
  */
 public class RepositoryTab<T extends PlanElement> extends Tab {
-    private AbstractPlanTool dragTool;
     private ObservableList<RepositoryHBox<T>> hBoxObservableList;
     private ListView<RepositoryHBox<T>> contentsListView;
 
     public RepositoryTab(ObservableList<Pair<T, Path>> objects, AbstractPlanTool dragTool, String typeName) {
-        this.dragTool = dragTool;
         List<RepositoryHBox<T>> hBoxes = objects
                 .stream()
                 .map(pair -> {
@@ -57,7 +55,6 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
     }
 
     public RepositoryTab(Pair<List<T>, Path> pair, AbstractPlanTool dragTool, String typeName) {
-        this.dragTool = dragTool;
         List<RepositoryHBox<T>> hBoxes = pair.getKey()
                 .stream()
                 .map(t -> {

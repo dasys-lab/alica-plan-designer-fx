@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -19,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFluent()
+ * @see alica.AlicaPackage#getFluent()
  * @model
  * @generated
  */
@@ -34,7 +38,7 @@ public interface Fluent extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFluent_Name()
+	 * @see alica.AlicaPackage#getFluent_Name()
 	 * @model
 	 * @generated
 	 */
@@ -60,7 +64,7 @@ public interface Fluent extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Formula</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFluent_Formula()
+	 * @see alica.AlicaPackage#getFluent_Formula()
 	 * @model containment="true" ordered="false"
 	 * @generated
 	 */

@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -22,7 +26,7 @@ import org.eclipse.emf.common.util.EMap;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition()
+ * @see alica.AlicaPackage#getCondition()
  * @model abstract="true"
  * @generated
  */
@@ -38,7 +42,7 @@ public interface Condition extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Condition String</em>' attribute.
 	 * @see #setConditionString(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_ConditionString()
+	 * @see alica.AlicaPackage#getCondition_ConditionString()
 	 * @model default=""
 	 * @generated
 	 */
@@ -64,7 +68,7 @@ public interface Condition extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Abstract Plan</em>' reference.
 	 * @see #setAbstractPlan(AbstractPlan)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_AbstractPlan()
+	 * @see alica.AlicaPackage#getCondition_AbstractPlan()
 	 * @model
 	 * @generated
 	 */
@@ -82,7 +86,7 @@ public interface Condition extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Vars</b></em>' reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Variable}.
+	 * The list contents are of type {@link alica.Variable}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Vars</em>' reference list isn't clear,
@@ -90,7 +94,7 @@ public interface Condition extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Vars</em>' reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_Vars()
+	 * @see alica.AlicaPackage#getCondition_Vars()
 	 * @model
 	 * @generated
 	 */
@@ -106,7 +110,7 @@ public interface Condition extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Quantifiers</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_Quantifiers()
+	 * @see alica.AlicaPackage#getCondition_Quantifiers()
 	 * @model containment="true"
 	 * @generated
 	 */
@@ -123,7 +127,7 @@ public interface Condition extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Plugin Name</em>' attribute.
 	 * @see #setPluginName(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_PluginName()
+	 * @see alica.AlicaPackage#getCondition_PluginName()
 	 * @model default="DefaultPlugin"
 	 * @generated
 	 */
@@ -141,8 +145,8 @@ public interface Condition extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Parameters</b></em>' map.
-	 * The key is of type {@link java.lang.String},
-	 * and the value is of type {@link java.lang.Object},
+	 * The key is of type {@link String},
+	 * and the value is of type {@link Object},
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parameters</em>' map isn't clear,
@@ -150,7 +154,7 @@ public interface Condition extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parameters</em>' map.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_Parameters()
+	 * @see alica.AlicaPackage#getCondition_Parameters()
 	 * @model mapType="alica.EStringToEObjectMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EJavaObject>"
 	 * @generated
 	 */

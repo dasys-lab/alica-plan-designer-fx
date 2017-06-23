@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -18,7 +22,7 @@ import org.eclipse.emf.common.util.EList;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleSet()
+ * @see alica.AlicaPackage#getRoleSet()
  * @model
  * @generated
  */
@@ -34,7 +38,7 @@ public interface RoleSet extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Usable With Plan ID</em>' attribute.
 	 * @see #setUsableWithPlanID(long)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleSet_UsableWithPlanID()
+	 * @see alica.AlicaPackage#getRoleSet_UsableWithPlanID()
 	 * @model default="0" required="true"
 	 * @generated
 	 */
@@ -61,7 +65,7 @@ public interface RoleSet extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Default</em>' attribute.
 	 * @see #setDefault(boolean)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleSet_Default()
+	 * @see alica.AlicaPackage#getRoleSet_Default()
 	 * @model default="false"
 	 * @generated
 	 */
@@ -87,7 +91,7 @@ public interface RoleSet extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Mappings</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleSet_Mappings()
+	 * @see alica.AlicaPackage#getRoleSet_Mappings()
 	 * @model containment="true"
 	 * @generated
 	 */

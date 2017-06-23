@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -6,13 +10,9 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -22,9 +22,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ParametrisationImpl#getSubplan <em>Subplan</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ParametrisationImpl#getSubvar <em>Subvar</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ParametrisationImpl#getVar <em>Var</em>}</li>
+ *   <li>{@link alica.impl.ParametrisationImpl#getSubplan <em>Subplan</em>}</li>
+ *   <li>{@link alica.impl.ParametrisationImpl#getSubvar <em>Subvar</em>}</li>
+ *   <li>{@link alica.impl.ParametrisationImpl#getVar <em>Var</em>}</li>
  * </ul>
  * </p>
  *
@@ -126,9 +126,6 @@ public class ParametrisationImpl extends PlanElementImpl implements Parametrisat
 	public Variable getSubvar() {
 		if (subvar != null && subvar.eIsProxy()) {
 			InternalEObject oldSubvar = (InternalEObject)subvar;
-			if (eResolveProxy(oldSubvar) instanceof  Variable == false) {
-				System.out.println("ParametrisationId: " +  this.getId() + " wrong var id = " + eResolveProxy(oldSubvar));
-			}
 			subvar = (Variable)eResolveProxy(oldSubvar);
 			if (subvar != oldSubvar) {
 				if (eNotificationRequired())

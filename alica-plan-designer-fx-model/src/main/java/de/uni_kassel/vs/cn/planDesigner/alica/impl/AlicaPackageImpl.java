@@ -462,7 +462,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * {@link Registry EPackage.Registry} by the package
 	 * package URI value.
 	 * <p>Note: the correct way to create the package is via the static
 	 * factory method {@link #init init()}, which also performs
@@ -470,7 +470,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * if one already exists.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.ecore.EPackage.Registry
+	 * @see Registry
 	 * @see alica.AlicaPackage#eNS_URI
 	 * @see #init()
 	 * @generated
@@ -488,7 +488,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 *
+	 * 
 	 * <p>This method is used to initialize {@link AlicaPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -499,10 +499,10 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * @generated
 	 */
 	public static AlicaPackage init() {
-		if (isInited) return (AlicaPackage)EPackage.Registry.INSTANCE.getEPackage(AlicaPackage.eNS_URI);
+		if (isInited) return (AlicaPackage) Registry.INSTANCE.getEPackage(AlicaPackage.eNS_URI);
 
 		// Obtain or create and register package
-		AlicaPackageImpl theAlicaPackage = (AlicaPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof AlicaPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new AlicaPackageImpl());
+		AlicaPackageImpl theAlicaPackage = (AlicaPackageImpl)(Registry.INSTANCE.get(eNS_URI) instanceof AlicaPackageImpl ? Registry.INSTANCE.get(eNS_URI) : new AlicaPackageImpl());
 
 		isInited = true;
 
@@ -515,9 +515,9 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		// Mark meta-data to indicate it can't be changed
 		theAlicaPackage.freeze();
 
-
+  
 		// Update the registry and return the package
-		EPackage.Registry.INSTANCE.put(AlicaPackage.eNS_URI, theAlicaPackage);
+		Registry.INSTANCE.put(AlicaPackage.eNS_URI, theAlicaPackage);
 		return theAlicaPackage;
 	}
 
@@ -2575,9 +2575,9 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEAttribute(getAbstractPlan_DestinationPath(), ecorePackage.getEString(), "destinationPath", "", 0, 1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(behaviourEClass, Behaviour.class, "Behaviour", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBehaviour_PreCondition(), this.getPreCondition(), null, "preCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBehaviour_RuntimeCondition(), this.getRuntimeCondition(), null, "runtimeCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBehaviour_PostCondition(), this.getPostCondition(), null, "postCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBehaviour_PreCondition(), this.getPreCondition(), null, "preCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBehaviour_RuntimeCondition(), this.getRuntimeCondition(), null, "runtimeCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBehaviour_PostCondition(), this.getPostCondition(), null, "postCondition", null, 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getBehaviour_Frequency(), ecorePackage.getEInt(), "frequency", "30", 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBehaviour_Vars(), this.getVariable(), null, "vars", null, 0, -1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2791,4 +2791,5 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		// Create resource
 		createResource(eNS_URI);
 	}
+
 } //AlicaPackageImpl

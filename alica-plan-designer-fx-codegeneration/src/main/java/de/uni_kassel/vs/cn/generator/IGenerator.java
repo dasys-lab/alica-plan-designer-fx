@@ -21,7 +21,6 @@ public interface IGenerator {
     void createPlans(List<Plan> plans);
     void createUtilityFunctionCreator(List<Plan> plans);
 
-    // TODO do we really need these? They're just empty unused dummies!
     void createDomainCondition();
     void createDomainBehaviour();
 

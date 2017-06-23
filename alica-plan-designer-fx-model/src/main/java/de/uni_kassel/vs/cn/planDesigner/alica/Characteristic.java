@@ -17,7 +17,7 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCharacteristic()
+ * @see alica.AlicaPackage#getCharacteristic()
  * @model
  * @generated
  */
@@ -33,7 +33,7 @@ public interface Characteristic extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Weight</em>' attribute.
 	 * @see #setWeight(double)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCharacteristic_Weight()
+	 * @see alica.AlicaPackage#getCharacteristic_Weight()
 	 * @model default="0"
 	 * @generated
 	 */
@@ -59,7 +59,7 @@ public interface Characteristic extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Capability</em>' reference.
 	 * @see #setCapability(Capability)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCharacteristic_Capability()
+	 * @see alica.AlicaPackage#getCharacteristic_Capability()
 	 * @model
 	 * @generated
 	 */
@@ -85,7 +85,7 @@ public interface Characteristic extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Value</em>' reference.
 	 * @see #setValue(CapValue)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCharacteristic_Value()
+	 * @see alica.AlicaPackage#getCharacteristic_Value()
 	 * @model
 	 * @generated
 	 */

@@ -1,14 +1,14 @@
 package de.uni_kassel.vs.cn.generator.cpp
 
+import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour
+import de.uni_kassel.vs.cn.planDesigner.alica.Condition
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan
+import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition
+import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition
+import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition
 import java.util.List
 import java.util.Map
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan
-import de.uni_kassel.vs.cn.planDesigner.alica.Condition
-import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition
-import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition
-import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition
-import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator
 
 /**
  * Created by marci on 11.05.17.

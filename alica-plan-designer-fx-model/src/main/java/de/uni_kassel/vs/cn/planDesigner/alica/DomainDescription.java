@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -21,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getDomainDescription()
+ * @see alica.AlicaPackage#getDomainDescription()
  * @model
  * @generated
  */
@@ -36,7 +40,7 @@ public interface DomainDescription extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Fluents</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getDomainDescription_Fluents()
+	 * @see alica.AlicaPackage#getDomainDescription_Fluents()
 	 * @model containment="true" ordered="false"
 	 * @generated
 	 */
@@ -44,7 +48,7 @@ public interface DomainDescription extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Types</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * The list contents are of type {@link String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Types</em>' attribute list isn't clear,
@@ -52,7 +56,7 @@ public interface DomainDescription extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Types</em>' attribute list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getDomainDescription_Types()
+	 * @see alica.AlicaPackage#getDomainDescription_Types()
 	 * @model ordered="false"
 	 * @generated
 	 */
@@ -68,7 +72,7 @@ public interface DomainDescription extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getDomainDescription_Name()
+	 * @see alica.AlicaPackage#getDomainDescription_Name()
 	 * @model
 	 * @generated
 	 */
@@ -94,7 +98,7 @@ public interface DomainDescription extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Constants</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getDomainDescription_Constants()
+	 * @see alica.AlicaPackage#getDomainDescription_Constants()
 	 * @model containment="true"
 	 * @generated
 	 */

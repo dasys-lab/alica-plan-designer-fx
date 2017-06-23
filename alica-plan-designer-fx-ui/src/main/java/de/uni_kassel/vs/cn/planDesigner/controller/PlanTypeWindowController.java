@@ -203,7 +203,7 @@ public class PlanTypeWindowController implements Initializable {
             TableRow<AnnotatedPlan> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
                 commandStack.storeAndExecute(new ChangeAttributeValue<>(annotatedPlanTableRow.getItem(),
-                        "activated", Boolean.class, !annotatedPlanTableRow.getItem().isActivated(), planType));
+                        "activated", !annotatedPlanTableRow.getItem().isActivated(), planType));
                 plantypeTableView.refresh();
             });
             return annotatedPlanTableRow;

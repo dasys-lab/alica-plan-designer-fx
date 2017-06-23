@@ -83,7 +83,14 @@ public class MainController implements Initializable {
         menus.add(new EditMenu(commandStack, editorTabPane));
         Menu codegenerationMenu = new Menu(I18NRepo.getString("label.menu.generation"));
         MenuItem regenerateItem = new MenuItem(I18NRepo.getString("label.menu.generation.regenerate"));
-        regenerateItem.setOnAction(e -> new Codegenerator().generate());
+        regenerateItem.setOnAction(e -> {
+            try {
+                new Codegenerator().generate();
+            } catch (RuntimeException ex) {
+                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.codegen"), null);
+            }
+
+        });
         codegenerationMenu.getItems().add(regenerateItem);
         menus.add(codegenerationMenu);
 

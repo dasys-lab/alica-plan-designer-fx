@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -19,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getConstraintCreator()
+ * @see alica.AlicaPackage#getConstraintCreator()
  * @model
  * @generated
  */
@@ -34,7 +38,7 @@ public interface ConstraintCreator extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Conditions</em>' reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getConstraintCreator_Conditions()
+	 * @see alica.AlicaPackage#getConstraintCreator_Conditions()
 	 * @model ordered="false"
 	 * @generated
 	 */
@@ -42,7 +46,7 @@ public interface ConstraintCreator extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Plans</b></em>' reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan}.
+	 * The list contents are of type {@link alica.AbstractPlan}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Plans</em>' reference list isn't clear,
@@ -50,7 +54,7 @@ public interface ConstraintCreator extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Plans</em>' reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getConstraintCreator_Plans()
+	 * @see alica.AlicaPackage#getConstraintCreator_Plans()
 	 * @model
 	 * @generated
 	 */

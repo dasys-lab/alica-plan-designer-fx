@@ -3,6 +3,8 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Tab;
@@ -55,7 +57,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
             EMFModelUtils.saveAlicaFile(getEditable());
             getCommandStack().setSavedForAbstractPlan(getEditable());
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
         }
     }
 

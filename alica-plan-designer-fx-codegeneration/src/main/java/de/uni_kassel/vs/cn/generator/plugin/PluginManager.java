@@ -1,6 +1,8 @@
 package de.uni_kassel.vs.cn.generator.plugin;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -20,6 +22,7 @@ import java.util.jar.JarFile;
  * Created by marci on 19.05.17.
  */
 public class PluginManager {
+    private static Logger LOG = LogManager.getLogger(PluginManager.class);
 
     private static PluginManager pluginManager;
 
@@ -47,15 +50,11 @@ public class PluginManager {
                         JarFile jarFile = null;
                         try {
                             jarFile = new JarFile(f);
-                        } catch (IOException ignored) {
+                        } catch (IOException ex) {
+                            LOG.error("Couldn't load jar file", ex);
+                            throw new RuntimeException(ex);
                         }
                         Enumeration<JarEntry> e = jarFile.entries();
-
-                        /*URL[] urls = new URL[0];
-                        try {
-                            urls = new URL[]{ new URL("jar:file:" + f.getAbsolutePath()+"!/") };
-                        } catch (MalformedURLException ignored) {
-                        }*/
 
                         while (e.hasMoreElements()) {
                             JarEntry je = e.nextElement();
@@ -84,8 +83,8 @@ public class PluginManager {
                         }
                     });
         } catch (IOException e) {
-            // TODO error handling
-            e.printStackTrace();
+            LOG.error("Couldn't initialize PluginManager", e);
+            throw new RuntimeException(e);
         }
 
         if (availablePlugins.size() == 1) {

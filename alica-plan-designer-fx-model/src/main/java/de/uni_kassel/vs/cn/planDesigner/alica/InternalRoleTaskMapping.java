@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getInternalRoleTaskMapping()
+ * @see alica.AlicaPackage#getInternalRoleTaskMapping()
  * @model
  * @generated
  */
@@ -32,7 +32,7 @@ public interface InternalRoleTaskMapping extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Role</em>' reference.
 	 * @see #setRole(Role)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getInternalRoleTaskMapping_Role()
+	 * @see alica.AlicaPackage#getInternalRoleTaskMapping_Role()
 	 * @model
 	 * @generated
 	 */
@@ -59,7 +59,7 @@ public interface InternalRoleTaskMapping extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Priority</em>' attribute.
 	 * @see #setPriority(double)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getInternalRoleTaskMapping_Priority()
+	 * @see alica.AlicaPackage#getInternalRoleTaskMapping_Priority()
 	 * @model default="0.0"
 	 * @generated
 	 */

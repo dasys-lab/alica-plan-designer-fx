@@ -1,0 +1,62 @@
+
+Wed Jun 21 15:54:56 CEST 2017
+================================================================================
+/**
+ */
+package alica;
+
+import org.eclipse.emf.common.util.EList;
+
+import org.eclipse.emf.ecore.EObject;
+
+/**
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Condition Creator</b></em>'.
+ * <!-- end-user-doc -->
+ *
+ * <p>
+ * The following features are supported:
+ * <ul>
+ *   <li>{@link alica.ConditionCreator#getConditions <em>Conditions</em>}</li>
+ *   <li>{@link alica.ConditionCreator#getPlans <em>Plans</em>}</li>
+ * </ul>
+ * </p>
+ *
+ * @see alica.AlicaPackage#getConditionCreator()
+ * @model
+ * @generated
+ */
+public interface ConditionCreator extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Conditions</b></em>' reference list.
+	 * The list contents are of type {@link alica.Condition}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Conditions</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Conditions</em>' reference list.
+	 * @see alica.AlicaPackage#getConditionCreator_Conditions()
+	 * @model ordered="false"
+	 * @generated
+	 */
+	EList<Condition> getConditions();
+
+	/**
+	 * Returns the value of the '<em><b>Plans</b></em>' reference list.
+	 * The list contents are of type {@link alica.AbstractPlan}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Plans</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Plans</em>' reference list.
+	 * @see alica.AlicaPackage#getConditionCreator_Plans()
+	 * @model
+	 * @generated
+	 */
+	EList<AbstractPlan> getPlans();
+
+} // ConditionCreator

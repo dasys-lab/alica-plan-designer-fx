@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -16,7 +20,7 @@ import org.eclipse.emf.common.util.EList;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleDefinitionSet()
+ * @see alica.AlicaPackage#getRoleDefinitionSet()
  * @model
  * @generated
  */
@@ -31,7 +35,7 @@ public interface RoleDefinitionSet extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Roles</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleDefinitionSet_Roles()
+	 * @see alica.AlicaPackage#getRoleDefinitionSet_Roles()
 	 * @model containment="true"
 	 * @generated
 	 */

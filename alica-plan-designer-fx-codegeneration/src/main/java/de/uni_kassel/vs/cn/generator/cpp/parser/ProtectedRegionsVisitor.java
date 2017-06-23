@@ -1,8 +1,5 @@
 package de.uni_kassel.vs.cn.generator.cpp.parser;
 
-import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsBaseVisitor;
-import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsParser;
-
 import java.util.HashMap;
 import java.util.Map;
 

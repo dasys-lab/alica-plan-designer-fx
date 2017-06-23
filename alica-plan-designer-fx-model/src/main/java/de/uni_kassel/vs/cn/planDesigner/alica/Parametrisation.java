@@ -11,13 +11,13 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getSubplan <em>Subplan</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getSubvar <em>Subvar</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getVar <em>Var</em>}</li>
+ *   <li>{@link alica.Parametrisation#getSubplan <em>Subplan</em>}</li>
+ *   <li>{@link alica.Parametrisation#getSubvar <em>Subvar</em>}</li>
+ *   <li>{@link alica.Parametrisation#getVar <em>Var</em>}</li>
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getParametrisation()
+ * @see alica.AlicaPackage#getParametrisation()
  * @model
  * @generated
  */
@@ -32,14 +32,14 @@ public interface Parametrisation extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Subplan</em>' reference.
 	 * @see #setSubplan(AbstractPlan)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getParametrisation_Subplan()
+	 * @see alica.AlicaPackage#getParametrisation_Subplan()
 	 * @model required="true"
 	 * @generated
 	 */
 	AbstractPlan getSubplan();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getSubplan <em>Subplan</em>}' reference.
+	 * Sets the value of the '{@link alica.Parametrisation#getSubplan <em>Subplan</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Subplan</em>' reference.
@@ -58,14 +58,14 @@ public interface Parametrisation extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Subvar</em>' reference.
 	 * @see #setSubvar(Variable)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getParametrisation_Subvar()
+	 * @see alica.AlicaPackage#getParametrisation_Subvar()
 	 * @model required="true"
 	 * @generated
 	 */
 	Variable getSubvar();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getSubvar <em>Subvar</em>}' reference.
+	 * Sets the value of the '{@link alica.Parametrisation#getSubvar <em>Subvar</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Subvar</em>' reference.
@@ -84,14 +84,14 @@ public interface Parametrisation extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Var</em>' reference.
 	 * @see #setVar(Variable)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getParametrisation_Var()
+	 * @see alica.AlicaPackage#getParametrisation_Var()
 	 * @model
 	 * @generated
 	 */
 	Variable getVar();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getVar <em>Var</em>}' reference.
+	 * Sets the value of the '{@link alica.Parametrisation#getVar <em>Var</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Var</em>' reference.

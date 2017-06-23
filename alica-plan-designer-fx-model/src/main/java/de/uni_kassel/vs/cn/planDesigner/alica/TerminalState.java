@@ -11,11 +11,11 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.TerminalState#getPostCondition <em>Post Condition</em>}</li>
+ *   <li>{@link alica.TerminalState#getPostCondition <em>Post Condition</em>}</li>
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getTerminalState()
+ * @see alica.AlicaPackage#getTerminalState()
  * @model abstract="true"
  * @generated
  */
@@ -30,14 +30,14 @@ public interface TerminalState extends State {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Post Condition</em>' containment reference.
 	 * @see #setPostCondition(PostCondition)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getTerminalState_PostCondition()
+	 * @see alica.AlicaPackage#getTerminalState_PostCondition()
 	 * @model containment="true"
 	 * @generated
 	 */
 	PostCondition getPostCondition();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.TerminalState#getPostCondition <em>Post Condition</em>}' containment reference.
+	 * Sets the value of the '{@link alica.TerminalState#getPostCondition <em>Post Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Post Condition</em>' containment reference.

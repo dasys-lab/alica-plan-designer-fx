@@ -9,7 +9,7 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
  * <!-- end-user-doc -->
  *
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getForallAgents()
+ * @see alica.AlicaPackage#getForallAgents()
  * @model
  * @generated
  */

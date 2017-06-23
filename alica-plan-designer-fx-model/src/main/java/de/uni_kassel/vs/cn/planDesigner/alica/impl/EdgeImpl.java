@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -22,8 +26,8 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EdgeImpl#getFrom <em>From</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EdgeImpl#getTo <em>To</em>}</li>
+ *   <li>{@link alica.impl.EdgeImpl#getFrom <em>From</em>}</li>
+ *   <li>{@link alica.impl.EdgeImpl#getTo <em>To</em>}</li>
  * </ul>
  * </p>
  *

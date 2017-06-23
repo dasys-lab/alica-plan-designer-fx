@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -17,15 +21,15 @@ import org.eclipse.emf.common.util.EMap;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleTaskMapping()
+ * @see alica.AlicaPackage#getRoleTaskMapping()
  * @model
  * @generated
  */
 public interface RoleTaskMapping extends PlanElement {
 	/**
 	 * Returns the value of the '<em><b>Task Priorities</b></em>' map.
-	 * The key is of type {@link java.lang.Long},
-	 * and the value is of type {@link java.lang.Double},
+	 * The key is of type {@link Long},
+	 * and the value is of type {@link Double},
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Task Priorities</em>' map isn't clear,
@@ -33,7 +37,7 @@ public interface RoleTaskMapping extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Task Priorities</em>' map.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleTaskMapping_TaskPriorities()
+	 * @see alica.AlicaPackage#getRoleTaskMapping_TaskPriorities()
 	 * @model mapType="alica.ELongToDoubleMapEntry<org.eclipse.emf.ecore.ELongObject, org.eclipse.emf.ecore.EDoubleObject>"
 	 * @generated
 	 */
@@ -49,7 +53,7 @@ public interface RoleTaskMapping extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Role</em>' reference.
 	 * @see #setRole(Role)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleTaskMapping_Role()
+	 * @see alica.AlicaPackage#getRoleTaskMapping_Role()
 	 * @model
 	 * @generated
 	 */

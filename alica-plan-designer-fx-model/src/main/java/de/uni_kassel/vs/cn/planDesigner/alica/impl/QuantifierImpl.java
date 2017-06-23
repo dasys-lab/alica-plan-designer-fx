@@ -1,22 +1,20 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable;
 import de.uni_kassel.vs.cn.planDesigner.alica.Quantifier;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
 /**
@@ -26,8 +24,8 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.QuantifierImpl#getScope <em>Scope</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.QuantifierImpl#getSorts <em>Sorts</em>}</li>
+ *   <li>{@link alica.impl.QuantifierImpl#getScope <em>Scope</em>}</li>
+ *   <li>{@link alica.impl.QuantifierImpl#getSorts <em>Sorts</em>}</li>
  * </ul>
  * </p>
  *

@@ -4,6 +4,8 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationOb
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
@@ -34,8 +36,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         try {
             pmlUiExtensionMap = EMFModelUtils.loadAlicaFileFromDisk(new File(uiExtensionMapPath));
         } catch (IOException e) {
-            // TODO create message window if file could not be opened
-            e.printStackTrace();
+            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.load.pmlx"), e);
         }
         planEditorPane = new PlanEditorPane(new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap), this);
         StackPane planContent = new StackPane(planEditorPane);
@@ -72,8 +73,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         try {
             EMFModelUtils.saveAlicaFile(pmlUiExtensionMap);
         } catch (IOException e) {
-            // TODO show error dialog
-            e.printStackTrace();
+            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save.pmlex"), e);
         }
     }
 }

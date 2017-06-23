@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -16,7 +20,7 @@ import org.eclipse.emf.common.util.EList;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCapabilityDefinitionSet()
+ * @see alica.AlicaPackage#getCapabilityDefinitionSet()
  * @model
  * @generated
  */
@@ -31,7 +35,7 @@ public interface CapabilityDefinitionSet extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Capabilities</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCapabilityDefinitionSet_Capabilities()
+	 * @see alica.AlicaPackage#getCapabilityDefinitionSet_Capabilities()
 	 * @model containment="true"
 	 * @generated
 	 */

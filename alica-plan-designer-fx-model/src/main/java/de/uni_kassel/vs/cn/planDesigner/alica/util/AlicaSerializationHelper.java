@@ -14,16 +14,15 @@
 //    GNU Lesser General Public License for more details.
 package de.uni_kassel.vs.cn.planDesigner.alica.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.BasicExtendedMetaData;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AlicaSerializationHelper {
 	
@@ -41,7 +40,7 @@ public class AlicaSerializationHelper {
 			// Create a new meta object
 			ExtendedMetaData meta = new BasicExtendedMetaData();
 			
-			// Contribute some options			
+			// Contribute some options
 			createEntryPointSaveOptions(meta);
 			createTerminalStateSaveOptions(meta);
 			createPlanSaveOptions(meta);
@@ -125,13 +124,7 @@ public class AlicaSerializationHelper {
 		meta.setFeatureKind(AlicaPackage.eINSTANCE.getState_OutTransitions(), ExtendedMetaData.ELEMENT_FEATURE);
 		//meta.setFeatureKind(AlicaPackage.eINSTANCE.getState_Parametrisation(), ExtendedMetaData.ELEMENT_FEATURE);
 	}
-	/*
-	private void createAbstractPlanSaveOptions(ExtendedMetaData meta){
-		meta.setFeatureKind(AlicaPackage.eINSTANCE.getAbstractPlan_Conditions(), ExtendedMetaData.ELEMENT_FEATURE);
-		meta.setFeatureKind(AlicaPackage.eINSTANCE.getAbstractPlan_Rating(), ExtendedMetaData.ELEMENT_FEATURE);
-		meta.setFeatureKind(AlicaPackage.eINSTANCE.getAbstractPlan_Utilities(), ExtendedMetaData.ELEMENT_FEATURE);
-	}
-	*/
+
 	private void createTerminalStateSaveOptions(ExtendedMetaData meta){
 		meta.setFeatureKind(AlicaPackage.eINSTANCE.getTerminalState_PostCondition(), ExtendedMetaData.ELEMENT_FEATURE);		
 	}

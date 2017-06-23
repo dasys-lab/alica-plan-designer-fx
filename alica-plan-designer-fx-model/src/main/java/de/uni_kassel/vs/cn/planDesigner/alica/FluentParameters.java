@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFluentParameters()
+ * @see alica.AlicaPackage#getFluentParameters()
  * @model
  * @generated
  */
@@ -32,7 +32,7 @@ public interface FluentParameters extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parameter</em>' attribute.
 	 * @see #setParameter(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFluentParameters_Parameter()
+	 * @see alica.AlicaPackage#getFluentParameters_Parameter()
 	 * @model
 	 * @generated
 	 */
@@ -58,7 +58,7 @@ public interface FluentParameters extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type</em>' attribute.
 	 * @see #setType(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFluentParameters_Type()
+	 * @see alica.AlicaPackage#getFluentParameters_Type()
 	 * @model
 	 * @generated
 	 */

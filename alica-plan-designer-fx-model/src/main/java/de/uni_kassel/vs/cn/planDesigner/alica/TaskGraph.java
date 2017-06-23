@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -14,12 +18,12 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph#getNodes <em>Nodes</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph#getEdges <em>Edges</em>}</li>
+ *   <li>{@link alica.TaskGraph#getNodes <em>Nodes</em>}</li>
+ *   <li>{@link alica.TaskGraph#getEdges <em>Edges</em>}</li>
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getTaskGraph()
+ * @see alica.AlicaPackage#getTaskGraph()
  * @model
  * @generated
  */
@@ -34,7 +38,7 @@ public interface TaskGraph extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Nodes</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getTaskGraph_Nodes()
+	 * @see alica.AlicaPackage#getTaskGraph_Nodes()
 	 * @model containment="true"
 	 * @generated
 	 */
@@ -42,7 +46,7 @@ public interface TaskGraph extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Edges</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Edge}.
+	 * The list contents are of type {@link alica.Edge}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Edges</em>' containment reference list isn't clear,
@@ -50,7 +54,7 @@ public interface TaskGraph extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Edges</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getTaskGraph_Edges()
+	 * @see alica.AlicaPackage#getTaskGraph_Edges()
 	 * @model containment="true"
 	 * @generated
 	 */

@@ -1,7 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Observable;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.Stack;
  * Created by marci on 03.01.17.
  */
 public class CommandStack extends Observable {
+    private static final Logger LOG = LogManager.getLogger(CommandStack.class);
     private Stack<AbstractCommand> undoStack = new Stack<>();
     private Stack<AbstractCommand> redoStack = new Stack<>();
 

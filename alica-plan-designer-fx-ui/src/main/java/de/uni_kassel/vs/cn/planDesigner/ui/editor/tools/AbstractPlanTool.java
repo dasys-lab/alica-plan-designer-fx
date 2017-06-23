@@ -1,8 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddAbstractPlanToState;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPlan;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
@@ -10,7 +8,6 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
 

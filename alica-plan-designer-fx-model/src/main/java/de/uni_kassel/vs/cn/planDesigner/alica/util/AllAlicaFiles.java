@@ -7,6 +7,8 @@ import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
  */
 public class AllAlicaFiles {
 
+    private static final Logger LOG = LogManager.getLogger(AllAlicaFiles.class);
+
     private static AllAlicaFiles instance;
 
     private ObservableList<Pair<Plan, Path>> plans;
@@ -46,6 +50,7 @@ public class AllAlicaFiles {
             try {
                 instance.init();
             } catch (URISyntaxException | IOException e) {
+                LOG.error("Could not initialize all ALICA files, this renders the PlanDesigner unusable", e);
                 throw new RuntimeException(e);
             }
         }
@@ -86,6 +91,7 @@ public class AllAlicaFiles {
 
         tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
         EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
+        LOG.info("AllAlicaFiles successfully initialized");
     }
 
     public Path getPathForAbstractPlan(AbstractPlan abstractPlan) {
@@ -110,6 +116,7 @@ public class AllAlicaFiles {
                     .filter(e -> e.getKey().equals(abstractPlan))
                     .findFirst().get().getValue();
         }
+        LOG.warn("No file path found for AbstractPlan " + abstractPlan.getName());
         return null;
     }
 
@@ -124,10 +131,12 @@ public class AllAlicaFiles {
                         }
                         return tPathPair;
                     } catch (IOException e) {
+                        LOG.fatal("Could not load repository of " + plansPath + "for file ending " + filePostfix, e);
                         throw new RuntimeException(e);
                     }
                 })
                 .collect(Collectors.toList());
+        LOG.info("Completed initial repository list for file ending: " + filePostfix);
         return FXCollections.observableList(collectedList);
     }
 }

@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- end-user-doc -->
  *
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getDomainCondition()
+ * @see alica.AlicaPackage#getDomainCondition()
  * @model
  * @generated
  */

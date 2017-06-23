@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -7,23 +11,16 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Quantifier;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
-
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
@@ -36,12 +33,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getConditionString <em>Condition String</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getAbstractPlan <em>Abstract Plan</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getVars <em>Vars</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getQuantifiers <em>Quantifiers</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getPluginName <em>Plugin Name</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getParameters <em>Parameters</em>}</li>
+ *   <li>{@link alica.impl.ConditionImpl#getConditionString <em>Condition String</em>}</li>
+ *   <li>{@link alica.impl.ConditionImpl#getAbstractPlan <em>Abstract Plan</em>}</li>
+ *   <li>{@link alica.impl.ConditionImpl#getVars <em>Vars</em>}</li>
+ *   <li>{@link alica.impl.ConditionImpl#getQuantifiers <em>Quantifiers</em>}</li>
+ *   <li>{@link alica.impl.ConditionImpl#getPluginName <em>Plugin Name</em>}</li>
+ *   <li>{@link alica.impl.ConditionImpl#getParameters <em>Parameters</em>}</li>
  * </ul>
  * </p>
  *

@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -29,8 +33,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannersImpl#getPlanners <em>Planners</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannersImpl#getName <em>Name</em>}</li>
+ *   <li>{@link alica.impl.PlannersImpl#getPlanners <em>Planners</em>}</li>
+ *   <li>{@link alica.impl.PlannersImpl#getName <em>Name</em>}</li>
  * </ul>
  * </p>
  *

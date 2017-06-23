@@ -1,9 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
-
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
+import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
@@ -25,16 +26,13 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
 
     private String attribute;
 
-    private Class type;
-
     private T newValue;
 
     private T oldValue;
 
-    public ChangeAttributeValue(PlanElement element, String attribute, Class type, T newValue, PlanElement affectedPlan) {
+    public ChangeAttributeValue(PlanElement element, String attribute, T newValue, PlanElement affectedPlan) {
         super(element, affectedPlan);
         this.attribute = attribute;
-        this.type = type;
         this.newValue = newValue;
     }
 

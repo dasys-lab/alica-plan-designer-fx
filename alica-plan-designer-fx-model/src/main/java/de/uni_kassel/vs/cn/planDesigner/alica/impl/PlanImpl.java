@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -11,21 +15,14 @@ import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
-
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -37,19 +34,19 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getPriority <em>Priority</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getStates <em>States</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getTransitions <em>Transitions</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getMinCardinality <em>Min Cardinality</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getMaxCardinality <em>Max Cardinality</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getSynchronisations <em>Synchronisations</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getEntryPoints <em>Entry Points</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#isMasterPlan <em>Master Plan</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getUtilityFunction <em>Utility Function</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getUtilityThreshold <em>Utility Threshold</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getVars <em>Vars</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getPreCondition <em>Pre Condition</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getPriority <em>Priority</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getStates <em>States</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getTransitions <em>Transitions</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getMinCardinality <em>Min Cardinality</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getMaxCardinality <em>Max Cardinality</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getSynchronisations <em>Synchronisations</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getEntryPoints <em>Entry Points</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#isMasterPlan <em>Master Plan</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getUtilityFunction <em>Utility Function</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getUtilityThreshold <em>Utility Threshold</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getVars <em>Vars</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link alica.impl.PlanImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
  * </ul>
  * </p>
  *
@@ -543,35 +540,20 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 	 * @generated
 	 */
 	public void calculateCardinalities() {
-		int min = 0;
-		int max = 0;
-		for(EntryPoint ep : getEntryPoints()){
-			min += ep.getMinCardinality();
-			int tmp = max + ep.getMaxCardinality();
-			max = tmp < 0 ? Integer.MAX_VALUE : tmp;
-		}
-
-		setMaxCardinality(max);
-		setMinCardinality(min);
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public void ensureParametrisationConsistency() {
-		/*for(State s: this.getStates()) {
-		s.ensureParametrisationConsistency();
-		}
-		for(Transition t: this.getTransitions()) {
-			if (t.getPreCondition()!=null) {
-				t.getPreCondition().ensureVariableConsistency(this);
-			}
-		}
-		for(Condition c : this.getConditions()) {
-			c.ensureVariableConsistency(this);
-		}*/
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -799,6 +781,24 @@ public class PlanImpl extends AbstractPlanImpl implements Plan {
 				return runtimeCondition != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case AlicaPackage.PLAN___CALCULATE_CARDINALITIES:
+				calculateCardinalities();
+				return null;
+			case AlicaPackage.PLAN___ENSURE_PARAMETRISATION_CONSISTENCY:
+				ensureParametrisationConsistency();
+				return null;
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

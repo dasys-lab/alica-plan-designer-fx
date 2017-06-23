@@ -1,5 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.configuration;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,7 @@ import java.util.ResourceBundle;
  * Created by marci on 09.06.17.
  */
 public class WorkspaceManager {
+    private static final Logger LOG = LogManager.getLogger(WorkspaceManager.class);
     private static List<Workspace> workspaces;
     private static File workspacesFile;
     private static Properties workspacesProperties;
@@ -24,13 +28,15 @@ public class WorkspaceManager {
         workspacesProperties.setProperty("workspaces", workspacesProperties.getProperty("workspaces") + ","+ workspace.getName());
         saveWorkspacesFile();
         saveWorkspaceConfiguration(workspace);
+        LOG.info("Added new workspace " + workspace.getName());
     }
 
     public void saveWorkspacesFile() {
         try {
             workspacesProperties.store(new FileOutputStream(new File("workspaces.properties")), "configuration file");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Could not save workspaces.properties!", e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,9 +57,10 @@ public class WorkspaceManager {
             props.setProperty("pluginPath", configuration.getPluginPath());
             FileOutputStream out = new FileOutputStream(workspaceFile);
             props.store(out, workspace.getName() + "configuration file");
-        }
-        catch (Exception e ) {
-            e.printStackTrace();
+            out.close();
+        } catch (IOException e) {
+            LOG.error("Could not save workspace configuration for " + workspace.getName(), e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -72,9 +79,11 @@ public class WorkspaceManager {
 
         try {
             workspacesProperties.load(is);
+            is.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Could not load workspace", e);
         }
+
 
         return loadWorkspace(workspacesProperties.getProperty("activeWorkspace"));
     }
@@ -95,12 +104,13 @@ public class WorkspaceManager {
             try {
                 is = new FileInputStream(workspacesFile);
             } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
+                LOG.fatal("Could not find workspaces.properties after trying to create it.", e1);
             }
         }
 
         try {
             workspacesProperties.load(is);
+            is.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -133,7 +143,9 @@ public class WorkspaceManager {
 
             workspaceProperties.store(workspacesOutputStream, "workspaces configuration");
             defaultProperties.store(fileOutputStream, "default properties");
+            fileOutputStream.close();
         } catch (IOException e1) {
+            LOG.fatal("Could not create default configuration files", e1);
             throw new RuntimeException("Could not create default configuration file");
         }
     }
@@ -150,13 +162,15 @@ public class WorkspaceManager {
         try {
             is = new FileInputStream(new File(workspaceName + ".properties"));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOG.error("Could not find file: " + workspaceName + ".properties", e);
+            throw new RuntimeException(e);
         }
 
         try {
             props.load(is);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Could not load properties from file: " + workspaceName + ".properties", e);
+            throw new RuntimeException(e);
         }
 
         Configuration configuration = new Configuration();

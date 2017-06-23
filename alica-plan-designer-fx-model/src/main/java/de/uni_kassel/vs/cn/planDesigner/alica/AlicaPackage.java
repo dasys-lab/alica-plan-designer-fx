@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EReference;
  *   <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory
+ * @see alica.AlicaFactory
  * @model kind="package"
  * @generated
  */
@@ -1332,7 +1332,7 @@ public interface AlicaPackage extends EPackage {
 	int BEHAVIOUR__DESTINATION_PATH = ABSTRACT_PLAN__DESTINATION_PATH;
 
 	/**
-	 * The feature id for the '<em><b>Pre Condition</b></em>' reference.
+	 * The feature id for the '<em><b>Pre Condition</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1341,7 +1341,7 @@ public interface AlicaPackage extends EPackage {
 	int BEHAVIOUR__PRE_CONDITION = ABSTRACT_PLAN_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Runtime Condition</b></em>' reference.
+	 * The feature id for the '<em><b>Runtime Condition</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1350,7 +1350,7 @@ public interface AlicaPackage extends EPackage {
 	int BEHAVIOUR__RUNTIME_CONDITION = ABSTRACT_PLAN_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Post Condition</b></em>' reference.
+	 * The feature id for the '<em><b>Post Condition</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -4846,10 +4846,10 @@ public interface AlicaPackage extends EPackage {
 	EClass getBehaviour();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Behaviour#getPreCondition <em>Pre Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link alica.Behaviour#getPreCondition <em>Pre Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Pre Condition</em>'.
+	 * @return the meta object for the containment reference '<em>Pre Condition</em>'.
 	 * @see alica.Behaviour#getPreCondition()
 	 * @see #getBehaviour()
 	 * @generated
@@ -4857,10 +4857,10 @@ public interface AlicaPackage extends EPackage {
 	EReference getBehaviour_PreCondition();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Behaviour#getRuntimeCondition <em>Runtime Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link alica.Behaviour#getRuntimeCondition <em>Runtime Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Runtime Condition</em>'.
+	 * @return the meta object for the containment reference '<em>Runtime Condition</em>'.
 	 * @see alica.Behaviour#getRuntimeCondition()
 	 * @see #getBehaviour()
 	 * @generated
@@ -4868,10 +4868,10 @@ public interface AlicaPackage extends EPackage {
 	EReference getBehaviour_RuntimeCondition();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Behaviour#getPostCondition <em>Post Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link alica.Behaviour#getPostCondition <em>Post Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Post Condition</em>'.
+	 * @return the meta object for the containment reference '<em>Post Condition</em>'.
 	 * @see alica.Behaviour#getPostCondition()
 	 * @see #getBehaviour()
 	 * @generated
@@ -6797,7 +6797,7 @@ public interface AlicaPackage extends EPackage {
 		EClass BEHAVIOUR = eINSTANCE.getBehaviour();
 
 		/**
-		 * The meta object literal for the '<em><b>Pre Condition</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Pre Condition</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -6805,7 +6805,7 @@ public interface AlicaPackage extends EPackage {
 		EReference BEHAVIOUR__PRE_CONDITION = eINSTANCE.getBehaviour_PreCondition();
 
 		/**
-		 * The meta object literal for the '<em><b>Runtime Condition</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Runtime Condition</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -6813,7 +6813,7 @@ public interface AlicaPackage extends EPackage {
 		EReference BEHAVIOUR__RUNTIME_CONDITION = eINSTANCE.getBehaviour_RuntimeCondition();
 
 		/**
-		 * The meta object literal for the '<em><b>Post Condition</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Post Condition</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -8137,4 +8137,5 @@ public interface AlicaPackage extends EPackage {
 		EEnum PLANNING_TYPE = eINSTANCE.getPlanningType();
 
 	}
+
 } //AlicaPackage

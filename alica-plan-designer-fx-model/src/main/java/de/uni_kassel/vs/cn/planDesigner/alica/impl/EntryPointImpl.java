@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -7,15 +11,11 @@ import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -25,12 +25,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getTask <em>Task</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#isSuccessRequired <em>Success Required</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getState <em>State</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getMinCardinality <em>Min Cardinality</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getMaxCardinality <em>Max Cardinality</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getPlan <em>Plan</em>}</li>
+ *   <li>{@link alica.impl.EntryPointImpl#getTask <em>Task</em>}</li>
+ *   <li>{@link alica.impl.EntryPointImpl#isSuccessRequired <em>Success Required</em>}</li>
+ *   <li>{@link alica.impl.EntryPointImpl#getState <em>State</em>}</li>
+ *   <li>{@link alica.impl.EntryPointImpl#getMinCardinality <em>Min Cardinality</em>}</li>
+ *   <li>{@link alica.impl.EntryPointImpl#getMaxCardinality <em>Max Cardinality</em>}</li>
+ *   <li>{@link alica.impl.EntryPointImpl#getPlan <em>Plan</em>}</li>
  * </ul>
  * </p>
  *

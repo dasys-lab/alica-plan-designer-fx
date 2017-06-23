@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -621,6 +625,7 @@ public class AlicaFactoryImpl extends EFactoryImpl implements AlicaFactory {
 		DomainConditionImpl domainCondition = new DomainConditionImpl();
 		return domainCondition;
 	}
+
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -18,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviourCreator()
+ * @see alica.AlicaPackage#getBehaviourCreator()
  * @model
  * @generated
  */
@@ -33,7 +37,7 @@ public interface BehaviourCreator extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Behaviours</em>' reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviourCreator_Behaviours()
+	 * @see alica.AlicaPackage#getBehaviourCreator_Behaviours()
 	 * @model ordered="false"
 	 * @generated
 	 */

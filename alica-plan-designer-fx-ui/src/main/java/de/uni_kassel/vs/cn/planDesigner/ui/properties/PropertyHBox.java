@@ -26,7 +26,6 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
 
     private CommandStack commandStack;
 
-    // TODO resolve problem of not getting value by property reference
     public PropertyHBox(T object, String propertyName, Class<?> propertyClass, CommandStack commandStack) {
         this.commandStack = commandStack;
         try {
@@ -84,7 +83,7 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
             booleanComboBox.getSelectionModel().select(Boolean.parseBoolean(BeanUtils.getProperty(object, propertyName)));
             booleanComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> getCommandStack()
                     .storeAndExecute(
-                            new ChangeAttributeValue<>(object, propertyName, object.getClass(), (T) ((Object) newValue), object)));
+                            new ChangeAttributeValue<>(object, propertyName, (T) ((Object) newValue), object)));
             return booleanComboBox;
         }
 

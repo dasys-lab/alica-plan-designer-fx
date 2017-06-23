@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -17,7 +21,7 @@ import org.eclipse.emf.common.util.EList;
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getQuantifier()
+ * @see alica.AlicaPackage#getQuantifier()
  * @model abstract="true"
  * @generated
  */
@@ -32,7 +36,7 @@ public interface Quantifier extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Scope</em>' reference.
 	 * @see #setScope(IInhabitable)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getQuantifier_Scope()
+	 * @see alica.AlicaPackage#getQuantifier_Scope()
 	 * @model
 	 * @generated
 	 */
@@ -50,7 +54,7 @@ public interface Quantifier extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Sorts</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * The list contents are of type {@link String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Sorts</em>' attribute list isn't clear,
@@ -58,7 +62,7 @@ public interface Quantifier extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Sorts</em>' attribute list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getQuantifier_Sorts()
+	 * @see alica.AlicaPackage#getQuantifier_Sorts()
 	 * @model default=""
 	 * @generated
 	 */

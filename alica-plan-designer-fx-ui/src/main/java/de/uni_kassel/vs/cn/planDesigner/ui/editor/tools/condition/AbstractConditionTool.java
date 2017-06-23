@@ -1,13 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.condition;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddConditionToPlan;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.ConditionHBox;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;

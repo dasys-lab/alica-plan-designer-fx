@@ -14,9 +14,8 @@ import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExten
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUIExtensionModelPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.util.PmlUIExtensionModelResourceFactoryImpl;
 import javafx.util.Pair;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -37,9 +36,11 @@ import java.util.Map;
  */
 public class EMFModelUtils {
 
+    private static final Logger LOG = LogManager.getLogger(EMFModelUtils.class);
     private static AlicaResourceSet alicaResourceSet;
     private static Configuration configuration;
 
+    @SuppressWarnings("unused")
     private static void initAlicaResourceSet() {
         alicaResourceSet = new AlicaResourceSet();
         AlicaResourceSet alicaResourceSet = new AlicaResourceSet();
@@ -70,6 +71,7 @@ public class EMFModelUtils {
         if (alicaResourceSet == null) {
             initAlicaResourceSet();
         }
+        LOG.info("EMF Base Classes initialized");
     }
 
     /**
@@ -143,6 +145,7 @@ public class EMFModelUtils {
         }
         resource.setTrackingModification(true);
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        LOG.info("Successfully created Alica file " + file.getAbsolutePath());
         return resource;
     }
 
@@ -186,6 +189,7 @@ public class EMFModelUtils {
      */
     public static <T extends EObject> void saveAlicaFile(T alicaObject) throws IOException {
         alicaObject.eResource().save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        LOG.info("Saved Alica successfully to disk specifically: " + alicaObject.eResource().getURI());
     }
 
     public static AlicaResourceSet getAlicaResourceSet() {

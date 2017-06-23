@@ -1,17 +1,17 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -21,8 +21,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEStringMapEntryImpl#getTypedKey <em>Key</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEStringMapEntryImpl#getTypedValue <em>Value</em>}</li>
+ *   <li>{@link alica.impl.EStringToEStringMapEntryImpl#getTypedKey <em>Key</em>}</li>
+ *   <li>{@link alica.impl.EStringToEStringMapEntryImpl#getTypedValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *

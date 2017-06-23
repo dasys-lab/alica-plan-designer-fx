@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.EntryPointCreatorDialogController;
+import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.event.EventHandler;
@@ -17,6 +18,8 @@ import javafx.scene.input.MouseDragEvent;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,6 +32,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
  */
 public class EntryPointTool extends AbstractTool<EntryPoint> {
 
+    private static final Logger LOG = LogManager.getLogger(EntryPointTool.class);
     private Map<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private boolean initial = true;
     private Node visualRepresentation;
@@ -109,8 +113,9 @@ public class EntryPointTool extends AbstractTool<EntryPoint> {
                         initial = true;
                     } catch (IOException e) {
                         // if the helper window is not loadable something is really wrong here
-                        e.printStackTrace();
-                        System.exit(1);
+                        LOG.error("Could not load entry point creator dialog. " +
+                                "Your installation of the plan designer is probably broken!");
+                        ErrorWindowController.createErrorWindow("Could not load entry point window", e);
                     }
 
                 }

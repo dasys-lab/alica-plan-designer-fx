@@ -1,4 +1,8 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -6,18 +10,12 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
-
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -28,8 +26,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanTypeImpl#getParametrisation <em>Parametrisation</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanTypeImpl#getPlans <em>Plans</em>}</li>
+ *   <li>{@link alica.impl.PlanTypeImpl#getParametrisation <em>Parametrisation</em>}</li>
+ *   <li>{@link alica.impl.PlanTypeImpl#getPlans <em>Plans</em>}</li>
  * </ul>
  * </p>
  *

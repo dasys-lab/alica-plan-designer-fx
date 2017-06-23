@@ -11,11 +11,11 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.PreCondition#isEnabled <em>Enabled</em>}</li>
+ *   <li>{@link alica.PreCondition#isEnabled <em>Enabled</em>}</li>
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPreCondition()
+ * @see alica.AlicaPackage#getPreCondition()
  * @model
  * @generated
  */
@@ -31,14 +31,14 @@ public interface PreCondition extends Condition {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Enabled</em>' attribute.
 	 * @see #setEnabled(boolean)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPreCondition_Enabled()
+	 * @see alica.AlicaPackage#getPreCondition_Enabled()
 	 * @model default="true"
 	 * @generated
 	 */
 	boolean isEnabled();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.PreCondition#isEnabled <em>Enabled</em>}' attribute.
+	 * Sets the value of the '{@link alica.PreCondition#isEnabled <em>Enabled</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Enabled</em>' attribute.

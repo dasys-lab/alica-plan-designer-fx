@@ -9,7 +9,7 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
  * <!-- end-user-doc -->
  *
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFailureState()
+ * @see alica.AlicaPackage#getFailureState()
  * @model
  * @generated
  */
