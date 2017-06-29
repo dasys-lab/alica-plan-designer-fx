@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * @generated
  */
 public abstract class PlanElementImpl extends MinimalEObjectImpl.Container implements PlanElement {
+	protected static int OBJECT_COUNTER = 0;
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -103,6 +104,7 @@ public abstract class PlanElementImpl extends MinimalEObjectImpl.Container imple
 	 */
 	protected PlanElementImpl() {
 		super();
+		setId(generateID());
 	}
 
 	/**
@@ -184,9 +186,7 @@ public abstract class PlanElementImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	public long generateID() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		return System.currentTimeMillis() + OBJECT_COUNTER++;
 	}
 
 	/**
