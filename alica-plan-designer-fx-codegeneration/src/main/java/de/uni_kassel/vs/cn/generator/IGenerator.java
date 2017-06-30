@@ -18,7 +18,9 @@ public interface IGenerator {
     void createConditionCreator(List<Plan> plans, List<Condition> conditions);
     void createConstraintCreator(List<Plan> plans, List<Condition> conditions);
     void createConstraints(List<Plan> plans);
+    void createConstraintsForPlan(Plan plan);
     void createPlans(List<Plan> plans);
+    void createPlan(Plan plan);
     void createUtilityFunctionCreator(List<Plan> plans);
 
     void createDomainCondition();

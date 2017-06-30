@@ -107,102 +107,112 @@ public class CPPGeneratorImpl implements IGenerator {
     @Override
     public void createConstraints(List<Plan> plans) {
         for (Plan plan : plans) {
-            String headerPath = generatedSourcesManager.getIncludeDir() + plan.getDestinationPath() +
-                    "/" + "constraints/" + plan.getName() + plan.getId() + "Constraints.h";
-            String fileContentHeader = xtendTemplates.constraintsHeader(plan);
-            writeSourceFile(headerPath, fileContentHeader);
-
-            formatFile(headerPath);
-
-            String srcPath = generatedSourcesManager.getSrcDir() + plan.getDestinationPath() +
-                    "/" + "constraints/" + plan.getName() + plan.getId() + "Constraints.cpp";
-            String fileContentSource = xtendTemplates.constraintsSource(plan, getActiveConstraintCodeGenerator());
-            writeSourceFile(srcPath, fileContentSource);
-            formatFile(srcPath);
-
-            for (State inPlan : plan.getStates()) {
-                try {
-                    LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
-                    while (lineNumberReader.ready()) {
-                        if (lineNumberReader.readLine().contains("// State: " + inPlan.getName())) {
-                            generatedSourcesManager.putStateCheckingLines(inPlan, lineNumberReader.getLineNumber());
-                            break;
-                        }
-                    }
-                    lineNumberReader.close();
-                } catch (IOException e) {
-                    LOG.error("Could not open/read lines for " + srcPath, e);
-                }
-            }
+            createConstraintsForPlan(plan);
         }
 
     }
 
     @Override
+    public void createConstraintsForPlan(Plan plan) {
+        String headerPath = generatedSourcesManager.getIncludeDir() + plan.getDestinationPath() +
+                "/" + "constraints/" + plan.getName() + plan.getId() + "Constraints.h";
+        String fileContentHeader = xtendTemplates.constraintsHeader(plan);
+        writeSourceFile(headerPath, fileContentHeader);
+
+        formatFile(headerPath);
+
+        String srcPath = generatedSourcesManager.getSrcDir() + plan.getDestinationPath() +
+                "/" + "constraints/" + plan.getName() + plan.getId() + "Constraints.cpp";
+        String fileContentSource = xtendTemplates.constraintsSource(plan, getActiveConstraintCodeGenerator());
+        writeSourceFile(srcPath, fileContentSource);
+        formatFile(srcPath);
+
+        for (State inPlan : plan.getStates()) {
+            try {
+                LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
+                while (lineNumberReader.ready()) {
+                    if (lineNumberReader.readLine().contains("// State: " + inPlan.getName())) {
+                        generatedSourcesManager.putStateCheckingLines(inPlan, lineNumberReader.getLineNumber());
+                        break;
+                    }
+                }
+                lineNumberReader.close();
+            } catch (IOException e) {
+                LOG.error("Could not open/read lines for " + srcPath, e);
+            }
+        }
+    }
+
+    @Override
     public void createPlans(List<Plan> plans) {
         for (Plan plan : plans) {
-            String headerPath = generatedSourcesManager.getIncludeDir() + plan.getDestinationPath() +
-                    "/" + plan.getName() + plan.getId() + ".h";
-            String fileContentHeader = xtendTemplates.planHeader(plan);
-            writeSourceFile(headerPath, fileContentHeader);
+            createPlan(plan);
+        }
+    }
 
-            formatFile(headerPath);
+    @Override
+    public void createPlan(Plan plan) {
+        String headerPath = generatedSourcesManager.getIncludeDir() + plan.getDestinationPath() +
+                "/" + plan.getName() + plan.getId() + ".h";
+        String fileContentHeader = xtendTemplates.planHeader(plan);
+        writeSourceFile(headerPath, fileContentHeader);
 
-            String srcPath = generatedSourcesManager.getSrcDir() + plan.getDestinationPath() +
-                    "/" + plan.getName() + plan.getId() + ".cpp";
-            String fileContentSource = xtendTemplates.planSource(plan, getActiveConstraintCodeGenerator());
-            writeSourceFile(srcPath, fileContentSource);
+        formatFile(headerPath);
 
-            formatFile(srcPath);
+        String srcPath = generatedSourcesManager.getSrcDir() + plan.getDestinationPath() +
+                "/" + plan.getName() + plan.getId() + ".cpp";
+        String fileContentSource = xtendTemplates.planSource(plan, getActiveConstraintCodeGenerator());
+        writeSourceFile(srcPath, fileContentSource);
 
-            RuntimeCondition runtimeCondition = plan.getRuntimeCondition();
-            if (runtimeCondition != null) {
-                try {
-                    LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
-                    while (lineNumberReader.ready()) {
-                        if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + runtimeCondition.getId() + ") ENABLED START*/")) {
-                            generatedSourcesManager.putConditionLines(runtimeCondition, lineNumberReader.getLineNumber());
-                            break;
-                        }
+        formatFile(srcPath);
 
+        RuntimeCondition runtimeCondition = plan.getRuntimeCondition();
+        if (runtimeCondition != null) {
+            try {
+                LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
+                while (lineNumberReader.ready()) {
+                    if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + runtimeCondition.getId() + ") ENABLED START*/")) {
+                        generatedSourcesManager.putConditionLines(runtimeCondition, lineNumberReader.getLineNumber());
+                        break;
                     }
-                    lineNumberReader.close();
-                } catch (IOException e) {
-                    LOG.error("Could not open/read lines for " + srcPath, e);
+
                 }
+                lineNumberReader.close();
+            } catch (IOException e) {
+                LOG.error("Could not open/read lines for " + srcPath, e);
             }
+        }
 
-            PreCondition preCondition = plan.getPreCondition();
-            if (preCondition != null) {
-                try {
-                    LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
-                    while (lineNumberReader.ready()) {
-                        if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + preCondition.getId() + ") ENABLED START*/")) {
-                            generatedSourcesManager.putConditionLines(preCondition, lineNumberReader.getLineNumber());
-                            break;
-                        }
-
+        PreCondition preCondition = plan.getPreCondition();
+        if (preCondition != null) {
+            try {
+                LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
+                while (lineNumberReader.ready()) {
+                    if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + preCondition.getId() + ") ENABLED START*/")) {
+                        generatedSourcesManager.putConditionLines(preCondition, lineNumberReader.getLineNumber());
+                        break;
                     }
-                    lineNumberReader.close();
-                } catch (IOException e) {
-                    LOG.error("Could not open/read lines for " + srcPath, e);
+
                 }
+                lineNumberReader.close();
+            } catch (IOException e) {
+                LOG.error("Could not open/read lines for " + srcPath, e);
             }
+        }
 
-            for (Transition inPlan : plan.getTransitions()) {
-                try {
-                    LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
-                    while (lineNumberReader.ready()) {
-                        if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + inPlan.getId() + ") ENABLED START*/")) {
-                            generatedSourcesManager.putTransitionLines(inPlan, lineNumberReader.getLineNumber());
-                            break;
-                        }
-
+        for (Transition inPlan : plan.getTransitions()) {
+            try {
+                LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
+                while (lineNumberReader.ready()) {
+                    if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + inPlan.getId() + ") ENABLED START*/")) {
+                        generatedSourcesManager.putTransitionLines(inPlan, lineNumberReader.getLineNumber());
+                        break;
                     }
-                    lineNumberReader.close();
-                } catch (IOException e) {
-                    LOG.error("Could not open/read lines for " + srcPath, e);
+
                 }
+                lineNumberReader.close();
+            } catch (IOException e) {
+                LOG.error("Could not open/read lines for " + srcPath, e);
             }
         }
     }
@@ -210,7 +220,6 @@ public class CPPGeneratorImpl implements IGenerator {
     @Override
     public void createUtilityFunctionCreator(List<Plan> plans) {
         String headerPath = generatedSourcesManager.getIncludeDir() + "UtilityFunctionCreator.h";
-        XtendTemplates xtendTemplates = new XtendTemplates();
         String fileContentHeader = xtendTemplates.utilityFunctionCreatorHeader();
         writeSourceFile(headerPath, fileContentHeader);
 
@@ -226,7 +235,6 @@ public class CPPGeneratorImpl implements IGenerator {
     @Override
     public void createDomainCondition() {
         String headerPath = generatedSourcesManager.getIncludeDir() + "DomainCondition.h";
-        XtendTemplates xtendTemplates = new XtendTemplates();
         String fileContentHeader = xtendTemplates.domainConditionHeader();
         writeSourceFile(headerPath, fileContentHeader);
 
@@ -242,7 +250,6 @@ public class CPPGeneratorImpl implements IGenerator {
     @Override
     public void createDomainBehaviour() {
         String headerPath = generatedSourcesManager.getIncludeDir() + "DomainBehaviour.h";
-        XtendTemplates xtendTemplates = new XtendTemplates();
         String fileContentHeader = xtendTemplates.domainBehaviourHeader();
         writeSourceFile(headerPath, fileContentHeader);
 

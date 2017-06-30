@@ -1425,6 +1425,22 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("#include \"engine/BasicBehaviour.h\"");
     _builder.newLine();
+    _builder.append("/*PROTECTED REGION ID(domainBehaviourHeaderHead) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey = this.protectedRegions.containsKey("domainBehaviourHeaderHead");
+      if (_containsKey) {
+        String _get = this.protectedRegions.get("domainBehaviourHeaderHead");
+        _builder.append(_get, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("        ");
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("namespace alica");
     _builder.newLine();
@@ -1445,6 +1461,24 @@ public class XtendTemplates {
     _builder.append("        ");
     _builder.append("virtual ~DomainBehaviour();");
     _builder.newLine();
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION ID(domainBehaviourClassDecl) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_1 = this.protectedRegions.containsKey("domainBehaviourClassDecl");
+      if (_containsKey_1) {
+        String _get_1 = this.protectedRegions.get("domainBehaviourClassDecl");
+        _builder.append(_get_1, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("};");
     _builder.newLine();
@@ -1460,6 +1494,21 @@ public class XtendTemplates {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("#include \"DomainBehaviour.h\"");
     _builder.newLine();
+    _builder.append("/*PROTECTED REGION ID(domainBehaviourSrcHeaders) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey = this.protectedRegions.containsKey("domainBehaviourSrcHeaders");
+      if (_containsKey) {
+        String _get = this.protectedRegions.get("domainBehaviourSrcHeaders");
+        _builder.append(_get, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("namespace alica");
     _builder.newLine();
@@ -1471,6 +1520,23 @@ public class XtendTemplates {
     _builder.append("    ");
     _builder.append("{");
     _builder.newLine();
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION ID(domainBehaviourConstructor) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_1 = this.protectedRegions.containsKey("domainBehaviourConstructor");
+      if (_containsKey_1) {
+        String _get_1 = this.protectedRegions.get("domainBehaviourConstructor");
+        _builder.append(_get_1, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("}");
     _builder.newLine();
@@ -1481,8 +1547,43 @@ public class XtendTemplates {
     _builder.append("    ");
     _builder.append("{");
     _builder.newLine();
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION ID(domainBehaviourDestructor) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_2 = this.protectedRegions.containsKey("domainBehaviourDestructor");
+      if (_containsKey_2) {
+        String _get_2 = this.protectedRegions.get("domainBehaviourDestructor");
+        _builder.append(_get_2, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("}");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("/*PROTECTED REGION ID(domainBehaviourMethods) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_3 = this.protectedRegions.containsKey("domainBehaviourMethods");
+      if (_containsKey_3) {
+        String _get_3 = this.protectedRegions.get("domainBehaviourMethods");
+        _builder.append(_get_3, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("    ");
+    _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.append("} /* namespace alica */");
     _builder.newLine();
@@ -1497,6 +1598,21 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.newLine();
     _builder.append("#include \"engine/BasicCondition.h\"");
+    _builder.newLine();
+    _builder.append("/*PROTECTED REGION ID(domainHeaderAdditional) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey = this.protectedRegions.containsKey("domainHeaderAdditional");
+      if (_containsKey) {
+        String _get = this.protectedRegions.get("domainHeaderAdditional");
+        _builder.append(_get, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.newLine();
     _builder.append("namespace alica");
@@ -1518,6 +1634,24 @@ public class XtendTemplates {
     _builder.append("        ");
     _builder.append("virtual ~DomainCondition();");
     _builder.newLine();
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION ID(domainHeader) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_1 = this.protectedRegions.containsKey("domainHeader");
+      if (_containsKey_1) {
+        String _get_1 = this.protectedRegions.get("domainHeader");
+        _builder.append(_get_1, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("};");
     _builder.newLine();
@@ -1533,6 +1667,21 @@ public class XtendTemplates {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("#include \"DomainCondition.h\"");
     _builder.newLine();
+    _builder.append("/*PROTECTED REGION ID(domainSourceHeaders) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey = this.protectedRegions.containsKey("domainSourceHeaders");
+      if (_containsKey) {
+        String _get = this.protectedRegions.get("domainSourceHeaders");
+        _builder.append(_get, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("namespace alica");
     _builder.newLine();
@@ -1544,6 +1693,23 @@ public class XtendTemplates {
     _builder.append("    ");
     _builder.append("{");
     _builder.newLine();
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION ID(domainSourceConstructor) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_1 = this.protectedRegions.containsKey("domainSourceConstructor");
+      if (_containsKey_1) {
+        String _get_1 = this.protectedRegions.get("domainSourceConstructor");
+        _builder.append(_get_1, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("}");
     _builder.newLine();
@@ -1553,6 +1719,23 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("    ");
     _builder.append("{");
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION ID(domainSourceDestructor) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_2 = this.protectedRegions.containsKey("domainSourceDestructor");
+      if (_containsKey_2) {
+        String _get_2 = this.protectedRegions.get("domainSourceDestructor");
+        _builder.append(_get_2, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("}");

@@ -41,7 +41,7 @@ public class ErrorWindowController implements Initializable {
             }
             Stage stage = new Stage();
             stage.setResizable(false);
-            stage.setTitle(I18NRepo.getString("label.menu.new"));
+            stage.setTitle("Error!");
             stage.setScene(new Scene(rootOfDialog));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(PlanDesigner.getPrimaryStage());
@@ -56,6 +56,7 @@ public class ErrorWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        confirmButton.setText(I18NRepo.getString("label.ok"));
         confirmButton.setOnAction(e -> {
             Node source = (Node) e.getSource();
             ((Stage) source.getScene().getWindow()).close();

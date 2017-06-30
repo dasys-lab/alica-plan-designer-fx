@@ -2,6 +2,8 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.Codegenerator;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane;
@@ -10,14 +12,19 @@ import de.uni_kassel.vs.cn.planDesigner.ui.menu.EditMenu;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
@@ -29,6 +36,8 @@ import java.util.ResourceBundle;
  * Created by marci on 16.10.16.
  */
 public class MainController implements Initializable {
+
+    private static final Logger LOG = LogManager.getLogger(MainController.class);
 
     private static MainController MAIN_CONTROLLER;
 
@@ -83,15 +92,35 @@ public class MainController implements Initializable {
         menus.add(new EditMenu(commandStack, editorTabPane));
         Menu codegenerationMenu = new Menu(I18NRepo.getString("label.menu.generation"));
         MenuItem regenerateItem = new MenuItem(I18NRepo.getString("label.menu.generation.regenerate"));
+        MenuItem generateCurrentFile = new MenuItem(I18NRepo.getString("label.menu.generation.file"));
+        generateCurrentFile.setDisable(true);
+        getEditorTabPane().getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                PlanElement editable = ((AbstractEditorTab) newValue).getEditable();
+                if (editable instanceof AbstractPlan) {
+                    generateCurrentFile.setDisable(false);
+                }
+            } else {
+                generateCurrentFile.setDisable(true);
+            }
+        });
+
+        generateCurrentFile.setOnAction(e -> {
+            PlanElement planElement = ((AbstractEditorTab) getEditorTabPane()
+                    .getSelectionModel().getSelectedItem()).getEditable();
+            new Codegenerator().generate((AbstractPlan)planElement);
+        });
         regenerateItem.setOnAction(e -> {
             try {
                 new Codegenerator().generate();
             } catch (RuntimeException ex) {
+                LOG.error("error while generating code", ex);
                 ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.codegen"), null);
             }
 
         });
-        codegenerationMenu.getItems().add(regenerateItem);
+        codegenerationMenu.getItems().addAll(generateCurrentFile, regenerateItem);
         menus.add(codegenerationMenu);
 
         return menus;

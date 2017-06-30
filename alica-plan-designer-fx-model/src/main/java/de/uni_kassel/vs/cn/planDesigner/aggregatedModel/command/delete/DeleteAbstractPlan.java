@@ -37,7 +37,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
     private PmlUiExtensionMap pmlUiExtensionMap;
 
     public DeleteAbstractPlan(AbstractPlan element) {
-        super(element, null);
+        super(element, element);
         if (element instanceof Behaviour) {
             planType = EAbstractPlanType.BEHAVIOUR;
         }

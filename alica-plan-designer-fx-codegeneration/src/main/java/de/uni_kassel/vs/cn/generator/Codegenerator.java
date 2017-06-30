@@ -15,6 +15,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,55 +36,40 @@ public class Codegenerator {
     private List<RuntimeCondition> runtimeConditions;
     private List<PostCondition> postConditions;
     private List<Condition> allConditions;
+    private final IGenerator actualGenerator;
+
+    public Codegenerator() {
+        // TODO document this! Here can the programming language be changed
+        actualGenerator = new CPPGeneratorImpl();
+        actualGenerator.setFormatter(new WorkspaceManager().getClangFormatPath());
+        initialze();
+    }
 
     public void generate() {
-        initialze();
-
-
-        // TODO document this! Here can the programming language be changed
-        IGenerator actualGenerator = new CPPGeneratorImpl();
-        actualGenerator.setFormatter(new WorkspaceManager().getClangFormatPath());
-
         GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
-        for (Plan plan : allPlans) {
-            generatedSourcesManager
-                    .getAllGeneratedFilesForAbstractPlan(plan)
-                    .forEach(e -> {
+        String expressionValidatorsPath = new WorkspaceManager().getActiveWorkspace()
+                .getConfiguration().getExpressionValidatorsPath();
+        try {
+            Files.walk(Paths.get(expressionValidatorsPath)).filter(e -> {
+                String fileName = e.getFileName().toString();
+                return fileName.endsWith(".h") || fileName.endsWith(".cpp");
+            }).forEach(e -> {
+                try {
+                    CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e));
+                    CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+                    CommentsParser parser = new CommentsParser(commonTokenStream);
+                    CommentsParser.All_textContext all_textContext = parser.all_text();
+                    protectedRegionsVisitor.visit(all_textContext);
+                } catch (IOException e1) {
+                    LOG.error("Could not parse existing source file " + e, e1);
+                    throw new RuntimeException(e1);
+                }
 
-                        try {
-                            if (e.exists()) {
-                                CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e.toPath()));
-                                CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-                                CommentsParser parser = new CommentsParser(commonTokenStream);
-                                CommentsParser.All_textContext all_textContext = parser.all_text();
-                                protectedRegionsVisitor.visit(all_textContext);
-                            }
-                        } catch (IOException e1) {
-                            LOG.error("Could not parse existing source file " + e.getAbsolutePath(), e1);
-                            throw new RuntimeException(e1);
-                        }
-                    });
-        }
-
-        for (Behaviour behaviour : allBehaviours) {
-            generatedSourcesManager
-                    .getAllGeneratedFilesForAbstractPlan(behaviour)
-                    .forEach(e -> {
-
-                        try {
-                            if (e.exists()) {
-                                CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e.toPath()));
-                                CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-                                CommentsParser parser = new CommentsParser(commonTokenStream);
-                                CommentsParser.All_textContext all_textContext = parser.all_text();
-                                protectedRegionsVisitor.visit(all_textContext);
-                            }
-                        } catch (IOException e1) {
-                            LOG.error("Could not parse existing source file " + e.getAbsolutePath(), e1);
-                            throw new RuntimeException(e1);
-                        }
-                    });
+            });
+        } catch (IOException e) {
+            LOG.error("Could not find expression validator path! ", e);
+            throw new RuntimeException(e);
         }
 
         PluginManager.getInstance().getActivePlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
@@ -172,5 +160,40 @@ public class Codegenerator {
         allConditions.addAll(preConditions);
         allConditions.addAll(postConditions);
         allConditions.addAll(runtimeConditions);
+    }
+
+    public void generate(AbstractPlan planElement) {
+        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
+        ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
+        generatedSourcesManager
+                .getAllGeneratedFilesForAbstractPlan(planElement)
+                .forEach(e -> {
+
+                    try {
+                        if (e.exists()) {
+                            CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e.toPath()));
+                            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+                            CommentsParser parser = new CommentsParser(commonTokenStream);
+                            CommentsParser.All_textContext all_textContext = parser.all_text();
+                            protectedRegionsVisitor.visit(all_textContext);
+                        }
+                    } catch (IOException e1) {
+                        LOG.error("Could not parse existing source file " + e.getAbsolutePath(), e1);
+                        throw new RuntimeException(e1);
+                    }
+                });
+        PluginManager.getInstance().getActivePlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
+        actualGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
+        if (planElement instanceof Behaviour) {
+            actualGenerator.createBehaviourCreator(allBehaviours);
+            actualGenerator.createBehaviour((Behaviour) planElement);
+        }
+
+        if (planElement instanceof Plan) {
+            actualGenerator.createConstraintsForPlan((Plan) planElement);
+            actualGenerator.createPlan((Plan) planElement);
+            actualGenerator.createConditionCreator(allPlans, allConditions);
+            actualGenerator.createUtilityFunctionCreator(allPlans);
+        }
     }
 }
