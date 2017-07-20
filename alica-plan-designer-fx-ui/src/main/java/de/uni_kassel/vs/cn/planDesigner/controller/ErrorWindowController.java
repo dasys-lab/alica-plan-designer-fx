@@ -66,4 +66,8 @@ public class ErrorWindowController implements Initializable {
     public void setErrorLabelText(String errorLabelText) {
         errorLabel.setText(errorLabelText);
     }
+    
+    public Button getConfirmButton() {
+		return confirmButton;
+	}
 }
