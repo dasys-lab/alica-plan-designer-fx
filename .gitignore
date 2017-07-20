@@ -34,3 +34,9 @@ hs_err_pid*
 *.iws
 
 /out/
+
+#Files created on a debug run should not be added to the repo
+RemoteSystemsTempFiles/
+default.properties
+alica-plan-designer-fx-ui/log/
+alica-plan-designer-fx-ui/workspaces.properties
