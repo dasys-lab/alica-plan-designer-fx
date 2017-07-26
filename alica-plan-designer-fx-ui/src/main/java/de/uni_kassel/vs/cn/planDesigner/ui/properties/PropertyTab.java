@@ -1,12 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
+import de.uni_kassel.vs.cn.generator.plugin.IPlugin;
+import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.SetTaskOfEntryPoint;
+import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -124,6 +128,16 @@ public class PropertyTab extends AbstractPropertyTab {
             HBox.setMargin(taskComboBox, new Insets(0,100,0,50));
 
             propertyHBoxList.add(hBox);
+        }
+
+        if (getSelectedEditorTabPlanElement() instanceof Condition) {
+            String pluginName = ((Condition) getSelectedEditorTabPlanElement()).getPluginName();
+            IPlugin matchingPlugin = PluginManager.getInstance().getPluginByName(pluginName);
+            if (matchingPlugin != null) {
+                propertyHBoxList.add(matchingPlugin.getPluginUI());
+            } else {
+                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.pluginNotFound"), null);
+            }
         }
 
 

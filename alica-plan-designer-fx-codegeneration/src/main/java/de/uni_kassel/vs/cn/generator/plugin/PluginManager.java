@@ -93,6 +93,25 @@ public class PluginManager {
 
     }
 
+    /**
+     * Searches through the {@link PluginManager#availablePlugins}.
+     * @param name
+     * @return plugin with matching name otherwise null
+     */
+    public IPlugin getPluginByName(String name) {
+        for (IPlugin plugin : availablePlugins) {
+            if (plugin.getPluginName().equals(name)) {
+                return plugin;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param activePlugin
+     */
     public void setActivePlugin(IPlugin<?> activePlugin) {
         this.activePlugin = activePlugin;
     }
