@@ -85,10 +85,10 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
         } else if (content.getName().endsWith(".pty")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
-        } else if (content.getName().endsWith("pmlex") || content.getName().startsWith(".")) {
-            return null;
-        } else {
+        } else if (content.isDirectory() || content.getName().endsWith(".tsk")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
+        } else {
+            return null;
         }
         return listItemImage;
     }
