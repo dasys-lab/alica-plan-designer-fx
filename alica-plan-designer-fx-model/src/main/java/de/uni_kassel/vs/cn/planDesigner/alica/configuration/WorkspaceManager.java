@@ -17,16 +17,8 @@ public class WorkspaceManager {
     private static List<Workspace> workspaces;
     private static File workspacesFile;
     private static Properties workspacesProperties;
-    private String realPath;
 
     public void init() {
-        String path = WorkspaceManager.class.getResource("WorkspaceManager.class").getPath();
-        System.out.println("PATH::::::" + path);
-        if (path.contains(".jar")) {
-            realPath = path.split("\\.jar")[0];
-            realPath = realPath.substring(0, realPath.lastIndexOf(File.separatorChar) + 1);
-        }
-
         workspaces = new ArrayList<>();
         loadWorkspaces();
     }
@@ -41,11 +33,7 @@ public class WorkspaceManager {
 
     public void saveWorkspacesFile() {
         try {
-            if (realPath != null) {
-                workspacesProperties.store(new FileOutputStream(new File(realPath + "workspaces.properties")), "configuration file");
-            } else {
-                workspacesProperties.store(new FileOutputStream(new File("workspaces.properties")), "configuration file");
-            }
+            workspacesProperties.store(new FileOutputStream(new File("workspaces.properties")), "configuration file");
         } catch (IOException e) {
             LOG.error("Could not save workspaces.properties!", e);
             throw new RuntimeException(e);
@@ -54,14 +42,7 @@ public class WorkspaceManager {
 
     public void saveWorkspaceConfiguration(Workspace workspace) {
         try {
-            File workspaceFile;
-
-            if (realPath != null) {
-                workspaceFile = new File(realPath + workspace.getName() + ".properties");
-            } else {
-                workspaceFile = new File(workspace.getName() + ".properties");
-            }
-
+            File workspaceFile = new File(workspace.getName() + ".properties");
             if (workspaceFile.exists() == false) {
                 workspaceFile.createNewFile();
             }
@@ -90,7 +71,7 @@ public class WorkspaceManager {
     public Workspace getActiveWorkspace() {
         InputStream is = null;
         try {
-            workspacesFile = new File((realPath != null ? realPath : "") + "workspaces.properties");
+            workspacesFile = new File("workspaces.properties");
             is = new FileInputStream(workspacesFile);
         } catch (FileNotFoundException e) {
             createDefaultConfigurationFiles();
@@ -115,11 +96,11 @@ public class WorkspaceManager {
         workspacesProperties = new Properties();
         InputStream is = null;
         try {
-            workspacesFile = new File((realPath != null ? realPath : "") + "workspaces.properties");
+            workspacesFile = new File("workspaces.properties");
             is = new FileInputStream(workspacesFile);
         } catch (FileNotFoundException e) {
             createDefaultConfigurationFiles();
-            workspacesFile = new File((realPath != null ? realPath : "") + "workspaces.properties");
+            workspacesFile = new File("workspaces.properties");
             try {
                 is = new FileInputStream(workspacesFile);
             } catch (FileNotFoundException e1) {
@@ -153,9 +134,9 @@ public class WorkspaceManager {
         Properties workspaceProperties = getPropertiesFromResourceBundle(workspaceBundle);
         Properties defaultProperties = getPropertiesFromResourceBundle(resourceBundle);
         try {
-            File workspacesFile = new File((realPath != null ? realPath : "") + "workspaces.properties");
+            File workspacesFile = new File("workspaces.properties");
             workspacesFile.createNewFile();
-            File defaultConfigFile = new File((realPath != null ? realPath : "") + "default.properties");
+            File defaultConfigFile = new File("default.properties");
             defaultConfigFile.createNewFile();
             FileOutputStream fileOutputStream = new FileOutputStream(defaultConfigFile);
             FileOutputStream workspacesOutputStream = new FileOutputStream(workspacesFile);
@@ -179,7 +160,7 @@ public class WorkspaceManager {
         Properties props = new Properties();
         InputStream is = null;
         try {
-            is = new FileInputStream(new File((realPath != null ? realPath : "") + workspaceName + ".properties"));
+            is = new FileInputStream(new File(workspaceName + ".properties"));
         } catch (FileNotFoundException e) {
             LOG.error("Could not find file: " + workspaceName + ".properties", e);
             throw new RuntimeException(e);
