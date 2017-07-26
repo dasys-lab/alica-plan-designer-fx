@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.Codegenerator;
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
@@ -13,29 +12,22 @@ import de.uni_kassel.vs.cn.planDesigner.ui.menu.EditMenu;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +57,14 @@ public class MainController implements Initializable {
     @FXML
     private MenuBar menuBar;
 
+    @FXML
+    private Rectangle statusBlob;
+
+    @FXML
+    private Text statusText;
+
     private CommandStack commandStack = new CommandStack();
+
 
     public MainController() {
         super();
@@ -83,6 +82,7 @@ public class MainController implements Initializable {
         repositoryTabPane.init();
         menuBar.getMenus().addAll(createMenus());
         propertyAndStatusTabPane.init(editorTabPane);
+        statusText.setVisible(false);
     }
 
     /**
@@ -142,36 +142,35 @@ public class MainController implements Initializable {
     }
 
 	private void waitOnProgressWindow(Runnable toWaitOn) {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("errorWindow.fxml"));
-		try {
-		    Parent rootOfDialog = fxmlLoader.load();
-		    ErrorWindowController controller = fxmlLoader.getController();
-		    controller.getConfirmButton().setVisible(false);
-		    Stage stage = new Stage();
-		    stage.setResizable(false);
-		    stage.setTitle(I18NRepo.getString("label.generate.sources"));
-		    stage.setScene(new Scene(rootOfDialog));
-		    stage.initModality(Modality.WINDOW_MODAL);
-		    stage.initOwner(PlanDesigner.getPrimaryStage());
-		    stage.showAndWait();
-		    new Thread(() -> {
-		    	toWaitOn.run();
-		    	stage.close();
-		    }).start();
-		    int[] counter = {0};
-		    new Thread(() -> {
-		    	Platform.runLater(() -> controller.setErrorLabelText(I18NRepo.getString("label.generation.progress" + counter[0]++%3+1)));
-		    	try {
-					Thread.sleep(1000L);
-				} catch (InterruptedException ignored) {
-				}
-		    }).start();
+		new Thread(() -> {
+		    toWaitOn.run();
+            statusText.toFront();
+            statusText.setOpacity(1.0);
+            statusBlob.setOpacity(1.0);
+            statusText.setLayoutY(statusBlob.getLayoutY()+statusText.getFont().getSize()+2);
+		    statusText.setText(I18NRepo.getString("label.generation.completed"));
+            statusText.setLayoutX(statusBlob.getLayoutX() + (statusBlob.getWidth()/2)-statusText.getBoundsInLocal().getWidth()/2);
+		    statusBlob.setVisible(true);
+		    statusText.setVisible(true);
+            FadeTransition fadeTransition = new FadeTransition();
+            fadeTransition.setFromValue(1.0);
+            fadeTransition.setToValue(0.0);
+            fadeTransition.setDelay(Duration.seconds(2.0));
+            fadeTransition.setNode(statusBlob);
 
-		} catch (IOException er) {
-		    // if the helper window is not loadable something is really wrong here
-		    er.printStackTrace();
-		    System.exit(1);
-		}
+            FadeTransition fadeTransition2 = new FadeTransition();
+            fadeTransition2.setFromValue(1.0);
+            fadeTransition2.setToValue(0.0);
+            fadeTransition2.setDelay(Duration.seconds(2.0));
+            fadeTransition2.setNode(statusText);
+
+            fadeTransition.play();
+            fadeTransition2.play();
+            fadeTransition.onFinishedProperty().setValue(event -> {
+                statusBlob.setVisible(false);
+                statusText.setVisible(false);
+            });
+        }).start();
 	}
 
     /**

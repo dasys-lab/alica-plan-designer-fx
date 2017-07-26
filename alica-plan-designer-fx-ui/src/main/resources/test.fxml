@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane?>
 <?import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.PLDFileTreeView?>
-<?import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane?>
-<?import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane?>
+<?import javafx.scene.text.Text?>
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController">
    <children>
       <SplitPane dividerPositions="0.1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -32,5 +33,7 @@
          </padding>
       </SplitPane>
        <MenuBar fx:id="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Rectangle fx:id="statusBlob" arcHeight="20.0" arcWidth="20.0" fill="#b3d9fc" height="20.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="170.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+        <Text fx:id="statusText"/>
    </children>
 </AnchorPane>
