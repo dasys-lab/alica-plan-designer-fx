@@ -113,7 +113,8 @@ public class CreatNewDialogController implements Initializable {
                 }
                 EObject emptyObject = getAlicaFactory().create(alicaType);
                 Resource alicaFile = EMFModelUtils.createAlicaFile(emptyObject, true, new File(pathTextField.getText() + fileName));
-                ((AbstractPlan)alicaFile.getContents().get(0)).setName(fileName.replace(".beh","")
+                AbstractPlan abstractPlan = (AbstractPlan) alicaFile.getContents().get(0);
+                abstractPlan.setName(fileName.replace(".beh","")
                         .replace(".pty","").replace(".pml", ""));
                 if (emptyObject instanceof Plan) {
                     AllAlicaFiles.getInstance().getPlans().add(new Pair<>((Plan) emptyObject,
@@ -125,15 +126,18 @@ public class CreatNewDialogController implements Initializable {
                     AllAlicaFiles.getInstance().getBehaviours().add(new Pair<>((Behaviour) emptyObject,
                             Paths.get(pathTextField.getText() + fileName)));
                 }
+
+                EMFModelUtils.saveAlicaFile(abstractPlan);
                 ((Stage)pathTextField.getScene().getWindow()).close();
             } catch (IOException e) {
+                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
                 e.printStackTrace();
             }
         } else {
             try {
                 Files.createDirectory(new File(pathTextField.getText() + fileName).toPath());
             } catch (IOException e) {
-                e.printStackTrace();
+                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.create.folder"), e);
             }
         }
     }
