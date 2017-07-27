@@ -34,7 +34,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
 
         try {
-            pmlUiExtensionMap = EMFModelUtils.loadAlicaFileFromDisk(new File(uiExtensionMapPath));
+            pmlUiExtensionMap = EMFModelUtils.reloadAlicaFileFromDisk(new File(uiExtensionMapPath));
         } catch (IOException e) {
             ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.load.pmlx"), e);
         }

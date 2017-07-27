@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.io.File;
@@ -105,6 +106,24 @@ public class EMFModelUtils {
          } else {
              return (T) resourceFromPool.getContents().get(0);
          }
+    }
+
+
+    public static <T extends EObject> T reloadAlicaFileFromDisk(File file) throws IOException {
+        configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
+        String relativePath = file.getAbsolutePath()
+                .replace(configuration.getPlansPath() + "/","")
+                .replace(configuration.getRolesPath()+ "/","")
+                .replace(configuration.getMiscPath()+ "/","");
+        URI uri = URI
+                .createURI(relativePath);
+
+        alicaResourceSet.getResources().remove(alicaResourceSet.getResource(uri, false));
+        Resource loadedResource = alicaResourceSet.createResource(uri);
+        loadedResource.load(new FileInputStream(file), AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        T t = (T) loadedResource.getContents().get(0);
+        EcoreUtil.resolveAll(loadedResource);
+        return t;
     }
 
     /**
