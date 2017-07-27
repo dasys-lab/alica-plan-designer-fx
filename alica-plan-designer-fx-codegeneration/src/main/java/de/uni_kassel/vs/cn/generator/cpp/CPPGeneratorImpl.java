@@ -8,6 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -114,15 +115,27 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createConstraintsForPlan(Plan plan) {
-        String headerPath = generatedSourcesManager.getIncludeDir() + plan.getDestinationPath() +
-                "/" + "constraints/" + plan.getName() + plan.getId() + "Constraints.h";
+        String destinationPath = plan.getDestinationPath();
+        String destinationPathWithoutName = destinationPath.substring(0, destinationPath.lastIndexOf('/') + 1);
+        String constraintHeaderPath = generatedSourcesManager.getIncludeDir() +
+                destinationPathWithoutName + "constraints/";
+        File cstrIncPathOnDisk = new File(constraintHeaderPath);
+        if (cstrIncPathOnDisk.exists() == false) {
+            cstrIncPathOnDisk.mkdir();
+        }
+        String headerPath = constraintHeaderPath + plan.getName() + plan.getId() + "Constraints.h";
         String fileContentHeader = xtendTemplates.constraintsHeader(plan);
         writeSourceFile(headerPath, fileContentHeader);
 
         formatFile(headerPath);
 
-        String srcPath = generatedSourcesManager.getSrcDir() + plan.getDestinationPath() +
-                "/" + "constraints/" + plan.getName() + plan.getId() + "Constraints.cpp";
+        String constraintSourcePath = generatedSourcesManager.getSrcDir() + destinationPathWithoutName +
+                "/" + "constraints/";
+        File cstrSrcPathOnDisk = new File(constraintSourcePath);
+        if (cstrSrcPathOnDisk.exists() == false) {
+            cstrSrcPathOnDisk.mkdir();
+        }
+        String srcPath = constraintSourcePath + plan.getName() + plan.getId() + "Constraints.cpp";
         String fileContentSource = xtendTemplates.constraintsSource(plan, getActiveConstraintCodeGenerator());
         writeSourceFile(srcPath, fileContentSource);
         formatFile(srcPath);
@@ -152,15 +165,17 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createPlan(Plan plan) {
-        String headerPath = generatedSourcesManager.getIncludeDir() + plan.getDestinationPath() +
-                "/" + plan.getName() + plan.getId() + ".h";
+        String destinationPath = plan.getDestinationPath();
+        String shortDestPath = destinationPath.substring(0, destinationPath.lastIndexOf('/') + 1);
+        String headerPath = generatedSourcesManager.getIncludeDir() + shortDestPath
+                + plan.getName() + plan.getId() + ".h";
         String fileContentHeader = xtendTemplates.planHeader(plan);
         writeSourceFile(headerPath, fileContentHeader);
 
         formatFile(headerPath);
 
-        String srcPath = generatedSourcesManager.getSrcDir() + plan.getDestinationPath() +
-                "/" + plan.getName() + plan.getId() + ".cpp";
+        String srcPath = generatedSourcesManager.getSrcDir() + shortDestPath +
+                plan.getName() + plan.getId() + ".cpp";
         String fileContentSource = xtendTemplates.planSource(plan, getActiveConstraintCodeGenerator());
         writeSourceFile(srcPath, fileContentSource);
 

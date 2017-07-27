@@ -23,9 +23,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/xtend-gen" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/xtend-gen" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/target/xtend-gen/main" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/../../alica-plan-designer-fx-default-plugin/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/target/xtend-gen/main" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

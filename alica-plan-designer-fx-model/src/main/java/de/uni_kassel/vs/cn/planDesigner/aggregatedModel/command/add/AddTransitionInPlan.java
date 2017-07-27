@@ -28,6 +28,7 @@ public class AddTransitionInPlan extends AbstractCommand<Transition> {
 
     @Override
     public void doCommand() {
+        getElementToEdit().setPreCondition(getAlicaFactory().createPreCondition());
         getElementToEdit().setInState(from);
         getElementToEdit().setOutState(to);
         parentOfElement.getPlan().getTransitions().add(getElementToEdit());
