@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTaskToRep
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -102,6 +104,12 @@ public class EntryPointCreatorDialogController implements Initializable {
                     .getCommandStack()
                     .storeAndExecute(new AddTaskToRepository(AllAlicaFiles.getInstance()
                             .getTaskRepository().get(0).getKey(), newTaskNameTextField.getText()));
+            try {
+                EMFModelUtils.saveAlicaFile(AllAlicaFiles.getInstance().getTaskRepository().get(0).getKey());
+            } catch (IOException e) {
+                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
+                e.printStackTrace();
+            }
             taskComboBox.setItems(FXCollections.observableArrayList(AllAlicaFiles.getInstance().getTasks().getKey()));
             newTaskNameTextField.setText("");
         }
