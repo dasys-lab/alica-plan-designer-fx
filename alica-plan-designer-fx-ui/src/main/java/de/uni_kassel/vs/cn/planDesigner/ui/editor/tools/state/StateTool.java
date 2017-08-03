@@ -5,14 +5,19 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPl
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 
 import java.util.HashMap;
@@ -49,25 +54,34 @@ public class StateTool extends AbstractTool<State> {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
+                    localCoord = null;
+                    if (updateLocalCoords(event)) return;
+
+                    double x = localCoord.getX();
+                    double y = localCoord.getY();
                     if (initial) {
-                        visualRepresentation.setLayoutX(event.getX());
-                        visualRepresentation.setLayoutY(event.getY());
+                        visualRepresentation.setLayoutX(x);
+                        visualRepresentation.setLayoutY(y);
                         initial = false;
                     }
 
+                    visualRepresentation.setTranslateX(x);
+                    visualRepresentation.setTranslateY(y);
+
                     if (event.getGestureSource() != workbench) {
-                        visualRepresentation.setTranslateX(event.getX());
-                        visualRepresentation.setTranslateY(event.getY());
+                        visualRepresentation.setTranslateX(x);
+                        visualRepresentation.setTranslateY(y);
                     }
-                    System.out.println("X: " + event.getX() + " Y: " + event.getY());
+                    System.out.println("X: " + x + " Y: " + y);
                     event.consume();
                 }
             });
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
+                    updateLocalCoords(event);
                     if (event.getGestureSource() != workbench && visualRepresentation == null) {
-                        visualRepresentation = new Circle(event.getX(),event.getY(), 10, new StateContainer().getVisualisationColor());
+                        visualRepresentation = new Circle(localCoord.getX(),localCoord.getY(), 10, new StateContainer().getVisualisationColor());
                         ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().add(visualRepresentation);
                     }
                     event.consume();
@@ -86,6 +100,13 @@ public class StateTool extends AbstractTool<State> {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
+                    if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
+                            event.getTarget() instanceof StackPane == false) {
+                        event.consume();
+                        endPhase();
+                        return;
+                    }
+
                     ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
                     PlanModelVisualisationObject planModelVisualisationObject = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject();
                     AddStateInPlan command = new AddStateInPlan(planModelVisualisationObject,
@@ -96,8 +117,8 @@ public class StateTool extends AbstractTool<State> {
                     MainController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(),command.getElementToEdit(),
-                                    (int) (event.getX()),
-                                    (int) (event.getY()), planModelVisualisationObject.getPlan()));
+                                    (int) (localCoord.getX()),
+                                    (int) (localCoord.getY()), planModelVisualisationObject.getPlan()));
                     endPhase();
                     initial = true;
                 }
@@ -105,4 +126,5 @@ public class StateTool extends AbstractTool<State> {
         }
         return eventHandlerMap;
     }
+
 }

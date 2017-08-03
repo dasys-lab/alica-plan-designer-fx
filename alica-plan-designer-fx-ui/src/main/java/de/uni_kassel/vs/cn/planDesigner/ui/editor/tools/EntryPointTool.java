@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.EntryPointCreatorDialogController;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.event.EventHandler;
@@ -15,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -57,25 +59,34 @@ public class EntryPointTool extends AbstractTool<EntryPoint> {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
+                    localCoord = null;
+                    if (updateLocalCoords(event)) return;
+
+                    double x = localCoord.getX();
+                    double y = localCoord.getY();
                     if (initial) {
-                        visualRepresentation.setLayoutX(event.getX());
-                        visualRepresentation.setLayoutY(event.getY());
+                        visualRepresentation.setLayoutX(x);
+                        visualRepresentation.setLayoutY(y);
                         initial = false;
                     }
 
+                    visualRepresentation.setTranslateX(x);
+                    visualRepresentation.setTranslateY(y);
+
                     if (event.getGestureSource() != workbench) {
-                        visualRepresentation.setTranslateX(event.getX());
-                        visualRepresentation.setTranslateY(event.getY());
+                        visualRepresentation.setTranslateX(x);
+                        visualRepresentation.setTranslateY(y);
                     }
-                    System.out.println("X: " + event.getX() + " Y: " + event.getY());
+                    System.out.println("X: " + x + " Y: " + y);
                     event.consume();
                 }
             });
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
+                    updateLocalCoords(event);
                     if (event.getGestureSource() != workbench && visualRepresentation == null) {
-                        visualRepresentation = new Circle(event.getX(),event.getY(), 10, new EntryPointContainer().getVisualisationColor());
+                        visualRepresentation = new Circle(localCoord.getX(),localCoord.getY(), 10, new EntryPointContainer().getVisualisationColor());
                         ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().add(visualRepresentation);
                     }
                     event.consume();
@@ -95,13 +106,18 @@ public class EntryPointTool extends AbstractTool<EntryPoint> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     endPhase();
+                    if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
+                            event.getTarget() instanceof StackPane == false) {
+                        event.consume();
+                        return;
+                    }
                     ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("entryPointCreatorDialog.fxml"));
                     try {
                         Parent rootOfDialog = fxmlLoader.load();
                         EntryPointCreatorDialogController controller = fxmlLoader.getController();
-                        controller.setX((int) event.getX());
-                        controller.setY((int) event.getY());
+                        controller.setX((int) localCoord.getX());
+                        controller.setY((int) localCoord.getY());
                         Stage stage = new Stage();
                         stage.setResizable(false);
                         stage.setTitle(I18NRepo.getString("label.choose.task"));

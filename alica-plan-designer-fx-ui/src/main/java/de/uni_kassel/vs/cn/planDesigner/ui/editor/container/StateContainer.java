@@ -3,8 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
@@ -68,6 +67,12 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
                 .stream()
                 .map(AbstractPlanHBox::new)
                 .collect(Collectors.toList());
+        if (getContainedElement() instanceof TerminalState) {
+            PostCondition postCondition = ((TerminalState) getContainedElement()).getPostCondition();
+            if (postCondition != null) {
+                statePlans.add(new AbstractPlanHBox(postCondition));
+            }
+        }
         getChildren().addAll(statePlans);
     }
 
@@ -116,9 +121,9 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
     }
 
     private class AbstractPlanHBox extends HBox {
-        private AbstractPlan abstractPlan;
+        private PlanElement abstractPlan;
 
-        public AbstractPlanHBox(AbstractPlan p) {
+        public AbstractPlanHBox(PlanElement p) {
             super();
             this.abstractPlan = p;
             ImageView imageView = new ImageView(new AlicaIcon(p.getClass()));

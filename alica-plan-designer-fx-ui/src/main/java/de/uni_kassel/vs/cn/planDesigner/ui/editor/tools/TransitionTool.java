@@ -1,13 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTransitionInPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TerminalStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +29,7 @@ public class TransitionTool extends AbstractTool<Transition> {
     private boolean initial = true;
     private StateContainer start;
     private StateContainer finish;
+    private Cursor previousCursor;
 
     public TransitionTool(TabPane workbench) {
         super(workbench);
@@ -45,22 +49,58 @@ public class TransitionTool extends AbstractTool<Transition> {
     protected Map<EventType, EventHandler> toolRequiredHandlers() {
         if (eventHandlerMap.isEmpty()) {
             eventHandlerMap.put(MouseEvent.MOUSE_CLICKED, event -> {
-                if(((Node)event.getTarget()).getParent() instanceof StateContainer) {
                     if (initial) {
-                        start = (StateContainer) ((Node)event.getTarget()).getParent();
-                        initial = false;
+                        if(((Node)event.getTarget()).getParent() instanceof StateContainer &&
+                                ((Node)event.getTarget()).getParent() instanceof TerminalStateContainer == false) {
+                            start = (StateContainer) ((Node)event.getTarget()).getParent();
+                            initial = false;
+                        } else {
+                            endPhase();
+                        }
                     } else {
-                        finish = (StateContainer) ((Node)event.getTarget()).getParent();
+                        if (((Node)event.getTarget()).getParent() instanceof StateContainer) {
+                            finish = (StateContainer) ((Node)event.getTarget()).getParent();
+                            AddTransitionInPlan command = new AddTransitionInPlan(
+                                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject(),
+                                    start.getContainedElement(), finish.getContainedElement());
+                            MainController.getInstance()
+                                    .getCommandStack()
+                                    .storeAndExecute(command);
+                        }
+
                         initial = true;
-                        AddTransitionInPlan command = new AddTransitionInPlan(
-                                ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject(),
-                                start.getContainedElement(), finish.getContainedElement());
-                        MainController.getInstance()
-                                .getCommandStack()
-                                .storeAndExecute(command);
                         endPhase();
                     }
+            });
+
+            eventHandlerMap.put(MouseEvent.MOUSE_MOVED, event -> {
+                if (event.getTarget() instanceof Node == false) {
+                    event.consume();
+                    return;
                 }
+                Node target = (Node) event.getTarget();
+
+                if (initial) {
+                    if (((Node)event.getTarget()).getParent() instanceof StateContainer == false ||
+                            ((Node)event.getTarget()).getParent() instanceof TerminalStateContainer) {
+                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
+                            previousCursor = target.getScene().getCursor();
+                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
+                        }
+                    } else {
+                        target.getScene().setCursor(previousCursor);
+                    }
+                } else {
+                    if (((Node)event.getTarget()).getParent() instanceof StateContainer == false) {
+                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
+                            previousCursor = target.getScene().getCursor();
+                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
+                        }
+                    } else {
+                        target.getScene().setCursor(previousCursor);
+                    }
+                }
+                event.consume();
             });
         }
         return eventHandlerMap;
@@ -68,7 +108,8 @@ public class TransitionTool extends AbstractTool<Transition> {
 
     @Override
     public DragableHBox<Transition> createToolUI() {
-        return new TransitionHBox();
+        dragableHBox = new TransitionHBox();
+        return dragableHBox;
     }
 
     private class TransitionHBox extends DragableHBox<Transition> {

@@ -24,8 +24,8 @@ import java.util.Map;
  */
 public abstract class AbstractConditionTool extends AbstractTool<Condition> {
 
-    private Map<EventType, EventHandler> eventHandlerMap = new HashMap<>();
-    private Node visualRepresentation;
+    protected Map<EventType, EventHandler> eventHandlerMap = new HashMap<>();
+    protected Node visualRepresentation;
 
     public AbstractConditionTool(TabPane workbench) {
         super(workbench);
@@ -69,8 +69,8 @@ public abstract class AbstractConditionTool extends AbstractTool<Condition> {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
-                    if (event.getSource() instanceof ConditionHBox) {
-                        ((ConditionHBox)event.getSource()).getChildren().remove(visualRepresentation);
+                    if (event.getTarget() instanceof ConditionHBox) {
+                        ((ConditionHBox)event.getTarget()).getChildren().remove(visualRepresentation);
                         Condition newCondition = createNewObject();
                         newCondition.setPluginName(PluginManager.getInstance().getActivePlugin().getPluginName());
                         if (newCondition instanceof PostCondition == false) {

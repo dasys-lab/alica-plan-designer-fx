@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 /**
  * Created by marci on 24.02.17.
  */
-public class FailureStateContainer extends StateContainer {
+public class FailureStateContainer extends TerminalStateContainer {
     public FailureStateContainer(PmlUiExtension pmlUiExtension, State state, CommandStack commandStack) {
         super(pmlUiExtension, state, commandStack);
     }

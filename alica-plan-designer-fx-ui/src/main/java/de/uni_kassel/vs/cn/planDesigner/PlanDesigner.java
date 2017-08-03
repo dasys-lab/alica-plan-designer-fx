@@ -10,8 +10,11 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -22,6 +25,9 @@ import java.net.URISyntaxException;
 public class PlanDesigner extends Application {
 
     private static Stage primaryStage;
+
+    public static Cursor FORBIDDEN_CURSOR = new ImageCursor(
+            new Image(PlanDesigner.class.getClassLoader().getResourceAsStream("images/forbidden.png")));
 
     public static Stage getPrimaryStage() {
         return primaryStage;

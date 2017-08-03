@@ -1,15 +1,19 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.SetStateForEntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.SynchronisationContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -24,9 +28,10 @@ import java.util.Map;
 public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStateConnection> {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
-    private boolean initial;
+    private boolean initial = true;
     private EntryPointContainer start;
     private StateContainer finish;
+    private Cursor previousCursor;
 
     public InitTransitionTool(TabPane workbench) {
         super(workbench);
@@ -39,13 +44,7 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
 
     @Override
     public void draw() {
-        PlanTab selectedItem = (PlanTab) workbench.getSelectionModel().getSelectedItem();
-        if (selectedItem == null) {
-            ChangeListener<Tab> listener = new TabChangeListener(workbench);
-            workbench.getSelectionModel().selectedItemProperty().addListener(listener);
-        } else {
-            (selectedItem).getPlanEditorPane().setupPlanVisualisation();
-        }
+        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
     }
 
     @Override
@@ -56,6 +55,8 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
                     if (initial) {
                         start = (EntryPointContainer) ((Node)event.getTarget()).getParent();
                         initial = false;
+                    } else {
+                        endPhase();
                     }
                 } else if (((Node)event.getTarget()).getParent() instanceof StateContainer && initial == false) {
                     finish = (StateContainer) ((Node)event.getTarget()).getParent();
@@ -64,9 +65,40 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
                     MainController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
+                } else {
                     endPhase();
                 }
 
+                event.consume();
+            });
+
+            eventHandlerMap.put(MouseEvent.MOUSE_MOVED, event -> {
+                if (event.getTarget() instanceof Node == false) {
+                    event.consume();
+                    return;
+                }
+                Node target = (Node) event.getTarget();
+
+                if (initial) {
+                    if (((Node)event.getTarget()).getParent() instanceof EntryPointContainer == false) {
+                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
+                            previousCursor = target.getScene().getCursor();
+                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
+                        }
+                    } else {
+                        target.getScene().setCursor(previousCursor);
+                    }
+                } else {
+                    if (((Node)event.getTarget()).getParent() instanceof StateContainer == false) {
+                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
+                            previousCursor = target.getScene().getCursor();
+                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
+                        }
+                    } else {
+                        target.getScene().setCursor(previousCursor);
+                    }
+                }
+                event.consume();
             });
         }
         return eventHandlerMap;
@@ -74,7 +106,8 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
 
     @Override
     public DragableHBox<InitStateConnection> createToolUI() {
-        return new InitTransitionTool.InitStateConnectionHBox();
+        dragableHBox = new InitTransitionTool.InitStateConnectionHBox();
+        return dragableHBox;
     }
 
     private class InitStateConnectionHBox extends DragableHBox<InitStateConnection> {

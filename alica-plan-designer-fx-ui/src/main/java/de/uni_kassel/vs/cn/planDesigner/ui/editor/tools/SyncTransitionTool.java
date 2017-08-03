@@ -1,9 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTransitionToSynchronisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.SynchronisationContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
@@ -12,6 +14,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -29,6 +32,7 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
     private boolean initial = true;
     private SynchronisationContainer start;
     private TransitionContainer finish;
+    private Cursor previousCursor;
 
     public SyncTransitionTool(TabPane workbench) {
         super(workbench);
@@ -58,6 +62,9 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
                     if (initial) {
                         start = (SynchronisationContainer) ((Node)event.getTarget()).getParent();
                         initial = false;
+                    } else {
+                        initial = true;
+                        endPhase();
                     }
                 } else if (((Node)event.getTarget()).getParent() instanceof TransitionContainer && initial == false) {
                     finish = (TransitionContainer) ((Node)event.getTarget()).getParent();
@@ -72,8 +79,40 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
                     start = null;
                     finish = null;
                     endPhase();
+                } else {
+                    initial = true;
+                    endPhase();
                 }
 
+            });
+
+            eventHandlerMap.put(MouseEvent.MOUSE_MOVED, event -> {
+                if (event.getTarget() instanceof Node == false) {
+                    event.consume();
+                    return;
+                }
+                Node target = (Node) event.getTarget();
+
+                if (initial) {
+                    if (target.getParent() instanceof SynchronisationContainer == false) {
+                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
+                            previousCursor = target.getScene().getCursor();
+                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
+                        }
+                    } else {
+                        target.getScene().setCursor(previousCursor);
+                    }
+                } else {
+                    if (((Node)event.getTarget()).getParent() instanceof TransitionContainer == false) {
+                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
+                            previousCursor = target.getScene().getCursor();
+                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
+                        }
+                    } else {
+                        target.getScene().setCursor(previousCursor);
+                    }
+                }
+                event.consume();
             });
         }
         return eventHandlerMap;
@@ -81,7 +120,8 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
 
     @Override
     public DragableHBox<SyncTransition> createToolUI() {
-        return new SyncTransitionHBox();
+        dragableHBox = new SyncTransitionHBox();
+        return dragableHBox;
     }
 
     /**
