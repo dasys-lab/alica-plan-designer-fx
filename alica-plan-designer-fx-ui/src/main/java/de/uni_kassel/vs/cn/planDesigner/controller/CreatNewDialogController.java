@@ -113,7 +113,13 @@ public class CreatNewDialogController implements Initializable {
                 EObject emptyObject = getAlicaFactory().create(alicaType);
                 ((PlanElement)emptyObject).setName(fileName.replace(".beh","")
                         .replace(".pty","").replace(".pml", ""));
-                EMFModelUtils.createAlicaFile(emptyObject, true, new File(pathTextField.getText() + fileName));
+                File alicaFile = new File(pathTextField.getText() + fileName);
+                if (alicaFile.exists()) {
+                    ErrorWindowController
+                            .createErrorWindow(I18NRepo.getString("label.error.save.alreadyExists"), null);
+                    return;
+                }
+                EMFModelUtils.createAlicaFile(emptyObject, true, alicaFile);
                 ((Stage)pathTextField.getScene().getWindow()).close();
             } catch (IOException e) {
                 ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
