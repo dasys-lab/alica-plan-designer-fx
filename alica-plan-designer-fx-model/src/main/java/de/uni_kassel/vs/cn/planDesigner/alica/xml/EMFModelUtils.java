@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -154,6 +155,12 @@ public class EMFModelUtils {
                 pmlexResource.setURI(URI.createURI(relativeURI.toString().replace(".pml", ".pmlex")));
                 pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
             }
+        } else if (emptyObject instanceof PlanType) {
+            AllAlicaFiles.getInstance().getPlanTypes().add(new Pair<>((PlanType) emptyObject,
+                    file.toPath()));
+        } else if (emptyObject instanceof Behaviour) {
+            AllAlicaFiles.getInstance().getBehaviours().add(new Pair<>((Behaviour) emptyObject,
+                    file.toPath()));
         }
 
         // set destinationPath when resource is created

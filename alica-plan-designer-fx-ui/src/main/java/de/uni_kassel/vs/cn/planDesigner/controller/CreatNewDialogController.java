@@ -1,9 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
@@ -101,33 +98,22 @@ public class CreatNewDialogController implements Initializable {
         String fileName = nameTextField.getText();
         if (alicaType != null) {
             try {
-                if (alicaType.getInstanceClass().equals(Behaviour.class) && fileName.endsWith(".beh") == false ||
-                        alicaType.getInstanceClass().equals(Plan.class) && fileName.endsWith(".pml") == false ||
-                        alicaType.getInstanceClass().equals(PlanType.class) && fileName.endsWith(".pty") == false) {
-                    nameTextField.setStyle("-fx-text-inner-color: red;");
-                    nameTextField.setOnKeyPressed(e -> {
-                        nameTextField.setStyle("");
-                        nameTextField.setOnKeyPressed(null);
-                    });
-                    return;
-                }
-                EObject emptyObject = getAlicaFactory().create(alicaType);
-                Resource alicaFile = EMFModelUtils.createAlicaFile(emptyObject, true, new File(pathTextField.getText() + fileName));
-                AbstractPlan abstractPlan = (AbstractPlan) alicaFile.getContents().get(0);
-                abstractPlan.setName(fileName.replace(".beh","")
-                        .replace(".pty","").replace(".pml", ""));
-                if (emptyObject instanceof Plan) {
-                    AllAlicaFiles.getInstance().getPlans().add(new Pair<>((Plan) emptyObject,
-                            Paths.get(pathTextField.getText() + fileName)));
-                } else if (emptyObject instanceof PlanType) {
-                    AllAlicaFiles.getInstance().getPlanTypes().add(new Pair<>((PlanType) emptyObject,
-                            Paths.get(pathTextField.getText() + fileName)));
-                } else if (emptyObject instanceof Behaviour) {
-                    AllAlicaFiles.getInstance().getBehaviours().add(new Pair<>((Behaviour) emptyObject,
-                            Paths.get(pathTextField.getText() + fileName)));
+                if (alicaType.getInstanceClass().equals(Behaviour.class) && fileName.endsWith(".beh") == false) {
+                    fileName = fileName + ".beh";
                 }
 
-                EMFModelUtils.saveAlicaFile(abstractPlan);
+                if (alicaType.getInstanceClass().equals(Plan.class) && fileName.endsWith(".pml") == false) {
+                    fileName = fileName + ".pml";
+                }
+
+                if (alicaType.getInstanceClass().equals(PlanType.class) && fileName.endsWith(".pty") == false) {
+                    fileName = fileName + ".pty";
+                }
+
+                EObject emptyObject = getAlicaFactory().create(alicaType);
+                ((PlanElement)emptyObject).setName(fileName.replace(".beh","")
+                        .replace(".pty","").replace(".pml", ""));
+                EMFModelUtils.createAlicaFile(emptyObject, true, new File(pathTextField.getText() + fileName));
                 ((Stage)pathTextField.getScene().getWindow()).close();
             } catch (IOException e) {
                 ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
