@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -89,6 +90,12 @@ public class AllAlicaFiles {
 
         taskRepository = getRepositoryOf(configuration.getMiscPath(), "tsk");
 
+        if (taskRepository == null || taskRepository.isEmpty()) {
+            EMFModelUtils.createAlicaFile(EMFModelUtils.getAlicaFactory().createTaskRepository(), false,
+                    new File(configuration.getMiscPath() + File.separator +"taskrepository.tsk"));
+        }
+
+        taskRepository = getRepositoryOf(configuration.getMiscPath(), "tsk");
         tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
         EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
         LOG.info("AllAlicaFiles successfully initialized");
