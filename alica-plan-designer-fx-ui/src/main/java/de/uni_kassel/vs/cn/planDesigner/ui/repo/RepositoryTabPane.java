@@ -49,6 +49,23 @@ public class RepositoryTabPane extends TabPane {
         return new Tab[]{new RepositoryTab<>(AllAlicaFiles.getInstance().getPlans(), planTool, getAlicaFactory().createPlan().eClass().getName()),
                 new RepositoryTab<>(AllAlicaFiles.getInstance().getPlanTypes(), planTypeTool, getAlicaFactory().createPlanType().eClass().getName()),
                 new RepositoryTab<>(AllAlicaFiles.getInstance().getBehaviours(), behaviourTool, getAlicaFactory().createBehaviour().eClass().getName()),
-                new RepositoryTab<>(AllAlicaFiles.getInstance().getTasks(), behaviourTool, getAlicaFactory().createTask().eClass().getName())};
+                new RepositoryTab<>(AllAlicaFiles.getInstance().getTasks(), new TaskTool(), getAlicaFactory().createTask().eClass().getName())};
+    }
+
+    public class TaskTool extends AbstractPlanTool {
+        public TaskTool() {
+            super(RepositoryTabPane.this);
+        }
+
+        @Override
+        public void startPhase() {}
+
+        @Override
+        public void endPhase() {}
+
+        @Override
+        public AbstractPlan createNewObject() {
+            return EMFModelUtils.getAlicaFactory().createBehaviour();
+        }
     }
 }

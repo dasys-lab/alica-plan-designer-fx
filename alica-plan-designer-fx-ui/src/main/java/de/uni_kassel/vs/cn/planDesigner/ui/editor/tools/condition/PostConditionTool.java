@@ -11,12 +11,10 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TerminalStateContain
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;

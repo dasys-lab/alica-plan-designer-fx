@@ -6,16 +6,12 @@ import de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.SynchronisationContainer;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
-import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 

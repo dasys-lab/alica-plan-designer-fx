@@ -4,12 +4,12 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractPlanTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.DragableHBox;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.ShowUsagesMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.nio.file.Path;
@@ -17,11 +17,13 @@ import java.nio.file.Path;
 /**
  * Created by marci on 25.11.16.
  */
-public class RepositoryHBox<T extends PlanElement> extends HBox {
+public class RepositoryHBox<T extends PlanElement> extends DragableHBox {
     private T object;
     private AbstractPlanTool dragTool;
 
     public RepositoryHBox(T object, Path pathToObject, AbstractPlanTool dragTool) {
+        super(dragTool.createNewObject(), dragTool);
+        dragTool.setDragableHBox(this);
         this.object = object;
         this.dragTool = dragTool;
         setOnContextMenuRequested(e -> {
@@ -37,7 +39,7 @@ public class RepositoryHBox<T extends PlanElement> extends HBox {
             }
         });
 
-        if (dragTool != null) {
+        if (dragTool instanceof RepositoryTabPane.TaskTool == false) {
             initDragSupport();
         }
     }
@@ -55,5 +57,8 @@ public class RepositoryHBox<T extends PlanElement> extends HBox {
         });
     }
 
+    @Override
+    public void addContents(ImageView imageView, String className) {
 
+    }
 }

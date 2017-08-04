@@ -20,19 +20,26 @@ public class DragableHBox<T extends PlanElement> extends HBox {
         Class<?> alicaTypeClass = alicaType.getClass();
         ImageView imageView = new ImageView(new AlicaIcon(alicaTypeClass));
         String className = alicaTypeClass.getSimpleName().replace("Impl", "");
-        getChildren().addAll(imageView, new Text(className));
-        EventHandler<MouseEvent> onDragDetectedHandler = event -> {
-            startFullDrag();
-            this.controller.startPhase();
-            event.consume();
-        };
+        addContents(imageView, className);
 
-        EventHandler<DragEvent> onDragDoneHandler = event -> {
-            event.consume();
-        };
-        this.setOnDragDetected(onDragDetectedHandler);
-        imageView.setOnDragDetected(onDragDetectedHandler);
-        this.setOnDragDone(onDragDoneHandler);
-        imageView.setOnDragDone(onDragDoneHandler);
+        if (controller instanceof AbstractPlanTool == false) {
+            EventHandler<MouseEvent> onDragDetectedHandler = event -> {
+                startFullDrag();
+                this.controller.startPhase();
+                event.consume();
+            };
+
+            EventHandler<DragEvent> onDragDoneHandler = event -> {
+                event.consume();
+            };
+            this.setOnDragDetected(onDragDetectedHandler);
+            imageView.setOnDragDetected(onDragDetectedHandler);
+            this.setOnDragDone(onDragDoneHandler);
+            imageView.setOnDragDone(onDragDoneHandler);
+        }
+    }
+
+    public void addContents(ImageView imageView, String className) {
+        getChildren().addAll(imageView, new Text(className));
     }
 }
