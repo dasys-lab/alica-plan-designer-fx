@@ -39,7 +39,7 @@ public class EMFModelUtils {
 
     private static final Logger LOG = LogManager.getLogger(EMFModelUtils.class);
     private static AlicaResourceSet alicaResourceSet;
-    private static Configuration configuration;
+    private static Configuration configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
 
     @SuppressWarnings("unused")
     private static void initAlicaResourceSet() {
@@ -82,7 +82,6 @@ public class EMFModelUtils {
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */
      public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
-         configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
          String relativePath = file.getAbsolutePath()
                  .replace(configuration.getPlansPath() + "/","")
                  .replace(configuration.getRolesPath()+ "/","")
@@ -110,7 +109,6 @@ public class EMFModelUtils {
 
 
     public static <T extends EObject> T reloadAlicaFileFromDisk(File file) throws IOException {
-        configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
         String relativePath = file.getAbsolutePath()
                 .replace(configuration.getPlansPath() + "/","")
                 .replace(configuration.getRolesPath()+ "/","")
