@@ -72,6 +72,10 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         return pldToolBar;
     }
 
+    public void setupPlanVisualisation() {
+        planEditorPane.setupPlanVisualisation();
+    }
+
     @Override
     public void save() {
         super.save();
