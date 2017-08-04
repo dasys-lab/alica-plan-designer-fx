@@ -1,8 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -16,6 +18,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 import java.util.Map;
 
@@ -35,6 +38,7 @@ public abstract class AbstractTool<T extends PlanElement> {
     protected Cursor originalCursor;
     protected Point2D localCoord;
     protected DragableHBox<T> dragableHBox;
+    private boolean recentlyDone;
 
     public AbstractTool(TabPane workbench) {
         this.workbench = workbench;
@@ -71,6 +75,10 @@ public abstract class AbstractTool<T extends PlanElement> {
                 .forEach(entry -> getWorkbench().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
         draw();
         workbench.getScene().setCursor(originalCursor);
+        ((AbstractEditorTab)MainController.getInstance().getEditorTabPane().getSelectionModel()
+                .getSelectedItem())
+                .getSelectedPlanElement().set(new Pair<>(null, null));
+        setRecentlyDone(true);
     }
 
     public boolean updateLocalCoords(MouseDragEvent event) {
@@ -95,5 +103,13 @@ public abstract class AbstractTool<T extends PlanElement> {
             return true;
         }
         return false;
+    }
+
+    public boolean isRecentlyDone() {
+        return recentlyDone;
+    }
+
+    public void setRecentlyDone(boolean recentlyDone) {
+        this.recentlyDone = recentlyDone;
     }
 }

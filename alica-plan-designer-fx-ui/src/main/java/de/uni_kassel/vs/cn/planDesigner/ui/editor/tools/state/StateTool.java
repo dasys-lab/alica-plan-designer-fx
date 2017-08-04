@@ -97,6 +97,7 @@ public class StateTool extends AbstractTool<State> {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
+                    updateLocalCoords(event);
                     if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
                             event.getTarget() instanceof StackPane == false) {
                         event.consume();

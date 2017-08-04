@@ -6,6 +6,9 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.PLDToolBar;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.ShowGeneratedSourcesMenuItem;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -50,8 +53,20 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
 
     @SuppressWarnings("unchecked")
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(T containedElement) {
-        return event -> ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
-                .getSelectedItem()).getSelectedPlanElement().setValue(new Pair<>(containedElement, this));
+        return event -> {
+            PLDToolBar pldToolBar = ((PlanTab) MainController.getInstance().getEditorTabPane().getSelectionModel()
+                    .getSelectedItem()).getPldToolBar();
+            if (pldToolBar.anyToolsRecentlyDone() == false) {
+                ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
+                        .getSelectedItem()).getSelectedPlanElement().setValue(new Pair<>(containedElement, this));
+            } else {
+                AbstractTool recentlyDoneTool = pldToolBar.getRecentlyDoneTool();
+                if(recentlyDoneTool != null) {
+                    recentlyDoneTool.setRecentlyDone(false);
+                }
+            }
+
+        };
     }
 
     @Override

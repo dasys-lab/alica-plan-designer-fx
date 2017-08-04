@@ -27,6 +27,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
     private final PlanEditorPane planEditorPane;
     private final ConditionHBox conditionHBox;
     private PmlUiExtensionMap pmlUiExtensionMap;
+    private final PLDToolBar pldToolBar;
 
     public PlanTab(Plan editable, Path filePath, CommandStack commandStack) {
         super(editable, filePath, commandStack);
@@ -45,7 +46,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
 
         planEditorPane.setManaged(true);
 
-        PLDToolBar pldToolBar = new PLDToolBar(MainController.getInstance().getEditorTabPane());
+        pldToolBar = new PLDToolBar(MainController.getInstance().getEditorTabPane());
         ScrollPane scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);
@@ -65,6 +66,10 @@ public class PlanTab extends AbstractEditorTab<Plan> {
 
     public ConditionHBox getConditionHBox() {
         return conditionHBox;
+    }
+
+    public PLDToolBar getPldToolBar() {
+        return pldToolBar;
     }
 
     @Override

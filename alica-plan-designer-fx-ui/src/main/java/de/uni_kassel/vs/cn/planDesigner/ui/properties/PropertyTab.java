@@ -49,6 +49,10 @@ public class PropertyTab extends AbstractPropertyTab {
             propertyHBoxList = FXCollections.observableList(new ArrayList<>());
         }
         propertyHBoxList.clear();
+        if (selectedPlanElement == null) {
+            setContent(new ListView<>(propertyHBoxList));
+            return;
+        }
         getSelectedEditorTabPlanElement()
                 .eClass()
                 .getEAllStructuralFeatures()
