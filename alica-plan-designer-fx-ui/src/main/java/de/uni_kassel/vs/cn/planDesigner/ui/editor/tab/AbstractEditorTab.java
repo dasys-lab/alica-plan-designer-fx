@@ -7,8 +7,15 @@ import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Tab;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
+import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
 
@@ -33,6 +40,21 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         this.filePath = filePath;
         selectedPlanElement = new SimpleObjectProperty<>(new Pair<>(editable, null));
         this.commandStack = commandStack;
+        selectedPlanElement.addListener(new ChangeListener<Pair<PlanElement, AbstractPlanElementContainer>>() {
+            private Effect previousEffect;
+            @Override
+            public void changed(ObservableValue<? extends Pair<PlanElement, AbstractPlanElementContainer>> observable, Pair<PlanElement, AbstractPlanElementContainer> oldValue, Pair<PlanElement, AbstractPlanElementContainer> newValue) {
+                if (oldValue != null && oldValue.getValue() != null) {
+                    oldValue.getValue().setEffect(previousEffect);
+                }
+                if(newValue != null && newValue.getValue() != null) {
+                    previousEffect = newValue.getValue().getEffect();
+                    DropShadow value = new DropShadow(StateContainer.STATE_RADIUS * 2, Color.GRAY);
+                    value.setSpread(0.9);
+                    newValue.getValue().setEffect(value);
+                }
+            }
+        });
         observer = (o, arg) -> {
             if (((CommandStack) o).isAbstractPlanInItsCurrentFormSaved(getEditable())) {
                 setText(getText().replace("*", ""));
