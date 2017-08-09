@@ -39,7 +39,9 @@ public class AbstractPlanTool extends AbstractTool<AbstractPlan> {
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+        if (workbench != null && workbench.getSelectionModel().getSelectedItem() != null) {
+            ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+        }
     }
 
     @Override

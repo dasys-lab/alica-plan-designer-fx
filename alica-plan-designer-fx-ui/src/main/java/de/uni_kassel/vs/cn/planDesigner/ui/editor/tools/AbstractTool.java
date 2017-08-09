@@ -75,9 +75,12 @@ public abstract class AbstractTool<T extends PlanElement> {
                 .forEach(entry -> getWorkbench().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
         draw();
         workbench.getScene().setCursor(originalCursor);
-        ((AbstractEditorTab)MainController.getInstance().getEditorTabPane().getSelectionModel()
-                .getSelectedItem())
-                .getSelectedPlanElement().set(new Pair<>(null, null));
+        AbstractEditorTab selectedItem = (AbstractEditorTab) MainController.getInstance().getEditorTabPane().getSelectionModel()
+                .getSelectedItem();
+        if (selectedItem != null) {
+            selectedItem
+                    .getSelectedPlanElement().set(new Pair<>(null, null));
+        }
         setRecentlyDone(true);
     }
 

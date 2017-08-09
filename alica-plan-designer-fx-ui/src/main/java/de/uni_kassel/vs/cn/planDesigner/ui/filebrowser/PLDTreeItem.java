@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
+import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
@@ -21,7 +22,6 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
     public PLDTreeItem(FileWrapper value, Node graphic) {
         super(value, graphic);
         if (value.unwrap().isDirectory()) {
-            setExpanded(true);
             for (File content : value.unwrap().listFiles()) {
                 Image listItemImage = getImageForFileType(content);
                 if (listItemImage == null) {
@@ -29,7 +29,7 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
                 }
                 getChildren().add(new PLDTreeItem(new FileWrapper(content), new ImageView(listItemImage)));
             }
-            getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap()));
+            getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
         }
     }
 
@@ -39,6 +39,10 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
                 .stream()
                 .filter(e -> child.toFile().getAbsolutePath().contains(e.getValue().unwrap().getAbsolutePath()))
                 .collect(Collectors.toList());
+        if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE) && child.toFile().isDirectory() && collect.size() == 1) {
+            ((PLDTreeItem)collect.get(0)).updateDirectory(kind, child);
+            return;
+        }
 
         if (collect.size() == 1 && collect.get(0).getChildren().stream().noneMatch(e -> child.toFile().getAbsolutePath().contains(e.getValue().unwrap().getAbsolutePath()))) {
             if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY) || kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
@@ -53,7 +57,7 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
                                 continue;
                             }
                             getChildren().add(new PLDTreeItem(new FileWrapper(content), new ImageView(listItemImage)));
-                            getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap()));
+                            getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
                         }
                     }
                 }
@@ -69,8 +73,13 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
                         getChildren().add(new PLDTreeItem(new FileWrapper(content), new ImageView(listItemImage)));
                     }
                 }
-                getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap()));
+                getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
             }
+        } else if (child.toFile().isDirectory() && child.toFile().getParentFile().equals(value.unwrap())){
+            getChildren().add(new PLDTreeItem(new FileWrapper(child.toFile()), new ImageView(getImageForFileType(child.toFile()))));
+            getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+        } else if(child.toFile().getParentFile().equals(value.unwrap())) {
+            getChildren().add(new PLDTreeItem(new FileWrapper(child.toFile()), new ImageView(getImageForFileType(child.toFile()))));
         } else {
             collect.forEach(e -> ((PLDTreeItem)e).updateDirectory(kind, child));
         }
@@ -87,7 +96,9 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
         } else if (content.isDirectory() || content.getName().endsWith(".tsk")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
-        } else {
+        } else if (content.isDirectory()) {
+            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
+        } else  {
             return null;
         }
         return listItemImage;

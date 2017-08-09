@@ -131,6 +131,7 @@ public class CreatNewDialogController implements Initializable {
             } catch (IOException e) {
                 ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.create.folder"), e);
             }
+            ((Stage)pathTextField.getScene().getWindow()).close();
         }
     }
 
