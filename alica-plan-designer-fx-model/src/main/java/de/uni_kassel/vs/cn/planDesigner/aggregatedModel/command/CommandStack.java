@@ -4,9 +4,11 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 /**
  * Created by marci on 03.01.17.
@@ -57,12 +59,12 @@ public class CommandStack extends Observable {
 
 
     public boolean isAbstractPlanInItsCurrentFormSaved(PlanElement abstractPlan) {
-        Optional<AbstractCommand> abstractCommand = undoStack
+        List<AbstractCommand> collect = undoStack
                 .stream()
                 .filter(e -> e.getAffectedPlan().equals(abstractPlan))
-                .findFirst();
-        if (abstractCommand.isPresent()) {
-            return abstractCommand.get().isSaved();
+                .collect(Collectors.toList());
+        if (collect.size() > 0) {
+            return collect.get(collect.size() - 1).isSaved();
         } else {
             return true;
         }
