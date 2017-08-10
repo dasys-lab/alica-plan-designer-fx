@@ -15,6 +15,8 @@ import javafx.scene.control.Tab;
 import javafx.util.Pair;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -93,7 +95,18 @@ public class DeleteFileMenuItem extends MenuItem {
                     }
 
                 } else {
-                    throw new RuntimeException("EAT SHIT AND DIE");
+                    if (toDelete.isDirectory()) {
+                        for (File alsoDelete : toDelete.listFiles()) {
+                            DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(alsoDelete);
+                            deleteFileMenuItem.setCommandStack(commandStack);
+                            deleteFileMenuItem.deleteFile();
+                        }
+                        try {
+                            Files.delete(toDelete.toPath());
+                        } catch (IOException e) {
+                            throw new RuntimeException("");
+                        }
+                    }
                 }
             }
         }

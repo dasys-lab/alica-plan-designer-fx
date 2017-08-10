@@ -121,10 +121,11 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                             }
                         }
 
-                        EObject pmlExObject = EMFModelUtils.loadAlicaFileFromDisk(new File(draggedItem.getValue().unwrap().toString() + "ex"));
-
-                        EMFModelUtils.moveAlicaFile(result, (PmlUiExtensionMap) pmlExObject,
-                                new File(parent, draggedItem.getValue().unwrap().getName()));
+                        if (draggedItem.getValue().unwrap().toString().endsWith("pml")) {
+                            EObject pmlExObject = EMFModelUtils.loadAlicaFileFromDisk(new File(draggedItem.getValue().unwrap().toString() + "ex"));
+                            EMFModelUtils.moveAlicaFile(result, (PmlUiExtensionMap) pmlExObject,
+                                    new File(parent, draggedItem.getValue().unwrap().getName()));
+                        }
                     } catch (IOException e1) {
                         throw new RuntimeException(e1);
                     }

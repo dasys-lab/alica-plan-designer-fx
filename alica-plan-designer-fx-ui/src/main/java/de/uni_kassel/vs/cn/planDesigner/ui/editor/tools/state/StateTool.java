@@ -11,6 +11,7 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
@@ -112,6 +113,9 @@ public class StateTool extends AbstractTool<State> {
                     MainController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
+                    if (localCoord == null) {
+                        localCoord = new Point2D(0,0);
+                    }
                     MainController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(),command.getElementToEdit(),
