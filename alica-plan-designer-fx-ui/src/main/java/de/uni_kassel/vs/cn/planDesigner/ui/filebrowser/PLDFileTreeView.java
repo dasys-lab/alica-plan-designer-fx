@@ -134,48 +134,32 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
             e.consume();
         });
 
-        this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue instanceof PLDTreeItem) {
-                if (newValue.getValue().unwrap().isDirectory()) {
-                    newValue.setExpanded(!newValue.isExpanded());
-                } else {
-                    controller.openFile(newValue.getValue().unwrap());
-                }
-            }
-        });
+
         this.setShowRoot(false);
         this.setContextMenu(new PLDFileTreeViewContextMenu());
         setEditable(true);
-        setCellFactory(new Callback<TreeView<FileWrapper>, TreeCell<FileWrapper>>() {
-            @Override
-            public TreeCell<FileWrapper> call(TreeView<FileWrapper> param) {
-                TreeCell<FileWrapper> fileWrapperTreeCell = new PLDTreeCell(controller.getCommandStack());
-                fileWrapperTreeCell.setContextMenu(new PLDFileTreeViewContextMenu());
-                fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        if (newValue) {
-                            ((PLDFileTreeViewContextMenu)fileWrapperTreeCell.getContextMenu())
-                                    .setCommandStack(controller.getCommandStack());
-                            ((PLDFileTreeViewContextMenu)fileWrapperTreeCell.getContextMenu())
-                                    .setHintFile(fileWrapperTreeCell.getTreeItem().getValue().unwrap());
-                        }
+        setCellFactory(param -> {
+            TreeCell<FileWrapper> fileWrapperTreeCell = new PLDTreeCell(controller.getCommandStack());
+            fileWrapperTreeCell.setContextMenu(new PLDFileTreeViewContextMenu());
+            fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (newValue) {
+                        ((PLDFileTreeViewContextMenu)fileWrapperTreeCell.getContextMenu())
+                                .setCommandStack(controller.getCommandStack());
+                        ((PLDFileTreeViewContextMenu)fileWrapperTreeCell.getContextMenu())
+                                .setHintFile(fileWrapperTreeCell.getTreeItem().getValue().unwrap());
+                        ((PLDFileTreeViewContextMenu)fileWrapperTreeCell.getContextMenu())
+                                .setTreeCell(fileWrapperTreeCell);
                     }
-                });
-
-                if(param.getEditingItem() != null) {
-                    fileWrapperTreeCell.setText(param.getEditingItem().getValue().unwrap().getName());
-                    fileWrapperTreeCell.setGraphic(param.getEditingItem().getGraphic());
                 }
+            });
 
-                fileWrapperTreeCell.setOnDragDetected(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        
-                    }
-                });
-                return fileWrapperTreeCell;
+            if(param.getEditingItem() != null) {
+                fileWrapperTreeCell.setText(param.getEditingItem().getValue().unwrap().getName());
+                fileWrapperTreeCell.setGraphic(param.getEditingItem().getGraphic());
             }
+            return fileWrapperTreeCell;
         });
         new Thread(new FileWatcherJob(this)).start();
     }

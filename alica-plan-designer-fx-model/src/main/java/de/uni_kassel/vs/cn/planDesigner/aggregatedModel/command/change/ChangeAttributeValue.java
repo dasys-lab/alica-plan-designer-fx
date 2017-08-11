@@ -40,6 +40,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
     public void doCommand() {
         try {
             oldValue = (T) BeanUtils.getProperty(getElementToEdit(), attribute);
+            BeanUtils.setProperty(getElementToEdit(), attribute, newValue);
             if (attribute.equals("name")) {
                 Path path = null;
                 if(getElementToEdit() instanceof Plan) {
@@ -147,7 +148,6 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                 }
 
             }
-            BeanUtils.setProperty(getElementToEdit(), attribute, newValue);
 
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);

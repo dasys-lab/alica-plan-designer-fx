@@ -14,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,16 +30,9 @@ public class PlanTab extends AbstractEditorTab<Plan> {
     private PmlUiExtensionMap pmlUiExtensionMap;
     private final PLDToolBar pldToolBar;
 
-    public PlanTab(Plan editable, Path filePath, CommandStack commandStack) {
-        super(editable, filePath, commandStack);
-        String absolutePath = filePath.toString();
-        String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
-
-        try {
-            pmlUiExtensionMap = EMFModelUtils.reloadAlicaFileFromDisk(new File(uiExtensionMapPath));
-        } catch (IOException e) {
-            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.load.pmlx"), e);
-        }
+    public PlanTab(Pair<Plan, Path> planPathPair, CommandStack commandStack) {
+        super(planPathPair , commandStack);
+        reloadPmlUiExtension(planPathPair);
         planEditorPane = new PlanEditorPane(new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap), this);
         StackPane planContent = new StackPane(planEditorPane);
         planContent.setPadding(new Insets(50, 50, 50, 50));
@@ -50,7 +44,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         ScrollPane scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);
-        conditionHBox = new ConditionHBox(editable, selectedPlanElement, commandStack);
+        conditionHBox = new ConditionHBox(planPathPair.getKey(), selectedPlanElement, commandStack);
         VBox vBox = new VBox(conditionHBox,hBox);
         VBox.setVgrow(scrollPane,Priority.ALWAYS);
         VBox.setVgrow(hBox,Priority.ALWAYS);
@@ -58,6 +52,17 @@ public class PlanTab extends AbstractEditorTab<Plan> {
 
         hBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         setContent(vBox);
+    }
+
+    private void reloadPmlUiExtension(Pair<Plan, Path> planPathPair) {
+        String absolutePath = planPathPair.getValue().toString();
+        String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
+
+        try {
+            pmlUiExtensionMap = EMFModelUtils.reloadAlicaFileFromDisk(new File(uiExtensionMapPath));
+        } catch (IOException e) {
+            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.load.pmlx"), e);
+        }
     }
 
     public PlanEditorPane getPlanEditorPane() {
