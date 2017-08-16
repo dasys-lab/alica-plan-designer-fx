@@ -47,7 +47,6 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
         setupContainer();
     }
 
-    // TODO fix init transition rendering
     @Override
     public void setupContainer() {
         getChildren().clear();

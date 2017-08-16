@@ -96,6 +96,10 @@ public class CreatNewDialogController implements Initializable {
 
     private void createFile() {
         String fileName = nameTextField.getText();
+        if (fileName == null || fileName.matches("\\.*/*\\*\\\\*\\$*§*\\?*\\[*\\]*")) {
+            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save.name"), null);
+            return;
+        }
         if (alicaType != null) {
             try {
                 if (alicaType.getInstanceClass().equals(Behaviour.class) && fileName.endsWith(".beh") == false) {
