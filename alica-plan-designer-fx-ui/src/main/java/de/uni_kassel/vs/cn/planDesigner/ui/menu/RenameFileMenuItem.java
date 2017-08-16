@@ -1,12 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
+import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 
 public class RenameFileMenuItem extends MenuItem {
     private TreeCell<FileWrapper> treeCell;
     public RenameFileMenuItem() {
+        super(I18NRepo.getString("label.menu.edit.rename"));
         setOnAction(e -> onRename());
     }
 
