@@ -2,12 +2,13 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
@@ -71,7 +72,8 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
                     _fromY,
                     _toX,
                     _toY);
-            potentialDraggableNodes.add(new Pane());
+            Bendpoint bendpoint = createBendpointInMiddle(_toX, _toY, _fromX, _fromY);
+            potentialDraggableNodes.add(makePotentialBendpoint(bendpoint));
             polygon = new Polygon(
             _toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
                     _toX, _toY,
@@ -80,6 +82,12 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
             double[] points = new double[getPmlUiExtension().getBendpoints().size() * 2 + 4];
             points[0] = _fromX;
             points[1] = _fromY;
+
+
+
+            Bendpoint bendpoint = getPmlUiExtension().getBendpoints().get(0);
+            Bendpoint firstMiddle = createBendpointInMiddle(bendpoint.getXPos(), bendpoint.getYPos(), _fromX, _fromY);
+            potentialDraggableNodes.add(makePotentialBendpoint(firstMiddle));
 
             for (int i = 0, j = 2; i < points.length / 2 - 2; i++, j += 2) {
                 Bendpoint currentBendpoint = getPmlUiExtension().getBendpoints().get(i);
@@ -98,10 +106,22 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
                 triangleSpanVecY = -vecX;
                 triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
 
+                if (i != getPmlUiExtension().getBendpoints().size() -1 && getPmlUiExtension().getBendpoints().size() != 1) {
+                    Bendpoint from = getPmlUiExtension().getBendpoints().get(i);
+                    Bendpoint to = getPmlUiExtension().getBendpoints().get(i + 1);
+                    Bendpoint bendpointInMiddle = createBendpointInMiddle(to.getXPos(), to.getYPos(), from.getXPos(), from.getYPos());
+                    potentialDraggableNodes.add(makePotentialBendpoint(bendpointInMiddle));
+                }
+
             }
 
             points[points.length - 2] = _toX;
             points[points.length - 1] = _toY;
+
+            Bendpoint lastBendpoint = getPmlUiExtension().getBendpoints()
+                    .get(getPmlUiExtension().getBendpoints().size() - 1);
+            Bendpoint bendpointInMiddle = createBendpointInMiddle(_toX, _toY, lastBendpoint.getXPos(), lastBendpoint.getYPos());
+            potentialDraggableNodes.add(makePotentialBendpoint(bendpointInMiddle));
 
             visualRepresentation = new Polyline(points);
             ((Shape)visualRepresentation).setFill(null);
@@ -117,11 +137,26 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
         polygon.setVisible(true);
         ((Shape)visualRepresentation).setStrokeWidth(3);
         ((Shape)visualRepresentation).setStroke(getVisualisationColor());
+        setBendpointContainerVisibility(MainController.getInstance().isSelectedPlanElement(this));
+        setPotentialDraggableNodesVisible(MainController.getInstance().isSelectedPlanElement(this));
         visualRepresentation.setPickOnBounds(false);
         this.getChildren().add(visualRepresentation);
         this.getChildren().add(polygon);
         this.getChildren().addAll(draggableNodes);
+        this.getChildren().addAll(potentialDraggableNodes);
         invalidationListeners.forEach(e-> e.invalidated(this));
+    }
+
+    protected PotentialBendPointContainer makePotentialBendpoint(Bendpoint bendpoint) {
+        return new PotentialBendPointContainer(bendpoint, getPmlUiExtension(), commandStack,
+                fromState.getContainedElement().getInPlan(), this);
+    }
+
+    protected Bendpoint createBendpointInMiddle(double _toX, double _toY, double _fromX, double _fromY) {
+        Bendpoint bendpoint = EMFModelUtils.getPmlUiExtensionModelFactory().createBendpoint();
+        bendpoint.setXPos((int)(_fromX + ((_toX - _fromX) / 2)));
+        bendpoint.setYPos((int)(_fromY + ((_toY - _fromY) / 2)));
+        return bendpoint;
     }
 
     @Override
@@ -135,6 +170,17 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
 
     public List<Node> getDraggableNodes() {
         return draggableNodes;
+    }
+
+    public void setPotentialDraggableNodesVisible(boolean visible) {
+        for (Node potentialDraggableNode : potentialDraggableNodes) {
+            potentialDraggableNode.setVisible(visible);
+        }
+    }
+
+    @Override
+    public void redrawElement() {
+        setupContainer();
     }
 
     @Override

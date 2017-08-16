@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.PLDFileTreeView;
@@ -15,15 +16,18 @@ import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -83,6 +87,21 @@ public class MainController implements Initializable {
         menuBar.getMenus().addAll(createMenus());
         propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
+    }
+
+    public boolean isSelectedPlanElement(Node node) {
+        Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
+        if (selectedItem != null && ((AbstractEditorTab) selectedItem).getSelectedPlanElement() != null) {
+            Pair<PlanElement, AbstractPlanElementContainer> o = (Pair<PlanElement, AbstractPlanElementContainer>)
+                    ((AbstractEditorTab) selectedItem).getSelectedPlanElement().getValue();
+            if (o != null && o.getValue() != null) {
+                return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**

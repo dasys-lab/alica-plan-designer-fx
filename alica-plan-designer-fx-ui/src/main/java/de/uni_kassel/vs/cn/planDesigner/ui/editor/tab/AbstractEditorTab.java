@@ -8,6 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -64,12 +65,18 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
             public void changed(ObservableValue<? extends Pair<PlanElement, AbstractPlanElementContainer>> observable, Pair<PlanElement, AbstractPlanElementContainer> oldValue, Pair<PlanElement, AbstractPlanElementContainer> newValue) {
                 if (oldValue != null && oldValue.getValue() != null) {
                     oldValue.getValue().setEffect(previousEffect);
+                    if (oldValue.getValue() instanceof TransitionContainer) {
+                        ((TransitionContainer)oldValue.getValue()).setPotentialDraggableNodesVisible(false);
+                    }
                 }
                 if(newValue != null && newValue.getValue() != null) {
                     previousEffect = newValue.getValue().getEffect();
                     DropShadow value = new DropShadow(StateContainer.STATE_RADIUS * 2, Color.GRAY);
                     value.setSpread(0.9);
                     newValue.getValue().setEffect(value);
+                    if (newValue.getValue() instanceof TransitionContainer) {
+                        ((TransitionContainer)newValue.getValue()).setPotentialDraggableNodesVisible(true);
+                    }
                 }
             }
         });
