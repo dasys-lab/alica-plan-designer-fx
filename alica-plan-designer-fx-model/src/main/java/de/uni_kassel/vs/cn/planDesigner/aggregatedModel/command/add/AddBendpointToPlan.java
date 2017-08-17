@@ -21,7 +21,8 @@ public class AddBendpointToPlan extends AbstractCommand<Bendpoint> {
     public void doCommand() {
         // TODO bendpoints are not saved
         pmlUiExtension.getBendpoints().add(getElementToEdit());
-        ECollections.sort(pmlUiExtension.getBendpoints(), Comparator.comparingInt(Bendpoint::getXPos));
+        // Test if saving works if no sort happens
+        //ECollections.sort(pmlUiExtension.getBendpoints(), Comparator.comparingInt(Bendpoint::getXPos));
     }
 
     @Override
