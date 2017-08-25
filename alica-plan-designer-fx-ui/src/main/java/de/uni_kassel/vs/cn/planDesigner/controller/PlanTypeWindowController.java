@@ -74,7 +74,7 @@ public class PlanTypeWindowController implements Initializable {
                 .getPlans()
                 .stream()
                 .map(e -> {
-                    RepositoryHBox<Plan> planRepositoryHBox = new RepositoryHBox<>(e.getKey(), e.getValue());
+                    RepositoryHBox<Plan> planRepositoryHBox = new RepositoryHBox<>(e.getKey(), e.getValue(), null);
                     planRepositoryHBox.setOnMouseClicked(null);
                     return planRepositoryHBox;
                 })
@@ -150,7 +150,7 @@ public class PlanTypeWindowController implements Initializable {
                                         .stream()
                                         .filter(f -> f.getKey().equals(e.getPlan()))
                                         .findFirst().get();
-                                RepositoryHBox<Plan> e1 = new RepositoryHBox<>(planPathPair.getKey(), planPathPair.getValue());
+                                RepositoryHBox<Plan> e1 = new RepositoryHBox<>(planPathPair.getKey(), planPathPair.getValue(), null);
                                 e1.setOnMouseClicked(null);
                                 planListView.getItems().add(e1);
                             });

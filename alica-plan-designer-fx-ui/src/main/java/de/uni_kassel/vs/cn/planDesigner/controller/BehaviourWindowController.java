@@ -124,7 +124,7 @@ public class BehaviourWindowController implements Initializable {
                     }
                 }
             });
-            AbstractEditorTab<Behaviour> abstractEditorTab = new AbstractEditorTab<Behaviour>() {
+            AbstractEditorTab<Behaviour> abstractEditorTab = new AbstractEditorTab<Behaviour>(null, new File(".").toPath(), null) {
 
                 @Override
                 public CommandStack getCommandStack() {

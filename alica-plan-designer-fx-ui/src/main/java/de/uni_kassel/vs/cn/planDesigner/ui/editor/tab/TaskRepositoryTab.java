@@ -28,8 +28,8 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
 
     private ListView<Task> taskListView;
 
-    public TaskRepositoryTab(Pair<TaskRepository, Path> taskRepositoryPathPair, CommandStack commandStack) {
-        super(taskRepositoryPathPair, commandStack);
+    public TaskRepositoryTab(TaskRepository editable, Path filePath, CommandStack commandStack) {
+        super(editable, filePath, commandStack);
         createContentView();
     }
 

@@ -127,34 +127,6 @@ public class AllAlicaFiles {
         return null;
     }
 
-    /**
-     * Tries to find a list matching the given pair.
-     * If none match null is returned
-     * @param pathPair the pair which list you are searching for
-     * @param <T> type of the list
-     * @return result
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends PlanElement> ObservableList<Pair<T, Path>> findListByType(Pair<T, Path> pathPair) {
-        if (pathPair.getKey() instanceof Plan) {
-            return (ObservableList<Pair<T, Path>>) (Object) getPlans();
-        }
-
-        if (pathPair.getKey() instanceof Behaviour) {
-            return (ObservableList<Pair<T, Path>>) (Object) getBehaviours();
-        }
-
-        if (pathPair.getKey() instanceof PlanType) {
-            return (ObservableList<Pair<T, Path>>) (Object) getPlanTypes();
-        }
-
-        if (pathPair.getKey() instanceof TaskRepository) {
-            return (ObservableList<Pair<T, Path>>) (Object) getTaskRepository();
-        }
-
-        return null;
-    }
-
     private <T extends EObject> ObservableList<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException {
         List<Pair<T, Path>> collectedList = Files.walk(Paths.get(plansPath))
                 .filter(p -> p.toString().endsWith("." + filePostfix))

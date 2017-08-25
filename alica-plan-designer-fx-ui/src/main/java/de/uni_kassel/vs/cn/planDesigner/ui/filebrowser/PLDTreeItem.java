@@ -1,12 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 import java.io.File;
 import java.nio.file.Path;

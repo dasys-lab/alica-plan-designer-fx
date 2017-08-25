@@ -12,8 +12,8 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.scene.control.Tab;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
@@ -29,35 +29,17 @@ import java.util.Observer;
  */
 public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
 
-    private Observer observer;
-    private Pair<T, Path> editablePathPair;
+    private final Observer observer;
+    private T editable;
+    private Path filePath;
     private CommandStack commandStack;
     protected SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedPlanElement;
 
-    public AbstractEditorTab() {
-        selectedPlanElement = new SimpleObjectProperty<>(new Pair<>(editablePathPair.getKey(), null));
-    }
-
-    public AbstractEditorTab(Pair<T, Path> editablePathPair, CommandStack commandStack) {
-        super(editablePathPair.getValue().getFileName().toString());
-        AllAlicaFiles.getInstance().findListByType(editablePathPair).addListener(new ListChangeListener<Pair<T, Path>>() {
-            @Override
-            public void onChanged(Change<? extends Pair<T, Path>> c) {
-                c.next();
-                if (c.getAddedSize() > 0) {
-                    for (Pair<T, Path> pair : c.getAddedSubList()) {
-                        if (pair.getKey().equals(editablePathPair.getKey())) {
-                            setEditablePathPair(pair);
-                            setText(editablePathPair.getValue().getFileName().toString());
-                            break;
-                        }
-                    }
-
-                }
-            }
-        });
-        this.editablePathPair = editablePathPair;
-        selectedPlanElement = new SimpleObjectProperty<>(new Pair<>(editablePathPair.getKey(), null));
+    public AbstractEditorTab(T editable, Path filePath, CommandStack commandStack) {
+        super(filePath.getFileName().toString());
+        this.editable = editable;
+        this.filePath = filePath;
+        selectedPlanElement = new SimpleObjectProperty<>(new Pair<>(editable, null));
         this.commandStack = commandStack;
         selectedPlanElement.addListener(new ChangeListener<Pair<PlanElement, AbstractPlanElementContainer>>() {
             private Effect previousEffect;
@@ -82,9 +64,11 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         });
         observer = (o, arg) -> {
             if (((CommandStack) o).isAbstractPlanInItsCurrentFormSaved(getEditable())) {
-                setText(getEditablePathPair().getValue().getFileName().toString());
+                setText(getText().replace("*", ""));
             } else {
-                setText(getEditablePathPair().getValue().getFileName() + "*");
+                if (getText().contains("*") == false) {
+                    setText(getText() + "*");
+                }
             }
         };
         if (commandStack != null) {
@@ -93,32 +77,32 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         setClosable(true);
         setOnCloseRequest(e -> {
             commandStack.deleteObserver(observer);
-            if (editablePathPair.getKey() instanceof TaskRepository == false) {
+            if (editable instanceof TaskRepository == false) {
                 try {
-                    EObject key = EMFModelUtils.reloadAlicaFileFromDisk(AllAlicaFiles.getInstance().getPathForAbstractPlan((AbstractPlan) getEditable()).toFile());
-                    if (editablePathPair.getKey() instanceof Plan) {
+                    EObject key = EMFModelUtils.reloadAlicaFileFromDisk(AllAlicaFiles.getInstance().getPathForAbstractPlan((AbstractPlan) editable).toFile());
+                    if (editable instanceof Plan) {
                         Pair<Plan, Path> planPathPair = AllAlicaFiles.getInstance().getPlans()
                                 .stream()
-                                .filter(pair -> pair.getKey().getId() == editablePathPair.getKey().getId())
+                                .filter(pair -> pair.getKey().getId() == editable.getId())
                                 .findFirst().orElse(null);
                         Path value = planPathPair.getValue();
                         AllAlicaFiles.getInstance().getPlans().remove(planPathPair);
                         AllAlicaFiles.getInstance().getPlans().add(new Pair<>((Plan) key, value));
                     }
-                    if (editablePathPair.getKey() instanceof Behaviour) {
+                    if (editable instanceof Behaviour) {
                         Pair<Behaviour, Path> planPathPair = AllAlicaFiles.getInstance().getBehaviours()
                                 .stream()
-                                .filter(pair -> pair.getKey().getId() == editablePathPair.getKey().getId())
+                                .filter(pair -> pair.getKey().getId() == editable.getId())
                                 .findFirst().orElse(null);
                         Path value = planPathPair.getValue();
                         AllAlicaFiles.getInstance().getBehaviours().remove(planPathPair);
                         AllAlicaFiles.getInstance().getBehaviours().add(new Pair<>((Behaviour) key, value));
                     }
 
-                    if (editablePathPair.getKey() instanceof PlanType) {
+                    if (editable instanceof PlanType) {
                         Pair<PlanType, Path> planPathPair = AllAlicaFiles.getInstance().getPlanTypes()
                                 .stream()
-                                .filter(pair -> pair.getKey().getId() == editablePathPair.getKey().getId())
+                                .filter(pair -> pair.getKey().getId() == editable.getId())
                                 .findFirst().orElse(null);
                         Path value = planPathPair.getValue();
                         AllAlicaFiles.getInstance().getPlanTypes().remove(planPathPair);
@@ -133,7 +117,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
     }
 
     public Path getFilePath() {
-        return editablePathPair.getValue();
+        return filePath;
     }
 
     public void save() {
@@ -147,7 +131,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
     }
 
     public T getEditable() {
-        return editablePathPair.getKey();
+        return editable;
     }
 
     public SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> getSelectedPlanElement() {
@@ -156,13 +140,5 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
 
     public CommandStack getCommandStack() {
         return commandStack;
-    }
-
-    private void setEditablePathPair(Pair<T, Path> editablePathPair) {
-        this.editablePathPair = editablePathPair;
-    }
-
-    public Pair<T, Path> getEditablePathPair() {
-        return editablePathPair;
     }
 }

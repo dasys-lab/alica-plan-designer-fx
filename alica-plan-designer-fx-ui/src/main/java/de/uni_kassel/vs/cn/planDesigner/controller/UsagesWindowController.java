@@ -34,7 +34,7 @@ public class UsagesWindowController implements Initializable {
                 .stream()
                 .map(e -> {
                     Path pathForAbstractPlan = AllAlicaFiles.getInstance().getPathForAbstractPlan(e);
-                    return new RepositoryHBox<>(e, pathForAbstractPlan);
+                    return new RepositoryHBox<>(e, pathForAbstractPlan, null);
                 })
                 .collect(Collectors.toList());
         listOfReferences.setItems(FXCollections.observableArrayList(repositoryHBoxes));

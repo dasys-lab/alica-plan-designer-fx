@@ -51,10 +51,11 @@ public class EditorTabPane extends TabPane {
                         .stream()
                         .filter(e -> e.getValue().equals(filePath))
                         .findFirst().get();
-                return new PlanTab(planPathPair, commandStack);
+                return new PlanTab(planPathPair.getKey(), planPathPair.getValue(), commandStack);
             case "tsk":
                 List<Pair<TaskRepository, Path>> taskRepositoryPathPair = AllAlicaFiles.getInstance().getTaskRepository();
-                return new TaskRepositoryTab(taskRepositoryPathPair.get(0), commandStack);
+                return new TaskRepositoryTab(taskRepositoryPathPair.get(0).getKey(),
+                        taskRepositoryPathPair.get(0).getValue(), commandStack);
             case "pty":
                 Pair<PlanType, Path> plantypePathPair = AllAlicaFiles
                         .getInstance()
@@ -62,7 +63,7 @@ public class EditorTabPane extends TabPane {
                         .stream()
                         .filter(e -> e.getValue().equals(filePath))
                         .findFirst().get();
-                return new PlanTypeTab(plantypePathPair, commandStack);
+                return new PlanTypeTab(plantypePathPair.getKey(), plantypePathPair.getValue(), commandStack);
             case "beh":
                 Pair<Behaviour, Path> behaviourPathPair = AllAlicaFiles
                         .getInstance()
@@ -70,7 +71,7 @@ public class EditorTabPane extends TabPane {
                         .stream()
                         .filter(e -> e.getValue().equals(filePath))
                         .findFirst().get();
-                return new BehaviourTab(behaviourPathPair, commandStack);
+                return new BehaviourTab(behaviourPathPair.getKey(), behaviourPathPair.getValue(), commandStack);
             default:
                 return null;
 

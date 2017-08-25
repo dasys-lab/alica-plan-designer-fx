@@ -3,10 +3,8 @@ package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.DeleteFileMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.NewResourceMenu;
-import de.uni_kassel.vs.cn.planDesigner.ui.menu.RenameFileMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
-import javafx.scene.control.TreeCell;
 
 import java.io.File;
 
@@ -18,13 +16,10 @@ public class PLDFileTreeViewContextMenu extends ContextMenu {
     private File hintFile;
     private CommandStack commandStack;
     private DeleteFileMenuItem deleteFileMenuItem;
-    private RenameFileMenuItem renameFileMenuItem;
-    private TreeCell treeCell;
 
     public PLDFileTreeViewContextMenu() {
         deleteFileMenuItem = new DeleteFileMenuItem(hintFile);
-        renameFileMenuItem = new RenameFileMenuItem();
-        getItems().addAll(createNewMenu(), renameFileMenuItem, deleteFileMenuItem);
+        getItems().addAll(createNewMenu(), deleteFileMenuItem);
     }
 
     private Menu createNewMenu() {
@@ -52,14 +47,5 @@ public class PLDFileTreeViewContextMenu extends ContextMenu {
 
     public CommandStack getCommandStack() {
         return commandStack;
-    }
-
-    public TreeCell getTreeCell() {
-        return treeCell;
-    }
-
-    public void setTreeCell(TreeCell treeCell) {
-        this.treeCell = treeCell;
-        renameFileMenuItem.setTreeCell(treeCell);
     }
 }

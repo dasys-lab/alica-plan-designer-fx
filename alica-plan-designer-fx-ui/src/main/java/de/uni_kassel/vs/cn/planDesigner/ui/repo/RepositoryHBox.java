@@ -44,23 +44,6 @@ public class RepositoryHBox<T extends PlanElement> extends DragableHBox {
         }
     }
 
-    public RepositoryHBox(T object, Path pathToObject) {
-        super(object, new AbstractPlanTool(null));
-        this.object = object;
-        setOnContextMenuRequested(e -> {
-            ContextMenu contextMenu = new ContextMenu(new ShowUsagesMenuItem(object));
-            contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
-        });
-
-        getChildren().addAll(new ImageView(new AlicaIcon(object.getClass())),
-                new Text(object.getName()));
-        setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
-                MainController.getInstance().openFile(pathToObject.toFile());
-            }
-        });
-    }
-
     public T getObject() {
         return object;
     }
