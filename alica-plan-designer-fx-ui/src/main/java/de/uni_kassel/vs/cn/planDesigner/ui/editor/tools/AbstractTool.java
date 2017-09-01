@@ -16,10 +16,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,6 +41,7 @@ public abstract class AbstractTool<T extends PlanElement> {
     protected Point2D localCoord;
     protected DragableHBox<T> dragableHBox;
     private boolean recentlyDone;
+    private HashMap<EventType, EventHandler> defaultHandlers;
 
     public AbstractTool(TabPane workbench) {
         this.workbench = workbench;
@@ -52,6 +55,21 @@ public abstract class AbstractTool<T extends PlanElement> {
         return workbench;
     }
 
+    protected Map<EventType, EventHandler> defaultHandlers() {
+        if (defaultHandlers == null) {
+            defaultHandlers = new HashMap<>();
+            defaultHandlers.put(MouseEvent.MOUSE_DRAGGED, (event) -> {
+                MouseEvent e = (MouseEvent) event;
+                if (e.getSceneX() + 5 > getWorkbench().getScene().getWidth()
+                        || e.getSceneY() + 5 > getWorkbench().getScene().getHeight()
+                        || e.getSceneX() - 5 < 0 || e.getSceneY() - 5 < 0) {
+                    endPhase();
+                }
+            });
+        }
+        return defaultHandlers;
+    }
+
     public DragableHBox<T> createToolUI() {
         dragableHBox = new DragableHBox<>(createNewObject(), this);
         return dragableHBox;
@@ -61,6 +79,10 @@ public abstract class AbstractTool<T extends PlanElement> {
         toolRequiredHandlers()
                 .entrySet()
                 .forEach(entry -> getWorkbench().getScene().addEventFilter(entry.getKey(), entry.getValue()));
+        defaultHandlers()
+                .entrySet()
+                .forEach(entry -> getWorkbench().getScene().addEventFilter(entry.getKey(), entry.getValue()));
+
         originalCursor = workbench.getScene().getCursor();
         DropShadow value = new DropShadow(10, Color.GREY);
         value.setSpread(0.5);
@@ -71,6 +93,9 @@ public abstract class AbstractTool<T extends PlanElement> {
     public void endPhase() {
         dragableHBox.setEffect(null);
         toolRequiredHandlers()
+                .entrySet()
+                .forEach(entry -> getWorkbench().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
+        defaultHandlers()
                 .entrySet()
                 .forEach(entry -> getWorkbench().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
         draw();
