@@ -110,12 +110,7 @@ public class EMFModelUtils {
 
 
     public static <T extends EObject> T reloadAlicaFileFromDisk(File file) throws IOException {
-        String relativePath = file.getAbsolutePath()
-                .replace(configuration.getPlansPath() + "/","")
-                .replace(configuration.getRolesPath()+ "/","")
-                .replace(configuration.getMiscPath()+ "/","");
-        URI uri = URI
-                .createURI(relativePath);
+        URI uri = createRelativeURI(file);
 
         alicaResourceSet.getResources().remove(alicaResourceSet.getResource(uri, false));
         Resource loadedResource = alicaResourceSet.createResource(uri);
@@ -123,6 +118,15 @@ public class EMFModelUtils {
         T t = (T) loadedResource.getContents().get(0);
         EcoreUtil.resolveAll(loadedResource);
         return t;
+    }
+
+    public static URI createRelativeURI(File file) {
+        String relativePath = file.getAbsolutePath()
+                .replace(configuration.getPlansPath() + "/","")
+                .replace(configuration.getRolesPath()+ "/","")
+                .replace(configuration.getMiscPath()+ "/","");
+        return URI
+                .createURI(relativePath);
     }
 
     /**
@@ -135,12 +139,7 @@ public class EMFModelUtils {
     public static <T extends EObject> Resource createAlicaFile(T emptyObject, boolean createPmlEx, File file) throws IOException {
         Resource resource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath()));
         resource.getContents().add(emptyObject);
-        String relativePath = file.getAbsolutePath()
-                .replace(configuration.getPlansPath() + "/","")
-                .replace(configuration.getRolesPath()+ "/","")
-                .replace(configuration.getMiscPath()+ "/","");
-        URI relativeURI = URI
-                .createURI(relativePath);
+        URI relativeURI = createRelativeURI(file);
 
         resource.setURI(relativeURI);
 
@@ -211,7 +210,7 @@ public class EMFModelUtils {
      * @param <T> The type of {@link EObject} to save
      * @throws IOException
      */
-    public static <T extends EObject> void saveAlicaFile(T alicaObject) throws IOException {
+    public static synchronized <T extends EObject> void saveAlicaFile(T alicaObject) throws IOException {
         alicaObject.eResource().save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         LOG.info("Saved Alica successfully to disk specifically: " + alicaObject.eResource().getURI());
     }

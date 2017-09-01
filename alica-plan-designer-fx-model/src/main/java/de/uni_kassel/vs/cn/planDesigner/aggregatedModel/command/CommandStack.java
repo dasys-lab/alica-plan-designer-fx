@@ -77,8 +77,6 @@ public class CommandStack extends Observable {
                 .findFirst();
         if (abstractCommand.isPresent()) {
             abstractCommand.get().setSaved(true);
-        } else {
-            throw new RuntimeException("WHAT");
         }
     }
 

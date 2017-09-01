@@ -1,10 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangeAttributeValue;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -12,6 +12,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -22,11 +23,14 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
 
     private TextField textField;
 
-    private final CommandStack commandStack;
+    private final MainController controller;
 
 
-    public PLDTreeCell(CommandStack commandStack) {
-        this.commandStack = commandStack;
+    public PLDTreeCell(MainController controller) {
+        this.controller = controller;
+        if (getItem() != null) {
+            addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleDoubleClick);
+        }
     }
 
     @Override
@@ -67,7 +71,8 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
             objectToChange = resource.getContents().get(0);
 
             String name = newValue.unwrap().getName().substring(0, newValue.unwrap().getName().lastIndexOf("."));
-            commandStack.storeAndExecute(new ChangeAttributeValue((PlanElement) objectToChange, "name", name, (PlanElement)objectToChange));
+            controller.getCommandStack()
+                    .storeAndExecute(new ChangeAttributeValue((PlanElement) objectToChange, "name", name, (PlanElement)objectToChange));
             isPlanElement = true;
         }
 
@@ -102,6 +107,9 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
             setText(null);
             setGraphic(null);
         } else {
+            if (getItem() != null) {
+                addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleDoubleClick);
+            }
             if (isEditing()) {
                 if (textField != null) {
                     textField.setText(getString());
@@ -137,5 +145,15 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
 
     private String getString() {
         return getItem() == null ? "" : getItem().toString();
+    }
+
+    private void handleDoubleClick(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            if (getItem().unwrap().isDirectory()) {
+                getTreeItem().setExpanded(getTreeItem().isExpanded() == false);
+            } else {
+                controller.openFile(getItem().unwrap());
+            }
+        }
     }
 }

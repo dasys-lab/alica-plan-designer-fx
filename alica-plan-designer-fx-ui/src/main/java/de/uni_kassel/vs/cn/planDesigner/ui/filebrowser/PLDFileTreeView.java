@@ -12,7 +12,6 @@ import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -21,7 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
 
@@ -37,6 +35,7 @@ import java.util.Optional;
  */
 public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
+    private final ChangeListener<TreeItem<FileWrapper>> treeItemChangeListener;
     private MainController controller;
 
     private boolean wasDragged;
@@ -134,7 +133,8 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
             e.consume();
         });
 
-        this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+        treeItemChangeListener = (observable, oldValue, newValue) -> {
             if (newValue instanceof PLDTreeItem) {
                 if (newValue.getValue().unwrap().isDirectory()) {
                     newValue.setExpanded(!newValue.isExpanded());
@@ -142,14 +142,13 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                     controller.openFile(newValue.getValue().unwrap());
                 }
             }
-        });
+        };
+        this.getSelectionModel().selectedItemProperty().addListener(getTreeItemChangeListener());
         this.setShowRoot(false);
         this.setContextMenu(new PLDFileTreeViewContextMenu());
         setEditable(true);
-        setCellFactory(new Callback<TreeView<FileWrapper>, TreeCell<FileWrapper>>() {
-            @Override
-            public TreeCell<FileWrapper> call(TreeView<FileWrapper> param) {
-                TreeCell<FileWrapper> fileWrapperTreeCell = new PLDTreeCell(controller.getCommandStack());
+        setCellFactory(param -> {
+                TreeCell<FileWrapper> fileWrapperTreeCell = new PLDTreeCell(controller);
                 fileWrapperTreeCell.setContextMenu(new PLDFileTreeViewContextMenu());
                 fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
@@ -159,6 +158,8 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                                     .setCommandStack(controller.getCommandStack());
                             ((PLDFileTreeViewContextMenu)fileWrapperTreeCell.getContextMenu())
                                     .setHintFile(fileWrapperTreeCell.getTreeItem().getValue().unwrap());
+                        ((PLDFileTreeViewContextMenu)fileWrapperTreeCell.getContextMenu())
+                                .setTreeCell(fileWrapperTreeCell);
                         }
                     }
                 });
@@ -167,15 +168,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                     fileWrapperTreeCell.setText(param.getEditingItem().getValue().unwrap().getName());
                     fileWrapperTreeCell.setGraphic(param.getEditingItem().getGraphic());
                 }
-
-                fileWrapperTreeCell.setOnDragDetected(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        
-                    }
-                });
                 return fileWrapperTreeCell;
-            }
         });
         new Thread(new FileWatcherJob(this)).start();
     }
@@ -187,6 +180,10 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
     public void setController(MainController controller) {
         this.controller = controller;
+    }
+
+    public ChangeListener<TreeItem<FileWrapper>> getTreeItemChangeListener() {
+        return treeItemChangeListener;
     }
 }
 

@@ -39,6 +39,10 @@ public class PlanDesigner extends Application {
         return running;
     }
 
+    public static void setRunning(boolean running) {
+        PlanDesigner.running = running;
+    }
+
     public static void main(String[] args) throws IOException, URISyntaxException {
         new WorkspaceManager().init();
         EMFModelUtils.initializeEMF();

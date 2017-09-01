@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,6 +57,16 @@ public class AllAlicaFiles {
             }
         }
 
+        return instance;
+    }
+
+    public static AllAlicaFiles getTestInstance() {
+        instance = new AllAlicaFiles();
+        instance.taskRepository = new ArrayList<>();
+        instance.plans = FXCollections.observableArrayList(new ArrayList<>());
+        instance.planTypes = FXCollections.observableArrayList(new ArrayList<>());
+        instance.behaviours = FXCollections.observableArrayList(new ArrayList<>());
+        instance.tasks = new Pair<>(new ArrayList<>(), null);
         return instance;
     }
 
@@ -124,6 +135,34 @@ public class AllAlicaFiles {
                     .findFirst().get().getValue();
         }
         LOG.warn("No file path found for AbstractPlan " + abstractPlan.getName());
+        return null;
+    }
+
+    /**
+     * Tries to find a list matching the given pair.
+     * If none match null is returned
+     * @param pathPair the pair which list you are searching for
+     * @param <T> type of the list
+     * @return result
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends PlanElement> ObservableList<Pair<T, Path>> findListByType(Pair<T, Path> pathPair) {
+        if (pathPair.getKey() instanceof Plan) {
+            return (ObservableList<Pair<T, Path>>) (Object) getPlans();
+        }
+
+        if (pathPair.getKey() instanceof Behaviour) {
+            return (ObservableList<Pair<T, Path>>) (Object) getBehaviours();
+        }
+
+        if (pathPair.getKey() instanceof PlanType) {
+            return (ObservableList<Pair<T, Path>>) (Object) getPlanTypes();
+        }
+
+        if (pathPair.getKey() instanceof TaskRepository) {
+            return (ObservableList<Pair<T, Path>>) (Object) getTaskRepository();
+        }
+
         return null;
     }
 
