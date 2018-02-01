@@ -19,7 +19,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Created by marci on 19.05.17.
+ * The {@link PluginManager} holds a list of available Plugins and sets the active plugin for the current session.
  */
 public class PluginManager {
     private static Logger LOG = LogManager.getLogger(PluginManager.class);
@@ -39,8 +39,14 @@ public class PluginManager {
         return pluginManager;
     }
 
+    /**
+     * The PluginManager initializes its plugin list at construction.
+     * The first available plugin is set as active.
+     * The plugin directory is not monitored for changes. That means there is no hot plug functionality here.
+     */
     private PluginManager() {
         availablePlugins = new ArrayList<>();
+        //HACK This is some nasty code to load the plugins
         try {
             Files.list(Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath()))
                     .map(e -> e.toFile())
@@ -109,13 +115,17 @@ public class PluginManager {
     }
 
     /**
-     *
+     * Sets the active Plugin.
      * @param activePlugin
      */
     public void setActivePlugin(IPlugin<?> activePlugin) {
         this.activePlugin = activePlugin;
     }
 
+    /**
+     * getter
+     * @return
+     */
     public IPlugin<?> getActivePlugin() {
         return activePlugin;
     }

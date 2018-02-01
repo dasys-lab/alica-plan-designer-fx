@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by marci on 31.05.17.
+ * This is an ANTLR generated Visitor. It creates a {@link Map} of protected regions id and the protected code.
  */
 public class ProtectedRegionsVisitor extends CommentsBaseVisitor<Void> {
 
@@ -15,6 +15,10 @@ public class ProtectedRegionsVisitor extends CommentsBaseVisitor<Void> {
         protectedRegions = new HashMap<>();
     }
 
+    /**
+     * It returns a map of protected region ids and their respective code
+     * @return
+     */
     public Map<String, String> getProtectedRegions() {
         return protectedRegions;
     }

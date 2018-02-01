@@ -72,7 +72,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                 }
                 if(newValue != null && newValue.getValue() != null) {
                     previousEffect = newValue.getValue().getEffect();
-                    DropShadow value = new DropShadow(StateContainer.STATE_RADIUS * 2, Color.GRAY);
+                    DropShadow value = new DropShadow(StateContainer.STATE_RADIUS * 2, new Color(0,0,0.7,0.5));
                     value.setSpread(0.9);
                     newValue.getValue().setEffect(value);
                     if (newValue.getValue() instanceof TransitionContainer) {

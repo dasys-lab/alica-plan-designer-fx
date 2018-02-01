@@ -7,7 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import java.util.Map;
 
 /**
- * Created by marci on 19.05.17.
+ * Glue Code for calling {@link DefaultTemplate}.
  */
 public class DefaultConstraintCodeGenerator implements IConstraintCodeGenerator {
     private DefaultTemplate defaultTemplate;

@@ -19,6 +19,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -56,6 +57,7 @@ public class PlanDesigner extends Application {
         running = true;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("test.fxml"));
         Parent root = fxmlLoader.load();
+        primaryStage.getIcons().add(new Image(new File("/home/marci/repos/alica-plan-designer-fx/bin/appIcon.xpm").toURL().toString()));
         primaryStage.setTitle("Carpe Noctem Plan Designer");
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

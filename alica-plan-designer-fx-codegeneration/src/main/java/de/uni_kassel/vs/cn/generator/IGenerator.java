@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by marci on 12.05.17.
+ * This interface declares methods for generating code.
+ * An example for an implementation for C++ as target language
+ * can be found at {@link de.uni_kassel.vs.cn.generator.cpp.CPPGeneratorImpl}
  */
 public interface IGenerator {
 

@@ -20,7 +20,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Created by marci on 12.05.17.
+ * Code generator for C++. It uses the {@link XtendTemplates} for creating the code.
+ * After this the created strings are written to disk according to {@link GeneratedSourcesManager}.
+ * Every file that is written is formatted by the formatter that is set by setFormatter.
  */
 public class CPPGeneratorImpl implements IGenerator {
 
@@ -35,6 +37,10 @@ public class CPPGeneratorImpl implements IGenerator {
         xtendTemplates = new XtendTemplates();
     }
 
+    /**
+     * delegate {@link XtendTemplates#setProtectedRegions(Map)}
+     * @param protectedRegions
+     */
     @Override
     public void setProtectedRegions(Map<String, String> protectedRegions) {
         xtendTemplates.setProtectedRegions(protectedRegions);
@@ -79,6 +85,11 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(srcPath);
     }
 
+    /**
+     * Small helper for writing source files
+     * @param filePath filePath to write to
+     * @param fileContent the content to write
+     */
     private void writeSourceFile(String filePath, String fileContent) {
         try {
             Files.write(Paths.get(filePath), fileContent.getBytes(StandardCharsets.UTF_8));
@@ -105,6 +116,10 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(srcPath);
     }
 
+    /**
+     * calls createConstraintsForPlan on each plan
+     * @param plans
+     */
     @Override
     public void createConstraints(List<Plan> plans) {
         for (Plan plan : plans) {
@@ -156,6 +171,10 @@ public class CPPGeneratorImpl implements IGenerator {
         }
     }
 
+    /**
+     * calls createPlan for each plan
+     * @param plans list of all plans to generate (usually this should be all plans in workspace)
+     */
     @Override
     public void createPlans(List<Plan> plans) {
         for (Plan plan : plans) {
@@ -282,10 +301,16 @@ public class CPPGeneratorImpl implements IGenerator {
         this.formatter = formatter;
     }
 
+    /**
+     * This returns the {@link IConstraintCodeGenerator} of the active condition plugin.
+     * TODO This maybe a candidate for a default method.
+     * @return
+     */
     @Override
     public IConstraintCodeGenerator getActiveConstraintCodeGenerator() {
         return PluginManager.getInstance().getActivePlugin().getConstraintCodeGenerator();
     }
+
 
     private <T> void useTemplateAndSaveResults(String sourcePath, String headerPath, T objectToInteractWith,
                                                Function<T, String> templateForHeader, Function<T, String> templateForSource) {
@@ -299,6 +324,11 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(sourcePath);
     }
 
+    /**
+     * Calls the executable found by the formatter attribute on the file found by filename.
+     * It is assumed that the executable is clang-format or has the same CLI as clang-format.
+     * @param fileName
+     */
     private void formatFile(String fileName) {
         if (formatter != null && formatter.length() > 0) {
             try {

@@ -23,7 +23,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by marci on 18.05.17.
+ * General Code Generator. It manages calling the correct {@link IGenerator} implementation
+ * and serves as a simple way of generating code for the rest of the application.
+ * If you want to generate a file just call {@link Codegenerator#generate(AbstractPlan)}
+ * or {@link Codegenerator#generate()} to generate all files.
  */
 public class Codegenerator {
 
