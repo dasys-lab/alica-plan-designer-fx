@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -99,7 +100,12 @@ public class EMFModelUtils {
                  URI pmlExURI = URI
                          .createURI(relativePath.replace("pml", "pmlex"));
                  Resource loadedPmlUiExtension = alicaResourceSet.createResource(pmlExURI);
-                 loadedPmlUiExtension.load(new FileInputStream(file.getAbsolutePath().replace("pml", "pmlex")), AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+                 try {
+                     loadedPmlUiExtension.load(new FileInputStream(file.getAbsolutePath().replace("pml", "pmlex")),
+                             AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+                 } catch (FileNotFoundException e) {
+                     createPmlEx(file, uri);
+                 }
                  loadedPmlUiExtension.setURI(pmlExURI);
              }
              return t;
@@ -149,10 +155,7 @@ public class EMFModelUtils {
                     .getPlans()
                     .add(new Pair<>((Plan) emptyObject, file.toPath()));
             if (createPmlEx) {
-                Resource pmlexResource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath().replace(".pml", ".pmlex")));
-                pmlexResource.getContents().add(getPmlUiExtensionModelFactory().createPmlUiExtensionMap());
-                pmlexResource.setURI(URI.createURI(relativeURI.toString().replace(".pml", ".pmlex")));
-                pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+                createPmlEx(file, relativeURI);
             }
         } else if (emptyObject instanceof PlanType) {
             AllAlicaFiles.getInstance().getPlanTypes().add(new Pair<>((PlanType) emptyObject,
@@ -170,6 +173,19 @@ public class EMFModelUtils {
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         LOG.info("Successfully created Alica file " + file.getAbsolutePath());
         return resource;
+    }
+
+    /**
+     * Creates a pmlex when given an pml path
+     * @param file a file with path to the pml NOT pmlex
+     * @param relativeURI a uri to the pml
+     * @throws IOException
+     */
+    private static void createPmlEx(File file, URI relativeURI) throws IOException {
+        Resource pmlexResource = alicaResourceSet.createResource(URI.createURI(file.getAbsolutePath().replace(".pml", ".pmlex")));
+        pmlexResource.getContents().add(getPmlUiExtensionModelFactory().createPmlUiExtensionMap());
+        pmlexResource.setURI(URI.createURI(relativeURI.toString().replace(".pml", ".pmlex")));
+        pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
     }
 
     /**

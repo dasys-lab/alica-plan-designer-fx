@@ -3,7 +3,9 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
+import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUiExtensionImpl;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.*;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.scene.Group;
@@ -84,6 +86,7 @@ public class PlanEditorPane extends Group {
                             break;
                         }
                     }
+                    pmlUiExtension = createPmlUiExtension(pmlUiExtension);
                     Optional<StateContainer> first = stateContainers
                             .stream()
                             .filter(s -> e.getState() != null && s.getContainedElement().getId() == e.getState().getId())
@@ -94,6 +97,13 @@ public class PlanEditorPane extends Group {
                         return new EntryPointContainer(e, pmlUiExtension, null, commandStack);
                     }
                 }).collect(Collectors.toList());
+    }
+
+    private PmlUiExtension createPmlUiExtension(PmlUiExtension pmlUiExtension) {
+        if (pmlUiExtension == null) {
+            pmlUiExtension = EMFModelUtils.getPmlUiExtensionModelFactory().createPmlUiExtension();
+        }
+        return pmlUiExtension;
     }
 
     private List<TransitionContainer> createTransitionContainers() {
@@ -111,6 +121,7 @@ public class PlanEditorPane extends Group {
                     .orElse(null);
 
             PmlUiExtension pmlUiExtension = planModelVisualisationObject.getPmlUiExtensionMap().getExtension().get(transition);
+            pmlUiExtension = createPmlUiExtension(pmlUiExtension);
             TransitionContainer transitionContainer = new TransitionContainer(transition, pmlUiExtension, commandStack, fromState, toState);
             transitions.add(transitionContainer);
         }
@@ -132,6 +143,9 @@ public class PlanEditorPane extends Group {
                             break;
                         }
                     }
+
+                    pmlUiExtension = createPmlUiExtension(pmlUiExtension);
+
                     if (e instanceof SuccessState) {
                         return new SuccessStateContainer(pmlUiExtension, e, commandStack);
                     } else if (e instanceof FailureState) {
@@ -158,6 +172,9 @@ public class PlanEditorPane extends Group {
                             break;
                         }
                     }
+
+                    pmlUiExtension = createPmlUiExtension(pmlUiExtension);
+
                     List<TransitionContainer> collect = transitionContainers
                             .stream()
                             .filter(f -> e.getSynchedTransitions().contains(f.getContainedElement()))

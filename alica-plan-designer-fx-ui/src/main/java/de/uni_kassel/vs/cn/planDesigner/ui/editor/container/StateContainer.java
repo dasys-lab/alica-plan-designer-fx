@@ -135,8 +135,10 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
             getChildren().addAll(imageView, text);
             setLayoutY(getContainedElement().getPlans().indexOf(p)*20);
             setPickOnBounds(false);
+            List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
+            selected.add(new Pair<>(abstractPlan, StateContainer.this));
             addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorPane) getParent().getParent())
-                    .getPlanEditorTab().getSelectedPlanElement().setValue(new Pair<>(abstractPlan, StateContainer.this)));
+                    .getPlanEditorTab().getSelectedPlanElement().setValue(selected));
         }
     }
 

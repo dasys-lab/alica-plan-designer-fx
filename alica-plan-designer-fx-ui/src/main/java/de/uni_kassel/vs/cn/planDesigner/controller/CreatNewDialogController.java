@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.fxml.FXML;
@@ -12,16 +12,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
@@ -96,8 +93,7 @@ public class CreatNewDialogController implements Initializable {
 
     private void createFile() {
         String fileName = nameTextField.getText();
-        if (fileName == null || fileName.length() == 0 ||
-                fileName.matches(".*[\\.*/*\\*\\\\*\\$*§*\\?*\\[*\\]*\\!*\\{*\\}*]+.*")) {
+        if (fileName == null || fileName.length() == 0 || AlicaModelUtils.containsIllegalCharacter(fileName)) {
             ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save.name"), null);
             return;
         }

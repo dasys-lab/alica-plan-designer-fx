@@ -10,6 +10,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
+
 /**
  * Created by marci on 28.02.17.
  */
@@ -26,7 +28,9 @@ public class ConditionContainer extends AbstractPlanElementContainer<Condition> 
 
     @Override
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(Condition containedElement) {
-        return event -> ((ConditionHBox) getParent()).selectedPlanElementProperty().setValue(new Pair<>(containedElement, this));
+        ArrayList selectedCondition = new ArrayList();
+        selectedCondition.add(new Pair<>(containedElement, this));
+        return event -> ((ConditionHBox) getParent()).selectedPlanElementProperty().setValue(selectedCondition);
     }
 
     @Override

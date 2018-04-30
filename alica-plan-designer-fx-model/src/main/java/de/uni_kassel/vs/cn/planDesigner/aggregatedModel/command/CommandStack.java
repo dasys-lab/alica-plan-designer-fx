@@ -4,14 +4,15 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.stream.Collectors;
 
 /**
- * Created by marci on 03.01.17.
+ * The CommandStack manages the undo and redo stack.
+ * Every time the stacks change all observers are informed about the change.
+ * You can also ask the CommandStack about the dirty state of a plan
+ * which is determined by the save flag of the {@link AbstractCommand}s on the undo stack
  */
 public class CommandStack extends Observable {
     private static final Logger LOG = LogManager.getLogger(CommandStack.class);
@@ -19,7 +20,7 @@ public class CommandStack extends Observable {
     private Stack<AbstractCommand> redoStack = new Stack<>();
 
     /**
-     *
+     * Executes a command, puts it on the undo stack and clears the redo stack.
      * @param command
      */
     public void storeAndExecute(AbstractCommand command) {
@@ -31,7 +32,7 @@ public class CommandStack extends Observable {
     }
 
     /**
-     *
+     * executes first command on undo stack and puts it from there to the redo stack.
      */
     public void undo() {
         AbstractCommand undone = undoStack.pop();
@@ -58,13 +59,18 @@ public class CommandStack extends Observable {
     }
 
 
+    /**
+     *
+     * @param abstractPlan
+     * @return
+     */
     public boolean isAbstractPlanInItsCurrentFormSaved(PlanElement abstractPlan) {
-        List<AbstractCommand> collect = undoStack
+        Optional<AbstractCommand> collect = undoStack
                 .stream()
                 .filter(e -> e.getAffectedPlan().equals(abstractPlan))
-                .collect(Collectors.toList());
-        if (collect.size() > 0) {
-            return collect.get(collect.size() - 1).isSaved();
+                .findFirst();
+        if (collect.isPresent()) {
+            return collect.get().isSaved();
         } else {
             return true;
         }
@@ -82,7 +88,7 @@ public class CommandStack extends Observable {
 
     /**
      *
-     * @return saved
+     * @return saved the saved flag of the top most command on the undo stack.
      */
     public boolean isCurrentCommandSaved() {
         if (undoStack.empty()) {

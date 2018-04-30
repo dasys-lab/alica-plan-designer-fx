@@ -74,5 +74,11 @@
             </HBox>
          </children>
       </VBox>
+      <HBox layoutX="393.0" layoutY="68.0" prefHeight="36.0" prefWidth="337.0" styleClass="cfgHbox">
+         <children>
+            <Label fx:id="activePluginLabel" styleClass="cfgLabel" text="Label" />
+            <ComboBox fx:id="activePluginComboBox" prefHeight="26.0" prefWidth="181.0" />
+         </children>
+      </HBox>
    </children>
 </Pane>

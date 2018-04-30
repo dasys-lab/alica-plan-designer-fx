@@ -25,6 +25,10 @@ public abstract class AbstractCommand<T extends EObject> {
         saved = false;
     }
 
+    /**
+     *
+     * @return the plan whose elements are changed/created/deleted
+     */
     public PlanElement getAffectedPlan() {
         return affectedPlan;
     }

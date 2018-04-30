@@ -2,8 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangeAttributeValue;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
+import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
@@ -13,6 +15,8 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -20,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class PLDTreeCell extends TreeCell<FileWrapper> {
+
+    private static final Logger LOG = LogManager.getLogger(PLDTreeCell.class);
 
     private TextField textField;
 
@@ -55,6 +61,24 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
     @Override
     public void commitEdit(FileWrapper newValue) {
         if (! isEditing()) return;
+            String name = newValue.unwrap().getName().substring(0, newValue.unwrap().getName().lastIndexOf("."));
+        if (AlicaModelUtils.containsIllegalCharacter(name)) {
+            final TreeItem<FileWrapper> treeItem = getTreeItem();
+            final TreeView<FileWrapper> tree = getTreeView();
+            if (tree != null) {
+                // Inform the TreeView of the edit being ready to be committed.
+                tree.fireEvent(new TreeView.EditEvent<>(tree,
+                        TreeView.<FileWrapper>editCommitEvent(),
+                        treeItem,
+                        getItem(),
+                        treeItem.getValue()));
+            }
+            LOG.warn("User tried to set illegal name: " + newValue.unwrap().getName());
+            ErrorWindowController.createErrorWindow("This name is not allowed! These characters are forbidden: "
+                    + AlicaModelUtils.forbiddenCharacters, null);
+
+            return;
+        }
         boolean isPlanElement = false;
         File unwrappedFile = getTreeItem().getValue().unwrap();
         EObject objectToChange = null;
@@ -70,7 +94,6 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
                     .get();
             objectToChange = resource.getContents().get(0);
 
-            String name = newValue.unwrap().getName().substring(0, newValue.unwrap().getName().lastIndexOf("."));
             controller.getCommandStack()
                     .storeAndExecute(new ChangeAttributeValue((PlanElement) objectToChange, "name", name, (PlanElement)objectToChange));
             isPlanElement = true;

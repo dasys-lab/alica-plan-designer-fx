@@ -19,8 +19,13 @@ public abstract class AbstractPropertyTab extends Tab {
 
     public AbstractPropertyTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         this.activeEditorTab = activeEditorTab;
-        this.selectedPlanElement = activeEditorTab.getSelectedPlanElement().getValue().getKey();
-        this.selectedElementContainer = activeEditorTab.getSelectedPlanElement();
+        if (activeEditorTab.getSelectedPlanElement().get().size() == 1) {
+            this.selectedPlanElement = activeEditorTab.getSelectedPlanElement().get().get(0).getKey();
+            this.selectedElementContainer = new SimpleObjectProperty<>(activeEditorTab.getSelectedPlanElement().get().get(0));
+        } else {
+            this.selectedPlanElement = null;
+            this.selectedElementContainer = null;
+        }
         this.commandStack = commandStack;
         addListenersForActiveTab(activeEditorTab);
         createTabContent();
@@ -28,7 +33,9 @@ public abstract class AbstractPropertyTab extends Tab {
 
     protected void addListenersForActiveTab(AbstractEditorTab<PlanElement> activeEditorTab) {
         activeEditorTab.getSelectedPlanElement().addListener((observable, oldValue, newValue) -> {
-            selectedPlanElement = newValue.getKey();
+            if (newValue.size() == 1) {
+                selectedPlanElement = newValue.get(0).getKey();
+            }
             createTabContent();
         });
     }

@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
 import javafx.event.EventHandler;
@@ -14,6 +15,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -83,7 +87,9 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
 
     @Override
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPoint containedElement) {
-        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(new Pair<>(containedElement, this));
+        List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
+        selected.add(new Pair<>(containedElement, this));
+        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(selected);
     }
 
     @Override

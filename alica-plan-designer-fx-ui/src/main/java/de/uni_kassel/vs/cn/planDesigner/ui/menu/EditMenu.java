@@ -126,7 +126,8 @@ public class EditMenu extends Menu {
 
             if (selectedItem instanceof PlanTab) {
                 PlanTab planTab = (PlanTab) selectedItem;
-                PlanElement selectedPlanElement = planTab.getSelectedPlanElement().getValue().getKey();
+                // TODO ask single
+                PlanElement selectedPlanElement = planTab.getSelectedPlanElement().get().get(0).getKey();
 
                 if(selectedPlanElement != null) {
                     deletePlanElement(commandStack, planTab, selectedPlanElement);
@@ -134,7 +135,8 @@ public class EditMenu extends Menu {
             } else if (selectedItem instanceof TaskRepositoryTab) {
                 TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab) selectedItem;
                 if (taskRepositoryTab.getSelectedPlanElement() != null) {
-                    commandStack.storeAndExecute(new DeleteTaskFromRepository(taskRepositoryTab.getEditable(), (Task) taskRepositoryTab.getSelectedPlanElement().getValue().getKey()));
+                    // TODO ask single
+                    commandStack.storeAndExecute(new DeleteTaskFromRepository(taskRepositoryTab.getEditable(), (Task) taskRepositoryTab.getSelectedPlanElement().get().get(0).getKey()));
                     taskRepositoryTab.createContentView();
                 }
             }
@@ -207,15 +209,15 @@ public class EditMenu extends Menu {
                     planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
         } else if (selectedPlanElement instanceof EntryPointImpl) {
             commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
-                    planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
-        } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElement().getValue().getValue() != null) {
-            State state = (State) planTab.getSelectedPlanElement().getValue().getValue().getContainedElement();
+                    planTab.getPlanEditorPane().getPlanModelVisualisationObject())); // TODO ask single * 3
+        } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElement().get().get(0).getValue() != null) {
+            State state = (State) planTab.getSelectedPlanElement().getValue().get(0).getValue().getContainedElement();
             commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
         } else if(selectedPlanElement instanceof SynchronisationImpl) {
             commandStack.storeAndExecute(new DeleteSynchronisationFromPlan((Synchronisation) selectedPlanElement,
                     planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
         } else if (selectedPlanElement instanceof Condition) {
-            Condition condition = (Condition) planTab.getSelectedPlanElement().getValue().getKey();
+            Condition condition = (Condition) planTab.getSelectedPlanElement().getValue().get(0).getKey();
             commandStack.storeAndExecute(new DeleteConditionFromPlan(planTab.getPlanEditorPane().getPlanModelVisualisationObject().getPlan(), condition));
         }
         planTab.getPlanEditorPane().setupPlanVisualisation();

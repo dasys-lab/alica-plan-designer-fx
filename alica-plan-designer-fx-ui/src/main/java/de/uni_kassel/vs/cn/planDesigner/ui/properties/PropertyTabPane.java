@@ -23,9 +23,10 @@ public class PropertyTabPane extends TabPane {
             getTabs().clear();
             try {
                 getTabs().add(new PropertyTab(activeEditorTab, activeEditorTab.getCommandStack()));
-                if (newValue instanceof PlanTab && ((PlanTab) newValue).getSelectedPlanElement().get().getKey() instanceof Plan
+                if (newValue instanceof PlanTab && ((PlanTab) newValue).getSelectedPlanElement().get().size() == 1
+                        &&  ((PlanTab) newValue).getSelectedPlanElement().get().get(0).getKey() instanceof Plan
                         || newValue instanceof BehaviourTab
-                        && ((BehaviourTab) newValue).getSelectedPlanElement().get().getKey() instanceof Behaviour) {
+                        && ((BehaviourTab) newValue).getSelectedPlanElement().get().get(0).getKey() instanceof Behaviour) {
                     getTabs().add(new VariablesTab(activeEditorTab, activeEditorTab.getCommandStack()));
                 }
                 // TODO this seems like bad code

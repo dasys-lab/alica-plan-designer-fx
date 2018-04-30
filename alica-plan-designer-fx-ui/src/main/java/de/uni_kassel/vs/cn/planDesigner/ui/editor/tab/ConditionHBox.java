@@ -14,16 +14,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import java.util.List;
+
 /**
  * Created by marci on 28.02.17.
  */
 public class ConditionHBox extends HBox {
 
-    private final SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedPlanElement;
+    private final SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement;
     private final CommandStack commandStack;
     private final Plan plan;
 
-    public ConditionHBox(Plan abstractPlan, SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedPlanElement, CommandStack commandStack) {
+    public ConditionHBox(Plan abstractPlan, SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement, CommandStack commandStack) {
         this.plan = abstractPlan;
         this.selectedPlanElement = selectedPlanElement;
         this.commandStack = commandStack;
@@ -44,10 +46,10 @@ public class ConditionHBox extends HBox {
     }
 
     public Pair<PlanElement, AbstractPlanElementContainer> getSelectedPlanElement() {
-        return selectedPlanElement.get();
+        return selectedPlanElement.get().get(0);
     }
 
-    public SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedPlanElementProperty() {
+    public SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElementProperty() {
         return selectedPlanElement;
     }
 }
