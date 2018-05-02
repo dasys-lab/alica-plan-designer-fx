@@ -131,7 +131,7 @@ public class CPPGeneratorImpl implements IGenerator {
     @Override
     public void createConstraintsForPlan(Plan plan) {
         String destinationPath = plan.getDestinationPath();
-        String destinationPathWithoutName = destinationPath.substring(0, destinationPath.lastIndexOf('/') + 1);
+        String destinationPathWithoutName = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
         String constraintHeaderPath = generatedSourcesManager.getIncludeDir() +
                 destinationPathWithoutName + "constraints/";
         File cstrIncPathOnDisk = new File(constraintHeaderPath);
@@ -150,6 +150,7 @@ public class CPPGeneratorImpl implements IGenerator {
         if (cstrSrcPathOnDisk.exists() == false) {
             cstrSrcPathOnDisk.mkdir();
         }
+
         String srcPath = constraintSourcePath + plan.getName() + plan.getId() + "Constraints.cpp";
         String fileContentSource = xtendTemplates.constraintsSource(plan, getActiveConstraintCodeGenerator());
         writeSourceFile(srcPath, fileContentSource);
@@ -185,10 +186,12 @@ public class CPPGeneratorImpl implements IGenerator {
     @Override
     public void createPlan(Plan plan) {
         String destinationPath = plan.getDestinationPath();
-        if (destinationPath.lastIndexOf('/')+1 < destinationPath.length())
+        if (destinationPath.lastIndexOf(File.separator) != destinationPath.charAt(destinationPath.length() - 1)
+                || destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator))
         {
-            destinationPath += "/";
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator)) + File.separator;
         }
+
         String headerPath = generatedSourcesManager.getIncludeDir() + destinationPath
                 + plan.getName() + plan.getId() + ".h";
         String fileContentHeader = xtendTemplates.planHeader(plan);

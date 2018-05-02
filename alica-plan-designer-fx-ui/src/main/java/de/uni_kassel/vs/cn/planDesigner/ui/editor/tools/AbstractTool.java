@@ -21,7 +21,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -103,8 +105,10 @@ public abstract class AbstractTool<T extends PlanElement> {
         AbstractEditorTab selectedItem = (AbstractEditorTab) MainController.getInstance().getEditorTabPane().getSelectionModel()
                 .getSelectedItem();
         if (selectedItem != null) {
+            List<Pair<PlanElement, AbstractPlanElementContainer>> noSelection = new ArrayList<>();
+            noSelection.add(new Pair<>(null, null));
             selectedItem
-                    .getSelectedPlanElement().set(new Pair<>(null, null));
+                    .getSelectedPlanElement().set(noSelection);
         }
         setRecentlyDone(true);
     }

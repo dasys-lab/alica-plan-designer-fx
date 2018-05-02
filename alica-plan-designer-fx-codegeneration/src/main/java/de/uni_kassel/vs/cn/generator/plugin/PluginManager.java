@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -110,7 +111,7 @@ public class PluginManager {
                                 }
                                 // -6 because of .class
                                 String className = je.getName().substring(0, je.getName().length() - 6);
-                                className = className.replace('/', '.');
+                                className = className.replace(File.separatorChar, '.');
                                 try {
                                     URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
                                     Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);

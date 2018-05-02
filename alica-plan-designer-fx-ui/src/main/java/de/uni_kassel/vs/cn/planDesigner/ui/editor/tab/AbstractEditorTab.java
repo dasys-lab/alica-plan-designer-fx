@@ -73,10 +73,20 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                                 List<Pair<PlanElement, AbstractPlanElementContainer>> oldValue,
                                 List<Pair<PlanElement, AbstractPlanElementContainer>> newValue) {
                 if(newValue != null && newValue.size() != 0) {
-                    newValue.forEach(selectedPlanElementPair -> previousEffect.add(selectedPlanElementPair.getValue().getEffect()));
+                    newValue.forEach(selectedPlanElementPair -> {
+                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
+                        if (planElementContainer != null) {
+                            previousEffect.add(planElementContainer.getEffect());
+                        }
+                    });
                     DropShadow value = new DropShadow(StateContainer.STATE_RADIUS * 2, new Color(0,0,0.7,0.5));
                     value.setSpread(0.9);
-                    newValue.forEach(selectedPlanElementPair -> selectedPlanElementPair.getValue().setEffect(value));
+                    newValue.forEach(selectedPlanElementPair -> {
+                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
+                        if (planElementContainer != null) {
+                            planElementContainer.setEffect(value);
+                        }
+                    });
                     if (newValue.size() == 1 && newValue.get(0).getValue() instanceof TransitionContainer) {
                         ((TransitionContainer)newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
                     }

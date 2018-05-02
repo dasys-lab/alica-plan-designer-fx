@@ -50,15 +50,22 @@ public class GeneratedSourcesManager {
     }
 
     public List<File> getAllGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
-        File header = new File(getIncludeDir() + abstractPlan.getDestinationPath() + "/" +
+        String destinationPath = abstractPlan.getDestinationPath();
+        if (destinationPath.lastIndexOf(File.separator) != destinationPath.charAt(destinationPath.length() - 1)
+                || destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator))
+        {
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator)) + File.separator;
+        }
+
+        File header = new File(getIncludeDir() + destinationPath + "/" +
                 (abstractPlan instanceof  Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".h");
-        File source = new File(getSrcDir() + abstractPlan.getDestinationPath() + "/" +
+        File source = new File(getSrcDir() + destinationPath + "/" +
                 (abstractPlan instanceof  Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".cpp");
 
         if (abstractPlan instanceof Plan) {
-            File headerConstraint = new File(getIncludeDir() + abstractPlan.getDestinationPath() +
+            File headerConstraint = new File(getIncludeDir() + destinationPath +
                     "/constraints/" + abstractPlan.getName() + abstractPlan.getId() + "Constraints.h");
-            File sourceConstraint = new File(getSrcDir() + abstractPlan.getDestinationPath() +
+            File sourceConstraint = new File(getSrcDir() + destinationPath +
                     "/constraints/" + abstractPlan.getName() + abstractPlan.getId() + "Constraints.cpp");
 
             return Arrays.asList(header, source, headerConstraint, sourceConstraint);

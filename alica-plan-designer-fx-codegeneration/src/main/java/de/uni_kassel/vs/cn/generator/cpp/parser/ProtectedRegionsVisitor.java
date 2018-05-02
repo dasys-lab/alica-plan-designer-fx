@@ -25,7 +25,7 @@ public class ProtectedRegionsVisitor extends CommentsBaseVisitor<Void> {
 
     @Override
     public Void visitProtected_region(CommentsParser.Protected_regionContext ctx) {
-        protectedRegions.put(ctx.protected_region_header().id.getText(), ctx.content.getText());
+        protectedRegions.put(ctx.protected_region_header().id.getText(), ctx.content.getText().substring(1));
         return super.visitProtected_region(ctx);
     }
 }
