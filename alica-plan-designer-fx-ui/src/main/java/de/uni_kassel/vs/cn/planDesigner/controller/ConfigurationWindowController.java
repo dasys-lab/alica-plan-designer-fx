@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
@@ -93,23 +94,34 @@ public class ConfigurationWindowController implements Initializable {
     @FXML
     private Button addWorkspaceButton;
 
+    @FXML
+    private Button plansPathFileButton;
 
+    @FXML
+    private Button rolesPathFileButton;
 
+    @FXML
+    private Button miscPathFileButton;
+
+    @FXML
+    private Button expressionsPathFileButton;
+
+    @FXML
+    private Button pluginPathFileButton;
+
+    @FXML
+    private Button eclipsePathFileButton;
+
+    @FXML
+    private Button clangFormatPathFileButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        plansPathLabel.setText(I18NRepo.getString("label.config.plan"));
-        rolesPathLabel.setText(I18NRepo.getString("label.config.roles"));
-        addWorkspaceLabel.setText(I18NRepo.getString("label.config.add"));
-        expressionsPathLabel.setText(I18NRepo.getString("label.config.expressions"));
-        miscPathLabel.setText(I18NRepo.getString("label.config.misc"));
-        pluginPathLabel.setText(I18NRepo.getString("label.config.plugin"));
-        workspaceLabel.setText(I18NRepo.getString("label.config.workspace"));
-        activePluginLabel.setText(I18NRepo.getString("label.config.plugin.active"));
-        saveButton.setText(I18NRepo.getString("action.save"));
-        clangFormatPathLabel.setText(I18NRepo.getString("label.config.clangFormatPath"));
-        eclipsePathLabel.setText(I18NRepo.getString("label.config.eclipse"));
-        addWorkspaceButton.setText(I18NRepo.getString("action.config.add"));
+        initLabelTexts();
+        initFileChooserButtons();
+
+
+
         addWorkspaceButton.setOnAction(e -> {
             if (workspaceNameField.getText() != null && workspaceNameField.getText().length() != 0) {
                 new WorkspaceManager().addWorkspace(new Workspace(workspaceNameField.getText(), new Configuration()));
@@ -176,6 +188,9 @@ public class ConfigurationWindowController implements Initializable {
         workspaceComboBox.setSelectionModel(new SingleSelectionModel<Workspace>() {
             @Override
             protected Workspace getModelItem(int index) {
+                if (index == -1) {
+                    return null;
+                }
                 return new WorkspaceManager().getWorkspaces().get(index);
             }
 
@@ -216,15 +231,40 @@ public class ConfigurationWindowController implements Initializable {
         });
         clangFormatPathTextField.setText(new WorkspaceManager().getClangFormatPath());
         eclipsePathTextField.setText(new WorkspaceManager().getEclipsePath());
-        clangFormatPathTextField.setOnMouseClicked(e -> makeFileChooserField(clangFormatPathTextField));
-        pluginPathTextField.setOnMouseClicked(e -> makeFileChooserField(pluginPathTextField));
-        plansPathTextField.setOnMouseClicked(e -> makeFileChooserField(plansPathTextField));
-        miscPathTextField.setOnMouseClicked(e -> makeFileChooserField(miscPathTextField));
-        eclipsePathTextField.setOnMouseClicked(e -> makeFileChooserField(eclipsePathTextField));
-        rolesPathTextField.setOnMouseClicked(e -> makeFileChooserField(rolesPathTextField));
-        expressionsPathTextField.setOnMouseClicked(e -> makeFileChooserField(expressionsPathTextField));
 
         saveButton.setOnAction(e -> onSave());
+    }
+
+    private void initFileChooserButtons() {
+        plansPathFileButton.setOnAction(e -> makeDirectoryChooserField(plansPathTextField));
+        rolesPathFileButton.setOnAction(e -> makeDirectoryChooserField(rolesPathTextField));
+        miscPathFileButton.setOnAction(e -> makeDirectoryChooserField(miscPathTextField));
+        pluginPathFileButton.setOnAction(e -> makeDirectoryChooserField(pluginPathTextField));
+        expressionsPathFileButton.setOnAction(e -> makeDirectoryChooserField(expressionsPathTextField));
+        eclipsePathFileButton.setOnAction(e -> makeFileChooserField(eclipsePathTextField));
+        clangFormatPathFileButton.setOnAction(e -> makeFileChooserField(clangFormatPathTextField));
+    }
+
+    private void initLabelTexts() {
+        plansPathLabel.setText(I18NRepo.getString("label.config.plan"));
+        rolesPathLabel.setText(I18NRepo.getString("label.config.roles"));
+        addWorkspaceLabel.setText(I18NRepo.getString("label.config.add"));
+        expressionsPathLabel.setText(I18NRepo.getString("label.config.expressions"));
+        miscPathLabel.setText(I18NRepo.getString("label.config.misc"));
+        pluginPathLabel.setText(I18NRepo.getString("label.config.plugin"));
+        workspaceLabel.setText(I18NRepo.getString("label.config.workspace"));
+        activePluginLabel.setText(I18NRepo.getString("label.config.plugin.active"));
+        saveButton.setText(I18NRepo.getString("action.save"));
+        clangFormatPathLabel.setText(I18NRepo.getString("label.config.clangFormatPath"));
+        eclipsePathLabel.setText(I18NRepo.getString("label.config.eclipse"));
+        addWorkspaceButton.setText(I18NRepo.getString("action.config.add"));
+        plansPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
+        rolesPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
+        miscPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
+        pluginPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
+        expressionsPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
+        eclipsePathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
+        clangFormatPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
     }
 
     /**
@@ -264,8 +304,17 @@ public class ConfigurationWindowController implements Initializable {
         }
     }
 
+    private void makeDirectoryChooserField(TextField textField) {
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        File file = fileChooser.showDialog(null);
+        if (file != null) {
+            textField.setText(file.getAbsolutePath());
+        }
+    }
+
     private void makeFileChooserField(TextField textField) {
-        File file = new FileChooser().showOpenDialog(null);
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             textField.setText(file.getAbsolutePath());
         }

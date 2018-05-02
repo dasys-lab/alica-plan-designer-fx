@@ -18,6 +18,12 @@ public class WorkspaceManager {
     private static File workspacesFile;
     private static Properties workspacesProperties;
 
+    public WorkspaceManager() {
+        if (workspacesProperties == null) {
+            workspacesProperties = new Properties();
+        }
+    }
+
     public void init() {
         workspaces = new ArrayList<>();
         loadWorkspaces();
@@ -188,7 +194,11 @@ public class WorkspaceManager {
     }
 
     public void setClangFormatPath(String clangFormatPath) {
-        workspacesProperties.setProperty("clangFormatPath", clangFormatPath);
+        if (clangFormatPath == null) {
+            workspacesProperties.setProperty("clangFormatPath", "");
+        } else {
+            workspacesProperties.setProperty("clangFormatPath", clangFormatPath);
+        }
         saveWorkspacesFile();
     }
 
@@ -197,7 +207,11 @@ public class WorkspaceManager {
     }
 
     public void setEclipsePath(String eclipsePath) {
-        workspacesProperties.setProperty("eclipsePath", eclipsePath);
+        if (eclipsePath == null) {
+            workspacesProperties.setProperty("eclipsePath", "");
+        } else {
+            workspacesProperties.setProperty("eclipsePath", eclipsePath);
+        }
         saveWorkspacesFile();
     }
 }
