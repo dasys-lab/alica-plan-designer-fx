@@ -50,8 +50,6 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
         setOnContextMenuRequested(e -> {
             ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem<T>(containedElement));
             contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY());
-            contextMenu.autoHideProperty().set(false);
-            contextMenu.setOnHiding(f -> contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY()));
         });
     }
 

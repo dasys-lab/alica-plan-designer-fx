@@ -20,22 +20,18 @@ public class DefaultConstraintCodeGenerator implements IConstraintCodeGenerator 
         defaultTemplate.setProtectedRegions(protectedRegions);
     }
 
-    @Override
     public String constraintPlanCheckingMethods(Plan plan) {
         return defaultTemplate.constraintPlanCheckingMethods(plan);
     }
 
-    @Override
     public String expressionsPlanCheckingMethods(Plan plan) {
         return defaultTemplate.expressionsPlanCheckingMethods(plan);
     }
 
-    @Override
     public String constraintStateCheckingMethods(State state) {
         return defaultTemplate.constraintStateCheckingMethods(state);
     }
 
-    @Override
     public String expressionsStateCheckingMethods(State state) {
         return defaultTemplate.expressionsStateCheckingMethods(state);
     }
