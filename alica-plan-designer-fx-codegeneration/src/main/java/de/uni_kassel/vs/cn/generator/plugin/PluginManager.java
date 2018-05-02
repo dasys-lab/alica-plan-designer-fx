@@ -48,46 +48,53 @@ public class PluginManager {
         availablePlugins = new ArrayList<>();
         //HACK This is some nasty code to load the plugins
         try {
-            Files.list(Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath()))
-                    .map(e -> e.toFile())
-                    .filter(e -> e.isDirectory() == false && e.getName().endsWith(".jar"))
-                    .forEach(f -> {
-                        // Source https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
-                        JarFile jarFile = null;
-                        try {
-                            jarFile = new JarFile(f);
-                        } catch (IOException ex) {
-                            LOG.error("Couldn't load jar file", ex);
-                            throw new RuntimeException(ex);
-                        }
-                        Enumeration<JarEntry> e = jarFile.entries();
-
-                        while (e.hasMoreElements()) {
-                            JarEntry je = e.nextElement();
-                            if(je.isDirectory() || !je.getName().endsWith(".class")){
-                                continue;
-                            }
-                            // -6 because of .class
-                            String className = je.getName().substring(0,je.getName().length()-6);
-                            className = className.replace('/', '.');
+            if (Files.exists(Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath())))
+            {
+                Files.list(Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath()))
+                        .map(e -> e.toFile())
+                        .filter(e -> e.isDirectory() == false && e.getName().endsWith(".jar"))
+                        .forEach(f -> {
+                            // Source https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
+                            JarFile jarFile = null;
                             try {
-                                URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-                                Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-                                method.setAccessible(true);
-                                method.invoke(classLoader, f.toURI().toURL());
-                                Class c = classLoader.loadClass(className);
-                                Object o = c.newInstance();
-                                if (o instanceof IPlugin) {
-                                    ((IPlugin) o).setPluginFile(f);
-                                    availablePlugins.add((IPlugin<?>) o);
-                                }
-                            } catch (ClassNotFoundException | InstantiationException ignored) {
-                            } catch (IllegalAccessException | NoSuchMethodException | MalformedURLException | InvocationTargetException e1) {
-                                e1.printStackTrace();
+                                jarFile = new JarFile(f);
+                            } catch (IOException ex) {
+                                LOG.error("Couldn't load jar file", ex);
+                                throw new RuntimeException(ex);
                             }
+                            Enumeration<JarEntry> e = jarFile.entries();
 
-                        }
-                    });
+                            while (e.hasMoreElements()) {
+                                JarEntry je = e.nextElement();
+                                if (je.isDirectory() || !je.getName().endsWith(".class")) {
+                                    continue;
+                                }
+                                // -6 because of .class
+                                String className = je.getName().substring(0, je.getName().length() - 6);
+                                className = className.replace('/', '.');
+                                try {
+                                    URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+                                    Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+                                    method.setAccessible(true);
+                                    method.invoke(classLoader, f.toURI().toURL());
+                                    Class c = classLoader.loadClass(className);
+                                    Object o = c.newInstance();
+                                    if (o instanceof IPlugin) {
+                                        ((IPlugin) o).setPluginFile(f);
+                                        availablePlugins.add((IPlugin<?>) o);
+                                    }
+                                } catch (ClassNotFoundException | InstantiationException ignored) {
+                                } catch (IllegalAccessException | NoSuchMethodException | MalformedURLException | InvocationTargetException e1) {
+                                    e1.printStackTrace();
+                                }
+
+                            }
+                        });
+            }
+            else
+            {
+                LOG.info("No Plugin Path configured, or Plugin Path does not exist: " + Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath()) + "'");
+            }
         } catch (IOException e) {
             LOG.error("Couldn't initialize PluginManager", e);
             throw new RuntimeException(e);
