@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Created by marci on 19.05.17.
+ * This plugin is the default implementation of {@link IPlugin}.
+ * It contains an empty UI and
+ * the {@link DefaultConstraintCodeGenerator} which generates NOOP Code (for own implementation)
  */
 public class DefaultPlugin implements IPlugin<Void> {
 
@@ -24,12 +26,10 @@ public class DefaultPlugin implements IPlugin<Void> {
         defaultConstraintCodeGenerator = new DefaultConstraintCodeGenerator();
     }
 
-    @Override
     public IConstraintCodeGenerator getConstraintCodeGenerator() {
         return defaultConstraintCodeGenerator;
     }
 
-    @Override
     public Parent getPluginUI() {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getClassLoader().getResource("ui.fxml"));
         try {
@@ -40,33 +40,27 @@ public class DefaultPlugin implements IPlugin<Void> {
         return null;
     }
 
-    @Override
     public void writePluginValuesToCondition(Condition condition) {
         // default doesn't need any implementation here
     }
 
-    @Override
     public Void readPluginValuesFromCondition(Condition condition) {
         // default doesn't need any implementation here
         return null;
     }
 
-    @Override
     public String getPluginName() {
         return "DefaultPlugin";
     }
 
-    @Override
     public void setPluginFile(File pluginJar) {
         this.pluginJar = pluginJar;
     }
 
-    @Override
     public File getPluginFile() {
         return pluginJar;
     }
 
-    @Override
     public void setProtectedRegions(Map<String, String> protectedRegions) {
         defaultConstraintCodeGenerator.setProtectedRegions(protectedRegions);
     }

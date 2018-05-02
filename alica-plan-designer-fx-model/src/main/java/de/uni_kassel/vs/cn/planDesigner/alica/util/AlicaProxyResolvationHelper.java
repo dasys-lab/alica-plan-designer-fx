@@ -11,7 +11,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import java.util.Optional;
 
 /**
- * Created by marci on 16.12.16.
+ * This class serves an own implementation for EMF proxy resolution.
+ * You can read up more in the EMF JavaDocs at http://download.eclipse.org/modeling/emf/emf/javadoc/2.8.0/org/eclipse/emf/ecore/impl/BasicEObjectImpl.html#eResolveProxy(org.eclipse.emf.ecore.InternalEObject)
  */
 public class AlicaProxyResolvationHelper {
 

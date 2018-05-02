@@ -20,7 +20,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * Created by marci on 08.06.17.
+ * This Controller holds the logic for the configuration window.
+ * The configuration window allows for editing the paths for plans, roles, expressions and misc.
+ *
+ *
  */
 public class ConfigurationWindowController implements Initializable {
 
@@ -108,8 +111,10 @@ public class ConfigurationWindowController implements Initializable {
         eclipsePathLabel.setText(I18NRepo.getString("label.config.eclipse"));
         addWorkspaceButton.setText(I18NRepo.getString("action.config.add"));
         addWorkspaceButton.setOnAction(e -> {
-            new WorkspaceManager().addWorkspace(new Workspace(workspaceNameField.getText(), new Configuration()));
-            workspaceComboBox.setItems(FXCollections.observableArrayList(new WorkspaceManager().getWorkspaces()));
+            if (workspaceNameField.getText() != null && workspaceNameField.getText().length() != 0) {
+                new WorkspaceManager().addWorkspace(new Workspace(workspaceNameField.getText(), new Configuration()));
+                workspaceComboBox.setItems(FXCollections.observableArrayList(new WorkspaceManager().getWorkspaces()));
+            }
         });
         // TODO refactor
         activePluginComboBox.setItems(FXCollections.observableArrayList(PluginManager.getInstance().getAvailablePlugins()));
@@ -129,6 +134,9 @@ public class ConfigurationWindowController implements Initializable {
         activePluginComboBox.setSelectionModel(new SingleSelectionModel<IPlugin<?>>() {
             @Override
             protected IPlugin<?> getModelItem(int index) {
+                if (index == -1) {
+                    return null;
+                }
                 return PluginManager.getInstance().getAvailablePlugins().get(index);
             }
 
@@ -216,26 +224,44 @@ public class ConfigurationWindowController implements Initializable {
         rolesPathTextField.setOnMouseClicked(e -> makeFileChooserField(rolesPathTextField));
         expressionsPathTextField.setOnMouseClicked(e -> makeFileChooserField(expressionsPathTextField));
 
-        saveButton.setOnAction(e -> {
-            Workspace selectedWorkspace = workspaceComboBox.getSelectionModel().getSelectedItem();
-            Configuration configuration = new Configuration();
-            configuration.setPluginPath(pluginPathTextField.getText());
-            configuration.setPlansPath(plansPathTextField.getText());
-            configuration.setMiscPath(miscPathTextField.getText());
-            configuration.setRolesPath(rolesPathTextField.getText());
-            configuration.setExpressionValidatorsPath(expressionsPathTextField.getText());
-            selectedWorkspace.setConfiguration(configuration);
-            WorkspaceManager workspaceManager = new WorkspaceManager();
-            workspaceManager.setClangFormatPath(clangFormatPathTextField.getText());
-            workspaceManager.setEclipsePath(eclipsePathTextField.getText());
+        saveButton.setOnAction(e -> onSave());
+    }
 
-            if (workspaceManager.getWorkspaces().contains(selectedWorkspace)) {
-                workspaceManager.saveWorkspaceConfiguration(selectedWorkspace);
-            } else {
-                workspaceManager.addWorkspace(selectedWorkspace);
-            }
+    /**
+     * Saves all {@link TextField} and {@link ComboBox} values from the configuration window.
+     */
+    public void onSave() {
+        Workspace selectedWorkspace = workspaceComboBox.getSelectionModel().getSelectedItem();
+        Configuration configuration = new Configuration();
+        configuration.setPluginPath(pluginPathTextField.getText());
+        configuration.setPlansPath(plansPathTextField.getText());
+        configuration.setMiscPath(miscPathTextField.getText());
+        configuration.setRolesPath(rolesPathTextField.getText());
+        configuration.setExpressionValidatorsPath(expressionsPathTextField.getText());
+
+        if (selectedWorkspace != null) {
+            selectedWorkspace.setConfiguration(configuration);
+        }
+
+        WorkspaceManager workspaceManager = new WorkspaceManager();
+        workspaceManager.setClangFormatPath(clangFormatPathTextField.getText());
+        workspaceManager.setEclipsePath(eclipsePathTextField.getText());
+
+        if (workspaceManager.getWorkspaces().contains(selectedWorkspace)) {
+            workspaceManager.saveWorkspaceConfiguration(selectedWorkspace);
+
+            // Update available plugins in case, the plugin path has changed
+            PluginManager pluginManager = PluginManager.getInstance();
+            pluginManager.updateAvailablePlugins();
+            activePluginComboBox.setItems(FXCollections
+                    .observableArrayList(pluginManager.getAvailablePlugins()));
+        } else if (selectedWorkspace != null) {
+            workspaceManager.addWorkspace(selectedWorkspace);
+        }
+
+        if (selectedWorkspace != null) {
             workspaceManager.setActiveWorkspace(selectedWorkspace);
-        });
+        }
     }
 
     private void makeFileChooserField(TextField textField) {

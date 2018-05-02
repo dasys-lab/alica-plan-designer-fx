@@ -24,9 +24,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by marci on 25.11.16.
- * <p>
  * This class functions as backend for the repository view.
+ * <p>
  * This class contains Lists of all Plans, PlanTypes, Behaviours and Tasks
  */
 public class AllAlicaFiles {
@@ -60,6 +59,10 @@ public class AllAlicaFiles {
         return instance;
     }
 
+    /**
+     * For testing only.
+     * @return
+     */
     public static AllAlicaFiles getTestInstance() {
         instance = new AllAlicaFiles();
         instance.taskRepository = new ArrayList<>();

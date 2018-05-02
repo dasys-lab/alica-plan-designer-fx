@@ -5,7 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import java.io.IOException;
 
 /**
- * Created by marci on 07.11.16.
+ * This Codegenerator console application (re)generates all plans/behaviours and terminates afterwards.
  */
 public class StandaloneCodegenerator {
     public static void main(String[] args) throws IOException {

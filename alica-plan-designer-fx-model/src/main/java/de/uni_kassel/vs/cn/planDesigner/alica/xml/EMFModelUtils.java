@@ -35,7 +35,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by marci on 08.11.16.
+ * This utility class serves EMF functionality to use and initialize.
+ * It serves as a shorthand for longer initializations and function calls.
  */
 public class EMFModelUtils {
 

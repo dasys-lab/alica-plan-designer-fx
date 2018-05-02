@@ -46,6 +46,45 @@ public class PluginManager {
      */
     private PluginManager() {
         availablePlugins = new ArrayList<>();
+        updateAvailablePlugins();
+
+        if (availablePlugins.size() == 1) {
+            setActivePlugin(availablePlugins.get(0));
+        }
+
+    }
+
+    /**
+     * Searches through the {@link PluginManager#availablePlugins}.
+     * @param name
+     * @return plugin with matching name otherwise null
+     */
+    public IPlugin getPluginByName(String name) {
+        for (IPlugin plugin : availablePlugins) {
+            if (plugin.getPluginName().equals(name)) {
+                return plugin;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets the active Plugin.
+     * @param activePlugin
+     */
+    public void setActivePlugin(IPlugin<?> activePlugin) {
+        this.activePlugin = activePlugin;
+    }
+
+    public List<IPlugin<?>> getAvailablePlugins() {
+        return availablePlugins;
+    }
+
+    /**
+     * Updates the list of available plugins
+     */
+    public void updateAvailablePlugins() {
         //HACK This is some nasty code to load the plugins
         try {
             Files.list(Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath()))
@@ -93,37 +132,9 @@ public class PluginManager {
             throw new RuntimeException(e);
         }
 
-        if (availablePlugins.size() == 1) {
-            setActivePlugin(availablePlugins.get(0));
+        if (!availablePlugins.contains(activePlugin)) {
+            setActivePlugin(null);
         }
-
-    }
-
-    /**
-     * Searches through the {@link PluginManager#availablePlugins}.
-     * @param name
-     * @return plugin with matching name otherwise null
-     */
-    public IPlugin getPluginByName(String name) {
-        for (IPlugin plugin : availablePlugins) {
-            if (plugin.getPluginName().equals(name)) {
-                return plugin;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Sets the active Plugin.
-     * @param activePlugin
-     */
-    public void setActivePlugin(IPlugin<?> activePlugin) {
-        this.activePlugin = activePlugin;
-    }
-
-    public List<IPlugin<?>> getAvailablePlugins() {
-        return availablePlugins;
     }
 
     /**
