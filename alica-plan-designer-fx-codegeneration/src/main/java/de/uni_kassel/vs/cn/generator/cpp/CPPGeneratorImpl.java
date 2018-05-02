@@ -63,8 +63,9 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createBehaviour(Behaviour behaviour) {
-        useTemplateAndSaveResults(generatedSourcesManager.getSrcDir() + behaviour.getDestinationPath() + "/" + behaviour.getName() + ".cpp",
-                generatedSourcesManager.getIncludeDir() + behaviour.getDestinationPath() + "/" + behaviour.getName() + ".h",
+        String destinationPath = cutDestinationPathToDirectory(behaviour);
+        useTemplateAndSaveResults(generatedSourcesManager.getSrcDir() + destinationPath + "/" + behaviour.getName() + ".cpp",
+                generatedSourcesManager.getIncludeDir() + destinationPath + "/" + behaviour.getName() + ".h",
                 behaviour,
                 xtendTemplates::behaviourHeader,
                 xtendTemplates::behaviourSource);
@@ -130,8 +131,7 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createConstraintsForPlan(Plan plan) {
-        String destinationPath = plan.getDestinationPath();
-        String destinationPathWithoutName = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
+        String destinationPathWithoutName = cutDestinationPathToDirectory(plan);
         String constraintHeaderPath = generatedSourcesManager.getIncludeDir() +
                 destinationPathWithoutName + "constraints/";
         File cstrIncPathOnDisk = new File(constraintHeaderPath);
@@ -185,12 +185,7 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createPlan(Plan plan) {
-        String destinationPath = plan.getDestinationPath();
-        if (destinationPath.lastIndexOf(File.separator) != destinationPath.charAt(destinationPath.length() - 1)
-                || destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator))
-        {
-            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator)) + File.separator;
-        }
+        String destinationPath = cutDestinationPathToDirectory(plan);
 
         String headerPath = generatedSourcesManager.getIncludeDir() + destinationPath
                 + plan.getName() + plan.getId() + ".h";
@@ -255,6 +250,16 @@ public class CPPGeneratorImpl implements IGenerator {
                 LOG.error("Could not open/read lines for " + srcPath, e);
             }
         }
+    }
+
+    private String cutDestinationPathToDirectory(AbstractPlan plan) {
+        String destinationPath = plan.getDestinationPath();
+        if (destinationPath.lastIndexOf(File.separator) != destinationPath.charAt(destinationPath.length() - 1)
+                || destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator))
+        {
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator)) + File.separator;
+        }
+        return destinationPath;
     }
 
     @Override
