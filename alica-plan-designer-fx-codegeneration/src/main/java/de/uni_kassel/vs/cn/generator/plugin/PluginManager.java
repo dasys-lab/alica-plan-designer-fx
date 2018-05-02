@@ -122,6 +122,10 @@ public class PluginManager {
         this.activePlugin = activePlugin;
     }
 
+    public List<IPlugin<?>> getAvailablePlugins() {
+        return availablePlugins;
+    }
+
     /**
      * getter
      * @return

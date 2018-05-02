@@ -19,6 +19,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
+
 /**
  * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a model object to hold changes from the visualisation
  * that will be written back to resource later.
@@ -48,20 +50,33 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
         setOnContextMenuRequested(e -> {
             ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem<T>(containedElement));
             contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY());
+            contextMenu.autoHideProperty().set(false);
+            contextMenu.setOnHiding(f -> contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY()));
         });
     }
 
+    /**
+     * Sets the selection flag for the editor when containedElement is clicked.
+     * Unless the last click was performed as part of a tool phase.
+     * @param containedElement
+     * @return
+     */
     @SuppressWarnings("unchecked")
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(T containedElement) {
         return event -> {
             PLDToolBar pldToolBar = ((PlanTab) MainController.getInstance().getEditorTabPane().getSelectionModel()
                     .getSelectedItem()).getPldToolBar();
+            // Was the last click performed in the context of a tool?
             if (pldToolBar.anyToolsRecentlyDone() == false) {
+                ArrayList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
+                selectedElements.add(new Pair<>(containedElement, this));
                 ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
-                        .getSelectedItem()).getSelectedPlanElement().setValue(new Pair<>(containedElement, this));
+                        .getSelectedItem()).getSelectedPlanElement().setValue(selectedElements);
+
             } else {
                 AbstractTool recentlyDoneTool = pldToolBar.getRecentlyDoneTool();
                 if(recentlyDoneTool != null) {
+                    // Reset flag
                     recentlyDoneTool.setRecentlyDone(false);
                 }
             }

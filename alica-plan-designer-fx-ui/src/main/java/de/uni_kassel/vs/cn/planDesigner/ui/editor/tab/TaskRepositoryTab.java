@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTaskToRepository;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskImpl;
@@ -20,6 +21,8 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by marci on 23.02.17.
@@ -37,19 +40,22 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         VBox contentContainer = new VBox();
         taskListView = new ListView<Task>(FXCollections.observableArrayList(getEditable().getTasks()));
         taskListView.setCellFactory(param -> new TaskListCell());
-        taskListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-                selectedPlanElement.setValue(new Pair<>(observable.getValue(),
-                        new AbstractPlanElementContainer<Task>(observable.getValue(), null, getCommandStack()) {
-            @Override
-            public void setupContainer() {
+        taskListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
+            selected.add(new Pair<>(observable.getValue(),
+                    new AbstractPlanElementContainer<Task>(observable.getValue(), null, getCommandStack()) {
+                        @Override
+                        public void setupContainer() {
 
-            }
+                        }
 
-            @Override
-            public Color getVisualisationColor() {
-                return null;
-            }
-        })));
+                        @Override
+                        public Color getVisualisationColor() {
+                            return null;
+                        }
+                    }));
+            selectedPlanElement.setValue(selected);
+        });
         HBox newTaskContainer = new HBox();
         Button createTaskButton = new Button();
         createTaskButton.setText(I18NRepo.getString("action.create.task"));

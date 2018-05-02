@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
@@ -42,6 +43,9 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
             oldValue = (T) BeanUtils.getProperty(getElementToEdit(), attribute);
             BeanUtils.setProperty(getElementToEdit(), attribute, newValue);
             if (attribute.equals("name")) {
+                if (AlicaModelUtils.containsIllegalCharacter(newValue.toString())) {
+                    throw new RuntimeException("Illegal name for element");
+                }
                 Path path = null;
                 if(getElementToEdit() instanceof Plan) {
                     Pair<Plan, Path> planPathPair = AllAlicaFiles.getInstance().getPlans()

@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 
 /**
- * Created by marci on 18.05.17.
+ * This interface defines the methods that a constraint plugin must implement.
  */
 public interface IConstraintCodeGenerator {
     String constraintPlanCheckingMethods(Plan plan);

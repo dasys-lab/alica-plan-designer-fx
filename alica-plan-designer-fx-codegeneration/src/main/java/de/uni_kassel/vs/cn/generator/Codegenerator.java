@@ -27,6 +27,9 @@ import java.util.stream.Collectors;
  * and serves as a simple way of generating code for the rest of the application.
  * If you want to generate a file just call {@link Codegenerator#generate(AbstractPlan)}
  * or {@link Codegenerator#generate()} to generate all files.
+ *
+ * Do not cache this object.
+ * A new instance should be created for every use or at least after creating a new ALICA object.
  */
 public class Codegenerator {
 
@@ -40,6 +43,9 @@ public class Codegenerator {
     private List<Condition> allConditions;
     private final IGenerator actualGenerator;
 
+    /**
+     * This constructor initializes a C++ code generator
+     */
     public Codegenerator() {
         // TODO document this! Here can the programming language be changed
         actualGenerator = new CPPGeneratorImpl();
@@ -47,6 +53,9 @@ public class Codegenerator {
         initialze();
     }
 
+    /**
+     * Generates source files for all ALICA plans and behaviours in workspace.
+     */
     public void generate() {
         GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
@@ -94,6 +103,9 @@ public class Codegenerator {
         LOG.info("Generated all files successfully");
     }
 
+    /**
+     * Initializes all attributes with the "all" prefix or all lists of alica objects in general.
+     */
     private void initialze() {
         allPlans = AllAlicaFiles
                 .getInstance()
@@ -164,6 +176,11 @@ public class Codegenerator {
         allConditions.addAll(runtimeConditions);
     }
 
+    /**
+     * (Re)Generates source files for the given object.
+     * If the given object is an instance of {@link Plan} or {@link Behaviour}.
+     * @param planElement
+     */
     public void generate(AbstractPlan planElement) {
         GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();

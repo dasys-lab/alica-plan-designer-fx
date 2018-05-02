@@ -13,11 +13,11 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="alica-plan-designer-fx-default-plugin" target="1.8" />
-      <module name="codegeneration" target="1.8" />
-      <module name="model" target="1.8" />
+      <module name="alica-plan-designer-fx-default-plugin" target="1.5" />
+      <module name="codegeneration" target="8" />
+      <module name="model" target="8" />
       <module name="plan_designer" target="1.8" />
-      <module name="ui" target="1.8" />
+      <module name="ui" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

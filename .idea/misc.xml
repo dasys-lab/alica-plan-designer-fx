@@ -5,7 +5,10 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../alica-plan-designer-fx-model/pom.xml" />
+        <option value="$PROJECT_DIR$/alica-plan-designer-fx-model/pom.xml" />
         <option value="$PROJECT_DIR$/alica-plan-designer-fx-ui/pom.xml" />
+        <option value="$PROJECT_DIR$/alica-plan-designer-fx-codegeneration/pom.xml" />
+        <option value="$PROJECT_DIR$/alica-plan-designer-fx-default-plugin/pom.xml" />
       </list>
     </option>
   </component>

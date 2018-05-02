@@ -27,6 +27,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="codegeneration" />
     <orderEntry type="module" module-name="model" />
     <orderEntry type="library" name="Maven: org.eclipse.emf:org.eclipse.emf.ecore:2.11.1-v20150805-0538" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.emf:org.eclipse.emf.ecore.xmi:2.11.1-v20150805-0538" level="project" />
@@ -37,7 +38,6 @@
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.8.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.8.2" level="project" />
-    <orderEntry type="module" module-name="codegeneration" />
     <orderEntry type="library" name="Maven: org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.12.0.M1" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.xtend:org.eclipse.xtend.lib:2.10.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.xtend:org.eclipse.xtend.lib.macro:2.10.0" level="project" />

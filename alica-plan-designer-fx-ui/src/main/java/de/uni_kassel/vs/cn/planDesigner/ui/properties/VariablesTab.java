@@ -37,7 +37,8 @@ public class VariablesTab extends AbstractPropertyTab {
     @Override
     protected void addListenersForActiveTab(AbstractEditorTab<PlanElement> activeEditorTab) {
         activeEditorTab.getSelectedPlanElement().addListener((observable, oldValue, newValue) -> {
-            selectedPlanElement = newValue.getKey();
+            // TODO check fo single
+            selectedPlanElement = newValue.get(0).getKey();
             if (selectedPlanElement instanceof Plan) {
                 this.setDisable(false);
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Plan) selectedPlanElement).getVars()));

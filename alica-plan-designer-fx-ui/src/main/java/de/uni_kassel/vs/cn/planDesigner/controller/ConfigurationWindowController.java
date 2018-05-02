@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.generator.plugin.IPlugin;
+import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Workspace;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
@@ -50,6 +52,9 @@ public class ConfigurationWindowController implements Initializable {
     private ComboBox<Workspace> workspaceComboBox;
 
     @FXML
+    private ComboBox<IPlugin<?>> activePluginComboBox;
+
+    @FXML
     private Label plansPathLabel;
 
     @FXML
@@ -74,6 +79,9 @@ public class ConfigurationWindowController implements Initializable {
     private Label eclipsePathLabel;
 
     @FXML
+    private Label activePluginLabel;
+
+    @FXML
     private Label clangFormatPathLabel;
 
     @FXML
@@ -81,6 +89,8 @@ public class ConfigurationWindowController implements Initializable {
 
     @FXML
     private Button addWorkspaceButton;
+
+
 
 
     @Override
@@ -92,6 +102,7 @@ public class ConfigurationWindowController implements Initializable {
         miscPathLabel.setText(I18NRepo.getString("label.config.misc"));
         pluginPathLabel.setText(I18NRepo.getString("label.config.plugin"));
         workspaceLabel.setText(I18NRepo.getString("label.config.workspace"));
+        activePluginLabel.setText(I18NRepo.getString("label.config.plugin.active"));
         saveButton.setText(I18NRepo.getString("action.save"));
         clangFormatPathLabel.setText(I18NRepo.getString("label.config.clangFormatPath"));
         eclipsePathLabel.setText(I18NRepo.getString("label.config.eclipse"));
@@ -100,7 +111,48 @@ public class ConfigurationWindowController implements Initializable {
             new WorkspaceManager().addWorkspace(new Workspace(workspaceNameField.getText(), new Configuration()));
             workspaceComboBox.setItems(FXCollections.observableArrayList(new WorkspaceManager().getWorkspaces()));
         });
-        workspaceComboBox.setButtonCell(new StringListCell());
+        // TODO refactor
+        activePluginComboBox.setItems(FXCollections.observableArrayList(PluginManager.getInstance().getAvailablePlugins()));
+        activePluginComboBox.setButtonCell(new StringListCell<IPlugin<?>>() {
+            @Override
+            protected void updateItem(IPlugin<?> item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item.getPluginName());
+                } else {
+                    setText(null);
+                }
+            }
+        });
+        activePluginComboBox.getSelectionModel().select(PluginManager.getInstance().getActivePlugin());
+
+        activePluginComboBox.setSelectionModel(new SingleSelectionModel<IPlugin<?>>() {
+            @Override
+            protected IPlugin<?> getModelItem(int index) {
+                return PluginManager.getInstance().getAvailablePlugins().get(index);
+            }
+
+            @Override
+            protected int getItemCount() {
+                return PluginManager.getInstance().getAvailablePlugins().size();
+            }
+        });
+        activePluginComboBox.setCellFactory(new Callback<ListView<IPlugin<?>>, ListCell<IPlugin<?>>>() {
+            @Override
+            public ListCell<IPlugin<?>> call(ListView<IPlugin<?>> param) {
+                return new ListCell<IPlugin<?>>() {
+                    @Override
+                    protected void updateItem(IPlugin<?> item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null) {
+                            setText(item.getPluginName());
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
         workspaceComboBox.setItems(FXCollections.observableArrayList(new WorkspaceManager().getWorkspaces()));
         workspaceComboBox.setButtonCell(new ListCell<Workspace>() {
             @Override
@@ -193,6 +245,6 @@ public class ConfigurationWindowController implements Initializable {
         }
     }
 
-    private static class StringListCell extends ListCell<Workspace> {
+    private static class StringListCell<T> extends ListCell<T> {
     }
 }
