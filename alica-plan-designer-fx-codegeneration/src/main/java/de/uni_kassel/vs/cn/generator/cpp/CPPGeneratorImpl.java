@@ -185,15 +185,18 @@ public class CPPGeneratorImpl implements IGenerator {
     @Override
     public void createPlan(Plan plan) {
         String destinationPath = plan.getDestinationPath();
-        String shortDestPath = destinationPath.substring(0, destinationPath.lastIndexOf('/') + 1);
-        String headerPath = generatedSourcesManager.getIncludeDir() + shortDestPath
+        if (destinationPath.lastIndexOf('/')+1 < destinationPath.length())
+        {
+            destinationPath += "/";
+        }
+        String headerPath = generatedSourcesManager.getIncludeDir() + destinationPath
                 + plan.getName() + plan.getId() + ".h";
         String fileContentHeader = xtendTemplates.planHeader(plan);
         writeSourceFile(headerPath, fileContentHeader);
 
         formatFile(headerPath);
 
-        String srcPath = generatedSourcesManager.getSrcDir() + shortDestPath +
+        String srcPath = generatedSourcesManager.getSrcDir() + destinationPath +
                 plan.getName() + plan.getId() + ".cpp";
         String fileContentSource = xtendTemplates.planSource(plan, getActiveConstraintCodeGenerator());
         writeSourceFile(srcPath, fileContentSource);

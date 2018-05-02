@@ -32,9 +32,7 @@ public class XtendTemplates {
   
   public String behaviourCreatorHeader() {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#ifndef BEHAVIOURCREATOR_H_");
-    _builder.newLine();
-    _builder.append("#define BEHAVIOURCREATOR_H_");
+    _builder.append("#pragma once");
     _builder.newLine();
     _builder.append("#include <engine/IBehaviourCreator.h>");
     _builder.newLine();
@@ -69,7 +67,7 @@ public class XtendTemplates {
     _builder.append("virtual ~BehaviourCreator();");
     _builder.newLine();
     _builder.append("            ");
-    _builder.append("virtual shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);");
+    _builder.append("virtual std::shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("};");
@@ -77,21 +75,11 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("} /* namespace alica */");
     _builder.newLine();
-    _builder.newLine();
-    _builder.append("#endif /* BEHAVIOURCREATOR_H_ */");
-    _builder.newLine();
     return _builder.toString();
   }
   
   public String behaviourCreatorSource(final List<Behaviour> behaviours) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("using std::execption;");
-    _builder.newLine();
-    _builder.append("using std::make_shared;");
-    _builder.newLine();
-    _builder.append("using std::cout;");
-    _builder.newLine();
-    _builder.newLine();
     _builder.append("#include \"BehaviourCreator.h\"");
     _builder.newLine();
     _builder.append("#include \"engine/BasicBehaviour.h\"");
@@ -108,6 +96,16 @@ public class XtendTemplates {
         _builder.newLineIfNotEmpty();
       }
     }
+    _builder.newLine();
+    _builder.append("using std::execption;");
+    _builder.newLine();
+    _builder.append("using std::make_shared;");
+    _builder.newLine();
+    _builder.append("using std::cout;");
+    _builder.newLine();
+    _builder.append("using std::string;");
+    _builder.newLine();
+    _builder.newLine();
     _builder.append("namespace alica");
     _builder.newLine();
     _builder.append("{");
@@ -134,7 +132,7 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)");
+    _builder.append("std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("{");
@@ -173,7 +171,7 @@ public class XtendTemplates {
     _builder.append("cerr << \"BehaviourCreator: Unknown behaviour requested: \" << behaviourConfId << endl;");
     _builder.newLine();
     _builder.append("            ");
-    _builder.append("throw new exception();");
+    _builder.append("throw exception();");
     _builder.newLine();
     _builder.append("            ");
     _builder.append("break;");
@@ -191,16 +189,8 @@ public class XtendTemplates {
   
   public String behaviourHeader(final Behaviour behaviour) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#ifndef ");
-    String _name = behaviour.getName();
-    _builder.append(_name, "");
-    _builder.append("_H_");
-    _builder.newLineIfNotEmpty();
-    _builder.append("#define ");
-    String _name_1 = behaviour.getName();
-    _builder.append(_name_1, "");
-    _builder.append("_H_");
-    _builder.newLineIfNotEmpty();
+    _builder.append("#pragma once");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("#include \"DomainBehaviour.h\"");
     _builder.newLine();
@@ -209,6 +199,8 @@ public class XtendTemplates {
     _builder.append(_id, "");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
+    _builder.append("//Add additional includes here");
+    _builder.newLine();
     {
       long _id_1 = behaviour.getId();
       String _plus = ("inc" + Long.valueOf(_id_1));
@@ -219,9 +211,6 @@ public class XtendTemplates {
         String _get = this.protectedRegions.get(_plus_1);
         _builder.append(_get, "");
         _builder.newLineIfNotEmpty();
-      } else {
-        _builder.append("//Add additional includes here");
-        _builder.newLine();
       }
     }
     _builder.append("/*PROTECTED REGION END*/");
@@ -233,8 +222,8 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("    ");
     _builder.append("class ");
-    String _name_2 = behaviour.getName();
-    _builder.append(_name_2, "    ");
+    String _name = behaviour.getName();
+    _builder.append(_name, "    ");
     _builder.append(" : public DomainBehaviour");
     _builder.newLineIfNotEmpty();
     _builder.append("    ");
@@ -244,14 +233,14 @@ public class XtendTemplates {
     _builder.append("public:");
     _builder.newLine();
     _builder.append("            ");
-    String _name_3 = behaviour.getName();
-    _builder.append(_name_3, "            ");
+    String _name_1 = behaviour.getName();
+    _builder.append(_name_1, "            ");
     _builder.append("();");
     _builder.newLineIfNotEmpty();
     _builder.append("            ");
     _builder.append("virtual ~");
-    String _name_4 = behaviour.getName();
-    _builder.append(_name_4, "            ");
+    String _name_2 = behaviour.getName();
+    _builder.append(_name_2, "            ");
     _builder.append("();");
     _builder.newLineIfNotEmpty();
     _builder.append("            ");
@@ -263,6 +252,9 @@ public class XtendTemplates {
     _builder.append(_id_3, "            ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
+    _builder.append("             ");
+    _builder.append("//Add additional public methods here");
+    _builder.newLine();
     {
       long _id_4 = behaviour.getId();
       String _plus_2 = ("pub" + Long.valueOf(_id_4));
@@ -273,10 +265,6 @@ public class XtendTemplates {
         String _get_1 = this.protectedRegions.get(_plus_3);
         _builder.append(_get_1, "");
         _builder.newLineIfNotEmpty();
-      } else {
-        _builder.append("            ");
-        _builder.append("//Add additional public methods here");
-        _builder.newLine();
       }
     }
     _builder.append("            ");
@@ -294,6 +282,9 @@ public class XtendTemplates {
     _builder.append(_id_6, "            ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
+    _builder.append("            ");
+    _builder.append("//Add additional protected methods here");
+    _builder.newLine();
     {
       long _id_7 = behaviour.getId();
       String _plus_4 = ("pro" + Long.valueOf(_id_7));
@@ -304,10 +295,6 @@ public class XtendTemplates {
         String _get_2 = this.protectedRegions.get(_plus_5);
         _builder.append(_get_2, "");
         _builder.newLineIfNotEmpty();
-      } else {
-        _builder.append("            ");
-        _builder.append("//Add additional protected methods here");
-        _builder.newLine();
       }
     }
     _builder.append("            ");
@@ -322,6 +309,9 @@ public class XtendTemplates {
     _builder.append(_id_9, "        ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
+    _builder.append("        ");
+    _builder.append("//Add additional private methods here");
+    _builder.newLine();
     {
       long _id_10 = behaviour.getId();
       String _plus_6 = ("priv" + Long.valueOf(_id_10));
@@ -332,10 +322,6 @@ public class XtendTemplates {
         String _get_3 = this.protectedRegions.get(_plus_7);
         _builder.append(_get_3, "");
         _builder.newLineIfNotEmpty();
-      } else {
-        _builder.append("            ");
-        _builder.append("//Add additional private methods here");
-        _builder.newLine();
       }
     }
     _builder.append("        ");
@@ -346,21 +332,11 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("} /* namespace alica */");
     _builder.newLine();
-    _builder.newLine();
-    _builder.append("#endif /* ");
-    String _name_5 = behaviour.getName();
-    _builder.append(_name_5, "");
-    _builder.append("_H_ */");
-    _builder.newLineIfNotEmpty();
     return _builder.toString();
   }
   
   public String behaviourSource(final Behaviour behaviour) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("using std::make_shared;");
-    _builder.newLine();
-    _builder.append("using std::shared_ptr;");
-    _builder.newLine();
     _builder.append("#include \"");
     String _destinationPath = behaviour.getDestinationPath();
     _builder.append(_destinationPath, "");
@@ -369,6 +345,13 @@ public class XtendTemplates {
     _builder.append(_name, "");
     _builder.append(".h\"");
     _builder.newLineIfNotEmpty();
+    _builder.append("#include <memory>");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("using std::make_shared;");
+    _builder.newLine();
+    _builder.append("using std::shared_ptr;");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("/*PROTECTED REGION ID(inccpp");
     long _id = behaviour.getId();
@@ -565,11 +548,11 @@ public class XtendTemplates {
     _builder.newLineIfNotEmpty();
     {
       long _id_16 = behaviour.getId();
-      String _plus_10 = ("run" + Long.valueOf(_id_16));
+      String _plus_10 = ("initialiseParameters" + Long.valueOf(_id_16));
       boolean _containsKey_5 = this.protectedRegions.containsKey(_plus_10);
       if (_containsKey_5) {
         long _id_17 = behaviour.getId();
-        String _plus_11 = ("run" + Long.valueOf(_id_17));
+        String _plus_11 = ("initialiseParameters" + Long.valueOf(_id_17));
         String _get_5 = this.protectedRegions.get(_plus_11);
         _builder.append(_get_5, "");
         _builder.newLineIfNotEmpty();
@@ -620,9 +603,7 @@ public class XtendTemplates {
   
   public String utilityFunctionCreatorHeader() {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#ifndef UTILITYFUNCTIONCREATOR_H_");
-    _builder.newLine();
-    _builder.append("#define UTILITYFUNCTIONCREATOR_H_");
+    _builder.append("#pragma once");
     _builder.newLine();
     _builder.newLine();
     _builder.append("#include <engine/IUtilityCreator.h>");
@@ -658,9 +639,6 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.newLine();
     _builder.append("} /* namespace alica */");
-    _builder.newLine();
-    _builder.newLine();
-    _builder.append("#endif /* UTILITYFUNCTIONCREATOR_H_ */");
     _builder.newLine();
     return _builder.toString();
   }
@@ -779,16 +757,7 @@ public class XtendTemplates {
   
   public String conditionCreatorHeader() {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#ifndef CONDITIONCREATOR_H_");
-    _builder.newLine();
-    _builder.append("#define CONDITIONCREATOR_H_");
-    _builder.newLine();
-    _builder.newLine();
-    _builder.append("using std::execption;");
-    _builder.newLine();
-    _builder.append("using std::make_shared;");
-    _builder.newLine();
-    _builder.append("using std::cout;");
+    _builder.append("#pragma once");
     _builder.newLine();
     _builder.newLine();
     _builder.append("#include \"engine/IConditionCreator.h\"");
@@ -796,6 +765,13 @@ public class XtendTemplates {
     _builder.append("#include <memory>");
     _builder.newLine();
     _builder.append("#include \"iostream\"");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("using std::execption;");
+    _builder.newLine();
+    _builder.append("using std::make_shared;");
+    _builder.newLine();
+    _builder.append("using std::cout;");
     _builder.newLine();
     _builder.newLine();
     _builder.append("namespace alica");
@@ -829,9 +805,6 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.newLine();
     _builder.append("} /* namespace alica */");
-    _builder.newLine();
-    _builder.newLine();
-    _builder.append("#endif");
     _builder.newLine();
     return _builder.toString();
   }
@@ -975,9 +948,7 @@ public class XtendTemplates {
   
   public String constraintCreatorHeader() {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#ifndef CONSTRAINTCREATOR_H_");
-    _builder.newLine();
-    _builder.append("#define CONSTRAINTCREATOR_H_");
+    _builder.append("#pragma once");
     _builder.newLine();
     _builder.newLine();
     _builder.append("#include <engine/IConstraintCreator.h>");
@@ -1013,8 +984,6 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.newLine();
     _builder.append("} /* namespace alica */");
-    _builder.newLine();
-    _builder.append("#endif /* CONSTRAINTCREATOR_H_ */");
     _builder.newLine();
     return _builder.toString();
   }
@@ -1137,16 +1106,9 @@ public class XtendTemplates {
   
   public String constraintsHeader(final Plan plan) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#ifndef ");
-    String _name = plan.getName();
-    _builder.append(_name, "");
-    _builder.append("CONSTRAINT_H_");
-    _builder.newLineIfNotEmpty();
-    _builder.append("#define ");
-    String _name_1 = plan.getName();
-    _builder.append(_name_1, "");
-    _builder.append("_H_");
-    _builder.newLineIfNotEmpty();
+    _builder.append("#pragma once");
+    _builder.newLine();
+    _builder.newLine();
     _builder.append("#include \"engine/BasicConstraint.h\"");
     _builder.newLine();
     _builder.append("#include <memory>");
@@ -1293,12 +1255,6 @@ public class XtendTemplates {
     }
     _builder.append("} /* namespace alica */");
     _builder.newLine();
-    _builder.newLine();
-    _builder.append("#endif /* ");
-    String _name_2 = plan.getName();
-    _builder.append(_name_2, "");
-    _builder.append("CONSTRAINT_H_ */");
-    _builder.newLineIfNotEmpty();
     return _builder.toString();
   }
   
@@ -1314,14 +1270,6 @@ public class XtendTemplates {
     _builder.append(_id, "");
     _builder.append("Constraints.h\"");
     _builder.newLineIfNotEmpty();
-    _builder.append("using std::execption;");
-    _builder.newLine();
-    _builder.append("using std::make_shared;");
-    _builder.newLine();
-    _builder.append("using std::cout;");
-    _builder.newLine();
-    _builder.append("using namespace alica;");
-    _builder.newLine();
     _builder.append("/*PROTECTED REGION ID(ch");
     long _id_1 = plan.getId();
     _builder.append(_id_1, "");
@@ -1345,6 +1293,14 @@ public class XtendTemplates {
     }
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
+    _builder.newLine();
+    _builder.append("using std::execption;");
+    _builder.newLine();
+    _builder.append("using std::make_shared;");
+    _builder.newLine();
+    _builder.append("using std::cout;");
+    _builder.newLine();
+    _builder.append("using namespace alica;");
     _builder.newLine();
     _builder.newLine();
     _builder.append("namespace alicaAutogenerated");
@@ -1444,12 +1400,12 @@ public class XtendTemplates {
   
   public String domainBehaviourHeader() {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#ifndef DomainBehaviour_H_");
-    _builder.newLine();
-    _builder.append("#define DomainBehaviour_H_");
+    _builder.append("#pragma once");
     _builder.newLine();
     _builder.newLine();
     _builder.append("#include \"engine/BasicBehaviour.h\"");
+    _builder.newLine();
+    _builder.append("#include <string>");
     _builder.newLine();
     _builder.append("/*PROTECTED REGION ID(domainBehaviourHeaderHead) ENABLED START*/");
     _builder.newLine();
@@ -1482,7 +1438,7 @@ public class XtendTemplates {
     _builder.append("public:");
     _builder.newLine();
     _builder.append("        ");
-    _builder.append("DomainBehaviour(string name);");
+    _builder.append("DomainBehaviour(std::string name);");
     _builder.newLine();
     _builder.append("        ");
     _builder.append("virtual ~DomainBehaviour();");
@@ -1509,9 +1465,6 @@ public class XtendTemplates {
     _builder.append("};");
     _builder.newLine();
     _builder.append("} /* namespace alica */");
-    _builder.newLine();
-    _builder.newLine();
-    _builder.append("#endif /* DomainBehaviour_H_ */");
     _builder.newLine();
     return _builder.toString();
   }
@@ -1541,7 +1494,7 @@ public class XtendTemplates {
     _builder.append("{");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("DomainBehaviour::DomainBehaviour(string name) : BasicBehaviour(name)");
+    _builder.append("DomainBehaviour::DomainBehaviour(std::string name) : BasicBehaviour(name)");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("{");
@@ -1618,9 +1571,7 @@ public class XtendTemplates {
   
   public String domainConditionHeader() {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#ifndef DomainBehaviour_H_");
-    _builder.newLine();
-    _builder.append("#define DomainBehaviour_H_");
+    _builder.append("#pragma once");
     _builder.newLine();
     _builder.newLine();
     _builder.append("#include \"engine/BasicCondition.h\"");
@@ -1773,16 +1724,8 @@ public class XtendTemplates {
   
   public String planHeader(final Plan plan) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#ifndef ");
-    String _name = plan.getName();
-    _builder.append(_name, "");
-    _builder.append("_H_");
-    _builder.newLineIfNotEmpty();
-    _builder.append("#define ");
-    String _name_1 = plan.getName();
-    _builder.append(_name_1, "");
-    _builder.append("_H_");
-    _builder.newLineIfNotEmpty();
+    _builder.append("#pragma once");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("#include \"DomainCondition.h\"");
     _builder.newLine();
@@ -1954,8 +1897,6 @@ public class XtendTemplates {
     _builder.append(_id, "");
     _builder.append(".h\"");
     _builder.newLineIfNotEmpty();
-    _builder.append("using namespace alica;");
-    _builder.newLine();
     _builder.append("/*PROTECTED REGION ID(eph");
     long _id_1 = plan.getId();
     _builder.append(_id_1, "");
@@ -1977,6 +1918,9 @@ public class XtendTemplates {
       }
     }
     _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("using namespace alica;");
     _builder.newLine();
     _builder.newLine();
     _builder.append("namespace alicaAutogenerated");

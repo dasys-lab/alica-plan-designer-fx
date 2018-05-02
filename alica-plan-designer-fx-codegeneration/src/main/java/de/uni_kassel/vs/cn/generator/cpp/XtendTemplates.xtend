@@ -22,8 +22,7 @@ class XtendTemplates {
     }
 
     def String behaviourCreatorHeader()'''
-#ifndef BEHAVIOURCREATOR_H_
-#define BEHAVIOURCREATOR_H_
+#pragma once
 #include <engine/IBehaviourCreator.h>
 
 #include <memory>
@@ -39,24 +38,24 @@ namespace alica
         public:
             BehaviourCreator();
             virtual ~BehaviourCreator();
-            virtual shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);
+            virtual std::shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);
     };
 
 } /* namespace alica */
-
-#endif /* BEHAVIOURCREATOR_H_ */
 '''
 
     def String behaviourCreatorSource(List<Behaviour> behaviours)'''
-using std::execption;
-using std::make_shared;
-using std::cout;
-
 #include "BehaviourCreator.h"
 #include "engine/BasicBehaviour.h"
 «FOR beh : behaviours»
 #include  "«beh.destinationPath»/«beh.name».h"
 «ENDFOR»
+
+using std::execption;
+using std::make_shared;
+using std::cout;
+using std::string;
+
 namespace alica
 {
 
@@ -68,7 +67,7 @@ namespace alica
     {
     }
 
-    shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
+    std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
     {
         switch(behaviourConfId)
         {
@@ -80,7 +79,7 @@ namespace alica
             «ENDFOR»
             default:
             cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourConfId << endl;
-            throw new exception();
+            throw exception();
             break;
         }
     }
@@ -88,15 +87,13 @@ namespace alica
 '''
 
     def String behaviourHeader(Behaviour behaviour)'''
-#ifndef «behaviour.name»_H_
-#define «behaviour.name»_H_
+#pragma once
 
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc«behaviour.id») ENABLED START*/
+//Add additional includes here
 «IF (protectedRegions.containsKey("inc" + behaviour.id))»
 «protectedRegions.get("inc" + behaviour.id)»
-«ELSE»
-//Add additional includes here
 «ENDIF»
 /*PROTECTED REGION END*/
 
@@ -109,39 +106,36 @@ namespace alica
             virtual ~«behaviour.name»();
             virtual void run(void* msg);
             /*PROTECTED REGION ID(pub«behaviour.id») ENABLED START*/
+             //Add additional public methods here
             «IF (protectedRegions.containsKey("pub" + behaviour.id))»
 «protectedRegions.get("pub" + behaviour.id)»
-            «ELSE»
-                //Add additional public methods here
             «ENDIF»
             /*PROTECTED REGION END*/
         protected:
             virtual void initialiseParameters();
             /*PROTECTED REGION ID(pro«behaviour.id») ENABLED START*/
+            //Add additional protected methods here
             «IF (protectedRegions.containsKey("pro" + behaviour.id))»
 «protectedRegions.get("pro" + behaviour.id)»
-            «ELSE»
-                //Add additional protected methods here
             «ENDIF»
             /*PROTECTED REGION END*/
         private:
         /*PROTECTED REGION ID(priv«behaviour.id») ENABLED START*/
+        //Add additional private methods here
             «IF (protectedRegions.containsKey("priv" + behaviour.id))»
 «protectedRegions.get("priv" + behaviour.id)»
-            «ELSE»
-                //Add additional private methods here
             «ENDIF»
         /*PROTECTED REGION END*/
     };
 } /* namespace alica */
-
-#endif /* «behaviour.name»_H_ */
 '''
 
     def String behaviourSource(Behaviour behaviour) '''
+#include "«behaviour.destinationPath»/«behaviour.name».h"
+#include <memory>
+
 using std::make_shared;
 using std::shared_ptr;
-#include "«behaviour.destinationPath»/«behaviour.name».h"
 
 /*PROTECTED REGION ID(inccpp«behaviour.id») ENABLED START*/
     //Add additional includes here
@@ -198,8 +192,8 @@ namespace alica
     void «behaviour.name»::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters«behaviour.id») ENABLED START*/
-        «IF (protectedRegions.containsKey("run" + behaviour.id))»
-«protectedRegions.get("run" + behaviour.id)»
+        «IF (protectedRegions.containsKey("initialiseParameters" + behaviour.id))»
+«protectedRegions.get("initialiseParameters" + behaviour.id)»
         «ELSE»
             //Add additional options here
         «ENDIF»
@@ -219,8 +213,7 @@ namespace alica
 '''
 
     def String utilityFunctionCreatorHeader()'''
-#ifndef UTILITYFUNCTIONCREATOR_H_
-#define UTILITYFUNCTIONCREATOR_H_
+#pragma once
 
 #include <engine/IUtilityCreator.h>
 #include <memory>
@@ -237,8 +230,6 @@ namespace alica
     };
 
 } /* namespace alica */
-
-#endif /* UTILITYFUNCTIONCREATOR_H_ */
 '''
 
 
@@ -285,16 +276,15 @@ namespace alica
 '''
 
     def String conditionCreatorHeader()'''
-#ifndef CONDITIONCREATOR_H_
-#define CONDITIONCREATOR_H_
-
-using std::execption;
-using std::make_shared;
-using std::cout;
+#pragma once
 
 #include "engine/IConditionCreator.h"
 #include <memory>
 #include "iostream"
+
+using std::execption;
+using std::make_shared;
+using std::cout;
 
 namespace alica
 {
@@ -309,8 +299,6 @@ namespace alica
     };
 
 } /* namespace alica */
-
-#endif
 '''
 
     def String conditionCreatorSource(List<Plan> plans, List<Condition> conditions) '''
@@ -361,8 +349,7 @@ namespace alica
 '''
 
     def String constraintCreatorHeader()'''
-#ifndef CONSTRAINTCREATOR_H_
-#define CONSTRAINTCREATOR_H_
+#pragma once
 
 #include <engine/IConstraintCreator.h>
 #include <memory>
@@ -379,7 +366,6 @@ namespace alica
     };
 
 } /* namespace alica */
-#endif /* CONSTRAINTCREATOR_H_ */
 '''
 
     def String constraintCreatorSource(List<Plan> plans, List<Condition> conditions)'''
@@ -429,8 +415,8 @@ namespace alica
 '''
 
     def String constraintsHeader(Plan plan)'''
-#ifndef «plan.name»CONSTRAINT_H_
-#define «plan.name»_H_
+#pragma once
+
 #include "engine/BasicConstraint.h"
 #include <memory>
 
@@ -483,16 +469,10 @@ namespace alicaAutogenerated
     «ENDIF»
     «ENDFOR»
 } /* namespace alica */
-
-#endif /* «plan.name»CONSTRAINT_H_ */
 '''
 
     def String constraintsSource(Plan plan, IConstraintCodeGenerator constraintCodeGenerator) '''
 #include "«plan.destinationPath»/constraints/«plan.name»«plan.id»Constraints.h"
-using std::execption;
-using std::make_shared;
-using std::cout;
-using namespace alica;
 /*PROTECTED REGION ID(ch«plan.id») ENABLED START*/
         «IF (protectedRegions.containsKey("ch" + plan.id))»
 «protectedRegions.get("ch" + plan.id)»
@@ -501,6 +481,10 @@ using namespace alica;
         «ENDIF»
 /*PROTECTED REGION END*/
 
+using std::execption;
+using std::make_shared;
+using std::cout;
+using namespace alica;
 
 namespace alicaAutogenerated
 {
@@ -523,10 +507,10 @@ namespace alicaAutogenerated
 '''
 
     def String domainBehaviourHeader() '''
-#ifndef DomainBehaviour_H_
-#define DomainBehaviour_H_
+#pragma once
 
 #include "engine/BasicBehaviour.h"
+#include <string>
 /*PROTECTED REGION ID(domainBehaviourHeaderHead) ENABLED START*/
         «IF (protectedRegions.containsKey("domainBehaviourHeaderHead"))»
 «protectedRegions.get("domainBehaviourHeaderHead")»
@@ -540,7 +524,7 @@ namespace alica
     class DomainBehaviour : public BasicBehaviour
     {
         public:
-        DomainBehaviour(string name);
+        DomainBehaviour(std::string name);
         virtual ~DomainBehaviour();
 
         /*PROTECTED REGION ID(domainBehaviourClassDecl) ENABLED START*/
@@ -552,8 +536,6 @@ namespace alica
         /*PROTECTED REGION END*/
     };
 } /* namespace alica */
-
-#endif /* DomainBehaviour_H_ */
 '''
 
     def String domainBehaviourSource() '''
@@ -568,7 +550,7 @@ namespace alica
 
 namespace alica
 {
-    DomainBehaviour::DomainBehaviour(string name) : BasicBehaviour(name)
+    DomainBehaviour::DomainBehaviour(std::string name) : BasicBehaviour(name)
     {
         /*PROTECTED REGION ID(domainBehaviourConstructor) ENABLED START*/
 «IF (protectedRegions.containsKey("domainBehaviourConstructor"))»
@@ -601,8 +583,7 @@ namespace alica
 '''
 
     def String domainConditionHeader() '''
-#ifndef DomainBehaviour_H_
-#define DomainBehaviour_H_
+#pragma once
 
 #include "engine/BasicCondition.h"
 /*PROTECTED REGION ID(domainHeaderAdditional) ENABLED START*/
@@ -671,8 +652,7 @@ namespace alica
 '''
 
     def String planHeader(Plan plan) '''
-#ifndef «plan.name»_H_
-#define «plan.name»_H_
+#pragma once
 
 #include "DomainCondition.h"
 #include "engine/BasicUtilityFunction.h"
@@ -727,7 +707,6 @@ namespace alicaAutogenerated
 
     def String planSource(Plan plan, IConstraintCodeGenerator constraintCodeGenerator) '''
 #include "«plan.destinationPath»/«plan.name»«plan.id».h"
-using namespace alica;
 /*PROTECTED REGION ID(eph«plan.id») ENABLED START*/
 «IF (protectedRegions.containsKey("eph" + plan.id))»
 «protectedRegions.get("eph" + plan.id)»
@@ -735,6 +714,8 @@ using namespace alica;
     //Add additional options here
 «ENDIF»
 /*PROTECTED REGION END*/
+
+using namespace alica;
 
 namespace alicaAutogenerated
 {
