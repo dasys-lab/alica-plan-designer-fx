@@ -39,7 +39,7 @@ public class CPPGeneratorImpl implements IGenerator {
 
     /**
      * delegate {@link XtendTemplates#setProtectedRegions(Map)}
-     * @param protectedRegions
+     * @param protectedRegions mapping from identifier to content of protected region
      */
     @Override
     public void setProtectedRegions(Map<String, String> protectedRegions) {
