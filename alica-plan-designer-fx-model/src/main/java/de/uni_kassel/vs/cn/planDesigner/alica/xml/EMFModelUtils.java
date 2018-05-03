@@ -105,6 +105,8 @@ public class EMFModelUtils {
                      loadedPmlUiExtension.load(new FileInputStream(file.getAbsolutePath().replace("pml", "pmlex")),
                              AlicaSerializationHelper.getInstance().getLoadSaveOptions());
                  } catch (FileNotFoundException e) {
+                     // remove not completely loaded resource from the AlicaResourceSet
+                     loadedPmlUiExtension.delete(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
                      createPmlEx(file, uri);
                  }
                  loadedPmlUiExtension.setURI(pmlExURI);
