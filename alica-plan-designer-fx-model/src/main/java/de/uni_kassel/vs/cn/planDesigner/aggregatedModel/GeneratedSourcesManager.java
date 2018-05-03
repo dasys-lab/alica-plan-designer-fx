@@ -5,8 +5,9 @@ import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -40,38 +41,36 @@ public class GeneratedSourcesManager {
     }
 
     public String getIncludeDir() {
-        String expressionValidatorsPath = configuration.getExpressionValidatorsPath();
-        return expressionValidatorsPath + "/include/";
+        return Paths.get(configuration.getExpressionValidatorsPath(), "include").toString();
     }
 
     public String getSrcDir() {
-        String expressionValidatorsPath = configuration.getExpressionValidatorsPath();
-        return expressionValidatorsPath + "/src/";
+        return Paths.get(configuration.getExpressionValidatorsPath(), "src").toString();
     }
 
     public List<File> getAllGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
         String destinationPath = abstractPlan.getDestinationPath();
-        if (destinationPath.lastIndexOf(File.separator) != destinationPath.charAt(destinationPath.length() - 1)
-                || destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator))
+        if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator))
         {
-            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator)) + File.separator;
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
         }
 
-        File header = new File(getIncludeDir() + destinationPath + "/" +
-                (abstractPlan instanceof  Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".h");
-        File source = new File(getSrcDir() + destinationPath + "/" +
-                (abstractPlan instanceof  Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".cpp");
+        String headerFilename = (abstractPlan instanceof  Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".h";
+        String sourceFilename = (abstractPlan instanceof  Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".cpp";
+        File headerFile = new File(Paths.get(getIncludeDir(), destinationPath, headerFilename).toString());
+        File sourceFile = new File(Paths.get(getSrcDir(),destinationPath, sourceFilename).toString());
+
+        List<File> generatedFiles = Collections.emptyList();
+        generatedFiles.add(headerFile);
+        generatedFiles.add(sourceFile);
 
         if (abstractPlan instanceof Plan) {
-            File headerConstraint = new File(getIncludeDir() + destinationPath +
-                    "/constraints/" + abstractPlan.getName() + abstractPlan.getId() + "Constraints.h");
-            File sourceConstraint = new File(getSrcDir() + destinationPath +
-                    "/constraints/" + abstractPlan.getName() + abstractPlan.getId() + "Constraints.cpp");
-
-            return Arrays.asList(header, source, headerConstraint, sourceConstraint);
-        } else {
-            return Arrays.asList(header, source);
+            File constraintHeaderFile = new File(Paths.get(getIncludeDir(), destinationPath, "constraints", abstractPlan.getName() + abstractPlan.getId() + "Constraints.h").toString());
+            File constraintSourceFile = new File(Paths.get(getSrcDir(), destinationPath, "constraints", abstractPlan.getName() + abstractPlan.getId() + "Constraints.cpp").toString());
+            generatedFiles.add(constraintHeaderFile);
+            generatedFiles.add(constraintSourceFile);
         }
+        return generatedFiles;
     }
 
     /**
