@@ -5,11 +5,8 @@ import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by marci on 31.05.17.
@@ -60,7 +57,7 @@ public class GeneratedSourcesManager {
         File headerFile = new File(Paths.get(getIncludeDir(), destinationPath, headerFilename).toString());
         File sourceFile = new File(Paths.get(getSrcDir(),destinationPath, sourceFilename).toString());
 
-        List<File> generatedFiles = Collections.emptyList();
+        List<File> generatedFiles = new ArrayList<>();
         generatedFiles.add(headerFile);
         generatedFiles.add(sourceFile);
 
