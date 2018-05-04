@@ -35,7 +35,6 @@ import java.util.Optional;
  */
 public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
-    private final ChangeListener<TreeItem<FileWrapper>> treeItemChangeListener;
     private MainController controller;
 
     private boolean wasDragged;
@@ -134,16 +133,6 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
         });
 
 
-        treeItemChangeListener = (observable, oldValue, newValue) -> {
-            if (newValue instanceof PLDTreeItem) {
-                if (newValue.getValue().unwrap().isDirectory()) {
-                    newValue.setExpanded(!newValue.isExpanded());
-                } else {
-                    controller.openFile(newValue.getValue().unwrap());
-                }
-            }
-        };
-        this.getSelectionModel().selectedItemProperty().addListener(getTreeItemChangeListener());
         this.setShowRoot(false);
         this.setContextMenu(new PLDFileTreeViewContextMenu());
         setEditable(true);
@@ -180,10 +169,6 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
     public void setController(MainController controller) {
         this.controller = controller;
-    }
-
-    public ChangeListener<TreeItem<FileWrapper>> getTreeItemChangeListener() {
-        return treeItemChangeListener;
     }
 }
 
