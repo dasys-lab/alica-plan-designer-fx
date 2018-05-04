@@ -35,7 +35,7 @@ class DefaultTemplate {
 			* Vars:«FOR variable : transition.preCondition.vars»
 			*	- «variable.name» («variable.id») «ENDFOR»
 			*/
-			bool TransitionCondition«transition.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
+			bool PreCondition«transition.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
 			 {
 				/*PROTECTED REGION ID(«transition.id») ENABLED START*/
                 «IF (protectedRegions.containsKey(transition.id + ""))»
