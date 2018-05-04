@@ -620,8 +620,9 @@ namespace alica
 
         /*PROTECTED REGION END*/
 
-                /*PROTECTED REGION ID(domainHeader) ENABLED START*/
-«IF (protectedRegions.containsKey("ProtectedDomainHeader"))»
+protected:
+                /*PROTECTED REGION ID(protectedDomainHeader) ENABLED START*/
+«IF (protectedRegions.containsKey("protectedDomainHeader"))»
 «protectedRegions.get("ProtectedDomainHeader")»
 «ELSE»
         //Add additional options here
@@ -629,7 +630,8 @@ namespace alica
 
         /*PROTECTED REGION END*/
 
-                /*PROTECTED REGION ID(domainHeader) ENABLED START*/
+private:
+                /*PROTECTED REGION ID(privateDomainHeader) ENABLED START*/
 «IF (protectedRegions.containsKey("privateDomainHeader"))»
 «protectedRegions.get("privateDomainHeader")»
 «ELSE»
