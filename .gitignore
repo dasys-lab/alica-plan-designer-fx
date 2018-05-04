@@ -15,21 +15,7 @@ target/
 hs_err_pid*
 
 # IntelliJ config
-.idea/workspace.xml
-.idea/tasks.xml
-
-.idea/dataSources/
-.idea/dataSources.ids
-.idea/dataSources.xml
-.idea/dataSources.local.xml
-.idea/sqlDataSources.xml
-.idea/dynamic.xml
-.idea/uiDesigner.xml
-
-.idea/gradle.xml
-.idea/libraries
-
-.idea/mongoSettings.xml
+.idea/*
 
 *.iws
 
@@ -38,6 +24,5 @@ hs_err_pid*
 
 #Files created on a debug run should not be added to the repo
 RemoteSystemsTempFiles/
-default.properties
 alica-plan-designer-fx-ui/log/
-workspaces.properties
+*.properties
