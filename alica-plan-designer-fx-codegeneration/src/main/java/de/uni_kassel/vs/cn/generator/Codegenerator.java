@@ -57,7 +57,6 @@ public class Codegenerator {
      * Generates source files for all ALICA plans and behaviours in workspace.
      */
     public void generate() {
-        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
         String expressionValidatorsPath = new WorkspaceManager().getActiveWorkspace()
                 .getConfiguration().getExpressionValidatorsPath();
@@ -182,12 +181,16 @@ public class Codegenerator {
      * @param planElement
      */
     public void generate(AbstractPlan planElement) {
+        if (!(planElement instanceof Behaviour || planElement instanceof Plan))
+        {
+            return;
+        }
+
         GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
         generatedSourcesManager
                 .getAllGeneratedFilesForAbstractPlan(planElement)
                 .forEach(e -> {
-
                     try {
                         if (e.exists()) {
                             CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e.toPath()));
@@ -201,14 +204,14 @@ public class Codegenerator {
                         throw new RuntimeException(e1);
                     }
                 });
+
         PluginManager.getInstance().getActivePlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
         actualGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
+
         if (planElement instanceof Behaviour) {
             actualGenerator.createBehaviourCreator(allBehaviours);
             actualGenerator.createBehaviour((Behaviour) planElement);
-        }
-
-        if (planElement instanceof Plan) {
+        } else if (planElement instanceof Plan) {
             actualGenerator.createConstraintsForPlan((Plan) planElement);
             actualGenerator.createPlan((Plan) planElement);
             actualGenerator.createConditionCreator(allPlans, allConditions);
