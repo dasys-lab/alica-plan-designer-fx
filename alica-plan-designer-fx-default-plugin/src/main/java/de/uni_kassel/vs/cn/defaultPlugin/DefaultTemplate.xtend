@@ -41,7 +41,7 @@ class DefaultTemplate {
                 «IF (protectedRegions.containsKey(transition.id + ""))»
                     «protectedRegions.get(transition.id + "")»
                 «ELSE»
-                    return false;
+                    return implement_me_«transition.id»;
                 «ENDIF»
 				/*PROTECTED REGION END*/
 
@@ -64,7 +64,7 @@ class DefaultTemplate {
             «IF (protectedRegions.containsKey(plan.runtimeCondition.id + ""))»
                 «protectedRegions.get(plan.runtimeCondition.id + "")»
             «ELSE»
-                return true;
+                return please_implement_me_«plan.runtimeCondition.id»;
             «ENDIF»
              /*PROTECTED REGION END*/
           }
@@ -82,8 +82,7 @@ class DefaultTemplate {
              «IF (protectedRegions.containsKey(plan.preCondition.id + ""))»
                 «protectedRegions.get(plan.preCondition.id + "")»
             «ELSE»
-                //--> "PreCondition:«plan.preCondition.id»  not implemented";
-                return true;
+                return please_implement_me_«plan.preCondition.id»;
             «ENDIF»
              /*PROTECTED REGION END*/
           }
@@ -111,7 +110,7 @@ void Constraint«plan.runtimeCondition.id»::getConstraint(shared_ptr<Constraint
     «IF (protectedRegions.containsKey("cc" + plan.runtimeCondition.id))»
         «protectedRegions.get("cc" + plan.runtimeCondition.id)»
     «ELSE»
-        //Proteced
+        //Please describe your runtime constraint here
     «ENDIF»
 /*PROTECTED REGION END*/
 }
@@ -133,7 +132,7 @@ void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ConstraintDesc
     «IF (protectedRegions.containsKey("cc" + plan.preCondition.id))»
         «protectedRegions.get("cc" + plan.preCondition.id)»
     «ELSE»
-        //Proteced
+        //Please describe your precondition constraint here
     «ENDIF»
 /*PROTECTED REGION END*/
 }
@@ -165,7 +164,7 @@ void Constraint«transition.preCondition.id»::getConstraint(shared_ptr<Constrai
 	«IF (protectedRegions.containsKey("cc" + transition.preCondition.id))»
         «protectedRegions.get("cc" + transition.preCondition.id)»
     «ELSE»
-        //Proteced
+        //Please describe your precondition constraint here
     «ENDIF»
 /*PROTECTED REGION END*/
 }
