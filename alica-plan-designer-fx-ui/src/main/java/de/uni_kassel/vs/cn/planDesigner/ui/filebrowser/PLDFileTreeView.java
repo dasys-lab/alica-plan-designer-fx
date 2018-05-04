@@ -143,7 +143,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 }
             }
         };
-        this.getSelectionModel().selectedItemProperty().addListener(getTreeItemChangeListener());
+        //this.getSelectionModel().selectedItemProperty().addListener(getTreeItemChangeListener());
         this.setShowRoot(false);
         this.setContextMenu(new PLDFileTreeViewContextMenu());
         setEditable(true);
