@@ -615,6 +615,24 @@ namespace alica
 «ELSE»
         //Add additional options here
 «ENDIF»
+
+        /*PROTECTED REGION END*/
+
+                /*PROTECTED REGION ID(domainHeader) ENABLED START*/
+«IF (protectedRegions.containsKey("ProtectedDomainHeader"))»
+«protectedRegions.get("ProtectedDomainHeader")»
+«ELSE»
+        //Add additional options here
+«ENDIF»
+
+        /*PROTECTED REGION END*/
+
+                /*PROTECTED REGION ID(domainHeader) ENABLED START*/
+«IF (protectedRegions.containsKey("privateDomainHeader"))»
+«protectedRegions.get("privateDomainHeader")»
+«ELSE»
+        //Add additional options here
+«ENDIF»
         /*PROTECTED REGION END*/
     };
 } /* namespace alica */
