@@ -623,7 +623,7 @@ namespace alica
 protected:
                 /*PROTECTED REGION ID(protectedDomainHeader) ENABLED START*/
 «IF (protectedRegions.containsKey("protectedDomainHeader"))»
-«protectedRegions.get("ProtectedDomainHeader")»
+«protectedRegions.get("protectedDomainHeader")»
 «ELSE»
         //Add additional options here
 «ENDIF»
