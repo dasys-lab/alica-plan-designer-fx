@@ -105,7 +105,7 @@ class DefaultTemplate {
 «ENDIF»
 *
 */
-void Constraint«plan.runtimeCondition.id»::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp) {
+void Constraint«plan.runtimeCondition.id»::getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp) {
 /*PROTECTED REGION ID(cc«plan.runtimeCondition.id») ENABLED START*/
     «IF (protectedRegions.containsKey("cc" + plan.runtimeCondition.id))»
         «protectedRegions.get("cc" + plan.runtimeCondition.id)»
@@ -127,7 +127,7 @@ void Constraint«plan.runtimeCondition.id»::getConstraint(shared_ptr<Constraint
 «ENDFOR»
 *
 */
-void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp) {
+void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp) {
 /*PROTECTED REGION ID(cc«plan.preCondition.id») ENABLED START*/
     «IF (protectedRegions.containsKey("cc" + plan.preCondition.id))»
         «protectedRegions.get("cc" + plan.preCondition.id)»
@@ -159,7 +159,7 @@ void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ConstraintDesc
 «ENDFOR»
 «ENDIF»
 */
-void Constraint«transition.preCondition.id»::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp) {
+void Constraint«transition.preCondition.id»::getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp) {
 /*PROTECTED REGION ID(cc«transition.preCondition.id») ENABLED START*/
 	«IF (protectedRegions.containsKey("cc" + transition.preCondition.id))»
         «protectedRegions.get("cc" + transition.preCondition.id)»
