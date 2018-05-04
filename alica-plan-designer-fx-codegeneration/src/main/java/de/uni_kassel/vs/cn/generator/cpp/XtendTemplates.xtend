@@ -125,7 +125,7 @@ namespace alica
         private:
         /*PROTECTED REGION ID(prv«behaviour.id») ENABLED START*/
             «IF (protectedRegions.containsKey("prv" + behaviour.id))»
-«protectedRegions.get("priv" + behaviour.id)»
+«protectedRegions.get("prv" + behaviour.id)»
             «ELSE»
             //Add additional private methods here
             «ENDIF»

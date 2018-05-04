@@ -161,8 +161,11 @@ public class DefaultTemplate {
                 _builder.newLineIfNotEmpty();
               } else {
                 _builder.append("                ");
-                _builder.append("return false;");
-                _builder.newLine();
+                _builder.append("return implement_me_");
+                long _id_9 = transition.getId();
+                _builder.append(_id_9, "                ");
+                _builder.append(";");
+                _builder.newLineIfNotEmpty();
               }
             }
             _builder.append("\t");
@@ -251,8 +254,12 @@ public class DefaultTemplate {
             _builder.newLineIfNotEmpty();
           } else {
             _builder.append("   ");
-            _builder.append("return true;");
-            _builder.newLine();
+            _builder.append("return please_implement_me_");
+            RuntimeCondition _runtimeCondition_8 = plan.getRuntimeCondition();
+            long _id_5 = _runtimeCondition_8.getId();
+            _builder.append(_id_5, "   ");
+            _builder.append(";");
+            _builder.newLineIfNotEmpty();
           }
         }
         _builder.append("    ");
@@ -295,8 +302,8 @@ public class DefaultTemplate {
             String _name_3 = variable_1.getName();
             _builder.append(_name_3, " ");
             _builder.append(" (");
-            long _id_5 = variable_1.getId();
-            _builder.append(_id_5, " ");
+            long _id_6 = variable_1.getId();
+            _builder.append(_id_6, " ");
             _builder.append(")");
           }
         }
@@ -306,8 +313,8 @@ public class DefaultTemplate {
         _builder.newLine();
         _builder.append("bool PreCondition");
         PreCondition _preCondition_4 = plan.getPreCondition();
-        long _id_6 = _preCondition_4.getId();
-        _builder.append(_id_6, "");
+        long _id_7 = _preCondition_4.getId();
+        _builder.append(_id_7, "");
         _builder.append("::evaluate(shared_ptr<RunningPlan> rp)");
         _builder.newLineIfNotEmpty();
         _builder.append("{");
@@ -315,34 +322,31 @@ public class DefaultTemplate {
         _builder.append("    ");
         _builder.append("/*PROTECTED REGION ID(");
         PreCondition _preCondition_5 = plan.getPreCondition();
-        long _id_7 = _preCondition_5.getId();
-        _builder.append(_id_7, "    ");
+        long _id_8 = _preCondition_5.getId();
+        _builder.append(_id_8, "    ");
         _builder.append(") ENABLED START*/");
         _builder.newLineIfNotEmpty();
         {
           PreCondition _preCondition_6 = plan.getPreCondition();
-          long _id_8 = _preCondition_6.getId();
-          String _plus_2 = (Long.valueOf(_id_8) + "");
+          long _id_9 = _preCondition_6.getId();
+          String _plus_2 = (Long.valueOf(_id_9) + "");
           boolean _containsKey_1 = this.protectedRegions.containsKey(_plus_2);
           if (_containsKey_1) {
             _builder.append("    ");
             PreCondition _preCondition_7 = plan.getPreCondition();
-            long _id_9 = _preCondition_7.getId();
-            String _plus_3 = (Long.valueOf(_id_9) + "");
+            long _id_10 = _preCondition_7.getId();
+            String _plus_3 = (Long.valueOf(_id_10) + "");
             String _get_1 = this.protectedRegions.get(_plus_3);
             _builder.append(_get_1, "    ");
             _builder.newLineIfNotEmpty();
           } else {
             _builder.append("    ");
-            _builder.append("//--> \"PreCondition:");
+            _builder.append("return please_implement_me_");
             PreCondition _preCondition_8 = plan.getPreCondition();
-            long _id_10 = _preCondition_8.getId();
-            _builder.append(_id_10, "    ");
-            _builder.append("  not implemented\";");
+            long _id_11 = _preCondition_8.getId();
+            _builder.append(_id_11, "    ");
+            _builder.append(";");
             _builder.newLineIfNotEmpty();
-            _builder.append("    ");
-            _builder.append("return true;");
-            _builder.newLine();
           }
         }
         _builder.append("    ");
@@ -444,7 +448,7 @@ public class DefaultTemplate {
             _builder.newLineIfNotEmpty();
           } else {
             _builder.append("    ");
-            _builder.append("//Proteced");
+            _builder.append("//Please describe your runtime constraint here");
             _builder.newLine();
           }
         }
@@ -527,7 +531,7 @@ public class DefaultTemplate {
             _builder.newLineIfNotEmpty();
           } else {
             _builder.append("    ");
-            _builder.append("//Proteced");
+            _builder.append("//Please describe your precondition constraint here");
             _builder.newLine();
           }
         }
@@ -641,7 +645,7 @@ public class DefaultTemplate {
                 _builder.append(_get, "");
                 _builder.newLineIfNotEmpty();
               } else {
-                _builder.append("//Proteced");
+                _builder.append("//Please describe your precondition constraint here");
                 _builder.newLine();
               }
             }
