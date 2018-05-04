@@ -1,5 +1,6 @@
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPlan;
+import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
@@ -10,6 +11,7 @@ import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.PLDFileTreeView;
+import de.uni_kassel.vs.cn.planDesigner.ui.menu.DeleteFileMenuItem;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -71,13 +73,14 @@ public class SaveTest extends ApplicationTest {
 
         Assert.assertTrue(fileWrapperTreeItem != null);
         Platform.runLater(() -> {
-            pldFileTreeView.getSelectionModel().select(fileWrapperTreeItem);
-            PlanTab selectedItem = (PlanTab) MainController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem();
+            MainController.getInstance().getEditorTabPane().openTab(fileWrapperTreeItem.getValue().unwrap().toPath());
+            PlanTab selectedItem = (PlanTab) MainController.getInstance().getEditorTabPane().getTabs().get(0);
             State state = getAlicaFactory().createState();
             state.setName("State1");
             AddStateInPlan addStateInPlan = new AddStateInPlan(selectedItem.getPlanModelVisualisationObject(), state);
             MainController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
             selectedItem.save();
+            MainController.getInstance().getCommandStack().storeAndExecute(new DeleteAbstractPlan(selectedItem.getEditable()));
         });
 
         PlanDesigner.setRunning(false);
@@ -113,16 +116,15 @@ public class SaveTest extends ApplicationTest {
 
         Assert.assertTrue(fileWrapperTreeItem != null);
         Platform.runLater(() -> {
-            Event.fireEvent(fileWrapperTreeItem, new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 2,
-                    false, false, false, false,
-                    true, false, false,
-                    false, false, true, null));
-            PlanTab selectedItem = (PlanTab) MainController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem();
+            MainController.getInstance().getEditorTabPane().openTab(fileWrapperTreeItem.getValue().unwrap().toPath());
+            PlanTab selectedItem = (PlanTab) MainController.getInstance().getEditorTabPane().getTabs().get(0);
             State state = getAlicaFactory().createState();
             state.setName("State2");
             AddStateInPlan addStateInPlan = new AddStateInPlan(selectedItem.getPlanModelVisualisationObject(), state);
             MainController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
             selectedItem.save();
+            MainController.getInstance().getCommandStack().storeAndExecute(new DeleteAbstractPlan(selectedItem.getEditable()));
+
         });
 
         PlanDesigner.setRunning(false);
