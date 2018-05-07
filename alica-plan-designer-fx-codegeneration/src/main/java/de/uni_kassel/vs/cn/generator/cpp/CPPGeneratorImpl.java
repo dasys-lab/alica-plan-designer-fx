@@ -48,13 +48,13 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createBehaviourCreator(List<Behaviour> behaviours) {
-        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "ConditionCreator.h").toString();
+        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "BehaviourCreator.h").toString();
         String fileContentHeader = xtendTemplates.behaviourCreatorHeader();
         writeSourceFile(headerPath, fileContentHeader);
 
         formatFile(headerPath);
 
-        String srcPath = generatedSourcesManager.getSrcDir() + "ConditionCreator.cpp";
+        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "BehaviourCreator.cpp").toString();
         String fileContentSource = xtendTemplates.behaviourCreatorSource(behaviours);
         writeSourceFile(srcPath, fileContentSource);
 

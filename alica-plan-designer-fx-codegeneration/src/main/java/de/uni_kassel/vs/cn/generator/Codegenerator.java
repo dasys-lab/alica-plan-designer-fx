@@ -9,6 +9,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.logging.log4j.LogManager;
@@ -137,6 +138,13 @@ public class Codegenerator {
                 .collect(Collectors.toList()));
 
         postConditions = new ArrayList<>();
+
+        // HACK fix this mess
+        allPlans.stream()
+                .map(e -> e.getTransitions())
+                .forEach(listOfTransitions ->
+                        listOfTransitions.forEach(transition ->
+                        preConditions.add(transition.getPreCondition())));
 
         allPlans
                 .stream()
