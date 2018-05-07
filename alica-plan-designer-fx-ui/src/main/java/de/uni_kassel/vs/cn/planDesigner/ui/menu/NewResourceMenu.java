@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.controller.CreatNewDialogController;
+import de.uni_kassel.vs.cn.planDesigner.controller.CreateNewDialogController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -50,7 +50,7 @@ public class NewResourceMenu extends Menu {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("createNewDialog.fxml"));
         try {
             Parent rootOfDialog = fxmlLoader.load();
-            CreatNewDialogController controller = fxmlLoader.getController();
+            CreateNewDialogController controller = fxmlLoader.getController();
             controller.setAlicaType(planClass);
             controller.setInitialDirectoryHint(unwrappedFile);
             Stage stage = new Stage();

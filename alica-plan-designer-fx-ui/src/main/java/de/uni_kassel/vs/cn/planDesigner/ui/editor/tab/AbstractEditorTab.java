@@ -143,7 +143,6 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                         AllAlicaFiles.getInstance().getBehaviours().remove(planPathPair);
                         AllAlicaFiles.getInstance().getBehaviours().add(new Pair<>((Behaviour) key, value));
                     }
-
                     if (editablePathPair.getKey() instanceof PlanType) {
                         Pair<PlanType, Path> planPathPair = AllAlicaFiles.getInstance().getPlanTypes()
                                 .stream()

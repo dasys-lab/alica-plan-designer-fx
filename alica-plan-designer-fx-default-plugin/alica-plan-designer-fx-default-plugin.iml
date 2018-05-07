@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4" />
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="org.eclipse.xtend.core.Xtend" name="Xtend">
+      <configuration>
+        <option name="activated" value="true" />
+        <option name="createDirectory" value="true" />
+        <option name="deleteGenerated" value="true" />
+        <option name="generateSuppressWarnings" value="true" />
+        <option name="hideLocalSyntheticVariables" value="true" />
+        <option name="outputDirectory" value="$MODULE_DIR$/src/main/xtend-gen" />
+        <option name="overwriteExisting" value="true" />
+        <option name="testOutputDirectory" value="$MODULE_DIR$/src/main/xtend-gen" />
+      </configuration>
+    </facet>
+  </component>
+</module>

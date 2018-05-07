@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
@@ -26,7 +27,7 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
 /**
  * Created by marci on 09.03.17.
  */
-public class CreatNewDialogController implements Initializable {
+public class CreateNewDialogController implements Initializable {
 
     @FXML
     private Label pathLabel;
@@ -67,7 +68,7 @@ public class CreatNewDialogController implements Initializable {
         if (initialDirectoryHint.isDirectory() == false) {
             this.initialDirectoryHint = initialDirectoryHint.getParentFile();
         }
-        pathTextField.setText(this.initialDirectoryHint.getAbsolutePath() + "/");
+        pathTextField.setText(this.initialDirectoryHint.getAbsolutePath());
     }
 
     private void openFileChooser(Stage stage) {
@@ -83,9 +84,6 @@ public class CreatNewDialogController implements Initializable {
 
         File chosenFile = fileChooser.showDialog(stage);
         String parentPath = chosenFile.getAbsolutePath();
-        if (parentPath.endsWith("/") == false) {
-            parentPath = parentPath + "/";
-        }
 
         pathTextField.setText(parentPath);
 
@@ -114,7 +112,7 @@ public class CreatNewDialogController implements Initializable {
                 EObject emptyObject = getAlicaFactory().create(alicaType);
                 ((PlanElement)emptyObject).setName(fileName.replace(".beh","")
                         .replace(".pty","").replace(".pml", ""));
-                File alicaFile = new File(pathTextField.getText() + fileName);
+                File alicaFile = new File(Paths.get(pathTextField.getText(), fileName).toString());
                 if (alicaFile.exists()) {
                     ErrorWindowController
                             .createErrorWindow(I18NRepo.getString("label.error.save.alreadyExists"), null);
