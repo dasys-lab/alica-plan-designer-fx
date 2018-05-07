@@ -49,9 +49,9 @@ public class EMFModelUtils {
     private static void initAlicaResourceSet() {
         alicaResourceSet = new AlicaResourceSet();
         AlicaResourceSet alicaResourceSet = new AlicaResourceSet();
-		URIConverter uriConverter = ExtensibleURIConverterImpl.INSTANCE;
+        URIConverter uriConverter = ExtensibleURIConverterImpl.INSTANCE;
 
-		alicaResourceSet.getResources().forEach(e -> e.setTrackingModification(true));
+        alicaResourceSet.getResources().forEach(e -> e.setTrackingModification(true));
     }
 
     /**
@@ -81,42 +81,43 @@ public class EMFModelUtils {
 
     /**
      * Loads given file from disk
+     *
      * @param file the file to load must not be null
      * @return the returned {@link EObject}
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */
-     public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
-         String relativePath = file.getAbsolutePath()
-                 .replace(configuration.getPlansPath() + "/","")
-                 .replace(configuration.getRolesPath()+ "/","")
-                 .replace(configuration.getMiscPath()+ "/","");
-         URI uri = URI
-                 .createURI(relativePath);
+    public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
+        String relativePath = file.getAbsolutePath()
+                .replace(configuration.getPlansPath() + "/", "")
+                .replace(configuration.getRolesPath() + "/", "")
+                .replace(configuration.getMiscPath() + "/", "");
+        URI uri = URI
+                .createURI(relativePath);
 
-         Resource resourceFromPool = alicaResourceSet.getResource(uri, false);
-         if (resourceFromPool == null) {
-             Resource loadedResource = alicaResourceSet.createResource(uri);
-             loadedResource.load(new FileInputStream(file), AlicaSerializationHelper.getInstance().getLoadSaveOptions());
-             T t = (T) loadedResource.getContents().get(0);
-             if (t instanceof Plan) {
-                 URI pmlExURI = URI
-                         .createURI(relativePath.replace("pml", "pmlex"));
-                 Resource loadedPmlUiExtension = alicaResourceSet.createResource(pmlExURI);
-                 try {
-                     loadedPmlUiExtension.load(new FileInputStream(file.getAbsolutePath().replace("pml", "pmlex")),
-                             AlicaSerializationHelper.getInstance().getLoadSaveOptions());
-                 } catch (FileNotFoundException e) {
-                     // remove not completely loaded resource from the AlicaResourceSet
-                     loadedPmlUiExtension.delete(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
-                     createPmlEx(file, uri);
-                 }
-                 loadedPmlUiExtension.setURI(pmlExURI);
+        Resource resourceFromPool = alicaResourceSet.getResource(uri, false);
+        if (resourceFromPool == null) {
+            Resource loadedResource = alicaResourceSet.createResource(uri);
+            loadedResource.load(new FileInputStream(file), AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+            T t = (T) loadedResource.getContents().get(0);
+            if (t instanceof Plan) {
+                URI pmlExURI = URI
+                        .createURI(relativePath.replace("pml", "pmlex"));
+                Resource loadedPmlUiExtension = alicaResourceSet.createResource(pmlExURI);
+                try {
+                    loadedPmlUiExtension.load(new FileInputStream(file.getAbsolutePath().replace("pml", "pmlex")),
+                            AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+                } catch (FileNotFoundException e) {
+                    // remove not completely loaded resource from the AlicaResourceSet
+                    loadedPmlUiExtension.delete(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+                    createPmlEx(file, uri);
+                }
+                loadedPmlUiExtension.setURI(pmlExURI);
 
-             }
-             return t;
-         } else {
-             return (T) resourceFromPool.getContents().get(0);
-         }
+            }
+            return t;
+        } else {
+            return (T) resourceFromPool.getContents().get(0);
+        }
     }
 
 
@@ -133,15 +134,16 @@ public class EMFModelUtils {
 
     public static URI createRelativeURI(File file) {
         String relativePath = file.getAbsolutePath()
-                .replace(configuration.getPlansPath() + "/","")
-                .replace(configuration.getRolesPath()+ "/","")
-                .replace(configuration.getMiscPath()+ "/","");
+                .replace(configuration.getPlansPath() + "/", "")
+                .replace(configuration.getRolesPath() + "/", "")
+                .replace(configuration.getMiscPath() + "/", "");
         return URI
                 .createURI(relativePath);
     }
 
     /**
      * Creates the best files, Alica Files. Or to be more specific {@link Resource} objects (which are written to disk).
+     *
      * @param emptyObject
      * @param file
      * @param <T>
@@ -172,7 +174,7 @@ public class EMFModelUtils {
 
         // set destinationPath when resource is created
         if (emptyObject instanceof AbstractPlan) {
-            ((AbstractPlan) emptyObject).setDestinationPath(file.getAbsolutePath().replace(configuration.getPlansPath(),"Plans/"));
+            ((AbstractPlan) emptyObject).setDestinationPath(file.getAbsolutePath().replace(configuration.getPlansPath(), "Plans/"));
         }
         resource.setTrackingModification(true);
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
@@ -182,7 +184,8 @@ public class EMFModelUtils {
 
     /**
      * Creates a pmlex when given an pml path
-     * @param file a file with path to the pml NOT pmlex
+     *
+     * @param file        a file with path to the pml NOT pmlex
      * @param relativeURI a uri to the pml
      * @throws IOException
      */
@@ -195,6 +198,7 @@ public class EMFModelUtils {
 
     /**
      * Creates the best files, Alica Files. Or to be more specific {@link Resource} objects (which are written to disk).
+     *
      * @param emptyObject
      * @param targetDir
      * @param pmlex
@@ -227,8 +231,9 @@ public class EMFModelUtils {
 
     /**
      * Saves the given alicaObject in the file.
+     *
      * @param alicaObject the object to save
-     * @param <T> The type of {@link EObject} to save
+     * @param <T>         The type of {@link EObject} to save
      * @throws IOException
      */
     public static synchronized <T extends EObject> void saveAlicaFile(T alicaObject) throws IOException {
@@ -253,6 +258,7 @@ public class EMFModelUtils {
 
     /**
      * Returns a list of distinct {@link AbstractPlan}s in which the given plan element is used.
+     *
      * @param planToGetUsageInformationAbout
      * @return
      */
@@ -262,30 +268,35 @@ public class EMFModelUtils {
 
         EMFModelUtils
                 .getAlicaResourceSet().getResources().forEach(e -> {
-            EObject eObject = e.getContents().get(0);
-            if (eObject instanceof Plan) {
-                ArrayList<State> states = new ArrayList<>();
-                ((Plan) eObject).getStates().forEach(f -> {
-                    if (f.getPlans().contains(planToGetUsageInformationAbout) && references.contains(eObject) == false) {
-                        references.add((AbstractPlan) eObject);
+            if (e.getContents().size() != 0) {
 
-                    }
-                });
 
-                ((Plan) eObject).getEntryPoints().forEach(f -> {
-                    if (f.getTask().equals(planToGetUsageInformationAbout) && references.contains(eObject) == false) {
-                        references.add((AbstractPlan) eObject);
-                    }
-                });
-            }
+                EObject eObject = e.getContents().get(0);
+                if (eObject instanceof Plan) {
+                    ArrayList<State> states = new ArrayList<>();
+                    ((Plan) eObject).getStates().forEach(f -> {
+                        if (f.getPlans().contains(planToGetUsageInformationAbout) && references.contains(eObject) == false) {
+                            references.add((AbstractPlan) eObject);
+                        }
+                    });
 
-            if (eObject instanceof PlanType) {
-                PlanType planType = (PlanType) eObject;
-                planType.getPlans().forEach(f -> {
-                    if (f.getPlan().equals(planToGetUsageInformationAbout) && references.contains(eObject) == false) {
-                        references.add((AbstractPlan) eObject);
-                    }
-                });
+                    ((Plan) eObject).getEntryPoints().forEach(f -> {
+                        if (f.getTask().equals(planToGetUsageInformationAbout) && references.contains(eObject) == false) {
+                            references.add((AbstractPlan) eObject);
+                        }
+                    });
+                }
+
+                if (eObject instanceof PlanType) {
+                    PlanType planType = (PlanType) eObject;
+                    planType.getPlans().forEach(f -> {
+                        if (f.getPlan().equals(planToGetUsageInformationAbout) && references.contains(eObject) == false) {
+                            references.add((AbstractPlan) eObject);
+                        }
+                    });
+                }
+            } else {
+             //   System.out.println("HMMM: " + e.getURI().toString());
             }
         });
         return references;
