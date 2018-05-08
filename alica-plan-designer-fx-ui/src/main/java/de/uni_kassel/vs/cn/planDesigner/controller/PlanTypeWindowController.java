@@ -91,6 +91,7 @@ public class PlanTypeWindowController implements Initializable {
                 throw new RuntimeException(e1);
             }
         });
+
         addPlanButton.setOnAction(e -> {
             RepositoryHBox<Plan> selectedItem = planListView.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -180,6 +181,7 @@ public class PlanTypeWindowController implements Initializable {
                 return annotatedPlanBooleanTableCell;
             }
         });
+
         TableColumn<AnnotatedPlan, Plan> planNameColumn = new TableColumn<>();
         planNameColumn.setCellValueFactory(new PropertyValueFactory<>("plan"));
         planNameColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlan, Plan>, TableCell<AnnotatedPlan, Plan>>() {
@@ -197,6 +199,7 @@ public class PlanTypeWindowController implements Initializable {
                 return planNameTableCell;
             }
         });
+
         plantypeTableView.getColumns().add(activeColumn);
         plantypeTableView.getColumns().add(planNameColumn);
         plantypeTableView.setRowFactory(tv -> {
