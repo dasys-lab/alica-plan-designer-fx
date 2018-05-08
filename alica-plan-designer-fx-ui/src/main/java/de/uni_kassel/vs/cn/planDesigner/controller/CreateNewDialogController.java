@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
@@ -126,7 +127,7 @@ public class CreateNewDialogController implements Initializable {
             }
         } else {
             try {
-                Files.createDirectory(new File(pathTextField.getText() + fileName).toPath());
+                Files.createDirectory(new File(Paths.get(pathTextField.getText(), fileName).toString()).toPath());
             } catch (IOException e) {
                 ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.create.folder"), e);
             }
