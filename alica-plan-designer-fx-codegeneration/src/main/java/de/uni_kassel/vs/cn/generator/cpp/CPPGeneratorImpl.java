@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,10 @@ public class CPPGeneratorImpl implements IGenerator {
      */
     private void writeSourceFile(String filePath, String fileContent) {
         try {
+
+            if(Files.notExists(Paths.get(filePath).getParent())) {
+                Files.createDirectories(Paths.get(filePath).getParent());
+            }
             Files.write(Paths.get(filePath), fileContent.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             LOG.error("Couldn't write source file "

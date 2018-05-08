@@ -169,8 +169,12 @@ public class AllAlicaFiles {
         return null;
     }
 
-    private <T extends EObject> ObservableList<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException {
-        List<Pair<T, Path>> collectedList = Files.walk(Paths.get(plansPath))
+    private <T extends EObject> ObservableList<Pair<T, Path>> getRepositoryOf(String path, String filePostfix) throws IOException {
+
+        if(Files.notExists(Paths.get(path))) {
+            Files.createDirectories(Paths.get(path));
+        }
+        List<Pair<T, Path>> collectedList = Files.walk(Paths.get(path))
                 .filter(p -> p.toString().endsWith("." + filePostfix))
                 .map(p -> {
                     try {
@@ -180,7 +184,7 @@ public class AllAlicaFiles {
                         }
                         return tPathPair;
                     } catch (IOException e) {
-                        LOG.fatal("Could not load repository of " + plansPath + "for file ending " + filePostfix, e);
+                        LOG.fatal("Could not load repository of " + path + "for file ending " + filePostfix, e);
                         throw new RuntimeException(e);
                     }
                 })

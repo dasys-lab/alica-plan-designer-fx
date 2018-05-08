@@ -62,6 +62,10 @@ public class Codegenerator {
         String expressionValidatorsPath = new WorkspaceManager().getActiveWorkspace()
                 .getConfiguration().getExpressionValidatorsPath();
         try {
+
+            if(Files.notExists(Paths.get(expressionValidatorsPath))) {
+                Files.createDirectories(Paths.get(expressionValidatorsPath));
+            }
             Files.walk(Paths.get(expressionValidatorsPath)).filter(e -> {
                 String fileName = e.getFileName().toString();
                 return fileName.endsWith(".h") || fileName.endsWith(".cpp");
@@ -76,7 +80,6 @@ public class Codegenerator {
                     LOG.error("Could not parse existing source file " + e, e1);
                     throw new RuntimeException(e1);
                 }
-
             });
         } catch (IOException e) {
             LOG.error("Could not find expression validator path! ", e);
