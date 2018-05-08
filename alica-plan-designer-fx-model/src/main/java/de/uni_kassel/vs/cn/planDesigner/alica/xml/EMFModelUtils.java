@@ -174,7 +174,7 @@ public class EMFModelUtils {
 
         // set destinationPath when resource is created
         if (emptyObject instanceof AbstractPlan) {
-            ((AbstractPlan) emptyObject).setDestinationPath(file.getAbsolutePath().replace(configuration.getPlansPath(), "Plans/"));
+            ((AbstractPlan) emptyObject).setDestinationPath(file.getAbsolutePath().replace(configuration.getPlansPath(), "Plans"));
         }
         resource.setTrackingModification(true);
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
