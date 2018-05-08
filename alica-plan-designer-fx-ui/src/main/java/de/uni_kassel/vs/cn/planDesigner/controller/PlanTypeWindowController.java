@@ -9,6 +9,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryHBox;
 import javafx.collections.FXCollections;
@@ -36,6 +37,9 @@ public class PlanTypeWindowController implements Initializable {
     private PlanType planType;
 
     private CommandStack commandStack;
+
+    @FXML
+    private PlanTypeTab planTypeTab;
 
     @FXML
     private Button removePlanButton;
@@ -86,7 +90,9 @@ public class PlanTypeWindowController implements Initializable {
     private void initButtons() {
         saveButton.setOnAction(e -> {
             try {
+                planTypeTab.setText(planTypeTab.getText().replace("*",""));
                 EMFModelUtils.saveAlicaFile(planType);
+                commandStack.setSavedForAbstractPlan(planType);
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
             }
@@ -225,4 +231,6 @@ public class PlanTypeWindowController implements Initializable {
     public void setCommandStack(CommandStack commandStack) {
         this.commandStack = commandStack;
     }
+
+    public void setPlanTypeTab(PlanTypeTab planTypeTab) {this.planTypeTab = planTypeTab; }
 }
