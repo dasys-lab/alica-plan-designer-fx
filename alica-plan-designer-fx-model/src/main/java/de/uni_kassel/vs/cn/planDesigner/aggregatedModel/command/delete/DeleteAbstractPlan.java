@@ -28,6 +28,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
     private Map<Plan, List<State>> referencedStateListForBackup;
     private Map<PmlUiExtensionMap, List<PmlUiExtension>> referencesInStyleFiles;
     private Map<PlanType, AnnotatedPlan> referencedAnnotatedPlansForBackup;
+    private Map<State, Parametrisation> referencedParametrisationForBackup;
     private Path path;
 
     // not always used
@@ -49,6 +50,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
         referencedAnnotatedPlansForBackup = new HashMap<>();
         referencedStateListForBackup = new HashMap<>();
         referencesInStyleFiles = new HashMap<>();
+        referencedParametrisationForBackup = new HashMap<>();
     }
 
     @Override
@@ -69,6 +71,38 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         saveForDeletionConfirmation[0] = true;
                     }
                     // TODO remove also references to behaviour variables
+                    state.getParametrisation().forEach(parametrisation -> {
+                        referencedParametrisationForBackup.put(state, parametrisation);
+                        boolean[] parametrisationChanged = {false};
+                        if(parametrisation.getSubplan().equals(getElementToEdit())) {
+                            parametrisation.setSubplan(null);
+                            parametrisationChanged[0] = true;
+                        }
+
+                        if(getElementToEdit() instanceof Behaviour) {
+                            Behaviour behaviour = (Behaviour) getElementToEdit();
+                            behaviour.getVars().forEach(variable -> {
+                                if(variable.equals(parametrisation.getSubvar())) {
+                                    parametrisation.setSubvar(null);
+                                    parametrisationChanged[0] = true;
+                                }
+                            });
+                        }
+
+                        if(getElementToEdit() instanceof Plan) {
+                            Plan innerPlan = (Plan) getElementToEdit();
+                            innerPlan.getVars().forEach(variable -> {
+                                if(variable.equals(parametrisation.getSubvar())) {
+                                    parametrisation.setSubvar(null);
+                                    parametrisationChanged[0] = true;
+                                }
+                            });
+                        }
+
+                        if(!parametrisationChanged[0]) {
+                            referencedParametrisationForBackup.remove(state);
+                        }
+                    });
                 });
                 if (states.isEmpty()) {
                     referencedStateListForBackup.remove(eObject);
@@ -208,7 +242,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                     .entrySet()
                     .forEach(e -> {
                         PlanType key = e.getKey();
-                        key.getPlans().addAll(e.getValue());
+                        key.getPlans().add(e.getValue());
                         try {
                             EMFModelUtils.saveAlicaFile(key);
                         } catch (IOException e1) {
