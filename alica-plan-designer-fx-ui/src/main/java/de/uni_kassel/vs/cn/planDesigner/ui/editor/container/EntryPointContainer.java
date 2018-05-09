@@ -65,10 +65,15 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
             double localY = stateContainer.getVisualRepresentation().getLayoutY();
             Point2D planXY = stateContainer.localToParent(localX, localY);
             Point2D localXY = parentToLocal(planXY);
+
+            Point2D vec = new Point2D(localXY.getX() - visualRepresentation.getLayoutX(), localXY.getY() - visualRepresentation.getLayoutY());
+            double len = vec.magnitude() - StateContainer.STATE_RADIUS;
+            vec = vec.normalize().multiply(len);
+
             Line line = new Line(visualRepresentation.getLayoutX(),
                     visualRepresentation.getLayoutY(),
-                    localXY.getX(),
-                    localXY.getY());
+                    vec.getX(),
+                    vec.getY());
             line.getStrokeDashArray().addAll(2d, 10d);
             getChildren().add(line);
         }
