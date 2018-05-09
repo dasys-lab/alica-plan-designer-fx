@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
@@ -44,7 +44,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
 
     public AbstractEditorTab(Pair<T, Path> editablePathPair, CommandStack commandStack) {
         super(editablePathPair.getValue().getFileName().toString());
-        AllAlicaFiles.getInstance().findListByType(editablePathPair).addListener(new ListChangeListener<Pair<T, Path>>() {
+        RepoViewBackend.getInstance().findListByType(editablePathPair).addListener(new ListChangeListener<Pair<T, Path>>() {
             @Override
             public void onChanged(Change<? extends Pair<T, Path>> c) {
                 c.next();
@@ -121,36 +121,36 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
             commandStack.deleteObserver(observer);
             if (editablePathPair.getKey() instanceof TaskRepository == false) {
                 try {
-                    File file = AllAlicaFiles.getInstance().getPathForAbstractPlan((AbstractPlan) getEditable()).toFile();
+                    File file = RepoViewBackend.getInstance().getPathForAbstractPlan((AbstractPlan) getEditable()).toFile();
                     EObject key = EMFModelUtils.reloadAlicaFileFromDisk(file);
                     if (editablePathPair.getKey() instanceof Plan) {
-                        Pair<Plan, Path> planPathPair = AllAlicaFiles.getInstance().getPlans()
+                        Pair<Plan, Path> planPathPair = RepoViewBackend.getInstance().getPlans()
                                 .stream()
                                 .filter(pair -> pair.getKey().getId() == editablePathPair.getKey().getId())
                                 .findFirst().orElse(null);
                         Path value = planPathPair.getValue();
-                        AllAlicaFiles.getInstance().getPlans().remove(planPathPair);
-                        AllAlicaFiles.getInstance().getPlans().add(new Pair<>((Plan) key, value));
+                        RepoViewBackend.getInstance().getPlans().remove(planPathPair);
+                        RepoViewBackend.getInstance().getPlans().add(new Pair<>((Plan) key, value));
                         File pmlexFile = new File(file.getAbsolutePath().replace(".pml", ".pmlex"));
                         ((PlanTab)this).setPmlUiExtensionMap(EMFModelUtils.reloadAlicaFileFromDisk(pmlexFile));
                     }
                     if (editablePathPair.getKey() instanceof Behaviour) {
-                        Pair<Behaviour, Path> planPathPair = AllAlicaFiles.getInstance().getBehaviours()
+                        Pair<Behaviour, Path> planPathPair = RepoViewBackend.getInstance().getBehaviours()
                                 .stream()
                                 .filter(pair -> pair.getKey().getId() == editablePathPair.getKey().getId())
                                 .findFirst().orElse(null);
                         Path value = planPathPair.getValue();
-                        AllAlicaFiles.getInstance().getBehaviours().remove(planPathPair);
-                        AllAlicaFiles.getInstance().getBehaviours().add(new Pair<>((Behaviour) key, value));
+                        RepoViewBackend.getInstance().getBehaviours().remove(planPathPair);
+                        RepoViewBackend.getInstance().getBehaviours().add(new Pair<>((Behaviour) key, value));
                     }
                     if (editablePathPair.getKey() instanceof PlanType) {
-                        Pair<PlanType, Path> planPathPair = AllAlicaFiles.getInstance().getPlanTypes()
+                        Pair<PlanType, Path> planPathPair = RepoViewBackend.getInstance().getPlanTypes()
                                 .stream()
                                 .filter(pair -> pair.getKey().getId() == editablePathPair.getKey().getId())
                                 .findFirst().orElse(null);
                         Path value = planPathPair.getValue();
-                        AllAlicaFiles.getInstance().getPlanTypes().remove(planPathPair);
-                        AllAlicaFiles.getInstance().getPlanTypes().add(new Pair<>((PlanType) key, value));
+                        RepoViewBackend.getInstance().getPlanTypes().remove(planPathPair);
+                        RepoViewBackend.getInstance().getPlanTypes().add(new Pair<>((PlanType) key, value));
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();

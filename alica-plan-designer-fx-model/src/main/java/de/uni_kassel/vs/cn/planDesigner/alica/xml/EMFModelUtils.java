@@ -7,10 +7,9 @@ import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelFactory;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelPackage;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUIExtensionModelPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.util.PmlUIExtensionModelResourceFactoryImpl;
@@ -30,7 +29,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -158,17 +156,17 @@ public class EMFModelUtils {
 
         if (emptyObject instanceof Plan) {
             // TODO ALLALICAFILES IS BROKEN WITHOUT UNIQUE KEYS
-            AllAlicaFiles.getInstance()
+            RepoViewBackend.getInstance()
                     .getPlans()
                     .add(new Pair<>((Plan) emptyObject, file.toPath()));
             if (createPmlEx) {
                 createPmlEx(file, relativeURI);
             }
         } else if (emptyObject instanceof PlanType) {
-            AllAlicaFiles.getInstance().getPlanTypes().add(new Pair<>((PlanType) emptyObject,
+            RepoViewBackend.getInstance().getPlanTypes().add(new Pair<>((PlanType) emptyObject,
                     file.toPath()));
         } else if (emptyObject instanceof Behaviour) {
-            AllAlicaFiles.getInstance().getBehaviours().add(new Pair<>((Behaviour) emptyObject,
+            RepoViewBackend.getInstance().getBehaviours().add(new Pair<>((Behaviour) emptyObject,
                     file.toPath()));
         }
 
@@ -209,7 +207,7 @@ public class EMFModelUtils {
         Resource resource = emptyObject.eResource();
         resource.setURI(URI.createURI(targetDir.getAbsolutePath()));
         if (emptyObject instanceof Plan) {
-            AllAlicaFiles.getInstance()
+            RepoViewBackend.getInstance()
                     .getPlans()
                     .add(new Pair<>((Plan) emptyObject, targetDir.toPath()));
             Resource pmlexResource = pmlex.eResource();

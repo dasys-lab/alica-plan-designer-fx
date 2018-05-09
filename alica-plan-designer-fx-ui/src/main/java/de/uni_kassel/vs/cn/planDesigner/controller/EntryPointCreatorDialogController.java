@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddEntryPoin
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTaskToRepository;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
@@ -53,7 +53,7 @@ public class EntryPointCreatorDialogController implements Initializable {
             }
         });
 
-        taskComboBox.setItems(FXCollections.observableArrayList(AllAlicaFiles.getInstance().getTasks().getKey()));
+        taskComboBox.setItems(FXCollections.observableArrayList(RepoViewBackend.getInstance().getTasks().getKey()));
         taskComboBox.setButtonCell(new ListCell<Task>() {
             @Override
             protected void updateItem(Task item, boolean empty) {
@@ -102,15 +102,15 @@ public class EntryPointCreatorDialogController implements Initializable {
             MainController
                     .getInstance()
                     .getCommandStack()
-                    .storeAndExecute(new AddTaskToRepository(AllAlicaFiles.getInstance()
+                    .storeAndExecute(new AddTaskToRepository(RepoViewBackend.getInstance()
                             .getTaskRepository().get(0).getKey(), newTaskNameTextField.getText()));
             try {
-                EMFModelUtils.saveAlicaFile(AllAlicaFiles.getInstance().getTaskRepository().get(0).getKey());
+                EMFModelUtils.saveAlicaFile(RepoViewBackend.getInstance().getTaskRepository().get(0).getKey());
             } catch (IOException e) {
                 ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
                 e.printStackTrace();
             }
-            taskComboBox.setItems(FXCollections.observableArrayList(AllAlicaFiles.getInstance().getTasks().getKey()));
+            taskComboBox.setItems(FXCollections.observableArrayList(RepoViewBackend.getInstance().getTasks().getKey()));
             newTaskNameTextField.setText("");
         }
     }

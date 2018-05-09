@@ -4,14 +4,11 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
 import javafx.util.Pair;
 
 import java.io.File;
@@ -34,86 +31,52 @@ public class DeleteFileMenuItem extends MenuItem {
     }
 
     public void deleteFile() {
-        Tab tabToClose = null;
-        Optional<Pair<Plan, Path>> first = AllAlicaFiles
-                .getInstance()
-                .getPlans()
-                .stream()
-                .filter(f -> f.getValue().toFile().equals(this.toDelete))
-                .findFirst();
-        if (first.isPresent()) {
-            commandStack.storeAndExecute(new DeleteAbstractPlan(first.get().getKey()));
-            AllAlicaFiles.getInstance().getPlans().remove(first.get());
-            Optional<AbstractEditorTab<PlanElement>> tabOptional = MainController.getInstance()
-                    .getEditorTabPane()
-                    .getTabs()
-                    .stream()
-                    .map(e -> (AbstractEditorTab<PlanElement>) e)
-                    .filter(e -> e.getEditable().equals(first.get().getKey()))
-                    .findFirst();
-            if (tabOptional.isPresent()) {
-                tabToClose = tabOptional.get();
-            }
-        } else {
-            Optional<Pair<PlanType, Path>> planTypePathPair = AllAlicaFiles
-                    .getInstance()
-                    .getPlanTypes()
-                    .stream()
-                    .filter(f -> f.getValue().toFile().equals(this.toDelete))
-                    .findFirst();
-            if (planTypePathPair.isPresent()) {
-                commandStack.storeAndExecute(new DeleteAbstractPlan(planTypePathPair.get().getKey()));
-                AllAlicaFiles.getInstance().getPlanTypes().remove(planTypePathPair.get());
-                Optional<AbstractEditorTab<PlanElement>> tabOptional = MainController.getInstance()
-                        .getEditorTabPane()
-                        .getTabs()
-                        .stream()
-                        .map(e -> (AbstractEditorTab<PlanElement>) e)
-                        .filter(e -> e.getEditable().equals(planTypePathPair.get().getKey()))
-                        .findFirst();
-                if (tabOptional.isPresent()) {
-                    tabToClose = tabOptional.get();
-                }
-            } else {
-                Optional<Pair<Behaviour, Path>> behaviourPathPair = AllAlicaFiles.getInstance()
-                        .getBehaviours()
-                        .stream()
-                        .filter(f -> f.getValue().toFile().equals(this.toDelete))
-                        .findFirst();
-                if (behaviourPathPair.isPresent()) {
-                    commandStack.storeAndExecute(new DeleteAbstractPlan(behaviourPathPair.get().getKey()));
-                    AllAlicaFiles.getInstance().getBehaviours().remove(behaviourPathPair.get());
-                    Optional<AbstractEditorTab<PlanElement>> tabOptional = MainController.getInstance()
-                            .getEditorTabPane()
-                            .getTabs()
-                            .stream()
-                            .map(e -> (AbstractEditorTab<PlanElement>) e)
-                            .filter(e -> e.getEditable().equals(behaviourPathPair.get().getKey()))
-                            .findFirst();
-                    if (tabOptional.isPresent()) {
-                        tabToClose = tabOptional.get();
-                    }
+        RepoViewBackend repoViewBackend = RepoViewBackend.getInstance();
+        MainController mainController = MainController.getInstance();
 
-                } else {
-                    if (toDelete.isDirectory()) {
-                        for (File alsoDelete : toDelete.listFiles()) {
-                            DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(alsoDelete);
-                            deleteFileMenuItem.setCommandStack(commandStack);
-                            deleteFileMenuItem.deleteFile();
-                        }
-                        try {
-                            Files.delete(toDelete.toPath());
-                        } catch (IOException e) {
-                            throw new RuntimeException("");
-                        }
-                    }
-                }
+        // Plans
+        Optional<Pair<Plan, Path>> planPathPair = repoViewBackend.getPlanPathPair(toDelete);
+        if (planPathPair.isPresent()) {
+            commandStack.storeAndExecute(new DeleteAbstractPlan(planPathPair.get().getKey()));
+            repoViewBackend.getPlans().remove(planPathPair.get());
+            mainController.closeTabIfOpen(planPathPair.get().getKey());
+            mainController.getRepositoryTabPane().init();
+            return;
+        }
+
+        // PlanTypes
+        Optional<Pair<PlanType, Path>> planTypePathPair = repoViewBackend.getPlanTypePathPair(toDelete);
+        if (planTypePathPair.isPresent()) {
+            commandStack.storeAndExecute(new DeleteAbstractPlan(planTypePathPair.get().getKey()));
+            repoViewBackend.getPlanTypes().remove(planTypePathPair.get());
+            mainController.closeTabIfOpen(planTypePathPair.get().getKey());
+            mainController.getRepositoryTabPane().init();
+            return;
+        }
+
+        // Behaviours
+        Optional<Pair<Behaviour, Path>> behaviourPathPair = repoViewBackend.getBehaviourPathPair(toDelete);
+        if (behaviourPathPair.isPresent()) {
+            commandStack.storeAndExecute(new DeleteAbstractPlan(behaviourPathPair.get().getKey()));
+            repoViewBackend.getBehaviours().remove(behaviourPathPair.get());
+            mainController.closeTabIfOpen(behaviourPathPair.get().getKey());
+            mainController.getRepositoryTabPane().init();
+            return;
+        }
+
+        // Folders
+        if (toDelete.isDirectory()) {
+            for (File alsoDelete : toDelete.listFiles()) {
+                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(alsoDelete);
+                deleteFileMenuItem.setCommandStack(commandStack);
+                deleteFileMenuItem.deleteFile();
+            }
+            try {
+                Files.delete(toDelete.toPath());
+            } catch (IOException e) {
+                throw new RuntimeException("");
             }
         }
-        if (tabToClose != null) {
-            MainController.getInstance().getEditorTabPane().getTabs().remove(tabToClose);
-        }
-        MainController.getInstance().getRepositoryTabPane().init();
     }
 
     public void setToDelete(File toDelete) {

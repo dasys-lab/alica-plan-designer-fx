@@ -6,7 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangeAtt
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemoveAllPlansFromPlanType;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemovePlanFromPlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTypeTab;
@@ -73,7 +73,7 @@ public class PlanTypeWindowController implements Initializable {
     }
 
     private void initPlanListView() {
-        List<RepositoryHBox<Plan>> allPlans = AllAlicaFiles
+        List<RepositoryHBox<Plan>> allPlans = RepoViewBackend
                 .getInstance()
                 .getPlans()
                 .stream()
@@ -151,7 +151,7 @@ public class PlanTypeWindowController implements Initializable {
                     List<? extends AnnotatedPlan> removedSubList = c.getRemoved();
                     removedSubList
                             .forEach(e -> {
-                                Pair<Plan, Path> planPathPair = AllAlicaFiles
+                                Pair<Plan, Path> planPathPair = RepoViewBackend
                                         .getInstance()
                                         .getPlans()
                                         .stream()

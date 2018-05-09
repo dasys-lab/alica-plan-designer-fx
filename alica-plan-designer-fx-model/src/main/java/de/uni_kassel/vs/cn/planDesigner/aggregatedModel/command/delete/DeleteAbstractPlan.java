@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.EAbstractPlanType;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
@@ -122,13 +122,13 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
         GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         switch (planType) {
             case PLAN:
-                Pair<Plan, Path> planPathPair = AllAlicaFiles.getInstance().getPlans()
+                Pair<Plan, Path> planPathPair = RepoViewBackend.getInstance().getPlans()
                         .stream()
                         .filter(e -> e.getKey().equals(getElementToEdit()))
                         .findFirst()
                         .get();
                 path = planPathPair.getValue();
-                AllAlicaFiles.getInstance().getPlans().remove(planPathPair);
+                RepoViewBackend.getInstance().getPlans().remove(planPathPair);
                 File pmlEx = new File(path.toFile().toString() + "ex");
                 List<Resource> pmlUiExt = EMFModelUtils.getAlicaResourceSet()
                         .getResources()
@@ -149,13 +149,13 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                 .forEach(File::delete);
                 break;
             case PLANTYPE:
-                Pair<PlanType, Path> planTypePathPair = AllAlicaFiles.getInstance().getPlanTypes()
+                Pair<PlanType, Path> planTypePathPair = RepoViewBackend.getInstance().getPlanTypes()
                         .stream()
                         .filter(e -> e.getKey().equals(getElementToEdit()))
                         .findFirst()
                         .get();
                 path = planTypePathPair.getValue();
-                AllAlicaFiles.getInstance().getPlans().remove(planTypePathPair);
+                RepoViewBackend.getInstance().getPlans().remove(planTypePathPair);
                 try {
                     Files.delete(planTypePathPair.getValue());
                 } catch (IOException e) {
@@ -163,13 +163,13 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                 }
                 break;
             case BEHAVIOUR:
-                Pair<Behaviour, Path> behaviourPathPair = AllAlicaFiles.getInstance().getBehaviours()
+                Pair<Behaviour, Path> behaviourPathPair = RepoViewBackend.getInstance().getBehaviours()
                         .stream()
                         .filter(e -> e.getKey().equals(getElementToEdit()))
                         .findFirst()
                         .get();
                 path = behaviourPathPair.getValue();
-                AllAlicaFiles.getInstance().getBehaviours().remove(behaviourPathPair);
+                RepoViewBackend.getInstance().getBehaviours().remove(behaviourPathPair);
                 try {
                     Files.delete(behaviourPathPair.getValue());
                 } catch (IOException e) {
