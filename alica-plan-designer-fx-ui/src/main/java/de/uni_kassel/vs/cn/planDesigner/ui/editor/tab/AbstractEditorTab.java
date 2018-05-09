@@ -14,6 +14,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.Tab;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
@@ -79,11 +80,13 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                             previousEffect.add(planElementContainer.getEffect());
                         }
                     });
-                    DropShadow value = new DropShadow(StateContainer.STATE_RADIUS * 2, new Color(0,0,0.7,0.5));
-                    value.setSpread(0.9);
+                    DropShadow value = new DropShadow(StateContainer.STATE_RADIUS, new Color(0,0.4,0.9,0.9));
+                    value.setBlurType(BlurType.ONE_PASS_BOX);
+                    value.setSpread(0.45);
                     newValue.forEach(selectedPlanElementPair -> {
                         AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
                         if (planElementContainer != null) {
+
                             planElementContainer.setEffect(value);
                         }
                     });
