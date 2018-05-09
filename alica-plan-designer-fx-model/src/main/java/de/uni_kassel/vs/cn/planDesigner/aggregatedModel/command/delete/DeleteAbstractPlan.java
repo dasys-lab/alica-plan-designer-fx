@@ -16,10 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +27,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
     private EAbstractPlanType planType;
     private Map<Plan, List<State>> referencedStateListForBackup;
     private Map<PmlUiExtensionMap, List<PmlUiExtension>> referencesInStyleFiles;
-    private Map<PlanType, List<AnnotatedPlan>> referencedAnnotatedPlansForBackup;
+    private Map<PlanType, AnnotatedPlan> referencedAnnotatedPlansForBackup;
     private Path path;
 
     // not always used
@@ -56,19 +53,22 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
 
     @Override
     public void doCommand() {
+
+        // Remove from AlicaResourceSet
         EMFModelUtils
                 .getAlicaResourceSet().getResources().forEach(e -> {
-                    boolean[] saveForDeletionConfirmation = {false};
+            boolean[] saveForDeletionConfirmation = {false};
             EObject eObject = e.getContents().get(0);
             if (eObject instanceof Plan) {
                 ArrayList<State> states = new ArrayList<>();
-                referencedStateListForBackup.put((Plan) eObject, states);
-                ((Plan) eObject).getStates().forEach(f -> {
-                    if (f.getPlans().contains(getElementToEdit())) {
-                        states.add(f);
+                Plan plan = (Plan) eObject;
+                referencedStateListForBackup.put(plan, states);
+                plan.getStates().forEach(state -> {
+                    if (state.getPlans().remove(getElementToEdit())) {
+                        states.add(state);
                         saveForDeletionConfirmation[0] = true;
                     }
-                    f.getPlans().remove(getElementToEdit());
+                    // TODO remove also references to behaviour variables
                 });
                 if (states.isEmpty()) {
                     referencedStateListForBackup.remove(eObject);
@@ -76,16 +76,17 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
             }
 
             if (eObject instanceof PlanType) {
-                List<AnnotatedPlan> plansToRemove = new ArrayList<>();
                 PlanType planType = (PlanType) eObject;
-                planType.getPlans().forEach(f -> {
-                    if (f.getPlan().equals(getElementToEdit())) {
-                        plansToRemove.add(f);
-                        saveForDeletionConfirmation[0] = true;
-                    }
-                });
-                referencedAnnotatedPlansForBackup.put(planType, plansToRemove);
-                planType.getPlans().removeAll(plansToRemove);
+                Optional<AnnotatedPlan> annotatedPlan = planType.getPlans()
+                        .stream()
+                        .filter(ap -> ap.getPlan().equals(getElementToEdit()))
+                        .findFirst();
+
+                if (annotatedPlan.isPresent()) {
+                    referencedAnnotatedPlansForBackup.put(planType, annotatedPlan.get());
+                    planType.getPlans().remove(annotatedPlan);
+                    saveForDeletionConfirmation[0] = true;
+                }
             }
 
             if (eObject instanceof PmlUiExtensionMap) {
@@ -99,10 +100,10 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         .collect(Collectors.toList());
                 if (pmlUiExtensions.size() > 0) {
                     referencesInStyleFiles.put(pmlUiExtensionMap, pmlUiExtensions);
-                    // HACK the pmluiextensionmap is more of a list of pairs,
+                    // The pmluiextensionmap is more of a list of pairs,
                     // which means removing a key removes only one entry with the named key.
                     // The EMF documentation hints at this with the description of removeKey() which says it removes an entry.
-                    while(pmlUiExtensionMap.getExtension().containsKey(getElementToEdit())) {
+                    while (pmlUiExtensionMap.getExtension().containsKey(getElementToEdit())) {
                         pmlUiExtensionMap.getExtension().removeKey(getElementToEdit());
                     }
                     saveForDeletionConfirmation[0] = true;
@@ -146,7 +147,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                 }
 
                 generatedSourcesManager.getAllGeneratedFilesForAbstractPlan(planPathPair.getKey())
-                .forEach(File::delete);
+                        .forEach(File::delete);
                 break;
             case PLANTYPE:
                 Pair<PlanType, Path> planTypePathPair = RepoViewBackend.getInstance().getPlanTypes()
@@ -176,7 +177,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                     throw new RuntimeException(e);
                 }
                 generatedSourcesManager.getAllGeneratedFilesForAbstractPlan(behaviourPathPair.getKey())
-                    .forEach(File::delete);
+                        .forEach(File::delete);
                 break;
         }
     }
@@ -193,10 +194,10 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                     .forEach(e -> {
                         Plan key = e.getKey();
                         key
-                            .getStates()
-                            .stream()
-                            .filter(f -> e.getValue().contains(f))
-                            .forEach(f -> f.getPlans().add(getElementToEdit()));
+                                .getStates()
+                                .stream()
+                                .filter(f -> e.getValue().contains(f))
+                                .forEach(f -> f.getPlans().add(getElementToEdit()));
                         try {
                             EMFModelUtils.saveAlicaFile(key);
                         } catch (IOException e1) {
