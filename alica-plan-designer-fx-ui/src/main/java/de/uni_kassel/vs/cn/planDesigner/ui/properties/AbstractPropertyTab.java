@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
@@ -37,6 +38,12 @@ public abstract class AbstractPropertyTab extends Tab {
                 selectedPlanElement = newValue.get(0).getKey();
             }
             createTabContent();
+            if (selectedPlanElement instanceof Plan && selectedPlanElement != activeEditorTab.getEditable()) {
+                setDisable(true);
+                getContent().setDisable(true);
+            } else {
+                setDisable(false);
+            }
         });
     }
 

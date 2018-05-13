@@ -1,5 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.util;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+
+import java.util.List;
+
 /**
  * General purpose utility class
  */
@@ -14,5 +19,26 @@ public class AlicaModelUtils {
      */
     public static boolean containsIllegalCharacter(String toCheck) {
         return toCheck.matches(forbiddenCharacters);
+    }
+
+    public static void addParametrisations(AbstractPlan abstractPlan, State state) {
+        List<Variable> variables = null;
+        if (abstractPlan instanceof Plan) {
+            variables = ((Plan) abstractPlan).getVars();
+        }
+
+        if (abstractPlan instanceof Behaviour) {
+            variables = ((Behaviour)abstractPlan).getVars();
+        }
+
+        if (variables != null) {
+            variables.forEach(var -> {
+                Parametrisation parametrisation = EMFModelUtils.getAlicaFactory().createParametrisation();
+                parametrisation.setSubplan(abstractPlan);
+                parametrisation.setSubvar(var);
+                parametrisation.setVar(null);
+                state.getParametrisation().add(parametrisation);
+            });
+        }
     }
 }

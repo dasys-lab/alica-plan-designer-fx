@@ -126,7 +126,7 @@ public class AlicaSerializationHelper {
 		meta.setFeatureKind(AlicaPackage.eINSTANCE.getState_Plans(), ExtendedMetaData.ELEMENT_FEATURE);
 		meta.setFeatureKind(AlicaPackage.eINSTANCE.getState_InTransitions(), ExtendedMetaData.ELEMENT_FEATURE);
 		meta.setFeatureKind(AlicaPackage.eINSTANCE.getState_OutTransitions(), ExtendedMetaData.ELEMENT_FEATURE);
-		//meta.setFeatureKind(AlicaPackage.eINSTANCE.getState_Parametrisation(), ExtendedMetaData.ELEMENT_FEATURE);
+		meta.setFeatureKind(AlicaPackage.eINSTANCE.getState_Parametrisation(), ExtendedMetaData.ELEMENT_FEATURE);
 	}
 
 	private void createTerminalStateSaveOptions(ExtendedMetaData meta){

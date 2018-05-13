@@ -39,21 +39,25 @@ public class VariablesTab extends AbstractPropertyTab {
         activeEditorTab.getSelectedPlanElement().addListener((observable, oldValue, newValue) -> {
             // TODO check fo single
             selectedPlanElement = newValue.get(0).getKey();
-            if (selectedPlanElement instanceof Plan) {
+            if (selectedPlanElement instanceof Plan && selectedPlanElement == activeEditorTab.getEditable()) {
                 this.setDisable(false);
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Plan) selectedPlanElement).getVars()));
                 createTabContent();
             } else if (selectedPlanElement instanceof Behaviour) {
+                this.setDisable(false);
+                setStyle("opacity: 100;");
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour) selectedPlanElement).getVars()));
                 createTabContent();
             } else if(selectedPlanElement instanceof Condition) {
                 // TODO make this work! Conditions have no own variables. They hold references to that of plans or behaviours
                 this.setDisable(true);
+                setStyle("opacity: 0;");
                 /*this.setDisable(false);
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Condition) selectedPlanElement).getVars()));
                 createTabContent();*/
             } else {
                 this.setDisable(true);
+                getContent().setDisable(true);
             }
         });
     }

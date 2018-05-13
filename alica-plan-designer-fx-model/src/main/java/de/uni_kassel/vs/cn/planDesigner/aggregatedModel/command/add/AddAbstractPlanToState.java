@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
 
 /**
  * Created by marci on 02.12.16.
@@ -18,11 +18,15 @@ public class AddAbstractPlanToState extends AbstractCommand<AbstractPlan> {
     @Override
     public void doCommand() {
         parentOfElement.getPlans().add(getElementToEdit());
+        AlicaModelUtils.addParametrisations(getElementToEdit(), parentOfElement);
     }
 
     @Override
     public void undoCommand() {
         parentOfElement.getPlans().remove(getElementToEdit());
+        parentOfElement
+                .getParametrisation()
+                .removeIf(param -> param.getSubplan().getId() == getElementToEdit().getId());
     }
 
     @Override
