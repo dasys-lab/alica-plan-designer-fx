@@ -1,8 +1,6 @@
 package de.uni_kassel.vs.cn.generator.cpp;
 
-import com.google.common.base.Objects;
 import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator;
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
@@ -1139,53 +1137,23 @@ public class XtendTemplates {
       PreCondition _preCondition = plan.getPreCondition();
       boolean _tripleNotEquals = (_preCondition != null);
       if (_tripleNotEquals) {
-        {
-          PreCondition _preCondition_1 = plan.getPreCondition();
-          AbstractPlan _abstractPlan = _preCondition_1.getAbstractPlan();
-          boolean _equals = Objects.equal(_abstractPlan, null);
-          if (_equals) {
-            {
-              if (((plan.getPreCondition().getVars().size() > 0) || (plan.getPreCondition().getQuantifiers().size() > 0))) {
-                _builder.newLine();
-                _builder.append("    ");
-                _builder.append("class Constraint");
-                PreCondition _preCondition_2 = plan.getPreCondition();
-                long _id = _preCondition_2.getId();
-                _builder.append(_id, "    ");
-                _builder.append(" : public BasicConstraint");
-                _builder.newLineIfNotEmpty();
-                _builder.append("    ");
-                _builder.append("{");
-                _builder.newLine();
-                _builder.append("    ");
-                _builder.append("    ");
-                _builder.append("void getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp);");
-                _builder.newLine();
-                _builder.append("    ");
-                _builder.append("};");
-                _builder.newLine();
-              } else {
-                _builder.append("    ");
-                _builder.append("class Constraint");
-                PreCondition _preCondition_3 = plan.getPreCondition();
-                long _id_1 = _preCondition_3.getId();
-                _builder.append(_id_1, "    ");
-                _builder.append(" : public BasicConstraint");
-                _builder.newLineIfNotEmpty();
-                _builder.append("    ");
-                _builder.append("{");
-                _builder.newLine();
-                _builder.append("    ");
-                _builder.append("    ");
-                _builder.append("void getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp);");
-                _builder.newLine();
-                _builder.append("    ");
-                _builder.append("};");
-                _builder.newLine();
-              }
-            }
-          }
-        }
+        _builder.append("    ");
+        _builder.append("class Constraint");
+        PreCondition _preCondition_1 = plan.getPreCondition();
+        long _id = _preCondition_1.getId();
+        _builder.append(_id, "    ");
+        _builder.append(" : public BasicConstraint");
+        _builder.newLineIfNotEmpty();
+        _builder.append("    ");
+        _builder.append("{");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("    ");
+        _builder.append("void getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp);");
+        _builder.newLine();
+        _builder.append("    ");
+        _builder.append("};");
+        _builder.newLine();
       }
     }
     {
@@ -1197,8 +1165,8 @@ public class XtendTemplates {
             _builder.append("    ");
             _builder.append("class Constraint");
             RuntimeCondition _runtimeCondition_1 = plan.getRuntimeCondition();
-            long _id_2 = _runtimeCondition_1.getId();
-            _builder.append(_id_2, "    ");
+            long _id_1 = _runtimeCondition_1.getId();
+            _builder.append(_id_1, "    ");
             _builder.append(" : public BasicConstraint");
             _builder.newLineIfNotEmpty();
             _builder.append("    ");
@@ -1219,16 +1187,16 @@ public class XtendTemplates {
       EList<Transition> _transitions = plan.getTransitions();
       for(final Transition transition : _transitions) {
         {
-          PreCondition _preCondition_4 = transition.getPreCondition();
-          boolean _tripleNotEquals_2 = (_preCondition_4 != null);
+          PreCondition _preCondition_2 = transition.getPreCondition();
+          boolean _tripleNotEquals_2 = (_preCondition_2 != null);
           if (_tripleNotEquals_2) {
             {
               if (((transition.getPreCondition().getVars().size() > 0) || (transition.getPreCondition().getQuantifiers().size() > 0))) {
                 _builder.append("    ");
                 _builder.append("class Constraint");
-                PreCondition _preCondition_5 = transition.getPreCondition();
-                long _id_3 = _preCondition_5.getId();
-                _builder.append(_id_3, "    ");
+                PreCondition _preCondition_3 = transition.getPreCondition();
+                long _id_2 = _preCondition_3.getId();
+                _builder.append(_id_2, "    ");
                 _builder.append(" : public BasicConstraint");
                 _builder.newLineIfNotEmpty();
                 _builder.append("    ");
