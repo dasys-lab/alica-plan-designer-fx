@@ -29,5 +29,6 @@ alica-plan-designer-fx-ui/log/
 *.properties
 alica-plan-designer-fx-default-plugin/src/main/xtend-gen/
 alica-plan-designer-fx-codegeneration/src/main/xtend-gen/
+de.uni-kassel.vs.cn.planDesigner.alica/
 *._trace
 *.orig
