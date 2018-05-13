@@ -93,7 +93,8 @@ public class VariablesTab extends AbstractPropertyTab {
                     textFieldTableView.setItems(FXCollections.observableArrayList(((Behaviour)selectedPlanElement).getVars()));
                 }
             } else if (selectedPlanElement instanceof Condition) {
-                commandStack.storeAndExecute(new AddVariableToCondition((Condition) selectedPlanElement));
+                commandStack.storeAndExecute(new AddVariableToCondition((Condition) selectedPlanElement,
+                        (Plan) activeEditorTab.getEditable()));
                 textFieldTableView.setItems(FXCollections.observableArrayList(((Condition)selectedPlanElement).getVars()));
             }
 
@@ -114,7 +115,8 @@ public class VariablesTab extends AbstractPropertyTab {
                 }
 
                 if (selectedPlanElement instanceof Condition) {
-                    commandStack.storeAndExecute(new DeleteVariableFromCondition(selectedItem, (Condition) selectedPlanElement));
+                    commandStack.storeAndExecute(new DeleteVariableFromCondition(selectedItem,
+                            (Condition) selectedPlanElement, (Plan) activeEditorTab.getEditable()));
                     textFieldTableView.setItems(FXCollections.observableArrayList(((Condition)selectedPlanElement).getVars()));
                 }
             }

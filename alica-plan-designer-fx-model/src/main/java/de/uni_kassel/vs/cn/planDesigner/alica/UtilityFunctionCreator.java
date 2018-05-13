@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -18,19 +14,19 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link alica.UtilityFunctionCreator#getConditions <em>Conditions</em>}</li>
- *   <li>{@link alica.UtilityFunctionCreator#getPlans <em>Plans</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getConditions <em>Conditions</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getPlans <em>Plans</em>}</li>
  * </ul>
  * </p>
  *
- * @see alica.AlicaPackage#getUtilityFunctionCreator()
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getUtilityFunctionCreator()
  * @model
  * @generated
  */
 public interface UtilityFunctionCreator extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Conditions</b></em>' reference list.
-	 * The list contents are of type {@link alica.Condition}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Condition}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Conditions</em>' reference list isn't clear,
@@ -38,7 +34,7 @@ public interface UtilityFunctionCreator extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Conditions</em>' reference list.
-	 * @see alica.AlicaPackage#getUtilityFunctionCreator_Conditions()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getUtilityFunctionCreator_Conditions()
 	 * @model ordered="false"
 	 * @generated
 	 */
@@ -46,7 +42,7 @@ public interface UtilityFunctionCreator extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Plans</b></em>' reference list.
-	 * The list contents are of type {@link alica.AbstractPlan}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Plans</em>' reference list isn't clear,
@@ -54,7 +50,7 @@ public interface UtilityFunctionCreator extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Plans</em>' reference list.
-	 * @see alica.AlicaPackage#getUtilityFunctionCreator_Plans()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getUtilityFunctionCreator_Plans()
 	 * @model
 	 * @generated
 	 */

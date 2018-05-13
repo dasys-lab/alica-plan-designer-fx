@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -31,8 +27,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link alica.impl.NodeImpl#getInEdge <em>In Edge</em>}</li>
- *   <li>{@link alica.impl.NodeImpl#getOutEdge <em>Out Edge</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.NodeImpl#getInEdge <em>In Edge</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.NodeImpl#getOutEdge <em>Out Edge</em>}</li>
  * </ul>
  * </p>
  *

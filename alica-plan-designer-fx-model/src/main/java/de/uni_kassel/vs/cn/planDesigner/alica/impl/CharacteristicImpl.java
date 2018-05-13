@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -10,9 +6,12 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.CapValue;
 import de.uni_kassel.vs.cn.planDesigner.alica.Capability;
 import de.uni_kassel.vs.cn.planDesigner.alica.Characteristic;
+
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -22,9 +21,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link alica.impl.CharacteristicImpl#getWeight <em>Weight</em>}</li>
- *   <li>{@link alica.impl.CharacteristicImpl#getCapability <em>Capability</em>}</li>
- *   <li>{@link alica.impl.CharacteristicImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl#getWeight <em>Weight</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl#getCapability <em>Capability</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *

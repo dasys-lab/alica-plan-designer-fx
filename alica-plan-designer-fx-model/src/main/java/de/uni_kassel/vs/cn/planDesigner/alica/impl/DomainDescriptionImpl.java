@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -35,10 +31,10 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link alica.impl.DomainDescriptionImpl#getFluents <em>Fluents</em>}</li>
- *   <li>{@link alica.impl.DomainDescriptionImpl#getTypes <em>Types</em>}</li>
- *   <li>{@link alica.impl.DomainDescriptionImpl#getName <em>Name</em>}</li>
- *   <li>{@link alica.impl.DomainDescriptionImpl#getConstants <em>Constants</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl#getFluents <em>Fluents</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl#getTypes <em>Types</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl#getName <em>Name</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl#getConstants <em>Constants</em>}</li>
  * </ul>
  * </p>
  *

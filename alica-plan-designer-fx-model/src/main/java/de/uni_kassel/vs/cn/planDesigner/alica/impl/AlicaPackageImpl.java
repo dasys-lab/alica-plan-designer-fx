@@ -462,7 +462,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link Registry EPackage.Registry} by the package
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
 	 * <p>Note: the correct way to create the package is via the static
 	 * factory method {@link #init init()}, which also performs
@@ -470,8 +470,8 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * if one already exists.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see Registry
-	 * @see alica.AlicaPackage#eNS_URI
+	 * @see org.eclipse.emf.ecore.EPackage.Registry
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
@@ -499,10 +499,10 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * @generated
 	 */
 	public static AlicaPackage init() {
-		if (isInited) return (AlicaPackage) Registry.INSTANCE.getEPackage(AlicaPackage.eNS_URI);
+		if (isInited) return (AlicaPackage)EPackage.Registry.INSTANCE.getEPackage(AlicaPackage.eNS_URI);
 
 		// Obtain or create and register package
-		AlicaPackageImpl theAlicaPackage = (AlicaPackageImpl)(Registry.INSTANCE.get(eNS_URI) instanceof AlicaPackageImpl ? Registry.INSTANCE.get(eNS_URI) : new AlicaPackageImpl());
+		AlicaPackageImpl theAlicaPackage = (AlicaPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof AlicaPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new AlicaPackageImpl());
 
 		isInited = true;
 
@@ -517,7 +517,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 
   
 		// Update the registry and return the package
-		Registry.INSTANCE.put(AlicaPackage.eNS_URI, theAlicaPackage);
+		EPackage.Registry.INSTANCE.put(AlicaPackage.eNS_URI, theAlicaPackage);
 		return theAlicaPackage;
 	}
 
@@ -598,7 +598,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getCondition_AbstractPlan() {
+	public EReference getCondition_Vars() {
 		return (EReference)conditionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -607,7 +607,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getCondition_Vars() {
+	public EReference getCondition_Quantifiers() {
 		return (EReference)conditionEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -616,17 +616,8 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getCondition_Quantifiers() {
-		return (EReference)conditionEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getCondition_PluginName() {
-		return (EAttribute)conditionEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)conditionEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -635,7 +626,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * @generated
 	 */
 	public EReference getCondition_Parameters() {
-		return (EReference)conditionEClass.getEStructuralFeatures().get(5);
+		return (EReference)conditionEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2232,7 +2223,6 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 
 		conditionEClass = createEClass(CONDITION);
 		createEAttribute(conditionEClass, CONDITION__CONDITION_STRING);
-		createEReference(conditionEClass, CONDITION__ABSTRACT_PLAN);
 		createEReference(conditionEClass, CONDITION__VARS);
 		createEReference(conditionEClass, CONDITION__QUANTIFIERS);
 		createEAttribute(conditionEClass, CONDITION__PLUGIN_NAME);
@@ -2544,7 +2534,6 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 
 		initEClass(conditionEClass, Condition.class, "Condition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCondition_ConditionString(), ecorePackage.getEString(), "conditionString", "", 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCondition_AbstractPlan(), this.getAbstractPlan(), null, "abstractPlan", null, 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCondition_Vars(), this.getVariable(), null, "vars", null, 0, -1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCondition_Quantifiers(), this.getQuantifier(), null, "quantifiers", null, 0, -1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCondition_PluginName(), ecorePackage.getEString(), "pluginName", "DefaultPlugin", 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -12,12 +12,12 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link alica.Constant#getName <em>Name</em>}</li>
- *   <li>{@link alica.Constant#getType <em>Type</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getName <em>Name</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
- * @see alica.AlicaPackage#getConstant()
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getConstant()
  * @model
  * @generated
  */
@@ -32,14 +32,14 @@ public interface Constant extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see alica.AlicaPackage#getConstant_Name()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getConstant_Name()
 	 * @model required="true"
 	 * @generated
 	 */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link alica.Constant#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -58,14 +58,14 @@ public interface Constant extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type</em>' attribute.
 	 * @see #setType(String)
-	 * @see alica.AlicaPackage#getConstant_Type()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getConstant_Type()
 	 * @model required="true"
 	 * @generated
 	 */
 	String getType();
 
 	/**
-	 * Sets the value of the '{@link alica.Constant#getType <em>Type</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getType <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Type</em>' attribute.

@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
@@ -13,8 +14,8 @@ public class AddVariableToCondition extends AbstractCommand<Variable> {
 
     private final Condition parentOfElement;
 
-    public AddVariableToCondition(Condition parentOfElement) {
-        super(getAlicaFactory().createVariable(), parentOfElement.getAbstractPlan());
+    public AddVariableToCondition(Condition parentOfElement, Plan affectedPlan) {
+        super(getAlicaFactory().createVariable(), affectedPlan);
         this.parentOfElement = parentOfElement;
     }
 

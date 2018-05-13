@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -27,7 +23,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link alica.impl.BehaviourCreatorImpl#getBehaviours <em>Behaviours</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourCreatorImpl#getBehaviours <em>Behaviours</em>}</li>
  * </ul>
  * </p>
  *

@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -23,10 +19,10 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link alica.impl.PlannerImpl#getType <em>Type</em>}</li>
- *   <li>{@link alica.impl.PlannerImpl#getName <em>Name</em>}</li>
- *   <li>{@link alica.impl.PlannerImpl#getParameters <em>Parameters</em>}</li>
- *   <li>{@link alica.impl.PlannerImpl#getCommand <em>Command</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannerImpl#getType <em>Type</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannerImpl#getName <em>Name</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannerImpl#getParameters <em>Parameters</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannerImpl#getCommand <em>Command</em>}</li>
  * </ul>
  * </p>
  *

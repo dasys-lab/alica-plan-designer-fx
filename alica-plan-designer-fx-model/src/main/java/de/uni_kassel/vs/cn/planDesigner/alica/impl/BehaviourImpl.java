@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -12,13 +8,19 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -29,11 +31,11 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link alica.impl.BehaviourImpl#getPreCondition <em>Pre Condition</em>}</li>
- *   <li>{@link alica.impl.BehaviourImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
- *   <li>{@link alica.impl.BehaviourImpl#getPostCondition <em>Post Condition</em>}</li>
- *   <li>{@link alica.impl.BehaviourImpl#getFrequency <em>Frequency</em>}</li>
- *   <li>{@link alica.impl.BehaviourImpl#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getPostCondition <em>Post Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getFrequency <em>Frequency</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getVars <em>Vars</em>}</li>
  * </ul>
  * </p>
  *

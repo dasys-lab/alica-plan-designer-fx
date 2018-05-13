@@ -12,12 +12,12 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link alica.InternalRoleTaskMapping#getRole <em>Role</em>}</li>
- *   <li>{@link alica.InternalRoleTaskMapping#getPriority <em>Priority</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping#getRole <em>Role</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping#getPriority <em>Priority</em>}</li>
  * </ul>
  * </p>
  *
- * @see alica.AlicaPackage#getInternalRoleTaskMapping()
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getInternalRoleTaskMapping()
  * @model
  * @generated
  */
@@ -32,14 +32,14 @@ public interface InternalRoleTaskMapping extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Role</em>' reference.
 	 * @see #setRole(Role)
-	 * @see alica.AlicaPackage#getInternalRoleTaskMapping_Role()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getInternalRoleTaskMapping_Role()
 	 * @model
 	 * @generated
 	 */
 	Role getRole();
 
 	/**
-	 * Sets the value of the '{@link alica.InternalRoleTaskMapping#getRole <em>Role</em>}' reference.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping#getRole <em>Role</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Role</em>' reference.
@@ -59,14 +59,14 @@ public interface InternalRoleTaskMapping extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Priority</em>' attribute.
 	 * @see #setPriority(double)
-	 * @see alica.AlicaPackage#getInternalRoleTaskMapping_Priority()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getInternalRoleTaskMapping_Priority()
 	 * @model default="0.0"
 	 * @generated
 	 */
 	double getPriority();
 
 	/**
-	 * Sets the value of the '{@link alica.InternalRoleTaskMapping#getPriority <em>Priority</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping#getPriority <em>Priority</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Priority</em>' attribute.

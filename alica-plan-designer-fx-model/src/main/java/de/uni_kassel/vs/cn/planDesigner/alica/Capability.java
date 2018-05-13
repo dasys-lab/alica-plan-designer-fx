@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -16,18 +12,18 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link alica.Capability#getCapValues <em>Cap Values</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Capability#getCapValues <em>Cap Values</em>}</li>
  * </ul>
  * </p>
  *
- * @see alica.AlicaPackage#getCapability()
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCapability()
  * @model
  * @generated
  */
 public interface Capability extends PlanElement {
 	/**
 	 * Returns the value of the '<em><b>Cap Values</b></em>' containment reference list.
-	 * The list contents are of type {@link alica.CapValue}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.CapValue}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Cap Values</em>' containment reference list isn't clear,
@@ -35,7 +31,7 @@ public interface Capability extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Cap Values</em>' containment reference list.
-	 * @see alica.AlicaPackage#getCapability_CapValues()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCapability_CapValues()
 	 * @model containment="true"
 	 * @generated
 	 */

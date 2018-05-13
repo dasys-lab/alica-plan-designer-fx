@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -16,12 +12,12 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link alica.Quantifier#getScope <em>Scope</em>}</li>
- *   <li>{@link alica.Quantifier#getSorts <em>Sorts</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getScope <em>Scope</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getSorts <em>Sorts</em>}</li>
  * </ul>
  * </p>
  *
- * @see alica.AlicaPackage#getQuantifier()
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getQuantifier()
  * @model abstract="true"
  * @generated
  */
@@ -36,14 +32,14 @@ public interface Quantifier extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Scope</em>' reference.
 	 * @see #setScope(IInhabitable)
-	 * @see alica.AlicaPackage#getQuantifier_Scope()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getQuantifier_Scope()
 	 * @model
 	 * @generated
 	 */
 	IInhabitable getScope();
 
 	/**
-	 * Sets the value of the '{@link alica.Quantifier#getScope <em>Scope</em>}' reference.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getScope <em>Scope</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Scope</em>' reference.
@@ -54,7 +50,7 @@ public interface Quantifier extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Sorts</b></em>' attribute list.
-	 * The list contents are of type {@link String}.
+	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Sorts</em>' attribute list isn't clear,
@@ -62,7 +58,7 @@ public interface Quantifier extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Sorts</em>' attribute list.
-	 * @see alica.AlicaPackage#getQuantifier_Sorts()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getQuantifier_Sorts()
 	 * @model default=""
 	 * @generated
 	 */

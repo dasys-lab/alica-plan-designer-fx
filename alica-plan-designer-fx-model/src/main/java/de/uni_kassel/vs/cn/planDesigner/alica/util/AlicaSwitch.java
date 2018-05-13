@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.util;
 
@@ -25,7 +21,7 @@ import org.eclipse.emf.ecore.util.Switch;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see alica.AlicaPackage
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage
  * @generated
  */
 public class AlicaSwitch<T> extends Switch<T> {
@@ -468,7 +464,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Transition</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseTransition(Transition object) {
@@ -483,7 +479,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Condition</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseCondition(Condition object) {
@@ -498,7 +494,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Pre Condition</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T casePreCondition(PreCondition object) {
@@ -513,7 +509,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Entry Point</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseEntryPoint(EntryPoint object) {
@@ -528,7 +524,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Terminal State</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseTerminalState(TerminalState object) {
@@ -543,7 +539,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Success State</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseSuccessState(SuccessState object) {
@@ -558,7 +554,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Failure State</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseFailureState(FailureState object) {
@@ -573,7 +569,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Abstract Plan</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseAbstractPlan(AbstractPlan object) {
@@ -588,7 +584,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Behaviour</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseBehaviour(Behaviour object) {
@@ -603,7 +599,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>State</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseState(State object) {
@@ -618,7 +614,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Plan</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T casePlan(Plan object) {
@@ -633,7 +629,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Plan Type</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T casePlanType(PlanType object) {
@@ -648,7 +644,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Rating</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseRating(Rating object) {
@@ -663,7 +659,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Post Condition</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T casePostCondition(PostCondition object) {
@@ -678,7 +674,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Runtime Condition</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseRuntimeCondition(RuntimeCondition object) {
@@ -693,7 +689,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Plan Element</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T casePlanElement(PlanElement object) {
@@ -708,7 +704,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Task</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseTask(Task object) {
@@ -723,7 +719,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>EString To EString Map Entry</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseEStringToEStringMapEntry(Map.Entry<String, String> object) {
@@ -738,7 +734,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Role</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseRole(Role object) {
@@ -753,7 +749,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Role Set</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseRoleSet(RoleSet object) {
@@ -768,7 +764,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>ELong To Double Map Entry</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseELongToDoubleMapEntry(Map.Entry<Long, Double> object) {
@@ -783,7 +779,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Role Definition Set</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseRoleDefinitionSet(RoleDefinitionSet object) {
@@ -798,7 +794,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Role Task Mapping</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseRoleTaskMapping(RoleTaskMapping object) {
@@ -813,7 +809,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Characteristic</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseCharacteristic(Characteristic object) {
@@ -828,7 +824,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Task Graph</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseTaskGraph(TaskGraph object) {
@@ -843,7 +839,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Edge</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseEdge(Edge object) {
@@ -858,7 +854,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Task Wrapper</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseTaskWrapper(TaskWrapper object) {
@@ -873,7 +869,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Internal Role Task Mapping</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseInternalRoleTaskMapping(InternalRoleTaskMapping object) {
@@ -888,7 +884,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Node</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseNode(Node object) {
@@ -903,7 +899,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Task Repository</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseTaskRepository(TaskRepository object) {
@@ -918,7 +914,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Synchronisation</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseSynchronisation(Synchronisation object) {
@@ -933,7 +929,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Variable</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseVariable(Variable object) {
@@ -948,7 +944,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Parametrisation</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseParametrisation(Parametrisation object) {
@@ -963,7 +959,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Annotated Plan</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseAnnotatedPlan(AnnotatedPlan object) {
@@ -978,7 +974,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Quantifier</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseQuantifier(Quantifier object) {
@@ -993,7 +989,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Forall Agents</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseForallAgents(ForallAgents object) {
@@ -1008,7 +1004,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>IInhabitable</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseIInhabitable(IInhabitable object) {
@@ -1023,7 +1019,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Capability</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseCapability(Capability object) {
@@ -1038,7 +1034,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Cap Value</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseCapValue(CapValue object) {
@@ -1053,7 +1049,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Capability Definition Set</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseCapabilityDefinitionSet(CapabilityDefinitionSet object) {
@@ -1068,7 +1064,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Planning Problem</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T casePlanningProblem(PlanningProblem object) {
@@ -1083,7 +1079,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Planner</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T casePlanner(Planner object) {
@@ -1098,7 +1094,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Fluent</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseFluent(Fluent object) {
@@ -1113,7 +1109,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Domain Description</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseDomainDescription(DomainDescription object) {
@@ -1128,7 +1124,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Planners</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T casePlanners(Planners object) {
@@ -1143,7 +1139,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>EString To EObject Map Entry</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseEStringToEObjectMapEntry(Map.Entry<String, Object> object) {
@@ -1158,7 +1154,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Fluent Parameters</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseFluentParameters(FluentParameters object) {
@@ -1173,7 +1169,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Constant</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseConstant(Constant object) {
@@ -1188,7 +1184,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Behaviour Creator</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseBehaviourCreator(BehaviourCreator object) {
@@ -1203,7 +1199,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Condition Creator</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseConditionCreator(ConditionCreator object) {
@@ -1218,7 +1214,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Utility Function Creator</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseUtilityFunctionCreator(UtilityFunctionCreator object) {
@@ -1233,7 +1229,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Constraint Creator</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseConstraintCreator(ConstraintCreator object) {
@@ -1248,7 +1244,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Domain Behaviour</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseDomainBehaviour(DomainBehaviour object) {
@@ -1263,7 +1259,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Domain Condition</em>'.
-	 * @see #doSwitch(EObject) doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	public T caseDomainCondition(DomainCondition object) {
@@ -1278,7 +1274,7 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>EObject</em>'.
-	 * @see #doSwitch(EObject)
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
 	 * @generated
 	 */
 	@Override

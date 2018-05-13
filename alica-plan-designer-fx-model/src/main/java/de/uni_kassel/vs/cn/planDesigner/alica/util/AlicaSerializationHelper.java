@@ -139,7 +139,6 @@ public class AlicaSerializationHelper {
 	}
 	
 	private void createConditionSaveOptions(ExtendedMetaData meta){
-		meta.setFeatureKind(AlicaPackage.eINSTANCE.getCondition_AbstractPlan(), ExtendedMetaData.ELEMENT_FEATURE);
 		meta.setFeatureKind(AlicaPackage.eINSTANCE.getCondition_Vars(), ExtendedMetaData.ELEMENT_FEATURE);
 	}
 

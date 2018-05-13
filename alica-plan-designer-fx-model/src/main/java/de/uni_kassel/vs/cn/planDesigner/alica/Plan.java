@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -16,23 +12,23 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link alica.Plan#getPriority <em>Priority</em>}</li>
- *   <li>{@link alica.Plan#getStates <em>States</em>}</li>
- *   <li>{@link alica.Plan#getTransitions <em>Transitions</em>}</li>
- *   <li>{@link alica.Plan#getMinCardinality <em>Min Cardinality</em>}</li>
- *   <li>{@link alica.Plan#getMaxCardinality <em>Max Cardinality</em>}</li>
- *   <li>{@link alica.Plan#getSynchronisations <em>Synchronisations</em>}</li>
- *   <li>{@link alica.Plan#getEntryPoints <em>Entry Points</em>}</li>
- *   <li>{@link alica.Plan#isMasterPlan <em>Master Plan</em>}</li>
- *   <li>{@link alica.Plan#getUtilityFunction <em>Utility Function</em>}</li>
- *   <li>{@link alica.Plan#getUtilityThreshold <em>Utility Threshold</em>}</li>
- *   <li>{@link alica.Plan#getVars <em>Vars</em>}</li>
- *   <li>{@link alica.Plan#getPreCondition <em>Pre Condition</em>}</li>
- *   <li>{@link alica.Plan#getRuntimeCondition <em>Runtime Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getPriority <em>Priority</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getStates <em>States</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getTransitions <em>Transitions</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getMinCardinality <em>Min Cardinality</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getMaxCardinality <em>Max Cardinality</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getSynchronisations <em>Synchronisations</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getEntryPoints <em>Entry Points</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#isMasterPlan <em>Master Plan</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getUtilityFunction <em>Utility Function</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getUtilityThreshold <em>Utility Threshold</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getRuntimeCondition <em>Runtime Condition</em>}</li>
  * </ul>
  * </p>
  *
- * @see alica.AlicaPackage#getPlan()
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan()
  * @model
  * @generated
  */
@@ -48,14 +44,14 @@ public interface Plan extends AbstractPlan {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Priority</em>' attribute.
 	 * @see #setPriority(double)
-	 * @see alica.AlicaPackage#getPlan_Priority()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_Priority()
 	 * @model default="0.0"
 	 * @generated
 	 */
 	double getPriority();
 
 	/**
-	 * Sets the value of the '{@link alica.Plan#getPriority <em>Priority</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getPriority <em>Priority</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Priority</em>' attribute.
@@ -66,8 +62,8 @@ public interface Plan extends AbstractPlan {
 
 	/**
 	 * Returns the value of the '<em><b>States</b></em>' containment reference list.
-	 * The list contents are of type {@link alica.State}.
-	 * It is bidirectional and its opposite is '{@link alica.State#getInPlan <em>In Plan</em>}'.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.State}.
+	 * It is bidirectional and its opposite is '{@link de.uni_kassel.vs.cn.planDesigner.alica.State#getInPlan <em>In Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>States</em>' containment reference list isn't clear,
@@ -75,8 +71,8 @@ public interface Plan extends AbstractPlan {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>States</em>' containment reference list.
-	 * @see alica.AlicaPackage#getPlan_States()
-	 * @see alica.State#getInPlan
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_States()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State#getInPlan
 	 * @model opposite="inPlan" containment="true"
 	 * @generated
 	 */
@@ -84,7 +80,7 @@ public interface Plan extends AbstractPlan {
 
 	/**
 	 * Returns the value of the '<em><b>Transitions</b></em>' containment reference list.
-	 * The list contents are of type {@link alica.Transition}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Transition}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Transitions</em>' containment reference list isn't clear,
@@ -92,7 +88,7 @@ public interface Plan extends AbstractPlan {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Transitions</em>' containment reference list.
-	 * @see alica.AlicaPackage#getPlan_Transitions()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_Transitions()
 	 * @model containment="true"
 	 * @generated
 	 */
@@ -109,14 +105,14 @@ public interface Plan extends AbstractPlan {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Min Cardinality</em>' attribute.
 	 * @see #setMinCardinality(int)
-	 * @see alica.AlicaPackage#getPlan_MinCardinality()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_MinCardinality()
 	 * @model default="0"
 	 * @generated
 	 */
 	int getMinCardinality();
 
 	/**
-	 * Sets the value of the '{@link alica.Plan#getMinCardinality <em>Min Cardinality</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getMinCardinality <em>Min Cardinality</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Min Cardinality</em>' attribute.
@@ -136,14 +132,14 @@ public interface Plan extends AbstractPlan {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Max Cardinality</em>' attribute.
 	 * @see #setMaxCardinality(int)
-	 * @see alica.AlicaPackage#getPlan_MaxCardinality()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_MaxCardinality()
 	 * @model default="2147483647"
 	 * @generated
 	 */
 	int getMaxCardinality();
 
 	/**
-	 * Sets the value of the '{@link alica.Plan#getMaxCardinality <em>Max Cardinality</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getMaxCardinality <em>Max Cardinality</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Max Cardinality</em>' attribute.
@@ -154,7 +150,7 @@ public interface Plan extends AbstractPlan {
 
 	/**
 	 * Returns the value of the '<em><b>Synchronisations</b></em>' containment reference list.
-	 * The list contents are of type {@link alica.Synchronisation}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Synchronisations</em>' containment reference list isn't clear,
@@ -162,7 +158,7 @@ public interface Plan extends AbstractPlan {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Synchronisations</em>' containment reference list.
-	 * @see alica.AlicaPackage#getPlan_Synchronisations()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_Synchronisations()
 	 * @model containment="true"
 	 * @generated
 	 */
@@ -170,8 +166,8 @@ public interface Plan extends AbstractPlan {
 
 	/**
 	 * Returns the value of the '<em><b>Entry Points</b></em>' containment reference list.
-	 * The list contents are of type {@link alica.EntryPoint}.
-	 * It is bidirectional and its opposite is '{@link alica.EntryPoint#getPlan <em>Plan</em>}'.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint}.
+	 * It is bidirectional and its opposite is '{@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getPlan <em>Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Entry Points</em>' containment reference list isn't clear,
@@ -179,8 +175,8 @@ public interface Plan extends AbstractPlan {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Entry Points</em>' containment reference list.
-	 * @see alica.AlicaPackage#getPlan_EntryPoints()
-	 * @see alica.EntryPoint#getPlan
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_EntryPoints()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getPlan
 	 * @model opposite="plan" containment="true"
 	 * @generated
 	 */
@@ -197,14 +193,14 @@ public interface Plan extends AbstractPlan {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Master Plan</em>' attribute.
 	 * @see #setMasterPlan(boolean)
-	 * @see alica.AlicaPackage#getPlan_MasterPlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_MasterPlan()
 	 * @model default="false"
 	 * @generated
 	 */
 	boolean isMasterPlan();
 
 	/**
-	 * Sets the value of the '{@link alica.Plan#isMasterPlan <em>Master Plan</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#isMasterPlan <em>Master Plan</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Master Plan</em>' attribute.
@@ -224,14 +220,14 @@ public interface Plan extends AbstractPlan {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Utility Function</em>' attribute.
 	 * @see #setUtilityFunction(String)
-	 * @see alica.AlicaPackage#getPlan_UtilityFunction()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_UtilityFunction()
 	 * @model default=""
 	 * @generated
 	 */
 	String getUtilityFunction();
 
 	/**
-	 * Sets the value of the '{@link alica.Plan#getUtilityFunction <em>Utility Function</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getUtilityFunction <em>Utility Function</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Utility Function</em>' attribute.
@@ -251,14 +247,14 @@ public interface Plan extends AbstractPlan {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Utility Threshold</em>' attribute.
 	 * @see #setUtilityThreshold(double)
-	 * @see alica.AlicaPackage#getPlan_UtilityThreshold()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_UtilityThreshold()
 	 * @model default="0.1"
 	 * @generated
 	 */
 	double getUtilityThreshold();
 
 	/**
-	 * Sets the value of the '{@link alica.Plan#getUtilityThreshold <em>Utility Threshold</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getUtilityThreshold <em>Utility Threshold</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Utility Threshold</em>' attribute.
@@ -269,7 +265,7 @@ public interface Plan extends AbstractPlan {
 
 	/**
 	 * Returns the value of the '<em><b>Vars</b></em>' containment reference list.
-	 * The list contents are of type {@link alica.Variable}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Variable}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Vars</em>' containment reference list isn't clear,
@@ -277,7 +273,7 @@ public interface Plan extends AbstractPlan {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Vars</em>' containment reference list.
-	 * @see alica.AlicaPackage#getPlan_Vars()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_Vars()
 	 * @model containment="true"
 	 * @generated
 	 */
@@ -293,14 +289,14 @@ public interface Plan extends AbstractPlan {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Pre Condition</em>' containment reference.
 	 * @see #setPreCondition(PreCondition)
-	 * @see alica.AlicaPackage#getPlan_PreCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_PreCondition()
 	 * @model containment="true"
 	 * @generated
 	 */
 	PreCondition getPreCondition();
 
 	/**
-	 * Sets the value of the '{@link alica.Plan#getPreCondition <em>Pre Condition</em>}' containment reference.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getPreCondition <em>Pre Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Pre Condition</em>' containment reference.
@@ -319,14 +315,14 @@ public interface Plan extends AbstractPlan {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Runtime Condition</em>' containment reference.
 	 * @see #setRuntimeCondition(RuntimeCondition)
-	 * @see alica.AlicaPackage#getPlan_RuntimeCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlan_RuntimeCondition()
 	 * @model containment="true"
 	 * @generated
 	 */
 	RuntimeCondition getRuntimeCondition();
 
 	/**
-	 * Sets the value of the '{@link alica.Plan#getRuntimeCondition <em>Runtime Condition</em>}' containment reference.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getRuntimeCondition <em>Runtime Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Runtime Condition</em>' containment reference.

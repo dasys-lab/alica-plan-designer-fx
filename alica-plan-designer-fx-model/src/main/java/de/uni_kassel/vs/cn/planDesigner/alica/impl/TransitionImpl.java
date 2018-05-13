@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -11,10 +7,13 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -24,11 +23,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link alica.impl.TransitionImpl#getMsg <em>Msg</em>}</li>
- *   <li>{@link alica.impl.TransitionImpl#getPreCondition <em>Pre Condition</em>}</li>
- *   <li>{@link alica.impl.TransitionImpl#getInState <em>In State</em>}</li>
- *   <li>{@link alica.impl.TransitionImpl#getOutState <em>Out State</em>}</li>
- *   <li>{@link alica.impl.TransitionImpl#getSynchronisation <em>Synchronisation</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getMsg <em>Msg</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getInState <em>In State</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getOutState <em>Out State</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getSynchronisation <em>Synchronisation</em>}</li>
  * </ul>
  * </p>
  *

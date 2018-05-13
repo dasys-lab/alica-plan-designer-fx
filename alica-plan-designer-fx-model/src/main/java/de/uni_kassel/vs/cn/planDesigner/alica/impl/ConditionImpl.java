@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
@@ -11,16 +7,23 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Quantifier;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
@@ -33,12 +36,11 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link alica.impl.ConditionImpl#getConditionString <em>Condition String</em>}</li>
- *   <li>{@link alica.impl.ConditionImpl#getAbstractPlan <em>Abstract Plan</em>}</li>
- *   <li>{@link alica.impl.ConditionImpl#getVars <em>Vars</em>}</li>
- *   <li>{@link alica.impl.ConditionImpl#getQuantifiers <em>Quantifiers</em>}</li>
- *   <li>{@link alica.impl.ConditionImpl#getPluginName <em>Plugin Name</em>}</li>
- *   <li>{@link alica.impl.ConditionImpl#getParameters <em>Parameters</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getConditionString <em>Condition String</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getQuantifiers <em>Quantifiers</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getPluginName <em>Plugin Name</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getParameters <em>Parameters</em>}</li>
  * </ul>
  * </p>
  *
@@ -64,16 +66,6 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 	 * @ordered
 	 */
 	protected String conditionString = CONDITION_STRING_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getAbstractPlan() <em>Abstract Plan</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAbstractPlan()
-	 * @generated
-	 * @ordered
-	 */
-	protected AbstractPlan abstractPlan;
 
 	/**
 	 * The cached value of the '{@link #getVars() <em>Vars</em>}' reference list.
@@ -170,44 +162,6 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AbstractPlan getAbstractPlan() {
-		if (abstractPlan != null && abstractPlan.eIsProxy()) {
-			InternalEObject oldAbstractPlan = (InternalEObject)abstractPlan;
-			abstractPlan = (AbstractPlan)eResolveProxy(oldAbstractPlan);
-			if (abstractPlan != oldAbstractPlan) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AlicaPackage.CONDITION__ABSTRACT_PLAN, oldAbstractPlan, abstractPlan));
-			}
-		}
-		return abstractPlan;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AbstractPlan basicGetAbstractPlan() {
-		return abstractPlan;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setAbstractPlan(AbstractPlan newAbstractPlan) {
-		AbstractPlan oldAbstractPlan = abstractPlan;
-		abstractPlan = newAbstractPlan;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.CONDITION__ABSTRACT_PLAN, oldAbstractPlan, abstractPlan));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<Variable> getVars() {
 		if (vars == null) {
 			vars = new EObjectResolvingEList<Variable>(Variable.class, this, AlicaPackage.CONDITION__VARS);
@@ -297,9 +251,6 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 		switch (featureID) {
 			case AlicaPackage.CONDITION__CONDITION_STRING:
 				return getConditionString();
-			case AlicaPackage.CONDITION__ABSTRACT_PLAN:
-				if (resolve) return getAbstractPlan();
-				return basicGetAbstractPlan();
 			case AlicaPackage.CONDITION__VARS:
 				return getVars();
 			case AlicaPackage.CONDITION__QUANTIFIERS:
@@ -324,9 +275,6 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 		switch (featureID) {
 			case AlicaPackage.CONDITION__CONDITION_STRING:
 				setConditionString((String)newValue);
-				return;
-			case AlicaPackage.CONDITION__ABSTRACT_PLAN:
-				setAbstractPlan((AbstractPlan)newValue);
 				return;
 			case AlicaPackage.CONDITION__VARS:
 				getVars().clear();
@@ -357,9 +305,6 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 			case AlicaPackage.CONDITION__CONDITION_STRING:
 				setConditionString(CONDITION_STRING_EDEFAULT);
 				return;
-			case AlicaPackage.CONDITION__ABSTRACT_PLAN:
-				setAbstractPlan((AbstractPlan)null);
-				return;
 			case AlicaPackage.CONDITION__VARS:
 				getVars().clear();
 				return;
@@ -386,8 +331,6 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 		switch (featureID) {
 			case AlicaPackage.CONDITION__CONDITION_STRING:
 				return CONDITION_STRING_EDEFAULT == null ? conditionString != null : !CONDITION_STRING_EDEFAULT.equals(conditionString);
-			case AlicaPackage.CONDITION__ABSTRACT_PLAN:
-				return abstractPlan != null;
 			case AlicaPackage.CONDITION__VARS:
 				return vars != null && !vars.isEmpty();
 			case AlicaPackage.CONDITION__QUANTIFIERS:

@@ -2,7 +2,6 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -22,7 +21,7 @@ import org.eclipse.emf.ecore.EReference;
  *   <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * @see alica.AlicaFactory
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory
  * @model kind="package"
  * @generated
  */
@@ -49,7 +48,7 @@ public interface AlicaPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "alica";
+	String eNS_PREFIX = "de.uni_kassel.vs.cn.planDesigner";
 
 	/**
 	 * The singleton instance of the package.
@@ -57,14 +56,14 @@ public interface AlicaPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	AlicaPackage eINSTANCE = AlicaPackageImpl.init();
+	AlicaPackage eINSTANCE = de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link alica.impl.PlanElementImpl <em>Plan Element</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl <em>Plan Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.PlanElementImpl
-	 * @see alica.impl.AlicaPackageImpl#getPlanElement()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanElement()
 	 * @generated
 	 */
 	int PLAN_ELEMENT = 15;
@@ -124,11 +123,11 @@ public interface AlicaPackage extends EPackage {
 	int PLAN_ELEMENT_OPERATION_COUNT = 1;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.TransitionImpl <em>Transition</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl <em>Transition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.TransitionImpl
-	 * @see alica.impl.AlicaPackageImpl#getTransition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTransition()
 	 * @generated
 	 */
 	int TRANSITION = 0;
@@ -233,11 +232,11 @@ public interface AlicaPackage extends EPackage {
 	int TRANSITION_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.ConditionImpl <em>Condition</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl <em>Condition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.ConditionImpl
-	 * @see alica.impl.AlicaPackageImpl#getCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCondition()
 	 * @generated
 	 */
 	int CONDITION = 1;
@@ -279,22 +278,13 @@ public interface AlicaPackage extends EPackage {
 	int CONDITION__CONDITION_STRING = PLAN_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Abstract Plan</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONDITION__ABSTRACT_PLAN = PLAN_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Vars</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONDITION__VARS = PLAN_ELEMENT_FEATURE_COUNT + 2;
+	int CONDITION__VARS = PLAN_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Quantifiers</b></em>' containment reference list.
@@ -303,7 +293,7 @@ public interface AlicaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONDITION__QUANTIFIERS = PLAN_ELEMENT_FEATURE_COUNT + 3;
+	int CONDITION__QUANTIFIERS = PLAN_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Plugin Name</b></em>' attribute.
@@ -312,7 +302,7 @@ public interface AlicaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONDITION__PLUGIN_NAME = PLAN_ELEMENT_FEATURE_COUNT + 4;
+	int CONDITION__PLUGIN_NAME = PLAN_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' map.
@@ -321,7 +311,7 @@ public interface AlicaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONDITION__PARAMETERS = PLAN_ELEMENT_FEATURE_COUNT + 5;
+	int CONDITION__PARAMETERS = PLAN_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Condition</em>' class.
@@ -330,7 +320,7 @@ public interface AlicaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONDITION_FEATURE_COUNT = PLAN_ELEMENT_FEATURE_COUNT + 6;
+	int CONDITION_FEATURE_COUNT = PLAN_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Generate ID</em>' operation.
@@ -360,11 +350,11 @@ public interface AlicaPackage extends EPackage {
 	int CONDITION_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.PreConditionImpl <em>Pre Condition</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PreConditionImpl <em>Pre Condition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.PreConditionImpl
-	 * @see alica.impl.AlicaPackageImpl#getPreCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PreConditionImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPreCondition()
 	 * @generated
 	 */
 	int PRE_CONDITION = 2;
@@ -404,15 +394,6 @@ public interface AlicaPackage extends EPackage {
 	 * @ordered
 	 */
 	int PRE_CONDITION__CONDITION_STRING = CONDITION__CONDITION_STRING;
-
-	/**
-	 * The feature id for the '<em><b>Abstract Plan</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRE_CONDITION__ABSTRACT_PLAN = CONDITION__ABSTRACT_PLAN;
 
 	/**
 	 * The feature id for the '<em><b>Vars</b></em>' reference list.
@@ -496,11 +477,11 @@ public interface AlicaPackage extends EPackage {
 	int PRE_CONDITION_OPERATION_COUNT = CONDITION_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.IInhabitable <em>IInhabitable</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable <em>IInhabitable</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.IInhabitable
-	 * @see alica.impl.AlicaPackageImpl#getIInhabitable()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getIInhabitable()
 	 * @generated
 	 */
 	int IINHABITABLE = 36;
@@ -560,11 +541,11 @@ public interface AlicaPackage extends EPackage {
 	int IINHABITABLE_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.EntryPointImpl <em>Entry Point</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl <em>Entry Point</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.EntryPointImpl
-	 * @see alica.impl.AlicaPackageImpl#getEntryPoint()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getEntryPoint()
 	 * @generated
 	 */
 	int ENTRY_POINT = 3;
@@ -678,11 +659,11 @@ public interface AlicaPackage extends EPackage {
 	int ENTRY_POINT_OPERATION_COUNT = IINHABITABLE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.StateImpl <em>State</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl <em>State</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.StateImpl
-	 * @see alica.impl.AlicaPackageImpl#getState()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getState()
 	 * @generated
 	 */
 	int STATE = 9;
@@ -805,11 +786,11 @@ public interface AlicaPackage extends EPackage {
 	int STATE_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.TerminalStateImpl <em>Terminal State</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TerminalStateImpl <em>Terminal State</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.TerminalStateImpl
-	 * @see alica.impl.AlicaPackageImpl#getTerminalState()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TerminalStateImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTerminalState()
 	 * @generated
 	 */
 	int TERMINAL_STATE = 4;
@@ -941,11 +922,11 @@ public interface AlicaPackage extends EPackage {
 	int TERMINAL_STATE_OPERATION_COUNT = STATE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.SuccessStateImpl <em>Success State</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.SuccessStateImpl <em>Success State</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.SuccessStateImpl
-	 * @see alica.impl.AlicaPackageImpl#getSuccessState()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.SuccessStateImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getSuccessState()
 	 * @generated
 	 */
 	int SUCCESS_STATE = 5;
@@ -1077,11 +1058,11 @@ public interface AlicaPackage extends EPackage {
 	int SUCCESS_STATE_OPERATION_COUNT = TERMINAL_STATE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.FailureStateImpl <em>Failure State</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.FailureStateImpl <em>Failure State</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.FailureStateImpl
-	 * @see alica.impl.AlicaPackageImpl#getFailureState()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.FailureStateImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getFailureState()
 	 * @generated
 	 */
 	int FAILURE_STATE = 6;
@@ -1213,11 +1194,11 @@ public interface AlicaPackage extends EPackage {
 	int FAILURE_STATE_OPERATION_COUNT = TERMINAL_STATE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.AbstractPlanImpl <em>Abstract Plan</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AbstractPlanImpl <em>Abstract Plan</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.AbstractPlanImpl
-	 * @see alica.impl.AlicaPackageImpl#getAbstractPlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AbstractPlanImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getAbstractPlan()
 	 * @generated
 	 */
 	int ABSTRACT_PLAN = 7;
@@ -1286,11 +1267,11 @@ public interface AlicaPackage extends EPackage {
 	int ABSTRACT_PLAN_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.BehaviourImpl <em>Behaviour</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl <em>Behaviour</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.BehaviourImpl
-	 * @see alica.impl.AlicaPackageImpl#getBehaviour()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getBehaviour()
 	 * @generated
 	 */
 	int BEHAVIOUR = 8;
@@ -1404,11 +1385,11 @@ public interface AlicaPackage extends EPackage {
 	int BEHAVIOUR_OPERATION_COUNT = ABSTRACT_PLAN_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.PlanImpl <em>Plan</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl <em>Plan</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.PlanImpl
-	 * @see alica.impl.AlicaPackageImpl#getPlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlan()
 	 * @generated
 	 */
 	int PLAN = 10;
@@ -1612,11 +1593,11 @@ public interface AlicaPackage extends EPackage {
 	int PLAN_OPERATION_COUNT = ABSTRACT_PLAN_OPERATION_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.PlanTypeImpl <em>Plan Type</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanTypeImpl <em>Plan Type</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.PlanTypeImpl
-	 * @see alica.impl.AlicaPackageImpl#getPlanType()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanTypeImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanType()
 	 * @generated
 	 */
 	int PLAN_TYPE = 11;
@@ -1712,11 +1693,11 @@ public interface AlicaPackage extends EPackage {
 	int PLAN_TYPE_OPERATION_COUNT = ABSTRACT_PLAN_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.RatingImpl <em>Rating</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RatingImpl <em>Rating</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.RatingImpl
-	 * @see alica.impl.AlicaPackageImpl#getRating()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RatingImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRating()
 	 * @generated
 	 */
 	int RATING = 12;
@@ -1776,11 +1757,11 @@ public interface AlicaPackage extends EPackage {
 	int RATING_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.PostConditionImpl <em>Post Condition</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PostConditionImpl <em>Post Condition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.PostConditionImpl
-	 * @see alica.impl.AlicaPackageImpl#getPostCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PostConditionImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPostCondition()
 	 * @generated
 	 */
 	int POST_CONDITION = 13;
@@ -1820,15 +1801,6 @@ public interface AlicaPackage extends EPackage {
 	 * @ordered
 	 */
 	int POST_CONDITION__CONDITION_STRING = CONDITION__CONDITION_STRING;
-
-	/**
-	 * The feature id for the '<em><b>Abstract Plan</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POST_CONDITION__ABSTRACT_PLAN = CONDITION__ABSTRACT_PLAN;
 
 	/**
 	 * The feature id for the '<em><b>Vars</b></em>' reference list.
@@ -1903,11 +1875,11 @@ public interface AlicaPackage extends EPackage {
 	int POST_CONDITION_OPERATION_COUNT = CONDITION_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.RuntimeConditionImpl <em>Runtime Condition</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RuntimeConditionImpl <em>Runtime Condition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.RuntimeConditionImpl
-	 * @see alica.impl.AlicaPackageImpl#getRuntimeCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RuntimeConditionImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRuntimeCondition()
 	 * @generated
 	 */
 	int RUNTIME_CONDITION = 14;
@@ -1947,15 +1919,6 @@ public interface AlicaPackage extends EPackage {
 	 * @ordered
 	 */
 	int RUNTIME_CONDITION__CONDITION_STRING = CONDITION__CONDITION_STRING;
-
-	/**
-	 * The feature id for the '<em><b>Abstract Plan</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RUNTIME_CONDITION__ABSTRACT_PLAN = CONDITION__ABSTRACT_PLAN;
 
 	/**
 	 * The feature id for the '<em><b>Vars</b></em>' reference list.
@@ -2030,11 +1993,11 @@ public interface AlicaPackage extends EPackage {
 	int RUNTIME_CONDITION_OPERATION_COUNT = CONDITION_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.TaskImpl <em>Task</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskImpl <em>Task</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.TaskImpl
-	 * @see alica.impl.AlicaPackageImpl#getTask()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTask()
 	 * @generated
 	 */
 	int TASK = 16;
@@ -2103,11 +2066,11 @@ public interface AlicaPackage extends EPackage {
 	int TASK_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.EStringToEStringMapEntryImpl <em>EString To EString Map Entry</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEStringMapEntryImpl <em>EString To EString Map Entry</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.EStringToEStringMapEntryImpl
-	 * @see alica.impl.AlicaPackageImpl#getEStringToEStringMapEntry()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEStringMapEntryImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getEStringToEStringMapEntry()
 	 * @generated
 	 */
 	int ESTRING_TO_ESTRING_MAP_ENTRY = 17;
@@ -2185,11 +2148,11 @@ public interface AlicaPackage extends EPackage {
 	int ESTRING_TO_ESTRING_MAP_ENTRY_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.RoleImpl <em>Role</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleImpl <em>Role</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.RoleImpl
-	 * @see alica.impl.AlicaPackageImpl#getRole()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRole()
 	 * @generated
 	 */
 	int ROLE = 18;
@@ -2258,11 +2221,11 @@ public interface AlicaPackage extends EPackage {
 	int ROLE_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.RoleSetImpl <em>Role Set</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleSetImpl <em>Role Set</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.RoleSetImpl
-	 * @see alica.impl.AlicaPackageImpl#getRoleSet()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleSetImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRoleSet()
 	 * @generated
 	 */
 	int ROLE_SET = 19;
@@ -2349,11 +2312,11 @@ public interface AlicaPackage extends EPackage {
 	int ROLE_SET_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.ELongToDoubleMapEntryImpl <em>ELong To Double Map Entry</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ELongToDoubleMapEntryImpl <em>ELong To Double Map Entry</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.ELongToDoubleMapEntryImpl
-	 * @see alica.impl.AlicaPackageImpl#getELongToDoubleMapEntry()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ELongToDoubleMapEntryImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getELongToDoubleMapEntry()
 	 * @generated
 	 */
 	int ELONG_TO_DOUBLE_MAP_ENTRY = 20;
@@ -2431,11 +2394,11 @@ public interface AlicaPackage extends EPackage {
 	int ELONG_TO_DOUBLE_MAP_ENTRY_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.RoleDefinitionSetImpl <em>Role Definition Set</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleDefinitionSetImpl <em>Role Definition Set</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.RoleDefinitionSetImpl
-	 * @see alica.impl.AlicaPackageImpl#getRoleDefinitionSet()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleDefinitionSetImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRoleDefinitionSet()
 	 * @generated
 	 */
 	int ROLE_DEFINITION_SET = 21;
@@ -2504,11 +2467,11 @@ public interface AlicaPackage extends EPackage {
 	int ROLE_DEFINITION_SET_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.RoleTaskMappingImpl <em>Role Task Mapping</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleTaskMappingImpl <em>Role Task Mapping</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.RoleTaskMappingImpl
-	 * @see alica.impl.AlicaPackageImpl#getRoleTaskMapping()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleTaskMappingImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRoleTaskMapping()
 	 * @generated
 	 */
 	int ROLE_TASK_MAPPING = 22;
@@ -2586,11 +2549,11 @@ public interface AlicaPackage extends EPackage {
 	int ROLE_TASK_MAPPING_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.CharacteristicImpl <em>Characteristic</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl <em>Characteristic</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.CharacteristicImpl
-	 * @see alica.impl.AlicaPackageImpl#getCharacteristic()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCharacteristic()
 	 * @generated
 	 */
 	int CHARACTERISTIC = 23;
@@ -2677,11 +2640,11 @@ public interface AlicaPackage extends EPackage {
 	int CHARACTERISTIC_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.TaskGraphImpl <em>Task Graph</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskGraphImpl <em>Task Graph</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.TaskGraphImpl
-	 * @see alica.impl.AlicaPackageImpl#getTaskGraph()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskGraphImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTaskGraph()
 	 * @generated
 	 */
 	int TASK_GRAPH = 24;
@@ -2723,11 +2686,11 @@ public interface AlicaPackage extends EPackage {
 	int TASK_GRAPH_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.EdgeImpl <em>Edge</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EdgeImpl <em>Edge</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.EdgeImpl
-	 * @see alica.impl.AlicaPackageImpl#getEdge()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.EdgeImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getEdge()
 	 * @generated
 	 */
 	int EDGE = 25;
@@ -2769,11 +2732,11 @@ public interface AlicaPackage extends EPackage {
 	int EDGE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.NodeImpl <em>Node</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.NodeImpl <em>Node</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.NodeImpl
-	 * @see alica.impl.AlicaPackageImpl#getNode()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.NodeImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getNode()
 	 * @generated
 	 */
 	int NODE = 28;
@@ -2815,11 +2778,11 @@ public interface AlicaPackage extends EPackage {
 	int NODE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.TaskWrapperImpl <em>Task Wrapper</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskWrapperImpl <em>Task Wrapper</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.TaskWrapperImpl
-	 * @see alica.impl.AlicaPackageImpl#getTaskWrapper()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskWrapperImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTaskWrapper()
 	 * @generated
 	 */
 	int TASK_WRAPPER = 26;
@@ -2879,11 +2842,11 @@ public interface AlicaPackage extends EPackage {
 	int TASK_WRAPPER_OPERATION_COUNT = NODE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.InternalRoleTaskMappingImpl <em>Internal Role Task Mapping</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.InternalRoleTaskMappingImpl <em>Internal Role Task Mapping</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.InternalRoleTaskMappingImpl
-	 * @see alica.impl.AlicaPackageImpl#getInternalRoleTaskMapping()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.InternalRoleTaskMappingImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getInternalRoleTaskMapping()
 	 * @generated
 	 */
 	int INTERNAL_ROLE_TASK_MAPPING = 27;
@@ -2925,11 +2888,11 @@ public interface AlicaPackage extends EPackage {
 	int INTERNAL_ROLE_TASK_MAPPING_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.TaskRepositoryImpl <em>Task Repository</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskRepositoryImpl <em>Task Repository</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.TaskRepositoryImpl
-	 * @see alica.impl.AlicaPackageImpl#getTaskRepository()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskRepositoryImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTaskRepository()
 	 * @generated
 	 */
 	int TASK_REPOSITORY = 29;
@@ -3016,11 +2979,11 @@ public interface AlicaPackage extends EPackage {
 	int TASK_REPOSITORY_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.SynchronisationImpl <em>Synchronisation</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl <em>Synchronisation</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.SynchronisationImpl
-	 * @see alica.impl.AlicaPackageImpl#getSynchronisation()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getSynchronisation()
 	 * @generated
 	 */
 	int SYNCHRONISATION = 30;
@@ -3116,11 +3079,11 @@ public interface AlicaPackage extends EPackage {
 	int SYNCHRONISATION_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.VariableImpl <em>Variable</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.VariableImpl <em>Variable</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.VariableImpl
-	 * @see alica.impl.AlicaPackageImpl#getVariable()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.VariableImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getVariable()
 	 * @generated
 	 */
 	int VARIABLE = 31;
@@ -3189,11 +3152,11 @@ public interface AlicaPackage extends EPackage {
 	int VARIABLE_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.ParametrisationImpl <em>Parametrisation</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ParametrisationImpl <em>Parametrisation</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.ParametrisationImpl
-	 * @see alica.impl.AlicaPackageImpl#getParametrisation()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ParametrisationImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getParametrisation()
 	 * @generated
 	 */
 	int PARAMETRISATION = 32;
@@ -3280,11 +3243,11 @@ public interface AlicaPackage extends EPackage {
 	int PARAMETRISATION_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.AnnotatedPlanImpl <em>Annotated Plan</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AnnotatedPlanImpl <em>Annotated Plan</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.AnnotatedPlanImpl
-	 * @see alica.impl.AlicaPackageImpl#getAnnotatedPlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AnnotatedPlanImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getAnnotatedPlan()
 	 * @generated
 	 */
 	int ANNOTATED_PLAN = 33;
@@ -3362,11 +3325,11 @@ public interface AlicaPackage extends EPackage {
 	int ANNOTATED_PLAN_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.QuantifierImpl <em>Quantifier</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.QuantifierImpl <em>Quantifier</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.QuantifierImpl
-	 * @see alica.impl.AlicaPackageImpl#getQuantifier()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.QuantifierImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getQuantifier()
 	 * @generated
 	 */
 	int QUANTIFIER = 34;
@@ -3444,11 +3407,11 @@ public interface AlicaPackage extends EPackage {
 	int QUANTIFIER_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.ForallAgentsImpl <em>Forall Agents</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ForallAgentsImpl <em>Forall Agents</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.ForallAgentsImpl
-	 * @see alica.impl.AlicaPackageImpl#getForallAgents()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ForallAgentsImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getForallAgents()
 	 * @generated
 	 */
 	int FORALL_AGENTS = 35;
@@ -3526,11 +3489,11 @@ public interface AlicaPackage extends EPackage {
 	int FORALL_AGENTS_OPERATION_COUNT = QUANTIFIER_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.CapabilityImpl <em>Capability</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CapabilityImpl <em>Capability</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.CapabilityImpl
-	 * @see alica.impl.AlicaPackageImpl#getCapability()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.CapabilityImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCapability()
 	 * @generated
 	 */
 	int CAPABILITY = 37;
@@ -3599,11 +3562,11 @@ public interface AlicaPackage extends EPackage {
 	int CAPABILITY_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.CapValueImpl <em>Cap Value</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CapValueImpl <em>Cap Value</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.CapValueImpl
-	 * @see alica.impl.AlicaPackageImpl#getCapValue()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.CapValueImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCapValue()
 	 * @generated
 	 */
 	int CAP_VALUE = 38;
@@ -3663,11 +3626,11 @@ public interface AlicaPackage extends EPackage {
 	int CAP_VALUE_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.CapabilityDefinitionSetImpl <em>Capability Definition Set</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CapabilityDefinitionSetImpl <em>Capability Definition Set</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.CapabilityDefinitionSetImpl
-	 * @see alica.impl.AlicaPackageImpl#getCapabilityDefinitionSet()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.CapabilityDefinitionSetImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCapabilityDefinitionSet()
 	 * @generated
 	 */
 	int CAPABILITY_DEFINITION_SET = 39;
@@ -3736,11 +3699,11 @@ public interface AlicaPackage extends EPackage {
 	int CAPABILITY_DEFINITION_SET_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.PlanningProblemImpl <em>Planning Problem</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl <em>Planning Problem</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.PlanningProblemImpl
-	 * @see alica.impl.AlicaPackageImpl#getPlanningProblem()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanningProblem()
 	 * @generated
 	 */
 	int PLANNING_PROBLEM = 40;
@@ -3890,11 +3853,11 @@ public interface AlicaPackage extends EPackage {
 	int PLANNING_PROBLEM_OPERATION_COUNT = ABSTRACT_PLAN_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.PlannerImpl <em>Planner</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannerImpl <em>Planner</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.PlannerImpl
-	 * @see alica.impl.AlicaPackageImpl#getPlanner()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannerImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanner()
 	 * @generated
 	 */
 	int PLANNER = 41;
@@ -3954,11 +3917,11 @@ public interface AlicaPackage extends EPackage {
 	int PLANNER_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.FluentImpl <em>Fluent</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentImpl <em>Fluent</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.FluentImpl
-	 * @see alica.impl.AlicaPackageImpl#getFluent()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getFluent()
 	 * @generated
 	 */
 	int FLUENT = 42;
@@ -4000,11 +3963,11 @@ public interface AlicaPackage extends EPackage {
 	int FLUENT_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.DomainDescriptionImpl <em>Domain Description</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl <em>Domain Description</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.DomainDescriptionImpl
-	 * @see alica.impl.AlicaPackageImpl#getDomainDescription()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainDescription()
 	 * @generated
 	 */
 	int DOMAIN_DESCRIPTION = 43;
@@ -4064,11 +4027,11 @@ public interface AlicaPackage extends EPackage {
 	int DOMAIN_DESCRIPTION_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.PlannersImpl <em>Planners</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannersImpl <em>Planners</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.PlannersImpl
-	 * @see alica.impl.AlicaPackageImpl#getPlanners()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannersImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanners()
 	 * @generated
 	 */
 	int PLANNERS = 44;
@@ -4110,11 +4073,11 @@ public interface AlicaPackage extends EPackage {
 	int PLANNERS_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.EStringToEObjectMapEntryImpl <em>EString To EObject Map Entry</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEObjectMapEntryImpl <em>EString To EObject Map Entry</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.EStringToEObjectMapEntryImpl
-	 * @see alica.impl.AlicaPackageImpl#getEStringToEObjectMapEntry()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEObjectMapEntryImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getEStringToEObjectMapEntry()
 	 * @generated
 	 */
 	int ESTRING_TO_EOBJECT_MAP_ENTRY = 45;
@@ -4192,11 +4155,11 @@ public interface AlicaPackage extends EPackage {
 	int ESTRING_TO_EOBJECT_MAP_ENTRY_OPERATION_COUNT = PLAN_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.FluentParametersImpl <em>Fluent Parameters</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentParametersImpl <em>Fluent Parameters</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.FluentParametersImpl
-	 * @see alica.impl.AlicaPackageImpl#getFluentParameters()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentParametersImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getFluentParameters()
 	 * @generated
 	 */
 	int FLUENT_PARAMETERS = 46;
@@ -4238,11 +4201,11 @@ public interface AlicaPackage extends EPackage {
 	int FLUENT_PARAMETERS_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.ConstantImpl <em>Constant</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstantImpl <em>Constant</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.ConstantImpl
-	 * @see alica.impl.AlicaPackageImpl#getConstant()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstantImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConstant()
 	 * @generated
 	 */
 	int CONSTANT = 47;
@@ -4284,11 +4247,11 @@ public interface AlicaPackage extends EPackage {
 	int CONSTANT_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.BehaviourCreatorImpl <em>Behaviour Creator</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourCreatorImpl <em>Behaviour Creator</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.BehaviourCreatorImpl
-	 * @see alica.impl.AlicaPackageImpl#getBehaviourCreator()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourCreatorImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getBehaviourCreator()
 	 * @generated
 	 */
 	int BEHAVIOUR_CREATOR = 48;
@@ -4321,11 +4284,11 @@ public interface AlicaPackage extends EPackage {
 	int BEHAVIOUR_CREATOR_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.ConditionCreatorImpl <em>Condition Creator</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionCreatorImpl <em>Condition Creator</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.ConditionCreatorImpl
-	 * @see alica.impl.AlicaPackageImpl#getConditionCreator()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionCreatorImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConditionCreator()
 	 * @generated
 	 */
 	int CONDITION_CREATOR = 49;
@@ -4367,11 +4330,11 @@ public interface AlicaPackage extends EPackage {
 	int CONDITION_CREATOR_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.UtilityFunctionCreatorImpl <em>Utility Function Creator</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.UtilityFunctionCreatorImpl <em>Utility Function Creator</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.UtilityFunctionCreatorImpl
-	 * @see alica.impl.AlicaPackageImpl#getUtilityFunctionCreator()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.UtilityFunctionCreatorImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getUtilityFunctionCreator()
 	 * @generated
 	 */
 	int UTILITY_FUNCTION_CREATOR = 50;
@@ -4413,11 +4376,11 @@ public interface AlicaPackage extends EPackage {
 	int UTILITY_FUNCTION_CREATOR_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.ConstraintCreatorImpl <em>Constraint Creator</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl <em>Constraint Creator</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.ConstraintCreatorImpl
-	 * @see alica.impl.AlicaPackageImpl#getConstraintCreator()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConstraintCreator()
 	 * @generated
 	 */
 	int CONSTRAINT_CREATOR = 51;
@@ -4459,11 +4422,11 @@ public interface AlicaPackage extends EPackage {
 	int CONSTRAINT_CREATOR_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.DomainBehaviourImpl <em>Domain Behaviour</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainBehaviourImpl <em>Domain Behaviour</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.DomainBehaviourImpl
-	 * @see alica.impl.AlicaPackageImpl#getDomainBehaviour()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainBehaviourImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainBehaviour()
 	 * @generated
 	 */
 	int DOMAIN_BEHAVIOUR = 52;
@@ -4487,11 +4450,11 @@ public interface AlicaPackage extends EPackage {
 	int DOMAIN_BEHAVIOUR_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.impl.DomainConditionImpl <em>Domain Condition</em>}' class.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainConditionImpl <em>Domain Condition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.impl.DomainConditionImpl
-	 * @see alica.impl.AlicaPackageImpl#getDomainCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainConditionImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainCondition()
 	 * @generated
 	 */
 	int DOMAIN_CONDITION = 53;
@@ -4515,791 +4478,780 @@ public interface AlicaPackage extends EPackage {
 	int DOMAIN_CONDITION_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link alica.PlanningType <em>Planning Type</em>}' enum.
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningType <em>Planning Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see alica.PlanningType
-	 * @see alica.impl.AlicaPackageImpl#getPlanningType()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningType
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanningType()
 	 * @generated
 	 */
 	int PLANNING_TYPE = 54;
 
 
 	/**
-	 * Returns the meta object for class '{@link alica.Transition <em>Transition</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Transition <em>Transition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Transition</em>'.
-	 * @see alica.Transition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Transition
 	 * @generated
 	 */
 	EClass getTransition();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Transition#getMsg <em>Msg</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Transition#getMsg <em>Msg</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Msg</em>'.
-	 * @see alica.Transition#getMsg()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Transition#getMsg()
 	 * @see #getTransition()
 	 * @generated
 	 */
 	EAttribute getTransition_Msg();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link alica.Transition#getPreCondition <em>Pre Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Transition#getPreCondition <em>Pre Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Pre Condition</em>'.
-	 * @see alica.Transition#getPreCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Transition#getPreCondition()
 	 * @see #getTransition()
 	 * @generated
 	 */
 	EReference getTransition_PreCondition();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Transition#getInState <em>In State</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Transition#getInState <em>In State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>In State</em>'.
-	 * @see alica.Transition#getInState()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Transition#getInState()
 	 * @see #getTransition()
 	 * @generated
 	 */
 	EReference getTransition_InState();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Transition#getOutState <em>Out State</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Transition#getOutState <em>Out State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Out State</em>'.
-	 * @see alica.Transition#getOutState()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Transition#getOutState()
 	 * @see #getTransition()
 	 * @generated
 	 */
 	EReference getTransition_OutState();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Transition#getSynchronisation <em>Synchronisation</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Transition#getSynchronisation <em>Synchronisation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Synchronisation</em>'.
-	 * @see alica.Transition#getSynchronisation()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Transition#getSynchronisation()
 	 * @see #getTransition()
 	 * @generated
 	 */
 	EReference getTransition_Synchronisation();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Condition <em>Condition</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition <em>Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Condition</em>'.
-	 * @see alica.Condition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Condition
 	 * @generated
 	 */
 	EClass getCondition();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Condition#getConditionString <em>Condition String</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getConditionString <em>Condition String</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Condition String</em>'.
-	 * @see alica.Condition#getConditionString()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Condition#getConditionString()
 	 * @see #getCondition()
 	 * @generated
 	 */
 	EAttribute getCondition_ConditionString();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Condition#getAbstractPlan <em>Abstract Plan</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Abstract Plan</em>'.
-	 * @see alica.Condition#getAbstractPlan()
-	 * @see #getCondition()
-	 * @generated
-	 */
-	EReference getCondition_AbstractPlan();
-
-	/**
-	 * Returns the meta object for the reference list '{@link alica.Condition#getVars <em>Vars</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getVars <em>Vars</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Vars</em>'.
-	 * @see alica.Condition#getVars()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Condition#getVars()
 	 * @see #getCondition()
 	 * @generated
 	 */
 	EReference getCondition_Vars();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Condition#getQuantifiers <em>Quantifiers</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getQuantifiers <em>Quantifiers</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Quantifiers</em>'.
-	 * @see alica.Condition#getQuantifiers()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Condition#getQuantifiers()
 	 * @see #getCondition()
 	 * @generated
 	 */
 	EReference getCondition_Quantifiers();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Condition#getPluginName <em>Plugin Name</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getPluginName <em>Plugin Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Plugin Name</em>'.
-	 * @see alica.Condition#getPluginName()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Condition#getPluginName()
 	 * @see #getCondition()
 	 * @generated
 	 */
 	EAttribute getCondition_PluginName();
 
 	/**
-	 * Returns the meta object for the map '{@link alica.Condition#getParameters <em>Parameters</em>}'.
+	 * Returns the meta object for the map '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getParameters <em>Parameters</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the map '<em>Parameters</em>'.
-	 * @see alica.Condition#getParameters()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Condition#getParameters()
 	 * @see #getCondition()
 	 * @generated
 	 */
 	EReference getCondition_Parameters();
 
 	/**
-	 * Returns the meta object for the '{@link alica.Condition#ensureVariableConsistency(alica.AbstractPlan) <em>Ensure Variable Consistency</em>}' operation.
+	 * Returns the meta object for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#ensureVariableConsistency(de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan) <em>Ensure Variable Consistency</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Ensure Variable Consistency</em>' operation.
-	 * @see alica.Condition#ensureVariableConsistency(alica.AbstractPlan)
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Condition#ensureVariableConsistency(de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan)
 	 * @generated
 	 */
 	EOperation getCondition__EnsureVariableConsistency__AbstractPlan();
 
 	/**
-	 * Returns the meta object for class '{@link alica.PreCondition <em>Pre Condition</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PreCondition <em>Pre Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Pre Condition</em>'.
-	 * @see alica.PreCondition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PreCondition
 	 * @generated
 	 */
 	EClass getPreCondition();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.PreCondition#isEnabled <em>Enabled</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.PreCondition#isEnabled <em>Enabled</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Enabled</em>'.
-	 * @see alica.PreCondition#isEnabled()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PreCondition#isEnabled()
 	 * @see #getPreCondition()
 	 * @generated
 	 */
 	EAttribute getPreCondition_Enabled();
 
 	/**
-	 * Returns the meta object for class '{@link alica.EntryPoint <em>Entry Point</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint <em>Entry Point</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Entry Point</em>'.
-	 * @see alica.EntryPoint
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint
 	 * @generated
 	 */
 	EClass getEntryPoint();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.EntryPoint#getTask <em>Task</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getTask <em>Task</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Task</em>'.
-	 * @see alica.EntryPoint#getTask()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getTask()
 	 * @see #getEntryPoint()
 	 * @generated
 	 */
 	EReference getEntryPoint_Task();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.EntryPoint#isSuccessRequired <em>Success Required</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#isSuccessRequired <em>Success Required</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Success Required</em>'.
-	 * @see alica.EntryPoint#isSuccessRequired()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#isSuccessRequired()
 	 * @see #getEntryPoint()
 	 * @generated
 	 */
 	EAttribute getEntryPoint_SuccessRequired();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.EntryPoint#getState <em>State</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getState <em>State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>State</em>'.
-	 * @see alica.EntryPoint#getState()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getState()
 	 * @see #getEntryPoint()
 	 * @generated
 	 */
 	EReference getEntryPoint_State();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.EntryPoint#getMinCardinality <em>Min Cardinality</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getMinCardinality <em>Min Cardinality</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Min Cardinality</em>'.
-	 * @see alica.EntryPoint#getMinCardinality()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getMinCardinality()
 	 * @see #getEntryPoint()
 	 * @generated
 	 */
 	EAttribute getEntryPoint_MinCardinality();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.EntryPoint#getMaxCardinality <em>Max Cardinality</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getMaxCardinality <em>Max Cardinality</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Max Cardinality</em>'.
-	 * @see alica.EntryPoint#getMaxCardinality()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getMaxCardinality()
 	 * @see #getEntryPoint()
 	 * @generated
 	 */
 	EAttribute getEntryPoint_MaxCardinality();
 
 	/**
-	 * Returns the meta object for the container reference '{@link alica.EntryPoint#getPlan <em>Plan</em>}'.
+	 * Returns the meta object for the container reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getPlan <em>Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the container reference '<em>Plan</em>'.
-	 * @see alica.EntryPoint#getPlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint#getPlan()
 	 * @see #getEntryPoint()
 	 * @generated
 	 */
 	EReference getEntryPoint_Plan();
 
 	/**
-	 * Returns the meta object for class '{@link alica.TerminalState <em>Terminal State</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.TerminalState <em>Terminal State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Terminal State</em>'.
-	 * @see alica.TerminalState
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TerminalState
 	 * @generated
 	 */
 	EClass getTerminalState();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link alica.TerminalState#getPostCondition <em>Post Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.TerminalState#getPostCondition <em>Post Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Post Condition</em>'.
-	 * @see alica.TerminalState#getPostCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TerminalState#getPostCondition()
 	 * @see #getTerminalState()
 	 * @generated
 	 */
 	EReference getTerminalState_PostCondition();
 
 	/**
-	 * Returns the meta object for class '{@link alica.SuccessState <em>Success State</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.SuccessState <em>Success State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Success State</em>'.
-	 * @see alica.SuccessState
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.SuccessState
 	 * @generated
 	 */
 	EClass getSuccessState();
 
 	/**
-	 * Returns the meta object for class '{@link alica.FailureState <em>Failure State</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.FailureState <em>Failure State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Failure State</em>'.
-	 * @see alica.FailureState
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.FailureState
 	 * @generated
 	 */
 	EClass getFailureState();
 
 	/**
-	 * Returns the meta object for class '{@link alica.AbstractPlan <em>Abstract Plan</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan <em>Abstract Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Abstract Plan</em>'.
-	 * @see alica.AbstractPlan
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan
 	 * @generated
 	 */
 	EClass getAbstractPlan();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.AbstractPlan#getDestinationPath <em>Destination Path</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getDestinationPath <em>Destination Path</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Destination Path</em>'.
-	 * @see alica.AbstractPlan#getDestinationPath()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getDestinationPath()
 	 * @see #getAbstractPlan()
 	 * @generated
 	 */
 	EAttribute getAbstractPlan_DestinationPath();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Behaviour <em>Behaviour</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour <em>Behaviour</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Behaviour</em>'.
-	 * @see alica.Behaviour
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Behaviour
 	 * @generated
 	 */
 	EClass getBehaviour();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link alica.Behaviour#getPreCondition <em>Pre Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getPreCondition <em>Pre Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Pre Condition</em>'.
-	 * @see alica.Behaviour#getPreCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getPreCondition()
 	 * @see #getBehaviour()
 	 * @generated
 	 */
 	EReference getBehaviour_PreCondition();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link alica.Behaviour#getRuntimeCondition <em>Runtime Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getRuntimeCondition <em>Runtime Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Runtime Condition</em>'.
-	 * @see alica.Behaviour#getRuntimeCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getRuntimeCondition()
 	 * @see #getBehaviour()
 	 * @generated
 	 */
 	EReference getBehaviour_RuntimeCondition();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link alica.Behaviour#getPostCondition <em>Post Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getPostCondition <em>Post Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Post Condition</em>'.
-	 * @see alica.Behaviour#getPostCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getPostCondition()
 	 * @see #getBehaviour()
 	 * @generated
 	 */
 	EReference getBehaviour_PostCondition();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Behaviour#getFrequency <em>Frequency</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getFrequency <em>Frequency</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Frequency</em>'.
-	 * @see alica.Behaviour#getFrequency()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getFrequency()
 	 * @see #getBehaviour()
 	 * @generated
 	 */
 	EAttribute getBehaviour_Frequency();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Behaviour#getVars <em>Vars</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getVars <em>Vars</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Vars</em>'.
-	 * @see alica.Behaviour#getVars()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getVars()
 	 * @see #getBehaviour()
 	 * @generated
 	 */
 	EReference getBehaviour_Vars();
 
 	/**
-	 * Returns the meta object for class '{@link alica.State <em>State</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.State <em>State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>State</em>'.
-	 * @see alica.State
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State
 	 * @generated
 	 */
 	EClass getState();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.State#getPlans <em>Plans</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.State#getPlans <em>Plans</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Plans</em>'.
-	 * @see alica.State#getPlans()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State#getPlans()
 	 * @see #getState()
 	 * @generated
 	 */
 	EReference getState_Plans();
 
 	/**
-	 * Returns the meta object for the container reference '{@link alica.State#getInPlan <em>In Plan</em>}'.
+	 * Returns the meta object for the container reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.State#getInPlan <em>In Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the container reference '<em>In Plan</em>'.
-	 * @see alica.State#getInPlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State#getInPlan()
 	 * @see #getState()
 	 * @generated
 	 */
 	EReference getState_InPlan();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.State#getParametrisation <em>Parametrisation</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.State#getParametrisation <em>Parametrisation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Parametrisation</em>'.
-	 * @see alica.State#getParametrisation()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State#getParametrisation()
 	 * @see #getState()
 	 * @generated
 	 */
 	EReference getState_Parametrisation();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.State#getInTransitions <em>In Transitions</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.State#getInTransitions <em>In Transitions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>In Transitions</em>'.
-	 * @see alica.State#getInTransitions()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State#getInTransitions()
 	 * @see #getState()
 	 * @generated
 	 */
 	EReference getState_InTransitions();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.State#getOutTransitions <em>Out Transitions</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.State#getOutTransitions <em>Out Transitions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Out Transitions</em>'.
-	 * @see alica.State#getOutTransitions()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State#getOutTransitions()
 	 * @see #getState()
 	 * @generated
 	 */
 	EReference getState_OutTransitions();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.State#getEntryPoint <em>Entry Point</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.State#getEntryPoint <em>Entry Point</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Entry Point</em>'.
-	 * @see alica.State#getEntryPoint()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State#getEntryPoint()
 	 * @see #getState()
 	 * @generated
 	 */
 	EReference getState_EntryPoint();
 
 	/**
-	 * Returns the meta object for the '{@link alica.State#ensureParametrisationConsistency() <em>Ensure Parametrisation Consistency</em>}' operation.
+	 * Returns the meta object for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.State#ensureParametrisationConsistency() <em>Ensure Parametrisation Consistency</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Ensure Parametrisation Consistency</em>' operation.
-	 * @see alica.State#ensureParametrisationConsistency()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State#ensureParametrisationConsistency()
 	 * @generated
 	 */
 	EOperation getState__EnsureParametrisationConsistency();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Plan <em>Plan</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan <em>Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Plan</em>'.
-	 * @see alica.Plan
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan
 	 * @generated
 	 */
 	EClass getPlan();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Plan#getPriority <em>Priority</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getPriority <em>Priority</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Priority</em>'.
-	 * @see alica.Plan#getPriority()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getPriority()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EAttribute getPlan_Priority();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Plan#getStates <em>States</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getStates <em>States</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>States</em>'.
-	 * @see alica.Plan#getStates()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getStates()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EReference getPlan_States();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Plan#getTransitions <em>Transitions</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getTransitions <em>Transitions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Transitions</em>'.
-	 * @see alica.Plan#getTransitions()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getTransitions()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EReference getPlan_Transitions();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Plan#getMinCardinality <em>Min Cardinality</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getMinCardinality <em>Min Cardinality</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Min Cardinality</em>'.
-	 * @see alica.Plan#getMinCardinality()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getMinCardinality()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EAttribute getPlan_MinCardinality();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Plan#getMaxCardinality <em>Max Cardinality</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getMaxCardinality <em>Max Cardinality</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Max Cardinality</em>'.
-	 * @see alica.Plan#getMaxCardinality()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getMaxCardinality()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EAttribute getPlan_MaxCardinality();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Plan#getSynchronisations <em>Synchronisations</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getSynchronisations <em>Synchronisations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Synchronisations</em>'.
-	 * @see alica.Plan#getSynchronisations()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getSynchronisations()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EReference getPlan_Synchronisations();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Plan#getEntryPoints <em>Entry Points</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getEntryPoints <em>Entry Points</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Entry Points</em>'.
-	 * @see alica.Plan#getEntryPoints()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getEntryPoints()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EReference getPlan_EntryPoints();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Plan#isMasterPlan <em>Master Plan</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#isMasterPlan <em>Master Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Master Plan</em>'.
-	 * @see alica.Plan#isMasterPlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#isMasterPlan()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EAttribute getPlan_MasterPlan();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Plan#getUtilityFunction <em>Utility Function</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getUtilityFunction <em>Utility Function</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Utility Function</em>'.
-	 * @see alica.Plan#getUtilityFunction()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getUtilityFunction()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EAttribute getPlan_UtilityFunction();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Plan#getUtilityThreshold <em>Utility Threshold</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getUtilityThreshold <em>Utility Threshold</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Utility Threshold</em>'.
-	 * @see alica.Plan#getUtilityThreshold()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getUtilityThreshold()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EAttribute getPlan_UtilityThreshold();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Plan#getVars <em>Vars</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getVars <em>Vars</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Vars</em>'.
-	 * @see alica.Plan#getVars()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getVars()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EReference getPlan_Vars();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link alica.Plan#getPreCondition <em>Pre Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getPreCondition <em>Pre Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Pre Condition</em>'.
-	 * @see alica.Plan#getPreCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getPreCondition()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EReference getPlan_PreCondition();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link alica.Plan#getRuntimeCondition <em>Runtime Condition</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#getRuntimeCondition <em>Runtime Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Runtime Condition</em>'.
-	 * @see alica.Plan#getRuntimeCondition()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#getRuntimeCondition()
 	 * @see #getPlan()
 	 * @generated
 	 */
 	EReference getPlan_RuntimeCondition();
 
 	/**
-	 * Returns the meta object for the '{@link alica.Plan#calculateCardinalities() <em>Calculate Cardinalities</em>}' operation.
+	 * Returns the meta object for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#calculateCardinalities() <em>Calculate Cardinalities</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Calculate Cardinalities</em>' operation.
-	 * @see alica.Plan#calculateCardinalities()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#calculateCardinalities()
 	 * @generated
 	 */
 	EOperation getPlan__CalculateCardinalities();
 
 	/**
-	 * Returns the meta object for the '{@link alica.Plan#ensureParametrisationConsistency() <em>Ensure Parametrisation Consistency</em>}' operation.
+	 * Returns the meta object for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan#ensureParametrisationConsistency() <em>Ensure Parametrisation Consistency</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Ensure Parametrisation Consistency</em>' operation.
-	 * @see alica.Plan#ensureParametrisationConsistency()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan#ensureParametrisationConsistency()
 	 * @generated
 	 */
 	EOperation getPlan__EnsureParametrisationConsistency();
 
 	/**
-	 * Returns the meta object for class '{@link alica.PlanType <em>Plan Type</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanType <em>Plan Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Plan Type</em>'.
-	 * @see alica.PlanType
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanType
 	 * @generated
 	 */
 	EClass getPlanType();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.PlanType#getParametrisation <em>Parametrisation</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanType#getParametrisation <em>Parametrisation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Parametrisation</em>'.
-	 * @see alica.PlanType#getParametrisation()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanType#getParametrisation()
 	 * @see #getPlanType()
 	 * @generated
 	 */
 	EReference getPlanType_Parametrisation();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.PlanType#getPlans <em>Plans</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanType#getPlans <em>Plans</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Plans</em>'.
-	 * @see alica.PlanType#getPlans()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanType#getPlans()
 	 * @see #getPlanType()
 	 * @generated
 	 */
 	EReference getPlanType_Plans();
 
 	/**
-	 * Returns the meta object for the '{@link alica.PlanType#ensureParametrisationConsistency() <em>Ensure Parametrisation Consistency</em>}' operation.
+	 * Returns the meta object for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanType#ensureParametrisationConsistency() <em>Ensure Parametrisation Consistency</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Ensure Parametrisation Consistency</em>' operation.
-	 * @see alica.PlanType#ensureParametrisationConsistency()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanType#ensureParametrisationConsistency()
 	 * @generated
 	 */
 	EOperation getPlanType__EnsureParametrisationConsistency();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Rating <em>Rating</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Rating <em>Rating</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Rating</em>'.
-	 * @see alica.Rating
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Rating
 	 * @generated
 	 */
 	EClass getRating();
 
 	/**
-	 * Returns the meta object for class '{@link alica.PostCondition <em>Post Condition</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PostCondition <em>Post Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Post Condition</em>'.
-	 * @see alica.PostCondition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PostCondition
 	 * @generated
 	 */
 	EClass getPostCondition();
 
 	/**
-	 * Returns the meta object for class '{@link alica.RuntimeCondition <em>Runtime Condition</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition <em>Runtime Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Runtime Condition</em>'.
-	 * @see alica.RuntimeCondition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition
 	 * @generated
 	 */
 	EClass getRuntimeCondition();
 
 	/**
-	 * Returns the meta object for class '{@link alica.PlanElement <em>Plan Element</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanElement <em>Plan Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Plan Element</em>'.
-	 * @see alica.PlanElement
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanElement
 	 * @generated
 	 */
 	EClass getPlanElement();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.PlanElement#getId <em>Id</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanElement#getId <em>Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Id</em>'.
-	 * @see alica.PlanElement#getId()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanElement#getId()
 	 * @see #getPlanElement()
 	 * @generated
 	 */
 	EAttribute getPlanElement_Id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.PlanElement#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanElement#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see alica.PlanElement#getName()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanElement#getName()
 	 * @see #getPlanElement()
 	 * @generated
 	 */
 	EAttribute getPlanElement_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.PlanElement#getComment <em>Comment</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanElement#getComment <em>Comment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Comment</em>'.
-	 * @see alica.PlanElement#getComment()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanElement#getComment()
 	 * @see #getPlanElement()
 	 * @generated
 	 */
 	EAttribute getPlanElement_Comment();
 
 	/**
-	 * Returns the meta object for the '{@link alica.PlanElement#generateID() <em>Generate ID</em>}' operation.
+	 * Returns the meta object for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanElement#generateID() <em>Generate ID</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Generate ID</em>' operation.
-	 * @see alica.PlanElement#generateID()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanElement#generateID()
 	 * @generated
 	 */
 	EOperation getPlanElement__GenerateID();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Task <em>Task</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Task <em>Task</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Task</em>'.
-	 * @see alica.Task
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Task
 	 * @generated
 	 */
 	EClass getTask();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Task#getDescription <em>Description</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Task#getDescription <em>Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Description</em>'.
-	 * @see alica.Task#getDescription()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Task#getDescription()
 	 * @see #getTask()
 	 * @generated
 	 */
@@ -5340,64 +5292,64 @@ public interface AlicaPackage extends EPackage {
 	EAttribute getEStringToEStringMapEntry_Value();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Role <em>Role</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Role <em>Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Role</em>'.
-	 * @see alica.Role
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Role
 	 * @generated
 	 */
 	EClass getRole();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Role#getCharacteristics <em>Characteristics</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Role#getCharacteristics <em>Characteristics</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Characteristics</em>'.
-	 * @see alica.Role#getCharacteristics()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Role#getCharacteristics()
 	 * @see #getRole()
 	 * @generated
 	 */
 	EReference getRole_Characteristics();
 
 	/**
-	 * Returns the meta object for class '{@link alica.RoleSet <em>Role Set</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet <em>Role Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Role Set</em>'.
-	 * @see alica.RoleSet
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleSet
 	 * @generated
 	 */
 	EClass getRoleSet();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Usable With Plan ID</em>'.
-	 * @see alica.RoleSet#getUsableWithPlanID()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getUsableWithPlanID()
 	 * @see #getRoleSet()
 	 * @generated
 	 */
 	EAttribute getRoleSet_UsableWithPlanID();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.RoleSet#isDefault <em>Default</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#isDefault <em>Default</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Default</em>'.
-	 * @see alica.RoleSet#isDefault()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#isDefault()
 	 * @see #getRoleSet()
 	 * @generated
 	 */
 	EAttribute getRoleSet_Default();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.RoleSet#getMappings <em>Mappings</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getMappings <em>Mappings</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Mappings</em>'.
-	 * @see alica.RoleSet#getMappings()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getMappings()
 	 * @see #getRoleSet()
 	 * @generated
 	 */
@@ -5438,833 +5390,833 @@ public interface AlicaPackage extends EPackage {
 	EAttribute getELongToDoubleMapEntry_Value();
 
 	/**
-	 * Returns the meta object for class '{@link alica.RoleDefinitionSet <em>Role Definition Set</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet <em>Role Definition Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Role Definition Set</em>'.
-	 * @see alica.RoleDefinitionSet
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet
 	 * @generated
 	 */
 	EClass getRoleDefinitionSet();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.RoleDefinitionSet#getRoles <em>Roles</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet#getRoles <em>Roles</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Roles</em>'.
-	 * @see alica.RoleDefinitionSet#getRoles()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet#getRoles()
 	 * @see #getRoleDefinitionSet()
 	 * @generated
 	 */
 	EReference getRoleDefinitionSet_Roles();
 
 	/**
-	 * Returns the meta object for class '{@link alica.RoleTaskMapping <em>Role Task Mapping</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping <em>Role Task Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Role Task Mapping</em>'.
-	 * @see alica.RoleTaskMapping
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping
 	 * @generated
 	 */
 	EClass getRoleTaskMapping();
 
 	/**
-	 * Returns the meta object for the map '{@link alica.RoleTaskMapping#getTaskPriorities <em>Task Priorities</em>}'.
+	 * Returns the meta object for the map '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping#getTaskPriorities <em>Task Priorities</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the map '<em>Task Priorities</em>'.
-	 * @see alica.RoleTaskMapping#getTaskPriorities()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping#getTaskPriorities()
 	 * @see #getRoleTaskMapping()
 	 * @generated
 	 */
 	EReference getRoleTaskMapping_TaskPriorities();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.RoleTaskMapping#getRole <em>Role</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping#getRole <em>Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Role</em>'.
-	 * @see alica.RoleTaskMapping#getRole()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping#getRole()
 	 * @see #getRoleTaskMapping()
 	 * @generated
 	 */
 	EReference getRoleTaskMapping_Role();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Characteristic <em>Characteristic</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic <em>Characteristic</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Characteristic</em>'.
-	 * @see alica.Characteristic
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Characteristic
 	 * @generated
 	 */
 	EClass getCharacteristic();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Characteristic#getWeight <em>Weight</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getWeight <em>Weight</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Weight</em>'.
-	 * @see alica.Characteristic#getWeight()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getWeight()
 	 * @see #getCharacteristic()
 	 * @generated
 	 */
 	EAttribute getCharacteristic_Weight();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Characteristic#getCapability <em>Capability</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getCapability <em>Capability</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Capability</em>'.
-	 * @see alica.Characteristic#getCapability()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getCapability()
 	 * @see #getCharacteristic()
 	 * @generated
 	 */
 	EReference getCharacteristic_Capability();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Characteristic#getValue <em>Value</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getValue <em>Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Value</em>'.
-	 * @see alica.Characteristic#getValue()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Characteristic#getValue()
 	 * @see #getCharacteristic()
 	 * @generated
 	 */
 	EReference getCharacteristic_Value();
 
 	/**
-	 * Returns the meta object for class '{@link alica.TaskGraph <em>Task Graph</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph <em>Task Graph</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Task Graph</em>'.
-	 * @see alica.TaskGraph
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph
 	 * @generated
 	 */
 	EClass getTaskGraph();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.TaskGraph#getNodes <em>Nodes</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph#getNodes <em>Nodes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Nodes</em>'.
-	 * @see alica.TaskGraph#getNodes()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph#getNodes()
 	 * @see #getTaskGraph()
 	 * @generated
 	 */
 	EReference getTaskGraph_Nodes();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.TaskGraph#getEdges <em>Edges</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph#getEdges <em>Edges</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Edges</em>'.
-	 * @see alica.TaskGraph#getEdges()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph#getEdges()
 	 * @see #getTaskGraph()
 	 * @generated
 	 */
 	EReference getTaskGraph_Edges();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Edge <em>Edge</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Edge <em>Edge</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Edge</em>'.
-	 * @see alica.Edge
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Edge
 	 * @generated
 	 */
 	EClass getEdge();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Edge#getFrom <em>From</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Edge#getFrom <em>From</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>From</em>'.
-	 * @see alica.Edge#getFrom()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Edge#getFrom()
 	 * @see #getEdge()
 	 * @generated
 	 */
 	EReference getEdge_From();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Edge#getTo <em>To</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Edge#getTo <em>To</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>To</em>'.
-	 * @see alica.Edge#getTo()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Edge#getTo()
 	 * @see #getEdge()
 	 * @generated
 	 */
 	EReference getEdge_To();
 
 	/**
-	 * Returns the meta object for class '{@link alica.TaskWrapper <em>Task Wrapper</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper <em>Task Wrapper</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Task Wrapper</em>'.
-	 * @see alica.TaskWrapper
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper
 	 * @generated
 	 */
 	EClass getTaskWrapper();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.TaskWrapper#getTask <em>Task</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper#getTask <em>Task</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Task</em>'.
-	 * @see alica.TaskWrapper#getTask()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper#getTask()
 	 * @see #getTaskWrapper()
 	 * @generated
 	 */
 	EReference getTaskWrapper_Task();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.TaskWrapper#getMappings <em>Mappings</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper#getMappings <em>Mappings</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Mappings</em>'.
-	 * @see alica.TaskWrapper#getMappings()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper#getMappings()
 	 * @see #getTaskWrapper()
 	 * @generated
 	 */
 	EReference getTaskWrapper_Mappings();
 
 	/**
-	 * Returns the meta object for class '{@link alica.InternalRoleTaskMapping <em>Internal Role Task Mapping</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping <em>Internal Role Task Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Internal Role Task Mapping</em>'.
-	 * @see alica.InternalRoleTaskMapping
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping
 	 * @generated
 	 */
 	EClass getInternalRoleTaskMapping();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.InternalRoleTaskMapping#getRole <em>Role</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping#getRole <em>Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Role</em>'.
-	 * @see alica.InternalRoleTaskMapping#getRole()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping#getRole()
 	 * @see #getInternalRoleTaskMapping()
 	 * @generated
 	 */
 	EReference getInternalRoleTaskMapping_Role();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.InternalRoleTaskMapping#getPriority <em>Priority</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping#getPriority <em>Priority</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Priority</em>'.
-	 * @see alica.InternalRoleTaskMapping#getPriority()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping#getPriority()
 	 * @see #getInternalRoleTaskMapping()
 	 * @generated
 	 */
 	EAttribute getInternalRoleTaskMapping_Priority();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Node <em>Node</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Node <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Node</em>'.
-	 * @see alica.Node
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Node
 	 * @generated
 	 */
 	EClass getNode();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.Node#getInEdge <em>In Edge</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Node#getInEdge <em>In Edge</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>In Edge</em>'.
-	 * @see alica.Node#getInEdge()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Node#getInEdge()
 	 * @see #getNode()
 	 * @generated
 	 */
 	EReference getNode_InEdge();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.Node#getOutEdge <em>Out Edge</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Node#getOutEdge <em>Out Edge</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Out Edge</em>'.
-	 * @see alica.Node#getOutEdge()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Node#getOutEdge()
 	 * @see #getNode()
 	 * @generated
 	 */
 	EReference getNode_OutEdge();
 
 	/**
-	 * Returns the meta object for class '{@link alica.TaskRepository <em>Task Repository</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository <em>Task Repository</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Task Repository</em>'.
-	 * @see alica.TaskRepository
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository
 	 * @generated
 	 */
 	EClass getTaskRepository();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.TaskRepository#getTasks <em>Tasks</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository#getTasks <em>Tasks</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Tasks</em>'.
-	 * @see alica.TaskRepository#getTasks()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository#getTasks()
 	 * @see #getTaskRepository()
 	 * @generated
 	 */
 	EReference getTaskRepository_Tasks();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.TaskRepository#getDefaultTask <em>Default Task</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository#getDefaultTask <em>Default Task</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Default Task</em>'.
-	 * @see alica.TaskRepository#getDefaultTask()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository#getDefaultTask()
 	 * @see #getTaskRepository()
 	 * @generated
 	 */
 	EReference getTaskRepository_DefaultTask();
 
 	/**
-	 * Returns the meta object for the '{@link alica.TaskRepository#createDefaultTask() <em>Create Default Task</em>}' operation.
+	 * Returns the meta object for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository#createDefaultTask() <em>Create Default Task</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Create Default Task</em>' operation.
-	 * @see alica.TaskRepository#createDefaultTask()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository#createDefaultTask()
 	 * @generated
 	 */
 	EOperation getTaskRepository__CreateDefaultTask();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Synchronisation <em>Synchronisation</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation <em>Synchronisation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Synchronisation</em>'.
-	 * @see alica.Synchronisation
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation
 	 * @generated
 	 */
 	EClass getSynchronisation();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.Synchronisation#getSynchedTransitions <em>Synched Transitions</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation#getSynchedTransitions <em>Synched Transitions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Synched Transitions</em>'.
-	 * @see alica.Synchronisation#getSynchedTransitions()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation#getSynchedTransitions()
 	 * @see #getSynchronisation()
 	 * @generated
 	 */
 	EReference getSynchronisation_SynchedTransitions();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Synchronisation#getTalkTimeout <em>Talk Timeout</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation#getTalkTimeout <em>Talk Timeout</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Talk Timeout</em>'.
-	 * @see alica.Synchronisation#getTalkTimeout()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation#getTalkTimeout()
 	 * @see #getSynchronisation()
 	 * @generated
 	 */
 	EAttribute getSynchronisation_TalkTimeout();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Synchronisation#getSyncTimeout <em>Sync Timeout</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation#getSyncTimeout <em>Sync Timeout</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Sync Timeout</em>'.
-	 * @see alica.Synchronisation#getSyncTimeout()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation#getSyncTimeout()
 	 * @see #getSynchronisation()
 	 * @generated
 	 */
 	EAttribute getSynchronisation_SyncTimeout();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Synchronisation#isFailOnSyncTimeOut <em>Fail On Sync Time Out</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation#isFailOnSyncTimeOut <em>Fail On Sync Time Out</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Fail On Sync Time Out</em>'.
-	 * @see alica.Synchronisation#isFailOnSyncTimeOut()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation#isFailOnSyncTimeOut()
 	 * @see #getSynchronisation()
 	 * @generated
 	 */
 	EAttribute getSynchronisation_FailOnSyncTimeOut();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Variable <em>Variable</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Variable <em>Variable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Variable</em>'.
-	 * @see alica.Variable
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Variable
 	 * @generated
 	 */
 	EClass getVariable();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Variable#getType <em>Type</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Variable#getType <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see alica.Variable#getType()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Variable#getType()
 	 * @see #getVariable()
 	 * @generated
 	 */
 	EAttribute getVariable_Type();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Parametrisation <em>Parametrisation</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation <em>Parametrisation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Parametrisation</em>'.
-	 * @see alica.Parametrisation
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation
 	 * @generated
 	 */
 	EClass getParametrisation();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Parametrisation#getSubplan <em>Subplan</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getSubplan <em>Subplan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Subplan</em>'.
-	 * @see alica.Parametrisation#getSubplan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getSubplan()
 	 * @see #getParametrisation()
 	 * @generated
 	 */
 	EReference getParametrisation_Subplan();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Parametrisation#getSubvar <em>Subvar</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getSubvar <em>Subvar</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Subvar</em>'.
-	 * @see alica.Parametrisation#getSubvar()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getSubvar()
 	 * @see #getParametrisation()
 	 * @generated
 	 */
 	EReference getParametrisation_Subvar();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Parametrisation#getVar <em>Var</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getVar <em>Var</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Var</em>'.
-	 * @see alica.Parametrisation#getVar()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation#getVar()
 	 * @see #getParametrisation()
 	 * @generated
 	 */
 	EReference getParametrisation_Var();
 
 	/**
-	 * Returns the meta object for class '{@link alica.AnnotatedPlan <em>Annotated Plan</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan <em>Annotated Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Annotated Plan</em>'.
-	 * @see alica.AnnotatedPlan
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan
 	 * @generated
 	 */
 	EClass getAnnotatedPlan();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.AnnotatedPlan#getPlan <em>Plan</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan#getPlan <em>Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Plan</em>'.
-	 * @see alica.AnnotatedPlan#getPlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan#getPlan()
 	 * @see #getAnnotatedPlan()
 	 * @generated
 	 */
 	EReference getAnnotatedPlan_Plan();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.AnnotatedPlan#isActivated <em>Activated</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan#isActivated <em>Activated</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Activated</em>'.
-	 * @see alica.AnnotatedPlan#isActivated()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan#isActivated()
 	 * @see #getAnnotatedPlan()
 	 * @generated
 	 */
 	EAttribute getAnnotatedPlan_Activated();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Quantifier <em>Quantifier</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier <em>Quantifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Quantifier</em>'.
-	 * @see alica.Quantifier
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Quantifier
 	 * @generated
 	 */
 	EClass getQuantifier();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.Quantifier#getScope <em>Scope</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getScope <em>Scope</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Scope</em>'.
-	 * @see alica.Quantifier#getScope()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getScope()
 	 * @see #getQuantifier()
 	 * @generated
 	 */
 	EReference getQuantifier_Scope();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link alica.Quantifier#getSorts <em>Sorts</em>}'.
+	 * Returns the meta object for the attribute list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getSorts <em>Sorts</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute list '<em>Sorts</em>'.
-	 * @see alica.Quantifier#getSorts()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Quantifier#getSorts()
 	 * @see #getQuantifier()
 	 * @generated
 	 */
 	EAttribute getQuantifier_Sorts();
 
 	/**
-	 * Returns the meta object for class '{@link alica.ForallAgents <em>Forall Agents</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ForallAgents <em>Forall Agents</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Forall Agents</em>'.
-	 * @see alica.ForallAgents
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ForallAgents
 	 * @generated
 	 */
 	EClass getForallAgents();
 
 	/**
-	 * Returns the meta object for class '{@link alica.IInhabitable <em>IInhabitable</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable <em>IInhabitable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>IInhabitable</em>'.
-	 * @see alica.IInhabitable
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable
 	 * @generated
 	 */
 	EClass getIInhabitable();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Capability <em>Capability</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Capability <em>Capability</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Capability</em>'.
-	 * @see alica.Capability
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Capability
 	 * @generated
 	 */
 	EClass getCapability();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Capability#getCapValues <em>Cap Values</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Capability#getCapValues <em>Cap Values</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Cap Values</em>'.
-	 * @see alica.Capability#getCapValues()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Capability#getCapValues()
 	 * @see #getCapability()
 	 * @generated
 	 */
 	EReference getCapability_CapValues();
 
 	/**
-	 * Returns the meta object for class '{@link alica.CapValue <em>Cap Value</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.CapValue <em>Cap Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Cap Value</em>'.
-	 * @see alica.CapValue
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.CapValue
 	 * @generated
 	 */
 	EClass getCapValue();
 
 	/**
-	 * Returns the meta object for class '{@link alica.CapabilityDefinitionSet <em>Capability Definition Set</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet <em>Capability Definition Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Capability Definition Set</em>'.
-	 * @see alica.CapabilityDefinitionSet
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet
 	 * @generated
 	 */
 	EClass getCapabilityDefinitionSet();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.CapabilityDefinitionSet#getCapabilities <em>Capabilities</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet#getCapabilities <em>Capabilities</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Capabilities</em>'.
-	 * @see alica.CapabilityDefinitionSet#getCapabilities()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet#getCapabilities()
 	 * @see #getCapabilityDefinitionSet()
 	 * @generated
 	 */
 	EReference getCapabilityDefinitionSet_Capabilities();
 
 	/**
-	 * Returns the meta object for class '{@link alica.PlanningProblem <em>Planning Problem</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem <em>Planning Problem</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Planning Problem</em>'.
-	 * @see alica.PlanningProblem
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem
 	 * @generated
 	 */
 	EClass getPlanningProblem();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.PlanningProblem#getPlans <em>Plans</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getPlans <em>Plans</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Plans</em>'.
-	 * @see alica.PlanningProblem#getPlans()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getPlans()
 	 * @see #getPlanningProblem()
 	 * @generated
 	 */
 	EReference getPlanningProblem_Plans();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.PlanningProblem#getPlanner <em>Planner</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getPlanner <em>Planner</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Planner</em>'.
-	 * @see alica.PlanningProblem#getPlanner()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getPlanner()
 	 * @see #getPlanningProblem()
 	 * @generated
 	 */
 	EReference getPlanningProblem_Planner();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.PlanningProblem#getAlternativePlan <em>Alternative Plan</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getAlternativePlan <em>Alternative Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Alternative Plan</em>'.
-	 * @see alica.PlanningProblem#getAlternativePlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getAlternativePlan()
 	 * @see #getPlanningProblem()
 	 * @generated
 	 */
 	EReference getPlanningProblem_AlternativePlan();
 
 	/**
-	 * Returns the meta object for the reference '{@link alica.PlanningProblem#getWaitPlan <em>Wait Plan</em>}'.
+	 * Returns the meta object for the reference '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getWaitPlan <em>Wait Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Wait Plan</em>'.
-	 * @see alica.PlanningProblem#getWaitPlan()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getWaitPlan()
 	 * @see #getPlanningProblem()
 	 * @generated
 	 */
 	EReference getPlanningProblem_WaitPlan();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.PlanningProblem#getUpdateRate <em>Update Rate</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getUpdateRate <em>Update Rate</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Update Rate</em>'.
-	 * @see alica.PlanningProblem#getUpdateRate()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getUpdateRate()
 	 * @see #getPlanningProblem()
 	 * @generated
 	 */
 	EAttribute getPlanningProblem_UpdateRate();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.PlanningProblem#isDistributeProblem <em>Distribute Problem</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#isDistributeProblem <em>Distribute Problem</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Distribute Problem</em>'.
-	 * @see alica.PlanningProblem#isDistributeProblem()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#isDistributeProblem()
 	 * @see #getPlanningProblem()
 	 * @generated
 	 */
 	EAttribute getPlanningProblem_DistributeProblem();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.PlanningProblem#getPlanningType <em>Planning Type</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getPlanningType <em>Planning Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Planning Type</em>'.
-	 * @see alica.PlanningProblem#getPlanningType()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getPlanningType()
 	 * @see #getPlanningProblem()
 	 * @generated
 	 */
 	EAttribute getPlanningProblem_PlanningType();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.PlanningProblem#getRequirements <em>Requirements</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getRequirements <em>Requirements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Requirements</em>'.
-	 * @see alica.PlanningProblem#getRequirements()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getRequirements()
 	 * @see #getPlanningProblem()
 	 * @generated
 	 */
 	EAttribute getPlanningProblem_Requirements();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.PlanningProblem#getPlannerParams <em>Planner Params</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getPlannerParams <em>Planner Params</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Planner Params</em>'.
-	 * @see alica.PlanningProblem#getPlannerParams()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem#getPlannerParams()
 	 * @see #getPlanningProblem()
 	 * @generated
 	 */
 	EAttribute getPlanningProblem_PlannerParams();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Planner <em>Planner</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planner <em>Planner</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Planner</em>'.
-	 * @see alica.Planner
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planner
 	 * @generated
 	 */
 	EClass getPlanner();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Planner#getType <em>Type</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planner#getType <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see alica.Planner#getType()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planner#getType()
 	 * @see #getPlanner()
 	 * @generated
 	 */
 	EAttribute getPlanner_Type();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Planner#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planner#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see alica.Planner#getName()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planner#getName()
 	 * @see #getPlanner()
 	 * @generated
 	 */
 	EAttribute getPlanner_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Planner#getParameters <em>Parameters</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planner#getParameters <em>Parameters</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Parameters</em>'.
-	 * @see alica.Planner#getParameters()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planner#getParameters()
 	 * @see #getPlanner()
 	 * @generated
 	 */
 	EAttribute getPlanner_Parameters();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Planner#getCommand <em>Command</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planner#getCommand <em>Command</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Command</em>'.
-	 * @see alica.Planner#getCommand()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planner#getCommand()
 	 * @see #getPlanner()
 	 * @generated
 	 */
 	EAttribute getPlanner_Command();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Fluent <em>Fluent</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Fluent <em>Fluent</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Fluent</em>'.
-	 * @see alica.Fluent
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Fluent
 	 * @generated
 	 */
 	EClass getFluent();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Fluent#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Fluent#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see alica.Fluent#getName()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Fluent#getName()
 	 * @see #getFluent()
 	 * @generated
 	 */
 	EAttribute getFluent_Name();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Fluent#getFormula <em>Formula</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Fluent#getFormula <em>Formula</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Formula</em>'.
-	 * @see alica.Fluent#getFormula()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Fluent#getFormula()
 	 * @see #getFluent()
 	 * @generated
 	 */
 	EReference getFluent_Formula();
 
 	/**
-	 * Returns the meta object for class '{@link alica.DomainDescription <em>Domain Description</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription <em>Domain Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Domain Description</em>'.
-	 * @see alica.DomainDescription
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription
 	 * @generated
 	 */
 	EClass getDomainDescription();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.DomainDescription#getFluents <em>Fluents</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription#getFluents <em>Fluents</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Fluents</em>'.
-	 * @see alica.DomainDescription#getFluents()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription#getFluents()
 	 * @see #getDomainDescription()
 	 * @generated
 	 */
 	EReference getDomainDescription_Fluents();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link alica.DomainDescription#getTypes <em>Types</em>}'.
+	 * Returns the meta object for the attribute list '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription#getTypes <em>Types</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute list '<em>Types</em>'.
-	 * @see alica.DomainDescription#getTypes()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription#getTypes()
 	 * @see #getDomainDescription()
 	 * @generated
 	 */
 	EAttribute getDomainDescription_Types();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.DomainDescription#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see alica.DomainDescription#getName()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription#getName()
 	 * @see #getDomainDescription()
 	 * @generated
 	 */
 	EAttribute getDomainDescription_Name();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.DomainDescription#getConstants <em>Constants</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription#getConstants <em>Constants</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Constants</em>'.
-	 * @see alica.DomainDescription#getConstants()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription#getConstants()
 	 * @see #getDomainDescription()
 	 * @generated
 	 */
 	EReference getDomainDescription_Constants();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Planners <em>Planners</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planners <em>Planners</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Planners</em>'.
-	 * @see alica.Planners
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planners
 	 * @generated
 	 */
 	EClass getPlanners();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link alica.Planners#getPlanners <em>Planners</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planners#getPlanners <em>Planners</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Planners</em>'.
-	 * @see alica.Planners#getPlanners()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planners#getPlanners()
 	 * @see #getPlanners()
 	 * @generated
 	 */
 	EReference getPlanners_Planners();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Planners#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planners#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see alica.Planners#getName()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planners#getName()
 	 * @see #getPlanners()
 	 * @generated
 	 */
@@ -6305,212 +6257,212 @@ public interface AlicaPackage extends EPackage {
 	EAttribute getEStringToEObjectMapEntry_Value();
 
 	/**
-	 * Returns the meta object for class '{@link alica.FluentParameters <em>Fluent Parameters</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters <em>Fluent Parameters</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Fluent Parameters</em>'.
-	 * @see alica.FluentParameters
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters
 	 * @generated
 	 */
 	EClass getFluentParameters();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.FluentParameters#getParameter <em>Parameter</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters#getParameter <em>Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Parameter</em>'.
-	 * @see alica.FluentParameters#getParameter()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters#getParameter()
 	 * @see #getFluentParameters()
 	 * @generated
 	 */
 	EAttribute getFluentParameters_Parameter();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.FluentParameters#getType <em>Type</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters#getType <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see alica.FluentParameters#getType()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters#getType()
 	 * @see #getFluentParameters()
 	 * @generated
 	 */
 	EAttribute getFluentParameters_Type();
 
 	/**
-	 * Returns the meta object for class '{@link alica.Constant <em>Constant</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant <em>Constant</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Constant</em>'.
-	 * @see alica.Constant
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Constant
 	 * @generated
 	 */
 	EClass getConstant();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Constant#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see alica.Constant#getName()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Constant#getName()
 	 * @see #getConstant()
 	 * @generated
 	 */
 	EAttribute getConstant_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link alica.Constant#getType <em>Type</em>}'.
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant#getType <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see alica.Constant#getType()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Constant#getType()
 	 * @see #getConstant()
 	 * @generated
 	 */
 	EAttribute getConstant_Type();
 
 	/**
-	 * Returns the meta object for class '{@link alica.BehaviourCreator <em>Behaviour Creator</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator <em>Behaviour Creator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Behaviour Creator</em>'.
-	 * @see alica.BehaviourCreator
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator
 	 * @generated
 	 */
 	EClass getBehaviourCreator();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.BehaviourCreator#getBehaviours <em>Behaviours</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator#getBehaviours <em>Behaviours</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Behaviours</em>'.
-	 * @see alica.BehaviourCreator#getBehaviours()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator#getBehaviours()
 	 * @see #getBehaviourCreator()
 	 * @generated
 	 */
 	EReference getBehaviourCreator_Behaviours();
 
 	/**
-	 * Returns the meta object for class '{@link alica.ConditionCreator <em>Condition Creator</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator <em>Condition Creator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Condition Creator</em>'.
-	 * @see alica.ConditionCreator
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator
 	 * @generated
 	 */
 	EClass getConditionCreator();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.ConditionCreator#getConditions <em>Conditions</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator#getConditions <em>Conditions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Conditions</em>'.
-	 * @see alica.ConditionCreator#getConditions()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator#getConditions()
 	 * @see #getConditionCreator()
 	 * @generated
 	 */
 	EReference getConditionCreator_Conditions();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.ConditionCreator#getPlans <em>Plans</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator#getPlans <em>Plans</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Plans</em>'.
-	 * @see alica.ConditionCreator#getPlans()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator#getPlans()
 	 * @see #getConditionCreator()
 	 * @generated
 	 */
 	EReference getConditionCreator_Plans();
 
 	/**
-	 * Returns the meta object for class '{@link alica.UtilityFunctionCreator <em>Utility Function Creator</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator <em>Utility Function Creator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Utility Function Creator</em>'.
-	 * @see alica.UtilityFunctionCreator
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator
 	 * @generated
 	 */
 	EClass getUtilityFunctionCreator();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.UtilityFunctionCreator#getConditions <em>Conditions</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getConditions <em>Conditions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Conditions</em>'.
-	 * @see alica.UtilityFunctionCreator#getConditions()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getConditions()
 	 * @see #getUtilityFunctionCreator()
 	 * @generated
 	 */
 	EReference getUtilityFunctionCreator_Conditions();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.UtilityFunctionCreator#getPlans <em>Plans</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getPlans <em>Plans</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Plans</em>'.
-	 * @see alica.UtilityFunctionCreator#getPlans()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getPlans()
 	 * @see #getUtilityFunctionCreator()
 	 * @generated
 	 */
 	EReference getUtilityFunctionCreator_Plans();
 
 	/**
-	 * Returns the meta object for class '{@link alica.ConstraintCreator <em>Constraint Creator</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator <em>Constraint Creator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Constraint Creator</em>'.
-	 * @see alica.ConstraintCreator
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator
 	 * @generated
 	 */
 	EClass getConstraintCreator();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.ConstraintCreator#getConditions <em>Conditions</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator#getConditions <em>Conditions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Conditions</em>'.
-	 * @see alica.ConstraintCreator#getConditions()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator#getConditions()
 	 * @see #getConstraintCreator()
 	 * @generated
 	 */
 	EReference getConstraintCreator_Conditions();
 
 	/**
-	 * Returns the meta object for the reference list '{@link alica.ConstraintCreator#getPlans <em>Plans</em>}'.
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator#getPlans <em>Plans</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Plans</em>'.
-	 * @see alica.ConstraintCreator#getPlans()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator#getPlans()
 	 * @see #getConstraintCreator()
 	 * @generated
 	 */
 	EReference getConstraintCreator_Plans();
 
 	/**
-	 * Returns the meta object for class '{@link alica.DomainBehaviour <em>Domain Behaviour</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour <em>Domain Behaviour</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Domain Behaviour</em>'.
-	 * @see alica.DomainBehaviour
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour
 	 * @generated
 	 */
 	EClass getDomainBehaviour();
 
 	/**
-	 * Returns the meta object for class '{@link alica.DomainCondition <em>Domain Condition</em>}'.
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition <em>Domain Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Domain Condition</em>'.
-	 * @see alica.DomainCondition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition
 	 * @generated
 	 */
 	EClass getDomainCondition();
 
 	/**
-	 * Returns the meta object for enum '{@link alica.PlanningType <em>Planning Type</em>}'.
+	 * Returns the meta object for enum '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningType <em>Planning Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for enum '<em>Planning Type</em>'.
-	 * @see alica.PlanningType
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningType
 	 * @generated
 	 */
 	EEnum getPlanningType();
@@ -6539,11 +6491,11 @@ public interface AlicaPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link alica.impl.TransitionImpl <em>Transition</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl <em>Transition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.TransitionImpl
-		 * @see alica.impl.AlicaPackageImpl#getTransition()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTransition()
 		 * @generated
 		 */
 		EClass TRANSITION = eINSTANCE.getTransition();
@@ -6589,11 +6541,11 @@ public interface AlicaPackage extends EPackage {
 		EReference TRANSITION__SYNCHRONISATION = eINSTANCE.getTransition_Synchronisation();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.ConditionImpl <em>Condition</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl <em>Condition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.ConditionImpl
-		 * @see alica.impl.AlicaPackageImpl#getCondition()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCondition()
 		 * @generated
 		 */
 		EClass CONDITION = eINSTANCE.getCondition();
@@ -6605,14 +6557,6 @@ public interface AlicaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CONDITION__CONDITION_STRING = eINSTANCE.getCondition_ConditionString();
-
-		/**
-		 * The meta object literal for the '<em><b>Abstract Plan</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference CONDITION__ABSTRACT_PLAN = eINSTANCE.getCondition_AbstractPlan();
 
 		/**
 		 * The meta object literal for the '<em><b>Vars</b></em>' reference list feature.
@@ -6655,11 +6599,11 @@ public interface AlicaPackage extends EPackage {
 		EOperation CONDITION___ENSURE_VARIABLE_CONSISTENCY__ABSTRACTPLAN = eINSTANCE.getCondition__EnsureVariableConsistency__AbstractPlan();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.PreConditionImpl <em>Pre Condition</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PreConditionImpl <em>Pre Condition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.PreConditionImpl
-		 * @see alica.impl.AlicaPackageImpl#getPreCondition()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PreConditionImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPreCondition()
 		 * @generated
 		 */
 		EClass PRE_CONDITION = eINSTANCE.getPreCondition();
@@ -6673,11 +6617,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute PRE_CONDITION__ENABLED = eINSTANCE.getPreCondition_Enabled();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.EntryPointImpl <em>Entry Point</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl <em>Entry Point</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.EntryPointImpl
-		 * @see alica.impl.AlicaPackageImpl#getEntryPoint()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getEntryPoint()
 		 * @generated
 		 */
 		EClass ENTRY_POINT = eINSTANCE.getEntryPoint();
@@ -6731,11 +6675,11 @@ public interface AlicaPackage extends EPackage {
 		EReference ENTRY_POINT__PLAN = eINSTANCE.getEntryPoint_Plan();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.TerminalStateImpl <em>Terminal State</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TerminalStateImpl <em>Terminal State</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.TerminalStateImpl
-		 * @see alica.impl.AlicaPackageImpl#getTerminalState()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TerminalStateImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTerminalState()
 		 * @generated
 		 */
 		EClass TERMINAL_STATE = eINSTANCE.getTerminalState();
@@ -6749,31 +6693,31 @@ public interface AlicaPackage extends EPackage {
 		EReference TERMINAL_STATE__POST_CONDITION = eINSTANCE.getTerminalState_PostCondition();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.SuccessStateImpl <em>Success State</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.SuccessStateImpl <em>Success State</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.SuccessStateImpl
-		 * @see alica.impl.AlicaPackageImpl#getSuccessState()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.SuccessStateImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getSuccessState()
 		 * @generated
 		 */
 		EClass SUCCESS_STATE = eINSTANCE.getSuccessState();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.FailureStateImpl <em>Failure State</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.FailureStateImpl <em>Failure State</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.FailureStateImpl
-		 * @see alica.impl.AlicaPackageImpl#getFailureState()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.FailureStateImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getFailureState()
 		 * @generated
 		 */
 		EClass FAILURE_STATE = eINSTANCE.getFailureState();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.AbstractPlanImpl <em>Abstract Plan</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AbstractPlanImpl <em>Abstract Plan</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.AbstractPlanImpl
-		 * @see alica.impl.AlicaPackageImpl#getAbstractPlan()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AbstractPlanImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getAbstractPlan()
 		 * @generated
 		 */
 		EClass ABSTRACT_PLAN = eINSTANCE.getAbstractPlan();
@@ -6787,11 +6731,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute ABSTRACT_PLAN__DESTINATION_PATH = eINSTANCE.getAbstractPlan_DestinationPath();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.BehaviourImpl <em>Behaviour</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl <em>Behaviour</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.BehaviourImpl
-		 * @see alica.impl.AlicaPackageImpl#getBehaviour()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getBehaviour()
 		 * @generated
 		 */
 		EClass BEHAVIOUR = eINSTANCE.getBehaviour();
@@ -6837,11 +6781,11 @@ public interface AlicaPackage extends EPackage {
 		EReference BEHAVIOUR__VARS = eINSTANCE.getBehaviour_Vars();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.StateImpl <em>State</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl <em>State</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.StateImpl
-		 * @see alica.impl.AlicaPackageImpl#getState()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getState()
 		 * @generated
 		 */
 		EClass STATE = eINSTANCE.getState();
@@ -6903,11 +6847,11 @@ public interface AlicaPackage extends EPackage {
 		EOperation STATE___ENSURE_PARAMETRISATION_CONSISTENCY = eINSTANCE.getState__EnsureParametrisationConsistency();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.PlanImpl <em>Plan</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl <em>Plan</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.PlanImpl
-		 * @see alica.impl.AlicaPackageImpl#getPlan()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlan()
 		 * @generated
 		 */
 		EClass PLAN = eINSTANCE.getPlan();
@@ -7033,11 +6977,11 @@ public interface AlicaPackage extends EPackage {
 		EOperation PLAN___ENSURE_PARAMETRISATION_CONSISTENCY = eINSTANCE.getPlan__EnsureParametrisationConsistency();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.PlanTypeImpl <em>Plan Type</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanTypeImpl <em>Plan Type</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.PlanTypeImpl
-		 * @see alica.impl.AlicaPackageImpl#getPlanType()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanTypeImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanType()
 		 * @generated
 		 */
 		EClass PLAN_TYPE = eINSTANCE.getPlanType();
@@ -7067,41 +7011,41 @@ public interface AlicaPackage extends EPackage {
 		EOperation PLAN_TYPE___ENSURE_PARAMETRISATION_CONSISTENCY = eINSTANCE.getPlanType__EnsureParametrisationConsistency();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.RatingImpl <em>Rating</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RatingImpl <em>Rating</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.RatingImpl
-		 * @see alica.impl.AlicaPackageImpl#getRating()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RatingImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRating()
 		 * @generated
 		 */
 		EClass RATING = eINSTANCE.getRating();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.PostConditionImpl <em>Post Condition</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PostConditionImpl <em>Post Condition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.PostConditionImpl
-		 * @see alica.impl.AlicaPackageImpl#getPostCondition()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PostConditionImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPostCondition()
 		 * @generated
 		 */
 		EClass POST_CONDITION = eINSTANCE.getPostCondition();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.RuntimeConditionImpl <em>Runtime Condition</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RuntimeConditionImpl <em>Runtime Condition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.RuntimeConditionImpl
-		 * @see alica.impl.AlicaPackageImpl#getRuntimeCondition()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RuntimeConditionImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRuntimeCondition()
 		 * @generated
 		 */
 		EClass RUNTIME_CONDITION = eINSTANCE.getRuntimeCondition();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.PlanElementImpl <em>Plan Element</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl <em>Plan Element</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.PlanElementImpl
-		 * @see alica.impl.AlicaPackageImpl#getPlanElement()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanElement()
 		 * @generated
 		 */
 		EClass PLAN_ELEMENT = eINSTANCE.getPlanElement();
@@ -7139,11 +7083,11 @@ public interface AlicaPackage extends EPackage {
 		EOperation PLAN_ELEMENT___GENERATE_ID = eINSTANCE.getPlanElement__GenerateID();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.TaskImpl <em>Task</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskImpl <em>Task</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.TaskImpl
-		 * @see alica.impl.AlicaPackageImpl#getTask()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTask()
 		 * @generated
 		 */
 		EClass TASK = eINSTANCE.getTask();
@@ -7157,11 +7101,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute TASK__DESCRIPTION = eINSTANCE.getTask_Description();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.EStringToEStringMapEntryImpl <em>EString To EString Map Entry</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEStringMapEntryImpl <em>EString To EString Map Entry</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.EStringToEStringMapEntryImpl
-		 * @see alica.impl.AlicaPackageImpl#getEStringToEStringMapEntry()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEStringMapEntryImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getEStringToEStringMapEntry()
 		 * @generated
 		 */
 		EClass ESTRING_TO_ESTRING_MAP_ENTRY = eINSTANCE.getEStringToEStringMapEntry();
@@ -7183,11 +7127,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute ESTRING_TO_ESTRING_MAP_ENTRY__VALUE = eINSTANCE.getEStringToEStringMapEntry_Value();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.RoleImpl <em>Role</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleImpl <em>Role</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.RoleImpl
-		 * @see alica.impl.AlicaPackageImpl#getRole()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRole()
 		 * @generated
 		 */
 		EClass ROLE = eINSTANCE.getRole();
@@ -7201,11 +7145,11 @@ public interface AlicaPackage extends EPackage {
 		EReference ROLE__CHARACTERISTICS = eINSTANCE.getRole_Characteristics();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.RoleSetImpl <em>Role Set</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleSetImpl <em>Role Set</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.RoleSetImpl
-		 * @see alica.impl.AlicaPackageImpl#getRoleSet()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleSetImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRoleSet()
 		 * @generated
 		 */
 		EClass ROLE_SET = eINSTANCE.getRoleSet();
@@ -7235,11 +7179,11 @@ public interface AlicaPackage extends EPackage {
 		EReference ROLE_SET__MAPPINGS = eINSTANCE.getRoleSet_Mappings();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.ELongToDoubleMapEntryImpl <em>ELong To Double Map Entry</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ELongToDoubleMapEntryImpl <em>ELong To Double Map Entry</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.ELongToDoubleMapEntryImpl
-		 * @see alica.impl.AlicaPackageImpl#getELongToDoubleMapEntry()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ELongToDoubleMapEntryImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getELongToDoubleMapEntry()
 		 * @generated
 		 */
 		EClass ELONG_TO_DOUBLE_MAP_ENTRY = eINSTANCE.getELongToDoubleMapEntry();
@@ -7261,11 +7205,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute ELONG_TO_DOUBLE_MAP_ENTRY__VALUE = eINSTANCE.getELongToDoubleMapEntry_Value();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.RoleDefinitionSetImpl <em>Role Definition Set</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleDefinitionSetImpl <em>Role Definition Set</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.RoleDefinitionSetImpl
-		 * @see alica.impl.AlicaPackageImpl#getRoleDefinitionSet()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleDefinitionSetImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRoleDefinitionSet()
 		 * @generated
 		 */
 		EClass ROLE_DEFINITION_SET = eINSTANCE.getRoleDefinitionSet();
@@ -7279,11 +7223,11 @@ public interface AlicaPackage extends EPackage {
 		EReference ROLE_DEFINITION_SET__ROLES = eINSTANCE.getRoleDefinitionSet_Roles();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.RoleTaskMappingImpl <em>Role Task Mapping</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleTaskMappingImpl <em>Role Task Mapping</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.RoleTaskMappingImpl
-		 * @see alica.impl.AlicaPackageImpl#getRoleTaskMapping()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleTaskMappingImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getRoleTaskMapping()
 		 * @generated
 		 */
 		EClass ROLE_TASK_MAPPING = eINSTANCE.getRoleTaskMapping();
@@ -7305,11 +7249,11 @@ public interface AlicaPackage extends EPackage {
 		EReference ROLE_TASK_MAPPING__ROLE = eINSTANCE.getRoleTaskMapping_Role();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.CharacteristicImpl <em>Characteristic</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl <em>Characteristic</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.CharacteristicImpl
-		 * @see alica.impl.AlicaPackageImpl#getCharacteristic()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCharacteristic()
 		 * @generated
 		 */
 		EClass CHARACTERISTIC = eINSTANCE.getCharacteristic();
@@ -7339,11 +7283,11 @@ public interface AlicaPackage extends EPackage {
 		EReference CHARACTERISTIC__VALUE = eINSTANCE.getCharacteristic_Value();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.TaskGraphImpl <em>Task Graph</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskGraphImpl <em>Task Graph</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.TaskGraphImpl
-		 * @see alica.impl.AlicaPackageImpl#getTaskGraph()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskGraphImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTaskGraph()
 		 * @generated
 		 */
 		EClass TASK_GRAPH = eINSTANCE.getTaskGraph();
@@ -7365,11 +7309,11 @@ public interface AlicaPackage extends EPackage {
 		EReference TASK_GRAPH__EDGES = eINSTANCE.getTaskGraph_Edges();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.EdgeImpl <em>Edge</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EdgeImpl <em>Edge</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.EdgeImpl
-		 * @see alica.impl.AlicaPackageImpl#getEdge()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.EdgeImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getEdge()
 		 * @generated
 		 */
 		EClass EDGE = eINSTANCE.getEdge();
@@ -7391,11 +7335,11 @@ public interface AlicaPackage extends EPackage {
 		EReference EDGE__TO = eINSTANCE.getEdge_To();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.TaskWrapperImpl <em>Task Wrapper</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskWrapperImpl <em>Task Wrapper</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.TaskWrapperImpl
-		 * @see alica.impl.AlicaPackageImpl#getTaskWrapper()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskWrapperImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTaskWrapper()
 		 * @generated
 		 */
 		EClass TASK_WRAPPER = eINSTANCE.getTaskWrapper();
@@ -7417,11 +7361,11 @@ public interface AlicaPackage extends EPackage {
 		EReference TASK_WRAPPER__MAPPINGS = eINSTANCE.getTaskWrapper_Mappings();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.InternalRoleTaskMappingImpl <em>Internal Role Task Mapping</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.InternalRoleTaskMappingImpl <em>Internal Role Task Mapping</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.InternalRoleTaskMappingImpl
-		 * @see alica.impl.AlicaPackageImpl#getInternalRoleTaskMapping()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.InternalRoleTaskMappingImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getInternalRoleTaskMapping()
 		 * @generated
 		 */
 		EClass INTERNAL_ROLE_TASK_MAPPING = eINSTANCE.getInternalRoleTaskMapping();
@@ -7443,11 +7387,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute INTERNAL_ROLE_TASK_MAPPING__PRIORITY = eINSTANCE.getInternalRoleTaskMapping_Priority();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.NodeImpl <em>Node</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.NodeImpl <em>Node</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.NodeImpl
-		 * @see alica.impl.AlicaPackageImpl#getNode()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.NodeImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getNode()
 		 * @generated
 		 */
 		EClass NODE = eINSTANCE.getNode();
@@ -7469,11 +7413,11 @@ public interface AlicaPackage extends EPackage {
 		EReference NODE__OUT_EDGE = eINSTANCE.getNode_OutEdge();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.TaskRepositoryImpl <em>Task Repository</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskRepositoryImpl <em>Task Repository</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.TaskRepositoryImpl
-		 * @see alica.impl.AlicaPackageImpl#getTaskRepository()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskRepositoryImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getTaskRepository()
 		 * @generated
 		 */
 		EClass TASK_REPOSITORY = eINSTANCE.getTaskRepository();
@@ -7503,11 +7447,11 @@ public interface AlicaPackage extends EPackage {
 		EOperation TASK_REPOSITORY___CREATE_DEFAULT_TASK = eINSTANCE.getTaskRepository__CreateDefaultTask();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.SynchronisationImpl <em>Synchronisation</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl <em>Synchronisation</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.SynchronisationImpl
-		 * @see alica.impl.AlicaPackageImpl#getSynchronisation()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getSynchronisation()
 		 * @generated
 		 */
 		EClass SYNCHRONISATION = eINSTANCE.getSynchronisation();
@@ -7545,11 +7489,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute SYNCHRONISATION__FAIL_ON_SYNC_TIME_OUT = eINSTANCE.getSynchronisation_FailOnSyncTimeOut();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.VariableImpl <em>Variable</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.VariableImpl <em>Variable</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.VariableImpl
-		 * @see alica.impl.AlicaPackageImpl#getVariable()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.VariableImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getVariable()
 		 * @generated
 		 */
 		EClass VARIABLE = eINSTANCE.getVariable();
@@ -7563,11 +7507,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute VARIABLE__TYPE = eINSTANCE.getVariable_Type();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.ParametrisationImpl <em>Parametrisation</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ParametrisationImpl <em>Parametrisation</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.ParametrisationImpl
-		 * @see alica.impl.AlicaPackageImpl#getParametrisation()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ParametrisationImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getParametrisation()
 		 * @generated
 		 */
 		EClass PARAMETRISATION = eINSTANCE.getParametrisation();
@@ -7597,11 +7541,11 @@ public interface AlicaPackage extends EPackage {
 		EReference PARAMETRISATION__VAR = eINSTANCE.getParametrisation_Var();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.AnnotatedPlanImpl <em>Annotated Plan</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AnnotatedPlanImpl <em>Annotated Plan</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.AnnotatedPlanImpl
-		 * @see alica.impl.AlicaPackageImpl#getAnnotatedPlan()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AnnotatedPlanImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getAnnotatedPlan()
 		 * @generated
 		 */
 		EClass ANNOTATED_PLAN = eINSTANCE.getAnnotatedPlan();
@@ -7623,11 +7567,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute ANNOTATED_PLAN__ACTIVATED = eINSTANCE.getAnnotatedPlan_Activated();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.QuantifierImpl <em>Quantifier</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.QuantifierImpl <em>Quantifier</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.QuantifierImpl
-		 * @see alica.impl.AlicaPackageImpl#getQuantifier()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.QuantifierImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getQuantifier()
 		 * @generated
 		 */
 		EClass QUANTIFIER = eINSTANCE.getQuantifier();
@@ -7649,31 +7593,31 @@ public interface AlicaPackage extends EPackage {
 		EAttribute QUANTIFIER__SORTS = eINSTANCE.getQuantifier_Sorts();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.ForallAgentsImpl <em>Forall Agents</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ForallAgentsImpl <em>Forall Agents</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.ForallAgentsImpl
-		 * @see alica.impl.AlicaPackageImpl#getForallAgents()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ForallAgentsImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getForallAgents()
 		 * @generated
 		 */
 		EClass FORALL_AGENTS = eINSTANCE.getForallAgents();
 
 		/**
-		 * The meta object literal for the '{@link alica.IInhabitable <em>IInhabitable</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable <em>IInhabitable</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.IInhabitable
-		 * @see alica.impl.AlicaPackageImpl#getIInhabitable()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getIInhabitable()
 		 * @generated
 		 */
 		EClass IINHABITABLE = eINSTANCE.getIInhabitable();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.CapabilityImpl <em>Capability</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CapabilityImpl <em>Capability</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.CapabilityImpl
-		 * @see alica.impl.AlicaPackageImpl#getCapability()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.CapabilityImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCapability()
 		 * @generated
 		 */
 		EClass CAPABILITY = eINSTANCE.getCapability();
@@ -7687,21 +7631,21 @@ public interface AlicaPackage extends EPackage {
 		EReference CAPABILITY__CAP_VALUES = eINSTANCE.getCapability_CapValues();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.CapValueImpl <em>Cap Value</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CapValueImpl <em>Cap Value</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.CapValueImpl
-		 * @see alica.impl.AlicaPackageImpl#getCapValue()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.CapValueImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCapValue()
 		 * @generated
 		 */
 		EClass CAP_VALUE = eINSTANCE.getCapValue();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.CapabilityDefinitionSetImpl <em>Capability Definition Set</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CapabilityDefinitionSetImpl <em>Capability Definition Set</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.CapabilityDefinitionSetImpl
-		 * @see alica.impl.AlicaPackageImpl#getCapabilityDefinitionSet()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.CapabilityDefinitionSetImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getCapabilityDefinitionSet()
 		 * @generated
 		 */
 		EClass CAPABILITY_DEFINITION_SET = eINSTANCE.getCapabilityDefinitionSet();
@@ -7715,11 +7659,11 @@ public interface AlicaPackage extends EPackage {
 		EReference CAPABILITY_DEFINITION_SET__CAPABILITIES = eINSTANCE.getCapabilityDefinitionSet_Capabilities();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.PlanningProblemImpl <em>Planning Problem</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl <em>Planning Problem</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.PlanningProblemImpl
-		 * @see alica.impl.AlicaPackageImpl#getPlanningProblem()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanningProblem()
 		 * @generated
 		 */
 		EClass PLANNING_PROBLEM = eINSTANCE.getPlanningProblem();
@@ -7797,11 +7741,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute PLANNING_PROBLEM__PLANNER_PARAMS = eINSTANCE.getPlanningProblem_PlannerParams();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.PlannerImpl <em>Planner</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannerImpl <em>Planner</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.PlannerImpl
-		 * @see alica.impl.AlicaPackageImpl#getPlanner()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannerImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanner()
 		 * @generated
 		 */
 		EClass PLANNER = eINSTANCE.getPlanner();
@@ -7839,11 +7783,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute PLANNER__COMMAND = eINSTANCE.getPlanner_Command();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.FluentImpl <em>Fluent</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentImpl <em>Fluent</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.FluentImpl
-		 * @see alica.impl.AlicaPackageImpl#getFluent()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getFluent()
 		 * @generated
 		 */
 		EClass FLUENT = eINSTANCE.getFluent();
@@ -7865,11 +7809,11 @@ public interface AlicaPackage extends EPackage {
 		EReference FLUENT__FORMULA = eINSTANCE.getFluent_Formula();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.DomainDescriptionImpl <em>Domain Description</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl <em>Domain Description</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.DomainDescriptionImpl
-		 * @see alica.impl.AlicaPackageImpl#getDomainDescription()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainDescription()
 		 * @generated
 		 */
 		EClass DOMAIN_DESCRIPTION = eINSTANCE.getDomainDescription();
@@ -7907,11 +7851,11 @@ public interface AlicaPackage extends EPackage {
 		EReference DOMAIN_DESCRIPTION__CONSTANTS = eINSTANCE.getDomainDescription_Constants();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.PlannersImpl <em>Planners</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannersImpl <em>Planners</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.PlannersImpl
-		 * @see alica.impl.AlicaPackageImpl#getPlanners()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.PlannersImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanners()
 		 * @generated
 		 */
 		EClass PLANNERS = eINSTANCE.getPlanners();
@@ -7933,11 +7877,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute PLANNERS__NAME = eINSTANCE.getPlanners_Name();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.EStringToEObjectMapEntryImpl <em>EString To EObject Map Entry</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEObjectMapEntryImpl <em>EString To EObject Map Entry</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.EStringToEObjectMapEntryImpl
-		 * @see alica.impl.AlicaPackageImpl#getEStringToEObjectMapEntry()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.EStringToEObjectMapEntryImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getEStringToEObjectMapEntry()
 		 * @generated
 		 */
 		EClass ESTRING_TO_EOBJECT_MAP_ENTRY = eINSTANCE.getEStringToEObjectMapEntry();
@@ -7959,11 +7903,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute ESTRING_TO_EOBJECT_MAP_ENTRY__VALUE = eINSTANCE.getEStringToEObjectMapEntry_Value();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.FluentParametersImpl <em>Fluent Parameters</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentParametersImpl <em>Fluent Parameters</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.FluentParametersImpl
-		 * @see alica.impl.AlicaPackageImpl#getFluentParameters()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentParametersImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getFluentParameters()
 		 * @generated
 		 */
 		EClass FLUENT_PARAMETERS = eINSTANCE.getFluentParameters();
@@ -7985,11 +7929,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute FLUENT_PARAMETERS__TYPE = eINSTANCE.getFluentParameters_Type();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.ConstantImpl <em>Constant</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstantImpl <em>Constant</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.ConstantImpl
-		 * @see alica.impl.AlicaPackageImpl#getConstant()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstantImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConstant()
 		 * @generated
 		 */
 		EClass CONSTANT = eINSTANCE.getConstant();
@@ -8011,11 +7955,11 @@ public interface AlicaPackage extends EPackage {
 		EAttribute CONSTANT__TYPE = eINSTANCE.getConstant_Type();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.BehaviourCreatorImpl <em>Behaviour Creator</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourCreatorImpl <em>Behaviour Creator</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.BehaviourCreatorImpl
-		 * @see alica.impl.AlicaPackageImpl#getBehaviourCreator()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourCreatorImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getBehaviourCreator()
 		 * @generated
 		 */
 		EClass BEHAVIOUR_CREATOR = eINSTANCE.getBehaviourCreator();
@@ -8029,11 +7973,11 @@ public interface AlicaPackage extends EPackage {
 		EReference BEHAVIOUR_CREATOR__BEHAVIOURS = eINSTANCE.getBehaviourCreator_Behaviours();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.ConditionCreatorImpl <em>Condition Creator</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionCreatorImpl <em>Condition Creator</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.ConditionCreatorImpl
-		 * @see alica.impl.AlicaPackageImpl#getConditionCreator()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionCreatorImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConditionCreator()
 		 * @generated
 		 */
 		EClass CONDITION_CREATOR = eINSTANCE.getConditionCreator();
@@ -8055,11 +7999,11 @@ public interface AlicaPackage extends EPackage {
 		EReference CONDITION_CREATOR__PLANS = eINSTANCE.getConditionCreator_Plans();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.UtilityFunctionCreatorImpl <em>Utility Function Creator</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.UtilityFunctionCreatorImpl <em>Utility Function Creator</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.UtilityFunctionCreatorImpl
-		 * @see alica.impl.AlicaPackageImpl#getUtilityFunctionCreator()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.UtilityFunctionCreatorImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getUtilityFunctionCreator()
 		 * @generated
 		 */
 		EClass UTILITY_FUNCTION_CREATOR = eINSTANCE.getUtilityFunctionCreator();
@@ -8081,11 +8025,11 @@ public interface AlicaPackage extends EPackage {
 		EReference UTILITY_FUNCTION_CREATOR__PLANS = eINSTANCE.getUtilityFunctionCreator_Plans();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.ConstraintCreatorImpl <em>Constraint Creator</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl <em>Constraint Creator</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.ConstraintCreatorImpl
-		 * @see alica.impl.AlicaPackageImpl#getConstraintCreator()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConstraintCreator()
 		 * @generated
 		 */
 		EClass CONSTRAINT_CREATOR = eINSTANCE.getConstraintCreator();
@@ -8107,31 +8051,31 @@ public interface AlicaPackage extends EPackage {
 		EReference CONSTRAINT_CREATOR__PLANS = eINSTANCE.getConstraintCreator_Plans();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.DomainBehaviourImpl <em>Domain Behaviour</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainBehaviourImpl <em>Domain Behaviour</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.DomainBehaviourImpl
-		 * @see alica.impl.AlicaPackageImpl#getDomainBehaviour()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainBehaviourImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainBehaviour()
 		 * @generated
 		 */
 		EClass DOMAIN_BEHAVIOUR = eINSTANCE.getDomainBehaviour();
 
 		/**
-		 * The meta object literal for the '{@link alica.impl.DomainConditionImpl <em>Domain Condition</em>}' class.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainConditionImpl <em>Domain Condition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.impl.DomainConditionImpl
-		 * @see alica.impl.AlicaPackageImpl#getDomainCondition()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainConditionImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainCondition()
 		 * @generated
 		 */
 		EClass DOMAIN_CONDITION = eINSTANCE.getDomainCondition();
 
 		/**
-		 * The meta object literal for the '{@link alica.PlanningType <em>Planning Type</em>}' enum.
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningType <em>Planning Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see alica.PlanningType
-		 * @see alica.impl.AlicaPackageImpl#getPlanningType()
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningType
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanningType()
 		 * @generated
 		 */
 		EEnum PLANNING_TYPE = eINSTANCE.getPlanningType();

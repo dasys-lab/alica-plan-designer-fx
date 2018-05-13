@@ -11,11 +11,11 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link alica.AbstractPlan#getDestinationPath <em>Destination Path</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getDestinationPath <em>Destination Path</em>}</li>
  * </ul>
  * </p>
  *
- * @see alica.AlicaPackage#getAbstractPlan()
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getAbstractPlan()
  * @model abstract="true"
  * @generated
  */
@@ -31,14 +31,14 @@ public interface AbstractPlan extends PlanElement, IInhabitable {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Destination Path</em>' attribute.
 	 * @see #setDestinationPath(String)
-	 * @see alica.AlicaPackage#getAbstractPlan_DestinationPath()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getAbstractPlan_DestinationPath()
 	 * @model default=""
 	 * @generated
 	 */
 	String getDestinationPath();
 
 	/**
-	 * Sets the value of the '{@link alica.AbstractPlan#getDestinationPath <em>Destination Path</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getDestinationPath <em>Destination Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Destination Path</em>' attribute.

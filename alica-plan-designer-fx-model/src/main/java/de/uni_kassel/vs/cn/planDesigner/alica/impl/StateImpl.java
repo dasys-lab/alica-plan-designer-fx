@@ -1,22 +1,34 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
+import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
 
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,12 +37,12 @@ import java.util.Collection;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link alica.impl.StateImpl#getPlans <em>Plans</em>}</li>
- *   <li>{@link alica.impl.StateImpl#getInPlan <em>In Plan</em>}</li>
- *   <li>{@link alica.impl.StateImpl#getParametrisation <em>Parametrisation</em>}</li>
- *   <li>{@link alica.impl.StateImpl#getInTransitions <em>In Transitions</em>}</li>
- *   <li>{@link alica.impl.StateImpl#getOutTransitions <em>Out Transitions</em>}</li>
- *   <li>{@link alica.impl.StateImpl#getEntryPoint <em>Entry Point</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl#getPlans <em>Plans</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl#getInPlan <em>In Plan</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl#getParametrisation <em>Parametrisation</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl#getInTransitions <em>In Transitions</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl#getOutTransitions <em>Out Transitions</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl#getEntryPoint <em>Entry Point</em>}</li>
  * </ul>
  * </p>
  *

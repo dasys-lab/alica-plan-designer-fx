@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.uni_kassel.vs.cn.planDesigner.alica;
 
@@ -16,13 +12,13 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}</li>
- *   <li>{@link alica.RoleSet#isDefault <em>Default</em>}</li>
- *   <li>{@link alica.RoleSet#getMappings <em>Mappings</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#isDefault <em>Default</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getMappings <em>Mappings</em>}</li>
  * </ul>
  * </p>
  *
- * @see alica.AlicaPackage#getRoleSet()
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleSet()
  * @model
  * @generated
  */
@@ -38,14 +34,14 @@ public interface RoleSet extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Usable With Plan ID</em>' attribute.
 	 * @see #setUsableWithPlanID(long)
-	 * @see alica.AlicaPackage#getRoleSet_UsableWithPlanID()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleSet_UsableWithPlanID()
 	 * @model default="0" required="true"
 	 * @generated
 	 */
 	long getUsableWithPlanID();
 
 	/**
-	 * Sets the value of the '{@link alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#getUsableWithPlanID <em>Usable With Plan ID</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Usable With Plan ID</em>' attribute.
@@ -65,14 +61,14 @@ public interface RoleSet extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Default</em>' attribute.
 	 * @see #setDefault(boolean)
-	 * @see alica.AlicaPackage#getRoleSet_Default()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleSet_Default()
 	 * @model default="false"
 	 * @generated
 	 */
 	boolean isDefault();
 
 	/**
-	 * Sets the value of the '{@link alica.RoleSet#isDefault <em>Default</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet#isDefault <em>Default</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Default</em>' attribute.
@@ -83,7 +79,7 @@ public interface RoleSet extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Mappings</b></em>' containment reference list.
-	 * The list contents are of type {@link alica.RoleTaskMapping}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Mappings</em>' containment reference list isn't clear,
@@ -91,7 +87,7 @@ public interface RoleSet extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Mappings</em>' containment reference list.
-	 * @see alica.AlicaPackage#getRoleSet_Mappings()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getRoleSet_Mappings()
 	 * @model containment="true"
 	 * @generated
 	 */

@@ -11,11 +11,11 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link alica.Variable#getType <em>Type</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Variable#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
- * @see alica.AlicaPackage#getVariable()
+ * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getVariable()
  * @model
  * @generated
  */
@@ -31,14 +31,14 @@ public interface Variable extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type</em>' attribute.
 	 * @see #setType(String)
-	 * @see alica.AlicaPackage#getVariable_Type()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getVariable_Type()
 	 * @model default=""
 	 * @generated
 	 */
 	String getType();
 
 	/**
-	 * Sets the value of the '{@link alica.Variable#getType <em>Type</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Variable#getType <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Type</em>' attribute.

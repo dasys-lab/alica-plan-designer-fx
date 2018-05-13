@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 
 /**
@@ -11,8 +12,8 @@ public class DeleteVariableFromCondition extends AbstractCommand<Variable> {
 
     private final Condition parentOfElement;
 
-    public DeleteVariableFromCondition(Variable toDelete, Condition parentOfElement) {
-        super(toDelete, parentOfElement.getAbstractPlan());
+    public DeleteVariableFromCondition(Variable toDelete, Condition parentOfElement, Plan affectedPlan) {
+        super(toDelete, affectedPlan);
         this.parentOfElement = parentOfElement;
     }
 
