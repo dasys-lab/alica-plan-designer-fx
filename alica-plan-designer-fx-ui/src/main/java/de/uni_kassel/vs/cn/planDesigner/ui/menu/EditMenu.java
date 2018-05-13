@@ -77,7 +77,7 @@ public class EditMenu extends Menu {
         commandStack.undo();
         Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
         if (selectedItem instanceof PlanTab) {
-            ((PlanTab)selectedItem).getPlanEditorPane().setupPlanVisualisation();
+            ((PlanTab)selectedItem).getPlanEditorGroup().setupPlanVisualisation();
             ((PlanTab)selectedItem).getConditionHBox().setupConditionVisualisation();
         } else if (selectedItem instanceof PlanTypeTab) {
             ((PlanTypeTab)selectedItem).refresh();
@@ -90,7 +90,7 @@ public class EditMenu extends Menu {
         commandStack.redo();
         Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
         if (selectedItem instanceof PlanTab) {
-            ((PlanTab)selectedItem).getPlanEditorPane().setupPlanVisualisation();
+            ((PlanTab)selectedItem).getPlanEditorGroup().setupPlanVisualisation();
             ((PlanTab)selectedItem).getConditionHBox().setupConditionVisualisation();
         } else if (selectedItem instanceof PlanTypeTab) {
             ((PlanTypeTab)selectedItem).refresh();
@@ -203,24 +203,24 @@ public class EditMenu extends Menu {
     private void deletePlanElement(CommandStack commandStack, PlanTab planTab, PlanElement selectedPlanElement) {
         if(selectedPlanElement instanceof StateImpl) {
             commandStack.storeAndExecute(new DeleteStateInPlan((State) selectedPlanElement,
-                    planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
+                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
         } else if (selectedPlanElement instanceof TransitionImpl) {
             commandStack.storeAndExecute(new DeleteTransitionInPlan((Transition) selectedPlanElement,
-                    planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
+                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
         } else if (selectedPlanElement instanceof EntryPointImpl) {
             commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
-                    planTab.getPlanEditorPane().getPlanModelVisualisationObject())); // TODO ask single * 3
+                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject())); // TODO ask single * 3
         } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElement().get().get(0).getValue() != null) {
             State state = (State) planTab.getSelectedPlanElement().getValue().get(0).getValue().getContainedElement();
             commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
         } else if(selectedPlanElement instanceof SynchronisationImpl) {
             commandStack.storeAndExecute(new DeleteSynchronisationFromPlan((Synchronisation) selectedPlanElement,
-                    planTab.getPlanEditorPane().getPlanModelVisualisationObject()));
+                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
         } else if (selectedPlanElement instanceof Condition) {
             Condition condition = (Condition) planTab.getSelectedPlanElement().getValue().get(0).getKey();
-            commandStack.storeAndExecute(new DeleteConditionFromPlan(planTab.getPlanEditorPane().getPlanModelVisualisationObject().getPlan(), condition));
+            commandStack.storeAndExecute(new DeleteConditionFromPlan(planTab.getPlanEditorGroup().getPlanModelVisualisationObject().getPlan(), condition));
         }
-        planTab.getPlanEditorPane().setupPlanVisualisation();
+        planTab.getPlanEditorGroup().setupPlanVisualisation();
         planTab.getConditionHBox().setupConditionVisualisation();
     }
 

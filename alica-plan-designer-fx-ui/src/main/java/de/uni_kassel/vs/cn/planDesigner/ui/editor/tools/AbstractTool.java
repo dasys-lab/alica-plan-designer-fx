@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * The {@link AbstractTool} interface provides methods for the tools in the {@link PLDToolBar}.
  * It helps to generalize the usage of these tools for the following workflow:
- * tool is selected (start of the phase) -> Event handler for special actions on the {@link de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane}
+ * tool is selected (start of the phase) -> Event handler for special actions on the {@link PlanEditorGroup}
  * are registered -> The actions are performed. A new model object is created.
  * Or the actions are aborted. -> The phase ends. The event handlers will be removed. and the editor is usable as before.
  *
@@ -124,7 +124,7 @@ public abstract class AbstractTool<T extends PlanElement> {
         }
 
         if (event.getTarget() instanceof StackPane && ((StackPane) event.getTarget()).getChildren().size() > 0 &&
-                ((StackPane) event.getTarget()).getChildren().get(0) instanceof PlanEditorPane) {
+                ((StackPane) event.getTarget()).getChildren().get(0) instanceof PlanEditorGroup) {
             localCoord =
                     ((StackPane) event.getTarget()).getChildren().get(0)
                             .sceneToLocal(event.getX(), event.getY());

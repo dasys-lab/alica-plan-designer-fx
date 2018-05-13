@@ -49,7 +49,7 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
             ChangeListener<Tab> listener = new TabChangeListener(workbench);
             workbench.getSelectionModel().selectedItemProperty().addListener(listener);
         } else {
-            (selectedItem).getPlanEditorPane().setupPlanVisualisation();
+            (selectedItem).getPlanEditorGroup().setupPlanVisualisation();
         }
     }
 

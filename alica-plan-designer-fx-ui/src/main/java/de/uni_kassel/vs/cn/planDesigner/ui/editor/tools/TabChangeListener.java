@@ -16,7 +16,7 @@ public class TabChangeListener implements ChangeListener<Tab> {
     @Override
     public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
         if (newValue != null) {
-            ((PlanTab) newValue).getPlanEditorPane().setupPlanVisualisation();
+            ((PlanTab) newValue).getPlanEditorGroup().setupPlanVisualisation();
             workbench.getSelectionModel().selectedItemProperty().removeListener(this);
         }
     }

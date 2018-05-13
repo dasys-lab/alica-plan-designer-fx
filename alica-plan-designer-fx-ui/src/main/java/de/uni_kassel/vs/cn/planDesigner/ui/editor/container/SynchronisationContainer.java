@@ -10,6 +10,8 @@ import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExten
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.geometry.Point2D;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -57,7 +59,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
         setLayoutX(getPmlUiExtension().getXPos());
         setLayoutY(getPmlUiExtension().getYPos());
         visualRepresentation = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
-        visualRepresentation.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
+        setEffectToStandard();
         ((Circle)visualRepresentation).setFill(new ImagePattern(new Image(getClass().getClassLoader()
                 .getResourceAsStream("images/synchronisation36x24.png"))));
         Text e = new Text(getContainedElement().getName());
@@ -110,6 +112,12 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
     }
 
     @Override
+    public void setEffectToStandard() {
+        visualRepresentation.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,
+            new Color(0,0,0,0.8), 10, 0, 0, 0));
+    }
+
+    @Override
     public Color getVisualisationColor() {
         return Color.TRANSPARENT;
     }
@@ -121,7 +129,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
 
     @Override
     public void redrawElement() {
-        //((PlanEditorPane) getParent()).setupPlanVisualisation();
+        //((PlanEditorGroup) getParent()).setupPlanVisualisation();
         setupContainer();
         invalidationListeners.forEach(listener -> listener.invalidated(this));
     }

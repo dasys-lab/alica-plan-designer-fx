@@ -42,7 +42,7 @@ public class TransitionTool extends AbstractTool<Transition> {
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class TransitionTool extends AbstractTool<Transition> {
                         if (((Node)event.getTarget()).getParent() instanceof StateContainer) {
                             finish = (StateContainer) ((Node)event.getTarget()).getParent();
                             AddTransitionInPlan command = new AddTransitionInPlan(
-                                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject(),
+                                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject(),
                                     start.getContainedElement(), finish.getContainedElement());
                             MainController.getInstance()
                                     .getCommandStack()

@@ -170,6 +170,14 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
      */
     public abstract void setupContainer();
 
+    /**
+     * Sets the standard effect for the {@link AbstractPlanElementContainer}.
+     * This should be overwritten by a child class for individual styling. By default no effect is set.
+     */
+    public void setEffectToStandard() {
+        setEffect(null);
+    }
+
     public abstract Color getVisualisationColor();
 
     @Override

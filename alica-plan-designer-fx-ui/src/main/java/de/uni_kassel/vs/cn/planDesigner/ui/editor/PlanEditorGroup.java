@@ -5,7 +5,6 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUiExtensionImpl;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.*;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.scene.Group;
@@ -18,9 +17,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Created by marci on 23.11.16.
+ * The {@link PlanEditorGroup} is the surrounding body for plan visualisation.
+ * It expands automatically if new or existing plan elements are brought to the edge of the plan.
+ * The visualisation of certain elements is realised through {@link AbstractPlanElementContainer}.
  */
-public class PlanEditorPane extends Group {
+public class PlanEditorGroup extends Group {
 
     private PlanModelVisualisationObject planModelVisualisationObject;
     private List<StateContainer> stateContainers;
@@ -30,7 +31,7 @@ public class PlanEditorPane extends Group {
     private AbstractEditorTab<Plan> planEditorTab;
     private List<SynchronisationContainer> synchronisationContainers;
 
-    public PlanEditorPane(PlanModelVisualisationObject planModelVisualisationObject, AbstractEditorTab<Plan> planEditorTab) {
+    public PlanEditorGroup(PlanModelVisualisationObject planModelVisualisationObject, AbstractEditorTab<Plan> planEditorTab) {
         super();
         this.planModelVisualisationObject = planModelVisualisationObject;
         this.planEditorTab = planEditorTab;

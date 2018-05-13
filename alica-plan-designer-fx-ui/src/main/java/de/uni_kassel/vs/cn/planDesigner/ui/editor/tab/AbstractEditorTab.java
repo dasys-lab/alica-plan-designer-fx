@@ -10,13 +10,10 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementC
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.Tab;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
@@ -63,52 +60,10 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         });
 
         this.editablePathPair = editablePathPair;
-        selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
-        selectedPlanElement.get().add(new Pair<>(editablePathPair.getKey(), null));
+        initSelectedPlanElement(editablePathPair);
+
+
         this.commandStack = commandStack;
-        selectedPlanElement.addListener(new ChangeListener<List<Pair<PlanElement, AbstractPlanElementContainer>>>() {
-
-            private List<Effect> previousEffect = new ArrayList<>();
-            @Override
-            public void changed(ObservableValue<? extends List<Pair<PlanElement, AbstractPlanElementContainer>>> observable,
-                                List<Pair<PlanElement, AbstractPlanElementContainer>> oldValue,
-                                List<Pair<PlanElement, AbstractPlanElementContainer>> newValue) {
-                if(newValue != null && newValue.size() != 0) {
-                    newValue.forEach(selectedPlanElementPair -> {
-                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
-                        if (planElementContainer != null) {
-                            previousEffect.add(planElementContainer.getEffect());
-                        }
-                    });
-                    DropShadow value = new DropShadow(StateContainer.STATE_RADIUS, new Color(0,0.4,0.9,0.9));
-                    value.setBlurType(BlurType.ONE_PASS_BOX);
-                    value.setSpread(0.45);
-                    newValue.forEach(selectedPlanElementPair -> {
-                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
-                        if (planElementContainer != null) {
-
-                            planElementContainer.setEffect(value);
-                        }
-                    });
-                    if (newValue.size() == 1 && newValue.get(0).getValue() instanceof TransitionContainer) {
-                        ((TransitionContainer)newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
-                    }
-                }
-
-                if ((oldValue != null && oldValue.size() != 0) && previousEffect.size() != 0) {
-                    if (oldValue.stream()
-                            .allMatch(selectedPlanElementPair -> selectedPlanElementPair.getValue() != null)) {
-                        oldValue.forEach(selectedPlanElementPair ->
-                                selectedPlanElementPair.getValue().setEffect(previousEffect.get(0)));
-                    }
-
-                    if (oldValue.size() == 1 && oldValue.get(0).getValue() instanceof TransitionContainer) {
-                        ((TransitionContainer)oldValue.get(0).getValue()).setPotentialDraggableNodesVisible(false);
-                    }
-                    previousEffect.clear();
-                }
-            }
-        });
         observer = (o, arg) -> {
             if (((CommandStack) o).isAbstractPlanInItsCurrentFormSaved(getEditable())) {
                 setText(getEditablePathPair().getValue().getFileName().toString());
@@ -160,6 +115,47 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                 }
             }
 
+        });
+    }
+
+    /**
+     * initialization for the selected element property, which indicates what elements are selected.
+     * specializations for specific selections of {@link AbstractPlanElementContainer}s can be found under
+     * {@link AbstractPlanElementContainer#getMouseClickedEventHandler(PlanElement)}
+     * @param editablePathPair
+     */
+    protected void initSelectedPlanElement(Pair<T, Path> editablePathPair) {
+        selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
+        selectedPlanElement.get().add(new Pair<>(editablePathPair.getKey(), null));
+        selectedPlanElement.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                DropShadow value = new DropShadow(StateContainer.STATE_RADIUS, new Color(0,0.4,0.9,0.9));
+                value.setBlurType(BlurType.ONE_PASS_BOX);
+                value.setSpread(0.45);
+                newValue.forEach(selectedPlanElementPair -> {
+                    AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
+                    if (planElementContainer != null) {
+                        planElementContainer.setEffect(value);
+                    }
+                });
+                if (newValue.size() == 1 && newValue.get(0).getValue() instanceof TransitionContainer) {
+                    ((TransitionContainer)newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
+                }
+            }
+
+            if ((oldValue != null)) {
+                    oldValue.forEach(selectedPlanElementPair -> {
+                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
+                        if (planElementContainer != null) {
+                            // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
+                            planElementContainer.setEffect(null);
+                        }
+                    });
+
+                if (oldValue.size() == 1 && oldValue.get(0).getValue() instanceof TransitionContainer) {
+                    ((TransitionContainer)oldValue.get(0).getValue()).setPotentialDraggableNodesVisible(false);
+                }
+            }
         });
     }
 

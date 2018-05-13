@@ -3,15 +3,18 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.PLDToolBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
@@ -20,17 +23,20 @@ import org.eclipse.emf.common.util.URI;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by marci on 23.11.16.
  */
 public class PlanTab extends AbstractEditorTab<Plan> {
 
-    private final PlanEditorPane planEditorPane;
+    private final PlanEditorGroup planEditorGroup;
     private final ConditionHBox conditionHBox;
     private PlanModelVisualisationObject planModelVisualisationObject;
     private PmlUiExtensionMap pmlUiExtensionMap;
     private final PLDToolBar pldToolBar;
+    private final StackPane planContent;
 
     public PlanTab(Pair<Plan, Path> planPathPair, CommandStack commandStack) {
         super(planPathPair , commandStack);
@@ -41,12 +47,12 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         setPmlUiExtensionMap((PmlUiExtensionMap) EMFModelUtils.getAlicaResourceSet().getResource(relativeURI, false).getContents().get(0));
 
         planModelVisualisationObject = new PlanModelVisualisationObject(getEditable(), getPmlUiExtensionMap());
-        planEditorPane = new PlanEditorPane(planModelVisualisationObject, this);
-        StackPane planContent = new StackPane(planEditorPane);
+        planEditorGroup = new PlanEditorGroup(planModelVisualisationObject, this);
+        planContent = new StackPane(planEditorGroup);
         planContent.setPadding(new Insets(50, 50, 50, 50));
         planContent.setManaged(true);
 
-        planEditorPane.setManaged(true);
+        planEditorGroup.setManaged(true);
 
         pldToolBar = new PLDToolBar(MainController.getInstance().getEditorTabPane());
         ScrollPane scrollPane = new ScrollPane(planContent);
@@ -62,8 +68,8 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         setContent(vBox);
     }
 
-    public PlanEditorPane getPlanEditorPane() {
-        return planEditorPane;
+    public PlanEditorGroup getPlanEditorGroup() {
+        return planEditorGroup;
     }
 
     public ConditionHBox getConditionHBox() {
@@ -75,7 +81,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
     }
 
     public void setupPlanVisualisation() {
-        planEditorPane.setupPlanVisualisation();
+        planEditorGroup.setupPlanVisualisation();
     }
 
     @Override
@@ -99,5 +105,21 @@ public class PlanTab extends AbstractEditorTab<Plan> {
 
     public PlanModelVisualisationObject getPlanModelVisualisationObject() {
         return planModelVisualisationObject;
+    }
+
+    @Override
+    protected void initSelectedPlanElement(Pair<Plan, Path> editablePathPair) {
+        super.initSelectedPlanElement(editablePathPair);
+        contentProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+                    if (event.getTarget() == planContent) {
+                        List<Pair<PlanElement, AbstractPlanElementContainer>> plan = new ArrayList<>();
+                        plan.add(new Pair<>(getEditable(), null));
+                        getSelectedPlanElement().set(plan);
+                    }
+                });
+            }
+        });
     }
 }

@@ -43,7 +43,7 @@ public class StateTool extends AbstractTool<State> {
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class StateTool extends AbstractTool<State> {
                     updateLocalCoords(event);
                     if (event.getGestureSource() != workbench && visualRepresentation == null) {
                         visualRepresentation = new Circle(localCoord.getX(),localCoord.getY(), 10, new StateContainer().getVisualisationColor());
-                        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().add(visualRepresentation);
+                        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().add(visualRepresentation);
                     }
                     event.consume();
                 }
@@ -89,7 +89,7 @@ public class StateTool extends AbstractTool<State> {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
-                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
+                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
                     visualRepresentation = null;
                 }
             });
@@ -106,8 +106,8 @@ public class StateTool extends AbstractTool<State> {
                         return;
                     }
 
-                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
-                    PlanModelVisualisationObject planModelVisualisationObject = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getPlanModelVisualisationObject();
+                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
+                    PlanModelVisualisationObject planModelVisualisationObject = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject();
                     AddStateInPlan command = new AddStateInPlan(planModelVisualisationObject,
                             createNewObject());
                     MainController.getInstance()

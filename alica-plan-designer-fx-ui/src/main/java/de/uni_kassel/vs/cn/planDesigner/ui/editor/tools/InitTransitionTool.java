@@ -40,7 +40,7 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
     }
 
     @Override

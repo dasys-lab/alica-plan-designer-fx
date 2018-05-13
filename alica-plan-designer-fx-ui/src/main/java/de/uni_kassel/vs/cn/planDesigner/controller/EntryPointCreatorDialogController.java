@@ -117,7 +117,7 @@ public class EntryPointCreatorDialogController implements Initializable {
 
     private void createNewEntryPoint(Task selectedItem) {
         PlanTab selectedPlanTab = (PlanTab) MainController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem();
-        AddEntryPointInPlan command = new AddEntryPointInPlan((selectedPlanTab.getPlanEditorPane().getPlanModelVisualisationObject()));
+        AddEntryPointInPlan command = new AddEntryPointInPlan((selectedPlanTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
         MainController.getInstance()
                 .getCommandStack()
                 .storeAndExecute(command);

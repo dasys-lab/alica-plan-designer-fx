@@ -6,9 +6,11 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePos
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -58,7 +60,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
         setLayoutY(getPmlUiExtension().getYPos());
         visualRepresentation = new Circle(StateContainer.STATE_RADIUS,
                 getVisualisationColor());
-        visualRepresentation.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
+        setEffectToStandard();
 
         if (stateContainer != null) {
             double localX = stateContainer.getVisualRepresentation().getLayoutX();
@@ -86,6 +88,12 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
     }
 
     @Override
+    public void setEffectToStandard() {
+        visualRepresentation.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,
+                new Color(0,0,0,0.8), 10, 0, 0, 0));
+    }
+
+    @Override
     public Color getVisualisationColor() {
         return Color.BLUE;
     }
@@ -94,7 +102,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPoint containedElement) {
         List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
         selected.add(new Pair<>(containedElement, this));
-        return event -> ((PlanEditorPane) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(selected);
+        return event -> ((PlanEditorGroup) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(selected);
     }
 
     @Override

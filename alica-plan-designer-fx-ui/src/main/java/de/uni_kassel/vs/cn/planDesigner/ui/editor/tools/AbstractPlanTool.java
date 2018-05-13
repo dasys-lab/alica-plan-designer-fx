@@ -40,7 +40,7 @@ public class AbstractPlanTool extends AbstractTool<AbstractPlan> {
     @Override
     public void draw() {
         if (workbench != null && workbench.getSelectionModel().getSelectedItem() != null) {
-            ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().setupPlanVisualisation();
+            ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
         }
     }
 
@@ -70,7 +70,7 @@ public class AbstractPlanTool extends AbstractTool<AbstractPlan> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (event.getGestureSource() != workbench && visualRepresentation == null) {
-                        ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().add(visualRepresentation);
+                        ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().add(visualRepresentation);
                     }
                     event.consume();
                 }
@@ -80,7 +80,7 @@ public class AbstractPlanTool extends AbstractTool<AbstractPlan> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (workbench.getSelectionModel().getSelectedItem() != null) {
-                        ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
+                        ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
                     }
                 }
             });
@@ -92,7 +92,7 @@ public class AbstractPlanTool extends AbstractTool<AbstractPlan> {
                     if (event.getTarget() != null && ((Node)event.getTarget()).getParent() instanceof StateContainer &&
                             ((Node)event.getTarget()).getParent() instanceof TerminalStateContainer == false) {
                         StateContainer stateContainer = (StateContainer) ((Node) event.getTarget()).getParent();
-                        ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorPane().getChildren().remove(visualRepresentation);
+                        ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
                         AddAbstractPlanToState command = new AddAbstractPlanToState(activeElement, stateContainer.getContainedElement());
                         MainController.getInstance()
                                 .getCommandStack()

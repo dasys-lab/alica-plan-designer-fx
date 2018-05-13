@@ -8,11 +8,13 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.TerminalState;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorPane;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.geometry.Insets;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -58,7 +60,7 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
         setLayoutX(getPmlUiExtension().getXPos());
         setLayoutY(getPmlUiExtension().getYPos());
         visualRepresentation = new Circle(STATE_RADIUS, getVisualisationColor());
-        visualRepresentation.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
+        setEffectToStandard();
         getChildren().add(visualRepresentation);
         Text e = new Text(getContainedElement().getName());
         getChildren().add(e);
@@ -80,6 +82,12 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
     }
 
     @Override
+    public void setEffectToStandard() {
+        visualRepresentation.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,
+                new Color(0,0,0,0.8), 10, 0, 0, 0));
+    }
+
+    @Override
     public Color getVisualisationColor() {
         return Color.YELLOW;
     }
@@ -91,7 +99,7 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
 
     @Override
     public void redrawElement() {
-        //((PlanEditorPane) getParent()).setupPlanVisualisation();
+        //((PlanEditorGroup) getParent()).setupPlanVisualisation();
         setupContainer();
         invalidationListeners.forEach(listener -> listener.invalidated(this));
     }
@@ -138,7 +146,7 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
             setPickOnBounds(false);
             List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
             selected.add(new Pair<>(abstractPlan, StateContainer.this));
-            addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorPane) getParent().getParent())
+            addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorGroup) getParent().getParent())
                     .getPlanEditorTab().getSelectedPlanElement().setValue(selected));
         }
     }
