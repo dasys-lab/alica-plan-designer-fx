@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.EAbstractPlanType;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
@@ -16,10 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +27,8 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
     private EAbstractPlanType planType;
     private Map<Plan, List<State>> referencedStateListForBackup;
     private Map<PmlUiExtensionMap, List<PmlUiExtension>> referencesInStyleFiles;
-    private Map<PlanType, List<AnnotatedPlan>> referencedAnnotatedPlansForBackup;
+    private Map<PlanType, AnnotatedPlan> referencedAnnotatedPlansForBackup;
+    private Map<State, Parametrisation> referencedParametrisationForBackup;
     private Path path;
 
     // not always used
@@ -52,23 +50,59 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
         referencedAnnotatedPlansForBackup = new HashMap<>();
         referencedStateListForBackup = new HashMap<>();
         referencesInStyleFiles = new HashMap<>();
+        referencedParametrisationForBackup = new HashMap<>();
     }
 
     @Override
     public void doCommand() {
+
+        // Remove from AlicaResourceSet
         EMFModelUtils
                 .getAlicaResourceSet().getResources().forEach(e -> {
-                    boolean[] saveForDeletionConfirmation = {false};
+            boolean[] saveForDeletionConfirmation = {false};
             EObject eObject = e.getContents().get(0);
             if (eObject instanceof Plan) {
                 ArrayList<State> states = new ArrayList<>();
-                referencedStateListForBackup.put((Plan) eObject, states);
-                ((Plan) eObject).getStates().forEach(f -> {
-                    if (f.getPlans().contains(getElementToEdit())) {
-                        states.add(f);
+                Plan plan = (Plan) eObject;
+                referencedStateListForBackup.put(plan, states);
+                plan.getStates().forEach(state -> {
+                    if (state.getPlans().remove(getElementToEdit())) {
+                        states.add(state);
                         saveForDeletionConfirmation[0] = true;
                     }
-                    f.getPlans().remove(getElementToEdit());
+                    // TODO remove also references to behaviour variables
+                    state.getParametrisation().forEach(parametrisation -> {
+                        referencedParametrisationForBackup.put(state, parametrisation);
+                        boolean[] parametrisationChanged = {false};
+                        if(parametrisation.getSubplan().equals(getElementToEdit())) {
+                            parametrisation.setSubplan(null);
+                            parametrisationChanged[0] = true;
+                        }
+
+                        if(getElementToEdit() instanceof Behaviour) {
+                            Behaviour behaviour = (Behaviour) getElementToEdit();
+                            behaviour.getVars().forEach(variable -> {
+                                if(variable.equals(parametrisation.getSubvar())) {
+                                    parametrisation.setSubvar(null);
+                                    parametrisationChanged[0] = true;
+                                }
+                            });
+                        }
+
+                        if(getElementToEdit() instanceof Plan) {
+                            Plan innerPlan = (Plan) getElementToEdit();
+                            innerPlan.getVars().forEach(variable -> {
+                                if(variable.equals(parametrisation.getSubvar())) {
+                                    parametrisation.setSubvar(null);
+                                    parametrisationChanged[0] = true;
+                                }
+                            });
+                        }
+
+                        if(!parametrisationChanged[0]) {
+                            referencedParametrisationForBackup.remove(state);
+                        }
+                    });
                 });
                 if (states.isEmpty()) {
                     referencedStateListForBackup.remove(eObject);
@@ -76,16 +110,17 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
             }
 
             if (eObject instanceof PlanType) {
-                List<AnnotatedPlan> plansToRemove = new ArrayList<>();
                 PlanType planType = (PlanType) eObject;
-                planType.getPlans().forEach(f -> {
-                    if (f.getPlan().equals(getElementToEdit())) {
-                        plansToRemove.add(f);
-                        saveForDeletionConfirmation[0] = true;
-                    }
-                });
-                referencedAnnotatedPlansForBackup.put(planType, plansToRemove);
-                planType.getPlans().removeAll(plansToRemove);
+                Optional<AnnotatedPlan> annotatedPlan = planType.getPlans()
+                        .stream()
+                        .filter(ap -> ap.getPlan().equals(getElementToEdit()))
+                        .findFirst();
+
+                if (annotatedPlan.isPresent()) {
+                    referencedAnnotatedPlansForBackup.put(planType, annotatedPlan.get());
+                    planType.getPlans().remove(annotatedPlan);
+                    saveForDeletionConfirmation[0] = true;
+                }
             }
 
             if (eObject instanceof PmlUiExtensionMap) {
@@ -99,10 +134,10 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         .collect(Collectors.toList());
                 if (pmlUiExtensions.size() > 0) {
                     referencesInStyleFiles.put(pmlUiExtensionMap, pmlUiExtensions);
-                    // HACK the pmluiextensionmap is more of a list of pairs,
+                    // The pmluiextensionmap is more of a list of pairs,
                     // which means removing a key removes only one entry with the named key.
                     // The EMF documentation hints at this with the description of removeKey() which says it removes an entry.
-                    while(pmlUiExtensionMap.getExtension().containsKey(getElementToEdit())) {
+                    while (pmlUiExtensionMap.getExtension().containsKey(getElementToEdit())) {
                         pmlUiExtensionMap.getExtension().removeKey(getElementToEdit());
                     }
                     saveForDeletionConfirmation[0] = true;
@@ -122,13 +157,13 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
         GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         switch (planType) {
             case PLAN:
-                Pair<Plan, Path> planPathPair = AllAlicaFiles.getInstance().getPlans()
+                Pair<Plan, Path> planPathPair = RepoViewBackend.getInstance().getPlans()
                         .stream()
                         .filter(e -> e.getKey().equals(getElementToEdit()))
                         .findFirst()
                         .get();
                 path = planPathPair.getValue();
-                AllAlicaFiles.getInstance().getPlans().remove(planPathPair);
+                RepoViewBackend.getInstance().getPlans().remove(planPathPair);
                 File pmlEx = new File(path.toFile().toString() + "ex");
                 List<Resource> pmlUiExt = EMFModelUtils.getAlicaResourceSet()
                         .getResources()
@@ -146,16 +181,16 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                 }
 
                 generatedSourcesManager.getAllGeneratedFilesForAbstractPlan(planPathPair.getKey())
-                .forEach(File::delete);
+                        .forEach(File::delete);
                 break;
             case PLANTYPE:
-                Pair<PlanType, Path> planTypePathPair = AllAlicaFiles.getInstance().getPlanTypes()
+                Pair<PlanType, Path> planTypePathPair = RepoViewBackend.getInstance().getPlanTypes()
                         .stream()
                         .filter(e -> e.getKey().equals(getElementToEdit()))
                         .findFirst()
                         .get();
                 path = planTypePathPair.getValue();
-                AllAlicaFiles.getInstance().getPlans().remove(planTypePathPair);
+                RepoViewBackend.getInstance().getPlans().remove(planTypePathPair);
                 try {
                     Files.delete(planTypePathPair.getValue());
                 } catch (IOException e) {
@@ -163,20 +198,20 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                 }
                 break;
             case BEHAVIOUR:
-                Pair<Behaviour, Path> behaviourPathPair = AllAlicaFiles.getInstance().getBehaviours()
+                Pair<Behaviour, Path> behaviourPathPair = RepoViewBackend.getInstance().getBehaviours()
                         .stream()
                         .filter(e -> e.getKey().equals(getElementToEdit()))
                         .findFirst()
                         .get();
                 path = behaviourPathPair.getValue();
-                AllAlicaFiles.getInstance().getBehaviours().remove(behaviourPathPair);
+                RepoViewBackend.getInstance().getBehaviours().remove(behaviourPathPair);
                 try {
                     Files.delete(behaviourPathPair.getValue());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 generatedSourcesManager.getAllGeneratedFilesForAbstractPlan(behaviourPathPair.getKey())
-                    .forEach(File::delete);
+                        .forEach(File::delete);
                 break;
         }
     }
@@ -193,10 +228,10 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                     .forEach(e -> {
                         Plan key = e.getKey();
                         key
-                            .getStates()
-                            .stream()
-                            .filter(f -> e.getValue().contains(f))
-                            .forEach(f -> f.getPlans().add(getElementToEdit()));
+                                .getStates()
+                                .stream()
+                                .filter(f -> e.getValue().contains(f))
+                                .forEach(f -> f.getPlans().add(getElementToEdit()));
                         try {
                             EMFModelUtils.saveAlicaFile(key);
                         } catch (IOException e1) {
@@ -207,7 +242,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                     .entrySet()
                     .forEach(e -> {
                         PlanType key = e.getKey();
-                        key.getPlans().addAll(e.getValue());
+                        key.getPlans().add(e.getValue());
                         try {
                             EMFModelUtils.saveAlicaFile(key);
                         } catch (IOException e1) {

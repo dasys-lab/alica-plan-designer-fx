@@ -35,6 +35,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -192,6 +193,18 @@ public class MainController implements Initializable {
             });
         }).start();
 	}
+
+	public void closeTabIfOpen (PlanElement planElement) {
+        Optional<AbstractEditorTab<PlanElement>> tabOptional = editorTabPane
+                .getTabs()
+                .stream()
+                .map(e -> (AbstractEditorTab<PlanElement>) e)
+                .filter(e -> e.getEditable().equals(planElement))
+                .findFirst();
+        if (tabOptional.isPresent()) {
+            editorTabPane.getTabs().remove(tabOptional.get());
+        }
+    }
 
     /**
      * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}

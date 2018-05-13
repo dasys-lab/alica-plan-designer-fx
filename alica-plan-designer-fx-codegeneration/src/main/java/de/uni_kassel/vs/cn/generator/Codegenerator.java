@@ -8,8 +8,7 @@ import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.logging.log4j.LogManager;
@@ -62,6 +61,10 @@ public class Codegenerator {
         String expressionValidatorsPath = new WorkspaceManager().getActiveWorkspace()
                 .getConfiguration().getExpressionValidatorsPath();
         try {
+
+            if(Files.notExists(Paths.get(expressionValidatorsPath))) {
+                Files.createDirectories(Paths.get(expressionValidatorsPath));
+            }
             Files.walk(Paths.get(expressionValidatorsPath)).filter(e -> {
                 String fileName = e.getFileName().toString();
                 return fileName.endsWith(".h") || fileName.endsWith(".cpp");
@@ -76,7 +79,6 @@ public class Codegenerator {
                     LOG.error("Could not parse existing source file " + e, e1);
                     throw new RuntimeException(e1);
                 }
-
             });
         } catch (IOException e) {
             LOG.error("Could not find expression validator path! ", e);
@@ -107,7 +109,7 @@ public class Codegenerator {
      * Initializes all attributes with the "all" prefix or all lists of alica objects in general.
      */
     private void initialze() {
-        allPlans = AllAlicaFiles
+        allPlans = RepoViewBackend
                 .getInstance()
                 .getPlans()
                 .stream()
@@ -115,7 +117,7 @@ public class Codegenerator {
                 .sorted(Comparator.comparing(e -> e.getId()))
                 .collect(Collectors.toList());
 
-        allBehaviours = AllAlicaFiles
+        allBehaviours = RepoViewBackend
                 .getInstance()
                 .getBehaviours()
                 .stream()

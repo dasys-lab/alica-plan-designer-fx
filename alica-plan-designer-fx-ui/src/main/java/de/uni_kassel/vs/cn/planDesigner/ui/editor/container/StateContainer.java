@@ -133,7 +133,8 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
             Text text = new Text(p.getName());
             this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             getChildren().addAll(imageView, text);
-            setLayoutY(getContainedElement().getPlans().indexOf(p)*20);
+            setLayoutX(-(text.getLayoutBounds().getWidth()/2));
+            setLayoutY(StateContainer.STATE_RADIUS + 3); // 3px offset to not touch state circle with text-box
             setPickOnBounds(false);
             List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
             selected.add(new Pair<>(abstractPlan, StateContainer.this));

@@ -6,7 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import javafx.util.Pair;
@@ -48,14 +48,14 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                 }
                 Path path = null;
                 if(getElementToEdit() instanceof Plan) {
-                    Pair<Plan, Path> planPathPair = AllAlicaFiles.getInstance().getPlans()
+                    Pair<Plan, Path> planPathPair = RepoViewBackend.getInstance().getPlans()
                             .stream()
                             .filter(e -> e.getKey().equals(getElementToEdit()))
                             .findFirst()
                             .get();
                     path = planPathPair.getValue();
-                    AllAlicaFiles.getInstance().getPlans().remove(planPathPair);
-                    AllAlicaFiles.getInstance().getPlans().add(new Pair<>((Plan) getElementToEdit(), getNewFilePath(path).toPath()));
+                    RepoViewBackend.getInstance().getPlans().remove(planPathPair);
+                    RepoViewBackend.getInstance().getPlans().add(new Pair<>((Plan) getElementToEdit(), getNewFilePath(path).toPath()));
                     getElementToEdit().eResource().setURI(URI.createURI(getElementToEdit().eResource().getURI()
                             .toString().replace(path.getFileName().toString(),getNewFilePath(path).getName())));
                     final Path finalPath = path;
@@ -73,25 +73,25 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                 }
 
                 if (getElementToEdit() instanceof PlanType) {
-                    Pair<PlanType, Path> planTypePathPair = AllAlicaFiles.getInstance().getPlanTypes()
+                    Pair<PlanType, Path> planTypePathPair = RepoViewBackend.getInstance().getPlanTypes()
                             .stream()
                             .filter(e -> e.getKey().equals(getElementToEdit()))
                             .findFirst()
                             .get();
                     path = planTypePathPair.getValue();
-                    AllAlicaFiles.getInstance().getPlanTypes().remove(planTypePathPair);
-                    AllAlicaFiles.getInstance().getPlanTypes().add(new Pair<>((PlanType) getElementToEdit(), getNewFilePath(path).toPath()));
+                    RepoViewBackend.getInstance().getPlanTypes().remove(planTypePathPair);
+                    RepoViewBackend.getInstance().getPlanTypes().add(new Pair<>((PlanType) getElementToEdit(), getNewFilePath(path).toPath()));
                 }
 
                 if (getElementToEdit() instanceof Behaviour) {
-                    Pair<Behaviour, Path> behaviourPathPair = AllAlicaFiles.getInstance().getBehaviours()
+                    Pair<Behaviour, Path> behaviourPathPair = RepoViewBackend.getInstance().getBehaviours()
                             .stream()
                             .filter(e -> e.getKey().equals(getElementToEdit()))
                             .findFirst()
                             .get();
                     path = behaviourPathPair.getValue();
-                    AllAlicaFiles.getInstance().getBehaviours().remove(behaviourPathPair);
-                    AllAlicaFiles.getInstance().getBehaviours().add(new Pair<>((Behaviour) getElementToEdit(), getNewFilePath(path).toPath()));
+                    RepoViewBackend.getInstance().getBehaviours().remove(behaviourPathPair);
+                    RepoViewBackend.getInstance().getBehaviours().add(new Pair<>((Behaviour) getElementToEdit(), getNewFilePath(path).toPath()));
                 }
 
                 if (path != null) {

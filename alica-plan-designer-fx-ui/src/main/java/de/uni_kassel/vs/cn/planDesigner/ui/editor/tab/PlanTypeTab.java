@@ -25,6 +25,7 @@ public class PlanTypeTab extends AbstractEditorTab<PlanType> {
             controller = fxmlLoader.getController();
             controller.setCommandStack(commandStack);
             controller.setPlanType(pair.getKey());
+            controller.setPlanTypeTab(this);
             setContent(window);
         } catch (IOException e) {
             e.printStackTrace();

@@ -5,7 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.util.Pair;
@@ -45,7 +45,7 @@ public class EditorTabPane extends TabPane {
         String filePathAsString = filePath.toString();
         switch (filePathAsString.substring(filePathAsString.lastIndexOf('.') + 1)) {
             case "pml":
-                Pair<Plan, Path> planPathPair = AllAlicaFiles
+                Pair<Plan, Path> planPathPair = RepoViewBackend
                         .getInstance()
                         .getPlans()
                         .stream()
@@ -53,10 +53,10 @@ public class EditorTabPane extends TabPane {
                         .findFirst().get();
                 return new PlanTab(planPathPair, commandStack);
             case "tsk":
-                List<Pair<TaskRepository, Path>> taskRepositoryPathPair = AllAlicaFiles.getInstance().getTaskRepository();
+                List<Pair<TaskRepository, Path>> taskRepositoryPathPair = RepoViewBackend.getInstance().getTaskRepository();
                 return new TaskRepositoryTab(taskRepositoryPathPair.get(0), commandStack);
             case "pty":
-                Pair<PlanType, Path> plantypePathPair = AllAlicaFiles
+                Pair<PlanType, Path> plantypePathPair = RepoViewBackend
                         .getInstance()
                         .getPlanTypes()
                         .stream()
@@ -64,7 +64,7 @@ public class EditorTabPane extends TabPane {
                         .findFirst().get();
                 return new PlanTypeTab(plantypePathPair, commandStack);
             case "beh":
-                Pair<Behaviour, Path> behaviourPathPair = AllAlicaFiles
+                Pair<Behaviour, Path> behaviourPathPair = RepoViewBackend
                         .getInstance()
                         .getBehaviours()
                         .stream()

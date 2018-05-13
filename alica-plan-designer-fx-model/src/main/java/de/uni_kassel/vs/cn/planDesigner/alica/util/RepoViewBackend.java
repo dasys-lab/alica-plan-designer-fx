@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,11 +29,11 @@ import java.util.stream.Collectors;
  * <p>
  * This class contains Lists of all Plans, PlanTypes, Behaviours and Tasks
  */
-public class AllAlicaFiles {
+public class RepoViewBackend {
 
-    private static final Logger LOG = LogManager.getLogger(AllAlicaFiles.class);
+    private static final Logger LOG = LogManager.getLogger(RepoViewBackend.class);
 
-    private static AllAlicaFiles instance;
+    private static RepoViewBackend instance;
 
     private ObservableList<Pair<Plan, Path>> plans;
 
@@ -42,12 +43,11 @@ public class AllAlicaFiles {
 
     private Pair<List<Task>, Path> tasks;
 
-
     private List<Pair<TaskRepository, Path>> taskRepository;
 
-    public static AllAlicaFiles getInstance() {
+    public static RepoViewBackend getInstance() {
         if (instance == null) {
-            instance = new AllAlicaFiles();
+            instance = new RepoViewBackend();
             try {
                 instance.init();
             } catch (URISyntaxException | IOException e) {
@@ -61,10 +61,11 @@ public class AllAlicaFiles {
 
     /**
      * For testing only.
+     *
      * @return
      */
-    public static AllAlicaFiles getTestInstance() {
-        instance = new AllAlicaFiles();
+    public static RepoViewBackend getTestInstance() {
+        instance = new RepoViewBackend();
         instance.taskRepository = new ArrayList<>();
         instance.plans = FXCollections.observableArrayList(new ArrayList<>());
         instance.planTypes = FXCollections.observableArrayList(new ArrayList<>());
@@ -106,13 +107,13 @@ public class AllAlicaFiles {
 
         if (taskRepository == null || taskRepository.isEmpty()) {
             EMFModelUtils.createAlicaFile(EMFModelUtils.getAlicaFactory().createTaskRepository(), false,
-                    new File(configuration.getMiscPath() + File.separator +"taskrepository.tsk"));
+                    new File(configuration.getMiscPath() + File.separator + "taskrepository.tsk"));
             taskRepository = getRepositoryOf(configuration.getMiscPath(), "tsk");
         }
 
         tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
         EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
-        LOG.info("AllAlicaFiles successfully initialized");
+        LOG.info("RepoViewBackend successfully initialized");
     }
 
     public Path getPathForAbstractPlan(AbstractPlan abstractPlan) {
@@ -144,8 +145,9 @@ public class AllAlicaFiles {
     /**
      * Tries to find a list matching the given pair.
      * If none match null is returned
+     *
      * @param pathPair the pair which list you are searching for
-     * @param <T> type of the list
+     * @param <T>      type of the list
      * @return result
      */
     @SuppressWarnings("unchecked")
@@ -169,8 +171,12 @@ public class AllAlicaFiles {
         return null;
     }
 
-    private <T extends EObject> ObservableList<Pair<T, Path>> getRepositoryOf(String plansPath, String filePostfix) throws IOException {
-        List<Pair<T, Path>> collectedList = Files.walk(Paths.get(plansPath))
+    private <T extends EObject> ObservableList<Pair<T, Path>> getRepositoryOf(String path, String filePostfix) throws IOException {
+
+        if (Files.notExists(Paths.get(path))) {
+            Files.createDirectories(Paths.get(path));
+        }
+        List<Pair<T, Path>> collectedList = Files.walk(Paths.get(path))
                 .filter(p -> p.toString().endsWith("." + filePostfix))
                 .map(p -> {
                     try {
@@ -180,12 +186,33 @@ public class AllAlicaFiles {
                         }
                         return tPathPair;
                     } catch (IOException e) {
-                        LOG.fatal("Could not load repository of " + plansPath + "for file ending " + filePostfix, e);
+                        LOG.fatal("Could not load repository of " + path + "for file ending " + filePostfix, e);
                         throw new RuntimeException(e);
                     }
                 })
                 .collect(Collectors.toList());
         LOG.info("Completed initial repository list for file ending: " + filePostfix);
         return FXCollections.observableList(collectedList);
+    }
+
+    public Optional<Pair<Plan, Path>> getPlanPathPair(File planFile) {
+        return plans
+                .stream()
+                .filter(f -> f.getValue().toFile().equals(planFile))
+                .findFirst();
+    }
+
+    public Optional<Pair<PlanType, Path>> getPlanTypePathPair(File planTypeFile) {
+        return planTypes
+                .stream()
+                .filter(f -> f.getValue().toFile().equals(planTypeFile))
+                .findFirst();
+    }
+
+    public Optional<Pair<Behaviour, Path>> getBehaviourPathPair(File behaviourFile) {
+        return behaviours
+                .stream()
+                .filter(f -> f.getValue().toFile().equals(behaviourFile))
+                .findFirst();
     }
 }

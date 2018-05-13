@@ -5,7 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
@@ -74,7 +74,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                                 new File(parent, draggedItem.getValue().unwrap().getName()).toPath());
 
                         EObject result = null;
-                        Optional<Pair<Plan, Path>> first = AllAlicaFiles
+                        Optional<Pair<Plan, Path>> first = RepoViewBackend
                                 .getInstance()
                                 .getPlans()
                                 .stream()
@@ -82,7 +82,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                                 .findFirst();
 
                         if (result != null) {
-                            AllAlicaFiles
+                            RepoViewBackend
                                     .getInstance()
                                     .getPlanTypes().remove(result);
                         }
@@ -90,7 +90,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                         result = first.isPresent() ? first.get().getKey() : null;
 
                         if (result == null) {
-                            Optional<Pair<Behaviour, Path>> second = AllAlicaFiles
+                            Optional<Pair<Behaviour, Path>> second = RepoViewBackend
                                     .getInstance()
                                     .getBehaviours()
                                     .stream()
@@ -98,14 +98,14 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                                     .findFirst();
                             result = second.isPresent() ? second.get().getKey() : null;
                             if (result != null) {
-                                AllAlicaFiles
+                                RepoViewBackend
                                         .getInstance()
                                         .getBehaviours().remove(result);
                             }
                         }
 
                         if (result == null) {
-                            Optional<Pair<PlanType, Path>> third = AllAlicaFiles
+                            Optional<Pair<PlanType, Path>> third = RepoViewBackend
                                     .getInstance()
                                     .getPlanTypes()
                                     .stream()
@@ -113,7 +113,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                                     .findFirst();
                             result = third.isPresent() ? third.get().getKey() : null;
                             if (result != null) {
-                                AllAlicaFiles
+                                RepoViewBackend
                                         .getInstance()
                                         .getPlanTypes().remove(result);
                             }

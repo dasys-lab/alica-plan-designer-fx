@@ -4,22 +4,17 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteAbs
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.PLDFileTreeView;
-import de.uni_kassel.vs.cn.planDesigner.ui.menu.DeleteFileMenuItem;
 import javafx.application.Platform;
-import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.junit.Assert;
@@ -34,13 +29,13 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
 
 public class SaveTest extends ApplicationTest {
 
-    private AllAlicaFiles testInstance;
+    private RepoViewBackend testInstance;
 
     @Before
     public void init() {
         new WorkspaceManager().init();
         EMFModelUtils.initializeEMF();
-        testInstance = AllAlicaFiles.getTestInstance();
+        testInstance = RepoViewBackend.getTestInstance();
         PlanDesigner.setRunning(true);
     }
 

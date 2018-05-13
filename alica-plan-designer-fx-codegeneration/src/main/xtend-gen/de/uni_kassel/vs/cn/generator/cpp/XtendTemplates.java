@@ -97,7 +97,7 @@ public class XtendTemplates {
       }
     }
     _builder.newLine();
-    _builder.append("using std::execption;");
+    _builder.append("using std::exception;");
     _builder.newLine();
     _builder.append("using std::make_shared;");
     _builder.newLine();
@@ -149,10 +149,8 @@ public class XtendTemplates {
         _builder.append("case ");
         long _id = beh_1.getId();
         _builder.append(_id, "            ");
+        _builder.append(":");
         _builder.newLineIfNotEmpty();
-        _builder.append("            ");
-        _builder.append("// TODO something for behaviour configurations has to be done here");
-        _builder.newLine();
         _builder.append("            ");
         _builder.append("return make_shared<");
         String _name_1 = beh_1.getName();
@@ -199,8 +197,6 @@ public class XtendTemplates {
     _builder.append(_id, "");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("//Add additional includes here");
-    _builder.newLine();
     {
       long _id_1 = behaviour.getId();
       String _plus = ("inc" + Long.valueOf(_id_1));
@@ -211,6 +207,9 @@ public class XtendTemplates {
         String _get = this.protectedRegions.get(_plus_1);
         _builder.append(_get, "");
         _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional includes here");
+        _builder.newLine();
       }
     }
     _builder.append("/*PROTECTED REGION END*/");
@@ -252,9 +251,6 @@ public class XtendTemplates {
     _builder.append(_id_3, "            ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("             ");
-    _builder.append("//Add additional public methods here");
-    _builder.newLine();
     {
       long _id_4 = behaviour.getId();
       String _plus_2 = ("pub" + Long.valueOf(_id_4));
@@ -265,6 +261,10 @@ public class XtendTemplates {
         String _get_1 = this.protectedRegions.get(_plus_3);
         _builder.append(_get_1, "");
         _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("            ");
+        _builder.append("//Add additional protected methods here");
+        _builder.newLine();
       }
     }
     _builder.append("            ");
@@ -282,9 +282,6 @@ public class XtendTemplates {
     _builder.append(_id_6, "            ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("            ");
-    _builder.append("//Add additional protected methods here");
-    _builder.newLine();
     {
       long _id_7 = behaviour.getId();
       String _plus_4 = ("pro" + Long.valueOf(_id_7));
@@ -295,6 +292,10 @@ public class XtendTemplates {
         String _get_2 = this.protectedRegions.get(_plus_5);
         _builder.append(_get_2, "");
         _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("            ");
+        _builder.append("//Add additional protected methods here");
+        _builder.newLine();
       }
     }
     _builder.append("            ");
@@ -304,24 +305,25 @@ public class XtendTemplates {
     _builder.append("private:");
     _builder.newLine();
     _builder.append("        ");
-    _builder.append("/*PROTECTED REGION ID(priv");
+    _builder.append("/*PROTECTED REGION ID(prv");
     long _id_9 = behaviour.getId();
     _builder.append(_id_9, "        ");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("        ");
-    _builder.append("//Add additional private methods here");
-    _builder.newLine();
     {
       long _id_10 = behaviour.getId();
-      String _plus_6 = ("priv" + Long.valueOf(_id_10));
+      String _plus_6 = ("prv" + Long.valueOf(_id_10));
       boolean _containsKey_3 = this.protectedRegions.containsKey(_plus_6);
       if (_containsKey_3) {
         long _id_11 = behaviour.getId();
-        String _plus_7 = ("priv" + Long.valueOf(_id_11));
+        String _plus_7 = ("prv" + Long.valueOf(_id_11));
         String _get_3 = this.protectedRegions.get(_plus_7);
         _builder.append(_get_3, "");
         _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("            ");
+        _builder.append("//Add additional private methods here");
+        _builder.newLine();
       }
     }
     _builder.append("        ");
@@ -358,9 +360,6 @@ public class XtendTemplates {
     _builder.append(_id, "");
     _builder.append(") ENABLED START*/");
     _builder.newLineIfNotEmpty();
-    _builder.append("    ");
-    _builder.append("//Add additional includes here");
-    _builder.newLine();
     {
       long _id_1 = behaviour.getId();
       String _plus = ("inccpp" + Long.valueOf(_id_1));
@@ -645,8 +644,6 @@ public class XtendTemplates {
   
   public String utilityFunctionCreatorSource(final List<Plan> plans) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#include <iostream>");
-    _builder.newLine();
     _builder.append("#include \"UtilityFunctionCreator.h\"");
     _builder.newLine();
     {
@@ -663,13 +660,17 @@ public class XtendTemplates {
         _builder.newLineIfNotEmpty();
       }
     }
-    _builder.append("using std::execption;");
+    _builder.append("#include <iostream>");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("using std::exception;");
     _builder.newLine();
     _builder.append("using std::make_shared;");
     _builder.newLine();
     _builder.append("using std::cout;");
     _builder.newLine();
     _builder.append("using namespace alicaAutogenerated;");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("namespace alica");
     _builder.newLine();
@@ -760,14 +761,14 @@ public class XtendTemplates {
     _builder.append("#pragma once");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("#include \"engine/IConditionCreator.h\"");
+    _builder.append("#include <engine/IConditionCreator.h>");
     _builder.newLine();
     _builder.append("#include <memory>");
     _builder.newLine();
-    _builder.append("#include \"iostream\"");
+    _builder.append("#include <iostream>");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("using std::execption;");
+    _builder.append("using std::exception;");
     _builder.newLine();
     _builder.append("using std::make_shared;");
     _builder.newLine();
@@ -876,33 +877,20 @@ public class XtendTemplates {
         _builder.newLineIfNotEmpty();
         {
           if ((con instanceof PreCondition)) {
-            {
-              AbstractPlan _abstractPlan = ((PreCondition)con).getAbstractPlan();
-              boolean _equals = Objects.equal(_abstractPlan, null);
-              if (_equals) {
-                _builder.append("            ");
-                _builder.append("return make_shared<TransitionCondition");
-                long _id_2 = ((PreCondition)con).getId();
-                _builder.append(_id_2, "            ");
-                _builder.append(">();");
-                _builder.newLineIfNotEmpty();
-              } else {
-                _builder.append("            ");
-                _builder.append("return make_shared<PreCondition");
-                long _id_3 = ((PreCondition)con).getId();
-                _builder.append(_id_3, "            ");
-                _builder.append(">();");
-                _builder.newLineIfNotEmpty();
-              }
-            }
+            _builder.append("            ");
+            _builder.append("return make_shared<PreCondition");
+            long _id_2 = ((PreCondition)con).getId();
+            _builder.append(_id_2, "            ");
+            _builder.append(">();");
+            _builder.newLineIfNotEmpty();
           }
         }
         {
           if ((con instanceof PostCondition)) {
             _builder.append("            ");
             _builder.append("return make_shared<PostCondition");
-            long _id_4 = ((PostCondition)con).getId();
-            _builder.append(_id_4, "            ");
+            long _id_3 = ((PostCondition)con).getId();
+            _builder.append(_id_3, "            ");
             _builder.append(">();");
             _builder.newLineIfNotEmpty();
           }
@@ -911,8 +899,8 @@ public class XtendTemplates {
           if ((con instanceof RuntimeCondition)) {
             _builder.append("            ");
             _builder.append("return make_shared<RunTimeCondition");
-            long _id_5 = ((RuntimeCondition)con).getId();
-            _builder.append(_id_5, "            ");
+            long _id_4 = ((RuntimeCondition)con).getId();
+            _builder.append(_id_4, "            ");
             _builder.append(">();");
             _builder.newLineIfNotEmpty();
           }
@@ -992,8 +980,6 @@ public class XtendTemplates {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("#include \"ConstraintCreator.h\"");
     _builder.newLine();
-    _builder.append("#include <iostream>");
-    _builder.newLine();
     _builder.newLine();
     {
       for(final Plan p : plans) {
@@ -1009,7 +995,11 @@ public class XtendTemplates {
         _builder.newLineIfNotEmpty();
       }
     }
-    _builder.append("using std::execption;");
+    _builder.newLine();
+    _builder.append("#include <iostream>");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("using std::exception;");
     _builder.newLine();
     _builder.append("using std::make_shared;");
     _builder.newLine();
@@ -1109,14 +1099,18 @@ public class XtendTemplates {
     _builder.append("#pragma once");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("#include \"engine/BasicConstraint.h\"");
+    _builder.append("#include <engine/BasicConstraint.h>");
     _builder.newLine();
     _builder.append("#include <memory>");
     _builder.newLine();
+    _builder.append("#include <iostream>");
     _builder.newLine();
-    _builder.append("using std::execption;");
+    _builder.newLine();
+    _builder.append("using std::exception;");
     _builder.newLine();
     _builder.append("using std::make_shared;");
+    _builder.newLine();
+    _builder.append("using std::shared_ptr;");
     _builder.newLine();
     _builder.append("using std::cout;");
     _builder.newLine();
@@ -1294,7 +1288,7 @@ public class XtendTemplates {
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("using std::execption;");
+    _builder.append("using std::exception;");
     _builder.newLine();
     _builder.append("using std::make_shared;");
     _builder.newLine();
@@ -1403,7 +1397,7 @@ public class XtendTemplates {
     _builder.append("#pragma once");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("#include \"engine/BasicBehaviour.h\"");
+    _builder.append("#include <engine/BasicBehaviour.h>");
     _builder.newLine();
     _builder.append("#include <string>");
     _builder.newLine();
@@ -1574,7 +1568,7 @@ public class XtendTemplates {
     _builder.append("#pragma once");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("#include \"engine/BasicCondition.h\"");
+    _builder.append("#include <engine/BasicCondition.h>");
     _builder.newLine();
     _builder.append("/*PROTECTED REGION ID(domainHeaderAdditional) ENABLED START*/");
     _builder.newLine();
@@ -1626,6 +1620,48 @@ public class XtendTemplates {
         _builder.newLine();
       }
     }
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("protected:");
+    _builder.newLine();
+    _builder.append("                ");
+    _builder.append("/*PROTECTED REGION ID(protectedDomainHeader) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_2 = this.protectedRegions.containsKey("protectedDomainHeader");
+      if (_containsKey_2) {
+        String _get_2 = this.protectedRegions.get("protectedDomainHeader");
+        _builder.append(_get_2, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("private:");
+    _builder.newLine();
+    _builder.append("                ");
+    _builder.append("/*PROTECTED REGION ID(privateDomainHeader) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_3 = this.protectedRegions.containsKey("privateDomainHeader");
+      if (_containsKey_3) {
+        String _get_3 = this.protectedRegions.get("privateDomainHeader");
+        _builder.append(_get_3, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional options here");
+        _builder.newLine();
+      }
+    }
     _builder.append("        ");
     _builder.append("/*PROTECTED REGION END*/");
     _builder.newLine();
@@ -1633,9 +1669,6 @@ public class XtendTemplates {
     _builder.append("};");
     _builder.newLine();
     _builder.append("} /* namespace alica */");
-    _builder.newLine();
-    _builder.newLine();
-    _builder.append("#endif /* DomainBehaviour_H_ */");
     _builder.newLine();
     return _builder.toString();
   }
@@ -1717,6 +1750,24 @@ public class XtendTemplates {
     _builder.append("    ");
     _builder.append("}");
     _builder.newLine();
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("/*PROTECTED REGION ID(additionalMethodsDomainCondition) ENABLED START*/");
+    _builder.newLine();
+    {
+      boolean _containsKey_3 = this.protectedRegions.containsKey("additionalMethodsDomainCondition");
+      if (_containsKey_3) {
+        String _get_3 = this.protectedRegions.get("additionalMethodsDomainCondition");
+        _builder.append(_get_3, "");
+        _builder.newLineIfNotEmpty();
+      } else {
+        _builder.append("//Add additional methods here");
+        _builder.newLine();
+      }
+    }
+    _builder.append("    ");
+    _builder.append("/*PROTECTED REGION END*/");
+    _builder.newLine();
     _builder.append("} /* namespace alica */");
     _builder.newLine();
     return _builder.toString();
@@ -1729,11 +1780,11 @@ public class XtendTemplates {
     _builder.newLine();
     _builder.append("#include \"DomainCondition.h\"");
     _builder.newLine();
-    _builder.append("#include \"engine/BasicUtilityFunction.h\"");
+    _builder.append("#include <engine/BasicUtilityFunction.h>");
     _builder.newLine();
-    _builder.append("#include \"engine/UtilityFunction.h\"");
+    _builder.append("#include <engine/UtilityFunction.h>");
     _builder.newLine();
-    _builder.append("#include \"engine/DefaultUtilityFunction.h\"");
+    _builder.append("#include <engine/DefaultUtilityFunction.h>");
     _builder.newLine();
     _builder.append("/*PROTECTED REGION ID(incl");
     long _id = plan.getId();
@@ -1751,7 +1802,7 @@ public class XtendTemplates {
         _builder.append(_get, "");
         _builder.newLineIfNotEmpty();
       } else {
-        _builder.append("//Add additional options here");
+        _builder.append("//Add additional includes here");
         _builder.newLine();
       }
     }
@@ -1857,7 +1908,7 @@ public class XtendTemplates {
           EList<Transition> _outTransitions = s.getOutTransitions();
           for(final Transition transition : _outTransitions) {
             _builder.append("    ");
-            _builder.append("class TransitionCondition");
+            _builder.append("class PreCondition");
             PreCondition _preCondition_2 = transition.getPreCondition();
             long _id_9 = _preCondition_2.getId();
             _builder.append(_id_9, "    ");
@@ -1878,9 +1929,6 @@ public class XtendTemplates {
       }
     }
     _builder.append("} /* namespace alica */");
-    _builder.newLine();
-    _builder.newLine();
-    _builder.append("#endif");
     _builder.newLine();
     return _builder.toString();
   }

@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryHBox;
 import javafx.collections.FXCollections;
@@ -33,7 +33,7 @@ public class UsagesWindowController implements Initializable {
         List<RepositoryHBox<AbstractPlan>> repositoryHBoxes = plans
                 .stream()
                 .map(e -> {
-                    Path pathForAbstractPlan = AllAlicaFiles.getInstance().getPathForAbstractPlan(e);
+                    Path pathForAbstractPlan = RepoViewBackend.getInstance().getPathForAbstractPlan(e);
                     return new RepositoryHBox<>(e, pathForAbstractPlan);
                 })
                 .collect(Collectors.toList());

@@ -6,9 +6,10 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangeAtt
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemoveAllPlansFromPlanType;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemovePlanFromPlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryHBox;
 import javafx.collections.FXCollections;
@@ -36,6 +37,9 @@ public class PlanTypeWindowController implements Initializable {
     private PlanType planType;
 
     private CommandStack commandStack;
+
+    @FXML
+    private PlanTypeTab planTypeTab;
 
     @FXML
     private Button removePlanButton;
@@ -69,7 +73,7 @@ public class PlanTypeWindowController implements Initializable {
     }
 
     private void initPlanListView() {
-        List<RepositoryHBox<Plan>> allPlans = AllAlicaFiles
+        List<RepositoryHBox<Plan>> allPlans = RepoViewBackend
                 .getInstance()
                 .getPlans()
                 .stream()
@@ -86,11 +90,14 @@ public class PlanTypeWindowController implements Initializable {
     private void initButtons() {
         saveButton.setOnAction(e -> {
             try {
+                planTypeTab.setText(planTypeTab.getText().replace("*",""));
                 EMFModelUtils.saveAlicaFile(planType);
+                commandStack.setSavedForAbstractPlan(planType);
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
             }
         });
+
         addPlanButton.setOnAction(e -> {
             RepositoryHBox<Plan> selectedItem = planListView.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -144,7 +151,7 @@ public class PlanTypeWindowController implements Initializable {
                     List<? extends AnnotatedPlan> removedSubList = c.getRemoved();
                     removedSubList
                             .forEach(e -> {
-                                Pair<Plan, Path> planPathPair = AllAlicaFiles
+                                Pair<Plan, Path> planPathPair = RepoViewBackend
                                         .getInstance()
                                         .getPlans()
                                         .stream()
@@ -180,6 +187,7 @@ public class PlanTypeWindowController implements Initializable {
                 return annotatedPlanBooleanTableCell;
             }
         });
+
         TableColumn<AnnotatedPlan, Plan> planNameColumn = new TableColumn<>();
         planNameColumn.setCellValueFactory(new PropertyValueFactory<>("plan"));
         planNameColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlan, Plan>, TableCell<AnnotatedPlan, Plan>>() {
@@ -197,6 +205,7 @@ public class PlanTypeWindowController implements Initializable {
                 return planNameTableCell;
             }
         });
+
         plantypeTableView.getColumns().add(activeColumn);
         plantypeTableView.getColumns().add(planNameColumn);
         plantypeTableView.setRowFactory(tv -> {
@@ -222,4 +231,6 @@ public class PlanTypeWindowController implements Initializable {
     public void setCommandStack(CommandStack commandStack) {
         this.commandStack = commandStack;
     }
+
+    public void setPlanTypeTab(PlanTypeTab planTypeTab) {this.planTypeTab = planTypeTab; }
 }

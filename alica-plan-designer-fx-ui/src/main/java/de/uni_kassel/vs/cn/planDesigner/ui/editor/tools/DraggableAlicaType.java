@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 /**
  * Created by marci on 23.11.16.
  */
-public enum DragableAlicaType {
+public enum DraggableAlicaType {
     PLAN(Plan.class),
     PLANNING_PROBLEM(PlanningProblem.class),
     PLANTYPE(PlanType.class),
@@ -26,7 +26,7 @@ public enum DragableAlicaType {
 
     private Class<? extends EObject> associatedClass;
 
-    DragableAlicaType(Class<? extends EObject> planClass) {
+    DraggableAlicaType(Class<? extends EObject> planClass) {
         associatedClass = planClass;
     }
 
@@ -34,9 +34,9 @@ public enum DragableAlicaType {
         return associatedClass;
     }
 
-    public static DragableAlicaType getDragbleTypeByClass(Class<? extends EObject> eClass) {
+    public static DraggableAlicaType getDraggableTypeByClass(Class<? extends EObject> eClass) {
         return Stream
-                .of(DragableAlicaType.values())
+                .of(DraggableAlicaType.values())
                 .filter(e -> e.getAssociatedClass().equals(eClass))
                 .findFirst()
                 .orElse(null);

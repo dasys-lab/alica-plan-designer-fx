@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AllAlicaFiles;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractPlanTool;
@@ -46,10 +46,10 @@ public class RepositoryTabPane extends TabPane {
             }
         };
 
-        return new Tab[]{new RepositoryTab<>(AllAlicaFiles.getInstance().getPlans(), planTool, getAlicaFactory().createPlan().eClass().getName()),
-                new RepositoryTab<>(AllAlicaFiles.getInstance().getPlanTypes(), planTypeTool, getAlicaFactory().createPlanType().eClass().getName()),
-                new RepositoryTab<>(AllAlicaFiles.getInstance().getBehaviours(), behaviourTool, getAlicaFactory().createBehaviour().eClass().getName()),
-                new RepositoryTab<>(AllAlicaFiles.getInstance().getTasks(), new TaskTool(), getAlicaFactory().createTask().eClass().getName())};
+        return new Tab[]{new RepositoryTab<>(RepoViewBackend.getInstance().getPlans(), planTool, getAlicaFactory().createPlan().eClass().getName()),
+                new RepositoryTab<>(RepoViewBackend.getInstance().getPlanTypes(), planTypeTool, getAlicaFactory().createPlanType().eClass().getName()),
+                new RepositoryTab<>(RepoViewBackend.getInstance().getBehaviours(), behaviourTool, getAlicaFactory().createBehaviour().eClass().getName()),
+                new RepositoryTab<>(RepoViewBackend.getInstance().getTasks(), new TaskTool(), getAlicaFactory().createTask().eClass().getName())};
     }
 
     public class TaskTool extends AbstractPlanTool {
