@@ -202,15 +202,15 @@ public class WorkspaceManager {
         saveWorkspacesFile();
     }
 
-    public String getEclipsePath() {
-        return (String) workspacesProperties.get("eclipsePath");
+    public String getEditorExecutablePath() {
+        return (String) workspacesProperties.get("editorExecutablePath");
     }
 
-    public void setEclipsePath(String eclipsePath) {
-        if (eclipsePath == null) {
-            workspacesProperties.setProperty("eclipsePath", "");
+    public void setEclipsePath(String editorExecutablePath) {
+        if (editorExecutablePath == null) {
+            workspacesProperties.setProperty("editorExecutablePath", "");
         } else {
-            workspacesProperties.setProperty("eclipsePath", eclipsePath);
+            workspacesProperties.setProperty("editorExecutablePath", editorExecutablePath);
         }
         saveWorkspacesFile();
     }

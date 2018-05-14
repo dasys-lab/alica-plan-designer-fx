@@ -67,9 +67,9 @@
          <children>
             <HBox prefHeight="36.0" prefWidth="337.0" styleClass="cfgHbox">
                <children>
-                  <Label fx:id="eclipsePathLabel" styleClass="cfgLabel" text="Label" />
-                  <TextField fx:id="eclipsePathTextField" />
-                  <Button fx:id="eclipsePathFileButton" mnemonicParsing="false" text="Button" />
+                  <Label fx:id="editorExecutablePathLabel" styleClass="cfgLabel" text="Label" />
+                  <TextField fx:id="editorExecutablePathTextField" />
+                  <Button fx:id="editorExecutablePathFileButton" mnemonicParsing="false" text="Button" />
                </children>
             </HBox>
             <HBox prefHeight="36.0" prefWidth="337.0" styleClass="cfgHbox">

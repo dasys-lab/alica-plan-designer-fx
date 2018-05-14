@@ -14,15 +14,15 @@ import java.util.List;
  * Created by marci on 14.06.17.
  */
 public class ShowGeneratedSourcesMenuItem<T extends PlanElement> extends MenuItem {
-    private String eclipsePath;
+    private String editorExecutablePath;
     private T planElement;
 
     public ShowGeneratedSourcesMenuItem(T planElement) {
         super(I18NRepo.getString("label.menu.sources"));
         this.planElement = planElement;
         setOnAction(e -> showSources());
-        eclipsePath = new WorkspaceManager().getEclipsePath();
-        if (eclipsePath == null  || eclipsePath.length() == 0 || planElement instanceof EntryPoint) {
+        editorExecutablePath = new WorkspaceManager().getEditorExecutablePath();
+        if (editorExecutablePath == null  || editorExecutablePath.length() == 0 || planElement instanceof EntryPoint) {
             setDisable(true);
         }
     }
@@ -32,7 +32,7 @@ public class ShowGeneratedSourcesMenuItem<T extends PlanElement> extends MenuIte
             List<File> allGeneratedFilesForAbstractPlan = GeneratedSourcesManager.get().getAllGeneratedFilesForAbstractPlan((AbstractPlan) planElement);
             for (File generatedSource : allGeneratedFilesForAbstractPlan) {
                 try {
-                    Runtime.getRuntime().exec(eclipsePath + " " + generatedSource.getAbsolutePath());
+                    Runtime.getRuntime().exec(editorExecutablePath + " " + generatedSource.getAbsolutePath());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -43,7 +43,7 @@ public class ShowGeneratedSourcesMenuItem<T extends PlanElement> extends MenuIte
                 int lineNumberForState = GeneratedSourcesManager.get().getLineNumberForState((State) planElement);
                 try {
                     Runtime.getRuntime()
-                            .exec(eclipsePath + " " + fileForState.getAbsolutePath() + "+" + lineNumberForState);
+                            .exec(editorExecutablePath + " " + fileForState.getAbsolutePath() + " +" + lineNumberForState);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -54,7 +54,7 @@ public class ShowGeneratedSourcesMenuItem<T extends PlanElement> extends MenuIte
                 int lineNumberForTransition = GeneratedSourcesManager.get().getLineNumberForTransition((Transition) planElement);
                 try {
                     Runtime.getRuntime()
-                            .exec(eclipsePath + " " + fileForTransition.getAbsolutePath() + "+" + lineNumberForTransition);
+                            .exec(editorExecutablePath + " " + fileForTransition.getAbsolutePath() + " +" + lineNumberForTransition);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -68,7 +68,7 @@ public class ShowGeneratedSourcesMenuItem<T extends PlanElement> extends MenuIte
                 int lineNumberForCondition = GeneratedSourcesManager.get().getLineNumberForCondition(planElement);
                 try {
                     Runtime.getRuntime()
-                            .exec(eclipsePath + " " + fileForCondition.getAbsolutePath() + "+" + lineNumberForCondition);
+                            .exec(editorExecutablePath + " " + fileForCondition.getAbsolutePath() + " +" + lineNumberForCondition);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
