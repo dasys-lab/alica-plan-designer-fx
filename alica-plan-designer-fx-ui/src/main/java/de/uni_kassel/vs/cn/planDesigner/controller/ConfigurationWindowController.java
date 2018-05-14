@@ -47,7 +47,7 @@ public class ConfigurationWindowController implements Initializable {
     private TextField workspaceNameField;
 
     @FXML
-    private TextField eclipsePathTextField;
+    private TextField editorExecutablePathTextField;
 
     @FXML
     private TextField clangFormatPathTextField;
@@ -80,7 +80,7 @@ public class ConfigurationWindowController implements Initializable {
     private Label addWorkspaceLabel;
 
     @FXML
-    private Label eclipsePathLabel;
+    private Label editorExecutablePathLabel;
 
     @FXML
     private Label activePluginLabel;
@@ -110,7 +110,7 @@ public class ConfigurationWindowController implements Initializable {
     private Button pluginPathFileButton;
 
     @FXML
-    private Button eclipsePathFileButton;
+    private Button editorExecutablePathFileButton;
 
     @FXML
     private Button clangFormatPathFileButton;
@@ -230,7 +230,7 @@ public class ConfigurationWindowController implements Initializable {
             }
         });
         clangFormatPathTextField.setText(new WorkspaceManager().getClangFormatPath());
-        eclipsePathTextField.setText(new WorkspaceManager().getEclipsePath());
+        editorExecutablePathTextField.setText(new WorkspaceManager().getEditorExecutablePath());
 
         saveButton.setOnAction(e -> onSave());
     }
@@ -241,7 +241,7 @@ public class ConfigurationWindowController implements Initializable {
         miscPathFileButton.setOnAction(e -> makeDirectoryChooserField(miscPathTextField));
         pluginPathFileButton.setOnAction(e -> makeDirectoryChooserField(pluginPathTextField));
         expressionsPathFileButton.setOnAction(e -> makeDirectoryChooserField(expressionsPathTextField));
-        eclipsePathFileButton.setOnAction(e -> makeFileChooserField(eclipsePathTextField));
+        editorExecutablePathFileButton.setOnAction(e -> makeFileChooserField(editorExecutablePathTextField));
         clangFormatPathFileButton.setOnAction(e -> makeFileChooserField(clangFormatPathTextField));
     }
 
@@ -256,14 +256,14 @@ public class ConfigurationWindowController implements Initializable {
         activePluginLabel.setText(I18NRepo.getString("label.config.plugin.active"));
         saveButton.setText(I18NRepo.getString("action.save"));
         clangFormatPathLabel.setText(I18NRepo.getString("label.config.clangFormatPath"));
-        eclipsePathLabel.setText(I18NRepo.getString("label.config.eclipse"));
+        editorExecutablePathLabel.setText(I18NRepo.getString("label.config.editorExecutablePath"));
         addWorkspaceButton.setText(I18NRepo.getString("action.config.add"));
         plansPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         rolesPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         miscPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         pluginPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         expressionsPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
-        eclipsePathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
+        editorExecutablePathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         clangFormatPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
     }
 
@@ -285,7 +285,7 @@ public class ConfigurationWindowController implements Initializable {
 
         WorkspaceManager workspaceManager = new WorkspaceManager();
         workspaceManager.setClangFormatPath(clangFormatPathTextField.getText());
-        workspaceManager.setEclipsePath(eclipsePathTextField.getText());
+        workspaceManager.setEclipsePath(editorExecutablePathTextField.getText());
 
         if (workspaceManager.getWorkspaces().contains(selectedWorkspace)) {
             workspaceManager.saveWorkspaceConfiguration(selectedWorkspace);

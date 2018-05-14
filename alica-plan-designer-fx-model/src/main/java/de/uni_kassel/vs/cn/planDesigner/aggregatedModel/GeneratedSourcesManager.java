@@ -47,15 +47,14 @@ public class GeneratedSourcesManager {
 
     public List<File> getAllGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
         String destinationPath = abstractPlan.getDestinationPath();
-        if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator))
-        {
+        if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
             destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
         }
 
-        String headerFilename = (abstractPlan instanceof  Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".h";
-        String sourceFilename = (abstractPlan instanceof  Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".cpp";
+        String headerFilename = (abstractPlan instanceof Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".h";
+        String sourceFilename = (abstractPlan instanceof Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".cpp";
         File headerFile = new File(Paths.get(getIncludeDir(), destinationPath, headerFilename).toString());
-        File sourceFile = new File(Paths.get(getSrcDir(),destinationPath, sourceFilename).toString());
+        File sourceFile = new File(Paths.get(getSrcDir(), destinationPath, sourceFilename).toString());
 
         List<File> generatedFiles = new ArrayList<>();
         generatedFiles.add(headerFile);
@@ -72,6 +71,7 @@ public class GeneratedSourcesManager {
 
     /**
      * delegate {@link Map#put(Object, Object)}
+     *
      * @param transition
      * @param lineNumber
      */
@@ -79,12 +79,23 @@ public class GeneratedSourcesManager {
         transitionConditionCode.put(transition, lineNumber);
     }
 
+    /**
+     * if code has not been generated this method returns 0
+     *
+     * @param transition
+     * @return line number of generated code
+     */
     public int getLineNumberForTransition(Transition transition) {
-        return transitionConditionCode.get(transition);
+        if (transitionConditionCode.containsKey(transition)) {
+            return transitionConditionCode.get(transition);
+        } else {
+            return 0;
+        }
     }
 
     /**
      * delegate {@link Map#put(Object, Object)}
+     *
      * @param state
      * @param lineNumber
      */
@@ -93,16 +104,20 @@ public class GeneratedSourcesManager {
     }
 
     /**
-     * if code has not been generated this method throws an exception
+     * if code has not been generated this method returns 0
+     *
      * @param state
-     * @return
+     * @return line number of generated code
      */
     public int getLineNumberForState(State state) {
-       return stateCheckingCode.get(state);
+        if (stateCheckingCode.containsKey(state)) {
+            return stateCheckingCode.get(state);
+        } else {
+            return 0;
+        }
     }
 
     /**
-     *
      * @param state
      * @return the file where the state code is located
      */
@@ -114,7 +129,6 @@ public class GeneratedSourcesManager {
     }
 
     /**
-     *
      * @param transition
      * @return
      */
