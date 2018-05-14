@@ -12,6 +12,7 @@ import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -57,8 +58,19 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
             if (wasDragged) {//
                 wasDragged = false;
                 if (e.getPickResult() != null) {
-                    PLDTreeCell treeCell = (PLDTreeCell) e.getPickResult().getIntersectedNode().getParent();
-                    // TODO auslagern
+                    PLDTreeCell treeCell = null;
+                    if(e.getPickResult().getIntersectedNode().getParent() instanceof Group) {
+                        for(Node child : e.getPickResult().getIntersectedNode().getParent().getChildrenUnmodifiable()) {
+                            if(child.getBoundsInParent().contains(e.getX(), e.getY(), e.getZ())) {
+                                treeCell = (PLDTreeCell)child;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        treeCell = (PLDTreeCell) e.getPickResult().getIntersectedNode().getParent();
+                    }
+
                     File parent = treeCell.getTreeItem().getValue().unwrap();
 
                     if (parent.isDirectory() == false) {

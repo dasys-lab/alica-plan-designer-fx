@@ -6,6 +6,9 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.condition.RuntimeConditi
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state.FailureStateTool;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state.StateTool;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state.SuccessStateTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.transition.InitTransitionTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.transition.SyncTransitionTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.transition.TransitionTool;
 import javafx.geometry.Orientation;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
