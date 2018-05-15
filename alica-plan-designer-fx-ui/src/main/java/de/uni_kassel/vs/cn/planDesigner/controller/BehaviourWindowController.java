@@ -14,6 +14,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.impl.RuntimeConditionImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.BehaviourTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTab;
 import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
@@ -42,6 +43,9 @@ public class BehaviourWindowController implements Initializable {
 
     @FXML
     private VBox runtimeConditionOptions;
+
+    @FXML
+    private BehaviourTab behaviourTab;
 
     private Behaviour behaviour;
 
@@ -123,7 +127,7 @@ public class BehaviourWindowController implements Initializable {
                     }
                 }
             });
-            AbstractEditorTab<Behaviour> abstractEditorTab = new AbstractEditorTab<Behaviour>() {
+            AbstractEditorTab<Behaviour> abstractEditorTab = new AbstractEditorTab<Behaviour>(behaviour) {
 
                 @Override
                 public CommandStack getCommandStack() {
@@ -204,5 +208,9 @@ public class BehaviourWindowController implements Initializable {
                 checkBox.setSelected(true);
             }
         }
+    }
+
+    public void setBehaviourTab(BehaviourTab behaviourTab) {
+        this.behaviourTab = behaviourTab;
     }
 }
