@@ -171,9 +171,8 @@ public class EMFModelUtils {
         }
 
         // set destinationPath when resource is created
-        if (emptyObject instanceof AbstractPlan) {
-            ((AbstractPlan) emptyObject).setDestinationPath(file.getAbsolutePath().replace(configuration.getPlansPath(), "Plans"));
-        }
+        setDestinationPath(emptyObject, file);
+
         resource.setTrackingModification(true);
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         LOG.info("Successfully created Alica file " + file.getAbsolutePath());
@@ -204,16 +203,32 @@ public class EMFModelUtils {
      * @throws IOException
      */
     public static <T extends EObject> Resource moveAlicaFile(T emptyObject, PmlUiExtensionMap pmlex, File targetDir) throws IOException {
+        RepoViewBackend repoViewBackend = RepoViewBackend.getInstance();
         Resource resource = emptyObject.eResource();
-        resource.setURI(URI.createURI(targetDir.getAbsolutePath()));
+        resource.setURI(createRelativeURI(targetDir));
+
         if (emptyObject instanceof Plan) {
-            RepoViewBackend.getInstance()
+            repoViewBackend
                     .getPlans()
                     .add(new Pair<>((Plan) emptyObject, targetDir.toPath()));
             Resource pmlexResource = pmlex.eResource();
-            pmlexResource.setURI(URI.createURI(targetDir.getAbsolutePath().replace(".pml", ".pmlex")));
+            pmlexResource.setURI(URI.createURI(createRelativeURI(targetDir).toString().replace(".pml", ".pmlex")));
             pmlexResource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
+        } else if (emptyObject instanceof Behaviour) {
+            repoViewBackend
+                    .getBehaviours()
+                    .add(new Pair<>((Behaviour) emptyObject, targetDir.toPath()));
+        } else if (emptyObject instanceof PlanType) {
+            repoViewBackend
+                    .getPlanTypes()
+                    .add(new Pair<>((PlanType) emptyObject, targetDir.toPath()));
+        } else {
+            //TODO tasks
         }
+
+        // set destinationPath when resource is moved
+        setDestinationPath(emptyObject, targetDir);
+
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         getAlicaResourceSet()
                 .getResources()
@@ -225,6 +240,15 @@ public class EMFModelUtils {
                     }
                 });
         return resource;
+    }
+
+    private static <T extends EObject> void setDestinationPath(T emptyObject, File targetDir) {
+        if (emptyObject instanceof AbstractPlan) {
+            String destinationPath = targetDir.getAbsolutePath().replace(configuration.getPlansPath(), "Plans");
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator));
+            System.out.println(destinationPath);
+            ((AbstractPlan) emptyObject).setDestinationPath(destinationPath);
+        }
     }
 
     /**
