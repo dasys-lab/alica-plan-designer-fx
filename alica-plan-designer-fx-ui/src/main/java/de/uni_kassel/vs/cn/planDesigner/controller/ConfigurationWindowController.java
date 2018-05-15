@@ -23,8 +23,6 @@ import java.util.ResourceBundle;
 /**
  * This Controller holds the logic for the configuration window.
  * The configuration window allows for editing the paths for plans, roles, expressions and misc.
- *
- *
  */
 public class ConfigurationWindowController implements Initializable {
 
@@ -119,7 +117,6 @@ public class ConfigurationWindowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initLabelTexts();
         initFileChooserButtons();
-
 
 
         addWorkspaceButton.setOnAction(e -> {
@@ -271,21 +268,24 @@ public class ConfigurationWindowController implements Initializable {
      * Saves all {@link TextField} and {@link ComboBox} values from the configuration window.
      */
     public void onSave() {
-        Workspace selectedWorkspace = workspaceComboBox.getSelectionModel().getSelectedItem();
-        Configuration configuration = new Configuration();
-        configuration.setPluginPath(pluginPathTextField.getText());
-        configuration.setPlansPath(plansPathTextField.getText());
-        configuration.setMiscPath(miscPathTextField.getText());
-        configuration.setRolesPath(rolesPathTextField.getText());
-        configuration.setExpressionValidatorsPath(expressionsPathTextField.getText());
 
+        Workspace selectedWorkspace = workspaceComboBox.getSelectionModel().getSelectedItem();
+        WorkspaceManager workspaceManager = new WorkspaceManager();
         if (selectedWorkspace != null) {
+            // store configuration in selected workspace
+            Configuration configuration = new Configuration();
+            configuration.setPluginPath(pluginPathTextField.getText());
+            configuration.setPlansPath(plansPathTextField.getText());
+            configuration.setMiscPath(miscPathTextField.getText());
+            configuration.setRolesPath(rolesPathTextField.getText());
+            configuration.setExpressionValidatorsPath(expressionsPathTextField.getText());
             selectedWorkspace.setConfiguration(configuration);
+            // set active workspace
+            workspaceManager.setActiveWorkspace(selectedWorkspace);
         }
 
-        WorkspaceManager workspaceManager = new WorkspaceManager();
         workspaceManager.setClangFormatPath(clangFormatPathTextField.getText());
-        workspaceManager.setEclipsePath(editorExecutablePathTextField.getText());
+        workspaceManager.setEditorExecutablePath(editorExecutablePathTextField.getText());
 
         if (workspaceManager.getWorkspaces().contains(selectedWorkspace)) {
             workspaceManager.saveWorkspaceConfiguration(selectedWorkspace);
@@ -298,15 +298,11 @@ public class ConfigurationWindowController implements Initializable {
         } else if (selectedWorkspace != null) {
             workspaceManager.addWorkspace(selectedWorkspace);
         }
-
-        if (selectedWorkspace != null) {
-            workspaceManager.setActiveWorkspace(selectedWorkspace);
-        }
     }
 
     private void makeDirectoryChooserField(TextField textField) {
-        DirectoryChooser fileChooser = new DirectoryChooser();
-        File file = fileChooser.showDialog(null);
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File file = directoryChooser.showDialog(null);
         if (file != null) {
             textField.setText(file.getAbsolutePath());
         }

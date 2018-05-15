@@ -206,7 +206,7 @@ public class WorkspaceManager {
         return (String) workspacesProperties.get("editorExecutablePath");
     }
 
-    public void setEclipsePath(String editorExecutablePath) {
+    public void setEditorExecutablePath(String editorExecutablePath) {
         if (editorExecutablePath == null) {
             workspacesProperties.setProperty("editorExecutablePath", "");
         } else {
