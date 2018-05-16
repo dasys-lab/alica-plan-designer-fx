@@ -18,7 +18,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,13 +35,13 @@ import java.util.List;
  */
 public class PlanTab extends AbstractEditorTab<Plan> {
 
-    private final PlanEditorGroup planEditorGroup;
-    private final ConditionHBox conditionHBox;
+    private PlanEditorGroup planEditorGroup;
+    private ConditionHBox conditionHBox;
     private PlanModelVisualisationObject planModelVisualisationObject;
     private PmlUiExtensionMap pmlUiExtensionMap;
-    private final PLDToolBar pldToolBar;
-    private final StackPane planContent;
-    private final ScrollPane scrollPane;
+    private PLDToolBar pldToolBar;
+    private StackPane planContent;
+    private ScrollPane scrollPane;
 
     public PlanTab(Pair<Plan, Path> planPathPair, CommandStack commandStack) {
         super(planPathPair , commandStack);
@@ -47,6 +51,18 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         URI relativeURI = EMFModelUtils.createRelativeURI(new File(uiExtensionMapPath));
         setPmlUiExtensionMap((PmlUiExtensionMap) EMFModelUtils.getAlicaResourceSet().getResource(relativeURI, false).getContents().get(0));
 
+        draw(planPathPair, commandStack);
+
+        EContentAdapter adapter = new EContentAdapter() {
+            public void notifyChanged(Notification n) {
+                draw(planPathPair, commandStack);
+            }
+        };
+
+        planModelVisualisationObject.getPlan().eAdapters().add(adapter);
+    }
+
+    private void draw(Pair<Plan, Path> planPathPair, CommandStack commandStack) {
         planModelVisualisationObject = new PlanModelVisualisationObject(getEditable(), getPmlUiExtensionMap());
         planEditorGroup = new PlanEditorGroup(planModelVisualisationObject, this);
         planContent = new StackPane(planEditorGroup);

@@ -12,6 +12,7 @@ import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -54,11 +55,23 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
         });
 
         addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+            RepoViewBackend repoViewBackend = RepoViewBackend.getInstance();
             if (wasDragged) {//
                 wasDragged = false;
                 if (e.getPickResult() != null) {
-                    PLDTreeCell treeCell = (PLDTreeCell) e.getPickResult().getIntersectedNode().getParent();
-                    // TODO auslagern
+                    PLDTreeCell treeCell = null;
+                    if(e.getPickResult().getIntersectedNode().getParent() instanceof Group) {
+                        for(Node child : e.getPickResult().getIntersectedNode().getParent().getChildrenUnmodifiable()) {
+                            if(child.getBoundsInParent().contains(e.getX(), e.getY(), e.getZ())) {
+                                treeCell = (PLDTreeCell)child;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        treeCell = (PLDTreeCell) e.getPickResult().getIntersectedNode().getParent();
+                    }
+
                     File parent = treeCell.getTreeItem().getValue().unwrap();
 
                     if (parent.isDirectory() == false) {
@@ -73,55 +86,66 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                         Files.move(draggedItem.getValue().unwrap().toPath(),
                                 new File(parent, draggedItem.getValue().unwrap().getName()).toPath());
 
-                        EObject result = null;
-                        Optional<Pair<Plan, Path>> first = RepoViewBackend
-                                .getInstance()
+                        Optional<Pair<Plan, Path>> first = repoViewBackend
                                 .getPlans()
                                 .stream()
                                 .filter(f -> f.getValue().toFile().equals(draggedItem.getValue().unwrap()))
                                 .findFirst();
 
+                        EObject result = first.isPresent() ? first.get().getKey() : null;
+
                         if (result != null) {
-                            RepoViewBackend
-                                    .getInstance()
-                                    .getPlanTypes().remove(result);
-                        }
+                            for(Pair<Plan, Path> pair : repoViewBackend.getPlans()) {
+                                if(pair.getKey() == (Plan)result) {
+                                    repoViewBackend.getPlans().remove(pair);
+                                    break;
+                                }
+                            }
 
-                        result = first.isPresent() ? first.get().getKey() : null;
-
-                        if (result == null) {
-                            Optional<Pair<Behaviour, Path>> second = RepoViewBackend
-                                    .getInstance()
+                        } else {
+                            Optional<Pair<Behaviour, Path>> second = repoViewBackend
                                     .getBehaviours()
                                     .stream()
                                     .filter(f -> f.getValue().toFile().equals(draggedItem.getValue().unwrap()))
                                     .findFirst();
+
                             result = second.isPresent() ? second.get().getKey() : null;
                             if (result != null) {
-                                RepoViewBackend
-                                        .getInstance()
-                                        .getBehaviours().remove(result);
+                                for(Pair<Behaviour, Path> pair : repoViewBackend.getBehaviours()) {
+                                    if(pair.getKey() == (Behaviour)result) {
+                                        repoViewBackend.getBehaviours().remove(pair);
+                                        break;
+                                    }
+                                }
                             }
                         }
 
                         if (result == null) {
-                            Optional<Pair<PlanType, Path>> third = RepoViewBackend
-                                    .getInstance()
+                            Optional<Pair<PlanType, Path>> third = repoViewBackend
                                     .getPlanTypes()
                                     .stream()
                                     .filter(f -> f.getValue().toFile().equals(draggedItem.getValue().unwrap()))
                                     .findFirst();
+
                             result = third.isPresent() ? third.get().getKey() : null;
                             if (result != null) {
-                                RepoViewBackend
-                                        .getInstance()
-                                        .getPlanTypes().remove(result);
+                                for(Pair<PlanType, Path> pair : repoViewBackend.getPlanTypes()) {
+                                    if(pair.getKey() == (PlanType)result) {
+                                        repoViewBackend.getPlanTypes().remove(pair);
+                                        break;
+                                    }
+                                }
                             }
                         }
+
+                        //TODO tasks ?
 
                         if (draggedItem.getValue().unwrap().toString().endsWith("pml")) {
                             EObject pmlExObject = EMFModelUtils.loadAlicaFileFromDisk(new File(draggedItem.getValue().unwrap().toString() + "ex"));
                             EMFModelUtils.moveAlicaFile(result, (PmlUiExtensionMap) pmlExObject,
+                                    new File(parent, draggedItem.getValue().unwrap().getName()));
+                        } else {
+                            EMFModelUtils.moveAlicaFile(result, null,
                                     new File(parent, draggedItem.getValue().unwrap().getName()));
                         }
                     } catch (IOException e1) {

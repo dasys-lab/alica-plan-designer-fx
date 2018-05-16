@@ -23,8 +23,6 @@ import java.util.ResourceBundle;
 /**
  * This Controller holds the logic for the configuration window.
  * The configuration window allows for editing the paths for plans, roles, expressions and misc.
- *
- *
  */
 public class ConfigurationWindowController implements Initializable {
 
@@ -47,7 +45,7 @@ public class ConfigurationWindowController implements Initializable {
     private TextField workspaceNameField;
 
     @FXML
-    private TextField eclipsePathTextField;
+    private TextField editorExecutablePathTextField;
 
     @FXML
     private TextField clangFormatPathTextField;
@@ -80,7 +78,7 @@ public class ConfigurationWindowController implements Initializable {
     private Label addWorkspaceLabel;
 
     @FXML
-    private Label eclipsePathLabel;
+    private Label editorExecutablePathLabel;
 
     @FXML
     private Label activePluginLabel;
@@ -110,7 +108,7 @@ public class ConfigurationWindowController implements Initializable {
     private Button pluginPathFileButton;
 
     @FXML
-    private Button eclipsePathFileButton;
+    private Button editorExecutablePathFileButton;
 
     @FXML
     private Button clangFormatPathFileButton;
@@ -119,7 +117,6 @@ public class ConfigurationWindowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initLabelTexts();
         initFileChooserButtons();
-
 
 
         addWorkspaceButton.setOnAction(e -> {
@@ -230,7 +227,7 @@ public class ConfigurationWindowController implements Initializable {
             }
         });
         clangFormatPathTextField.setText(new WorkspaceManager().getClangFormatPath());
-        eclipsePathTextField.setText(new WorkspaceManager().getEclipsePath());
+        editorExecutablePathTextField.setText(new WorkspaceManager().getEditorExecutablePath());
 
         saveButton.setOnAction(e -> onSave());
     }
@@ -241,7 +238,7 @@ public class ConfigurationWindowController implements Initializable {
         miscPathFileButton.setOnAction(e -> makeDirectoryChooserField(miscPathTextField));
         pluginPathFileButton.setOnAction(e -> makeDirectoryChooserField(pluginPathTextField));
         expressionsPathFileButton.setOnAction(e -> makeDirectoryChooserField(expressionsPathTextField));
-        eclipsePathFileButton.setOnAction(e -> makeFileChooserField(eclipsePathTextField));
+        editorExecutablePathFileButton.setOnAction(e -> makeFileChooserField(editorExecutablePathTextField));
         clangFormatPathFileButton.setOnAction(e -> makeFileChooserField(clangFormatPathTextField));
     }
 
@@ -256,14 +253,14 @@ public class ConfigurationWindowController implements Initializable {
         activePluginLabel.setText(I18NRepo.getString("label.config.plugin.active"));
         saveButton.setText(I18NRepo.getString("action.save"));
         clangFormatPathLabel.setText(I18NRepo.getString("label.config.clangFormatPath"));
-        eclipsePathLabel.setText(I18NRepo.getString("label.config.eclipse"));
+        editorExecutablePathLabel.setText(I18NRepo.getString("label.config.editorExecutablePath"));
         addWorkspaceButton.setText(I18NRepo.getString("action.config.add"));
         plansPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         rolesPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         miscPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         pluginPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         expressionsPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
-        eclipsePathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
+        editorExecutablePathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
         clangFormatPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
     }
 
@@ -271,21 +268,24 @@ public class ConfigurationWindowController implements Initializable {
      * Saves all {@link TextField} and {@link ComboBox} values from the configuration window.
      */
     public void onSave() {
-        Workspace selectedWorkspace = workspaceComboBox.getSelectionModel().getSelectedItem();
-        Configuration configuration = new Configuration();
-        configuration.setPluginPath(pluginPathTextField.getText());
-        configuration.setPlansPath(plansPathTextField.getText());
-        configuration.setMiscPath(miscPathTextField.getText());
-        configuration.setRolesPath(rolesPathTextField.getText());
-        configuration.setExpressionValidatorsPath(expressionsPathTextField.getText());
 
+        Workspace selectedWorkspace = workspaceComboBox.getSelectionModel().getSelectedItem();
+        WorkspaceManager workspaceManager = new WorkspaceManager();
         if (selectedWorkspace != null) {
+            // store configuration in selected workspace
+            Configuration configuration = new Configuration();
+            configuration.setPluginPath(pluginPathTextField.getText());
+            configuration.setPlansPath(plansPathTextField.getText());
+            configuration.setMiscPath(miscPathTextField.getText());
+            configuration.setRolesPath(rolesPathTextField.getText());
+            configuration.setExpressionValidatorsPath(expressionsPathTextField.getText());
             selectedWorkspace.setConfiguration(configuration);
+            // set active workspace
+            workspaceManager.setActiveWorkspace(selectedWorkspace);
         }
 
-        WorkspaceManager workspaceManager = new WorkspaceManager();
         workspaceManager.setClangFormatPath(clangFormatPathTextField.getText());
-        workspaceManager.setEclipsePath(eclipsePathTextField.getText());
+        workspaceManager.setEditorExecutablePath(editorExecutablePathTextField.getText());
 
         if (workspaceManager.getWorkspaces().contains(selectedWorkspace)) {
             workspaceManager.saveWorkspaceConfiguration(selectedWorkspace);
@@ -298,15 +298,11 @@ public class ConfigurationWindowController implements Initializable {
         } else if (selectedWorkspace != null) {
             workspaceManager.addWorkspace(selectedWorkspace);
         }
-
-        if (selectedWorkspace != null) {
-            workspaceManager.setActiveWorkspace(selectedWorkspace);
-        }
     }
 
     private void makeDirectoryChooserField(TextField textField) {
-        DirectoryChooser fileChooser = new DirectoryChooser();
-        File file = fileChooser.showDialog(null);
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File file = directoryChooser.showDialog(null);
         if (file != null) {
             textField.setText(file.getAbsolutePath());
         }

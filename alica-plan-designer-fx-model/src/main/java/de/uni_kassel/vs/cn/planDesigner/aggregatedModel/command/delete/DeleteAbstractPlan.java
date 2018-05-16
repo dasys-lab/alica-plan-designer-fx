@@ -4,13 +4,15 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.EAbstractPlanType;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.impl.ParametrisationImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import javafx.util.Pair;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +30,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
     private Map<Plan, List<State>> referencedStateListForBackup;
     private Map<PmlUiExtensionMap, List<PmlUiExtension>> referencesInStyleFiles;
     private Map<PlanType, AnnotatedPlan> referencedAnnotatedPlansForBackup;
-    private Map<State, Parametrisation> referencedParametrisationForBackup;
+    private Map<Parametrisation, Parametrisation> referencedParametrisationForBackup;
     private Path path;
 
     // not always used
@@ -70,11 +72,12 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         states.add(state);
                         saveForDeletionConfirmation[0] = true;
                     }
-                    // TODO remove also references to behaviour variables
+
                     state.getParametrisation().forEach(parametrisation -> {
-                        referencedParametrisationForBackup.put(state, parametrisation);
+                        Parametrisation params = EcoreUtil.copy(parametrisation);
+                        referencedParametrisationForBackup.put(parametrisation, params);
                         boolean[] parametrisationChanged = {false};
-                        if(parametrisation.getSubplan().equals(getElementToEdit())) {
+                        if(parametrisation.getSubplan() != null && parametrisation.getSubplan().equals(getElementToEdit())) {
                             parametrisation.setSubplan(null);
                             parametrisationChanged[0] = true;
                         }
@@ -82,7 +85,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         if(getElementToEdit() instanceof Behaviour) {
                             Behaviour behaviour = (Behaviour) getElementToEdit();
                             behaviour.getVars().forEach(variable -> {
-                                if(variable.equals(parametrisation.getSubvar())) {
+                                if(parametrisation.getSubvar() != null && parametrisation.getSubvar().equals(variable)) {
                                     parametrisation.setSubvar(null);
                                     parametrisationChanged[0] = true;
                                 }
@@ -92,7 +95,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         if(getElementToEdit() instanceof Plan) {
                             Plan innerPlan = (Plan) getElementToEdit();
                             innerPlan.getVars().forEach(variable -> {
-                                if(variable.equals(parametrisation.getSubvar())) {
+                                if(parametrisation.getSubvar() != null && parametrisation.getSubvar().equals(variable)) {
                                     parametrisation.setSubvar(null);
                                     parametrisationChanged[0] = true;
                                 }
@@ -255,6 +258,20 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                     .forEach(e -> {
                         PmlUiExtensionMap key = e.getKey();
                         e.getValue().forEach(f -> key.getExtension().put(getElementToEdit(), f));
+                        try {
+                            EMFModelUtils.saveAlicaFile(key);
+                        } catch (IOException e1) {
+                            throw new RuntimeException(e1);
+                        }
+                    });
+
+            referencedParametrisationForBackup
+                    .entrySet()
+                    .forEach(entry -> {
+                        Parametrisation key = entry.getKey();
+                        key.setSubvar(entry.getValue().getSubvar());
+                        key.setSubplan(entry.getValue().getSubplan());
+                        key.setVar(entry.getValue().getVar());
                         try {
                             EMFModelUtils.saveAlicaFile(key);
                         } catch (IOException e1) {

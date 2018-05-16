@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.transition;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTransitionToSynchronisation;
@@ -9,6 +9,9 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.SynchronisationConta
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.DragableHBox;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.TabChangeListener;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;

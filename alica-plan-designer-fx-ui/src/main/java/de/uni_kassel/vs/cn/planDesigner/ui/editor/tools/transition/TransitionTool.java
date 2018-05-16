@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
+package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.transition;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTransitionInPlan;
@@ -7,6 +7,8 @@ import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TerminalStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.DragableHBox;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;

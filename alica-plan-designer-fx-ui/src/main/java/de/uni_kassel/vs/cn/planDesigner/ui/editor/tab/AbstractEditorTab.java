@@ -35,9 +35,9 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
     private CommandStack commandStack;
     protected SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement;
 
-    public AbstractEditorTab() {
+    public AbstractEditorTab(T key) {
         selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
-        selectedPlanElement.get().add(new Pair<>(editablePathPair.getKey(), null));
+        selectedPlanElement.get().add(new Pair<>(key, null));
     }
 
     public AbstractEditorTab(Pair<T, Path> editablePathPair, CommandStack commandStack) {
