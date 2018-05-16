@@ -9,6 +9,7 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementC
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Point2D;
@@ -66,10 +67,6 @@ public class StateTool extends AbstractTool<State> {
                     visualRepresentation.setTranslateX(x);
                     visualRepresentation.setTranslateY(y);
 
-                    if (event.getGestureSource() != workbench) {
-                        visualRepresentation.setTranslateX(x);
-                        visualRepresentation.setTranslateY(y);
-                    }
                     System.out.println("X: " + x + " Y: " + y);
                     event.consume();
                 }
