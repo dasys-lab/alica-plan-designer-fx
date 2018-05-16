@@ -142,7 +142,13 @@ public class VariablesTab extends AbstractPropertyTab {
                 @Override
                 public TextField getValue() {
                     try {
-                        return new PropertyTextField<>(param.getValue(), propertyName, commandStack);
+                        PropertyTextField<Variable> variablePropertyTextField = new PropertyTextField<>(param.getValue(), propertyName, commandStack);
+                        variablePropertyTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                            if(newValue) {
+                                param.getTableView().getSelectionModel().select(param.getValue());
+                            }
+                        });
+                        return variablePropertyTextField;
                     } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                         throw new RuntimeException(e);
                     }
