@@ -5,7 +5,9 @@ import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Point2D;
@@ -17,6 +19,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
@@ -44,6 +47,7 @@ public abstract class AbstractTool<T extends PlanElement> {
     protected DragableHBox<T> dragableHBox;
     private boolean recentlyDone;
     private HashMap<EventType, EventHandler> defaultHandlers;
+    private EventHandler<? super ScrollEvent> onScrollInPlanTab;
 
     public AbstractTool(TabPane workbench) {
         this.workbench = workbench;
@@ -85,6 +89,12 @@ public abstract class AbstractTool<T extends PlanElement> {
                 .entrySet()
                 .forEach(entry -> getWorkbench().getScene().addEventFilter(entry.getKey(), entry.getValue()));
 
+        if (workbench.getSelectionModel().getSelectedItem() instanceof PlanTab) {
+            onScrollInPlanTab = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getOnScroll();
+            // deactivate scrolling, fixes scrolling to infinity when handling a tool
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setOnScroll(Event::consume);
+        }
+
         originalCursor = workbench.getScene().getCursor();
         DropShadow value = new DropShadow(10, Color.GREY);
         value.setSpread(0.5);
@@ -100,6 +110,11 @@ public abstract class AbstractTool<T extends PlanElement> {
         defaultHandlers()
                 .entrySet()
                 .forEach(entry -> getWorkbench().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
+        if (workbench.getSelectionModel().getSelectedItem() instanceof PlanTab) {
+            // reactivate scrolling
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setOnScroll(onScrollInPlanTab);
+        }
+
         draw();
         workbench.getScene().setCursor(originalCursor);
         AbstractEditorTab selectedItem = (AbstractEditorTab) MainController.getInstance().getEditorTabPane().getSelectionModel()
