@@ -26,8 +26,10 @@ import org.eclipse.emf.ecore.EObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.Optional;
 
@@ -189,6 +191,16 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
     public synchronized void updateTreeView(WatchEvent.Kind kind, Path child) {
 
         ((VirtualDirectoryTreeItem) getRoot()).updateDirectory(kind, child);
+        if(kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
+            try {
+                RepoViewBackend.getInstance().init();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            MainController.getInstance().getRepositoryTabPane().init();
+        }
     }
 
     public void setController(MainController controller) {
