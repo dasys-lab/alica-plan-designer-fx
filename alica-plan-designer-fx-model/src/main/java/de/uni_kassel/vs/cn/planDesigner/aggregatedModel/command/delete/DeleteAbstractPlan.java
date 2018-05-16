@@ -77,7 +77,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         Parametrisation params = EcoreUtil.copy(parametrisation);
                         referencedParametrisationForBackup.put(parametrisation, params);
                         boolean[] parametrisationChanged = {false};
-                        if(parametrisation.getSubplan().equals(getElementToEdit())) {
+                        if(parametrisation.getSubplan() != null && parametrisation.getSubplan().equals(getElementToEdit())) {
                             parametrisation.setSubplan(null);
                             parametrisationChanged[0] = true;
                         }
@@ -85,7 +85,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         if(getElementToEdit() instanceof Behaviour) {
                             Behaviour behaviour = (Behaviour) getElementToEdit();
                             behaviour.getVars().forEach(variable -> {
-                                if(variable.equals(parametrisation.getSubvar())) {
+                                if(parametrisation.getSubvar() != null && parametrisation.getSubvar().equals(variable)) {
                                     parametrisation.setSubvar(null);
                                     parametrisationChanged[0] = true;
                                 }
@@ -95,7 +95,7 @@ public class DeleteAbstractPlan extends AbstractCommand<AbstractPlan> {
                         if(getElementToEdit() instanceof Plan) {
                             Plan innerPlan = (Plan) getElementToEdit();
                             innerPlan.getVars().forEach(variable -> {
-                                if(variable.equals(parametrisation.getSubvar())) {
+                                if(parametrisation.getSubvar() != null && parametrisation.getSubvar().equals(variable)) {
                                     parametrisation.setSubvar(null);
                                     parametrisationChanged[0] = true;
                                 }
