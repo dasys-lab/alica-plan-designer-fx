@@ -48,7 +48,7 @@ public abstract class AbstractConditionTool extends AbstractTool<Condition> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (event.getTarget() instanceof ConditionHBox && visualRepresentation == null) {
-                        visualRepresentation = new ImageView(new AlicaIcon(createNewObject().getClass()));
+                        visualRepresentation = new ImageView(new AlicaIcon(createNewObject().getClass().getSimpleName()));
                         ((ConditionHBox)event.getTarget()).getChildren().add(visualRepresentation);
                     }
                     event.consume();

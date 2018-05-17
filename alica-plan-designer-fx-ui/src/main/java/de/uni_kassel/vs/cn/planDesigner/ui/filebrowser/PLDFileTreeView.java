@@ -224,20 +224,4 @@ class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
     public void updateDirectory(WatchEvent.Kind kind, Path child) {
         getChildren().forEach(e -> ((PLDTreeItem)e).updateDirectory(kind, child));
     }
-
-    private Image getImageForFileType(File content) {
-        Image listItemImage = null;
-        if (content.getName().endsWith(".beh")) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
-        } else if (content.getName().endsWith(".pml")) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
-        } else if (content.getName().endsWith(".pty")) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
-        } else if (content.getName().endsWith("pmlex") || content.getName().startsWith(".")) {
-            return null;
-        } else {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
-        }
-        return listItemImage;
-    }
 }

@@ -100,8 +100,8 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
         } else if (content.getName().endsWith(".pty")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
-        } else if (content.isDirectory() || content.getName().endsWith(".tsk")) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
+        } else if (content.getName().endsWith(".tsk")) {
+            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/tasks24x24.png")));
         } else if (content.isDirectory()) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
         } else  {

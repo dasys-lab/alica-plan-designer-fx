@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 
 /**
@@ -40,6 +41,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
     @Override
     public void doCommand() {
         try {
+            RepoViewBackend repoViewBackend = RepoViewBackend.getInstance();
             oldValue = (T) BeanUtils.getProperty(getElementToEdit(), attribute);
             BeanUtils.setProperty(getElementToEdit(), attribute, newValue);
             if (attribute.equals("name")) {
@@ -48,14 +50,14 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                 }
                 Path path = null;
                 if(getElementToEdit() instanceof Plan) {
-                    Pair<Plan, Path> planPathPair = RepoViewBackend.getInstance().getPlans()
+                    Pair<Plan, Path> planPathPair = repoViewBackend.getPlans()
                             .stream()
                             .filter(e -> e.getKey().equals(getElementToEdit()))
                             .findFirst()
                             .get();
                     path = planPathPair.getValue();
-                    RepoViewBackend.getInstance().getPlans().remove(planPathPair);
-                    RepoViewBackend.getInstance().getPlans().add(new Pair<>((Plan) getElementToEdit(), getNewFilePath(path).toPath()));
+                    repoViewBackend.getPlans().remove(planPathPair);
+                    repoViewBackend.getPlans().add(new Pair<>((Plan) getElementToEdit(), getNewFilePath(path).toPath()));
                     getElementToEdit().eResource().setURI(URI.createURI(getElementToEdit().eResource().getURI()
                             .toString().replace(path.getFileName().toString(),getNewFilePath(path).getName())));
                     final Path finalPath = path;
@@ -73,14 +75,14 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                 }
 
                 if (getElementToEdit() instanceof PlanType) {
-                    Pair<PlanType, Path> planTypePathPair = RepoViewBackend.getInstance().getPlanTypes()
+                    Pair<PlanType, Path> planTypePathPair = repoViewBackend.getPlanTypes()
                             .stream()
                             .filter(e -> e.getKey().equals(getElementToEdit()))
                             .findFirst()
                             .get();
                     path = planTypePathPair.getValue();
-                    RepoViewBackend.getInstance().getPlanTypes().remove(planTypePathPair);
-                    RepoViewBackend.getInstance().getPlanTypes().add(new Pair<>((PlanType) getElementToEdit(), getNewFilePath(path).toPath()));
+                    repoViewBackend.getPlanTypes().remove(planTypePathPair);
+                    repoViewBackend.getPlanTypes().add(new Pair<>((PlanType) getElementToEdit(), getNewFilePath(path).toPath()));
                 }
 
                 if (getElementToEdit() instanceof Behaviour) {
@@ -90,8 +92,8 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                             .findFirst()
                             .get();
                     path = behaviourPathPair.getValue();
-                    RepoViewBackend.getInstance().getBehaviours().remove(behaviourPathPair);
-                    RepoViewBackend.getInstance().getBehaviours().add(new Pair<>((Behaviour) getElementToEdit(), getNewFilePath(path).toPath()));
+                    repoViewBackend.getBehaviours().remove(behaviourPathPair);
+                    repoViewBackend.getBehaviours().add(new Pair<>((Behaviour) getElementToEdit(), getNewFilePath(path).toPath()));
                 }
 
                 if (path != null) {

@@ -137,7 +137,7 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
         public AbstractPlanHBox(PlanElement p) {
             super();
             this.abstractPlan = p;
-            ImageView imageView = new ImageView(new AlicaIcon(p.getClass()));
+            ImageView imageView = new ImageView(new AlicaIcon(p.getClass().getSimpleName()));
             Text text = new Text(p.getName());
             this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             getChildren().addAll(imageView, text);

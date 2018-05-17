@@ -18,7 +18,7 @@ public class DragableHBox<T extends PlanElement> extends HBox {
     public DragableHBox(T alicaType, AbstractTool<T> controller) {
         this.controller = controller;
         Class<?> alicaTypeClass = alicaType.getClass();
-        ImageView imageView = new ImageView(new AlicaIcon(alicaTypeClass));
+        ImageView imageView = new ImageView(new AlicaIcon(alicaTypeClass.getSimpleName()));
         String className = alicaTypeClass.getSimpleName().replace("Impl", "");
         addContents(imageView, className);
 

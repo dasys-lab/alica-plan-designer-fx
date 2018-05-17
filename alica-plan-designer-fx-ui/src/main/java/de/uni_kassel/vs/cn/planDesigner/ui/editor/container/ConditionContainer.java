@@ -36,7 +36,7 @@ public class ConditionContainer extends AbstractPlanElementContainer<Condition> 
     @Override
     public void setupContainer() {
         getChildren().clear();
-        getChildren().add(new ImageView(new AlicaIcon(getContainedElement().getClass())));
+        getChildren().add(new ImageView(new AlicaIcon(getContainedElement().getClass().getSimpleName())));
     }
 
     @Override

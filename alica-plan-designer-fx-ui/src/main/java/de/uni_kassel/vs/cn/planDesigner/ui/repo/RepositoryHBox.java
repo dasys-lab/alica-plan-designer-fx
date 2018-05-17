@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractPlanTool;
@@ -31,8 +32,16 @@ public class RepositoryHBox<T extends PlanElement> extends DragableHBox {
             contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
         });
 
-        getChildren().addAll(new ImageView(new AlicaIcon(object.getClass())),
-                new Text(object.getName()));
+        if(object instanceof Plan && ((Plan)object).isMasterPlan()) {
+
+            getChildren().addAll(new ImageView(new AlicaIcon("masterplan")),
+                    new Text(" " + object.getName()));
+
+        } else {
+
+            getChildren().addAll(new ImageView(new AlicaIcon(object.getClass().getSimpleName())),
+                    new Text(" " + object.getName()));
+        }
         setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
                 MainController.getInstance().openFile(pathToObject.toFile());
@@ -52,7 +61,7 @@ public class RepositoryHBox<T extends PlanElement> extends DragableHBox {
             contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
         });
 
-        getChildren().addAll(new ImageView(new AlicaIcon(object.getClass())),
+        getChildren().addAll(new ImageView(new AlicaIcon(object.getClass().getSimpleName())),
                 new Text(object.getName()));
         setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {

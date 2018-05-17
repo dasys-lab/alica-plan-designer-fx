@@ -51,7 +51,7 @@ public class PostConditionTool extends AbstractConditionTool {
                         return;
                     }
                     if (((Node)event.getTarget()).getParent() instanceof TerminalStateContainer && visualRepresentation == null) {
-                        visualRepresentation = new ImageView(new AlicaIcon(createNewObject().getClass()));
+                        visualRepresentation = new ImageView(new AlicaIcon(createNewObject().getClass().getSimpleName()));
                         ((TerminalStateContainer)event.getTarget()).getChildren().add(visualRepresentation);
                     } else if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer
                             || event.getTarget() instanceof ConditionHBox) {

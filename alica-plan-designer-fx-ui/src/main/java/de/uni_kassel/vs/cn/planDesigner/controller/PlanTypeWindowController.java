@@ -176,9 +176,9 @@ public class PlanTypeWindowController implements Initializable {
                         super.updateItem(item, empty);
                         if (empty == false) {
                             if (Boolean.TRUE.equals(item)) {
-                                setGraphic(new ImageView(new AlicaIcon(SuccessState.class)));
+                                setGraphic(new ImageView(new AlicaIcon(SuccessState.class.getSimpleName())));
                             } else {
-                                setGraphic(new ImageView(new AlicaIcon(FailureState.class)));
+                                setGraphic(new ImageView(new AlicaIcon(FailureState.class.getSimpleName())));
                             }
                             setText("");
                         }
