@@ -15,6 +15,7 @@ import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseDragEvent;
@@ -48,6 +49,10 @@ public abstract class AbstractTool<T extends PlanElement> {
     private boolean recentlyDone;
     private HashMap<EventType, EventHandler> defaultHandlers;
     private EventHandler<? super ScrollEvent> onScrollInPlanTab;
+    private ScrollPane.ScrollBarPolicy vBarPolicy;
+    private ScrollPane.ScrollBarPolicy hBarPolicy;
+    private double vmax;
+    private double hmax;
 
     public AbstractTool(TabPane workbench) {
         this.workbench = workbench;
@@ -90,9 +95,20 @@ public abstract class AbstractTool<T extends PlanElement> {
                 .forEach(entry -> getWorkbench().getScene().addEventFilter(entry.getKey(), entry.getValue()));
 
         if (workbench.getSelectionModel().getSelectedItem() instanceof PlanTab) {
-            onScrollInPlanTab = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getOnScroll();
             // deactivate scrolling, fixes scrolling to infinity when handling a tool
+            onScrollInPlanTab = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getOnScroll();
+            vBarPolicy = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getHbarPolicy();
+            hBarPolicy = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getVbarPolicy();
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            vmax = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getVmax();
+            hmax = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getHmax();
+
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setVmax(0);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setHmax(0);
             ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setOnScroll(Event::consume);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setAutoSizeChildren(false);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setManaged(false);
         }
 
         originalCursor = workbench.getScene().getCursor();
@@ -113,6 +129,13 @@ public abstract class AbstractTool<T extends PlanElement> {
         if (workbench.getSelectionModel().getSelectedItem() instanceof PlanTab) {
             // reactivate scrolling
             ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setOnScroll(onScrollInPlanTab);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setVbarPolicy(vBarPolicy);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setHbarPolicy(hBarPolicy);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setVmax(vmax);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().setHmax(hmax);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setAutoSizeChildren(true);
+            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setManaged(true);
+
         }
 
         draw();

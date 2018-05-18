@@ -66,10 +66,6 @@ public class StateTool extends AbstractTool<State> {
                     visualRepresentation.setTranslateX(x);
                     visualRepresentation.setTranslateY(y);
 
-                    if (event.getGestureSource() != workbench) {
-                        visualRepresentation.setTranslateX(x);
-                        visualRepresentation.setTranslateY(y);
-                    }
                     System.out.println("X: " + x + " Y: " + y);
                     event.consume();
                 }
