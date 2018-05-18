@@ -1,10 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddPlanToPlanType;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangeAttributeValue;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemoveAllPlansFromPlanType;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemovePlanFromPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddPlanToPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.RemoveAllPlansFromPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.RemovePlanFromPlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;

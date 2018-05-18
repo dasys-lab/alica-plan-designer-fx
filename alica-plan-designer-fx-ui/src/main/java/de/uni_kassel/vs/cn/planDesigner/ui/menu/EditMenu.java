@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.*;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
@@ -14,6 +14,7 @@ import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTab;
+import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -118,6 +119,9 @@ public class EditMenu extends Menu {
 
     private void delete(CommandStack commandStack, EditorTabPane editorTabPane) {
         // TODO refactor
+        MainController mainController = MainController.getInstance();
+        RepositoryTabPane repositoryTabPane = mainController.getRepositoryTabPane();
+
         if (editorTabPane.focusedProperty().get()) {
             Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
             if (selectedItem == null) {
@@ -141,13 +145,12 @@ public class EditMenu extends Menu {
                 }
             }
         } else {
-            boolean isRepoFocused = MainController.getInstance().getRepositoryTabPane().getTabs().stream()
+            boolean isRepoFocused = repositoryTabPane.getTabs().stream()
                     .anyMatch(e -> ((RepositoryTab) e).getContentsListView().focusedProperty().get());
             if (isRepoFocused) {
                 // TODO make delete task possible here too
                 AbstractPlan selectedAbstractPlan = (AbstractPlan)
-                        ((RepositoryTab<PlanElement>) MainController.getInstance()
-                                .getRepositoryTabPane()
+                        ((RepositoryTab<PlanElement>) repositoryTabPane
                                 .getSelectionModel()
                                 .getSelectedItem())
                                 .getContentsListView()
@@ -157,13 +160,15 @@ public class EditMenu extends Menu {
                         .filter(e -> ((AbstractEditorTab<PlanElement>)e).getEditable().equals(selectedAbstractPlan))
                         .forEach(e -> editorTabPane.getTabs().remove(e));
                 commandStack.storeAndExecute(new DeleteAbstractPlan(selectedAbstractPlan));
-                MainController.getInstance().getRepositoryTabPane().init();
+                Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
+                repositoryTabPane.init();
+                repositoryTabPane.getSelectionModel().select(repoTab);
                 return;
             }
 
-            if (MainController.getInstance().getFileTreeView().focusedProperty().get()) {
+            if (mainController.getFileTreeView().focusedProperty().get()) {
 
-                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(MainController.getInstance().getFileTreeView()
+                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainController.getFileTreeView()
                         .getSelectionModel()
                         .getSelectedItem()
                         .getValue().unwrap());

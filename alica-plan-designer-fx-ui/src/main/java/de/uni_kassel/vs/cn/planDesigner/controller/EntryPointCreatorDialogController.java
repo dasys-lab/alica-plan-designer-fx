@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddEntryPointInPlan;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTaskToRepository;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddEntryPointInPlan;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddTaskToRepository;
+import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;

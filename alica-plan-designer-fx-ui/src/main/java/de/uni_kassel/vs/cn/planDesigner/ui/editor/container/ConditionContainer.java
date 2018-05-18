@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;

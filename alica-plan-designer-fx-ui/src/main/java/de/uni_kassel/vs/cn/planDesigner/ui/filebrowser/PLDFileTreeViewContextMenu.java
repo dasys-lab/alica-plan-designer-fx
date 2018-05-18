@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.DeleteFileMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.RenameFileMenuItem;

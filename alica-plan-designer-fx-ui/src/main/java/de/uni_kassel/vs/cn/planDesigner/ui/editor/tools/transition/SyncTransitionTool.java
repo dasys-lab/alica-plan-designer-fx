@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.transition;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddTransitionToSynchronisation;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddTransitionToSynchronisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;

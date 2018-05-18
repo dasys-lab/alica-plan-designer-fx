@@ -10,10 +10,12 @@ import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
+import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -199,7 +201,11 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            MainController.getInstance().getRepositoryTabPane().init();
+            RepositoryTabPane repositoryTabPane = MainController.getInstance().getRepositoryTabPane();
+            Tab previousTab = repositoryTabPane.getSelectionModel().getSelectedItem();
+            repositoryTabPane.init();
+            repositoryTabPane.getSelectionModel().select(previousTab);
+
         }
     }
 
