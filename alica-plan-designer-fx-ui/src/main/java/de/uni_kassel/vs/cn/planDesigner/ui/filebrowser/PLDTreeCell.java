@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangeAttributeValue;
+import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;

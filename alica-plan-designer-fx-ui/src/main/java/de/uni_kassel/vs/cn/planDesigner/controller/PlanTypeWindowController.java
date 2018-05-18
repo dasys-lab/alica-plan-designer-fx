@@ -1,10 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddPlanToPlanType;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangeAttributeValue;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemoveAllPlansFromPlanType;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.RemovePlanFromPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddPlanToPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.RemoveAllPlansFromPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.RemovePlanFromPlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
@@ -176,9 +176,9 @@ public class PlanTypeWindowController implements Initializable {
                         super.updateItem(item, empty);
                         if (empty == false) {
                             if (Boolean.TRUE.equals(item)) {
-                                setGraphic(new ImageView(new AlicaIcon(SuccessState.class)));
+                                setGraphic(new ImageView(new AlicaIcon(SuccessState.class.getSimpleName())));
                             } else {
-                                setGraphic(new ImageView(new AlicaIcon(FailureState.class)));
+                                setGraphic(new ImageView(new AlicaIcon(FailureState.class.getSimpleName())));
                             }
                             setText("");
                         }

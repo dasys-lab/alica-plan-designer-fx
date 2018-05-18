@@ -10,10 +10,12 @@ import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
+import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -26,8 +28,10 @@ import org.eclipse.emf.ecore.EObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.Optional;
 
@@ -189,6 +193,20 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
     public synchronized void updateTreeView(WatchEvent.Kind kind, Path child) {
 
         ((VirtualDirectoryTreeItem) getRoot()).updateDirectory(kind, child);
+        if(kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
+            try {
+                RepoViewBackend.getInstance().init();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            RepositoryTabPane repositoryTabPane = MainController.getInstance().getRepositoryTabPane();
+            Tab previousTab = repositoryTabPane.getSelectionModel().getSelectedItem();
+            repositoryTabPane.init();
+            repositoryTabPane.getSelectionModel().select(previousTab);
+
+        }
     }
 
     public void setController(MainController controller) {
@@ -211,21 +229,5 @@ class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
 
     public void updateDirectory(WatchEvent.Kind kind, Path child) {
         getChildren().forEach(e -> ((PLDTreeItem)e).updateDirectory(kind, child));
-    }
-
-    private Image getImageForFileType(File content) {
-        Image listItemImage = null;
-        if (content.getName().endsWith(".beh")) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
-        } else if (content.getName().endsWith(".pml")) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
-        } else if (content.getName().endsWith(".pty")) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
-        } else if (content.getName().endsWith("pmlex") || content.getName().startsWith(".")) {
-            return null;
-        } else {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
-        }
-        return listItemImage;
     }
 }

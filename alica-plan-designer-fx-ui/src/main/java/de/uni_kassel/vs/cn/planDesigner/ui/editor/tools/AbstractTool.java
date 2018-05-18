@@ -115,7 +115,7 @@ public abstract class AbstractTool<T extends PlanElement> {
         DropShadow value = new DropShadow(10, Color.GREY);
         value.setSpread(0.5);
         dragableHBox.setEffect(value);
-        workbench.getScene().setCursor(new ImageCursor(new AlicaIcon(createNewObject().getClass())));
+        workbench.getScene().setCursor(new ImageCursor(new AlicaIcon(createNewObject().getClass().getSimpleName())));
     }
 
     public void endPhase() {

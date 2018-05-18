@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.condition;
 
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddConditionToPlan;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddConditionToPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
@@ -51,7 +51,7 @@ public class PostConditionTool extends AbstractConditionTool {
                         return;
                     }
                     if (((Node)event.getTarget()).getParent() instanceof TerminalStateContainer && visualRepresentation == null) {
-                        visualRepresentation = new ImageView(new AlicaIcon(createNewObject().getClass()));
+                        visualRepresentation = new ImageView(new AlicaIcon(createNewObject().getClass().getSimpleName()));
                         ((TerminalStateContainer)event.getTarget()).getChildren().add(visualRepresentation);
                     } else if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer
                             || event.getTarget() instanceof ConditionHBox) {

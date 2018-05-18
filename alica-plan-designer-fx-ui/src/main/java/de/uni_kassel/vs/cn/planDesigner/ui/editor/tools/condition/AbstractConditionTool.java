@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.condition;
 
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddConditionToPlan;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddConditionToPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
@@ -48,7 +48,7 @@ public abstract class AbstractConditionTool extends AbstractTool<Condition> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (event.getTarget() instanceof ConditionHBox && visualRepresentation == null) {
-                        visualRepresentation = new ImageView(new AlicaIcon(createNewObject().getClass()));
+                        visualRepresentation = new ImageView(new AlicaIcon(createNewObject().getClass().getSimpleName()));
                         ((ConditionHBox)event.getTarget()).getChildren().add(visualRepresentation);
                     }
                     event.consume();

@@ -1,6 +1,6 @@
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.add.AddStateInPlan;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteAbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddStateInPlan;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;

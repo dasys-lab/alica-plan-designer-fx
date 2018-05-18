@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.change.ChangePosition;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
@@ -137,7 +137,7 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
         public AbstractPlanHBox(PlanElement p) {
             super();
             this.abstractPlan = p;
-            ImageView imageView = new ImageView(new AlicaIcon(p.getClass()));
+            ImageView imageView = new ImageView(new AlicaIcon(p.getClass().getSimpleName()));
             Text text = new Text(p.getName());
             this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             getChildren().addAll(imageView, text);

@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.Codegenerator;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
@@ -71,7 +71,7 @@ public class MainController implements Initializable {
     private CommandStack commandStack = new CommandStack();
 
 
-    public MainController() {
+    public  MainController() {
         super();
         MAIN_CONTROLLER = this;
     }
