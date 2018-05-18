@@ -246,7 +246,6 @@ public class EMFModelUtils {
         if (emptyObject instanceof AbstractPlan) {
             String destinationPath = targetDir.getAbsolutePath().replace(configuration.getPlansPath(), "Plans");
             destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator));
-            System.out.println(destinationPath);
             ((AbstractPlan) emptyObject).setDestinationPath(destinationPath);
         }
     }
