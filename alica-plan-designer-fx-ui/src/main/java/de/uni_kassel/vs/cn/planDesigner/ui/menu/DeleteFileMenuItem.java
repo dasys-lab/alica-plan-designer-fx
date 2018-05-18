@@ -1,14 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.delete.DeleteAbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.util.Pair;
 
 import java.io.File;
@@ -33,14 +35,17 @@ public class DeleteFileMenuItem extends MenuItem {
     public void deleteFile() {
         RepoViewBackend repoViewBackend = RepoViewBackend.getInstance();
         MainController mainController = MainController.getInstance();
+        RepositoryTabPane repositoryTabPane = mainController.getRepositoryTabPane();
 
         // Plans
         Optional<Pair<Plan, Path>> planPathPair = repoViewBackend.getPlanPathPair(toDelete);
         if (planPathPair.isPresent()) {
             commandStack.storeAndExecute(new DeleteAbstractPlan(planPathPair.get().getKey()));
             repoViewBackend.getPlans().remove(planPathPair.get());
+            Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
             mainController.closeTabIfOpen(planPathPair.get().getKey());
-            mainController.getRepositoryTabPane().init();
+            repositoryTabPane.init();
+            repositoryTabPane.getSelectionModel().select(repoTab);
             return;
         }
 
@@ -49,8 +54,10 @@ public class DeleteFileMenuItem extends MenuItem {
         if (planTypePathPair.isPresent()) {
             commandStack.storeAndExecute(new DeleteAbstractPlan(planTypePathPair.get().getKey()));
             repoViewBackend.getPlanTypes().remove(planTypePathPair.get());
+            Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
             mainController.closeTabIfOpen(planTypePathPair.get().getKey());
-            mainController.getRepositoryTabPane().init();
+            repositoryTabPane.init();
+            repositoryTabPane.getSelectionModel().select(repoTab);
             return;
         }
 
@@ -59,8 +66,10 @@ public class DeleteFileMenuItem extends MenuItem {
         if (behaviourPathPair.isPresent()) {
             commandStack.storeAndExecute(new DeleteAbstractPlan(behaviourPathPair.get().getKey()));
             repoViewBackend.getBehaviours().remove(behaviourPathPair.get());
+            Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
             mainController.closeTabIfOpen(behaviourPathPair.get().getKey());
-            mainController.getRepositoryTabPane().init();
+            repositoryTabPane.init();
+            repositoryTabPane.getSelectionModel().select(repoTab);
             return;
         }
 

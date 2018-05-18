@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
@@ -14,8 +14,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
@@ -51,6 +50,8 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
             ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem<T>(containedElement));
             contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY());
         });
+        // prohibit containers from growing indefinitely (especially transition containers)
+        setMaxSize(1, 1);
     }
 
     /**

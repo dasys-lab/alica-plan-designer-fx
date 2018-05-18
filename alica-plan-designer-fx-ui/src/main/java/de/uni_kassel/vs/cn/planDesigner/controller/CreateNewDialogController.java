@@ -1,11 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.command.CreateAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,14 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
 
-/**
- * Created by marci on 09.03.17.
- */
 public class CreateNewDialogController implements Initializable {
 
     @FXML
@@ -53,6 +49,7 @@ public class CreateNewDialogController implements Initializable {
     private File initialDirectoryHint;
 
     private EClass alicaType;
+    private EObject createdObject;
 
     private I18NRepo i18NRepo;
 
@@ -130,6 +127,20 @@ public class CreateNewDialogController implements Initializable {
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.save"), e);
                 e.printStackTrace();
             }
+
+            createdObject = getAlicaFactory().create(alicaType);
+            ((PlanElement) createdObject).setName(fileName.replace(".beh","")
+                    .replace(".pty","").replace(".pml", ""));
+            Path alicaFilePath = Paths.get(pathTextField.getText(), fileName);
+            if (Files.exists(alicaFilePath)) {
+                ErrorWindowController
+                        .createErrorWindow(i18NRepo.getString("label.error.save.alreadyExists"), null);
+                return;
+            }
+
+            MainController.getInstance().getCommandStack()
+                    .storeAndExecute(new CreateAbstractPlan((AbstractPlan) createdObject, alicaFilePath));
+            ((Stage)pathTextField.getScene().getWindow()).close();
         } else {
             try {
                 Files.createDirectory(new File(Paths.get(pathTextField.getText(), fileName).toString()).toPath());
@@ -158,5 +169,9 @@ public class CreateNewDialogController implements Initializable {
         } else {
             nameLabel.setText(i18NRepo.getString("label.menu.new.folder") + " " + nameString);
         }
+    }
+
+    public EObject getCreatedObject() {
+        return createdObject;
     }
 }
