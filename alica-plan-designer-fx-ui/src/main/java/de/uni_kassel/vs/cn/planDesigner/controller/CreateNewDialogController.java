@@ -1,11 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.command.CreateAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
@@ -53,6 +52,7 @@ public class CreateNewDialogController implements Initializable {
     private File initialDirectoryHint;
 
     private EClass alicaType;
+    private EObject createdObject;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -99,34 +99,31 @@ public class CreateNewDialogController implements Initializable {
             return;
         }
         if (alicaType != null) {
-            try {
-                if (alicaType.getInstanceClass().equals(Behaviour.class) && fileName.endsWith(".beh") == false) {
-                    fileName = fileName + ".beh";
-                }
-
-                if (alicaType.getInstanceClass().equals(Plan.class) && fileName.endsWith(".pml") == false) {
-                    fileName = fileName + ".pml";
-                }
-
-                if (alicaType.getInstanceClass().equals(PlanType.class) && fileName.endsWith(".pty") == false) {
-                    fileName = fileName + ".pty";
-                }
-
-                EObject emptyObject = getAlicaFactory().create(alicaType);
-                ((PlanElement)emptyObject).setName(fileName.replace(".beh","")
-                        .replace(".pty","").replace(".pml", ""));
-                File alicaFile = new File(Paths.get(pathTextField.getText(), fileName).toString());
-                if (alicaFile.exists()) {
-                    ErrorWindowController
-                            .createErrorWindow(I18NRepo.getString("label.error.save.alreadyExists"), null);
-                    return;
-                }
-                EMFModelUtils.createAlicaFile(emptyObject, true, alicaFile);
-                ((Stage)pathTextField.getScene().getWindow()).close();
-            } catch (IOException e) {
-                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
-                e.printStackTrace();
+            if (alicaType.getInstanceClass().equals(Behaviour.class) && fileName.endsWith(".beh") == false) {
+                fileName = fileName + ".beh";
             }
+
+            if (alicaType.getInstanceClass().equals(Plan.class) && fileName.endsWith(".pml") == false) {
+                fileName = fileName + ".pml";
+            }
+
+            if (alicaType.getInstanceClass().equals(PlanType.class) && fileName.endsWith(".pty") == false) {
+                fileName = fileName + ".pty";
+            }
+
+            createdObject = getAlicaFactory().create(alicaType);
+            ((PlanElement) createdObject).setName(fileName.replace(".beh","")
+                    .replace(".pty","").replace(".pml", ""));
+            Path alicaFilePath = Paths.get(pathTextField.getText(), fileName);
+            if (Files.exists(alicaFilePath)) {
+                ErrorWindowController
+                        .createErrorWindow(I18NRepo.getString("label.error.save.alreadyExists"), null);
+                return;
+            }
+
+            MainController.getInstance().getCommandStack()
+                    .storeAndExecute(new CreateAbstractPlan((AbstractPlan) createdObject, alicaFilePath));
+            ((Stage)pathTextField.getScene().getWindow()).close();
         } else {
             try {
                 Files.createDirectory(new File(Paths.get(pathTextField.getText(), fileName).toString()).toPath());
@@ -155,5 +152,9 @@ public class CreateNewDialogController implements Initializable {
         } else {
             nameLabel.setText(I18NRepo.getString("label.menu.new.folder") + " " + nameString);
         }
+    }
+
+    public EObject getCreatedObject() {
+        return createdObject;
     }
 }

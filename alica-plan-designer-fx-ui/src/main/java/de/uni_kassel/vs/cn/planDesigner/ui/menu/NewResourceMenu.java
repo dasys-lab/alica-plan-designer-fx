@@ -46,8 +46,8 @@ public class NewResourceMenu extends Menu {
         createFileDialog(getHintFile(), resourceInstanceClass);
     }
 
-    private void createFileDialog(File unwrappedFile, EClass planClass) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("createNewDialog.fxml"));
+    public static CreateNewDialogController createFileDialog(File unwrappedFile, EClass planClass) {
+        FXMLLoader fxmlLoader = new FXMLLoader(NewResourceMenu.class.getClassLoader().getResource("createNewDialog.fxml"));
         try {
             Parent rootOfDialog = fxmlLoader.load();
             CreateNewDialogController controller = fxmlLoader.getController();
@@ -66,11 +66,14 @@ public class NewResourceMenu extends Menu {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(PlanDesigner.getPrimaryStage());
             stage.showAndWait();
+            return controller;
 
         } catch (IOException e) {
             // if the helper window is not loadable something is really wrong here
             e.printStackTrace();
             System.exit(1);
+            // unreachable statement
+            return null;
         }
     }
 }
