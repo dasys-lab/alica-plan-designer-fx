@@ -19,8 +19,11 @@ import java.io.IOException;
  */
 public class ShowUsagesMenuItem extends MenuItem {
 
+    private I18NRepo i18NRepo;
+
     public ShowUsagesMenuItem(PlanElement planToGetUsageInformationAbout) {
-        setText(I18NRepo.getString("label.menu.usage"));
+        i18NRepo = I18NRepo.getInstance();
+        setText(i18NRepo.getString("label.menu.usage"));
         setOnAction( e -> {
             FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
             try {
@@ -29,7 +32,7 @@ public class ShowUsagesMenuItem extends MenuItem {
                 controller.createReferencesList(EMFModelUtils.getUsages(planToGetUsageInformationAbout));
                 Stage stage = new Stage();
                 stage.setResizable(false);
-                stage.setTitle(I18NRepo.getString("label.usage.info"));
+                stage.setTitle(i18NRepo.getString("label.usage.info"));
                 stage.setScene(new Scene(infoWindow));
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.initOwner(PlanDesigner.getPrimaryStage());

@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.aggregatedModel;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 
 import java.io.File;
 import java.util.*;
@@ -31,7 +31,7 @@ public class GeneratedSourcesManager {
     }
 
     private GeneratedSourcesManager() {
-        configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
+        configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
         stateCheckingCode = new HashMap<>();
         transitionConditionCode = new HashMap<>();
         conditionCode = new HashMap<>();

@@ -54,15 +54,18 @@ public class CreateNewDialogController implements Initializable {
 
     private EClass alicaType;
 
+    private I18NRepo i18NRepo;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        pathLabel.setText(I18NRepo.getString("label.choose.parentDirectory"));
+        i18NRepo = I18NRepo.getInstance();
+        pathLabel.setText(i18NRepo.getString("label.choose.parentDirectory"));
         openFileChooserButton.setOnAction(e -> {
             Node source = (Node) e.getSource();
             openFileChooser((Stage) source.getScene().getWindow());
         });
-        openFileChooserButton.setText(I18NRepo.getString("action.choose"));
-        createButton.setText(I18NRepo.getString("action.create"));
+        openFileChooserButton.setText(i18NRepo.getString("action.choose"));
+        createButton.setText(i18NRepo.getString("action.create"));
         createButton.setOnAction(e -> createFile());
     }
 
@@ -95,7 +98,7 @@ public class CreateNewDialogController implements Initializable {
     private void createFile() {
         String fileName = nameTextField.getText();
         if (fileName == null || fileName.length() == 0 || AlicaModelUtils.containsIllegalCharacter(fileName)) {
-            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save.name"), null);
+            ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.save.name"), null);
             return;
         }
         if (alicaType != null) {
@@ -118,20 +121,20 @@ public class CreateNewDialogController implements Initializable {
                 File alicaFile = new File(Paths.get(pathTextField.getText(), fileName).toString());
                 if (alicaFile.exists()) {
                     ErrorWindowController
-                            .createErrorWindow(I18NRepo.getString("label.error.save.alreadyExists"), null);
+                            .createErrorWindow(i18NRepo.getString("label.error.save.alreadyExists"), null);
                     return;
                 }
                 EMFModelUtils.createAlicaFile(emptyObject, true, alicaFile);
                 ((Stage)pathTextField.getScene().getWindow()).close();
             } catch (IOException e) {
-                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
+                ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.save"), e);
                 e.printStackTrace();
             }
         } else {
             try {
                 Files.createDirectory(new File(Paths.get(pathTextField.getText(), fileName).toString()).toPath());
             } catch (IOException e) {
-                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.create.folder"), e);
+                ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.create.folder"), e);
             }
             ((Stage)pathTextField.getScene().getWindow()).close();
         }
@@ -139,21 +142,21 @@ public class CreateNewDialogController implements Initializable {
 
     public void setAlicaType(EClass alicaType) {
         this.alicaType = alicaType;
-        String nameString = I18NRepo.getString("label.name");
+        String nameString = i18NRepo.getString("label.name");
         if (alicaType != null) {
             if (alicaType.getInstanceClass().equals(Behaviour.class)) {
-                nameLabel.setText(I18NRepo.getString("label.menu.new.behaviour") + " " + nameString);
+                nameLabel.setText(i18NRepo.getString("label.menu.new.behaviour") + " " + nameString);
             }
 
             if (alicaType.getInstanceClass().equals(Plan.class)) {
-                nameLabel.setText(I18NRepo.getString("label.menu.new.plan") + " " + nameString);
+                nameLabel.setText(i18NRepo.getString("label.menu.new.plan") + " " + nameString);
             }
 
             if (alicaType.getInstanceClass().equals(PlanType.class)) {
-                nameLabel.setText(I18NRepo.getString("label.menu.new.plantype") + " " + nameString);
+                nameLabel.setText(i18NRepo.getString("label.menu.new.plantype") + " " + nameString);
             }
         } else {
-            nameLabel.setText(I18NRepo.getString("label.menu.new.folder") + " " + nameString);
+            nameLabel.setText(i18NRepo.getString("label.menu.new.folder") + " " + nameString);
         }
     }
 }

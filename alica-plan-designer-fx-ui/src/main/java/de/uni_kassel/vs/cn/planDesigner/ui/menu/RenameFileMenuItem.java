@@ -8,7 +8,7 @@ import javafx.scene.control.TreeCell;
 public class RenameFileMenuItem extends MenuItem {
     private TreeCell<FileWrapper> treeCell;
     public RenameFileMenuItem() {
-        super(I18NRepo.getString("label.menu.edit.rename"));
+        super(I18NRepo.getInstance().getString("label.menu.edit.rename"));
         setOnAction(e -> onRename());
     }
 

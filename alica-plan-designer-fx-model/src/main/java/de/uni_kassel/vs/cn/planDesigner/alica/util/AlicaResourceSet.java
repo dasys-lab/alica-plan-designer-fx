@@ -15,7 +15,7 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.util;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -40,7 +40,7 @@ public class AlicaResourceSet extends ResourceSetImpl {
 					if(result.hasAbsolutePath()) {
 						result = URI.createURI("file:" + result);
 					} else {
-						Configuration configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
+						Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
 						if(result.toString().contains(".beh") || result.toString().contains(".pml") || result.toString().contains(".pty")) {
 							result = URI.createFileURI((new File(configuration.getPlansPath() + "/" + result)).getAbsolutePath());
 						} else {

@@ -21,6 +21,8 @@ public class Configuration {
 
     private String pluginPath;
 
+    private String defaultPluginName;
+
     private boolean pathsInitialized;
 
     public Configuration() {
@@ -100,5 +102,13 @@ public class Configuration {
 
     public void setPluginPath(String pluginPath) {
         this.pluginPath = replaceBashConstants(pluginPath);
+    }
+
+    public String getDefaultPlugin() {
+        return defaultPluginName;
+    }
+
+    public void setDefaultPlugin(String pluginName) {
+        defaultPluginName = pluginName;
     }
 }

@@ -42,7 +42,7 @@ public class UsagesWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        continueButton.setText(I18NRepo.getString("label.ok"));
+        continueButton.setText(I18NRepo.getInstance().getString("label.ok"));
         continueButton.setOnAction(e -> ((Stage)continueButton.getScene().getWindow()).close());
     }
 }

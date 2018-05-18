@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.CreateNewDialogController;
 import javafx.fxml.FXMLLoader;
@@ -22,24 +22,28 @@ import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaF
  * Created by marci on 17.03.17.
  */
 public class NewResourceMenu extends Menu {
+
+    private I18NRepo i18NRepo;
+
     public NewResourceMenu() {
-        super(I18NRepo.getString("label.menu.new"));
-        MenuItem newPlanMenuItem = new MenuItem(I18NRepo.getString("label.menu.new.plan"));
+        super(I18NRepo.getInstance().getString("label.menu.new"));
+        i18NRepo = I18NRepo.getInstance();
+        MenuItem newPlanMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plan"));
         newPlanMenuItem.setOnAction(e -> onElementClick(getAlicaFactory().createPlan().eClass()));
         getItems().add(newPlanMenuItem);
-        MenuItem newPlanTypeMenuItem = new MenuItem(I18NRepo.getString("label.menu.new.plantype"));
+        MenuItem newPlanTypeMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plantype"));
         newPlanTypeMenuItem.setOnAction(e -> onElementClick(getAlicaFactory().createPlanType().eClass()));
         getItems().add(newPlanTypeMenuItem);
-        MenuItem newBehaviourMenuItem = new MenuItem(I18NRepo.getString("label.menu.new.behaviour"));
+        MenuItem newBehaviourMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.behaviour"));
         newBehaviourMenuItem.setOnAction(e -> onElementClick(getAlicaFactory().createBehaviour().eClass()));
         getItems().add(newBehaviourMenuItem);
-        MenuItem newFolderMenuItem = new MenuItem(I18NRepo.getString("label.menu.new.folder"));
+        MenuItem newFolderMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.folder"));
         newFolderMenuItem.setOnAction(e -> onElementClick(null));
         getItems().add(newFolderMenuItem);
     }
 
     protected File getHintFile() {
-        return new File(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPlansPath());
+        return new File(ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPlansPath());
     }
 
     private void onElementClick(EClass resourceInstanceClass) {
@@ -56,11 +60,11 @@ public class NewResourceMenu extends Menu {
             Stage stage = new Stage();
             stage.setResizable(false);
             if (planClass != null) {
-                stage.setTitle(I18NRepo.getString("label.menu.new") + " " +
-                        I18NRepo.getString("label.menu.new." + planClass.getName().toLowerCase()));
+                stage.setTitle(i18NRepo.getString("label.menu.new") + " " +
+                        i18NRepo.getString("label.menu.new." + planClass.getName().toLowerCase()));
             } else {
-                stage.setTitle(I18NRepo.getString("label.menu.new") + " " +
-                        I18NRepo.getString("label.menu.new.folder"));
+                stage.setTitle(i18NRepo.getString("label.menu.new") + " " +
+                        i18NRepo.getString("label.menu.new.folder"));
             }
             stage.setScene(new Scene(rootOfDialog));
             stage.initModality(Modality.WINDOW_MODAL);

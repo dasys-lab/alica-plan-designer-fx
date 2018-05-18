@@ -59,9 +59,12 @@ public class PlanTypeWindowController implements Initializable {
     @FXML
     private Button saveButton;
 
+    private I18NRepo i18NRepo;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        i18NRepo = I18NRepo.getInstance();
         initUIText();
         initPlanListView();
         initTableView();
@@ -125,10 +128,10 @@ public class PlanTypeWindowController implements Initializable {
     }
 
     private void initUIText() {
-        removePlanButton.setText(I18NRepo.getString("label.plantype.removePlan"));
-        removeAllPlansButton.setText(I18NRepo.getString("label.plantype.removeAllPlans"));
-        addPlanButton.setText(I18NRepo.getString("label.plantype.addPlan"));
-        saveButton.setText(I18NRepo.getString("action.save"));
+        removePlanButton.setText(i18NRepo.getString("label.plantype.removePlan"));
+        removeAllPlansButton.setText(i18NRepo.getString("label.plantype.removeAllPlans"));
+        addPlanButton.setText(i18NRepo.getString("label.plantype.addPlan"));
+        saveButton.setText(i18NRepo.getString("action.save"));
     }
 
     private void initTableView() {
@@ -165,7 +168,7 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<AnnotatedPlan, Boolean> activeColumn = new TableColumn<>(I18NRepo.getString("label.column.active"));
+        TableColumn<AnnotatedPlan, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
         activeColumn.setCellValueFactory(new PropertyValueFactory<>("activated"));
         activeColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlan, Boolean>, TableCell<AnnotatedPlan, Boolean>>() {
             @Override

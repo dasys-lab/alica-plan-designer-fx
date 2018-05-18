@@ -38,12 +38,15 @@ public class EntryPointCreatorDialogController implements Initializable {
     private int x = 0;
     private int y = 0;
     boolean createEntryPoint = false;
+    private I18NRepo i18NRepo;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        createTaskButton.setText(I18NRepo.getString("action.create.task"));
+        i18NRepo = I18NRepo.getInstance();
+        createTaskButton.setText(i18NRepo.getString("action.create.task"));
         createTaskButton.setOnAction(e -> createTask());
-        confirmTaskChoiceButton.setText(I18NRepo.getString("action.confirm"));
+        confirmTaskChoiceButton.setText(i18NRepo.getString("action.confirm"));
         confirmTaskChoiceButton.setOnAction(e -> {
             Stage window = (Stage) confirmTaskChoiceButton.getScene().getWindow();
             Task selectedItem = taskComboBox.getSelectionModel().getSelectedItem();
@@ -87,7 +90,7 @@ public class EntryPointCreatorDialogController implements Initializable {
                 taskComboBox.setVisible(false);
                 confirmTaskChoiceButton.setVisible(false);
                 Stage window = (Stage) newTaskNameTextField.getScene().getWindow();
-                window.setTitle(I18NRepo.getString("action.create.task"));
+                window.setTitle(i18NRepo.getString("action.create.task"));
                 createTaskButton.setOnAction(e -> {
                     createTask();
                     window.close();
@@ -107,7 +110,7 @@ public class EntryPointCreatorDialogController implements Initializable {
             try {
                 EMFModelUtils.saveAlicaFile(RepoViewBackend.getInstance().getTaskRepository().get(0).getKey());
             } catch (IOException e) {
-                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
+                ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.save"), e);
                 e.printStackTrace();
             }
             taskComboBox.setItems(FXCollections.observableArrayList(RepoViewBackend.getInstance().getTasks().getKey()));

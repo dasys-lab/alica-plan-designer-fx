@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.alica.util;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -95,7 +95,7 @@ public class RepoViewBackend {
     }
 
     public void init() throws URISyntaxException, IOException {
-        Configuration configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
+        Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
         String plansPath = configuration.getPlansPath();
         plans = getRepositoryOf(plansPath, "pml");
 

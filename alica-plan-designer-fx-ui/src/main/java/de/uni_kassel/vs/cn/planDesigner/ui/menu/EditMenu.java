@@ -37,13 +37,15 @@ public class EditMenu extends Menu {
     private MenuItem undoItem;
     private MenuItem redoItem;
     private final MenuItem configItem;
+    private I18NRepo i18NRepo;
 
     public EditMenu(CommandStack commandStack, EditorTabPane editorTabPane) {
-        super(I18NRepo.getString("label.menu.edit"));
-        deleteElementItem = new MenuItem(I18NRepo.getString("label.menu.edit.delete"));
-        undoItem = new MenuItem(I18NRepo.getString("label.menu.edit.undo"));
-        redoItem = new MenuItem(I18NRepo.getString("label.menu.edit.redo"));
-        configItem = new MenuItem(I18NRepo.getString("label.menu.edit.config"));
+        super(I18NRepo.getInstance().getString("label.menu.edit"));
+        i18NRepo = I18NRepo.getInstance();
+        deleteElementItem = new MenuItem(i18NRepo.getString("label.menu.edit.delete"));
+        undoItem = new MenuItem(i18NRepo.getString("label.menu.edit.undo"));
+        redoItem = new MenuItem(i18NRepo.getString("label.menu.edit.redo"));
+        configItem = new MenuItem(i18NRepo.getString("label.menu.edit.config"));
 
         commandStack.addObserver((a,b) -> {
             if (((CommandStack)a).getUndoStack().isEmpty()) {
@@ -107,7 +109,7 @@ public class EditMenu extends Menu {
             //ConfigurationWindowController controller = fxmlLoader.getController();
             Stage stage = new Stage();
             stage.setResizable(false);
-            stage.setTitle(I18NRepo.getString("label.config.title"));
+            stage.setTitle(i18NRepo.getString("label.config.title"));
             stage.setScene(new Scene(window));
             stage.show();
 
@@ -186,7 +188,7 @@ public class EditMenu extends Menu {
                         UsagesWindowController controller = fxmlLoader.getController();
                         controller.createReferencesList(EMFModelUtils.getUsages(taskToBeDeleted));
                         Stage stage = new Stage();
-                        stage.setTitle(I18NRepo.getString("label.usage.nodelete"));
+                        stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
                         stage.setScene(new Scene(infoWindow));
                         stage.initModality(Modality.WINDOW_MODAL);
                         stage.initOwner(PlanDesigner.getPrimaryStage());

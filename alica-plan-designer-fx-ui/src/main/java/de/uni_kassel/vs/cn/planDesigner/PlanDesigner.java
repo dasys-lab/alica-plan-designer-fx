@@ -1,10 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner;
-/**
- * Created by marci on 16.10.16.
- */
 
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.FileWatcherJob;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -45,7 +43,7 @@ public class PlanDesigner extends Application {
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        new WorkspaceManager().init();
+        ConfigurationManager.getInstance().init();
         EMFModelUtils.initializeEMF();
         launch(args);
         FileWatcherJob.stayAlive = false;
@@ -53,11 +51,16 @@ public class PlanDesigner extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
         running = true;
+
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("test.fxml"));
+        // The next two lines replace this attribute in test.fxml::AnchorPane "fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController"
+        MainController mainController = MainController.getInstance();
+        fxmlLoader.setController(mainController);
         Parent root = fxmlLoader.load();
-        primaryStage.getIcons().add(new Image(new File("/home/marci/repos/alica-plan-designer-fx/bin/appIcon.xpm").toURL().toString()));
+        // TODO: does not load the icon.xpm
+        primaryStage.getIcons().add(new Image(PlanDesigner.class.getClassLoader().getResourceAsStream("images/icon.xpm")));
         primaryStage.setTitle("Carpe Noctem Plan Designer");
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -65,6 +68,7 @@ public class PlanDesigner extends Application {
                 running = false;
             }
         });
+
         Scene scene = new Scene(root);
         String cssPath = PlanDesigner.class.getResource("/styles.css").toExternalForm();
         scene.getStylesheets().add(cssPath);

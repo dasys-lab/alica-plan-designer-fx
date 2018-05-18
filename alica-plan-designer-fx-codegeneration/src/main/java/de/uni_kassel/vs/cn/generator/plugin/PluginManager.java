@@ -1,6 +1,8 @@
 package de.uni_kassel.vs.cn.generator.plugin;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,22 +25,24 @@ import java.util.jar.JarFile;
  * The {@link PluginManager} holds a list of available Plugins and sets the active plugin for the current session.
  */
 public class PluginManager {
-    private static Logger LOG = LogManager.getLogger(PluginManager.class);
 
-    private static PluginManager pluginManager;
-
-    private List<IPlugin<?>> availablePlugins;
-
-    private IPlugin<?> activePlugin;
-
+    // SINGLETON
+    private static volatile PluginManager instance;
     public static PluginManager getInstance() {
-
-        if (pluginManager == null) {
-            pluginManager = new PluginManager();
+        if (instance == null) {
+            synchronized (ConfigurationManager.class) {
+                if (instance == null) {
+                    instance = new PluginManager();
+                }
+            }
         }
 
-        return pluginManager;
+        return instance;
     }
+
+    private static Logger LOG = LogManager.getLogger(PluginManager.class);
+    private List<IPlugin<?>> availablePlugins;
+    private IPlugin<?> activePlugin;
 
     /**
      * The PluginManager initializes its plugin list at construction.
@@ -62,7 +66,7 @@ public class PluginManager {
      */
     public IPlugin getPluginByName(String name) {
         for (IPlugin plugin : availablePlugins) {
-            if (plugin.getPluginName().equals(name)) {
+            if (plugin.getName().equals(name)) {
                 return plugin;
             }
         }
@@ -82,15 +86,25 @@ public class PluginManager {
         return availablePlugins;
     }
 
+    public ObservableList<String> getAvailablePluginNames()
+    {
+        ObservableList<String> pluginNamesList = FXCollections.observableArrayList();
+        for (IPlugin plugin : availablePlugins)
+        {
+            pluginNamesList.add(plugin.getName());
+        }
+        return pluginNamesList;
+    }
+
     /**
      * Updates the list of available plugins
      */
     public void updateAvailablePlugins() {
         //HACK This is some nasty code to load the plugins
         try {
-            if (Files.exists(Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath())))
+            if (Files.exists(Paths.get(ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPluginPath())))
             {
-                Files.list(Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath()))
+                Files.list(Paths.get(ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPluginPath()))
                         .map(e -> e.toFile())
                         .filter(e -> e.isDirectory() == false && e.getName().endsWith(".jar"))
                         .forEach(f -> {
@@ -133,7 +147,7 @@ public class PluginManager {
             }
             else
             {
-                LOG.info("No Plugin Path configured, or Plugin Path does not exist: " + Paths.get(new WorkspaceManager().getActiveWorkspace().getConfiguration().getPluginPath()) + "'");
+                LOG.info("No Plugin Path configured, or Plugin Path does not exist: " + Paths.get(ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPluginPath()) + "'");
             }
         } catch (IOException e) {
             LOG.error("Couldn't initialize PluginManager", e);
@@ -146,8 +160,8 @@ public class PluginManager {
     }
 
     /**
-     * getter
-     * @return
+     * Getter for the active plugin.
+     * @return The currently activated plugin
      */
     public IPlugin<?> getActivePlugin() {
         return activePlugin;

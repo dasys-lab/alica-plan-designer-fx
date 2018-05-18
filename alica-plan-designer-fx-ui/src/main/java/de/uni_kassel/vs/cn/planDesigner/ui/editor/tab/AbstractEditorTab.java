@@ -169,7 +169,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
             EMFModelUtils.saveAlicaFile(getEditable());
             getCommandStack().setSavedForAbstractPlan(getEditable());
         } catch (IOException e) {
-            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save"), e);
+            ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.save"), e);
         }
     }
 

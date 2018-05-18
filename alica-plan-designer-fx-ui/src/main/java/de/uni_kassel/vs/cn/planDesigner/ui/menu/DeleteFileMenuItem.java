@@ -25,7 +25,7 @@ public class DeleteFileMenuItem extends MenuItem {
     private CommandStack commandStack;
 
     public DeleteFileMenuItem(File toDelete) {
-        super(I18NRepo.getString("label.menu.edit.delete"));
+        super(I18NRepo.getInstance().getString("label.menu.edit.delete"));
         this.toDelete = toDelete;
         setOnAction(e -> deleteFile());
     }
