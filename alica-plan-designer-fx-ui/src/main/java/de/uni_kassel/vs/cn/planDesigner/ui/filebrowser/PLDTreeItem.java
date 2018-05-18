@@ -1,12 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -97,7 +101,17 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
         if (content.getName().endsWith(".beh")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
         } else if (content.getName().endsWith(".pml")) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
+            try {
+                Plan plan = (Plan)EMFModelUtils.loadAlicaFileFromDisk(content);
+                if (plan.isMasterPlan()) {
+                    listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
+                } else {
+                    listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                return null;
+            }
         } else if (content.getName().endsWith(".pty")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
         } else if (content.getName().endsWith(".tsk")) {
