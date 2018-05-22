@@ -124,8 +124,10 @@ public class PlanEditorGroup extends Group {
 
             PmlUiExtension pmlUiExtension = planModelVisualisationObject.getPmlUiExtensionMap().getExtension().get(transition);
             pmlUiExtension = createPmlUiExtension(transition, pmlUiExtension);
-            TransitionContainer transitionContainer = new TransitionContainer(transition, pmlUiExtension, commandStack, fromState, toState);
-            transitions.add(transitionContainer);
+            if(fromState != null && toState != null) {
+                TransitionContainer transitionContainer = new TransitionContainer(transition, pmlUiExtension, commandStack, fromState, toState);
+                transitions.add(transitionContainer);
+            }
         }
         return transitions;
     }
