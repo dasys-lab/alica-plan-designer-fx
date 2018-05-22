@@ -27,11 +27,10 @@ import java.lang.reflect.InvocationTargetException;
 public class VariablesTab extends AbstractPropertyTab {
 
     private TableView<Variable> textFieldTableView;
-    private I18NRepo i18NRepo;
+
 
     public VariablesTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         super(activeEditorTab, commandStack);
-        i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getInstance().getString("label.variables"));
     }
 

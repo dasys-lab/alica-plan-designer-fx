@@ -27,10 +27,8 @@ import java.util.List;
  */
 public class ParametrisationTab extends AbstractPropertyTab {
     private static final Logger LOG = LogManager.getLogger(ParametrisationTab.class);
-
     private TableView<Parametrisation> parametrisationTableView;
     private State currentState;
-    private I18NRepo i18NRepo;
 
     /**
      *
@@ -39,7 +37,6 @@ public class ParametrisationTab extends AbstractPropertyTab {
      */
     public ParametrisationTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         super(activeEditorTab, commandStack);
-        i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getString("label.parametrisation"));
     }
 
