@@ -43,10 +43,11 @@ public class PlanDesigner extends Application {
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        ConfigurationManager.getInstance().init();
+        ConfigurationManager manager = ConfigurationManager.getInstance();
         EMFModelUtils.initializeEMF();
         launch(args);
         FileWatcherJob.stayAlive = false;
+        System.out.println(manager.toString());
     }
 
     @Override
@@ -59,6 +60,7 @@ public class PlanDesigner extends Application {
         MainController mainController = MainController.getInstance();
         fxmlLoader.setController(mainController);
         Parent root = fxmlLoader.load();
+
         // TODO: does not load the icon.xpm
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/icon.png")));
         primaryStage.setTitle("Carpe Noctem Plan Designer");

@@ -38,11 +38,11 @@ public class GeneratedSourcesManager {
     }
 
     public String getIncludeDir() {
-        return Paths.get(configuration.getExpressionValidatorsPath(), "include").toString();
+        return Paths.get(configuration.getGenSrcPath(), "include").toString();
     }
 
     public String getSrcDir() {
-        return Paths.get(configuration.getExpressionValidatorsPath(), "src").toString();
+        return Paths.get(configuration.getGenSrcPath(), "src").toString();
     }
 
     public List<File> getAllGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {

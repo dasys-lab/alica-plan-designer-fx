@@ -33,7 +33,7 @@ public class SaveTest extends ApplicationTest {
 
     @Before
     public void init() {
-        ConfigurationManager.getInstance().init();
+        ConfigurationManager.getInstance();
         EMFModelUtils.initializeEMF();
         testInstance = RepoViewBackend.getTestInstance();
         PlanDesigner.setRunning(true);

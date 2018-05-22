@@ -103,12 +103,12 @@ public class RepoViewBackend {
 
         planTypes = getRepositoryOf(plansPath, "pty");
 
-        taskRepository = getRepositoryOf(configuration.getMiscPath(), "tsk");
+        taskRepository = getRepositoryOf(configuration.getTasksPath(), "tsk");
 
         if (taskRepository == null || taskRepository.isEmpty()) {
             EMFModelUtils.createAlicaFile(EMFModelUtils.getAlicaFactory().createTaskRepository(), false,
-                    new File(configuration.getMiscPath() + File.separator + "taskrepository.tsk"));
-            taskRepository = getRepositoryOf(configuration.getMiscPath(), "tsk");
+                    new File(configuration.getTasksPath() + File.separator + "taskrepository.tsk"));
+            taskRepository = getRepositoryOf(configuration.getTasksPath(), "tsk");
         }
 
         tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());

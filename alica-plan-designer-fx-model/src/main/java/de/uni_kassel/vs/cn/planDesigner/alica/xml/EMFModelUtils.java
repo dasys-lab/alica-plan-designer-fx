@@ -41,7 +41,6 @@ public class EMFModelUtils {
 
     private static final Logger LOG = LogManager.getLogger(EMFModelUtils.class);
     private static AlicaResourceSet alicaResourceSet;
-    private static Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
 
     @SuppressWarnings("unused")
     private static void initAlicaResourceSet() {
@@ -85,10 +84,11 @@ public class EMFModelUtils {
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */
     public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
+        Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
         String relativePath = file.getAbsolutePath()
                 .replace(configuration.getPlansPath() + "/", "")
                 .replace(configuration.getRolesPath() + "/", "")
-                .replace(configuration.getMiscPath() + "/", "");
+                .replace(configuration.getTasksPath() + "/", "");
         URI uri = URI
                 .createURI(relativePath);
 
@@ -131,10 +131,11 @@ public class EMFModelUtils {
     }
 
     public static URI createRelativeURI(File file) {
+        Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
         String relativePath = file.getAbsolutePath()
                 .replace(configuration.getPlansPath() + "/", "")
                 .replace(configuration.getRolesPath() + "/", "")
-                .replace(configuration.getMiscPath() + "/", "");
+                .replace(configuration.getTasksPath() + "/", "");
         return URI
                 .createURI(relativePath);
     }
@@ -244,6 +245,7 @@ public class EMFModelUtils {
 
     private static <T extends EObject> void setDestinationPath(T emptyObject, File targetDir) {
         if (emptyObject instanceof AbstractPlan) {
+            Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
             String destinationPath = targetDir.getAbsolutePath().replace(configuration.getPlansPath(), "Plans");
             destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator));
             ((AbstractPlan) emptyObject).setDestinationPath(destinationPath);

@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.generator.plugin.IPlugin;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.handler.ConfigurationListViewHandler;
@@ -128,6 +127,7 @@ public class ConfigurationWindowController implements Initializable {
         // active workspace
         loadWorkspace(availableWorkspacesListView.getSelectionModel().getSelectedItem());
 
+        saveButton.setOnAction(e -> onSave());
 /*
         defaultPluginComboBox.setItems(FXCollections.observableArrayList(PluginManager.getInstance().getAvailablePlugins()));
         defaultPluginComboBox.setButtonCell(new StringListCell<IPlugin<?>>() {
@@ -226,14 +226,11 @@ public class ConfigurationWindowController implements Initializable {
                     plansPathTextField.setText(configuration.getPlansPath());
                     rolesPathTextField.setText(configuration.getRolesPath());
                     pluginPathTextField.setText(configuration.getPluginPath());
-                    miscPathTextField.setText(configuration.getMiscPath());
-                    expressionsPathTextField.setText(configuration.getExpressionValidatorsPath());
+                    miscPathTextField.setText(configuration.getTasksPath());
+                    expressionsPathTextField.setText(configuration.getGenSrcPath());
                 }
             }
         });*/
-
-
-        saveButton.setOnAction(e -> onSave());
     }
 
     public void storeWorkspace(String wsName) {
@@ -246,8 +243,8 @@ public class ConfigurationWindowController implements Initializable {
         Configuration conf = ws.getConfiguration();
         conf.setPlansPath(plansFolderTextField.getText());
         conf.setRolesPath(rolesFolderTextField.getText());
-        conf.setMiscPath(tasksFolderTextField.getText());
-        conf.setExpressionValidatorsPath(genSourceFolderTextField.getText());
+        conf.setTasksPath(tasksFolderTextField.getText());
+        conf.setGenSrcPath(genSourceFolderTextField.getText());
         conf.setPluginPath(pluginsFolderTextField.getText());
         String selectedPluginsName = defaultPluginComboBox.getSelectionModel().getSelectedItem();
         if(selectedPluginsName != null && !selectedPluginsName.isEmpty()) {
@@ -270,10 +267,11 @@ public class ConfigurationWindowController implements Initializable {
         Configuration conf = ws.getConfiguration();
         plansFolderTextField.setText(conf.getPlansPath());
         rolesFolderTextField.setText(conf.getRolesPath());
-        tasksFolderTextField.setText(conf.getMiscPath());
-        genSourceFolderTextField.setText(conf.getExpressionValidatorsPath());
+        tasksFolderTextField.setText(conf.getTasksPath());
+        genSourceFolderTextField.setText(conf.getGenSrcPath());
         pluginsFolderTextField.setText(conf.getPluginPath());
         defaultPluginComboBox.setItems(PluginManager.getInstance().getAvailablePluginNames());
+        System.out.println("Default Plugin in Conf: " + conf.getDefaultPlugin());
         defaultPluginComboBox.getSelectionModel().select(conf.getDefaultPlugin());
     }
 
@@ -297,9 +295,9 @@ public class ConfigurationWindowController implements Initializable {
             Configuration configuration = new Configuration();
             configuration.setPluginPath(pluginsFolderTextField.getText());
             configuration.setPlansPath(plansFolderTextField.getText());
-            configuration.setMiscPath(tasksFolderTextField.getText());
+            configuration.setTasksPath(tasksFolderTextField.getText());
             configuration.setRolesPath(rolesFolderTextField.getText());
-            configuration.setExpressionValidatorsPath(genSourceFolderTextField.getText());
+            configuration.setGenSrcPath(genSourceFolderTextField.getText());
             selectedWorkspace.setConfiguration(configuration);
             // set active workspace
             configManager.setActiveWorkspace(selectedWorkspace);

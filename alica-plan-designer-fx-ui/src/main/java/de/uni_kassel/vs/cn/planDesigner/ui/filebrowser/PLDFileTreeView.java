@@ -27,7 +27,6 @@ import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.common.util.URI;
 
 import java.io.File;
 import java.io.IOException;
@@ -256,15 +255,17 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 }
 
 class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
-    private static final Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
+
+    private Configuration configuration;
 
     VirtualDirectoryTreeItem() {
         super();
+        configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
         this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getPlansPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
         this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getRolesPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getMiscPath()),
+        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getTasksPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
     }
 

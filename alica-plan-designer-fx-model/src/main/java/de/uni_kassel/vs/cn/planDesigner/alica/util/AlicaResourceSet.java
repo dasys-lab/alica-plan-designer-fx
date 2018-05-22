@@ -44,7 +44,7 @@ public class AlicaResourceSet extends ResourceSetImpl {
 						if(result.toString().contains(".beh") || result.toString().contains(".pml") || result.toString().contains(".pty")) {
 							result = URI.createFileURI((new File(configuration.getPlansPath() + "/" + result)).getAbsolutePath());
 						} else {
-							result = URI.createFileURI((new File(configuration.getMiscPath() + "/" + result)).getAbsolutePath());
+							result = URI.createFileURI((new File(configuration.getTasksPath() + "/" + result)).getAbsolutePath());
 						}
 					}
 				}

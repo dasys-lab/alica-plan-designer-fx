@@ -59,7 +59,7 @@ public class Codegenerator {
     public void generate() {
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
         String expressionValidatorsPath = ConfigurationManager.getInstance().getActiveWorkspace()
-                .getConfiguration().getExpressionValidatorsPath();
+                .getConfiguration().getGenSrcPath();
         try {
 
             if(Files.notExists(Paths.get(expressionValidatorsPath))) {
