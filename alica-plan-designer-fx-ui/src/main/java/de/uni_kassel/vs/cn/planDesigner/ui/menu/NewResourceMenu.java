@@ -52,6 +52,7 @@ public class NewResourceMenu extends Menu {
 
     public static CreateNewDialogController createFileDialog(File unwrappedFile, EClass planClass) {
         FXMLLoader fxmlLoader = new FXMLLoader(NewResourceMenu.class.getClassLoader().getResource("createNewDialog.fxml"));
+        I18NRepo i18 = I18NRepo.getInstance();
         try {
             Parent rootOfDialog = fxmlLoader.load();
             CreateNewDialogController controller = fxmlLoader.getController();
@@ -60,11 +61,11 @@ public class NewResourceMenu extends Menu {
             Stage stage = new Stage();
             stage.setResizable(false);
             if (planClass != null) {
-                stage.setTitle(i18NRepo.getString("label.menu.new") + " " +
-                        i18NRepo.getString("label.menu.new." + planClass.getName().toLowerCase()));
+                stage.setTitle(i18.getString("label.menu.new") + " " +
+                        i18.getInstance().getString("label.menu.new." + planClass.getName().toLowerCase()));
             } else {
-                stage.setTitle(i18NRepo.getString("label.menu.new") + " " +
-                        i18NRepo.getString("label.menu.new.folder"));
+                stage.setTitle(i18.getString("label.menu.new") + " " +
+                        i18.getString("label.menu.new.folder"));
             }
             stage.setScene(new Scene(rootOfDialog));
             stage.initModality(Modality.WINDOW_MODAL);
