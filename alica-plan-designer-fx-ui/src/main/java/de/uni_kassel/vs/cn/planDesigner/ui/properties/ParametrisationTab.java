@@ -22,9 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
 public class ParametrisationTab extends AbstractPropertyTab {
     private static final Logger LOG = LogManager.getLogger(ParametrisationTab.class);
     private TableView<Parametrisation> parametrisationTableView;
