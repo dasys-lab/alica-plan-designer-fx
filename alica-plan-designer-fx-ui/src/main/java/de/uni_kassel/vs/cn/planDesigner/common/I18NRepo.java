@@ -1,14 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.common;
 
 import java.util.ResourceBundle;
+import java.util.Locale;
 
-/**
- * Created by marci on 27.11.16.
- */
 public class I18NRepo {
 
     private static I18NRepo centralRepo;
-    private final ResourceBundle resourceBundle;
+    private ResourceBundle resourceBundle;
 
     public static I18NRepo getInstance() {
         if (centralRepo == null) {
@@ -21,7 +19,13 @@ public class I18NRepo {
         resourceBundle = ResourceBundle.getBundle("pld_globals");
     }
 
-    public static String getString(String key) {
-        return getInstance().resourceBundle.getString(key);
+    public void setLocale(String language, String country)
+    {
+        Locale tmpLocal = new Locale(language, country);
+        resourceBundle = ResourceBundle.getBundle("pld_globals", tmpLocal);
+    }
+
+    public String getString(String key) {
+        return resourceBundle.getString(key);
     }
 }

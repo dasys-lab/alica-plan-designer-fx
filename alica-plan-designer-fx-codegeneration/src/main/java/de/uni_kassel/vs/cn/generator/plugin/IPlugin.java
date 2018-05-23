@@ -45,7 +45,7 @@ public interface IPlugin<T> {
      * It is assumed plugin names are unique.
      * @return the name of the plugin
      */
-    String getPluginName();
+    String getName();
 
     /**
      * @return the JAR of the plugin

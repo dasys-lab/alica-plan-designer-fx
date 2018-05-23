@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.alica.xml;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
@@ -41,7 +41,7 @@ public class EMFModelUtils {
 
     private static final Logger LOG = LogManager.getLogger(EMFModelUtils.class);
     private static AlicaResourceSet alicaResourceSet;
-    private static Configuration configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
+    private static Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
 
     @SuppressWarnings("unused")
     private static void initAlicaResourceSet() {

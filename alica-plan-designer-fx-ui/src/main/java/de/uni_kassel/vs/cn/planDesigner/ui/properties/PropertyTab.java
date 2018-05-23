@@ -31,16 +31,16 @@ import org.eclipse.emf.ecore.impl.EAttributeImpl;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-/**
- * Created by marci on 27.11.16.
- */
 public class PropertyTab extends AbstractPropertyTab {
 
     private ObservableList<Node> propertyHBoxList;
 
+    private I18NRepo i18NRepo;
+
     public PropertyTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         super(activeEditorTab, commandStack);
-        setText(I18NRepo.getString("label.properties"));
+        i18NRepo = I18NRepo.getInstance();
+        setText(i18NRepo.getString("label.properties"));
     }
 
     @Override
@@ -86,7 +86,7 @@ public class PropertyTab extends AbstractPropertyTab {
                 });
 
         if (getSelectedEditorTabPlanElement() instanceof EntryPoint) {
-            Text text = new Text(I18NRepo.getString("alicatype.property.task"));
+            Text text = new Text(i18NRepo.getString("alicatype.property.task"));
             ComboBox<Task> taskComboBox = new ComboBox<>();
             taskComboBox.getSelectionModel().select(((EntryPoint) getSelectedEditorTabPlanElement()).getTask());
             taskComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Task>() {
@@ -140,7 +140,7 @@ public class PropertyTab extends AbstractPropertyTab {
             if (matchingPlugin != null) {
                 propertyHBoxList.add(matchingPlugin.getPluginUI());
             } else {
-                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.pluginNotFound"), null);
+                ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.pluginNotFound"), null);
             }
         }
 

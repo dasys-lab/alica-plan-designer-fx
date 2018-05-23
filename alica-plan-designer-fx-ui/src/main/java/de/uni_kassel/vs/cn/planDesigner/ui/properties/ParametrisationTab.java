@@ -22,12 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
 public class ParametrisationTab extends AbstractPropertyTab {
     private static final Logger LOG = LogManager.getLogger(ParametrisationTab.class);
-
     private TableView<Parametrisation> parametrisationTableView;
     private State currentState;
 
@@ -38,7 +34,7 @@ public class ParametrisationTab extends AbstractPropertyTab {
      */
     public ParametrisationTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         super(activeEditorTab, commandStack);
-        setText(I18NRepo.getString("label.parametrisation"));
+        setText(i18NRepo.getString("label.parametrisation"));
     }
 
     /**
@@ -59,13 +55,13 @@ public class ParametrisationTab extends AbstractPropertyTab {
             this.setDisable(true);
         }
 
-        TableColumn<Parametrisation, Label> subPlanColumn = new TableColumn<>(I18NRepo.getString("label.column.subplan"));
+        TableColumn<Parametrisation, Label> subPlanColumn = new TableColumn<>(i18NRepo.getString("label.column.subplan"));
         subPlanColumn.setCellValueFactory(new ParametrisationTab.CellColumnLabelCreatorCallback("subplan.name"));
         parametrisationTableView.getColumns().add(subPlanColumn);
-        TableColumn<Parametrisation, Label> subVariableColumn = new TableColumn<>(I18NRepo.getString("label.column.subVariable"));
+        TableColumn<Parametrisation, Label> subVariableColumn = new TableColumn<>(i18NRepo.getString("label.column.subVariable"));
         subVariableColumn.setCellValueFactory(new ParametrisationTab.CellColumnLabelCreatorCallback("subvar.name"));
         parametrisationTableView.getColumns().add(subVariableColumn);
-        TableColumn<Parametrisation, ComboBox<Variable>> varColumn = new TableColumn<>(I18NRepo.getString("label.column.subVariableValue"));
+        TableColumn<Parametrisation, ComboBox<Variable>> varColumn = new TableColumn<>(i18NRepo.getString("label.column.subVariableValue"));
         varColumn.setCellValueFactory(new ParametrisationTab.CellColumnCreatorCallback());
         parametrisationTableView.getColumns().add(varColumn);
         if (currentState != null) {
@@ -103,7 +99,7 @@ public class ParametrisationTab extends AbstractPropertyTab {
                             if (item != null) {
                                 setText(item.getName());
                             } else {
-                                setText(I18NRepo.getString("label.combobox.param.empty"));
+                                setText(i18NRepo.getString("label.combobox.param.empty"));
                             }
                         }
                     });
@@ -117,7 +113,7 @@ public class ParametrisationTab extends AbstractPropertyTab {
                                     if (item != null) {
                                         setText(item.getName());
                                     } else {
-                                        setText(I18NRepo.getString("label.combobox.param.empty"));
+                                        setText(i18NRepo.getString("label.combobox.param.empty"));
                                     }
                                 }
                             };

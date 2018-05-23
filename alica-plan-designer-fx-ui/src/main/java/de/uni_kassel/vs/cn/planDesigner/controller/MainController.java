@@ -38,14 +38,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-/**
- * Created by marci on 16.10.16.
- */
 public class MainController implements Initializable {
 
-    private static final Logger LOG = LogManager.getLogger(MainController.class);
+    // SINGLETON
+    private static volatile MainController instance;
+    public static MainController getInstance() {
+        if (instance == null)
+        {
+            synchronized(MainController.class)
+            {
+                if (instance == null)
+                {
+                    instance = new MainController();
+                }
+            }
+        }
 
-    private static MainController MAIN_CONTROLLER;
+        return instance;
+    }
+
+    private static final Logger LOG = LogManager.getLogger(MainController.class);
 
     @FXML
     private PLDFileTreeView fileTreeView;
@@ -70,14 +82,12 @@ public class MainController implements Initializable {
 
     private CommandStack commandStack = new CommandStack();
 
+    private I18NRepo i18NRepo;
 
-    public  MainController() {
+    private MainController ()
+    {
         super();
-        MAIN_CONTROLLER = this;
-    }
-
-    public static MainController getInstance() {
-        return MAIN_CONTROLLER;
+        i18NRepo = I18NRepo.getInstance();
     }
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -112,17 +122,17 @@ public class MainController implements Initializable {
      */
     private List<Menu> createMenus() {
         List<Menu> menus = new ArrayList<>();
-        Menu fileMenu = new Menu(I18NRepo.getString("label.menu.file"));
+        Menu fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
         fileMenu.getItems().add(new NewResourceMenu());
-        MenuItem saveItem = new MenuItem(I18NRepo.getString("label.menu.file.save"));
+        MenuItem saveItem = new MenuItem(i18NRepo.getString("label.menu.file.save"));
         saveItem.setOnAction(event -> ((AbstractEditorTab<?>) editorTabPane.getSelectionModel().getSelectedItem()).save());
         saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
         menus.add(fileMenu);
         menus.add(new EditMenu(commandStack, editorTabPane));
-        Menu codegenerationMenu = new Menu(I18NRepo.getString("label.menu.generation"));
-        MenuItem regenerateItem = new MenuItem(I18NRepo.getString("label.menu.generation.regenerate"));
-        MenuItem generateCurrentFile = new MenuItem(I18NRepo.getString("label.menu.generation.file"));
+        Menu codegenerationMenu = new Menu(i18NRepo.getString("label.menu.generation"));
+        MenuItem regenerateItem = new MenuItem(i18NRepo.getString("label.menu.generation.regenerate"));
+        MenuItem generateCurrentFile = new MenuItem(i18NRepo.getString("label.menu.generation.file"));
         generateCurrentFile.setDisable(true);
         getEditorTabPane().getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
@@ -143,7 +153,7 @@ public class MainController implements Initializable {
             	waitOnProgressWindow(() -> new Codegenerator().generate((AbstractPlan)planElement));
             } catch (RuntimeException ex) {
                 LOG.error("error while generating code", ex);
-                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.codegen"), null);
+                ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
             }
         });
         regenerateItem.setOnAction(e -> {
@@ -152,7 +162,7 @@ public class MainController implements Initializable {
                 
             } catch (RuntimeException ex) {
                 LOG.error("error while generating code", ex);
-                ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.codegen"), null);
+                ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
             }
 
         });
@@ -169,7 +179,7 @@ public class MainController implements Initializable {
             statusText.setOpacity(1.0);
             statusBlob.setOpacity(1.0);
             statusText.setLayoutY(statusBlob.getLayoutY()+statusText.getFont().getSize()+2);
-		    statusText.setText(I18NRepo.getString("label.generation.completed"));
+		    statusText.setText(i18NRepo.getString("label.generation.completed"));
             statusText.setLayoutX(statusBlob.getLayoutX() + (statusBlob.getWidth()/2)-statusText.getBoundsInLocal().getWidth()/2);
 		    statusBlob.setVisible(true);
 		    statusText.setVisible(true);

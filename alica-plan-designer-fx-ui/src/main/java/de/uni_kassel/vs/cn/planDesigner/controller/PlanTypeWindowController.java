@@ -25,6 +25,7 @@ import javafx.util.Pair;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -37,6 +38,12 @@ public class PlanTypeWindowController implements Initializable {
     private PlanType planType;
 
     private CommandStack commandStack;
+
+    private Comparator<Pair<Plan, Path>> pairComparator;
+
+    private Comparator<RepositoryHBox<Plan>> repositoryHBoxComparator;
+
+    private Comparator<AnnotatedPlan> annotatedPlanComparator;
 
     @FXML
     private PlanTypeTab planTypeTab;
@@ -59,9 +66,13 @@ public class PlanTypeWindowController implements Initializable {
     @FXML
     private Button saveButton;
 
+    private I18NRepo i18NRepo;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        i18NRepo = I18NRepo.getInstance();
+        initComparators();
         initUIText();
         initPlanListView();
         initTableView();
@@ -77,13 +88,13 @@ public class PlanTypeWindowController implements Initializable {
                 .getInstance()
                 .getPlans()
                 .stream()
+                .sorted(pairComparator)
                 .map(e -> {
                     RepositoryHBox<Plan> planRepositoryHBox = new RepositoryHBox<>(e.getKey(), e.getValue());
                     planRepositoryHBox.setOnMouseClicked(null);
                     return planRepositoryHBox;
                 })
                 .collect(Collectors.toList());
-
         planListView.setItems(FXCollections.observableArrayList(allPlans));
     }
 
@@ -104,7 +115,7 @@ public class PlanTypeWindowController implements Initializable {
                 AddPlanToPlanType command = new AddPlanToPlanType(selectedItem.getObject(), planType);
                 commandStack.storeAndExecute(command);
                 plantypeTableView.getItems().add(command.getCopyForRemoval());
-
+                plantypeTableView.getItems().sort(annotatedPlanComparator);
             }
         });
 
@@ -114,6 +125,7 @@ public class PlanTypeWindowController implements Initializable {
                 commandStack.storeAndExecute(new RemovePlanFromPlanType(selectedItem, planType));
                 plantypeTableView.getItems().remove(selectedItem);
                 plantypeTableView.refresh();
+                planListView.getItems().sort(repositoryHBoxComparator);
             }
         });
 
@@ -121,14 +133,15 @@ public class PlanTypeWindowController implements Initializable {
             commandStack.storeAndExecute(new RemoveAllPlansFromPlanType(planType));
             plantypeTableView.getItems().clear();
             plantypeTableView.refresh();
+            planListView.getItems().sort(repositoryHBoxComparator);
         });
     }
 
     private void initUIText() {
-        removePlanButton.setText(I18NRepo.getString("label.plantype.removePlan"));
-        removeAllPlansButton.setText(I18NRepo.getString("label.plantype.removeAllPlans"));
-        addPlanButton.setText(I18NRepo.getString("label.plantype.addPlan"));
-        saveButton.setText(I18NRepo.getString("action.save"));
+        removePlanButton.setText(i18NRepo.getString("label.plantype.removePlan"));
+        removeAllPlansButton.setText(i18NRepo.getString("label.plantype.removeAllPlans"));
+        addPlanButton.setText(i18NRepo.getString("label.plantype.addPlan"));
+        saveButton.setText(i18NRepo.getString("action.save"));
     }
 
     private void initTableView() {
@@ -165,7 +178,8 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<AnnotatedPlan, Boolean> activeColumn = new TableColumn<>(I18NRepo.getString("label.column.active"));
+        TableColumn<AnnotatedPlan, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
+        activeColumn.setResizable(false);
         activeColumn.setCellValueFactory(new PropertyValueFactory<>("activated"));
         activeColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlan, Boolean>, TableCell<AnnotatedPlan, Boolean>>() {
             @Override
@@ -184,11 +198,12 @@ public class PlanTypeWindowController implements Initializable {
                         }
                     }
                 };
+                annotatedPlanBooleanTableCell.setStyle("-fx-alignment: CENTER;");
                 return annotatedPlanBooleanTableCell;
             }
         });
 
-        TableColumn<AnnotatedPlan, Plan> planNameColumn = new TableColumn<>();
+        TableColumn<AnnotatedPlan, Plan> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
         planNameColumn.setCellValueFactory(new PropertyValueFactory<>("plan"));
         planNameColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlan, Plan>, TableCell<AnnotatedPlan, Plan>>() {
             @Override
@@ -198,6 +213,11 @@ public class PlanTypeWindowController implements Initializable {
                     protected void updateItem(Plan item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty == false) {
+                            if (item.isMasterPlan()) {
+                                setGraphic(new ImageView(new AlicaIcon("masterplan")));
+                            } else {
+                                setGraphic(new ImageView(new AlicaIcon(Plan.class.getSimpleName())));
+                            }
                             setText(item.getName());
                         }
                     }
@@ -211,14 +231,25 @@ public class PlanTypeWindowController implements Initializable {
         plantypeTableView.setRowFactory(tv -> {
             TableRow<AnnotatedPlan> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
-                commandStack.storeAndExecute(new ChangeAttributeValue<>(annotatedPlanTableRow.getItem(),
-                        "activated", !annotatedPlanTableRow.getItem().isActivated(), planType));
-                plantypeTableView.refresh();
+                if(e.getClickCount() == 2 && annotatedPlanTableRow.getItem() != null) {
+                    commandStack.storeAndExecute(new ChangeAttributeValue<>(annotatedPlanTableRow.getItem(),
+                            "activated", !annotatedPlanTableRow.getItem().isActivated(), planType));
+                    plantypeTableView.refresh();
+                }
             });
             return annotatedPlanTableRow;
         });
     }
 
+
+    private void initComparators() {
+        pairComparator = Comparator.comparing(planPathPair -> !planPathPair.getKey().isMasterPlan());
+        pairComparator = pairComparator.thenComparing(planPathPair -> planPathPair.getKey().getName());
+        repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getObject().isMasterPlan());
+        repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryHBox -> planRepositoryHBox.getObject().getName());
+        annotatedPlanComparator = Comparator.comparing(annotatedPlan -> !annotatedPlan.getPlan().isMasterPlan());
+        annotatedPlanComparator = annotatedPlanComparator.thenComparing(annotatedPlan -> annotatedPlan.getPlan().getName());
+    }
 
     public void setPlanType(PlanType planType) {
         if (planType == null) {

@@ -56,7 +56,7 @@ public class ErrorWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        confirmButton.setText(I18NRepo.getString("label.ok"));
+        confirmButton.setText(I18NRepo.getInstance().getString("label.ok"));
         confirmButton.setOnAction(e -> {
             Node source = (Node) e.getSource();
             ((Stage) source.getScene().getWindow()).close();

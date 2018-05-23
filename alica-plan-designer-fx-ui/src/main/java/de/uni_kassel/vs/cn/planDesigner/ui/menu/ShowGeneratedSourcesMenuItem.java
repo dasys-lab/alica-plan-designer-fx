@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.scene.control.MenuItem;
 
@@ -10,18 +10,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by marci on 14.06.17.
- */
 public class ShowGeneratedSourcesMenuItem<T extends PlanElement> extends MenuItem {
     private String editorExecutablePath;
     private T planElement;
 
     public ShowGeneratedSourcesMenuItem(T planElement) {
-        super(I18NRepo.getString("label.menu.sources"));
+        super(I18NRepo.getInstance().getString("label.menu.sources"));
         this.planElement = planElement;
         setOnAction(e -> showSources());
-        editorExecutablePath = new WorkspaceManager().getEditorExecutablePath();
+        editorExecutablePath = ConfigurationManager.getInstance().getEditorExecutablePath();
         if (editorExecutablePath == null  || editorExecutablePath.length() == 0 || planElement instanceof EntryPoint) {
             setDisable(true);
         }

@@ -27,6 +27,21 @@ public class RepositoryHBox<T extends PlanElement> extends DragableHBox {
         dragTool.setDragableHBox(this);
         this.object = object;
         this.dragTool = dragTool;
+
+        init(object, pathToObject);
+
+        if (dragTool instanceof RepositoryTabPane.TaskTool == false) {
+            initDragSupport();
+        }
+    }
+
+    public RepositoryHBox(T object, Path pathToObject) {
+        super(object, new AbstractPlanTool(null));
+        this.object = object;
+        init(object, pathToObject);
+    }
+
+    private void init(T object, Path pathToObject) {
         setOnContextMenuRequested(e -> {
             ContextMenu contextMenu = new ContextMenu(new ShowUsagesMenuItem(object));
             contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
@@ -42,27 +57,6 @@ public class RepositoryHBox<T extends PlanElement> extends DragableHBox {
             getChildren().addAll(new ImageView(new AlicaIcon(object.getClass().getSimpleName())),
                     new Text(" " + object.getName()));
         }
-        setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
-                MainController.getInstance().openFile(pathToObject.toFile());
-            }
-        });
-
-        if (dragTool instanceof RepositoryTabPane.TaskTool == false) {
-            initDragSupport();
-        }
-    }
-
-    public RepositoryHBox(T object, Path pathToObject) {
-        super(object, new AbstractPlanTool(null));
-        this.object = object;
-        setOnContextMenuRequested(e -> {
-            ContextMenu contextMenu = new ContextMenu(new ShowUsagesMenuItem(object));
-            contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
-        });
-
-        getChildren().addAll(new ImageView(new AlicaIcon(object.getClass().getSimpleName())),
-                new Text(object.getName()));
         setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
                 MainController.getInstance().openFile(pathToObject.toFile());

@@ -3,144 +3,147 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 import de.uni_kassel.vs.cn.generator.plugin.IPlugin;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.handler.ConfigurationListViewHandler;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Workspace;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.util.Callback;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
  * This Controller holds the logic for the configuration window.
- * The configuration window allows for editing the paths for plans, roles, expressions and misc.
+ * The configuration window allows for editing the paths for plans, roles, source generation and tasks.
  */
 public class ConfigurationWindowController implements Initializable {
 
+    // EXTERNAL TOOLS GUI PART
     @FXML
-    private TextField plansPathTextField;
+    private TitledPane externalToolsTitledPane;
 
     @FXML
-    private TextField rolesPathTextField;
+    private Label sourceCodeEditorLabel;
+    @FXML
+    private TextField sourceCodeEditorTextField;
+    @FXML
+    private Button sourceCodeEditorFileButton;
 
     @FXML
-    private TextField expressionsPathTextField;
+    private Label clangFormatLabel;
+    @FXML
+    private TextField clangFormatTextField;
+    @FXML
+    private Button clangFormatFileButton;
+
+
+    // WORKSPACE MANAGEMENT GUI PART
+    @FXML
+    private TitledPane workspaceManagementTitledPane;
 
     @FXML
-    private TextField pluginPathTextField;
+    private Label availableWorkspacesLabel;
+    @FXML
+    private ListView<String> availableWorkspacesListView;
+
 
     @FXML
-    private TextField miscPathTextField;
+    private Label plansFolderLabel;
+    @FXML
+    private TextField plansFolderTextField;
+    @FXML
+    private Button plansFolderFileButton;
+
 
     @FXML
-    private TextField workspaceNameField;
+    private Label rolesFolderLabel;
+    @FXML
+    private TextField rolesFolderTextField;
+    @FXML
+    private Button rolesFolderFileButton;
+
 
     @FXML
-    private TextField editorExecutablePathTextField;
+    private Label tasksFolderLabel;
+    @FXML
+    private TextField tasksFolderTextField;
+    @FXML
+    private Button tasksFolderFileButton;
+
 
     @FXML
-    private TextField clangFormatPathTextField;
+    private Label genSourceFolderLabel;
+    @FXML
+    private TextField genSourceFolderTextField;
+    @FXML
+    private Button genSourceFolderFileButton;
 
     @FXML
-    private ComboBox<Workspace> workspaceComboBox;
+    private Label pluginsFolderLabel;
+    @FXML
+    private TextField pluginsFolderTextField;
+    @FXML
+    private Button pluginsFolderFileButton;
 
     @FXML
-    private ComboBox<IPlugin<?>> activePluginComboBox;
-
+    private Label defaultPluginLabel;
     @FXML
-    private Label plansPathLabel;
+    private ComboBox<String> defaultPluginComboBox;
 
-    @FXML
-    private Label rolesPathLabel;
-
-    @FXML
-    private Label miscPathLabel;
-
-    @FXML
-    private Label pluginPathLabel;
-
-    @FXML
-    private Label expressionsPathLabel;
-
-    @FXML
-    private Label workspaceLabel;
-
-    @FXML
-    private Label addWorkspaceLabel;
-
-    @FXML
-    private Label editorExecutablePathLabel;
-
-    @FXML
-    private Label activePluginLabel;
-
-    @FXML
-    private Label clangFormatPathLabel;
 
     @FXML
     private Button saveButton;
 
-    @FXML
-    private Button addWorkspaceButton;
+    private ConfigurationManager configManager;
+    private ConfigurationListViewHandler configListViewEventHandler;
 
-    @FXML
-    private Button plansPathFileButton;
-
-    @FXML
-    private Button rolesPathFileButton;
-
-    @FXML
-    private Button miscPathFileButton;
-
-    @FXML
-    private Button expressionsPathFileButton;
-
-    @FXML
-    private Button pluginPathFileButton;
-
-    @FXML
-    private Button editorExecutablePathFileButton;
-
-    @FXML
-    private Button clangFormatPathFileButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        configManager = ConfigurationManager.getInstance();
+        configListViewEventHandler = new ConfigurationListViewHandler(this);
+        // strings
         initLabelTexts();
+
+        // file chooser buttons
         initFileChooserButtons();
 
+        // external tools
+        clangFormatTextField.setText(configManager.getClangFormatPath());
+        sourceCodeEditorTextField.setText(configManager.getEditorExecutablePath());
 
-        addWorkspaceButton.setOnAction(e -> {
-            if (workspaceNameField.getText() != null && workspaceNameField.getText().length() != 0) {
-                new WorkspaceManager().addWorkspace(new Workspace(workspaceNameField.getText(), new Configuration()));
-                workspaceComboBox.setItems(FXCollections.observableArrayList(new WorkspaceManager().getWorkspaces()));
-            }
-        });
-        // TODO refactor
-        activePluginComboBox.setItems(FXCollections.observableArrayList(PluginManager.getInstance().getAvailablePlugins()));
-        activePluginComboBox.setButtonCell(new StringListCell<IPlugin<?>>() {
+        // available workspaces
+        setupAvailableWorkspaceListView(configManager);
+
+        // active workspace
+        loadWorkspace(availableWorkspacesListView.getSelectionModel().getSelectedItem());
+
+/*
+        defaultPluginComboBox.setItems(FXCollections.observableArrayList(PluginManager.getInstance().getAvailablePlugins()));
+        defaultPluginComboBox.setButtonCell(new StringListCell<IPlugin<?>>() {
             @Override
             protected void updateItem(IPlugin<?> item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item != null) {
-                    setText(item.getPluginName());
+                    setText(item.getName());
                 } else {
                     setText(null);
                 }
             }
         });
-        activePluginComboBox.getSelectionModel().select(PluginManager.getInstance().getActivePlugin());
+        defaultPluginComboBox.getSelectionModel().select(PluginManager.getInstance().getActivePlugin());
 
-        activePluginComboBox.setSelectionModel(new SingleSelectionModel<IPlugin<?>>() {
+        defaultPluginComboBox.setSelectionModel(new SingleSelectionModel<IPlugin<?>>() {
             @Override
             protected IPlugin<?> getModelItem(int index) {
                 if (index == -1) {
@@ -154,7 +157,8 @@ public class ConfigurationWindowController implements Initializable {
                 return PluginManager.getInstance().getAvailablePlugins().size();
             }
         });
-        activePluginComboBox.setCellFactory(new Callback<ListView<IPlugin<?>>, ListCell<IPlugin<?>>>() {
+
+        defaultPluginComboBox.setCellFactory(new Callback<ListView<IPlugin<?>>, ListCell<IPlugin<?>>>() {
             @Override
             public ListCell<IPlugin<?>> call(ListView<IPlugin<?>> param) {
                 return new ListCell<IPlugin<?>>() {
@@ -162,7 +166,7 @@ public class ConfigurationWindowController implements Initializable {
                     protected void updateItem(IPlugin<?> item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
-                            setText(item.getPluginName());
+                            setText(item.getName());
                         } else {
                             setText(null);
                         }
@@ -170,7 +174,8 @@ public class ConfigurationWindowController implements Initializable {
                 };
             }
         });
-        workspaceComboBox.setItems(FXCollections.observableArrayList(new WorkspaceManager().getWorkspaces()));
+
+        workspaceComboBox.setItems(FXCollections.observableArrayList(configManager.getWorkspaces()));
         workspaceComboBox.setButtonCell(new ListCell<Workspace>() {
             @Override
             protected void updateItem(Workspace item, boolean empty) {
@@ -188,12 +193,12 @@ public class ConfigurationWindowController implements Initializable {
                 if (index == -1) {
                     return null;
                 }
-                return new WorkspaceManager().getWorkspaces().get(index);
+                return configManager.getWorkspaces().get(index);
             }
 
             @Override
             protected int getItemCount() {
-                return new WorkspaceManager().getWorkspaces().size();
+                return configManager.getWorkspaces().size();
             }
         });
         workspaceComboBox.setCellFactory(new Callback<ListView<Workspace>, ListCell<Workspace>>() {
@@ -225,79 +230,151 @@ public class ConfigurationWindowController implements Initializable {
                     expressionsPathTextField.setText(configuration.getExpressionValidatorsPath());
                 }
             }
-        });
-        clangFormatPathTextField.setText(new WorkspaceManager().getClangFormatPath());
-        editorExecutablePathTextField.setText(new WorkspaceManager().getEditorExecutablePath());
+        });*/
+
 
         saveButton.setOnAction(e -> onSave());
     }
 
-    private void initFileChooserButtons() {
-        plansPathFileButton.setOnAction(e -> makeDirectoryChooserField(plansPathTextField));
-        rolesPathFileButton.setOnAction(e -> makeDirectoryChooserField(rolesPathTextField));
-        miscPathFileButton.setOnAction(e -> makeDirectoryChooserField(miscPathTextField));
-        pluginPathFileButton.setOnAction(e -> makeDirectoryChooserField(pluginPathTextField));
-        expressionsPathFileButton.setOnAction(e -> makeDirectoryChooserField(expressionsPathTextField));
-        editorExecutablePathFileButton.setOnAction(e -> makeFileChooserField(editorExecutablePathTextField));
-        clangFormatPathFileButton.setOnAction(e -> makeFileChooserField(clangFormatPathTextField));
+    public void storeWorkspace(String wsName) {
+        Workspace ws = configManager.getWorkspace(wsName);
+        if (ws == null)
+        {
+            return;
+        }
+        System.out.println("Storing " + wsName);
+        Configuration conf = ws.getConfiguration();
+        conf.setPlansPath(plansFolderTextField.getText());
+        conf.setRolesPath(rolesFolderTextField.getText());
+        conf.setMiscPath(tasksFolderTextField.getText());
+        conf.setExpressionValidatorsPath(genSourceFolderTextField.getText());
+        conf.setPluginPath(pluginsFolderTextField.getText());
+        String selectedPluginsName = defaultPluginComboBox.getSelectionModel().getSelectedItem();
+        if(selectedPluginsName != null && !selectedPluginsName.isEmpty()) {
+            conf.setDefaultPlugin(selectedPluginsName);
+        }
     }
 
-    private void initLabelTexts() {
-        plansPathLabel.setText(I18NRepo.getString("label.config.plan"));
-        rolesPathLabel.setText(I18NRepo.getString("label.config.roles"));
-        addWorkspaceLabel.setText(I18NRepo.getString("label.config.add"));
-        expressionsPathLabel.setText(I18NRepo.getString("label.config.expressions"));
-        miscPathLabel.setText(I18NRepo.getString("label.config.misc"));
-        pluginPathLabel.setText(I18NRepo.getString("label.config.plugin"));
-        workspaceLabel.setText(I18NRepo.getString("label.config.workspace"));
-        activePluginLabel.setText(I18NRepo.getString("label.config.plugin.active"));
-        saveButton.setText(I18NRepo.getString("action.save"));
-        clangFormatPathLabel.setText(I18NRepo.getString("label.config.clangFormatPath"));
-        editorExecutablePathLabel.setText(I18NRepo.getString("label.config.editorExecutablePath"));
-        addWorkspaceButton.setText(I18NRepo.getString("action.config.add"));
-        plansPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
-        rolesPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
-        miscPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
-        pluginPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
-        expressionsPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
-        editorExecutablePathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
-        clangFormatPathFileButton.setText(I18NRepo.getString("label.config.fileButton"));
+    /**
+     * Fills the gui with the values of the given workspace
+     * @param wsName
+     */
+    public void loadWorkspace(String wsName) {
+        Workspace ws = configManager.getWorkspace(wsName);
+        if (ws == null)
+        {
+            return;
+        }
+
+        System.out.println("Loading " + wsName);
+        Configuration conf = ws.getConfiguration();
+        plansFolderTextField.setText(conf.getPlansPath());
+        rolesFolderTextField.setText(conf.getRolesPath());
+        tasksFolderTextField.setText(conf.getMiscPath());
+        genSourceFolderTextField.setText(conf.getExpressionValidatorsPath());
+        pluginsFolderTextField.setText(conf.getPluginPath());
+        defaultPluginComboBox.setItems(PluginManager.getInstance().getAvailablePluginNames());
+        defaultPluginComboBox.getSelectionModel().select(conf.getDefaultPlugin());
     }
 
     /**
      * Saves all {@link TextField} and {@link ComboBox} values from the configuration window.
      */
     public void onSave() {
+        // store values of currently selected workspace into the workspaces configuration object
+        String selectedWsName = availableWorkspacesListView.getSelectionModel().getSelectedItem();
+        if (selectedWsName != null && !selectedWsName.isEmpty()) {
+            storeWorkspace(selectedWsName);
+        }
 
-        Workspace selectedWorkspace = workspaceComboBox.getSelectionModel().getSelectedItem();
-        WorkspaceManager workspaceManager = new WorkspaceManager();
+        // TODO serialize the workspace to file
+        configManager.saveWorkspaceToFile(selectedWsName);
+
+       /* Workspace selectedWorkspace = workspaceComboBox.getSelectionModel().getSelectedItem();
+        ConfigurationManager configManager = ConfigurationManager.getInstance();
         if (selectedWorkspace != null) {
             // store configuration in selected workspace
             Configuration configuration = new Configuration();
-            configuration.setPluginPath(pluginPathTextField.getText());
-            configuration.setPlansPath(plansPathTextField.getText());
-            configuration.setMiscPath(miscPathTextField.getText());
-            configuration.setRolesPath(rolesPathTextField.getText());
-            configuration.setExpressionValidatorsPath(expressionsPathTextField.getText());
+            configuration.setPluginPath(pluginsFolderTextField.getText());
+            configuration.setPlansPath(plansFolderTextField.getText());
+            configuration.setMiscPath(tasksFolderTextField.getText());
+            configuration.setRolesPath(rolesFolderTextField.getText());
+            configuration.setExpressionValidatorsPath(genSourceFolderTextField.getText());
             selectedWorkspace.setConfiguration(configuration);
             // set active workspace
-            workspaceManager.setActiveWorkspace(selectedWorkspace);
+            configManager.setActiveWorkspace(selectedWorkspace);
         }
 
-        workspaceManager.setClangFormatPath(clangFormatPathTextField.getText());
-        workspaceManager.setEditorExecutablePath(editorExecutablePathTextField.getText());
+        configManager.setClangFormatPath(clangFormatTextField.getText());
+        configManager.setEditorExecutablePath(sourceCodeEditorTextField.getText());
 
-        if (workspaceManager.getWorkspaces().contains(selectedWorkspace)) {
-            workspaceManager.saveWorkspaceConfiguration(selectedWorkspace);
+        if (configManager.getWorkspaces().contains(selectedWorkspace)) {
+            configManager.saveWorkspaceConfiguration(selectedWorkspace);
 
             // Update available plugins in case, the plugin path has changed
             PluginManager pluginManager = PluginManager.getInstance();
             pluginManager.updateAvailablePlugins();
-            activePluginComboBox.setItems(FXCollections
+            defaultPluginComboBox.setItems(FXCollections
                     .observableArrayList(pluginManager.getAvailablePlugins()));
         } else if (selectedWorkspace != null) {
-            workspaceManager.addWorkspace(selectedWorkspace);
+            configManager.addWorkspace(selectedWorkspace);
+        }*/
+    }
+
+    private void setupAvailableWorkspaceListView(ConfigurationManager configManager) {
+        List<Workspace> wsList = configManager.getWorkspaces();
+        ObservableList<String> wsNameList = FXCollections.observableArrayList();
+        for (Workspace ws : wsList) {
+            wsNameList.add(ws.getName());
         }
+        wsNameList.add("");
+        availableWorkspacesListView.setItems(wsNameList);
+        availableWorkspacesListView.setEditable(true);
+        availableWorkspacesListView.setCellFactory(TextFieldListCell.forListView());
+        availableWorkspacesListView.setOnEditCommit(configListViewEventHandler);
+        availableWorkspacesListView.setOnMouseClicked(configListViewEventHandler);
+        availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configListViewEventHandler);
+    }
+
+    /**
+     * Sets all label's text of the configuration window, according to the currently configured locale.
+     */
+    private void initLabelTexts() {
+        // labels
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+        externalToolsTitledPane.setText(i18NRepo.getString("label.config.externalTools"));
+        clangFormatLabel.setText(i18NRepo.getString("label.config.clangFormatter") + ":");
+        sourceCodeEditorLabel.setText(i18NRepo.getString("label.config.sourceCodeEditor") + ":");
+
+        workspaceManagementTitledPane.setText(i18NRepo.getString("label.config.workspaceManagement"));
+        availableWorkspacesLabel.setText(i18NRepo.getString("label.config.availableWorkspacesLabel") + ":");
+        plansFolderLabel.setText(i18NRepo.getString("label.config.planFolder") + ":");
+        rolesFolderLabel.setText(i18NRepo.getString("label.config.rolesFolder") + ":");
+        genSourceFolderLabel.setText(i18NRepo.getString("label.config.genSourceFolder") + ":");
+        tasksFolderLabel.setText(i18NRepo.getString("label.config.tasksFolder") + ":");
+        pluginsFolderLabel.setText(i18NRepo.getString("label.config.pluginsFolder") + ":");
+        defaultPluginLabel.setText(i18NRepo.getString("label.config.plugin.defaultPlugin") + ":");
+
+        // buttons
+        plansFolderFileButton.setText(i18NRepo.getString("label.config.fileButton"));
+        rolesFolderFileButton.setText(i18NRepo.getString("label.config.fileButton"));
+        tasksFolderFileButton.setText(i18NRepo.getString("label.config.fileButton"));
+        genSourceFolderFileButton.setText(i18NRepo.getString("label.config.fileButton"));
+        pluginsFolderFileButton.setText(i18NRepo.getString("label.config.fileButton"));
+
+        sourceCodeEditorFileButton.setText(i18NRepo.getString("label.config.fileButton"));
+        clangFormatFileButton.setText(i18NRepo.getString("label.config.fileButton"));
+        saveButton.setText(i18NRepo.getString("action.save"));
+    }
+
+    private void initFileChooserButtons() {
+        plansFolderFileButton.setOnAction(e -> makeDirectoryChooserField(plansFolderTextField));
+        rolesFolderFileButton.setOnAction(e -> makeDirectoryChooserField(rolesFolderTextField));
+        tasksFolderFileButton.setOnAction(e -> makeDirectoryChooserField(tasksFolderTextField));
+        pluginsFolderFileButton.setOnAction(e -> makeDirectoryChooserField(pluginsFolderTextField));
+        genSourceFolderFileButton.setOnAction(e -> makeDirectoryChooserField(genSourceFolderTextField));
+        sourceCodeEditorFileButton.setOnAction(e -> makeFileChooserField(sourceCodeEditorTextField));
+        clangFormatFileButton.setOnAction(e -> makeFileChooserField(clangFormatTextField));
     }
 
     private void makeDirectoryChooserField(TextField textField) {

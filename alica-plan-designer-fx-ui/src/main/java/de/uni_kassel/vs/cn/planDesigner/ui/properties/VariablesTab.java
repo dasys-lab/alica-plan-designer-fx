@@ -28,10 +28,10 @@ public class VariablesTab extends AbstractPropertyTab {
 
     private TableView<Variable> textFieldTableView;
 
+
     public VariablesTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         super(activeEditorTab, commandStack);
-        setText(I18NRepo.getString("label.variables"));
-
+        setText(i18NRepo.getInstance().getString("label.variables"));
     }
 
     @Override
@@ -71,19 +71,19 @@ public class VariablesTab extends AbstractPropertyTab {
             textFieldTableView.setItems(FXCollections.observableArrayList(((Condition)selectedPlanElement).getVars()));
         }
 
-        TableColumn<Variable, TextField> nameColumn = new TableColumn<>(I18NRepo.getString("label.column.name"));
+        TableColumn<Variable, TextField> nameColumn = new TableColumn<>(i18NRepo.getString("label.column.name"));
         nameColumn.setCellValueFactory(new CellColumnCreatorCallback("name"));
         textFieldTableView.getColumns().add(nameColumn);
-        TableColumn<Variable, TextField> typeColumn = new TableColumn<>(I18NRepo.getString("label.column.type"));
+        TableColumn<Variable, TextField> typeColumn = new TableColumn<>(i18NRepo.getString("label.column.type"));
         typeColumn.setCellValueFactory(new CellColumnCreatorCallback("type"));
         textFieldTableView.getColumns().add(typeColumn);
-        TableColumn<Variable, TextField> commentColumn = new TableColumn<>(I18NRepo.getString("label.column.comment"));
+        TableColumn<Variable, TextField> commentColumn = new TableColumn<>(i18NRepo.getString("label.column.comment"));
         commentColumn.setCellValueFactory(new CellColumnCreatorCallback("comment"));
         textFieldTableView.getColumns().add(commentColumn);
 
         VBox vBox = new VBox();
         HBox hBox = new HBox();
-        Button addButton = new Button(I18NRepo.getString("action.list.add"));
+        Button addButton = new Button(i18NRepo.getString("action.list.add"));
         addButton.setOnAction(e -> {
             if (selectedPlanElement instanceof AbstractPlan) {
                 commandStack.storeAndExecute(new AddVariableToAbstractPlan(selectedPlanElement));
@@ -100,7 +100,7 @@ public class VariablesTab extends AbstractPropertyTab {
 
         });
 
-        Button deleteButton = new Button(I18NRepo.getString("action.list.remove"));
+        Button deleteButton = new Button(i18NRepo.getString("action.list.remove"));
         deleteButton.setOnAction(e -> {
             Variable selectedItem = textFieldTableView.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {

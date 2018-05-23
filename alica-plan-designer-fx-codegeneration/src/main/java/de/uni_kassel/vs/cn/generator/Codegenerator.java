@@ -7,7 +7,7 @@ import de.uni_kassel.vs.cn.generator.cpp.parser.ProtectedRegionsVisitor;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -49,7 +49,7 @@ public class Codegenerator {
     public Codegenerator() {
         // TODO document this! Here can the programming language be changed
         actualGenerator = new CPPGeneratorImpl();
-        actualGenerator.setFormatter(new WorkspaceManager().getClangFormatPath());
+        actualGenerator.setFormatter(ConfigurationManager.getInstance().getClangFormatPath());
         initialze();
     }
 
@@ -58,7 +58,7 @@ public class Codegenerator {
      */
     public void generate() {
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
-        String expressionValidatorsPath = new WorkspaceManager().getActiveWorkspace()
+        String expressionValidatorsPath = ConfigurationManager.getInstance().getActiveWorkspace()
                 .getConfiguration().getExpressionValidatorsPath();
         try {
 

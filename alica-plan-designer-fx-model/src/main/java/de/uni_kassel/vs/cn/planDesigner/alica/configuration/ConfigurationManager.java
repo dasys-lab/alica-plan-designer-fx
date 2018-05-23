@@ -9,21 +9,35 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-/**
- * Created by marci on 09.06.17.
- */
-public class WorkspaceManager {
-    private static final Logger LOG = LogManager.getLogger(WorkspaceManager.class);
+public final class ConfigurationManager {
+
+    // SINGLETON
+    private static volatile ConfigurationManager instance;
+    public static ConfigurationManager getInstance() {
+        if (instance == null) {
+            synchronized (ConfigurationManager.class) {
+                if (instance == null) {
+                    instance = new ConfigurationManager();
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    private static final Logger LOG = LogManager.getLogger(ConfigurationManager.class);
     private static List<Workspace> workspaces;
     private static File workspacesFile;
     private static Properties workspacesProperties;
 
-    public WorkspaceManager() {
+    private ConfigurationManager() {
         if (workspacesProperties == null) {
             workspacesProperties = new Properties();
         }
     }
 
+
+    // TODO make init obsolete!!!
     public void init() {
         workspaces = new ArrayList<>();
         loadWorkspaces();
@@ -31,9 +45,9 @@ public class WorkspaceManager {
 
     public void addWorkspace(Workspace workspace) {
         workspaces.add(workspace);
-        workspacesProperties.setProperty("workspaces", workspacesProperties.getProperty("workspaces") + ","+ workspace.getName());
+        workspacesProperties.setProperty("workspaces", workspacesProperties.getProperty("workspaces") + "," + workspace.getName());
         saveWorkspacesFile();
-        saveWorkspaceConfiguration(workspace);
+        saveWorkspaceToFile(workspace.getName());
         LOG.info("Added new workspace " + workspace.getName());
     }
 
@@ -46,14 +60,14 @@ public class WorkspaceManager {
         }
     }
 
-    public void saveWorkspaceConfiguration(Workspace workspace) {
+    public void saveWorkspaceToFile(String wsName) {
         try {
-            File workspaceFile = new File(workspace.getName() + ".properties");
+            File workspaceFile = new File(wsName + ".properties");
             if (workspaceFile.exists() == false) {
                 workspaceFile.createNewFile();
             }
 
-            Configuration configuration = workspace.getConfiguration();
+            Configuration configuration = getWorkspace(wsName).getConfiguration();
 
             Properties props = new Properties();
             props.setProperty("plansPath", configuration.getPlansPath());
@@ -62,16 +76,25 @@ public class WorkspaceManager {
             props.setProperty("expressionValidatorsPath", configuration.getExpressionValidatorsPath());
             props.setProperty("pluginPath", configuration.getPluginPath());
             FileOutputStream out = new FileOutputStream(workspaceFile);
-            props.store(out, workspace.getName() + "configuration file");
+            props.store(out, wsName + "configuration file");
             out.close();
         } catch (IOException e) {
-            LOG.error("Could not save workspace configuration for " + workspace.getName(), e);
+            LOG.error("Could not save workspace configuration for " + wsName, e);
             throw new RuntimeException(e);
         }
     }
 
-    public List<Workspace> getWorkspaces() {
+    public List<Workspace> getWorkspaces (){
         return workspaces;
+    }
+
+    public Workspace getWorkspace(String wsName) {
+        for (Workspace ws : workspaces) {
+            if (ws.getName() == wsName) {
+                return ws;
+            }
+        }
+        return null;
     }
 
     public Workspace getActiveWorkspace() {
@@ -186,7 +209,6 @@ public class WorkspaceManager {
         configuration.setExpressionValidatorsPath(props.getProperty("expressionValidatorsPath"));
         configuration.setMiscPath(props.getProperty("miscPath"));
         return new Workspace(workspaceName, configuration);
-
     }
 
     public String getClangFormatPath() {

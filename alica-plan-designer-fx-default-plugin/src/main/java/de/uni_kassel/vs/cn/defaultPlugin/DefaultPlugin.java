@@ -35,7 +35,7 @@ public class DefaultPlugin implements IPlugin<Void> {
         try {
             return fxmlLoader.load();
         } catch (IOException e) {
-            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.plugin.missingui"), e);
+            ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.plugin.missingui"), e);
         }
         return null;
     }
@@ -49,7 +49,7 @@ public class DefaultPlugin implements IPlugin<Void> {
         return null;
     }
 
-    public String getPluginName() {
+    public String getName() {
         return "DefaultPlugin";
     }
 

@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
@@ -52,7 +52,6 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
     public PLDFileTreeView() {
         super(new VirtualDirectoryTreeItem());
-        //TODO change icon
 
         addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
             System.out.println("Source: " + e.getSource() + " Target: " + e.getTarget());
@@ -82,6 +81,12 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+            } else if (fileName.endsWith(".pty")) {
+                getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+                        .getResourceAsStream("images/planTyp24x24.png"))));
+            } else if (fileName.endsWith(".tsk")) {
+                getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+                        .getResourceAsStream("images/tasks24x24.png"))));
             }
             wasDragged = true;
             e.consume();
@@ -256,7 +261,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 }
 
 class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
-    private static final Configuration configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
+    private static final Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
 
     VirtualDirectoryTreeItem() {
         super();

@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.WorkspaceManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import javafx.application.Platform;
 
 import java.io.File;
@@ -80,7 +80,7 @@ public class FileWatcherJob implements Runnable {
     public void run() {
         try {
             watcher = FileSystems.getDefault().newWatchService();
-            Configuration configuration = new WorkspaceManager().getActiveWorkspace().getConfiguration();
+            Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
             registerAll(new File(configuration.getPlansPath()).toPath());
             this.trace = true;
             while (PlanDesigner.isRunning()) {

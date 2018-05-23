@@ -58,7 +58,7 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         });
         HBox newTaskContainer = new HBox();
         Button createTaskButton = new Button();
-        createTaskButton.setText(I18NRepo.getString("action.create.task"));
+        createTaskButton.setText(I18NRepo.getInstance().getString("action.create.task"));
         TextField taskNameField = new TextField();
         createTaskButton.setOnAction(e -> {
             if (taskNameField.getText() != null && taskNameField.getText().isEmpty() == false) {

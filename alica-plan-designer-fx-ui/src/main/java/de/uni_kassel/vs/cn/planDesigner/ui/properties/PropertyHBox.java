@@ -31,7 +31,7 @@ public class PropertyHBox<T extends PlanElement> extends HBox {
     public PropertyHBox(T object, String propertyName, Class<?> propertyClass, CommandStack commandStack) {
         this.commandStack = commandStack;
         try {
-            Text text = new Text(I18NRepo.getString("alicatype.property." + propertyName));
+            Text text = new Text(I18NRepo.getInstance().getString("alicatype.property." + propertyName));
             text.setWrappingWidth(wrappingWidth);
             Node inputField = getInputField(object, propertyName, propertyClass);
             if (propertyName.equals("id")) {

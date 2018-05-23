@@ -89,7 +89,7 @@ public class PostConditionTool extends AbstractConditionTool {
                     if (event.getSource() instanceof ConditionHBox) {
                         ((ConditionHBox)event.getSource()).getChildren().remove(visualRepresentation);
                         Condition newCondition = createNewObject();
-                        newCondition.setPluginName(PluginManager.getInstance().getActivePlugin().getPluginName());
+                        newCondition.setPluginName(PluginManager.getInstance().getActivePlugin().getName());
                         if (newCondition instanceof PostCondition == false) {
                             AddConditionToPlan command = new AddConditionToPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getEditable(),
                                     newCondition);

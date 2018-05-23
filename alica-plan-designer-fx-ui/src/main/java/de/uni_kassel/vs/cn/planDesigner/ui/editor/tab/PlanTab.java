@@ -109,7 +109,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         try {
             EMFModelUtils.saveAlicaFile(getPmlUiExtensionMap());
         } catch (IOException e) {
-            ErrorWindowController.createErrorWindow(I18NRepo.getString("label.error.save.pmlex"), e);
+            ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.save.pmlex"), e);
         }
     }
 

@@ -101,7 +101,7 @@ public class BehaviourWindowController implements Initializable {
         public BehaviourConditionVBox(T object, VBox vBox) {
             super();
             condition = object;
-            checkBox = new CheckBox(I18NRepo.getString("label.add.condition"));
+            checkBox = new CheckBox(I18NRepo.getInstance().getString("label.add.condition"));
             checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     if (condition.getClass().equals(PreConditionImpl.class)) {
