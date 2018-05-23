@@ -38,6 +38,7 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
     public static final double STATE_RADIUS = 20.0;
     private boolean dragged;
     private List<InvalidationListener> invalidationListeners;
+    private List<AbstractPlanHBox> statePlans;
 
     /**
      * This constructor is for dummy containers. NEVER use in real UI
@@ -67,15 +68,15 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
         e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth()/2);
         e.setLayoutY(e.getLayoutY() - StateContainer.STATE_RADIUS);
 
-        List<HBox> statePlans = getContainedElement()
+        statePlans = getContainedElement()
                 .getPlans()
                 .stream()
-                .map(AbstractPlanHBox::new)
+                .map(abstractPlan -> new AbstractPlanHBox(abstractPlan, this))
                 .collect(Collectors.toList());
         if (getContainedElement() instanceof TerminalState) {
             PostCondition postCondition = ((TerminalState) getContainedElement()).getPostCondition();
             if (postCondition != null) {
-                statePlans.add(new AbstractPlanHBox(postCondition));
+                statePlans.add(new AbstractPlanHBox(postCondition, this));
             }
         }
         getChildren().addAll(statePlans);
@@ -131,24 +132,8 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
         invalidationListeners.remove(listener);
     }
 
-    private class AbstractPlanHBox extends HBox {
-        private PlanElement abstractPlan;
-
-        public AbstractPlanHBox(PlanElement p) {
-            super();
-            this.abstractPlan = p;
-            ImageView imageView = new ImageView(new AlicaIcon(p.getClass().getSimpleName()));
-            Text text = new Text(p.getName());
-            this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-            getChildren().addAll(imageView, text);
-            setLayoutX(-(text.getLayoutBounds().getWidth()/2));
-            setLayoutY(StateContainer.STATE_RADIUS + 3); // 3px offset to not touch state circle with text-box
-            setPickOnBounds(false);
-            List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
-            selected.add(new Pair<>(abstractPlan, StateContainer.this));
-            addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorGroup) getParent().getParent())
-                    .getPlanEditorTab().getSelectedPlanElement().setValue(selected));
-        }
+    public List<AbstractPlanHBox> getStatePlans() {
+        return statePlans;
     }
 
 }

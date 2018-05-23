@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanHBox;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import javafx.beans.property.SimpleObjectProperty;
@@ -129,15 +130,25 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         selectedPlanElement.get().add(new Pair<>(editablePathPair.getKey(), null));
         selectedPlanElement.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                DropShadow value = new DropShadow(StateContainer.STATE_RADIUS, new Color(0,0.4,0.9,0.9));
-                value.setBlurType(BlurType.ONE_PASS_BOX);
-                value.setSpread(0.45);
-                newValue.forEach(selectedPlanElementPair -> {
-                    AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
-                    if (planElementContainer != null) {
-                        planElementContainer.setEffect(value);
-                    }
-                });
+                DropShadow value = createSelectedEffect();
+                if (newValue.size() == 1 && newValue.get(0).getKey() instanceof AbstractPlan
+                        && newValue.get(0).getValue() != null
+                        && newValue.get(0).getValue() instanceof StateContainer) {
+                    ((StateContainer) newValue.get(0).getValue()).getStatePlans()
+                            .stream()
+                            .filter(abstractPlanHBox -> abstractPlanHBox.getAbstractPlan()
+                                    .equals(newValue.get(0).getKey()))
+                            .findFirst().orElseGet(() -> new AbstractPlanHBox(newValue.get(0).getKey(),
+                            (StateContainer) newValue.get(0).getValue())).setEffect(createSelectedEffect());
+
+                } else {
+                    newValue.forEach(selectedPlanElementPair -> {
+                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
+                        if (planElementContainer != null) {
+                            planElementContainer.setEffect(value);
+                        }
+                    });
+                }
                 if (newValue.size() == 1 && newValue.get(0).getValue() instanceof TransitionContainer) {
                     ((TransitionContainer)newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
                 }
@@ -148,7 +159,18 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                         AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
                         if (planElementContainer != null) {
                             // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
-                            planElementContainer.setEffect(null);
+                            if (planElementContainer.getContainedElement() == oldValue.get(0).getKey()) {
+                                planElementContainer.setEffect(null);
+                            }
+                            if (planElementContainer instanceof StateContainer) {
+                                ((StateContainer) planElementContainer)
+                                        .getStatePlans()
+                                        .forEach(abstractPlanHBox -> {
+                                            if (abstractPlanHBox.getAbstractPlan() != newValue.get(0).getKey()) {
+                                                abstractPlanHBox.setEffect(null);
+                                            }
+                                        });
+                            }
                         }
                     });
 
@@ -157,6 +179,13 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                 }
             }
         });
+    }
+
+    private DropShadow createSelectedEffect() {
+        DropShadow value = new DropShadow(StateContainer.STATE_RADIUS, new Color(0,0.4,0.9,0.9));
+        value.setBlurType(BlurType.ONE_PASS_BOX);
+        value.setSpread(0.45);
+        return value;
     }
 
     public Path getFilePath() {
