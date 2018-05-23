@@ -3,7 +3,6 @@ package de.uni_kassel.vs.cn.planDesigner.handler;
 import de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
@@ -56,7 +55,6 @@ public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> 
         }
         event.consume();
     }
-
 
     /**
      * Called when the selected element of the list view has changed.
