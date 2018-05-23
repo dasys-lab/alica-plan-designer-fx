@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.configuration;
 
-import javafx.collections.FXCollections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,19 +68,19 @@ public final class ConfigurationManager {
         if (!mainConfigFile.exists()) {
             LOG.info(mainConfigFile.toString() + " does not exist!");
 
-            // load default values for mainConfig.properties
+            // loadFromDisk default values for mainConfig.properties
             mainConfigProperties.setProperty(CLANG_FORMAT_PATH, "clang-format");
             mainConfigProperties.setProperty(EDITOR_EXEC_PATH, "gedit");
             mainConfigProperties.setProperty(DOMAIN_CONFIGS, "");
             mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, "");
         } else {
-            // load values from mainConfig.properties file in $HOME/.planDesigner/configurations.properties
+            // loadFromDisk values from mainConfig.properties file in $HOME/.planDesigner/configurations.properties
             try {
                 InputStream is = new FileInputStream(mainConfigFile);
                 mainConfigProperties.load(is);
                 is.close();
             } catch (IOException e) {
-                LOG.fatal("Could not load " + mainConfigFile.toString() + " although it exists.", e);
+                LOG.fatal("Could not loadFromDisk " + mainConfigFile.toString() + " although it exists.", e);
                 e.printStackTrace();
             }
 
@@ -114,20 +113,6 @@ public final class ConfigurationManager {
         }
     }
 
-    public void addConfiguration(Configuration configuration) {
-        configurations.add(configuration);
-        String domainConfigs = mainConfigProperties.getProperty(DOMAIN_CONFIGS);
-        if (domainConfigs == null || domainConfigs.isEmpty())
-        {
-            mainConfigProperties.setProperty(DOMAIN_CONFIGS, configuration.getName());
-        }
-        else
-        {
-            mainConfigProperties.setProperty(DOMAIN_CONFIGS, domainConfigs + "," + configuration.getName());
-        }
-        LOG.info("Added new configuration " + configuration.getName());
-    }
-
     private void saveMainConfigFile() {
         try {
             mainConfigProperties.store(new FileOutputStream(mainConfigFile), " Plan Designer - main configuration file");
@@ -137,6 +122,8 @@ public final class ConfigurationManager {
         }
     }
 
+    // CONFIGURATION MANAGEMENT SECTION
+
     public List<String> getConfigurationNames() {
         List<String> configurationNames = new ArrayList<String>();
         for (Configuration conf : configurations)
@@ -144,6 +131,48 @@ public final class ConfigurationManager {
             configurationNames.add(conf.getName());
         }
         return configurationNames;
+    }
+
+    public boolean addConfiguration(String confName)
+    {
+        for (Configuration conf : configurations) {
+            if (conf.getName().equals(confName)) {
+                return false;
+            }
+        }
+
+        configurations.add(new Configuration(confName));
+        String domainConfigs = mainConfigProperties.getProperty(DOMAIN_CONFIGS);
+        if (domainConfigs == null || domainConfigs.isEmpty())
+        {
+            mainConfigProperties.setProperty(DOMAIN_CONFIGS, confName);
+        }
+        else
+        {
+            mainConfigProperties.setProperty(DOMAIN_CONFIGS, domainConfigs + "," + confName);
+        }
+        LOG.info("Added new configuration " + confName);
+        return true;
+    }
+
+    public boolean renameConfiguration(String oldConfName, String newConfName) {
+        for (Configuration conf : configurations) {
+            if (conf.getName().equals(oldConfName)) {
+                conf.setName(newConfName);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removeConfiguration(String confName) {
+        for (Configuration conf : configurations) {
+            if (conf.getName().equals(confName)) {
+                conf.removeFromDisk();
+                return configurations.remove(conf);
+            }
+        }
+        return false;
     }
 
     public Configuration getConfiguration(String confName) {
@@ -168,6 +197,8 @@ public final class ConfigurationManager {
         }
         return null;
     }
+
+    // EXTERNAL TOOLS SECTION
 
     public String getClangFormatPath() {
         return mainConfigProperties.getProperty(CLANG_FORMAT_PATH);

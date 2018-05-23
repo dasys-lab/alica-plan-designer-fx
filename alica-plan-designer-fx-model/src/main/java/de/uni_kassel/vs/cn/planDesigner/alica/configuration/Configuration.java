@@ -45,7 +45,11 @@ public class Configuration {
     }
 
     public void setRolesPath(String rolesPath) {
-        properties.setProperty("rolesPath", replaceBashConstants(rolesPath));
+        if (rolesPath == null) {
+            properties.setProperty("rolesPath", "");
+        } else {
+            properties.setProperty("rolesPath", replaceBashConstants(rolesPath));
+        }
     }
 
     public String getPlansPath() {
@@ -53,7 +57,11 @@ public class Configuration {
     }
 
     public void setPlansPath(String plansPath) {
-        properties.setProperty("plansPath", replaceBashConstants(plansPath));
+        if (plansPath == null) {
+            properties.setProperty("plansPath", "");
+        } else {
+            properties.setProperty("plansPath", replaceBashConstants(plansPath));
+        }
     }
 
     public String getGenSrcPath() {
@@ -61,7 +69,11 @@ public class Configuration {
     }
 
     public void setGenSrcPath(String genSrcPath) {
-        properties.setProperty("genSrcPath", replaceBashConstants(genSrcPath));
+        if (genSrcPath == null) {
+            properties.setProperty("genSrcPath", "");
+        } else {
+            properties.setProperty("genSrcPath", replaceBashConstants(genSrcPath));
+        }
     }
 
     public String getTasksPath() {
@@ -69,7 +81,11 @@ public class Configuration {
     }
 
     public void setTasksPath(String tasksPath) {
-        properties.setProperty("tasksPath", replaceBashConstants(tasksPath));
+        if (tasksPath == null) {
+            properties.setProperty("tasksPath", "");
+        } else {
+            properties.setProperty("tasksPath", replaceBashConstants(tasksPath));
+        }
     }
 
     public String getPluginsPath() {
@@ -77,7 +93,11 @@ public class Configuration {
     }
 
     public void setPluginsPath(String pluginsPath) {
-        properties.setProperty("tasksPath", replaceBashConstants(pluginsPath));
+        if (pluginsPath == null) {
+            properties.setProperty("pluginsPath", "");
+        } else {
+            properties.setProperty("pluginsPath", replaceBashConstants(pluginsPath));
+        }
     }
 
     public String getDefaultPluginName() {
@@ -85,16 +105,19 @@ public class Configuration {
     }
 
     public void setDefaultPluginName(String pluginName) {
-        properties.setProperty("defaultPlugin", pluginName);
+        if (pluginName == null) {
+            properties.setProperty("defaultPlugin", "");
+        } else {
+            properties.setProperty("defaultPlugin", pluginName);
+        }
     }
 
     public void setFile(File file) {
-        file = file;
+        this.file = file;
     }
 
     public boolean writeToDisk() {
-        if (file == null)
-        {
+        if (file == null) {
             return false;
         }
         try {
@@ -111,9 +134,8 @@ public class Configuration {
         return true;
     }
 
-    public boolean load() {
-        if (file == null || !file.exists())
-        {
+    public boolean loadFromDisk() {
+        if (file == null || !file.exists()) {
             return false;
         }
 
@@ -131,5 +153,12 @@ public class Configuration {
         }
 
         return true;
+    }
+
+    public boolean removeFromDisk() {
+        if (file != null && file.exists()) {
+            return file.delete();
+        }
+        return false;
     }
 }

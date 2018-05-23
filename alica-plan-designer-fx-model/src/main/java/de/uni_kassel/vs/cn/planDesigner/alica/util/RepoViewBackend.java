@@ -189,7 +189,7 @@ public class RepoViewBackend {
                         }
                         return tPathPair;
                     } catch (IOException e) {
-                        LOG.fatal("Could not load repository of " + path + "for file ending " + filePostfix, e);
+                        LOG.fatal("Could not loadFromDisk repository of " + path + "for file ending " + filePostfix, e);
                         throw new RuntimeException(e);
                     }
                 })

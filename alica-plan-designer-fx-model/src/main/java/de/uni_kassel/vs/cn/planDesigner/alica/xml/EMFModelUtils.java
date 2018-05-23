@@ -79,7 +79,7 @@ public class EMFModelUtils {
     /**
      * Loads given file from disk
      *
-     * @param file the file to load must not be null
+     * @param file the file to loadFromDisk must not be null
      * @return the returned {@link EObject}
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */

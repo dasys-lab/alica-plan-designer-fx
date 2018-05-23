@@ -109,12 +109,16 @@ public class ConfigurationWindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         configManager = ConfigurationManager.getInstance();
+        configListViewEventHandler = new ConfigurationListViewHandler(this);
 
         // strings
         initLabelTexts();
 
         // file chooser buttons
         initFileChooserButtons();
+
+        // external tools
+        setupExternalTools();
 
         // show available configurations in the list
         setupAvailableConfigurationsListView();
@@ -124,13 +128,6 @@ public class ConfigurationWindowController implements Initializable {
 
         saveButton.setOnAction(e -> onSave());
 
-        // external tools
-        clangFormatTextField.setText(configManager.getClangFormatPath());
-        clangFormatTextField.setOnKeyReleased(configListViewEventHandler);
-
-        sourceCodeEditorTextField.setText(configManager.getEditorExecutablePath());
-        sourceCodeEditorTextField.setOnKeyReleased(configListViewEventHandler);
-
         // TODO handle plugin drop down box
     }
 
@@ -138,7 +135,30 @@ public class ConfigurationWindowController implements Initializable {
      * Writes everything possible to disk.
      */
     public void onSave() {
+        storeConfiguration(availableWorkspacesListView.getSelectionModel().getSelectedItem());
         configManager.writeToDisk();
+    }
+
+    public void setExternalToolValue(TextField tf) {
+        if (tf == sourceCodeEditorTextField) {
+            configManager.setEditorExecutablePath(tf.getText());
+        } else if (tf == clangFormatTextField) {
+            configManager.setClangFormatPath(tf.getText());
+        }
+    }
+
+    public boolean removeConfiguration(String confName)
+    {
+        return configManager.removeConfiguration(confName);
+    }
+
+    public boolean renameConfiguration(String oldConfName, String newConfName) {
+        return configManager.renameConfiguration(oldConfName, newConfName);
+    }
+
+    public boolean addConfiguration(String confName)
+    {
+        return configManager.addConfiguration(confName);
     }
 
     /**
@@ -165,14 +185,6 @@ public class ConfigurationWindowController implements Initializable {
         }
     }
 
-    public void setExternalToolValue(TextField tf) {
-        if (tf == sourceCodeEditorTextField) {
-            configManager.setEditorExecutablePath(tf.getText());
-        } else if (tf == clangFormatTextField) {
-            configManager.setClangFormatPath(tf.getText());
-        }
-    }
-
     /**
      * Fills the gui with the values of the currently selected configuration.
      */
@@ -194,6 +206,14 @@ public class ConfigurationWindowController implements Initializable {
         defaultPluginComboBox.getSelectionModel().select(conf.getDefaultPluginName());
     }
 
+    private void setupExternalTools () {
+        clangFormatTextField.setText(configManager.getClangFormatPath());
+        clangFormatTextField.setOnKeyReleased(configListViewEventHandler);
+
+        sourceCodeEditorTextField.setText(configManager.getEditorExecutablePath());
+        sourceCodeEditorTextField.setOnKeyReleased(configListViewEventHandler);
+    }
+
     private void setupAvailableConfigurationsListView() {
         ObservableList<String> confNameList = FXCollections.observableArrayList(configManager.getConfigurationNames());
         // for adding a new configuration, the empty entry is necessary and specially handled
@@ -201,7 +221,6 @@ public class ConfigurationWindowController implements Initializable {
         availableWorkspacesListView.setItems(confNameList);
         availableWorkspacesListView.setEditable(true);
         availableWorkspacesListView.setCellFactory(TextFieldListCell.forListView());
-        configListViewEventHandler = new ConfigurationListViewHandler(this);
         availableWorkspacesListView.setOnEditCommit(configListViewEventHandler);
         availableWorkspacesListView.setOnMouseClicked(configListViewEventHandler);
         availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configListViewEventHandler);

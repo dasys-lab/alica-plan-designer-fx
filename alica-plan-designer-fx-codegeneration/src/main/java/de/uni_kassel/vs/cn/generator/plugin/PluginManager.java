@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.generator.plugin;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,7 @@ public class PluginManager {
 
     // SINGLETON
     private static volatile PluginManager instance;
+
     public static PluginManager getInstance() {
         if (instance == null) {
             synchronized (ConfigurationManager.class) {
@@ -61,6 +63,7 @@ public class PluginManager {
 
     /**
      * Searches through the {@link PluginManager#availablePlugins}.
+     *
      * @param name
      * @return plugin with matching name otherwise null
      */
@@ -76,6 +79,7 @@ public class PluginManager {
 
     /**
      * Sets the active Plugin.
+     *
      * @param activePlugin
      */
     public void setActivePlugin(IPlugin<?> activePlugin) {
@@ -86,11 +90,9 @@ public class PluginManager {
         return availablePlugins;
     }
 
-    public ObservableList<String> getAvailablePluginNames()
-    {
+    public ObservableList<String> getAvailablePluginNames() {
         ObservableList<String> pluginNamesList = FXCollections.observableArrayList();
-        for (IPlugin plugin : availablePlugins)
-        {
+        for (IPlugin plugin : availablePlugins) {
             pluginNamesList.add(plugin.getName());
         }
         return pluginNamesList;
@@ -100,11 +102,17 @@ public class PluginManager {
      * Updates the list of available plugins
      */
     public void updateAvailablePlugins() {
-        //HACK This is some nasty code to load the plugins
+        Configuration conf = ConfigurationManager.getInstance().getActiveConfiguration();
+        if (conf == null) {
+            setActivePlugin(null);
+            return;
+        }
+
+        //HACK This is some nasty code to loadFromDisk the plugins
         try {
-            if (Files.exists(Paths.get(ConfigurationManager.getInstance().getActiveConfiguration().getPluginsPath())))
-            {
-                Files.list(Paths.get(ConfigurationManager.getInstance().getActiveConfiguration().getPluginsPath()))
+
+            if (Files.exists(Paths.get(conf.getPluginsPath()))) {
+                Files.list(Paths.get(conf.getPluginsPath()))
                         .map(e -> e.toFile())
                         .filter(e -> e.isDirectory() == false && e.getName().endsWith(".jar"))
                         .forEach(f -> {
@@ -113,7 +121,7 @@ public class PluginManager {
                             try {
                                 jarFile = new JarFile(f);
                             } catch (IOException ex) {
-                                LOG.error("Couldn't load jar file", ex);
+                                LOG.error("Couldn't loadFromDisk jar file", ex);
                                 throw new RuntimeException(ex);
                             }
                             Enumeration<JarEntry> e = jarFile.entries();
@@ -144,9 +152,7 @@ public class PluginManager {
 
                             }
                         });
-            }
-            else
-            {
+            } else {
                 LOG.info("No Plugin Path configured, or Plugin Path does not exist: " + Paths.get(ConfigurationManager.getInstance().getActiveConfiguration().getPluginsPath()) + "'");
             }
         } catch (IOException e) {
@@ -161,6 +167,7 @@ public class PluginManager {
 
     /**
      * Getter for the active plugin.
+     *
      * @return The currently activated plugin
      */
     public IPlugin<?> getActivePlugin() {

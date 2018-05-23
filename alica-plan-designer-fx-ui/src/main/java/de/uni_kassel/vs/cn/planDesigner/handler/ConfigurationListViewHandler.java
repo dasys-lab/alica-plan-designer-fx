@@ -41,18 +41,24 @@ public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> 
      * @param event
      */
     public void handleEditCommit(ListView.EditEvent<String> event) {
-        event.getSource().getItems().set(event.getIndex(), event.getNewValue());
         if (!event.getNewValue().isEmpty()) {
             if (event.getIndex() == event.getSource().getItems().size() - 1) {
                 // last empty element was edited, so we need to add a new empty last element
+                configWindowController.addConfiguration(event.getNewValue());
                 event.getSource().getItems().add("");
+            } else {
+                // another element than the last element was edited, rename
+                configWindowController.renameConfiguration(event.getSource().getItems().get(event.getIndex()), event.getNewValue());
             }
         } else {
             if (event.getIndex() != event.getSource().getItems().size() - 1) {
                 // another element than the last element was deleted (new value is empty), so remove this element
+                configWindowController.removeConfiguration(event.getSource().getItems().get(event.getIndex()));
                 event.getSource().getItems().remove(event.getIndex());
             }
         }
+
+        event.getSource().getItems().set(event.getIndex(), event.getNewValue());
         event.consume();
     }
 
