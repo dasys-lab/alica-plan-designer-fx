@@ -203,7 +203,7 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<AnnotatedPlan, Plan> planNameColumn = new TableColumn<>();
+        TableColumn<AnnotatedPlan, Plan> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
         planNameColumn.setCellValueFactory(new PropertyValueFactory<>("plan"));
         planNameColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlan, Plan>, TableCell<AnnotatedPlan, Plan>>() {
             @Override
