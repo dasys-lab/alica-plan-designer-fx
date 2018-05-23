@@ -92,7 +92,8 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         protected void updateItem(Task item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-                setText(item.getName());
+                setGraphic(new ImageView(image));
+                setText(" " + item.getName());
             } else {
                 setText(null);
             }
