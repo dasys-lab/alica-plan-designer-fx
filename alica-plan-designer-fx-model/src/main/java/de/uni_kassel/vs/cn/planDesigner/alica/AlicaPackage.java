@@ -48,7 +48,7 @@ public interface AlicaPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "de.uni_kassel.vs.cn.planDesigner";
+	String eNS_PREFIX = "alica";
 
 	/**
 	 * The singleton instance of the package.
