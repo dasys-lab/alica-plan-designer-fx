@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.repo;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractPlanTool;
 import javafx.collections.FXCollections;
@@ -21,7 +22,10 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
     private ObservableList<RepositoryHBox<T>> hBoxObservableList;
     private ListView<RepositoryHBox<T>> contentsListView;
 
+    private Comparator<RepositoryHBox<Plan>> planComparator;
+
     public RepositoryTab(ObservableList<Pair<T, Path>> objects, AbstractPlanTool dragTool, String typeName) {
+        initComparator();
         List<RepositoryHBox<T>> hBoxes = objects
                 .stream()
                 .map(pair -> {
@@ -49,12 +53,18 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
         });
         setText(typeName);
         hBoxObservableList = FXCollections.observableArrayList(hBoxes);
-        hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
+        if(objects.size() > 0 && objects.get(0).getKey() instanceof Plan) {
+            //TODO find a better way
+            hBoxObservableList.sort((Comparator<? super RepositoryHBox<T>>) (Object) planComparator);
+        } else {
+            hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
+        }
         contentsListView = new ListView<>(hBoxObservableList);
         setContent(contentsListView);
     }
 
     public RepositoryTab(Pair<List<T>, Path> pair, AbstractPlanTool dragTool, String typeName) {
+        initComparator();
         List<RepositoryHBox<T>> hBoxes = pair.getKey()
                 .stream()
                 .map(t -> {
@@ -67,6 +77,11 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
         hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
         contentsListView = new ListView<>(hBoxObservableList);
         setContent(contentsListView);
+    }
+
+    private void initComparator() {
+        planComparator = Comparator.comparing(o -> !o.getObject().isMasterPlan());
+        planComparator = planComparator.thenComparing(o -> o.getObject().getName());
     }
 
     public ListView<RepositoryHBox<T>> getContentsListView() {

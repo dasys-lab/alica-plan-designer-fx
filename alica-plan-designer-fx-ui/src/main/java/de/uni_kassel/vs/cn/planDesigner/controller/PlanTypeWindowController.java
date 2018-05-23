@@ -25,6 +25,7 @@ import javafx.util.Pair;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -37,6 +38,10 @@ public class PlanTypeWindowController implements Initializable {
     private PlanType planType;
 
     private CommandStack commandStack;
+
+    private Comparator<Pair<Plan, Path>> pairComparator;
+
+    private Comparator<RepositoryHBox<Plan>> repositoryHBoxComparator;
 
     @FXML
     private PlanTypeTab planTypeTab;
@@ -65,6 +70,10 @@ public class PlanTypeWindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         i18NRepo = I18NRepo.getInstance();
+        pairComparator = Comparator.comparing(planPathPair -> !planPathPair.getKey().isMasterPlan());
+        pairComparator = pairComparator.thenComparing(planPathPair -> planPathPair.getKey().getName());
+        repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getObject().isMasterPlan());
+        repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryHBox -> planRepositoryHBox.getObject().getName());
         initUIText();
         initPlanListView();
         initTableView();
@@ -80,13 +89,13 @@ public class PlanTypeWindowController implements Initializable {
                 .getInstance()
                 .getPlans()
                 .stream()
+                .sorted(pairComparator)
                 .map(e -> {
                     RepositoryHBox<Plan> planRepositoryHBox = new RepositoryHBox<>(e.getKey(), e.getValue());
                     planRepositoryHBox.setOnMouseClicked(null);
                     return planRepositoryHBox;
                 })
                 .collect(Collectors.toList());
-
         planListView.setItems(FXCollections.observableArrayList(allPlans));
     }
 
@@ -117,6 +126,7 @@ public class PlanTypeWindowController implements Initializable {
                 commandStack.storeAndExecute(new RemovePlanFromPlanType(selectedItem, planType));
                 plantypeTableView.getItems().remove(selectedItem);
                 plantypeTableView.refresh();
+                planListView.getItems().sort(repositoryHBoxComparator);
             }
         });
 
@@ -124,6 +134,7 @@ public class PlanTypeWindowController implements Initializable {
             commandStack.storeAndExecute(new RemoveAllPlansFromPlanType(planType));
             plantypeTableView.getItems().clear();
             plantypeTableView.refresh();
+            planListView.getItems().sort(repositoryHBoxComparator);
         });
     }
 
