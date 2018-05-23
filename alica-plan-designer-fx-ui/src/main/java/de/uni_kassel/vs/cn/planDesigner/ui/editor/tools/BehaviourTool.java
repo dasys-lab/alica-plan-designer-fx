@@ -74,6 +74,13 @@ public class BehaviourTool extends AbstractTool<Behaviour> {
                                     .getFilePath().getParent().toFile(),
                             getAlicaFactory().createBehaviour().eClass());
                     Behaviour newBehaviour = (Behaviour) newDialogController.getCreatedObject();
+
+                    // don't do anything if no new behaviour was created
+                    if (newBehaviour == null) {
+                        endPhase();
+                        return;
+                    }
+
                     AddAbstractPlanToState command =
                             new AddAbstractPlanToState(newBehaviour, stateContainer.getContainedElement());
                     MainController.getInstance()
