@@ -41,11 +41,11 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </TitledPane>
-            <TitledPane fx:id="workspaceManagementTitledPane" animated="false" collapsible="false" prefHeight="386.0" prefWidth="918.0" text="Workspace Management">
+            <TitledPane fx:id="workspaceManagementTitledPane" animated="false" collapsible="false" prefHeight="386.0" prefWidth="918.0" text="Configuration Management">
                <content>
                   <VBox prefHeight="359.0" prefWidth="892.0">
                      <children>
-                        <Label fx:id="availableWorkspacesLabel" styleClass="cfgLabel" text="Available Workspaces:" />
+                        <Label fx:id="availableWorkspacesLabel" styleClass="cfgLabel" text="Available Configurations:" />
                         <ListView fx:id="availableWorkspacesListView" editable="true" prefHeight="97.0" prefWidth="890.0" />
                         <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
                            <children>

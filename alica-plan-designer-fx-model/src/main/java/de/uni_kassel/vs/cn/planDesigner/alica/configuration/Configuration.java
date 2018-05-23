@@ -92,7 +92,7 @@ public class Configuration {
         file = file;
     }
 
-    public boolean store() {
+    public boolean writeToDisk() {
         if (file == null)
         {
             return false;
@@ -102,7 +102,7 @@ public class Configuration {
                 file.createNewFile();
             }
             FileOutputStream stream = new FileOutputStream(file);
-            properties.store(stream, name + FILE_ENDING + " configuration file");
+            properties.store(stream, "Plan Designer - " + name + FILE_ENDING + " configuration file");
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();

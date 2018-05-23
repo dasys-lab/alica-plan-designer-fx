@@ -3,9 +3,12 @@ package de.uni_kassel.vs.cn.planDesigner.handler;
 import de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 
 public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> implements EventHandler<Event>, ChangeListener<String> {
 
@@ -23,7 +26,14 @@ public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> 
     public void handle(Event event) {
         if (event.getEventType() == ListView.editCommitEvent()) {
             handleEditCommit((ListView.EditEvent<String>) event);
+        } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
+            handleTextFieldKeyReleased((KeyEvent) event);
         }
+    }
+
+    public void handleTextFieldKeyReleased(KeyEvent event) {
+        configWindowController.setExternalToolValue((TextField) event.getSource());
+        event.consume();
     }
 
     /**
@@ -44,23 +54,24 @@ public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> 
                 event.getSource().getItems().remove(event.getIndex());
             }
         }
+        event.consume();
     }
 
+
     /**
-     * Called when the selected element of the list view has changed
+     * Called when the selected element of the list view has changed.
      *
      * @param observable
      * @param oldValue
      * @param newValue
      */
+    @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         if (oldValue != null && !oldValue.isEmpty()) {
-            System.out.println("Old: " + oldValue);
-            configWindowController.storeWorkspace(oldValue);
+            configWindowController.storeConfiguration(oldValue);
         }
         if (newValue != null && !newValue.isEmpty()) {
-            System.out.println("New: " + newValue);
-            configWindowController.loadWorkspace(newValue);
+            configWindowController.showSelectedConfiguration();
         }
     }
 }

@@ -58,17 +58,13 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
         setText(typeName);
 
         hBoxObservableList = FXCollections.observableArrayList(hBoxes);
-        if (objects.size() > 0 && objects.get(0).
-
-                getKey() instanceof Plan)
-
-        {
-            //TODO find a better way
-            hBoxObservableList.sort((Comparator<? super RepositoryHBox<T>>) (Object) planComparator);
-        } else
-
-        {
-            hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
+        if (objects != null) {
+            if (objects.size() > 0 && objects.get(0).getKey() instanceof Plan) {
+                //TODO find a better way
+                hBoxObservableList.sort((Comparator<? super RepositoryHBox<T>>) (Object) planComparator);
+            } else {
+                hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
+            }
         }
 
         contentsListView = new ListView<>(hBoxObservableList);

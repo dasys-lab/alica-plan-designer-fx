@@ -13,6 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
@@ -44,7 +46,7 @@ public class ConfigurationWindowController implements Initializable {
     private Button clangFormatFileButton;
 
 
-    // WORKSPACE MANAGEMENT GUI PART
+    // CONFIGURATION MANAGEMENT GUI PART
     @FXML
     private TitledPane workspaceManagementTitledPane;
 
@@ -101,146 +103,57 @@ public class ConfigurationWindowController implements Initializable {
     @FXML
     private Button saveButton;
 
+    private static final Logger LOG = LogManager.getLogger(ConfigurationManager.class);
     private ConfigurationManager configManager;
     private ConfigurationListViewHandler configListViewEventHandler;
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         configManager = ConfigurationManager.getInstance();
-        configListViewEventHandler = new ConfigurationListViewHandler(this);
+
         // strings
         initLabelTexts();
 
         // file chooser buttons
         initFileChooserButtons();
 
-        // external tools
-        clangFormatTextField.setText(configManager.getClangFormatPath());
-        sourceCodeEditorTextField.setText(configManager.getEditorExecutablePath());
+        // show available configurations in the list
+        setupAvailableConfigurationsListView();
 
-        // available workspaces
-        setupAvailableWorkspaceListView(configManager);
-
-        // active workspace
-        loadWorkspace(availableWorkspacesListView.getSelectionModel().getSelectedItem());
+        // show the values of the selected configuration
+        showSelectedConfiguration();
 
         saveButton.setOnAction(e -> onSave());
-/*
-        defaultPluginComboBox.setItems(FXCollections.observableArrayList(PluginManager.getInstance().getAvailablePlugins()));
-        defaultPluginComboBox.setButtonCell(new StringListCell<IPlugin<?>>() {
-            @Override
-            protected void updateItem(IPlugin<?> item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item != null) {
-                    setText(item.getName());
-                } else {
-                    setText(null);
-                }
-            }
-        });
-        defaultPluginComboBox.getSelectionModel().select(PluginManager.getInstance().getActivePlugin());
 
-        defaultPluginComboBox.setSelectionModel(new SingleSelectionModel<IPlugin<?>>() {
-            @Override
-            protected IPlugin<?> getModelItem(int index) {
-                if (index == -1) {
-                    return null;
-                }
-                return PluginManager.getInstance().getAvailablePlugins().get(index);
-            }
+        // external tools
+        clangFormatTextField.setText(configManager.getClangFormatPath());
+        clangFormatTextField.setOnKeyReleased(configListViewEventHandler);
 
-            @Override
-            protected int getItemCount() {
-                return PluginManager.getInstance().getAvailablePlugins().size();
-            }
-        });
+        sourceCodeEditorTextField.setText(configManager.getEditorExecutablePath());
+        sourceCodeEditorTextField.setOnKeyReleased(configListViewEventHandler);
 
-        defaultPluginComboBox.setCellFactory(new Callback<ListView<IPlugin<?>>, ListCell<IPlugin<?>>>() {
-            @Override
-            public ListCell<IPlugin<?>> call(ListView<IPlugin<?>> param) {
-                return new ListCell<IPlugin<?>>() {
-                    @Override
-                    protected void updateItem(IPlugin<?> item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item != null) {
-                            setText(item.getName());
-                        } else {
-                            setText(null);
-                        }
-                    }
-                };
-            }
-        });
-
-        workspaceComboBox.setItems(FXCollections.observableArrayList(configManager.getConfigurations()));
-        workspaceComboBox.setButtonCell(new ListCell<Configuration>() {
-            @Override
-            protected void updateItem(Configuration item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item != null) {
-                    setText(item.getName());
-                } else {
-                    setText(null);
-                }
-            }
-        });
-        workspaceComboBox.setSelectionModel(new SingleSelectionModel<Configuration>() {
-            @Override
-            protected Configuration getModelItem(int index) {
-                if (index == -1) {
-                    return null;
-                }
-                return configManager.getConfigurations().get(index);
-            }
-
-            @Override
-            protected int getItemCount() {
-                return configManager.getConfigurations().size();
-            }
-        });
-        workspaceComboBox.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
-            @Override
-            public ListCell<Configuration> call(ListView<Configuration> param) {
-                return new ListCell<Configuration>() {
-                    @Override
-                    protected void updateItem(Configuration item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item != null) {
-                            setText(item.getName());
-                        } else {
-                            setText(null);
-                        }
-                    }
-                };
-            }
-        });
-
-        workspaceComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Configuration>() {
-            @Override
-            public void changed(ObservableValue<? extends Configuration> observable, Configuration oldValue, Configuration newValue) {
-                if (newValue != null) {
-                    Configuration configuration = newValue.getConfiguration();
-                    plansPathTextField.setText(configuration.getPlansPath());
-                    rolesPathTextField.setText(configuration.getRolesPath());
-                    pluginPathTextField.setText(configuration.getPluginPath());
-                    miscPathTextField.setText(configuration.getTasksPath());
-                    expressionsPathTextField.setText(configuration.getGenSrcPath());
-                }
-            }
-        });*/
+        // TODO handle plugin drop down box
     }
 
-    public void storeWorkspace(String wsName) {
-        System.out.println("Storing " + wsName);
+    /**
+     * Writes everything possible to disk.
+     */
+    public void onSave() {
+        configManager.writeToDisk();
+    }
 
-        Configuration conf = configManager.getConfiguration(wsName);
-        if (conf == null)
-        {
-            conf = new Configuration(wsName);
-            configManager.addConfiguration(conf);
+    /**
+     * Stores the current gui values into the corresponding configuration object.
+     *
+     * @param confName identifies the configuration object for storing the values
+     */
+    public void storeConfiguration(String confName) {
+        Configuration conf = configManager.getConfiguration(confName);
+        if (conf == null) {
+            return;
         }
+
+        System.out.println("Storing " + confName);
 
         conf.setPlansPath(plansFolderTextField.getText());
         conf.setRolesPath(rolesFolderTextField.getText());
@@ -248,23 +161,30 @@ public class ConfigurationWindowController implements Initializable {
         conf.setGenSrcPath(genSourceFolderTextField.getText());
         conf.setPluginsPath(pluginsFolderTextField.getText());
         String selectedPluginsName = defaultPluginComboBox.getSelectionModel().getSelectedItem();
-        if(selectedPluginsName != null && !selectedPluginsName.isEmpty()) {
+        if (selectedPluginsName != null && !selectedPluginsName.isEmpty()) {
             conf.setDefaultPluginName(selectedPluginsName);
         }
     }
 
-    /**
-     * Fills the gui with the values of the given workspace
-     * @param wsName
-     */
-    public void loadWorkspace(String wsName) {
-        System.out.println("Loading " + wsName);
+    public void setExternalToolValue(TextField tf) {
+        if (tf == sourceCodeEditorTextField) {
+            configManager.setEditorExecutablePath(tf.getText());
+        } else if (tf == clangFormatTextField) {
+            configManager.setClangFormatPath(tf.getText());
+        }
+    }
 
-        Configuration conf = configManager.getConfiguration(wsName);
-        if (conf == null)
-        {
+    /**
+     * Fills the gui with the values of the currently selected configuration.
+     */
+    public void showSelectedConfiguration() {
+        String selectedConfName = availableWorkspacesListView.getSelectionModel().getSelectedItem();
+        Configuration conf = configManager.getConfiguration(selectedConfName);
+        if (conf == null) {
             return;
         }
+
+        LOG.info("Showing " + selectedConfName);
 
         plansFolderTextField.setText(conf.getPlansPath());
         rolesFolderTextField.setText(conf.getRolesPath());
@@ -272,32 +192,17 @@ public class ConfigurationWindowController implements Initializable {
         genSourceFolderTextField.setText(conf.getGenSrcPath());
         pluginsFolderTextField.setText(conf.getPluginsPath());
         defaultPluginComboBox.setItems(PluginManager.getInstance().getAvailablePluginNames());
-        System.out.println("Default Plugin in Conf: " + conf.getDefaultPluginName());
         defaultPluginComboBox.getSelectionModel().select(conf.getDefaultPluginName());
     }
 
-    /**
-     * Saves all {@link TextField} and {@link ComboBox} values from the configuration window.
-     */
-    public void onSave() {
-        // store values of currently selected workspace into the workspaces configuration object
-        String selectedWsName = availableWorkspacesListView.getSelectionModel().getSelectedItem();
-        if (selectedWsName != null && !selectedWsName.isEmpty()) {
-            storeWorkspace(selectedWsName);
-            configManager.getConfiguration(selectedWsName).store();
-        }
-    }
-
-    private void setupAvailableWorkspaceListView(ConfigurationManager configManager) {
-        List<Configuration> wsList = configManager.getConfigurations();
-        ObservableList<String> wsNameList = FXCollections.observableArrayList();
-        for (Configuration ws : wsList) {
-            wsNameList.add(ws.getName());
-        }
-        wsNameList.add("");
-        availableWorkspacesListView.setItems(wsNameList);
+    private void setupAvailableConfigurationsListView() {
+        ObservableList<String> confNameList = FXCollections.observableArrayList(configManager.getConfigurationNames());
+        // for adding a new configuration, the empty entry is necessary and specially handled
+        confNameList.add("");
+        availableWorkspacesListView.setItems(confNameList);
         availableWorkspacesListView.setEditable(true);
         availableWorkspacesListView.setCellFactory(TextFieldListCell.forListView());
+        configListViewEventHandler = new ConfigurationListViewHandler(this);
         availableWorkspacesListView.setOnEditCommit(configListViewEventHandler);
         availableWorkspacesListView.setOnMouseClicked(configListViewEventHandler);
         availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configListViewEventHandler);
@@ -358,8 +263,5 @@ public class ConfigurationWindowController implements Initializable {
         if (file != null) {
             textField.setText(file.getAbsolutePath());
         }
-    }
-
-    private static class StringListCell<T> extends ListCell<T> {
     }
 }

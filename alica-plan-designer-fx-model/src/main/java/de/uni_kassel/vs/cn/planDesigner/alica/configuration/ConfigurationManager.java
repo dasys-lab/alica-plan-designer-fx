@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.configuration;
 
+import javafx.collections.FXCollections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +34,10 @@ public final class ConfigurationManager {
      * Not the domain config folder (etc). Its for plan designer only.
      */
     private static final String CONFIG_FOLDERNAME = ".planDesigner";
+    private static final String ACTIVE_DOMAIN_CONF = "activeDomainConfig";
+    private static final String DOMAIN_CONFIGS = "domainConfigs";
+    private static final String CLANG_FORMAT_PATH = "clangFormatPath";
+    private static final String EDITOR_EXEC_PATH = "editorExecutablePath";
 
     private Properties mainConfigProperties;
     private File mainConfigFile;
@@ -65,10 +70,10 @@ public final class ConfigurationManager {
             LOG.info(mainConfigFile.toString() + " does not exist!");
 
             // load default values for mainConfig.properties
-            mainConfigProperties.setProperty("clangFormatPath", "clang-format");
-            mainConfigProperties.setProperty("editorExecutablePath", "gedit");
-            mainConfigProperties.setProperty("workspaces", "");
-            mainConfigProperties.setProperty("activeWorkspace", "");
+            mainConfigProperties.setProperty(CLANG_FORMAT_PATH, "clang-format");
+            mainConfigProperties.setProperty(EDITOR_EXEC_PATH, "gedit");
+            mainConfigProperties.setProperty(DOMAIN_CONFIGS, "");
+            mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, "");
         } else {
             // load values from mainConfig.properties file in $HOME/.planDesigner/configurations.properties
             try {
@@ -80,7 +85,7 @@ public final class ConfigurationManager {
                 e.printStackTrace();
             }
 
-            String workspaceNames = mainConfigProperties.getProperty("workspaces");
+            String workspaceNames = mainConfigProperties.getProperty(DOMAIN_CONFIGS);
             String[] split = workspaceNames.split(",");
             for (String workspaceName : split) {
                 if (!workspaceName.isEmpty()) {
@@ -90,38 +95,55 @@ public final class ConfigurationManager {
         }
 
         // set active workspace
-        String activeWs = mainConfigProperties.getProperty("activeWorkspace");
-        if (!activeWs.isEmpty()) {
-            for (Configuration ws : configurations) {
-                if (activeWs.equals(ws.getName())) {
-                    setActiveConfiguration(ws);
+        String activeConfiguration = mainConfigProperties.getProperty(ACTIVE_DOMAIN_CONF);
+        if (!activeConfiguration.isEmpty()) {
+            for (Configuration conf : configurations) {
+                if (activeConfiguration.equals(conf.getName())) {
+                    mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, activeConfiguration);
                 }
             }
         }
     }
 
+    public void writeToDisk()
+    {
+        saveMainConfigFile();
+        for (Configuration conf : configurations)
+        {
+            conf.writeToDisk();
+        }
+    }
+
     public void addConfiguration(Configuration configuration) {
         configurations.add(configuration);
-        mainConfigProperties.setProperty("workspaces", mainConfigProperties.getProperty("workspaces") + "," + configuration.getName());
-        saveMainConfigFile();
-        if (!configuration.store())
+        String domainConfigs = mainConfigProperties.getProperty(DOMAIN_CONFIGS);
+        if (domainConfigs == null || domainConfigs.isEmpty())
         {
-            LOG.error("Unable so save configuration " + configuration.getName());
+            mainConfigProperties.setProperty(DOMAIN_CONFIGS, configuration.getName());
+        }
+        else
+        {
+            mainConfigProperties.setProperty(DOMAIN_CONFIGS, domainConfigs + "," + configuration.getName());
         }
         LOG.info("Added new configuration " + configuration.getName());
     }
 
     private void saveMainConfigFile() {
         try {
-            mainConfigProperties.store(new FileOutputStream(mainConfigFile), " main configuration file");
+            mainConfigProperties.store(new FileOutputStream(mainConfigFile), " Plan Designer - main configuration file");
         } catch (IOException e) {
             LOG.error("Could not save " + mainConfigFile.toString() + "!", e);
             throw new RuntimeException(e);
         }
     }
 
-    public List<Configuration> getConfigurations() {
-        return configurations;
+    public List<String> getConfigurationNames() {
+        List<String> configurationNames = new ArrayList<String>();
+        for (Configuration conf : configurations)
+        {
+            configurationNames.add(conf.getName());
+        }
+        return configurationNames;
     }
 
     public Configuration getConfiguration(String confName) {
@@ -134,7 +156,7 @@ public final class ConfigurationManager {
     }
 
     public Configuration getActiveConfiguration() {
-        String activeWsName = mainConfigProperties.getProperty("activeWorkspace");
+        String activeWsName = mainConfigProperties.getProperty(ACTIVE_DOMAIN_CONF);
         if (activeWsName.isEmpty()) {
             return null;
         }
@@ -147,34 +169,27 @@ public final class ConfigurationManager {
         return null;
     }
 
-    private void setActiveConfiguration(Configuration activeConfiguration) {
-        System.out.println("Configuration: " + activeConfiguration.getName());
-        mainConfigProperties.setProperty("activeWorkspace", activeConfiguration.getName());
-    }
-
     public String getClangFormatPath() {
-        return (String) mainConfigProperties.get("clangFormatPath");
+        return mainConfigProperties.getProperty(CLANG_FORMAT_PATH);
     }
 
     public void setClangFormatPath(String clangFormatPath) {
         if (clangFormatPath == null) {
-            mainConfigProperties.setProperty("clangFormatPath", "");
+            mainConfigProperties.setProperty(CLANG_FORMAT_PATH, "");
         } else {
-            mainConfigProperties.setProperty("clangFormatPath", clangFormatPath);
+            mainConfigProperties.setProperty(CLANG_FORMAT_PATH, clangFormatPath);
         }
-        saveMainConfigFile();
     }
 
     public String getEditorExecutablePath() {
-        return (String) mainConfigProperties.get("editorExecutablePath");
+        return mainConfigProperties.getProperty(EDITOR_EXEC_PATH);
     }
 
     public void setEditorExecutablePath(String editorExecutablePath) {
         if (editorExecutablePath == null) {
-            mainConfigProperties.setProperty("editorExecutablePath", "");
+            mainConfigProperties.setProperty(EDITOR_EXEC_PATH, "");
         } else {
-            mainConfigProperties.setProperty("editorExecutablePath", editorExecutablePath);
+            mainConfigProperties.setProperty(EDITOR_EXEC_PATH, editorExecutablePath);
         }
-        saveMainConfigFile();
     }
 }
