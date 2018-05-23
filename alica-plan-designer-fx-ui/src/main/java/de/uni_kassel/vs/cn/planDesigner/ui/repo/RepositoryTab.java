@@ -23,6 +23,7 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
     private ListView<RepositoryHBox<T>> contentsListView;
 
     private Comparator<RepositoryHBox<Plan>> planComparator;
+    private String typeName;
 
     public RepositoryTab(ObservableList<Pair<T, Path>> objects, AbstractPlanTool dragTool, String typeName) {
         initComparator();
@@ -51,6 +52,7 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
                 setContent(new ListView<>(hBoxObservableList));
             }
         });
+        this.typeName = typeName;
         setText(typeName);
         hBoxObservableList = FXCollections.observableArrayList(hBoxes);
         if(objects.size() > 0 && objects.get(0).getKey() instanceof Plan) {
@@ -72,6 +74,7 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
                     return tRepositoryHBox;
                 })
                 .collect(Collectors.toList());
+        this.typeName = typeName;
         setText(typeName);
         ObservableList<RepositoryHBox<T>> hBoxObservableList = FXCollections.observableArrayList(hBoxes);
         hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
@@ -86,5 +89,9 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
 
     public ListView<RepositoryHBox<T>> getContentsListView() {
         return contentsListView;
+    }
+
+    public String getTypeName() {
+        return typeName;
     }
 }

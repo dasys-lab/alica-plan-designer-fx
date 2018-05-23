@@ -106,7 +106,7 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
                     .findFirst()
                     .get();
             objectToChange = (AbstractPlan) resource.getContents().get(0);
-            
+
             boolean hasSameName = false;
             if (objectToChange instanceof Plan) {
                 if (checkForCorrectFileEnding(newValue, ".pml")) return;

@@ -1,17 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.command.change;
 
-import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
+import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
-import javafx.scene.control.Tab;
 import javafx.util.Pair;
 import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.emf.common.util.URI;
@@ -21,8 +20,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 /**
  * Created by marci on 17.03.17.
@@ -48,10 +47,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
             oldValue = (T) BeanUtils.getProperty(getElementToEdit(), attribute);
             BeanUtils.setProperty(getElementToEdit(), attribute, newValue);
             if (attribute.equals("masterPlan")) {
-                RepositoryTabPane repositoryTabPane = MainController.getInstance().getRepositoryTabPane();
-                Tab previousSelectedTab =  repositoryTabPane.getSelectionModel().getSelectedItem();
-                repositoryTabPane.init();
-                repositoryTabPane.getSelectionModel().select(previousSelectedTab);
+                reinitializeRepoTabs();
             }
             if (attribute.equals("name")) {
                 if (AlicaModelUtils.containsIllegalCharacter(newValue.toString())) {
@@ -103,6 +99,14 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                     path = behaviourPathPair.getValue();
                     repoViewBackend.getBehaviours().remove(behaviourPathPair);
                     repoViewBackend.getBehaviours().add(new Pair<>((Behaviour) getElementToEdit(), getNewFilePath(path).toPath()));
+                }
+
+                if (getElementToEdit() instanceof Task) {
+                    RepoViewBackend.getInstance()
+                            .getTaskRepository()
+                            .get(0).getKey().getTasks().remove(getElementToEdit());
+                    repoViewBackend.getTaskRepository()
+                            .get(0).getKey().getTasks().add((Task) getElementToEdit());
                 }
 
                 if (path != null) {
@@ -160,12 +164,35 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                                     }
                                 }
                             });
+                } else {
+                    if (getElementToEdit() instanceof Task) {
+                        EMFModelUtils.saveAlicaFile(RepoViewBackend.getInstance().getTaskRepository().get(0).getKey());
+                        reinitializeRepoTabs();
+                    }
                 }
 
             }
 
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void reinitializeRepoTabs() {
+        RepositoryTabPane repositoryTabPane = MainController.getInstance().getRepositoryTabPane();
+        String previousSelectedTabTypeName =  ((RepositoryTab<?>)repositoryTabPane.getSelectionModel()
+                .getSelectedItem()).getTypeName();
+        repositoryTabPane.init();
+        Optional<RepositoryTab> repositoryTab = repositoryTabPane.getTabs().stream()
+                .map(t -> (RepositoryTab) t)
+                .filter(t -> previousSelectedTabTypeName.equals(t.getTypeName()))
+                .findFirst();
+        if (repositoryTab.isPresent()) {
+            repositoryTabPane.getSelectionModel().select(repositoryTab.get());
+        } else {
+            // if this happens something went wrong.
+            ErrorWindowController
+                    .createErrorWindow(I18NRepo.getInstance().getString("label.error.repoview"), null);
         }
     }
 
