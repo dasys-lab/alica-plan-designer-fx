@@ -65,15 +65,13 @@ public class CommandStack extends Observable {
      * @return
      */
     public boolean isAbstractPlanInItsCurrentFormSaved(PlanElement abstractPlan) {
-        Optional<AbstractCommand> collect = undoStack
-                .stream()
-                .filter(e -> e.getAffectedPlan().equals(abstractPlan))
-                .findFirst();
-        if (collect.isPresent()) {
-            return collect.get().isSaved();
-        } else {
-            return true;
+        for (int i = undoStack.indexOf(undoStack.lastElement()); i >= 0; i--) {
+            AbstractCommand currentCommand = undoStack.elementAt(i);
+            if (currentCommand.getAffectedPlan().equals(abstractPlan)) {
+                return currentCommand.isSaved();
+            }
         }
+        return true;
     }
 
     public void setSavedForAbstractPlan(PlanElement abstractPlan) {
