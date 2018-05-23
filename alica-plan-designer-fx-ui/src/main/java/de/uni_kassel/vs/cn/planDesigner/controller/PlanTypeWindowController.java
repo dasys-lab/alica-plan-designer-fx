@@ -43,6 +43,8 @@ public class PlanTypeWindowController implements Initializable {
 
     private Comparator<RepositoryHBox<Plan>> repositoryHBoxComparator;
 
+    private Comparator<AnnotatedPlan> annotatedPlanComparator;
+
     @FXML
     private PlanTypeTab planTypeTab;
 
@@ -70,10 +72,7 @@ public class PlanTypeWindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         i18NRepo = I18NRepo.getInstance();
-        pairComparator = Comparator.comparing(planPathPair -> !planPathPair.getKey().isMasterPlan());
-        pairComparator = pairComparator.thenComparing(planPathPair -> planPathPair.getKey().getName());
-        repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getObject().isMasterPlan());
-        repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryHBox -> planRepositoryHBox.getObject().getName());
+        initComparators();
         initUIText();
         initPlanListView();
         initTableView();
@@ -116,7 +115,7 @@ public class PlanTypeWindowController implements Initializable {
                 AddPlanToPlanType command = new AddPlanToPlanType(selectedItem.getObject(), planType);
                 commandStack.storeAndExecute(command);
                 plantypeTableView.getItems().add(command.getCopyForRemoval());
-
+                plantypeTableView.getItems().sort(annotatedPlanComparator);
             }
         });
 
@@ -180,6 +179,7 @@ public class PlanTypeWindowController implements Initializable {
         });
 
         TableColumn<AnnotatedPlan, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
+        activeColumn.setResizable(false);
         activeColumn.setCellValueFactory(new PropertyValueFactory<>("activated"));
         activeColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlan, Boolean>, TableCell<AnnotatedPlan, Boolean>>() {
             @Override
@@ -198,6 +198,7 @@ public class PlanTypeWindowController implements Initializable {
                         }
                     }
                 };
+                annotatedPlanBooleanTableCell.setStyle("-fx-alignment: CENTER;");
                 return annotatedPlanBooleanTableCell;
             }
         });
@@ -212,6 +213,11 @@ public class PlanTypeWindowController implements Initializable {
                     protected void updateItem(Plan item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty == false) {
+                            if (item.isMasterPlan()) {
+                                setGraphic(new ImageView(new AlicaIcon("masterplan")));
+                            } else {
+                                setGraphic(new ImageView(new AlicaIcon(Plan.class.getSimpleName())));
+                            }
                             setText(item.getName());
                         }
                     }
@@ -225,14 +231,25 @@ public class PlanTypeWindowController implements Initializable {
         plantypeTableView.setRowFactory(tv -> {
             TableRow<AnnotatedPlan> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
-                commandStack.storeAndExecute(new ChangeAttributeValue<>(annotatedPlanTableRow.getItem(),
-                        "activated", !annotatedPlanTableRow.getItem().isActivated(), planType));
-                plantypeTableView.refresh();
+                if(e.getClickCount() == 2 && annotatedPlanTableRow.getItem() != null) {
+                    commandStack.storeAndExecute(new ChangeAttributeValue<>(annotatedPlanTableRow.getItem(),
+                            "activated", !annotatedPlanTableRow.getItem().isActivated(), planType));
+                    plantypeTableView.refresh();
+                }
             });
             return annotatedPlanTableRow;
         });
     }
 
+
+    private void initComparators() {
+        pairComparator = Comparator.comparing(planPathPair -> !planPathPair.getKey().isMasterPlan());
+        pairComparator = pairComparator.thenComparing(planPathPair -> planPathPair.getKey().getName());
+        repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getObject().isMasterPlan());
+        repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryHBox -> planRepositoryHBox.getObject().getName());
+        annotatedPlanComparator = Comparator.comparing(annotatedPlan -> !annotatedPlan.getPlan().isMasterPlan());
+        annotatedPlanComparator = annotatedPlanComparator.thenComparing(annotatedPlan -> annotatedPlan.getPlan().getName());
+    }
 
     public void setPlanType(PlanType planType) {
         if (planType == null) {
