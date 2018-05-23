@@ -1,10 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
+import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import javafx.event.EventHandler;
@@ -61,7 +63,17 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
     @Override
     public void commitEdit(FileWrapper newValue) {
         if (! isEditing()) return;
-            String name = newValue.unwrap().getName().substring(0, newValue.unwrap().getName().lastIndexOf("."));
+
+        int fileEndingPosition = newValue.unwrap().getName().lastIndexOf(".");
+        if (fileEndingPosition < 0) {
+            getTreeView()
+                    .fireEvent(new TreeView.EditEvent<>(getTreeView(),
+                            TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));
+            ErrorWindowController.createErrorWindow(
+                    I18NRepo.getInstance().getString("label.error.rename.illegalEnding"), null);
+            return;
+        }
+        String name = newValue.unwrap().getName().substring(0, fileEndingPosition);
         if (AlicaModelUtils.containsIllegalCharacter(name)) {
             final TreeItem<FileWrapper> treeItem = getTreeItem();
             final TreeView<FileWrapper> tree = getTreeView();
@@ -81,9 +93,10 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
         }
         boolean isPlanElement = false;
         File unwrappedFile = getTreeItem().getValue().unwrap();
-        EObject objectToChange = null;
+        AbstractPlan objectToChange = null;
         if (unwrappedFile.getName().endsWith(".pml") ||
                 unwrappedFile.getName().endsWith(".pty") || unwrappedFile.getName().endsWith("beh")) {
+
             Resource resource = EMFModelUtils
                     .getAlicaResourceSet()
                     .getResources()
@@ -92,10 +105,39 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
                     .filter(e -> e.getURI().toFileString().contains("pmlex") == false)
                     .findFirst()
                     .get();
-            objectToChange = resource.getContents().get(0);
+            objectToChange = (AbstractPlan) resource.getContents().get(0);
+            
+            boolean hasSameName = false;
+            if (objectToChange instanceof Plan) {
+                if (checkForCorrectFileEnding(newValue, ".pml")) return;
+                hasSameName = RepoViewBackend.getInstance().getPlans()
+                        .stream()
+                        .anyMatch(planPathPair -> planPathPair.getKey().getName().equals(name));
+            }
 
+            if (objectToChange instanceof Behaviour) {
+                if (checkForCorrectFileEnding(newValue, ".beh")) return;
+                hasSameName = RepoViewBackend.getInstance().getBehaviours()
+                        .stream()
+                        .anyMatch(behaviourPathPair -> behaviourPathPair.getKey().getName().equals(name));
+            }
+
+            if (objectToChange instanceof PlanType) {
+                if (checkForCorrectFileEnding(newValue, ".pty")) return;
+                hasSameName = RepoViewBackend.getInstance().getPlanTypes()
+                        .stream()
+                        .anyMatch(planTypePathPair -> planTypePathPair.getKey().getName().equals(name));
+            }
+
+            if (hasSameName) {
+                getTreeView()
+                        .fireEvent(new TreeView.EditEvent<>(getTreeView(),
+                                TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));
+                ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.rename"), null);
+                return;
+            }
             controller.getCommandStack()
-                    .storeAndExecute(new ChangeAttributeValue((PlanElement) objectToChange, "name", name, (PlanElement)objectToChange));
+                    .storeAndExecute(new ChangeAttributeValue(objectToChange, "name", name, objectToChange));
             isPlanElement = true;
         }
 
@@ -120,6 +162,18 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
                     newValue));
         }
 
+    }
+
+    private boolean checkForCorrectFileEnding(FileWrapper newValue, String ending) {
+        if (newValue.unwrap().getName().endsWith(ending) == false) {
+            getTreeView()
+                    .fireEvent(new TreeView.EditEvent<>(getTreeView(),
+                            TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));
+            ErrorWindowController.createErrorWindow(
+                    I18NRepo.getInstance().getString("label.error.rename.illegalEnding"), null);
+            return true;
+        }
+        return false;
     }
 
     @Override
