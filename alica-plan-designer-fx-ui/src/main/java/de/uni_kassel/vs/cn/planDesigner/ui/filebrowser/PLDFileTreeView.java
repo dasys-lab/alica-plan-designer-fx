@@ -51,7 +51,6 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
     public PLDFileTreeView() {
         super(new VirtualDirectoryTreeItem());
-        //TODO change icon
 
         addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
             System.out.println("Source: " + e.getSource() + " Target: " + e.getTarget());
@@ -81,6 +80,12 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+            } else if (fileName.endsWith(".pty")) {
+                getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+                        .getResourceAsStream("images/planTyp24x24.png"))));
+            } else if (fileName.endsWith(".tsk")) {
+                getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+                        .getResourceAsStream("images/tasks24x24.png"))));
             }
             wasDragged = true;
             e.consume();

@@ -1,5 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
+import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
@@ -8,15 +11,22 @@ import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,7 +50,7 @@ public class DeleteFileMenuItem extends MenuItem {
         // Plans
         Optional<Pair<Plan, Path>> planPathPair = repoViewBackend.getPlanPathPair(toDelete);
         if (planPathPair.isPresent()) {
-            commandStack.storeAndExecute(new DeleteAbstractPlan(planPathPair.get().getKey()));
+            checkAbstractPlanUsage(commandStack, planPathPair.get().getKey());
             repoViewBackend.getPlans().remove(planPathPair.get());
             Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
             mainController.closeTabIfOpen(planPathPair.get().getKey());
@@ -52,7 +62,7 @@ public class DeleteFileMenuItem extends MenuItem {
         // PlanTypes
         Optional<Pair<PlanType, Path>> planTypePathPair = repoViewBackend.getPlanTypePathPair(toDelete);
         if (planTypePathPair.isPresent()) {
-            commandStack.storeAndExecute(new DeleteAbstractPlan(planTypePathPair.get().getKey()));
+            checkAbstractPlanUsage(commandStack, planTypePathPair.get().getKey());
             repoViewBackend.getPlanTypes().remove(planTypePathPair.get());
             Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
             mainController.closeTabIfOpen(planTypePathPair.get().getKey());
@@ -64,7 +74,7 @@ public class DeleteFileMenuItem extends MenuItem {
         // Behaviours
         Optional<Pair<Behaviour, Path>> behaviourPathPair = repoViewBackend.getBehaviourPathPair(toDelete);
         if (behaviourPathPair.isPresent()) {
-            commandStack.storeAndExecute(new DeleteAbstractPlan(behaviourPathPair.get().getKey()));
+            checkAbstractPlanUsage(commandStack, behaviourPathPair.get().getKey());
             repoViewBackend.getBehaviours().remove(behaviourPathPair.get());
             Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
             mainController.closeTabIfOpen(behaviourPathPair.get().getKey());
@@ -85,6 +95,27 @@ public class DeleteFileMenuItem extends MenuItem {
             } catch (IOException e) {
                 throw new RuntimeException("");
             }
+        }
+    }
+
+    private void checkAbstractPlanUsage(CommandStack commandStack, AbstractPlan toBeDeleted) {
+        List<AbstractPlan> usages = EMFModelUtils.getUsages(toBeDeleted);
+        if (usages.size() > 0) {
+            FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
+            try {
+                Parent infoWindow = fxmlLoader.load();
+                UsagesWindowController controller = fxmlLoader.getController();
+                controller.createReferencesList(usages);
+                Stage stage = new Stage();
+                stage.setTitle(I18NRepo.getInstance().getString("label.usage.nodelete"));
+                stage.setScene(new Scene(infoWindow));
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(PlanDesigner.getPrimaryStage());
+                stage.showAndWait();
+            } catch (IOException ignored) {
+            }
+        } else {
+            commandStack.storeAndExecute(new DeleteAbstractPlan(toBeDeleted));
         }
     }
 

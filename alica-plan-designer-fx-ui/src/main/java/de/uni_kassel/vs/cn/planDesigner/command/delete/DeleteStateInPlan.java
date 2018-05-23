@@ -63,12 +63,13 @@ public class DeleteStateInPlan extends AbstractCommand<State> {
         for (Transition inTransition : outStatesOfInTransitions.keySet()) {
             inTransition.setOutState(null);
         }
+        
         parentOfDeleted.getPmlUiExtensionMap().getExtension().remove(getElementToEdit());
 
         pmlUiExtensionsOfTransitions
                 .keySet()
                 .forEach(k -> parentOfDeleted.getPmlUiExtensionMap().getExtension().remove(k));
-    }
+        }
 
     /**
      * This method ensures the deleted data can be retrieved if this command is undone
