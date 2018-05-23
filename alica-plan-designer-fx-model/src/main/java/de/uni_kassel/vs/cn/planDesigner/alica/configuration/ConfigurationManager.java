@@ -13,6 +13,7 @@ public final class ConfigurationManager {
 
     // SINGLETON
     private static volatile ConfigurationManager instance;
+
     public static ConfigurationManager getInstance() {
         if (instance == null) {
             synchronized (ConfigurationManager.class) {
@@ -26,17 +27,22 @@ public final class ConfigurationManager {
     }
 
     private static final Logger LOG = LogManager.getLogger(ConfigurationManager.class);
-    private static final String MAIN_CONFIG_FILENAME = "mainConfig.properties";
+    private static final String MAIN_CONFIG_FILENAME = "mainConfig";
+
+    /**
+     * Not the domain config folder (etc). Its for plan designer only.
+     */
     private static final String CONFIG_FOLDERNAME = ".planDesigner";
 
     private Properties mainConfigProperties;
     private File mainConfigFile;
+    private File planDesignerConfigFolder;
 
-    private List<Workspace> workspaces;
+    private List<Configuration> configurations;
 
     private ConfigurationManager() {
         mainConfigProperties = new Properties();
-        workspaces = new ArrayList<>();
+        configurations = new ArrayList<>();
 
         // check for home dir
         String homeDirString = System.getProperty("user.home");
@@ -46,15 +52,17 @@ public final class ConfigurationManager {
         }
 
         // check for .planDesigner in home dir
-        File planDesignerConfigFolder = Paths.get(homeDirString, CONFIG_FOLDERNAME).toFile();
+        planDesignerConfigFolder = Paths.get(homeDirString, CONFIG_FOLDERNAME).toFile();
         if (!planDesignerConfigFolder.exists()) {
-            planDesignerConfigFolder.mkdir();
+            if (!planDesignerConfigFolder.mkdir()) {
+                throw new RuntimeException("Unable to create " + CONFIG_FOLDERNAME + " in home directory!");
+            }
         }
 
 
-        mainConfigFile = Paths.get(homeDirString, CONFIG_FOLDERNAME, MAIN_CONFIG_FILENAME).toFile();
+        mainConfigFile = Paths.get(planDesignerConfigFolder.toString(), MAIN_CONFIG_FILENAME + Configuration.FILE_ENDING).toFile();
         if (!mainConfigFile.exists()) {
-            System.out.println("ConfigurationManager: " + MAIN_CONFIG_FILENAME + " does not exist!");
+            LOG.info(mainConfigFile.toString() + " does not exist!");
 
             // load default values for mainConfig.properties
             mainConfigProperties.setProperty("clangFormatPath", "clang-format");
@@ -62,14 +70,13 @@ public final class ConfigurationManager {
             mainConfigProperties.setProperty("workspaces", "");
             mainConfigProperties.setProperty("activeWorkspace", "");
         } else {
-            // load values from mainConfig.properties file in $HOME/.planDesigner/workspaces.properties
-            InputStream is = null;
+            // load values from mainConfig.properties file in $HOME/.planDesigner/configurations.properties
             try {
-                is = new FileInputStream(mainConfigFile);
+                InputStream is = new FileInputStream(mainConfigFile);
                 mainConfigProperties.load(is);
                 is.close();
             } catch (IOException e) {
-                LOG.fatal("Could not find mainConfig.properties after trying to create it.", e);
+                LOG.fatal("Could not load " + mainConfigFile.toString() + " although it exists.", e);
                 e.printStackTrace();
             }
 
@@ -77,7 +84,7 @@ public final class ConfigurationManager {
             String[] split = workspaceNames.split(",");
             for (String workspaceName : split) {
                 if (!workspaceName.isEmpty()) {
-                    workspaces.add(loadWorkspace(workspaceName));
+                    configurations.add(new Configuration(workspaceName));
                 }
             }
         }
@@ -85,100 +92,64 @@ public final class ConfigurationManager {
         // set active workspace
         String activeWs = mainConfigProperties.getProperty("activeWorkspace");
         if (!activeWs.isEmpty()) {
-            for (Workspace ws : workspaces) {
-                if (ws.getName() == activeWs) {
-                    setActiveWorkspace(ws);
+            for (Configuration ws : configurations) {
+                if (activeWs.equals(ws.getName())) {
+                    setActiveConfiguration(ws);
                 }
             }
         }
     }
 
-    public void addWorkspace(Workspace workspace) {
-        workspaces.add(workspace);
-        mainConfigProperties.setProperty("workspaces", mainConfigProperties.getProperty("workspaces") + "," + workspace.getName());
+    public void addConfiguration(Configuration configuration) {
+        configurations.add(configuration);
+        mainConfigProperties.setProperty("workspaces", mainConfigProperties.getProperty("workspaces") + "," + configuration.getName());
         saveMainConfigFile();
-        saveWorkspaceToFile(workspace.getName());
-        LOG.info("Added new workspace " + workspace.getName());
+        if (!configuration.store())
+        {
+            LOG.error("Unable so save configuration " + configuration.getName());
+        }
+        LOG.info("Added new configuration " + configuration.getName());
     }
 
-    public void saveMainConfigFile() {
+    private void saveMainConfigFile() {
         try {
-            mainConfigProperties.store(new FileOutputStream(new File(MAIN_CONFIG_FILENAME)), " main configuration file");
+            mainConfigProperties.store(new FileOutputStream(mainConfigFile), " main configuration file");
         } catch (IOException e) {
-            LOG.error("Could not save " + MAIN_CONFIG_FILENAME + "!", e);
+            LOG.error("Could not save " + mainConfigFile.toString() + "!", e);
             throw new RuntimeException(e);
         }
     }
 
-    public void saveWorkspaceToFile(String wsName) {
-        try {
-            File workspaceFile = new File(wsName + ".properties");
-            if (workspaceFile.exists() == false) {
-                workspaceFile.createNewFile();
-            }
-
-            Configuration configuration = getWorkspace(wsName).getConfiguration();
-
-            Properties props = new Properties();
-            props.setProperty("plansPath", configuration.getPlansPath());
-            props.setProperty("rolesPath", configuration.getRolesPath());
-            props.setProperty("miscPath", configuration.getTasksPath());
-            props.setProperty("expressionValidatorsPath", configuration.getGenSrcPath());
-            props.setProperty("pluginPath", configuration.getPluginPath());
-            FileOutputStream out = new FileOutputStream(workspaceFile);
-            props.store(out, wsName + "configuration file");
-            out.close();
-        } catch (IOException e) {
-            LOG.error("Could not save workspace configuration for " + wsName, e);
-            throw new RuntimeException(e);
-        }
+    public List<Configuration> getConfigurations() {
+        return configurations;
     }
 
-    public List<Workspace> getWorkspaces() {
-        return workspaces;
-    }
-
-    public Workspace getWorkspace(String wsName) {
-        for (Workspace ws : workspaces) {
-            if (ws.getName() == wsName) {
-                return ws;
+    public Configuration getConfiguration(String confName) {
+        for (Configuration conf : configurations) {
+            if (conf.getName().equals(confName)) {
+                return conf;
             }
         }
         return null;
     }
 
-    public Workspace getActiveWorkspace() {
-        return loadWorkspace(mainConfigProperties.getProperty("activeWorkspace"));
-    }
-
-    public void setActiveWorkspace(Workspace activeWorkspace) {
-        mainConfigProperties.setProperty("activeWorkspace", activeWorkspace.getName());
-    }
-
-    private Workspace loadWorkspace(String workspaceName) {
-        Properties props = new Properties();
-        InputStream is = null;
-        try {
-            is = new FileInputStream(new File(workspaceName + ".properties"));
-        } catch (FileNotFoundException e) {
-            LOG.error("Could not find file: " + workspaceName + ".properties", e);
-            throw new RuntimeException(e);
+    public Configuration getActiveConfiguration() {
+        String activeWsName = mainConfigProperties.getProperty("activeWorkspace");
+        if (activeWsName.isEmpty()) {
+            return null;
         }
 
-        try {
-            props.load(is);
-        } catch (IOException e) {
-            LOG.error("Could not load properties from file: " + workspaceName + ".properties", e);
-            throw new RuntimeException(e);
+        for (Configuration conf : configurations) {
+            if (conf.getName().equals(activeWsName)) {
+                return conf;
+            }
         }
+        return null;
+    }
 
-        Configuration configuration = new Configuration();
-        configuration.setPlansPath(props.getProperty("plansPath"));
-        configuration.setRolesPath(props.getProperty("rolesPath"));
-        configuration.setPluginPath(props.getProperty("pluginPath"));
-        configuration.setGenSrcPath(props.getProperty("expressionValidatorsPath"));
-        configuration.setTasksPath(props.getProperty("miscPath"));
-        return new Workspace(workspaceName, configuration);
+    private void setActiveConfiguration(Configuration activeConfiguration) {
+        System.out.println("Configuration: " + activeConfiguration.getName());
+        mainConfigProperties.setProperty("activeWorkspace", activeConfiguration.getName());
     }
 
     public String getClangFormatPath() {

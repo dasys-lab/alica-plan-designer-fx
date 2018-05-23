@@ -17,7 +17,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -43,25 +42,22 @@ public class PlanDesigner extends Application {
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        ConfigurationManager manager = ConfigurationManager.getInstance();
+        ConfigurationManager.getInstance();
         EMFModelUtils.initializeEMF();
         launch(args);
         FileWatcherJob.stayAlive = false;
-        System.out.println(manager.toString());
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
         running = true;
 
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("test.fxml"));
-        // The next two lines replace this attribute in test.fxml::AnchorPane "fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController"
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("mainWindow.fxml"));
+        // The next two lines replace this attribute in mainWindow.fxml::AnchorPane "fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController"
         MainController mainController = MainController.getInstance();
         fxmlLoader.setController(mainController);
         Parent root = fxmlLoader.load();
 
-        // TODO: does not load the icon.xpm
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/icon.png")));
         primaryStage.setTitle("Carpe Noctem Plan Designer");
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

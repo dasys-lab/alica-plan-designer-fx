@@ -84,7 +84,7 @@ public class EMFModelUtils {
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */
     public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
-        Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
+        Configuration configuration = ConfigurationManager.getInstance().getActiveConfiguration();
         String relativePath = file.getAbsolutePath()
                 .replace(configuration.getPlansPath() + "/", "")
                 .replace(configuration.getRolesPath() + "/", "")
@@ -131,7 +131,7 @@ public class EMFModelUtils {
     }
 
     public static URI createRelativeURI(File file) {
-        Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
+        Configuration configuration = ConfigurationManager.getInstance().getActiveConfiguration();
         String relativePath = file.getAbsolutePath()
                 .replace(configuration.getPlansPath() + "/", "")
                 .replace(configuration.getRolesPath() + "/", "")
@@ -245,7 +245,7 @@ public class EMFModelUtils {
 
     private static <T extends EObject> void setDestinationPath(T emptyObject, File targetDir) {
         if (emptyObject instanceof AbstractPlan) {
-            Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
+            Configuration configuration = ConfigurationManager.getInstance().getActiveConfiguration();
             String destinationPath = targetDir.getAbsolutePath().replace(configuration.getPlansPath(), "Plans");
             destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator));
             ((AbstractPlan) emptyObject).setDestinationPath(destinationPath);

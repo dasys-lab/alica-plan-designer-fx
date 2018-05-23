@@ -3,8 +3,8 @@ package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
@@ -256,16 +256,17 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
 class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
 
-    private Configuration configuration;
-
     VirtualDirectoryTreeItem() {
         super();
-        configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
-        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getPlansPath()),
+        Configuration conf = ConfigurationManager.getInstance().getActiveConfiguration();
+        if (conf == null) {
+            return;
+        }
+        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(conf.getPlansPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getRolesPath()),
+        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(conf.getRolesPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getTasksPath()),
+        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(conf.getTasksPath()),
                 new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
     }
 

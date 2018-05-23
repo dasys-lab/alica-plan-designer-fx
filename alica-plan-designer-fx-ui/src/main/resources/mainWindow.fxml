@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.PLDFileTreeView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.EditorTabPane?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTabPane?>
+<?import de.uni_kassel.vs.cn.planDesigner.ui.properties.PropertyTabPane?>
+<?import javafx.scene.text.Text?>
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <SplitPane dividerPositions="0.1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <PLDFileTreeView fx:id="fileTreeView" maxWidth="1.7976931348623157E308" minWidth="100.0"
+                                 prefWidth="300.0"/>
+                <SplitPane dividerPositions="0.9">
+                    <items>
+                        <EditorTabPane fx:id="editorTabPane" maxHeight="1.7976931348623157E308"
+                                       maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="100.0"
+                                       tabClosingPolicy="ALL_TABS"/>
+                        <SplitPane dividerPositions="0.5" maxWidth="1.7976931348623157E308" minWidth="100.0"
+                                   orientation="VERTICAL" prefWidth="300.0">
+                            <items>
+                                <RepositoryTabPane fx:id="repositoryTabPane" tabClosingPolicy="UNAVAILABLE"/>
+                                <PropertyTabPane fx:id="propertyAndStatusTabPane" tabClosingPolicy="UNAVAILABLE"/>
+                            </items>
+                        </SplitPane>
+                    </items>
+                </SplitPane>
+            </items>
+            <padding>
+                <Insets top="29.0"/>
+            </padding>
+        </SplitPane>
+        <MenuBar fx:id="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+        <Rectangle fx:id="statusBlob" arcHeight="20.0" arcWidth="20.0" fill="#b3d9fc" height="20.0" stroke="BLACK"
+                   strokeType="INSIDE" visible="false" width="170.0" AnchorPane.rightAnchor="2.0"
+                   AnchorPane.topAnchor="2.0"/>
+        <Text fx:id="statusText"/>
+    </children>
+</AnchorPane>

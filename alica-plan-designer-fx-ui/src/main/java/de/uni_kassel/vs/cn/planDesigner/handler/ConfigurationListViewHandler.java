@@ -20,7 +20,6 @@ public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> 
      *
      * @param event
      */
-    @Override
     public void handle(Event event) {
         if (event.getEventType() == ListView.editCommitEvent()) {
             handleEditCommit((ListView.EditEvent<String>) event);
@@ -54,10 +53,15 @@ public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> 
      * @param oldValue
      * @param newValue
      */
-    @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        configWindowController.storeWorkspace(oldValue);
-        configWindowController.loadWorkspace(newValue);
+        if (oldValue != null && !oldValue.isEmpty()) {
+            System.out.println("Old: " + oldValue);
+            configWindowController.storeWorkspace(oldValue);
+        }
+        if (newValue != null && !newValue.isEmpty()) {
+            System.out.println("New: " + newValue);
+            configWindowController.loadWorkspace(newValue);
+        }
     }
 }
 

@@ -102,9 +102,9 @@ public class PluginManager {
     public void updateAvailablePlugins() {
         //HACK This is some nasty code to load the plugins
         try {
-            if (Files.exists(Paths.get(ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPluginPath())))
+            if (Files.exists(Paths.get(ConfigurationManager.getInstance().getActiveConfiguration().getPluginsPath())))
             {
-                Files.list(Paths.get(ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPluginPath()))
+                Files.list(Paths.get(ConfigurationManager.getInstance().getActiveConfiguration().getPluginsPath()))
                         .map(e -> e.toFile())
                         .filter(e -> e.isDirectory() == false && e.getName().endsWith(".jar"))
                         .forEach(f -> {
@@ -147,7 +147,7 @@ public class PluginManager {
             }
             else
             {
-                LOG.info("No Plugin Path configured, or Plugin Path does not exist: " + Paths.get(ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPluginPath()) + "'");
+                LOG.info("No Plugin Path configured, or Plugin Path does not exist: " + Paths.get(ConfigurationManager.getInstance().getActiveConfiguration().getPluginsPath()) + "'");
             }
         } catch (IOException e) {
             LOG.error("Couldn't initialize PluginManager", e);

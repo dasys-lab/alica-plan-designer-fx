@@ -41,7 +41,7 @@ public class NewResourceMenu extends Menu {
     }
 
     protected File getHintFile() {
-        return new File(ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPlansPath());
+        return new File(ConfigurationManager.getInstance().getActiveConfiguration().getPlansPath());
     }
 
     private void onElementClick(EClass resourceInstanceClass) {

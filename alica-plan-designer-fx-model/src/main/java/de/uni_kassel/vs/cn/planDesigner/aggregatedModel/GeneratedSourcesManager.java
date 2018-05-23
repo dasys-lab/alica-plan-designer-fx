@@ -31,7 +31,7 @@ public class GeneratedSourcesManager {
     }
 
     private GeneratedSourcesManager() {
-        configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
+        configuration = ConfigurationManager.getInstance().getActiveConfiguration();
         stateCheckingCode = new HashMap<>();
         transitionConditionCode = new HashMap<>();
         conditionCode = new HashMap<>();

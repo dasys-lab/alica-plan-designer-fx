@@ -10,9 +10,6 @@ import javafx.scene.control.TabPane;
 
 import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
 
-/**
- * Created by marci on 25.11.16.
- */
 public class RepositoryTabPane extends TabPane {
 
     public RepositoryTabPane() {
@@ -58,10 +55,12 @@ public class RepositoryTabPane extends TabPane {
         }
 
         @Override
-        public void startPhase() {}
+        public void startPhase() {
+        }
 
         @Override
-        public void endPhase() {}
+        public void endPhase() {
+        }
 
         @Override
         public AbstractPlan createNewObject() {

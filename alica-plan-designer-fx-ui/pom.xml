@@ -14,6 +14,11 @@
     <artifactId>ui</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>de.uks.vs.alica</groupId>
@@ -52,7 +57,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.0</version>
-                <configuration>
+                <properties>
                     <archive>
                         <manifest>
                             <mainClass>de.uni_kassel.vs.cn.planDesigner.PlanDesigner</mainClass>
@@ -61,16 +66,16 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                </configuration>
+                </properties>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
-                <configuration>
+                <properties>
                     <source>8</source>
                     <target>8</target>
-                </configuration>
+                </properties>
             </plugin>
         </plugins>
     </build>

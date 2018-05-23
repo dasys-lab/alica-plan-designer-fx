@@ -40,7 +40,7 @@ public class AlicaResourceSet extends ResourceSetImpl {
 					if(result.hasAbsolutePath()) {
 						result = URI.createURI("file:" + result);
 					} else {
-						Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
+						Configuration configuration = ConfigurationManager.getInstance().getActiveConfiguration();
 						if(result.toString().contains(".beh") || result.toString().contains(".pml") || result.toString().contains(".pty")) {
 							result = URI.createFileURI((new File(configuration.getPlansPath() + "/" + result)).getAbsolutePath());
 						} else {

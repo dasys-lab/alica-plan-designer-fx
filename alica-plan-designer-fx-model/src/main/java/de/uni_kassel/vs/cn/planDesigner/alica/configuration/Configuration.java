@@ -1,25 +1,32 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.configuration;
 
-import java.io.File;
+import java.io.*;
+import java.util.Properties;
 
 public class Configuration {
 
-    private String rolesPath;
+    public static final String FILE_ENDING = ".properties";
 
-    private String plansPath;
+    private String name;
+    private Properties properties;
+    private File file;
 
-    /**
-     * Path to generated source code
-     */
-    private String genSrcPath;
+    public Configuration(String name) {
+        this.name = name;
+        this.properties = new Properties();
+    }
 
-    private String tasksPath;
+    public Configuration(String name, Properties properties) {
+        this.name = name;
+        this.properties = properties;
+    }
 
-    private String pluginPath;
+    public String getName() {
+        return name;
+    }
 
-    private String defaultPluginName;
-
-    public Configuration() {
+    public void setName(String name) {
+        this.name = name;
     }
 
     private String replaceBashConstants(String pathWithConstants) {
@@ -34,50 +41,95 @@ public class Configuration {
     }
 
     public String getRolesPath() {
-        return rolesPath;
+        return properties.getProperty("rolesPath");
     }
 
     public void setRolesPath(String rolesPath) {
-        this.rolesPath = replaceBashConstants(rolesPath);
+        properties.setProperty("rolesPath", replaceBashConstants(rolesPath));
     }
 
     public String getPlansPath() {
-        return plansPath;
+        return properties.getProperty("plansPath");
     }
 
     public void setPlansPath(String plansPath) {
-        this.plansPath = replaceBashConstants(plansPath);
+        properties.setProperty("plansPath", replaceBashConstants(plansPath));
     }
 
     public String getGenSrcPath() {
-        return genSrcPath;
+        return properties.getProperty("genSrcPath");
     }
 
     public void setGenSrcPath(String genSrcPath) {
-        this.genSrcPath = replaceBashConstants(genSrcPath);
+        properties.setProperty("genSrcPath", replaceBashConstants(genSrcPath));
     }
 
     public String getTasksPath() {
-        return tasksPath;
+        return properties.getProperty("tasksPath");
     }
 
     public void setTasksPath(String tasksPath) {
-        this.tasksPath = replaceBashConstants(tasksPath);
+        properties.setProperty("tasksPath", replaceBashConstants(tasksPath));
     }
 
-    public String getPluginPath() {
-        return pluginPath;
+    public String getPluginsPath() {
+        return properties.getProperty("pluginsPath");
     }
 
-    public void setPluginPath(String pluginPath) {
-        this.pluginPath = replaceBashConstants(pluginPath);
+    public void setPluginsPath(String pluginsPath) {
+        properties.setProperty("tasksPath", replaceBashConstants(pluginsPath));
     }
 
-    public String getDefaultPlugin() {
-        return defaultPluginName;
+    public String getDefaultPluginName() {
+        return properties.getProperty("defaultPluginName");
     }
 
-    public void setDefaultPlugin(String pluginName) {
-        defaultPluginName = pluginName;
+    public void setDefaultPluginName(String pluginName) {
+        properties.setProperty("defaultPlugin", pluginName);
+    }
+
+    public void setFile(File file) {
+        file = file;
+    }
+
+    public boolean store() {
+        if (file == null)
+        {
+            return false;
+        }
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream stream = new FileOutputStream(file);
+            properties.store(stream, name + FILE_ENDING + " configuration file");
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean load() {
+        if (file == null || !file.exists())
+        {
+            return false;
+        }
+
+        FileInputStream stream = null;
+        try {
+            stream = new FileInputStream(file);
+            properties.load(stream);
+            stream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 }
