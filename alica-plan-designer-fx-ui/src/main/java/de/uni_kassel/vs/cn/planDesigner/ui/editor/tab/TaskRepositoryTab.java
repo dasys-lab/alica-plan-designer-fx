@@ -1,11 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddTaskToRepository;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskImpl;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddTaskToRepository;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
@@ -19,9 +19,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -29,16 +32,30 @@ import java.util.List;
  */
 public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
 
+    private final AdapterImpl taskRepoListener;
     private ListView<Task> taskListView;
 
     public TaskRepositoryTab(Pair<TaskRepository, Path> taskRepositoryPathPair, CommandStack commandStack) {
         super(taskRepositoryPathPair, commandStack);
+        taskRepoListener = new AdapterImpl() {
+            @Override
+            public void notifyChanged(Notification msg) {
+                super.notifyChanged(msg);
+                createContentView();
+            }
+        };
+        getEditable().eAdapters().add(taskRepoListener);
+
+        onClosedProperty().addListener((observable, oldValue, newValue) -> {
+            getEditable().eAdapters().remove(taskRepoListener);
+        });
         createContentView();
     }
 
     public void createContentView() {
         VBox contentContainer = new VBox();
         taskListView = new ListView<Task>(FXCollections.observableArrayList(getEditable().getTasks()));
+        taskListView.getItems().sort(Comparator.comparing(task -> task.getName()));
         taskListView.setCellFactory(param -> new TaskListCell());
         taskListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
@@ -92,7 +109,8 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         protected void updateItem(Task item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-                setText(item.getName());
+                setGraphic(new ImageView(image));
+                setText(" " + item.getName());
             } else {
                 setText(null);
             }

@@ -98,35 +98,30 @@ public class CreateNewDialogController implements Initializable {
             ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.save.name"), null);
             return;
         }
+
         if (alicaType != null) {
-            try {
-                if (alicaType.getInstanceClass().equals(Behaviour.class) && fileName.endsWith(".beh") == false) {
-                    fileName = fileName + ".beh";
-                }
-
-                if (alicaType.getInstanceClass().equals(Plan.class) && fileName.endsWith(".pml") == false) {
-                    fileName = fileName + ".pml";
-                }
-
-                if (alicaType.getInstanceClass().equals(PlanType.class) && fileName.endsWith(".pty") == false) {
-                    fileName = fileName + ".pty";
-                }
-
-                EObject emptyObject = getAlicaFactory().create(alicaType);
-                ((PlanElement)emptyObject).setName(fileName.replace(".beh","")
-                        .replace(".pty","").replace(".pml", ""));
-                File alicaFile = new File(Paths.get(pathTextField.getText(), fileName).toString());
-                if (alicaFile.exists()) {
-                    ErrorWindowController
-                            .createErrorWindow(i18NRepo.getString("label.error.save.alreadyExists"), null);
-                    return;
-                }
-                EMFModelUtils.createAlicaFile(emptyObject, true, alicaFile);
-                ((Stage)pathTextField.getScene().getWindow()).close();
-            } catch (IOException e) {
-                ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.save"), e);
-                e.printStackTrace();
+            if (alicaType.getInstanceClass().equals(Behaviour.class) && fileName.endsWith(".beh") == false) {
+                fileName = fileName + ".beh";
             }
+
+            if (alicaType.getInstanceClass().equals(Plan.class) && fileName.endsWith(".pml") == false) {
+                fileName = fileName + ".pml";
+            }
+
+            if (alicaType.getInstanceClass().equals(PlanType.class) && fileName.endsWith(".pty") == false) {
+                fileName = fileName + ".pty";
+            }
+
+            EObject emptyObject = getAlicaFactory().create(alicaType);
+            ((PlanElement)emptyObject).setName(fileName.replace(".beh","")
+                    .replace(".pty","").replace(".pml", ""));
+            File alicaFile = new File(Paths.get(pathTextField.getText(), fileName).toString());
+            if (alicaFile.exists()) {
+                ErrorWindowController
+                        .createErrorWindow(i18NRepo.getString("label.error.save.alreadyExists"), null);
+                return;
+            }
+            ((Stage)pathTextField.getScene().getWindow()).close();
 
             createdObject = getAlicaFactory().create(alicaType);
             ((PlanElement) createdObject).setName(fileName.replace(".beh","")

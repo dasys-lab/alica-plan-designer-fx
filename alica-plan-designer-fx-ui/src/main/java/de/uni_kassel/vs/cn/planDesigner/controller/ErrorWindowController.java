@@ -45,7 +45,7 @@ public class ErrorWindowController implements Initializable {
             stage.setScene(new Scene(rootOfDialog));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(PlanDesigner.getPrimaryStage());
-            stage.showAndWait();
+            stage.show();
 
         } catch (IOException e) {
             // if the helper window is not loadable something is really wrong here
