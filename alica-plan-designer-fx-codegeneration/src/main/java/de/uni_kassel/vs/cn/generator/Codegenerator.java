@@ -5,9 +5,8 @@ import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsLexer;
 import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsParser;
 import de.uni_kassel.vs.cn.generator.cpp.parser.ProtectedRegionsVisitor;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -85,7 +84,7 @@ public class Codegenerator {
             throw new RuntimeException(e);
         }
 
-        PluginManager.getInstance().getActivePlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
+        PluginManager.getInstance().getDefaultPlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
         actualGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
 
         actualGenerator.createDomainBehaviour();
@@ -215,7 +214,7 @@ public class Codegenerator {
                     }
                 });
 
-        PluginManager.getInstance().getActivePlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
+        PluginManager.getInstance().getDefaultPlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
         actualGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
 
         if (planElement instanceof Behaviour) {

@@ -1,14 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.emfUtil.RepoViewBackend;
+import de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractPlanTool;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils.getAlicaFactory;
 
 public class RepositoryTabPane extends TabPane {
 

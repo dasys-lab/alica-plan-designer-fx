@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
+import de.uni_kassel.vs.cn.planDesigner.emfUtil.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
@@ -9,7 +9,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;

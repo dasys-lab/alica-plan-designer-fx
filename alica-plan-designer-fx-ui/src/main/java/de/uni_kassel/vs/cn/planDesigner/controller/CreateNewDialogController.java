@@ -1,8 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.emfUtil.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.command.CreateAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.fxml.FXML;
@@ -24,7 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils.getAlicaFactory;
 
 public class CreateNewDialogController implements Initializable {
 

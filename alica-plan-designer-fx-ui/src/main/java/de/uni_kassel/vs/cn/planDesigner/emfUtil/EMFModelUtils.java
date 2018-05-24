@@ -1,13 +1,12 @@
-package de.uni_kassel.vs.cn.planDesigner.alica.xml;
+package de.uni_kassel.vs.cn.planDesigner.emfUtil;
 
+import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.generator.configuration.Configuration;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelFactory;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelPackage;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
@@ -42,19 +41,9 @@ public class EMFModelUtils {
     private static final Logger LOG = LogManager.getLogger(EMFModelUtils.class);
     private static AlicaResourceSet alicaResourceSet;
 
-    @SuppressWarnings("unused")
-    private static void initAlicaResourceSet() {
-        alicaResourceSet = new AlicaResourceSet();
-        AlicaResourceSet alicaResourceSet = new AlicaResourceSet();
-        URIConverter uriConverter = ExtensibleURIConverterImpl.INSTANCE;
-
-        alicaResourceSet.getResources().forEach(e -> e.setTrackingModification(true));
-    }
-
     /**
      * Initializes EMF context, adds filetypes which can be read via means of EMF
      */
-    @SuppressWarnings("unused")
     public static void initializeEMF() {
         // initialize the model
         EClass alicaPackageEClass = AlicaPackage.eINSTANCE.eClass();
@@ -70,9 +59,7 @@ public class EMFModelUtils {
         m.put("beh", new XMIResourceFactoryImpl());
         m.put("pty", new XMIResourceFactoryImpl());
         m.put("tsk", new XMIResourceFactoryImpl());
-        if (alicaResourceSet == null) {
-            initAlicaResourceSet();
-        }
+        alicaResourceSet = AlicaResourceSet.getInstance();
         LOG.info("EMF Base Classes initialized");
     }
 
@@ -231,7 +218,7 @@ public class EMFModelUtils {
         setDestinationPath(emptyObject, targetDir);
 
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
-        getAlicaResourceSet()
+        alicaResourceSet
                 .getResources()
                 .forEach(e -> {
                     try {
@@ -264,13 +251,6 @@ public class EMFModelUtils {
         LOG.info("Saved Alica successfully to disk specifically: " + alicaObject.eResource().getURI());
     }
 
-    public static AlicaResourceSet getAlicaResourceSet() {
-        if (alicaResourceSet == null) {
-            initAlicaResourceSet();
-        }
-        return alicaResourceSet;
-    }
-
     public static AlicaFactory getAlicaFactory() {
         return AlicaFactoryImpl.init();
     }
@@ -289,8 +269,7 @@ public class EMFModelUtils {
 
         List<AbstractPlan> references = new ArrayList<>();
 
-        EMFModelUtils
-                .getAlicaResourceSet().getResources().forEach(e -> {
+        alicaResourceSet.getResources().forEach(e -> {
             if (e.getContents().size() != 0) {
 
 

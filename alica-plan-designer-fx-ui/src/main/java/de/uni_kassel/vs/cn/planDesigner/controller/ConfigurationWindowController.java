@@ -1,9 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
+import de.uni_kassel.vs.cn.generator.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.handler.ConfigurationEventHandler;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,8 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
@@ -102,7 +100,6 @@ public class ConfigurationWindowController implements Initializable {
     @FXML
     private Button saveButton;
 
-    private static final Logger LOG = LogManager.getLogger(ConfigurationWindowController.class);
     private ConfigurationManager configManager;
     private ConfigurationEventHandler configListViewEventHandler;
 

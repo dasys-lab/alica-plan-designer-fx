@@ -1,7 +1,6 @@
-package de.uni_kassel.vs.cn.planDesigner.alica.util;
+package de.uni_kassel.vs.cn.planDesigner.emfUtil;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 
 import java.util.List;
 

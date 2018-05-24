@@ -8,7 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
+import de.uni_kassel.vs.cn.planDesigner.emfUtil.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
@@ -136,7 +136,7 @@ public class PropertyTab extends AbstractPropertyTab {
 
         if (getSelectedEditorTabPlanElement() instanceof Transition) {
             String pluginName = ((Transition) getSelectedEditorTabPlanElement()).getPreCondition().getPluginName();
-            IPlugin matchingPlugin = PluginManager.getInstance().getPluginByName(pluginName);
+            IPlugin matchingPlugin = PluginManager.getInstance().getPlugin(pluginName);
             if (matchingPlugin != null) {
                 propertyHBoxList.add(matchingPlugin.getPluginUI());
             } else {

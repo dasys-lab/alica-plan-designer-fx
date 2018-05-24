@@ -1,5 +1,6 @@
-package de.uni_kassel.vs.cn.planDesigner.alica.configuration;
+package de.uni_kassel.vs.cn.generator.configuration;
 
+import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,10 +30,9 @@ public final class ConfigurationManager {
     private static final Logger LOG = LogManager.getLogger(ConfigurationManager.class);
     private static final String MAIN_CONFIG_FILENAME = "mainConfig";
 
-    /**
-     * Not the domain config folder (etc). Its for plan designer only.
-     */
-    public static final String CONFIG_FOLDERNAME = ".planDesigner";
+
+    // Not the domain config folder (etc). Its for plan designer only.
+    private static final String CONFIG_FOLDERNAME = ".planDesigner";
     private static final String ACTIVE_DOMAIN_CONF = "activeDomainConfig";
     private static final String DOMAIN_CONFIGS = "domainConfigs";
     private static final String CLANG_FORMAT_PATH = "clangFormatPath";
@@ -43,6 +43,7 @@ public final class ConfigurationManager {
     private File planDesignerConfigFolder;
 
     private List<Configuration> configurations;
+    private Configuration activeConfiguration;
 
     private ConfigurationManager() {
         mainConfigProperties = new Properties();
@@ -99,14 +100,7 @@ public final class ConfigurationManager {
         }
 
         // set active workspace
-        String activeConfiguration = mainConfigProperties.getProperty(ACTIVE_DOMAIN_CONF);
-        if (!activeConfiguration.isEmpty()) {
-            for (Configuration conf : configurations) {
-                if (activeConfiguration.equals(conf.getName())) {
-                    mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, activeConfiguration);
-                }
-            }
-        }
+        setActiveConfiguration(mainConfigProperties.getProperty(ACTIVE_DOMAIN_CONF));
     }
 
     public void writeToDisk() {
@@ -118,15 +112,24 @@ public final class ConfigurationManager {
 
     private void saveMainConfigFile() {
         try {
+            // available domain configs
             String domainConfigs = "";
             for (Configuration conf : configurations) {
                 domainConfigs += conf.getName() + ",";
             }
-            if (!domainConfigs.isEmpty())
-            {
+            if (!domainConfigs.isEmpty()) {
                 domainConfigs = domainConfigs.substring(0, domainConfigs.length() - 1);
             }
             mainConfigProperties.setProperty(DOMAIN_CONFIGS, domainConfigs);
+
+            // active config
+            if (activeConfiguration == null) {
+                mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, "");
+            } else {
+                mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, activeConfiguration.getName());
+            }
+
+            // actual write to file
             mainConfigProperties.store(new FileOutputStream(mainConfigFile), " Plan Designer - main configuration file");
         } catch (IOException e) {
             LOG.error("Could not save " + mainConfigFile.toString() + "!", e);
@@ -137,7 +140,7 @@ public final class ConfigurationManager {
     // CONFIGURATION MANAGEMENT SECTION
 
     public List<String> getConfigurationNames() {
-        List<String> configurationNames = new ArrayList<String>();
+        List<String> configurationNames = new ArrayList<>();
         for (Configuration conf : configurations) {
             configurationNames.add(conf.getName());
         }
@@ -189,28 +192,19 @@ public final class ConfigurationManager {
     }
 
     public Configuration getActiveConfiguration() {
-        String activeConfName = mainConfigProperties.getProperty(ACTIVE_DOMAIN_CONF);
-        if (activeConfName.isEmpty()) {
-            return null;
-        }
-
-        for (Configuration conf : configurations) {
-            if (conf.getName().equals(activeConfName)) {
-                return conf;
-            }
-        }
-        return null;
+        return activeConfiguration;
     }
 
     public boolean setActiveConfiguration(String confName) {
         for (Configuration conf : configurations) {
             if (conf.getName().equals(confName)) {
-                mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, confName);
+                activeConfiguration = conf;
+                PluginManager.getInstance().updateAvailablePlugins(conf.getPluginsPath());
                 LOG.info("Set active configuration to " + confName);
                 return true;
             }
         }
-        mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, "");
+        activeConfiguration = null;
         return false;
     }
 

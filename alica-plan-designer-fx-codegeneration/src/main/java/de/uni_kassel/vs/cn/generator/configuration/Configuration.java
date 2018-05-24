@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.alica.configuration;
+package de.uni_kassel.vs.cn.generator.configuration;
 
 import java.io.*;
 import java.nio.file.Paths;

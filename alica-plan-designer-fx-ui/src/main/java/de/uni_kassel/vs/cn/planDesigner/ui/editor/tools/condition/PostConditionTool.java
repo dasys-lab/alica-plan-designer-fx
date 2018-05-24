@@ -22,7 +22,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.util.Map;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils.getAlicaFactory;
 
 /**
  * Created by marci on 01.03.17.
@@ -89,7 +89,7 @@ public class PostConditionTool extends AbstractConditionTool {
                     if (event.getSource() instanceof ConditionHBox) {
                         ((ConditionHBox)event.getSource()).getChildren().remove(visualRepresentation);
                         Condition newCondition = createNewObject();
-                        newCondition.setPluginName(PluginManager.getInstance().getActivePlugin().getName());
+                        newCondition.setPluginName(PluginManager.getInstance().getDefaultPlugin().getName());
                         if (newCondition instanceof PostCondition == false) {
                             AddConditionToPlan command = new AddConditionToPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getEditable(),
                                     newCondition);

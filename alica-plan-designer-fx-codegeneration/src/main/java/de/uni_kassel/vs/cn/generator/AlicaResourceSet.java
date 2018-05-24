@@ -12,11 +12,14 @@
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU Lesser General Public License for more details.
-package de.uni_kassel.vs.cn.planDesigner.alica.util;
+package de.uni_kassel.vs.cn.generator;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.generator.configuration.Configuration;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
@@ -26,7 +29,21 @@ import java.util.Map;
 
 public class AlicaResourceSet extends ResourceSetImpl {
 
-	public AlicaResourceSet() {
+	// SINGLETON
+	private static volatile  AlicaResourceSet instance;
+	public static AlicaResourceSet getInstance() {
+		if (instance == null) {
+			synchronized (AlicaResourceSet.class) {
+				if (instance == null) {
+					instance = new AlicaResourceSet();
+					instance.getResources().forEach(e -> e.setTrackingModification(true));
+				}
+			}
+		}
+		return instance;
+	}
+
+	private AlicaResourceSet() {
 		super();
 		this.setURIConverter(new ExtensibleURIConverterImpl() {
 			@Override
@@ -36,12 +53,12 @@ public class AlicaResourceSet extends ResourceSetImpl {
 				URI trimmedURI = uri.trimFragment().trimQuery();
 				URI result = this.getInternalURIMap().getURI(trimmedURI);
 				String scheme = result.scheme();
-				if(scheme == null) {
-					if(result.hasAbsolutePath()) {
+				if (scheme == null) {
+					if (result.hasAbsolutePath()) {
 						result = URI.createURI("file:" + result);
 					} else {
 						Configuration configuration = ConfigurationManager.getInstance().getActiveConfiguration();
-						if(result.toString().contains(".beh") || result.toString().contains(".pml") || result.toString().contains(".pty")) {
+						if (result.toString().contains(".beh") || result.toString().contains(".pml") || result.toString().contains(".pty")) {
 							result = URI.createFileURI((new File(configuration.getPlansPath() + "/" + result)).getAbsolutePath());
 						} else {
 							result = URI.createFileURI((new File(configuration.getTasksPath() + "/" + result)).getAbsolutePath());
@@ -49,14 +66,14 @@ public class AlicaResourceSet extends ResourceSetImpl {
 					}
 				}
 
-				if(result == trimmedURI) {
+				if (result == trimmedURI) {
 					return uri;
 				} else {
-					if(query != null) {
+					if (query != null) {
 						result = result.appendQuery(query);
 					}
 
-					if(fragment != null) {
+					if (fragment != null) {
 						result = result.appendFragment(fragment);
 					}
 
