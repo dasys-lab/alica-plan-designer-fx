@@ -8,12 +8,15 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> implements EventHandler<Event>, ChangeListener<String> {
+public class ConfigurationEventHandler<T extends ListView.EditEvent<String>> implements EventHandler<Event>, ChangeListener<String> {
 
+    private static final Logger LOG = LogManager.getLogger(ConfigurationEventHandler.class);
     private ConfigurationWindowController configWindowController;
 
-    public ConfigurationListViewHandler(ConfigurationWindowController configWindowController) {
+    public ConfigurationEventHandler(ConfigurationWindowController configWindowController) {
         this.configWindowController = configWindowController;
     }
 
@@ -41,6 +44,11 @@ public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> 
      * @param event
      */
     public void handleEditCommit(ListView.EditEvent<String> event) {
+        if (event.getNewValue().contains(","))
+        {
+            LOG.info("Comma character (,) is not allowed in configuration names! Value: " + event.getNewValue());
+            return;
+        }
         if (!event.getNewValue().isEmpty()) {
             if (event.getIndex() == event.getSource().getItems().size() - 1) {
                 // last empty element was edited, so we need to add a new empty last element
@@ -50,15 +58,16 @@ public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> 
                 // another element than the last element was edited, rename
                 configWindowController.renameConfiguration(event.getSource().getItems().get(event.getIndex()), event.getNewValue());
             }
+            event.getSource().getItems().set(event.getIndex(), event.getNewValue());
         } else {
             if (event.getIndex() != event.getSource().getItems().size() - 1) {
                 // another element than the last element was deleted (new value is empty), so remove this element
-                configWindowController.removeConfiguration(event.getSource().getItems().get(event.getIndex()));
+                if (!configWindowController.removeConfiguration(event.getSource().getItems().get(event.getIndex()))) {
+                    LOG.error("Unable to remove configuration " + event.getSource().getItems().get(event.getIndex()));
+                }
                 event.getSource().getItems().remove(event.getIndex());
             }
         }
-
-        event.getSource().getItems().set(event.getIndex(), event.getNewValue());
         event.consume();
     }
 
@@ -74,9 +83,7 @@ public class ConfigurationListViewHandler<T extends ListView.EditEvent<String>> 
         if (oldValue != null && !oldValue.isEmpty()) {
             configWindowController.storeConfiguration(oldValue);
         }
-        if (newValue != null && !newValue.isEmpty()) {
-            configWindowController.showSelectedConfiguration();
-        }
+        configWindowController.showSelectedConfiguration();
     }
 }
 

@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.handler.ConfigurationListViewHandler;
+import de.uni_kassel.vs.cn.planDesigner.handler.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.collections.FXCollections;
@@ -102,14 +102,14 @@ public class ConfigurationWindowController implements Initializable {
     @FXML
     private Button saveButton;
 
-    private static final Logger LOG = LogManager.getLogger(ConfigurationManager.class);
+    private static final Logger LOG = LogManager.getLogger(ConfigurationWindowController.class);
     private ConfigurationManager configManager;
-    private ConfigurationListViewHandler configListViewEventHandler;
+    private ConfigurationEventHandler configListViewEventHandler;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         configManager = ConfigurationManager.getInstance();
-        configListViewEventHandler = new ConfigurationListViewHandler(this);
+        configListViewEventHandler = new ConfigurationEventHandler(this);
 
         // strings
         initLabelTexts();
@@ -172,17 +172,12 @@ public class ConfigurationWindowController implements Initializable {
             return;
         }
 
-        System.out.println("Storing " + confName);
-
         conf.setPlansPath(plansFolderTextField.getText());
         conf.setRolesPath(rolesFolderTextField.getText());
         conf.setTasksPath(tasksFolderTextField.getText());
         conf.setGenSrcPath(genSourceFolderTextField.getText());
         conf.setPluginsPath(pluginsFolderTextField.getText());
-        String selectedPluginsName = defaultPluginComboBox.getSelectionModel().getSelectedItem();
-        if (selectedPluginsName != null && !selectedPluginsName.isEmpty()) {
-            conf.setDefaultPluginName(selectedPluginsName);
-        }
+        conf.setDefaultPluginName(defaultPluginComboBox.getSelectionModel().getSelectedItem());
     }
 
     /**
@@ -190,12 +185,11 @@ public class ConfigurationWindowController implements Initializable {
      */
     public void showSelectedConfiguration() {
         String selectedConfName = availableWorkspacesListView.getSelectionModel().getSelectedItem();
+        configManager.setActiveConfiguration(selectedConfName);
         Configuration conf = configManager.getConfiguration(selectedConfName);
         if (conf == null) {
             return;
         }
-
-        LOG.info("Showing " + selectedConfName);
 
         plansFolderTextField.setText(conf.getPlansPath());
         rolesFolderTextField.setText(conf.getRolesPath());
@@ -236,8 +230,8 @@ public class ConfigurationWindowController implements Initializable {
         clangFormatLabel.setText(i18NRepo.getString("label.config.clangFormatter") + ":");
         sourceCodeEditorLabel.setText(i18NRepo.getString("label.config.sourceCodeEditor") + ":");
 
-        workspaceManagementTitledPane.setText(i18NRepo.getString("label.config.workspaceManagement"));
-        availableWorkspacesLabel.setText(i18NRepo.getString("label.config.availableWorkspacesLabel") + ":");
+        workspaceManagementTitledPane.setText(i18NRepo.getString("label.config.configurationManagement"));
+        availableWorkspacesLabel.setText(i18NRepo.getString("label.config.availableConfigurations") + ":");
         plansFolderLabel.setText(i18NRepo.getString("label.config.planFolder") + ":");
         rolesFolderLabel.setText(i18NRepo.getString("label.config.rolesFolder") + ":");
         genSourceFolderLabel.setText(i18NRepo.getString("label.config.genSourceFolder") + ":");

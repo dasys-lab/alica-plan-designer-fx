@@ -32,7 +32,7 @@ public final class ConfigurationManager {
     /**
      * Not the domain config folder (etc). Its for plan designer only.
      */
-    private static final String CONFIG_FOLDERNAME = ".planDesigner";
+    public static final String CONFIG_FOLDERNAME = ".planDesigner";
     private static final String ACTIVE_DOMAIN_CONF = "activeDomainConfig";
     private static final String DOMAIN_CONFIGS = "domainConfigs";
     private static final String CLANG_FORMAT_PATH = "clangFormatPath";
@@ -88,7 +88,12 @@ public final class ConfigurationManager {
             String[] split = workspaceNames.split(",");
             for (String workspaceName : split) {
                 if (!workspaceName.isEmpty()) {
-                    configurations.add(new Configuration(workspaceName));
+                    Configuration conf = new Configuration(workspaceName, planDesignerConfigFolder);
+                    if (!conf.loadFromDisk()) {
+                        LOG.error("Could not loadFromDisk " + conf.getName() + ".");
+                    } else {
+                        configurations.add(conf);
+                    }
                 }
             }
         }
@@ -104,17 +109,24 @@ public final class ConfigurationManager {
         }
     }
 
-    public void writeToDisk()
-    {
+    public void writeToDisk() {
         saveMainConfigFile();
-        for (Configuration conf : configurations)
-        {
+        for (Configuration conf : configurations) {
             conf.writeToDisk();
         }
     }
 
     private void saveMainConfigFile() {
         try {
+            String domainConfigs = "";
+            for (Configuration conf : configurations) {
+                domainConfigs += conf.getName() + ",";
+            }
+            if (!domainConfigs.isEmpty())
+            {
+                domainConfigs = domainConfigs.substring(0, domainConfigs.length() - 1);
+            }
+            mainConfigProperties.setProperty(DOMAIN_CONFIGS, domainConfigs);
             mainConfigProperties.store(new FileOutputStream(mainConfigFile), " Plan Designer - main configuration file");
         } catch (IOException e) {
             LOG.error("Could not save " + mainConfigFile.toString() + "!", e);
@@ -126,31 +138,20 @@ public final class ConfigurationManager {
 
     public List<String> getConfigurationNames() {
         List<String> configurationNames = new ArrayList<String>();
-        for (Configuration conf : configurations)
-        {
+        for (Configuration conf : configurations) {
             configurationNames.add(conf.getName());
         }
         return configurationNames;
     }
 
-    public boolean addConfiguration(String confName)
-    {
+    public boolean addConfiguration(String confName) {
         for (Configuration conf : configurations) {
             if (conf.getName().equals(confName)) {
                 return false;
             }
         }
 
-        configurations.add(new Configuration(confName));
-        String domainConfigs = mainConfigProperties.getProperty(DOMAIN_CONFIGS);
-        if (domainConfigs == null || domainConfigs.isEmpty())
-        {
-            mainConfigProperties.setProperty(DOMAIN_CONFIGS, confName);
-        }
-        else
-        {
-            mainConfigProperties.setProperty(DOMAIN_CONFIGS, domainConfigs + "," + confName);
-        }
+        configurations.add(new Configuration(confName, planDesignerConfigFolder));
         LOG.info("Added new configuration " + confName);
         return true;
     }
@@ -159,6 +160,7 @@ public final class ConfigurationManager {
         for (Configuration conf : configurations) {
             if (conf.getName().equals(oldConfName)) {
                 conf.setName(newConfName);
+                LOG.info("Renamed configuration " + oldConfName + " to " + newConfName);
                 return true;
             }
         }
@@ -169,7 +171,9 @@ public final class ConfigurationManager {
         for (Configuration conf : configurations) {
             if (conf.getName().equals(confName)) {
                 conf.removeFromDisk();
-                return configurations.remove(conf);
+                configurations.remove(conf);
+                LOG.info("Removed configuration " + confName);
+                return true;
             }
         }
         return false;
@@ -185,17 +189,29 @@ public final class ConfigurationManager {
     }
 
     public Configuration getActiveConfiguration() {
-        String activeWsName = mainConfigProperties.getProperty(ACTIVE_DOMAIN_CONF);
-        if (activeWsName.isEmpty()) {
+        String activeConfName = mainConfigProperties.getProperty(ACTIVE_DOMAIN_CONF);
+        if (activeConfName.isEmpty()) {
             return null;
         }
 
         for (Configuration conf : configurations) {
-            if (conf.getName().equals(activeWsName)) {
+            if (conf.getName().equals(activeConfName)) {
                 return conf;
             }
         }
         return null;
+    }
+
+    public boolean setActiveConfiguration(String confName) {
+        for (Configuration conf : configurations) {
+            if (conf.getName().equals(confName)) {
+                mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, confName);
+                LOG.info("Set active configuration to " + confName);
+                return true;
+            }
+        }
+        mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, "");
+        return false;
     }
 
     // EXTERNAL TOOLS SECTION

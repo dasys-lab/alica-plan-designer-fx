@@ -100,21 +100,24 @@ public class RepoViewBackend {
             return;
         }
         String plansPath = conf.getPlansPath();
-        plans = getRepositoryOf(plansPath, "pml");
+        if (plansPath != null && !plansPath.isEmpty()) {
+            plans = getRepositoryOf(plansPath, "pml");
 
-        behaviours = getRepositoryOf(plansPath, "beh");
+            behaviours = getRepositoryOf(plansPath, "beh");
 
-        planTypes = getRepositoryOf(plansPath, "pty");
-
-        taskRepository = getRepositoryOf(conf.getTasksPath(), "tsk");
-
-        if (taskRepository == null || taskRepository.isEmpty()) {
-            EMFModelUtils.createAlicaFile(EMFModelUtils.getAlicaFactory().createTaskRepository(), false,
-                    new File(conf.getTasksPath() + File.separator + "taskrepository.tsk"));
-            taskRepository = getRepositoryOf(conf.getTasksPath(), "tsk");
+            planTypes = getRepositoryOf(plansPath, "pty");
         }
 
-        tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
+        if (conf.getTasksPath() != null && !conf.getTasksPath().isEmpty()) {
+            taskRepository = getRepositoryOf(conf.getTasksPath(), "tsk");
+            if (taskRepository == null || taskRepository.isEmpty()) {
+                EMFModelUtils.createAlicaFile(EMFModelUtils.getAlicaFactory().createTaskRepository(), false,
+                        new File(conf.getTasksPath() + File.separator + "taskrepository.tsk"));
+                taskRepository = getRepositoryOf(conf.getTasksPath(), "tsk");
+            }
+            tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
+        }
+
         EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
         LOG.info("RepoViewBackend successfully initialized");
     }

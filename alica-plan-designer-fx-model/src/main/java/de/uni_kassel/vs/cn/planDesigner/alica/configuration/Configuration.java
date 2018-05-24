@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.alica.configuration;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class Configuration {
@@ -11,14 +12,10 @@ public class Configuration {
     private Properties properties;
     private File file;
 
-    public Configuration(String name) {
+    public Configuration(String name, File planDesignerConfigFolder) {
         this.name = name;
         this.properties = new Properties();
-    }
-
-    public Configuration(String name, Properties properties) {
-        this.name = name;
-        this.properties = properties;
+        file = Paths.get(planDesignerConfigFolder.toString(), name+FILE_ENDING).toFile();
     }
 
     public String getName() {
@@ -27,6 +24,8 @@ public class Configuration {
 
     public void setName(String name) {
         this.name = name;
+        file.delete();
+        file = Paths.get(file.getParent(), name+FILE_ENDING).toFile();
     }
 
     private String replaceBashConstants(String pathWithConstants) {
@@ -112,10 +111,6 @@ public class Configuration {
         }
     }
 
-    public void setFile(File file) {
-        this.file = file;
-    }
-
     public boolean writeToDisk() {
         if (file == null) {
             return false;
@@ -125,7 +120,7 @@ public class Configuration {
                 file.createNewFile();
             }
             FileOutputStream stream = new FileOutputStream(file);
-            properties.store(stream, "Plan Designer - " + name + FILE_ENDING + " configuration file");
+            properties.store(stream, " Plan Designer - " + name + FILE_ENDING + " configuration file");
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();

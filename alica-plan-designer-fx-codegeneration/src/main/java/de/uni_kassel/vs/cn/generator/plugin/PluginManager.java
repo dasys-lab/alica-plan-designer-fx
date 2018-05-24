@@ -108,53 +108,54 @@ public class PluginManager {
             return;
         }
 
+        String pluginsPath = conf.getPluginsPath();
+        if (pluginsPath == null || pluginsPath.isEmpty() || !Files.exists(Paths.get(pluginsPath))) {
+            LOG.info("No Plugin Path configured, or Plugin Path does not exist");
+            return;
+        }
+
         //HACK This is some nasty code to loadFromDisk the plugins
         try {
+            Files.list(Paths.get(pluginsPath))
+                .map(e -> e.toFile())
+                .filter(e -> e.isDirectory() == false && e.getName().endsWith(".jar"))
+                .forEach(f -> {
+                    // Source https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
+                    JarFile jarFile = null;
+                    try {
+                        jarFile = new JarFile(f);
+                    } catch (IOException ex) {
+                        LOG.error("Couldn't loadFromDisk jar file", ex);
+                        throw new RuntimeException(ex);
+                    }
+                    Enumeration<JarEntry> e = jarFile.entries();
 
-            if (Files.exists(Paths.get(conf.getPluginsPath()))) {
-                Files.list(Paths.get(conf.getPluginsPath()))
-                        .map(e -> e.toFile())
-                        .filter(e -> e.isDirectory() == false && e.getName().endsWith(".jar"))
-                        .forEach(f -> {
-                            // Source https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
-                            JarFile jarFile = null;
-                            try {
-                                jarFile = new JarFile(f);
-                            } catch (IOException ex) {
-                                LOG.error("Couldn't loadFromDisk jar file", ex);
-                                throw new RuntimeException(ex);
+                    while (e.hasMoreElements()) {
+                        JarEntry je = e.nextElement();
+                        if (je.isDirectory() || !je.getName().endsWith(".class")) {
+                            continue;
+                        }
+                        // -6 because of .class
+                        String className = je.getName().substring(0, je.getName().length() - 6);
+                        className = className.replace(File.separatorChar, '.');
+                        try {
+                            URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+                            Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+                            method.setAccessible(true);
+                            method.invoke(classLoader, f.toURI().toURL());
+                            Class c = classLoader.loadClass(className);
+                            Object o = c.newInstance();
+                            if (o instanceof IPlugin) {
+                                ((IPlugin) o).setPluginFile(f);
+                                availablePlugins.add((IPlugin<?>) o);
                             }
-                            Enumeration<JarEntry> e = jarFile.entries();
+                        } catch (ClassNotFoundException | InstantiationException ignored) {
+                        } catch (IllegalAccessException | NoSuchMethodException | MalformedURLException | InvocationTargetException e1) {
+                            e1.printStackTrace();
+                        }
 
-                            while (e.hasMoreElements()) {
-                                JarEntry je = e.nextElement();
-                                if (je.isDirectory() || !je.getName().endsWith(".class")) {
-                                    continue;
-                                }
-                                // -6 because of .class
-                                String className = je.getName().substring(0, je.getName().length() - 6);
-                                className = className.replace(File.separatorChar, '.');
-                                try {
-                                    URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-                                    Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-                                    method.setAccessible(true);
-                                    method.invoke(classLoader, f.toURI().toURL());
-                                    Class c = classLoader.loadClass(className);
-                                    Object o = c.newInstance();
-                                    if (o instanceof IPlugin) {
-                                        ((IPlugin) o).setPluginFile(f);
-                                        availablePlugins.add((IPlugin<?>) o);
-                                    }
-                                } catch (ClassNotFoundException | InstantiationException ignored) {
-                                } catch (IllegalAccessException | NoSuchMethodException | MalformedURLException | InvocationTargetException e1) {
-                                    e1.printStackTrace();
-                                }
-
-                            }
-                        });
-            } else {
-                LOG.info("No Plugin Path configured, or Plugin Path does not exist: " + Paths.get(ConfigurationManager.getInstance().getActiveConfiguration().getPluginsPath()) + "'");
-            }
+                    }
+                });
         } catch (IOException e) {
             LOG.error("Couldn't initialize PluginManager", e);
             throw new RuntimeException(e);
