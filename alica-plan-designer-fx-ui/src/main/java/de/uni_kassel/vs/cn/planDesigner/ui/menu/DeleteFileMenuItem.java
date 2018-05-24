@@ -50,7 +50,9 @@ public class DeleteFileMenuItem extends MenuItem {
         // Plans
         Optional<Pair<Plan, Path>> planPathPair = repoViewBackend.getPlanPathPair(toDelete);
         if (planPathPair.isPresent()) {
-            checkAbstractPlanUsage(commandStack, planPathPair.get().getKey());
+            if(checkAbstractPlanUsage(commandStack, planPathPair.get().getKey())) {
+                return;
+            }
             repoViewBackend.getPlans().remove(planPathPair.get());
             Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
             mainController.closeTabIfOpen(planPathPair.get().getKey());
@@ -62,7 +64,9 @@ public class DeleteFileMenuItem extends MenuItem {
         // PlanTypes
         Optional<Pair<PlanType, Path>> planTypePathPair = repoViewBackend.getPlanTypePathPair(toDelete);
         if (planTypePathPair.isPresent()) {
-            checkAbstractPlanUsage(commandStack, planTypePathPair.get().getKey());
+            if(checkAbstractPlanUsage(commandStack, planTypePathPair.get().getKey())) {
+                return;
+            }
             repoViewBackend.getPlanTypes().remove(planTypePathPair.get());
             Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
             mainController.closeTabIfOpen(planTypePathPair.get().getKey());
@@ -74,7 +78,9 @@ public class DeleteFileMenuItem extends MenuItem {
         // Behaviours
         Optional<Pair<Behaviour, Path>> behaviourPathPair = repoViewBackend.getBehaviourPathPair(toDelete);
         if (behaviourPathPair.isPresent()) {
-            checkAbstractPlanUsage(commandStack, behaviourPathPair.get().getKey());
+            if(checkAbstractPlanUsage(commandStack, behaviourPathPair.get().getKey())) {
+                return;
+            }
             repoViewBackend.getBehaviours().remove(behaviourPathPair.get());
             Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
             mainController.closeTabIfOpen(behaviourPathPair.get().getKey());
@@ -98,7 +104,7 @@ public class DeleteFileMenuItem extends MenuItem {
         }
     }
 
-    private void checkAbstractPlanUsage(CommandStack commandStack, AbstractPlan toBeDeleted) {
+    private boolean checkAbstractPlanUsage(CommandStack commandStack, AbstractPlan toBeDeleted) {
         List<AbstractPlan> usages = EMFModelUtils.getUsages(toBeDeleted);
         if (usages.size() > 0) {
             FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
@@ -111,11 +117,13 @@ public class DeleteFileMenuItem extends MenuItem {
                 stage.setScene(new Scene(infoWindow));
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.initOwner(PlanDesigner.getPrimaryStage());
-                stage.showAndWait();
+                stage.show();
             } catch (IOException ignored) {
             }
+            return true;
         } else {
             commandStack.storeAndExecute(new DeleteAbstractPlan(toBeDeleted));
+            return false;
         }
     }
 
