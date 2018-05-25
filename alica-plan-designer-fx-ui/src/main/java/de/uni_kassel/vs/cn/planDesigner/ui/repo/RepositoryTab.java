@@ -26,7 +26,7 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
     private String typeName;
 
     public RepositoryTab(ObservableList<Pair<T, Path>> objects, AbstractPlanTool dragTool, String typeName) {
-        initComparator();
+
         List<RepositoryHBox<T>> hBoxes = objects
                 .stream()
                 .map(pair -> {
@@ -52,21 +52,10 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
                 setContent(new ListView<>(hBoxObservableList));
             }
         });
-        this.typeName = typeName;
-        setText(typeName);
-        hBoxObservableList = FXCollections.observableArrayList(hBoxes);
-        if(objects.size() > 0 && objects.get(0).getKey() instanceof Plan) {
-            //TODO find a better way
-            hBoxObservableList.sort((Comparator<? super RepositoryHBox<T>>) (Object) planComparator);
-        } else {
-            hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
-        }
-        contentsListView = new ListView<>(hBoxObservableList);
-        setContent(contentsListView);
+        init(typeName, hBoxes);
     }
 
     public RepositoryTab(Pair<List<T>, Path> pair, AbstractPlanTool dragTool, String typeName) {
-        initComparator();
         List<RepositoryHBox<T>> hBoxes = pair.getKey()
                 .stream()
                 .map(t -> {
@@ -74,10 +63,15 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
                     return tRepositoryHBox;
                 })
                 .collect(Collectors.toList());
+        init(typeName, hBoxes);
+    }
+
+    private void init(String typeName, List<RepositoryHBox<T>> hBoxes) {
+        initComparator();
         this.typeName = typeName;
         setText(typeName);
-        ObservableList<RepositoryHBox<T>> hBoxObservableList = FXCollections.observableArrayList(hBoxes);
-        hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
+        hBoxObservableList = FXCollections.observableArrayList(hBoxes);
+        sort();
         contentsListView = new ListView<>(hBoxObservableList);
         setContent(contentsListView);
     }
@@ -93,5 +87,14 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
 
     public String getTypeName() {
         return typeName;
+    }
+
+    public void sort() {
+        if(typeName.equals("Plan")) {
+            //TODO find a better way
+            hBoxObservableList.sort((Comparator<? super RepositoryHBox<T>>) (Object) planComparator);
+        } else {
+            hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
+        }
     }
 }
