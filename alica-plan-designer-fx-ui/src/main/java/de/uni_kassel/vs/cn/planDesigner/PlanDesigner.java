@@ -17,7 +17,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -54,8 +53,8 @@ public class PlanDesigner extends Application {
         running = true;
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("test.fxml"));
-        // The next two lines replace this attribute in test.fxml::AnchorPane "fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController"
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("planDesigner.fxml"));
+        // The next two lines replace this attribute in planDesigner.fxml::AnchorPane "fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController"
         MainController mainController = MainController.getInstance();
         fxmlLoader.setController(mainController);
         Parent root = fxmlLoader.load();

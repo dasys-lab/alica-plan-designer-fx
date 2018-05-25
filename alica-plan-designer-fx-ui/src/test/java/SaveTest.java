@@ -143,7 +143,7 @@ public class SaveTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("test.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("planDesigner.fxml"));
             Parent root = fxmlLoader.load();
             stage.setScene(new Scene(root));
             stage.show();
