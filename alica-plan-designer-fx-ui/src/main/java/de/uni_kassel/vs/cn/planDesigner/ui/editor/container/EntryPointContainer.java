@@ -7,11 +7,15 @@ import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
+import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -28,6 +32,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
 
     private StateContainer stateContainer;
     private boolean dragged;
+    private ImageView taskIcon;
 
     /**
      * This constructor is for dummy containers. NEVER use in real UI
@@ -50,6 +55,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
             setStateContainer(stateContainer);
         }
         makeDraggable(this);
+        taskIcon = new ImageView(new AlicaIcon(Task.class.getSimpleName()));
         setupContainer();
     }
 
@@ -81,10 +87,17 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
         }
 
         getChildren().add(visualRepresentation);
-        Text e = new Text(getContainedElement().getTask().getName());
-        getChildren().add(e);
-        e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth()/2);
-        e.setLayoutY(e.getLayoutY() - StateContainer.STATE_RADIUS);
+        Text taskName = new Text(getContainedElement().getTask().getName());
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(taskIcon, taskName);
+        hBox.setLayoutX(visualRepresentation.getLayoutX() - taskName.getLayoutBounds().getWidth() / 2.0 - taskIcon.getFitWidth() / 2.0 - StateContainer.STATE_RADIUS / 2.0);
+        hBox.setLayoutY(visualRepresentation.getLayoutY() - StateContainer.STATE_RADIUS * 1.2 - taskName.getFont().getSize());
+        getChildren().add(hBox);
+//        taskName.setLayoutX(taskName.getLayoutX() - taskName.getLayoutBounds().getWidth() / 2);
+//        taskName.setLayoutY(taskName.getLayoutY() - StateContainer.STATE_RADIUS * 1.2);
+//        getChildren().add(taskIcon);
+//        taskIcon.setLayoutX(taskName.getLayoutX() - taskName.getFont().getSize() * 1.5);
+//        taskIcon.setLayoutY(taskName.getLayoutY() - taskName.getFont().getSize());
     }
 
     @Override

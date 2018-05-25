@@ -14,7 +14,7 @@ import javafx.util.Pair;
  * Created by marci on 24.02.17.
  */
 public abstract class AbstractPropertyTab extends Tab {
-    private final SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedElementContainer;
+    private SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedElementContainer;
     protected final AbstractEditorTab<PlanElement> activeEditorTab;
     protected PlanElement selectedPlanElement;
     protected I18NRepo i18NRepo;
@@ -62,6 +62,7 @@ public abstract class AbstractPropertyTab extends Tab {
 
     public SimpleObjectProperty<Pair<PlanElement, AbstractPlanElementContainer>> selectedElementContainerProperty() {
         return selectedElementContainer;
+
     }
 
     public CommandStack getCommandStack() {
