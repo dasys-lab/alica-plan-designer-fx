@@ -1,10 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.emfUtil.RepoViewBackend;
+import de.uni_kassel.vs.cn.generator.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
-import de.uni_kassel.vs.cn.planDesigner.emfUtil.AlicaModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.AlicaModelUtils;
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;

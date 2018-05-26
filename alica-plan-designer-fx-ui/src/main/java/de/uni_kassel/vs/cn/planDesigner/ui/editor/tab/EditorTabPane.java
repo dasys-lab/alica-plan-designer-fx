@@ -5,7 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
-import de.uni_kassel.vs.cn.planDesigner.emfUtil.RepoViewBackend;
+import de.uni_kassel.vs.cn.generator.RepoViewBackend;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.util.Pair;

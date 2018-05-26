@@ -5,7 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 
-import static de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils.getPmlUiExtensionModelFactory;
+import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getPmlUiExtensionModelFactory;
 
 /**
  * Created by marci on 19.03.17.

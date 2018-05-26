@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EClass;
 import java.io.File;
 import java.io.IOException;
 
-import static de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
 
 public class NewResourceMenu extends Menu {

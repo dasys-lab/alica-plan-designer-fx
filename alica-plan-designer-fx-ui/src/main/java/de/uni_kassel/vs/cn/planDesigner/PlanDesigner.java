@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.FileWatcherJob;
 import javafx.application.Application;
@@ -17,7 +17,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -43,7 +42,7 @@ public class PlanDesigner extends Application {
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        ConfigurationManager.getInstance().init();
+        ConfigurationManager.getInstance();
         EMFModelUtils.initializeEMF();
         launch(args);
         FileWatcherJob.stayAlive = false;

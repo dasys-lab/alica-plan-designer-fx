@@ -6,7 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
-import de.uni_kassel.vs.cn.planDesigner.emfUtil.AlicaModelUtils;
+import de.uni_kassel.vs.cn.generator.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

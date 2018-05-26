@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.emfUtil;
+package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.generator.configuration.Configuration;

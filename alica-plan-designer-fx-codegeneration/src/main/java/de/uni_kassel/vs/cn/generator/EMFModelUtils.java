@@ -1,6 +1,5 @@
-package de.uni_kassel.vs.cn.planDesigner.emfUtil;
+package de.uni_kassel.vs.cn.generator;
 
-import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.generator.configuration.Configuration;
 import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
