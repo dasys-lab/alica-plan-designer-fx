@@ -3,9 +3,9 @@ import de.uni_kassel.vs.cn.planDesigner.command.add.AddStateInPlan;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.emfUtil.RepoViewBackend;
-import de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
+import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
@@ -25,7 +25,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import java.io.File;
 import java.io.IOException;
 
-import static de.uni_kassel.vs.cn.planDesigner.emfUtil.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
 
 public class SaveTest extends ApplicationTest {
 
@@ -33,7 +33,7 @@ public class SaveTest extends ApplicationTest {
 
     @Before
     public void init() {
-        ConfigurationManager.getInstance();
+        ConfigurationManager.getInstance().init();
         EMFModelUtils.initializeEMF();
         testInstance = RepoViewBackend.getTestInstance();
         PlanDesigner.setRunning(true);
@@ -45,7 +45,7 @@ public class SaveTest extends ApplicationTest {
         Plan plan = getAlicaFactory().createPlan();
         plan.setName("Test1");
 
-        String pathname = ConfigurationManager.getInstance().getActiveConfiguration().getPlansPath() + "/Test1.pml";
+        String pathname = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPlansPath() + "/Test1.pml";
         File planFile = new File(pathname);
 
         // Dateien erzeugen
@@ -88,7 +88,7 @@ public class SaveTest extends ApplicationTest {
         Plan plan = getAlicaFactory().createPlan();
         plan.setName("Test2");
 
-        String pathname = ConfigurationManager.getInstance().getActiveConfiguration().getPlansPath() + "/Test2.pml";
+        String pathname = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration().getPlansPath() + "/Test2.pml";
         File planFile = new File(pathname);
 
         // Dateien erzeugen

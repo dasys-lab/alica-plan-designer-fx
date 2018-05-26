@@ -28,6 +28,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import sun.applet.Main;
 
 import java.nio.file.Path;
 
@@ -219,6 +220,8 @@ public class EditMenu extends Menu {
             }
         } else {
             commandStack.storeAndExecute(new DeleteTaskFromRepository(taskRepository, taskToBeDeleted));
+            MainController.getInstance().closePropertyAndStatusTabIfOpen();
+
         }
     }
 

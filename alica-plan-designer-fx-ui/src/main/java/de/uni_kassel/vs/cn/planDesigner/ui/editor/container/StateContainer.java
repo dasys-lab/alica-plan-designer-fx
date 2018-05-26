@@ -63,10 +63,10 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
         visualRepresentation = new Circle(STATE_RADIUS, getVisualisationColor());
         setEffectToStandard();
         getChildren().add(visualRepresentation);
-        Text e = new Text(getContainedElement().getName());
-        getChildren().add(e);
-        e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth()/2);
-        e.setLayoutY(e.getLayoutY() - StateContainer.STATE_RADIUS);
+        Text elementName = new Text(getContainedElement().getName());
+        getChildren().add(elementName);
+        elementName.setLayoutX(elementName.getLayoutX() - elementName.getLayoutBounds().getWidth() / 2);
+        elementName.setLayoutY(elementName.getLayoutY() - STATE_RADIUS * 1.3);
 
         statePlans = getContainedElement()
                 .getPlans()

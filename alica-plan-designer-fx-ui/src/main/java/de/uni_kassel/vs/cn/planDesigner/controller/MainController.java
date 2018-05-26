@@ -216,6 +216,13 @@ public class MainController implements Initializable {
         }
     }
 
+    public void closePropertyAndStatusTabIfOpen() {
+        if(propertyAndStatusTabPane != null) {
+            propertyAndStatusTabPane.getTabs().clear();
+        }
+
+    }
+
     /**
      * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}
      *

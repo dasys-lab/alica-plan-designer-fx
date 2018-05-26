@@ -94,7 +94,8 @@ public class PropertyTab extends AbstractPropertyTab {
                 public void changed(ObservableValue<? extends Task> observable, Task oldValue, Task newValue) {
                     commandStack.storeAndExecute(new SetTaskOfEntryPoint(newValue, (EntryPoint) getSelectedEditorTabPlanElement()));
                     ((EntryPoint) getSelectedEditorTabPlanElement()).setTask(newValue);
-                    selectedElementContainerProperty().getValue().getValue().setupContainer();
+                    //TODO causes nullptr but should not be needed since tasks do not have a visual representation
+                    //selectedElementContainerProperty().getValue().getValue().setupContainer();
                 }
             });
             taskComboBox.setItems(FXCollections.observableArrayList(RepoViewBackend.getInstance().getTasks().getKey()));
