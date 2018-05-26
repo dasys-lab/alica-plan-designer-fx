@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
+import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.generator.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
@@ -96,8 +97,7 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
         if (unwrappedFile.getName().endsWith(".pml") ||
                 unwrappedFile.getName().endsWith(".pty") || unwrappedFile.getName().endsWith("beh")) {
 
-            Resource resource = EMFModelUtils
-                    .getAlicaResourceSet()
+            Resource resource = AlicaResourceSet.getInstance()
                     .getResources()
                     .stream()
                     .filter(e -> e.getURI().toFileString().contains(unwrappedFile.getName()))

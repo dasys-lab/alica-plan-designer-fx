@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
+import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.EAbstractPlanType;
 import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
@@ -113,8 +114,7 @@ public class CreateAbstractPlan extends AbstractCommand<AbstractPlan> {
     @Override
     public void undoCommand() {
         // Remove from AlicaResourceSet
-        EMFModelUtils
-                .getAlicaResourceSet().getResources().forEach(e -> {
+        AlicaResourceSet.getInstance().getResources().forEach(e -> {
             boolean[] saveForDeletionConfirmation = {false};
             EObject eObject = e.getContents().get(0);
             if (eObject instanceof Plan) {
@@ -209,7 +209,7 @@ public class CreateAbstractPlan extends AbstractCommand<AbstractPlan> {
                 }
             }
         });
-        EMFModelUtils.getAlicaResourceSet().getResources().remove(getElementToEdit().eResource());
+        AlicaResourceSet.getInstance().getResources().remove(getElementToEdit().eResource());
 
         GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
         switch (planType) {
@@ -222,13 +222,13 @@ public class CreateAbstractPlan extends AbstractCommand<AbstractPlan> {
                 path = planPathPair.getValue();
                 RepoViewBackend.getInstance().getPlans().remove(planPathPair);
                 File pmlEx = new File(path.toFile().toString() + "ex");
-                List<Resource> pmlUiExt = EMFModelUtils.getAlicaResourceSet()
+                List<Resource> pmlUiExt = AlicaResourceSet.getInstance()
                         .getResources()
                         .stream()
                         .filter(e -> new File(path.toFile().toString() + "ex").toString()
                                 .endsWith(e.getURI().toFileString()))
                         .collect(Collectors.toList());
-                EMFModelUtils.getAlicaResourceSet().getResources().remove(pmlUiExt.get(0));
+                AlicaResourceSet.getInstance().getResources().remove(pmlUiExt.get(0));
                 try {
                     Files.delete(planPathPair.getValue());
                     Files.delete(pmlEx.toPath());

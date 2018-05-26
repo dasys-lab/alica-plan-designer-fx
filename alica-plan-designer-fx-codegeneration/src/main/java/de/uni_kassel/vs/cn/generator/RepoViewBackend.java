@@ -117,7 +117,7 @@ public class RepoViewBackend {
             tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
         }
 
-        EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
+        EcoreUtil.resolveAll(AlicaResourceSet.getInstance());
         LOG.info("RepoViewBackend successfully initialized");
     }
 

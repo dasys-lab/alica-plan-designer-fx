@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
+import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
@@ -47,7 +48,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         String absolutePath = planPathPair.getValue().toFile().toString();
         String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
         URI relativeURI = EMFModelUtils.createRelativeURI(new File(uiExtensionMapPath));
-        setPmlUiExtensionMap((PmlUiExtensionMap) EMFModelUtils.getAlicaResourceSet().getResource(relativeURI, false).getContents().get(0));
+        setPmlUiExtensionMap((PmlUiExtensionMap) AlicaResourceSet.getInstance().getResource(relativeURI, false).getContents().get(0));
 
         draw(planPathPair, commandStack);
 

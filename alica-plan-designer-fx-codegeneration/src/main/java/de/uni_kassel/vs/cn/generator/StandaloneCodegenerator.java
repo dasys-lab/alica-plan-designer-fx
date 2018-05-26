@@ -24,8 +24,7 @@ public class StandaloneCodegenerator {
     private static AlicaResourceSet alicaResourceSet;
 
     private static void initAlicaResourceSet() {
-        alicaResourceSet = new AlicaResourceSet();
-        AlicaResourceSet alicaResourceSet = new AlicaResourceSet();
+        alicaResourceSet = AlicaResourceSet.getInstance();
         URIConverter uriConverter = ExtensibleURIConverterImpl.INSTANCE;
 
         alicaResourceSet.getResources().forEach(e -> e.setTrackingModification(true));
