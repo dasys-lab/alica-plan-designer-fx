@@ -1,0 +1,40 @@
+{
+  "id" : 1,
+  "name" : "TestBehaviour",
+  "comment" : "Behaviour Comment String",
+  "destinationPath" : "result.json",
+  "preCondition" : {
+    "id" : 3,
+    "name" : "TestPreCondition",
+    "comment" : "PreCondition Comment String",
+    "conditionString" : null,
+    "pluginName" : "Plugin Name String",
+    "vars" : null,
+    "quantifier" : null
+  },
+  "runtimeCondition" : {
+    "id" : 4,
+    "name" : "TestRuntimeCondition",
+    "comment" : "RuntimeCondition Comment String",
+    "conditionString" : null,
+    "pluginName" : "Plugin Name String",
+    "vars" : null,
+    "quantifier" : null
+  },
+  "postCondition" : {
+    "id" : 5,
+    "name" : "TestPostCondition",
+    "comment" : "PostCondition Comment String",
+    "conditionString" : null,
+    "pluginName" : "Plugin Name String",
+    "vars" : null,
+    "quantifier" : null
+  },
+  "variables" : [ {
+    "id" : 2,
+    "name" : "TestVariable",
+    "comment" : "Variable Comment String",
+    "type" : "Variable Type String"
+  } ],
+  "frequency" : 30
+}
