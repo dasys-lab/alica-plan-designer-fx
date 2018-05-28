@@ -6,7 +6,7 @@ import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>State</b></em>'.
+ * A representation of the alica object '<em><b>State</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>

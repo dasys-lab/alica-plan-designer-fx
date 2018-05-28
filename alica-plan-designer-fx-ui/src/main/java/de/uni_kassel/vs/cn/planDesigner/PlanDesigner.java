@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner;
 
 import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.FileWatcherJob;
 import javafx.application.Application;
@@ -43,7 +42,6 @@ public class PlanDesigner extends Application {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         ConfigurationManager.getInstance();
-        EMFModelUtils.initializeEMF();
         launch(args);
         FileWatcherJob.stayAlive = false;
     }
@@ -57,6 +55,7 @@ public class PlanDesigner extends Application {
         MainController mainController = MainController.getInstance();
         fxmlLoader.setController(mainController);
         Parent root = fxmlLoader.load();
+
         // TODO: does not load the icon.xpm
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/icon.png")));
         primaryStage.setTitle("Carpe Noctem Plan Designer");

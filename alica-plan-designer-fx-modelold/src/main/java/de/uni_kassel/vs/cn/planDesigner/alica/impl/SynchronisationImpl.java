@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Synchronisation</b></em>'.
+ * An implementation of the alica object '<em><b>Synchronisation</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:

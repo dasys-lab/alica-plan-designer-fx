@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * This class serves LoadSaveOptions for {@link org.eclipse.emf.ecore.resource.ResourceSet}
- * and {@link org.eclipse.emf.ecore.EStructuralFeature}s for {@link ExtendedMetaData} of model elements.
+ * and {@link org.eclipse.emf.ecore.EStructuralFeature}s for {@link ExtendedMetaData} of alica elements.
  */
 public class AlicaSerializationHelper {
 	

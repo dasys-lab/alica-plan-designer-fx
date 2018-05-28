@@ -5,7 +5,7 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Abstract Plan</b></em>'.
+ * A representation of the alica object '<em><b>Abstract Plan</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>

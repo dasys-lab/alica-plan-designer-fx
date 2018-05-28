@@ -6,7 +6,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Bendpoint</b></em>'.
+ * A representation of the alica object '<em><b>Bendpoint</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>

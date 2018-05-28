@@ -5,12 +5,12 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Annotated Plan</b></em>'.
+ * A representation of the alica object '<em><b>Annotated Plan</b></em>'.
  * <!-- end-user-doc -->
  *
- * <!-- begin-model-doc -->
+ * <!-- begin-alica-doc -->
  * Wraps a plan, which is either activated or deactived in the associated plantype.
- * <!-- end-model-doc -->
+ * <!-- end-alica-doc -->
  *
  * <p>
  * The following features are supported:

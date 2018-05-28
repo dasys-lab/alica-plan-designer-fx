@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Internal Role Task Mapping</b></em>'.
+ * An implementation of the alica object '<em><b>Internal Role Task Mapping</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:

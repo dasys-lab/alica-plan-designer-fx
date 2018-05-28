@@ -9,7 +9,7 @@ import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Post Condition</b></em>'.
+ * An implementation of the alica object '<em><b>Post Condition</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>

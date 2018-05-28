@@ -7,7 +7,7 @@ import org.eclipse.emf.common.util.EMap;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Condition</b></em>'.
+ * A representation of the alica object '<em><b>Condition</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>

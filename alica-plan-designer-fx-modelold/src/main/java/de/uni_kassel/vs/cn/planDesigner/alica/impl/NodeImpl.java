@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Node</b></em>'.
+ * An implementation of the alica object '<em><b>Node</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:

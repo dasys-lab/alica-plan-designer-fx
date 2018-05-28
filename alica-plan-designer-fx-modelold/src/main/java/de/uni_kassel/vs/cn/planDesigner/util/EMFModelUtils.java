@@ -44,13 +44,13 @@ public class EMFModelUtils {
      * Initializes EMF context, adds filetypes which can be read via means of EMF
      */
     public static void initializeEMF() {
-        // initialize the model
+        // initialize the alica
         EClass alicaPackageEClass = AlicaPackage.eINSTANCE.eClass();
         EClass uiExtensionEClass = PmlUIExtensionModelPackage.eINSTANCE.eClass();
         Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
         URIConverter extensibleURIConverter = ExtensibleURIConverterImpl.INSTANCE;
         Map<String, Object> m = reg.getExtensionToFactoryMap();
-        // Initialize the model and the extensionUI package
+        // Initialize the alica and the extensionUI package
         AlicaPackageImpl.init();
         PmlUIExtensionModelPackageImpl.init();
         m.put("pml", new XMIResourceFactoryImpl());

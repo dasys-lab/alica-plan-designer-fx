@@ -8,7 +8,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Utility Function Creator</b></em>'.
+ * A representation of the alica object '<em><b>Utility Function Creator</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>

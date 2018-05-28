@@ -6,8 +6,8 @@ import org.eclipse.emf.ecore.EFactory;
 
 /**
  * <!-- begin-user-doc -->
- * The <b>Factory</b> for the model.
- * It provides a create method for each non-abstract class of the model.
+ * The <b>Factory</b> for the alica.
+ * It provides a create method for each non-abstract class of the alica.
  * <!-- end-user-doc -->
  * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage
  * @generated

@@ -12,9 +12,9 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * The <b>Switch</b> for the model's inheritance hierarchy.
+ * The <b>Switch</b> for the alica's inheritance hierarchy.
  * It supports the call {@link #doSwitch(EObject) doSwitch(object)}
- * to invoke the <code>caseXXX</code> method for each class of the model,
+ * to invoke the <code>caseXXX</code> method for each class of the alica,
  * starting with the actual class of the object
  * and proceeding up the inheritance hierarchy
  * until a non-null result is returned,
@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class PmlUIExtensionModelSwitch<T> {
 	/**
-	 * The cached model package
+	 * The cached alica package
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -45,7 +45,7 @@ public class PmlUIExtensionModelSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * Calls <code>caseXXX</code> for each class of the alica until one returns a non null result; it yields that result.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
@@ -56,7 +56,7 @@ public class PmlUIExtensionModelSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * Calls <code>caseXXX</code> for each class of the alica until one returns a non null result; it yields that result.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
@@ -76,7 +76,7 @@ public class PmlUIExtensionModelSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * Calls <code>caseXXX</code> for each class of the alica until one returns a non null result; it yields that result.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.

@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Condition Creator</b></em>'.
+ * An implementation of the alica object '<em><b>Condition Creator</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:

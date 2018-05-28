@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.serialize;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import de.uni_kassel.vs.cn.planDesigner.model.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 
 import java.io.File;
 import java.io.IOException;

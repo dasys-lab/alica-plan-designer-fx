@@ -6,7 +6,7 @@ import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Task Repository</b></em>'.
+ * A representation of the alica object '<em><b>Task Repository</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>

@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Abstract Plan</b></em>'.
+ * An implementation of the alica object '<em><b>Abstract Plan</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:

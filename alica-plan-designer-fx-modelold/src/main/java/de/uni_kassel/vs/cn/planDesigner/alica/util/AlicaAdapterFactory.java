@@ -15,15 +15,15 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * The <b>Adapter Factory</b> for the model.
- * It provides an adapter <code>createXXX</code> method for each class of the model.
+ * The <b>Adapter Factory</b> for the alica.
+ * It provides an adapter <code>createXXX</code> method for each class of the alica.
  * <!-- end-user-doc -->
  * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage
  * @generated
  */
 public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	/**
-	 * The cached model package.
+	 * The cached alica package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -45,7 +45,7 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * Returns whether this factory is applicable for the type of the object.
 	 * <!-- begin-user-doc -->
-	 * This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model.
+	 * This implementation returns <code>true</code> if the object is either the alica's package or is an instance object of the alica.
 	 * <!-- end-user-doc -->
 	 * @return whether this factory is applicable for the type of the object.
 	 * @generated

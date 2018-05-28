@@ -11,7 +11,7 @@ import org.eclipse.emf.ecore.EReference;
 
 /**
  * <!-- begin-user-doc -->
- * The <b>Package</b> for the model.
+ * The <b>Package</b> for the alica.
  * It contains accessors for the meta objects to represent
  * <ul>
  *   <li>each class,</li>
@@ -6468,10 +6468,10 @@ public interface AlicaPackage extends EPackage {
 	EEnum getPlanningType();
 
 	/**
-	 * Returns the factory that creates the instances of the model.
+	 * Returns the factory that creates the instances of the alica.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the factory that creates the instances of the model.
+	 * @return the factory that creates the instances of the alica.
 	 * @generated
 	 */
 	AlicaFactory getAlicaFactory();

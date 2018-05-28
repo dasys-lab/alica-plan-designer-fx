@@ -6,7 +6,7 @@ import org.eclipse.emf.common.util.EMap;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Role Task Mapping</b></em>'.
+ * A representation of the alica object '<em><b>Role Task Mapping</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>

@@ -21,7 +21,7 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 
 /**
- * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a model object to hold changes from the visualisation
+ * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a alica object to hold changes from the visualisation
  * that will be written back to resource later.
  */
 public abstract class AbstractPlanElementContainer<T extends PlanElement> extends Pane implements DraggableEditorElement {

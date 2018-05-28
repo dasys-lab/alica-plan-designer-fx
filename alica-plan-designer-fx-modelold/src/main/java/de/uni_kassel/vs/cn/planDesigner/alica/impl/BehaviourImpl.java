@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Behaviour</b></em>'.
+ * An implementation of the alica object '<em><b>Behaviour</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:

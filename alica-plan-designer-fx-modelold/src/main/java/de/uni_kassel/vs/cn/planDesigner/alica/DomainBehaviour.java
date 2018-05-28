@@ -6,7 +6,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Domain Behaviour</b></em>'.
+ * A representation of the alica object '<em><b>Domain Behaviour</b></em>'.
  * <!-- end-user-doc -->
  *
  *

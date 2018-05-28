@@ -6,7 +6,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Internal Role Task Mapping</b></em>'.
+ * A representation of the alica object '<em><b>Internal Role Task Mapping</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
