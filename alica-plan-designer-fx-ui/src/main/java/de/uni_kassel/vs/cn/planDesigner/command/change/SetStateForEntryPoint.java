@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.command.change;
 
-import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
 /**
  * Created by marci on 08.03.17.

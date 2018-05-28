@@ -17,9 +17,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * Created by marci on 22.06.17.
- */
 public class ErrorWindowController implements Initializable {
 
     @FXML

@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.transition;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.command.change.SetStateForEntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanElementImpl;
+import de.uni_kassel.vs.cn.planDesigner.command.change.SetStateForEntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;

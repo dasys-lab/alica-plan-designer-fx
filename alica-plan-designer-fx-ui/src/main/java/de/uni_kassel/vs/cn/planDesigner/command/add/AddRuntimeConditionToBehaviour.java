@@ -1,9 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
-import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
 /**
  * Created by marci on 16.06.17.

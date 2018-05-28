@@ -1,9 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
 /**
  * Created by marci on 26.02.17.

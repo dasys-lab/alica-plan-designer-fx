@@ -1,11 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.generator.RepoViewBackend;
 import de.uni_kassel.vs.cn.generator.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.RepoViewBackend;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
+import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanHBox;
@@ -81,6 +82,10 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         setClosable(true);
         setOnCloseRequest(e -> {
             commandStack.deleteObserver(observer);
+            if (isDirty()) {
+                IsDirtyWindowController.createIsDirtyWindow(this, e);
+                return;
+            }
             if (editablePathPair.getKey() instanceof TaskRepository) {
                 return;
             }
@@ -192,6 +197,10 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         value.setBlurType(BlurType.ONE_PASS_BOX);
         value.setSpread(0.45);
         return value;
+    }
+
+    private boolean isDirty() {
+        return getText().contains("*");
     }
 
     public Path getFilePath() {

@@ -1,7 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner;
 
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.generator.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.filebrowser.FileWatcherJob;
 import javafx.application.Application;
@@ -63,7 +64,11 @@ public class PlanDesigner extends Application {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                running = false;
+                if(IsDirtyWindowController.isAnyTabDirty()) {
+                    IsDirtyWindowController.createMultipleTabsDirtyWindow(event);
+                } else {
+                    running = false;
+                }
             }
         });
 

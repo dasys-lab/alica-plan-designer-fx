@@ -1,12 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddVariableToAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddVariableToCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteVariableFromAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteVariableFromCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ObservableValueBase;

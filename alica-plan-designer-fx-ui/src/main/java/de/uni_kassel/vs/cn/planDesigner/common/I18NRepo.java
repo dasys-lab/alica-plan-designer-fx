@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.common;
 
-import java.util.ResourceBundle;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class I18NRepo {
 
