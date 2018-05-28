@@ -122,7 +122,7 @@ public class GeneratedSourcesManager {
      * @return the file where the state code is located
      */
     public File getFileForState(State state) {
-        List<File> allGeneratedFilesForAbstractPlan = getAllGeneratedFilesForAbstractPlan(state.getInPlan());
+        List<File> allGeneratedFilesForAbstractPlan = getAllGeneratedFilesForAbstractPlan(state.getParentPlan());
         return allGeneratedFilesForAbstractPlan.stream()
                 .filter(e -> e.getAbsolutePath().endsWith("Constraints.cpp"))
                 .findFirst().orElse(null);
@@ -133,7 +133,7 @@ public class GeneratedSourcesManager {
      * @return
      */
     public File getFileForTransition(Transition transition) {
-        Plan plan = transition.getOutState().getInPlan();
+        Plan plan = transition.getOutState().getParentPlan();
         List<File> allGeneratedFilesForAbstractPlan = getAllGeneratedFilesForAbstractPlan(plan);
         return allGeneratedFilesForAbstractPlan
                 .stream()

@@ -21,7 +21,7 @@ public interface IPlugin<T> {
     IConstraintCodeGenerator getConstraintCodeGenerator();
 
     /**
-     * Returns the plugin ui that will be embedded into the properties view of the condition
+     * Returns the plugin view that will be embedded into the properties view of the condition
      * @return
      */
     Parent getPluginUI();

@@ -2,8 +2,9 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
 
 import java.util.ArrayList;
 
-public class State extends PlanElement{
+public class State extends PlanElement {
     protected EntryPoint entryPoint;
+    protected Plan parentPlan;
     protected ArrayList<Plan> plans;
     protected ArrayList<Parametrisation> parametrisations;
     protected ArrayList<Transition> inTransitions;
@@ -11,6 +12,14 @@ public class State extends PlanElement{
 
     public EntryPoint getEntryPoint() {
         return entryPoint;
+    }
+
+    public Plan getParentPlan() {
+        return parentPlan;
+    }
+
+    public void setParentPlan(Plan parentPlan) {
+        this.parentPlan = parentPlan;
     }
 
     public void setEntryPoint(EntryPoint entryPoint) {

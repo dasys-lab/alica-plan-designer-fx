@@ -10,7 +10,7 @@
     "conditionString" : null,
     "pluginName" : "Plugin Name String",
     "vars" : null,
-    "quantifier" : null
+    "quantifiers" : null
   },
   "runtimeCondition" : {
     "id" : 4,
@@ -19,7 +19,7 @@
     "conditionString" : null,
     "pluginName" : "Plugin Name String",
     "vars" : null,
-    "quantifier" : null
+    "quantifiers" : null
   },
   "postCondition" : {
     "id" : 5,
@@ -28,7 +28,7 @@
     "conditionString" : null,
     "pluginName" : "Plugin Name String",
     "vars" : null,
-    "quantifier" : null
+    "quantifiers" : null
   },
   "variables" : [ {
     "id" : 2,

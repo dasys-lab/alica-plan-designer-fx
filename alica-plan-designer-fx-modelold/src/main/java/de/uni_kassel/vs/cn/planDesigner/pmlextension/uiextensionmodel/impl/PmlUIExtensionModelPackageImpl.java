@@ -377,7 +377,7 @@ public class PmlUIExtensionModelPackageImpl extends EPackageImpl implements PmlU
 		   source, 
 		   new String[] {
 			 "representation", "schema",
-			 "targetNamespace", "http:///de.uni_kassel.vs.cn/alica/ui/extensionmodel"
+			 "targetNamespace", "http:///de.uni_kassel.vs.cn/alica/view/extensionmodel"
 		   });		
 		addAnnotation
 		  (getPmlUiExtensionMap_Extension(), 
