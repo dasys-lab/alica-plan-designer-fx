@@ -13,7 +13,7 @@ public class StandaloneCodegenerator {
     private static final Logger LOG = LogManager.getLogger(StandaloneCodegenerator.class);
 
     public static void main(String[] args) throws IOException {
-        Codegenerator codegenerator = new CPPGeneratorImpl();
+        Codegenerator codegenerator = new Codegenerator();
         codegenerator.generate();
     }
 }

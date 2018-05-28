@@ -2,9 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.alica;
 
 import java.util.ArrayList;
 
-public class Plan extends AbstractPlan{
+public class Plan extends AbstractPlan {
 
     protected boolean masterPlan;
+    protected boolean activated;
     protected double utilityThreshold;
     protected PreCondition preCondition;
     protected RuntimeCondition runtimeCondition;
@@ -64,5 +65,13 @@ public class Plan extends AbstractPlan{
 
     public void setMasterPlan(boolean masterPlan) {
         this.masterPlan = masterPlan;
+    }
+
+    public boolean getActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 }

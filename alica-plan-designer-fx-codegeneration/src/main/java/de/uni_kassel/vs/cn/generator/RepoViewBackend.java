@@ -8,8 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -176,12 +174,17 @@ public class RepoViewBackend {
         return null;
     }
 
-    private <T extends EObject> ObservableList<Pair<T, Path>> getRepositoryOf(String path, String filePostfix) throws IOException {
+    private ObservableList<Pair<Long, String>> getRepositoryOf(String path, String filePostfix) throws IOException {
 
         if (Files.notExists(Paths.get(path))) {
             Files.createDirectories(Paths.get(path));
         }
-        List<Pair<T, Path>> collectedList = Files.walk(Paths.get(path))
+
+        ObservableList<Pair<Long, String>> list = FXCollections.observableArrayList();
+
+
+
+        List<Pair<Long, Path>> collectedList = Files.walk(Paths.get(path))
                 .filter(p -> p.toString().endsWith("." + filePostfix))
                 .map(p -> {
                     try {

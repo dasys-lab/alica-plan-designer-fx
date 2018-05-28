@@ -28,7 +28,7 @@ public class Condition extends PlanElement {
         return vars;
     }
 
-    public ArrayList<Quantifier> getQuantifier() {
+    public ArrayList<Quantifier> getQuantifiers() {
         return quantifier;
     }
 }
