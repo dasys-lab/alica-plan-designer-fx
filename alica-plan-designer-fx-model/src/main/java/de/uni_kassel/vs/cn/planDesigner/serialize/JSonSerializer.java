@@ -6,6 +6,8 @@ import de.uni_kassel.vs.cn.planDesigner.alica.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class JSonSerializer {
 
@@ -51,8 +53,25 @@ public class JSonSerializer {
 
         behaviour.setDestinationPath("result.json");
 
+        CapValue val = new CapValue();
+        val.setName("TestCapValue");
+        val.setComment("CapValue Comment String");
+        val.setId(6);
+
+        Characteristic charac = new Characteristic();
+        charac.setName("TestCharacteristic");
+        charac.setComment("Characteristic Comment String");
+        charac.setValue(val);
+
+        Role role = new Role();
+        role.setName("TestRole");
+        role.setComment("Role Comment String");
+        role.setId(7);
+        role.getCharacteristics().add(charac);
+
         try {
-            mapper.writeValue(new File(behaviour.getDestinationPath()), behaviour);
+        File outfile = new File(behaviour.getDestinationPath());
+            mapper.writeValue(outfile, Arrays.asList(behaviour,role));
         } catch (IOException e) {
             e.printStackTrace();
         }

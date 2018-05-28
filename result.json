@@ -1,4 +1,4 @@
-{
+[ {
   "id" : 1,
   "name" : "TestBehaviour",
   "comment" : "Behaviour Comment String",
@@ -37,4 +37,20 @@
     "type" : "Variable Type String"
   } ],
   "frequency" : 30
-}
+}, {
+  "id" : 7,
+  "name" : "TestRole",
+  "comment" : "Role Comment String",
+  "characteristics" : [ {
+    "id" : 0,
+    "name" : "TestCharacteristic",
+    "comment" : "Characteristic Comment String",
+    "weight" : 0.0,
+    "capabilty" : null,
+    "value" : {
+      "id" : 6,
+      "name" : "TestCapValue",
+      "comment" : "CapValue Comment String"
+    }
+  } ]
+} ]
