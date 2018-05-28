@@ -85,11 +85,11 @@ public final class ConfigurationManager {
                 e.printStackTrace();
             }
 
-            String workspaceNames = mainConfigProperties.getProperty(DOMAIN_CONFIGS);
-            String[] split = workspaceNames.split(",");
-            for (String workspaceName : split) {
-                if (!workspaceName.isEmpty()) {
-                    Configuration conf = new Configuration(workspaceName, planDesignerConfigFolder);
+            String domainNames = mainConfigProperties.getProperty(DOMAIN_CONFIGS);
+            String[] split = domainNames.split(",");
+            for (String domainName : split) {
+                if (!domainName.isEmpty()) {
+                    Configuration conf = new Configuration(domainName, planDesignerConfigFolder);
                     if (!conf.loadFromDisk()) {
                         LOG.error("Could not loadFromDisk " + conf.getName() + ".");
                     } else {
