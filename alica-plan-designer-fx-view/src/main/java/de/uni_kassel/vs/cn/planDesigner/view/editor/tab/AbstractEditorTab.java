@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.container.*;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanHBox;
@@ -12,6 +13,9 @@ import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -34,6 +38,7 @@ public abstract class AbstractEditorTab extends Tab {
     private Observer observer;
     private Pair<Long, Path> editablePathPair;
     protected SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElements;
+    private ObservableList<Node> visualRepresentations;
     //TODO add to scene
     private final KeyCombination ctrlA = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
 
@@ -139,16 +144,68 @@ public abstract class AbstractEditorTab extends Tab {
         }
 
         selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+        visualRepresentations = FXCollections.observableArrayList();
+
         selectedPlanElements.get().addListener(new ListChangeListener<Pair<PlanElement, AbstractPlanElementContainer>>() {
             @Override
             public void onChanged(Change<? extends Pair<PlanElement, AbstractPlanElementContainer>> change) {
                 while (change.next()) {
                     change.getAddedSubList().forEach(o -> {
                         o.getValue().setEffect(createSelectedEffect());
+                        visualRepresentations.add(o.getValue().getVisualRepresentation());
                     });
                 }
             }
         });
+
+        /*final DraggableEditorElement.DragContext dragContext = new DraggableEditorElement.DragContext();
+        final boolean[] dragged = {false};
+        getContent().addEventHandler(
+                MouseEvent.MOUSE_PRESSED,
+                mouseEvent -> {
+                    dragged[0] = false;
+                    // remember initial mouse cursor coordinates
+                    // and node position
+                    dragContext.mouseAnchorX = mouseEvent.getX();
+                    dragContext.mouseAnchorY = mouseEvent.getY();
+                    dragContext.initialLayoutX = getContent().getLayoutX();
+                    dragContext.initialLayoutY = getContent().getLayoutY();
+                });
+
+        getContent().addEventHandler(
+                MouseEvent.MOUSE_DRAGGED,
+                mouseEvent -> {
+                    // shift node from its initial position by delta
+                    // calculated from mouse cursor movement
+                    dragged[0] = true;
+
+                    // set temporary translation
+                    //node.setLayoutX(dragContext.initialLayoutX + mouseEvent.getX() - dragContext.mouseAnchorX);
+                    //node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getY() - dragContext.mouseAnchorY);
+                    //System.out.println("X: " + mouseEvent.getX() + " Y:" + mouseEvent.getY());
+                });
+
+        getContent().addEventHandler(MouseEvent.MOUSE_RELEASED, mouseEvent -> {
+            if(selectedPlanElements.get().size() < 2)
+            {
+                return;
+            }
+            // save final position in actual bendpoint
+            if (dragged[0]) {
+                // reset translation and set layout to actual position
+                getContent().setTranslateX(0);
+                getContent().setTranslateY(0);
+                getContent().setLayoutX(dragContext.initialLayoutX + mouseEvent.getX() - dragContext.mouseAnchorX);
+                getContent().setLayoutY(dragContext.initialLayoutY + mouseEvent.getY() - dragContext.mouseAnchorY);
+
+                System.out.println("AFfdgsgTER DRAG X: " + (mouseEvent.getX() - dragContext.mouseAnchorX) + " Y:" +
+                        (mouseEvent.getY() - dragContext.mouseAnchorY));
+                System.out.println("LAYOUT X: " + getContent().getLayoutX() + " Y:" + getContent().getLayoutY());
+                mouseEvent.consume();
+            }
+        });*/
+
+
         PlanTab tab = (PlanTab) selectedTab;
         tab.getPlanEditorGroup().getStateContainers().forEach(stateContainer -> {
             selectedPlanElements.get()
@@ -251,6 +308,7 @@ public abstract class AbstractEditorTab extends Tab {
             element.getValue().setEffect(null);
         });
         selectedPlanElements.get().clear();
+        visualRepresentations.clear();
     }
 
     private DropShadow createSelectedEffect() {
