@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 
 /**
  * Created by marci on 02.12.16.

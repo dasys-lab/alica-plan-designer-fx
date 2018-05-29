@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.alica;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import java.util.ArrayList;
 

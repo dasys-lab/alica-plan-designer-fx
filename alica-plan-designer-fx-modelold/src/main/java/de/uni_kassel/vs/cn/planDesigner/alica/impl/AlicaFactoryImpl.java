@@ -1,8 +1,8 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 
 import java.util.Map;
 
@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica <b>Factory</b>.
+ * An implementation of the alicamodel <b>Factory</b>.
  * <!-- end-user-doc -->
  * @generated
  */

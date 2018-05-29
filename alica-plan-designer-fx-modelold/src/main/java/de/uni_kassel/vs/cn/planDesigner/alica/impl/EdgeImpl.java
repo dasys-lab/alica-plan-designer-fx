@@ -1,10 +1,10 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Edge;
-import de.uni_kassel.vs.cn.planDesigner.alica.Node;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Edge;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Node;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -17,13 +17,13 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Edge</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Edge</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EdgeImpl#getFrom <em>From</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EdgeImpl#getTo <em>To</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.EdgeImpl#getFrom <em>From</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.EdgeImpl#getTo <em>To</em>}</li>
  * </ul>
  * </p>
  *

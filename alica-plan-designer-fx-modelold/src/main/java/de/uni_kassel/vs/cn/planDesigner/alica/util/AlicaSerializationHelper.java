@@ -12,9 +12,9 @@
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU Lesser General Public License for more details.
-package de.uni_kassel.vs.cn.planDesigner.alica.util;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.util;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.BasicExtendedMetaData;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * This class serves LoadSaveOptions for {@link org.eclipse.emf.ecore.resource.ResourceSet}
- * and {@link org.eclipse.emf.ecore.EStructuralFeature}s for {@link ExtendedMetaData} of alica elements.
+ * and {@link org.eclipse.emf.ecore.EStructuralFeature}s for {@link ExtendedMetaData} of alicamodel elements.
  */
 public class AlicaSerializationHelper {
 	

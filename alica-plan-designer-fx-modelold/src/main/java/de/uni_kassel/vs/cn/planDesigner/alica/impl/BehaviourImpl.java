@@ -1,13 +1,13 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 
 import java.util.Collection;
 
@@ -26,16 +26,16 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Behaviour</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Behaviour</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getPreCondition <em>Pre Condition</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getPostCondition <em>Post Condition</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getFrequency <em>Frequency</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.BehaviourImpl#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.BehaviourImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.BehaviourImpl#getPostCondition <em>Post Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.BehaviourImpl#getFrequency <em>Frequency</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.BehaviourImpl#getVars <em>Vars</em>}</li>
  * </ul>
  * </p>
  *

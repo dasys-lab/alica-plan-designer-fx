@@ -1,9 +1,9 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainCondition;
 
 import org.eclipse.emf.ecore.EClass;
 
@@ -11,7 +11,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Domain Condition</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Domain Condition</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>

@@ -1,10 +1,10 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleSet;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleTaskMapping;
 
 import java.util.Collection;
 
@@ -23,14 +23,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Role Set</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Role Set</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleSetImpl#getUsableWithPlanID <em>Usable With Plan ID</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleSetImpl#isDefault <em>Default</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleSetImpl#getMappings <em>Mappings</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.RoleSetImpl#getUsableWithPlanID <em>Usable With Plan ID</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.RoleSetImpl#isDefault <em>Default</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.RoleSetImpl#getMappings <em>Mappings</em>}</li>
  * </ul>
  * </p>
  *

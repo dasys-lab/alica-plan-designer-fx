@@ -1,16 +1,16 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the alica object '<em><b>Domain Condition</b></em>'.
+ * A representation of the alicamodel object '<em><b>Domain Condition</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getDomainCondition()
+ * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getDomainCondition()
  * @model
  * @generated
  */

@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.aggregatedModel;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 
 /**

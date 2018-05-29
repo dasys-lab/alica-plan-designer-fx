@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
 /**

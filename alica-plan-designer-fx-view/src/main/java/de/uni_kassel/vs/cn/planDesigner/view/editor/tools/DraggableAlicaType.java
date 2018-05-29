@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import org.eclipse.emf.ecore.EObject;
 
 import java.util.stream.Stream;

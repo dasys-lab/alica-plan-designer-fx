@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.properties;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import javafx.scene.control.Label;
 import org.apache.commons.beanutils.BeanUtils;
 

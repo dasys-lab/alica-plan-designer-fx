@@ -1,10 +1,10 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 
 import java.util.Collection;
 
@@ -23,15 +23,15 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Synchronisation</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Synchronisation</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl#getSynchedTransitions <em>Synched Transitions</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl#getTalkTimeout <em>Talk Timeout</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl#getSyncTimeout <em>Sync Timeout</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl#isFailOnSyncTimeOut <em>Fail On Sync Time Out</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.SynchronisationImpl#getSynchedTransitions <em>Synched Transitions</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.SynchronisationImpl#getTalkTimeout <em>Talk Timeout</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.SynchronisationImpl#getSyncTimeout <em>Sync Timeout</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.SynchronisationImpl#isFailOnSyncTimeOut <em>Fail On Sync Time Out</em>}</li>
  * </ul>
  * </p>
  *

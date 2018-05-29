@@ -1,9 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.properties;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Parametrisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

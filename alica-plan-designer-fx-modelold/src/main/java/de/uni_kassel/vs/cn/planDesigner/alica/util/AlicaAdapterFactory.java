@@ -1,8 +1,8 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.util;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.util;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 
 import java.util.Map;
 
@@ -15,15 +15,15 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * The <b>Adapter Factory</b> for the alica.
- * It provides an adapter <code>createXXX</code> method for each class of the alica.
+ * The <b>Adapter Factory</b> for the alicamodel.
+ * It provides an adapter <code>createXXX</code> method for each class of the alicamodel.
  * <!-- end-user-doc -->
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage
+ * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage
  * @generated
  */
 public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	/**
-	 * The cached alica package.
+	 * The cached alicamodel package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -45,7 +45,7 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * Returns whether this factory is applicable for the type of the object.
 	 * <!-- begin-user-doc -->
-	 * This implementation returns <code>true</code> if the object is either the alica's package or is an instance object of the alica.
+	 * This implementation returns <code>true</code> if the object is either the alicamodel's package or is an instance object of the alicamodel.
 	 * <!-- end-user-doc -->
 	 * @return whether this factory is applicable for the type of the object.
 	 * @generated
@@ -306,13 +306,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Transition <em>Transition</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition <em>Transition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Transition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition
 	 * @generated
 	 */
 	public Adapter createTransitionAdapter() {
@@ -320,13 +320,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition <em>Condition</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition <em>Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Condition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition
 	 * @generated
 	 */
 	public Adapter createConditionAdapter() {
@@ -334,13 +334,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PreCondition <em>Pre Condition</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition <em>Pre Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PreCondition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition
 	 * @generated
 	 */
 	public Adapter createPreConditionAdapter() {
@@ -348,13 +348,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint <em>Entry Point</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint <em>Entry Point</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint
 	 * @generated
 	 */
 	public Adapter createEntryPointAdapter() {
@@ -362,13 +362,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.TerminalState <em>Terminal State</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.TerminalState <em>Terminal State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TerminalState
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.TerminalState
 	 * @generated
 	 */
 	public Adapter createTerminalStateAdapter() {
@@ -376,13 +376,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.SuccessState <em>Success State</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.SuccessState <em>Success State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.SuccessState
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.SuccessState
 	 * @generated
 	 */
 	public Adapter createSuccessStateAdapter() {
@@ -390,13 +390,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.FailureState <em>Failure State</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.FailureState <em>Failure State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.FailureState
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.FailureState
 	 * @generated
 	 */
 	public Adapter createFailureStateAdapter() {
@@ -404,13 +404,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan <em>Abstract Plan</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan <em>Abstract Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan
 	 * @generated
 	 */
 	public Adapter createAbstractPlanAdapter() {
@@ -418,13 +418,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour <em>Behaviour</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour <em>Behaviour</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Behaviour
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour
 	 * @generated
 	 */
 	public Adapter createBehaviourAdapter() {
@@ -432,13 +432,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.State <em>State</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.State <em>State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.State
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.State
 	 * @generated
 	 */
 	public Adapter createStateAdapter() {
@@ -446,13 +446,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Plan <em>Plan</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan <em>Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Plan
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan
 	 * @generated
 	 */
 	public Adapter createPlanAdapter() {
@@ -460,13 +460,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanType <em>Plan Type</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType <em>Plan Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanType
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType
 	 * @generated
 	 */
 	public Adapter createPlanTypeAdapter() {
@@ -474,13 +474,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Rating <em>Rating</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Rating <em>Rating</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Rating
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Rating
 	 * @generated
 	 */
 	public Adapter createRatingAdapter() {
@@ -488,13 +488,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PostCondition <em>Post Condition</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition <em>Post Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PostCondition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition
 	 * @generated
 	 */
 	public Adapter createPostConditionAdapter() {
@@ -502,13 +502,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition <em>Runtime Condition</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition <em>Runtime Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition
 	 * @generated
 	 */
 	public Adapter createRuntimeConditionAdapter() {
@@ -516,13 +516,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanElement <em>Plan Element</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement <em>Plan Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanElement
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement
 	 * @generated
 	 */
 	public Adapter createPlanElementAdapter() {
@@ -530,13 +530,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Task <em>Task</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Task <em>Task</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Task
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Task
 	 * @generated
 	 */
 	public Adapter createTaskAdapter() {
@@ -558,13 +558,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Role <em>Role</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Role <em>Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Role
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Role
 	 * @generated
 	 */
 	public Adapter createRoleAdapter() {
@@ -572,13 +572,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleSet <em>Role Set</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleSet <em>Role Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleSet
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleSet
 	 * @generated
 	 */
 	public Adapter createRoleSetAdapter() {
@@ -600,13 +600,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet <em>Role Definition Set</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleDefinitionSet <em>Role Definition Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleDefinitionSet
 	 * @generated
 	 */
 	public Adapter createRoleDefinitionSetAdapter() {
@@ -614,13 +614,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping <em>Role Task Mapping</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleTaskMapping <em>Role Task Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleTaskMapping
 	 * @generated
 	 */
 	public Adapter createRoleTaskMappingAdapter() {
@@ -628,13 +628,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Characteristic <em>Characteristic</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Characteristic <em>Characteristic</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Characteristic
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Characteristic
 	 * @generated
 	 */
 	public Adapter createCharacteristicAdapter() {
@@ -642,13 +642,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph <em>Task Graph</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskGraph <em>Task Graph</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskGraph
 	 * @generated
 	 */
 	public Adapter createTaskGraphAdapter() {
@@ -656,13 +656,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Edge <em>Edge</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Edge <em>Edge</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Edge
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Edge
 	 * @generated
 	 */
 	public Adapter createEdgeAdapter() {
@@ -670,13 +670,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper <em>Task Wrapper</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskWrapper <em>Task Wrapper</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskWrapper
 	 * @generated
 	 */
 	public Adapter createTaskWrapperAdapter() {
@@ -684,13 +684,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping <em>Internal Role Task Mapping</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.InternalRoleTaskMapping <em>Internal Role Task Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.InternalRoleTaskMapping
 	 * @generated
 	 */
 	public Adapter createInternalRoleTaskMappingAdapter() {
@@ -698,13 +698,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Node <em>Node</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Node <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Node
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Node
 	 * @generated
 	 */
 	public Adapter createNodeAdapter() {
@@ -712,13 +712,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository <em>Task Repository</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskRepository <em>Task Repository</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskRepository
 	 * @generated
 	 */
 	public Adapter createTaskRepositoryAdapter() {
@@ -726,13 +726,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation <em>Synchronisation</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation <em>Synchronisation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation
 	 * @generated
 	 */
 	public Adapter createSynchronisationAdapter() {
@@ -740,13 +740,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Variable <em>Variable</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable <em>Variable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Variable
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable
 	 * @generated
 	 */
 	public Adapter createVariableAdapter() {
@@ -754,13 +754,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation <em>Parametrisation</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Parametrisation <em>Parametrisation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Parametrisation
 	 * @generated
 	 */
 	public Adapter createParametrisationAdapter() {
@@ -768,13 +768,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan <em>Annotated Plan</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.AnnotatedPlan <em>Annotated Plan</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AnnotatedPlan
 	 * @generated
 	 */
 	public Adapter createAnnotatedPlanAdapter() {
@@ -782,13 +782,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier <em>Quantifier</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Quantifier <em>Quantifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Quantifier
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Quantifier
 	 * @generated
 	 */
 	public Adapter createQuantifierAdapter() {
@@ -796,13 +796,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ForallAgents <em>Forall Agents</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.ForallAgents <em>Forall Agents</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ForallAgents
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.ForallAgents
 	 * @generated
 	 */
 	public Adapter createForallAgentsAdapter() {
@@ -810,13 +810,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable <em>IInhabitable</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.IInhabitable <em>IInhabitable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.IInhabitable
 	 * @generated
 	 */
 	public Adapter createIInhabitableAdapter() {
@@ -824,13 +824,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Capability <em>Capability</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Capability <em>Capability</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Capability
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Capability
 	 * @generated
 	 */
 	public Adapter createCapabilityAdapter() {
@@ -838,13 +838,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.CapValue <em>Cap Value</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.CapValue <em>Cap Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.CapValue
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.CapValue
 	 * @generated
 	 */
 	public Adapter createCapValueAdapter() {
@@ -852,13 +852,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet <em>Capability Definition Set</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.CapabilityDefinitionSet <em>Capability Definition Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.CapabilityDefinitionSet
 	 * @generated
 	 */
 	public Adapter createCapabilityDefinitionSetAdapter() {
@@ -866,13 +866,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem <em>Planning Problem</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanningProblem <em>Planning Problem</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanningProblem
 	 * @generated
 	 */
 	public Adapter createPlanningProblemAdapter() {
@@ -880,13 +880,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planner <em>Planner</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Planner <em>Planner</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planner
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Planner
 	 * @generated
 	 */
 	public Adapter createPlannerAdapter() {
@@ -894,13 +894,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Fluent <em>Fluent</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Fluent <em>Fluent</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Fluent
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Fluent
 	 * @generated
 	 */
 	public Adapter createFluentAdapter() {
@@ -908,13 +908,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription <em>Domain Description</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainDescription <em>Domain Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainDescription
 	 * @generated
 	 */
 	public Adapter createDomainDescriptionAdapter() {
@@ -922,13 +922,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Planners <em>Planners</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Planners <em>Planners</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Planners
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Planners
 	 * @generated
 	 */
 	public Adapter createPlannersAdapter() {
@@ -950,13 +950,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters <em>Fluent Parameters</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.FluentParameters <em>Fluent Parameters</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.FluentParameters
 	 * @generated
 	 */
 	public Adapter createFluentParametersAdapter() {
@@ -964,13 +964,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Constant <em>Constant</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Constant <em>Constant</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Constant
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.Constant
 	 * @generated
 	 */
 	public Adapter createConstantAdapter() {
@@ -978,13 +978,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator <em>Behaviour Creator</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.BehaviourCreator <em>Behaviour Creator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.BehaviourCreator
 	 * @generated
 	 */
 	public Adapter createBehaviourCreatorAdapter() {
@@ -992,13 +992,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator <em>Condition Creator</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.ConditionCreator <em>Condition Creator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.ConditionCreator
 	 * @generated
 	 */
 	public Adapter createConditionCreatorAdapter() {
@@ -1006,13 +1006,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator <em>Utility Function Creator</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.UtilityFunctionCreator <em>Utility Function Creator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.UtilityFunctionCreator
 	 * @generated
 	 */
 	public Adapter createUtilityFunctionCreatorAdapter() {
@@ -1020,13 +1020,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator <em>Constraint Creator</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.ConstraintCreator <em>Constraint Creator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.ConstraintCreator
 	 * @generated
 	 */
 	public Adapter createConstraintCreatorAdapter() {
@@ -1034,13 +1034,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour <em>Domain Behaviour</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainBehaviour <em>Domain Behaviour</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainBehaviour
 	 * @generated
 	 */
 	public Adapter createDomainBehaviourAdapter() {
@@ -1048,13 +1048,13 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition <em>Domain Condition</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainCondition <em>Domain Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainCondition
 	 * @generated
 	 */
 	public Adapter createDomainConditionAdapter() {

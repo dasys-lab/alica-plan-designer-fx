@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
 import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;

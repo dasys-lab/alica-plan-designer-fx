@@ -1,12 +1,12 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -18,16 +18,16 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Transition</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Transition</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getMsg <em>Msg</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getPreCondition <em>Pre Condition</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getInState <em>In State</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getOutState <em>Out State</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl#getSynchronisation <em>Synchronisation</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TransitionImpl#getMsg <em>Msg</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TransitionImpl#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TransitionImpl#getInState <em>In State</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TransitionImpl#getOutState <em>Out State</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TransitionImpl#getSynchronisation <em>Synchronisation</em>}</li>
  * </ul>
  * </p>
  *

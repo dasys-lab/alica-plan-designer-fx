@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
@@ -34,10 +34,10 @@ import java.util.Map;
  * The {@link AbstractTool} interface provides methods for the tools in the {@link PLDToolBar}.
  * It helps to generalize the usage of these tools for the following workflow:
  * tool is selected (start of the phase) -> Event handler for special actions on the {@link PlanEditorGroup}
- * are registered -> The actions are performed. A new alica object is created.
+ * are registered -> The actions are performed. A new alicamodel object is created.
  * Or the actions are aborted. -> The phase ends. The event handlers will be removed. and the editor is usable as before.
  *
- * @param <T> type of the alica object this tool is associated with
+ * @param <T> type of the alicamodel object this tool is associated with
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractTool<T extends PlanElement> {

@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Pml Ui Extension Map</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Pml Ui Extension Map</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:

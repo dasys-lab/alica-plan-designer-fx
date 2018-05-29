@@ -1,10 +1,10 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskRepository;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -25,13 +25,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Task Repository</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Task Repository</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskRepositoryImpl#getTasks <em>Tasks</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskRepositoryImpl#getDefaultTask <em>Default Task</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TaskRepositoryImpl#getTasks <em>Tasks</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TaskRepositoryImpl#getDefaultTask <em>Default Task</em>}</li>
  * </ul>
  * </p>
  *

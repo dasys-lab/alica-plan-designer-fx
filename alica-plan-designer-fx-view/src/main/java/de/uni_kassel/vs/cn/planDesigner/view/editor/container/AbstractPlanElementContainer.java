@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
@@ -19,7 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 /**
- * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a alica object to hold changes from the visualisation
+ * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a alicamodel object to hold changes from the visualisation
  * that will be written back to resource later.
  */
 public abstract class AbstractPlanElementContainer<T extends PlanElement> extends Pane implements DraggableEditorElement {

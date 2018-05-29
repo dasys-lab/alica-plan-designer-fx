@@ -1,10 +1,10 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable;
-import de.uni_kassel.vs.cn.planDesigner.alica.Quantifier;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.IInhabitable;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Quantifier;
 
 import java.util.Collection;
 
@@ -21,13 +21,13 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Quantifier</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Quantifier</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.QuantifierImpl#getScope <em>Scope</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.QuantifierImpl#getSorts <em>Sorts</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.QuantifierImpl#getScope <em>Scope</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.QuantifierImpl#getSorts <em>Sorts</em>}</li>
  * </ul>
  * </p>
  *

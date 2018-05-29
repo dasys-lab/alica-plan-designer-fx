@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
 import javafx.scene.control.TabPane;
 
 import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;

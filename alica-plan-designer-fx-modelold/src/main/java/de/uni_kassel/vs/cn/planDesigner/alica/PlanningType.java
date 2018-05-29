@@ -1,6 +1,6 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import org.eclipse.emf.common.util.Enumerator;
  * A representation of the literals of the enumeration '<em><b>Planning Type</b></em>',
  * and utility methods for working with them.
  * <!-- end-user-doc -->
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlanningType()
+ * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getPlanningType()
  * @model
  * @generated
  */

@@ -1,11 +1,11 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AnnotatedPlan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Parametrisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -23,13 +23,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Plan Type</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Plan Type</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanTypeImpl#getParametrisation <em>Parametrisation</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanTypeImpl#getPlans <em>Plans</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanTypeImpl#getParametrisation <em>Parametrisation</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanTypeImpl#getPlans <em>Plans</em>}</li>
  * </ul>
  * </p>
  *

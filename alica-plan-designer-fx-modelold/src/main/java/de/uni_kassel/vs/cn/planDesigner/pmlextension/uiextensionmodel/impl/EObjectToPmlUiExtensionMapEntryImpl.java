@@ -2,7 +2,7 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl;
 
-//import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaProxyResolvationHelper;
+//import de.uni_kassel.vs.cn.planDesigner.alicamodel.util.AlicaProxyResolvationHelper;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelPackage;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 
@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>EObject To Pml Ui Extension Map Entry</b></em>'.
+ * An implementation of the alicamodel object '<em><b>EObject To Pml Ui Extension Map Entry</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:

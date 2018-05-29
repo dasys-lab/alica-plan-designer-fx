@@ -1,16 +1,16 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -32,24 +32,24 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Plan</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Plan</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getPriority <em>Priority</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getStates <em>States</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getTransitions <em>Transitions</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getMinCardinality <em>Min Cardinality</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getMaxCardinality <em>Max Cardinality</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getSynchronisations <em>Synchronisations</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getEntryPoints <em>Entry Points</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#isMasterPlan <em>Master Plan</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getUtilityFunction <em>Utility Function</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getUtilityThreshold <em>Utility Threshold</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getVars <em>Vars</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getPreCondition <em>Pre Condition</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getPriority <em>Priority</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getStates <em>States</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getTransitions <em>Transitions</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getMinCardinality <em>Min Cardinality</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getMaxCardinality <em>Max Cardinality</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getSynchronisations <em>Synchronisations</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getEntryPoints <em>Entry Points</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#isMasterPlan <em>Master Plan</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getUtilityFunction <em>Utility Function</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getUtilityThreshold <em>Utility Threshold</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getPreCondition <em>Pre Condition</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanImpl#getRuntimeCondition <em>Runtime Condition</em>}</li>
  * </ul>
  * </p>
  *

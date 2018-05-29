@@ -1,10 +1,10 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AnnotatedPlan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -15,13 +15,13 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Annotated Plan</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Annotated Plan</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AnnotatedPlanImpl#getPlan <em>Plan</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AnnotatedPlanImpl#isActivated <em>Activated</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.AnnotatedPlanImpl#getPlan <em>Plan</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.AnnotatedPlanImpl#isActivated <em>Activated</em>}</li>
  * </ul>
  * </p>
  *

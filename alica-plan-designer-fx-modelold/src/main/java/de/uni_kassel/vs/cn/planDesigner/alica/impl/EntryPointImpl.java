@@ -1,12 +1,12 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -20,17 +20,17 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Entry Point</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Entry Point</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getTask <em>Task</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#isSuccessRequired <em>Success Required</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getState <em>State</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getMinCardinality <em>Min Cardinality</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getMaxCardinality <em>Max Cardinality</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl#getPlan <em>Plan</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.EntryPointImpl#getTask <em>Task</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.EntryPointImpl#isSuccessRequired <em>Success Required</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.EntryPointImpl#getState <em>State</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.EntryPointImpl#getMinCardinality <em>Min Cardinality</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.EntryPointImpl#getMaxCardinality <em>Max Cardinality</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.EntryPointImpl#getPlan <em>Plan</em>}</li>
  * </ul>
  * </p>
  *

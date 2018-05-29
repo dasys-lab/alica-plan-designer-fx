@@ -1,23 +1,23 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the alica object '<em><b>Fluent Parameters</b></em>'.
+ * A representation of the alicamodel object '<em><b>Fluent Parameters</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters#getParameter <em>Parameter</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters#getType <em>Type</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.FluentParameters#getParameter <em>Parameter</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.FluentParameters#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFluentParameters()
+ * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getFluentParameters()
  * @model
  * @generated
  */
@@ -32,14 +32,14 @@ public interface FluentParameters extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parameter</em>' attribute.
 	 * @see #setParameter(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFluentParameters_Parameter()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getFluentParameters_Parameter()
 	 * @model
 	 * @generated
 	 */
 	String getParameter();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters#getParameter <em>Parameter</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.FluentParameters#getParameter <em>Parameter</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Parameter</em>' attribute.
@@ -58,14 +58,14 @@ public interface FluentParameters extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type</em>' attribute.
 	 * @see #setType(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getFluentParameters_Type()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getFluentParameters_Type()
 	 * @model
 	 * @generated
 	 */
 	String getType();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters#getType <em>Type</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.FluentParameters#getType <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Type</em>' attribute.

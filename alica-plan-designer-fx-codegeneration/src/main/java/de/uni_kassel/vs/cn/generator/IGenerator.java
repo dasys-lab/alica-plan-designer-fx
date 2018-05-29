@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.generator;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 
 import java.util.List;
 import java.util.Map;

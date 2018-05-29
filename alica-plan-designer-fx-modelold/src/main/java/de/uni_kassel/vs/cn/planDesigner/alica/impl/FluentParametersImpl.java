@@ -1,9 +1,9 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.FluentParameters;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -14,13 +14,13 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Fluent Parameters</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Fluent Parameters</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentParametersImpl#getParameter <em>Parameter</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.FluentParametersImpl#getType <em>Type</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.FluentParametersImpl#getParameter <em>Parameter</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.FluentParametersImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *

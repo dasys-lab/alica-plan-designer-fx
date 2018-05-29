@@ -1,61 +1,61 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator;
-import de.uni_kassel.vs.cn.planDesigner.alica.CapValue;
-import de.uni_kassel.vs.cn.planDesigner.alica.Capability;
-import de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.Characteristic;
-import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
-import de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator;
-import de.uni_kassel.vs.cn.planDesigner.alica.Constant;
-import de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator;
-import de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription;
-import de.uni_kassel.vs.cn.planDesigner.alica.Edge;
-import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.alica.FailureState;
-import de.uni_kassel.vs.cn.planDesigner.alica.Fluent;
-import de.uni_kassel.vs.cn.planDesigner.alica.FluentParameters;
-import de.uni_kassel.vs.cn.planDesigner.alica.ForallAgents;
-import de.uni_kassel.vs.cn.planDesigner.alica.IInhabitable;
-import de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping;
-import de.uni_kassel.vs.cn.planDesigner.alica.Node;
-import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.alica.Planner;
-import de.uni_kassel.vs.cn.planDesigner.alica.Planners;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanningType;
-import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Quantifier;
-import de.uni_kassel.vs.cn.planDesigner.alica.Rating;
-import de.uni_kassel.vs.cn.planDesigner.alica.Role;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleDefinitionSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleSet;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping;
-import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.SuccessState;
-import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper;
-import de.uni_kassel.vs.cn.planDesigner.alica.TerminalState;
-import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
-import de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator;
-import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaFactory;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AnnotatedPlan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.BehaviourCreator;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.CapValue;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Capability;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.CapabilityDefinitionSet;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Characteristic;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.ConditionCreator;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Constant;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.ConstraintCreator;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainBehaviour;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainDescription;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Edge;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.FailureState;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Fluent;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.FluentParameters;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.ForallAgents;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.IInhabitable;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.InternalRoleTaskMapping;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Node;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Parametrisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Planner;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Planners;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanningProblem;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanningType;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Quantifier;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Rating;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Role;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleDefinitionSet;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleSet;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleTaskMapping;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.SuccessState;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskGraph;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskRepository;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskWrapper;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.TerminalState;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.UtilityFunctionCreator;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 
 import java.util.Map;
 
@@ -70,7 +70,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica <b>Package</b>.
+ * An implementation of the alicamodel <b>Package</b>.
  * <!-- end-user-doc -->
  * @generated
  */
@@ -461,7 +461,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	private EEnum planningTypeEEnum = null;
 
 	/**
-	 * Creates an instance of the alica <b>Package</b>, registered with
+	 * Creates an instance of the alicamodel <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
 	 * <p>Note: the correct way to create the package is via the static
@@ -471,7 +471,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#eNS_URI
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
@@ -487,7 +487,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	private static boolean isInited = false;
 
 	/**
-	 * Creates, registers, and initializes the <b>Package</b> for this alica, and for any others upon which it depends.
+	 * Creates, registers, and initializes the <b>Package</b> for this alicamodel, and for any others upon which it depends.
 	 * 
 	 * <p>This method is used to initialize {@link AlicaPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
@@ -2203,7 +2203,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	private boolean isCreated = false;
 
 	/**
-	 * Creates the meta-alica objects for the package.  This method is
+	 * Creates the meta-alicamodel objects for the package.  This method is
 	 * guarded to have no affect on any invocation but its first.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2464,7 +2464,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	private boolean isInitialized = false;
 
 	/**
-	 * Complete the initialization of the package and its meta-alica.  This
+	 * Complete the initialization of the package and its meta-alicamodel.  This
 	 * method is guarded to have no affect on any invocation but its first.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

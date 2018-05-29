@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddSynchronisationToPlan;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;

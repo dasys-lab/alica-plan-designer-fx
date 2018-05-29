@@ -15,15 +15,15 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * The <b>Adapter Factory</b> for the alica.
- * It provides an adapter <code>createXXX</code> method for each class of the alica.
+ * The <b>Adapter Factory</b> for the alicamodel.
+ * It provides an adapter <code>createXXX</code> method for each class of the alicamodel.
  * <!-- end-user-doc -->
  * @see de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelPackage
  * @generated
  */
 public class PmlUIExtensionModelAdapterFactory extends AdapterFactoryImpl {
 	/**
-	 * The cached alica package.
+	 * The cached alicamodel package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -45,7 +45,7 @@ public class PmlUIExtensionModelAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * Returns whether this factory is applicable for the type of the object.
 	 * <!-- begin-user-doc -->
-	 * This implementation returns <code>true</code> if the object is either the alica's package or is an instance object of the alica.
+	 * This implementation returns <code>true</code> if the object is either the alicamodel's package or is an instance object of the alicamodel.
 	 * <!-- end-user-doc -->
 	 * @return whether this factory is applicable for the type of the object.
 	 * @generated

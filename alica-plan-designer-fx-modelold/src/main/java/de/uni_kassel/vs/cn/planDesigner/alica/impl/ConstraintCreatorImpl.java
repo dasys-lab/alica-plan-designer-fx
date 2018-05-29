@@ -1,11 +1,11 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
-import de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.ConstraintCreator;
 
 import java.util.Collection;
 
@@ -19,13 +19,13 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Constraint Creator</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Constraint Creator</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl#getConditions <em>Conditions</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl#getPlans <em>Plans</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.ConstraintCreatorImpl#getConditions <em>Conditions</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.ConstraintCreatorImpl#getPlans <em>Plans</em>}</li>
  * </ul>
  * </p>
  *

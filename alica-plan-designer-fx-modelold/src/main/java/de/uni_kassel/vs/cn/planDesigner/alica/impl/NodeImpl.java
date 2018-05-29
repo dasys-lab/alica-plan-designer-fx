@@ -1,10 +1,10 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Edge;
-import de.uni_kassel.vs.cn.planDesigner.alica.Node;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Edge;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Node;
 
 import java.util.Collection;
 
@@ -22,13 +22,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Node</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Node</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.NodeImpl#getInEdge <em>In Edge</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.NodeImpl#getOutEdge <em>Out Edge</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.NodeImpl#getInEdge <em>In Edge</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.NodeImpl#getOutEdge <em>Out Edge</em>}</li>
  * </ul>
  * </p>
  *

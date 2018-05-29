@@ -1,27 +1,27 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the alica object '<em><b>Condition</b></em>'.
+ * A representation of the alicamodel object '<em><b>Condition</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getConditionString <em>Condition String</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getVars <em>Vars</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getQuantifiers <em>Quantifiers</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getPluginName <em>Plugin Name</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getParameters <em>Parameters</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition#getConditionString <em>Condition String</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition#getQuantifiers <em>Quantifiers</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition#getPluginName <em>Plugin Name</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition#getParameters <em>Parameters</em>}</li>
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition()
+ * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getCondition()
  * @model abstract="true"
  * @generated
  */
@@ -37,14 +37,14 @@ public interface Condition extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Condition String</em>' attribute.
 	 * @see #setConditionString(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_ConditionString()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getCondition_ConditionString()
 	 * @model default=""
 	 * @generated
 	 */
 	String getConditionString();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getConditionString <em>Condition String</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition#getConditionString <em>Condition String</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Condition String</em>' attribute.
@@ -55,7 +55,7 @@ public interface Condition extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Vars</b></em>' reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Variable}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Vars</em>' reference list isn't clear,
@@ -63,7 +63,7 @@ public interface Condition extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Vars</em>' reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_Vars()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getCondition_Vars()
 	 * @model
 	 * @generated
 	 */
@@ -71,7 +71,7 @@ public interface Condition extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Quantifiers</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Quantifier}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Quantifier}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Quantifiers</em>' containment reference list isn't clear,
@@ -79,7 +79,7 @@ public interface Condition extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Quantifiers</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_Quantifiers()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getCondition_Quantifiers()
 	 * @model containment="true"
 	 * @generated
 	 */
@@ -96,14 +96,14 @@ public interface Condition extends PlanElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Plugin Name</em>' attribute.
 	 * @see #setPluginName(String)
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_PluginName()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getCondition_PluginName()
 	 * @model default="DefaultPlugin"
 	 * @generated
 	 */
 	String getPluginName();
 
 	/**
-	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Condition#getPluginName <em>Plugin Name</em>}' attribute.
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition#getPluginName <em>Plugin Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Plugin Name</em>' attribute.
@@ -123,8 +123,8 @@ public interface Condition extends PlanElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parameters</em>' map.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_Parameters()
-	 * @model mapType="de.uni_kassel.vs.cn.planDesigner.alica.EStringToEObjectMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EJavaObject>"
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getCondition_Parameters()
+	 * @model mapType="de.uni_kassel.vs.cn.planDesigner.alicamodel.EStringToEObjectMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EJavaObject>"
 	 * @generated
 	 */
 	EMap<String, Object> getParameters();

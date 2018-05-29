@@ -3,8 +3,8 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
 import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
@@ -128,7 +128,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
 
     @Override
     protected void initSelectedPlanElement(Pair<Plan, Path> editablePathPair) {
-        super.initSelectedPlanElement(editablePathPair);
+        super.initSelectedPlanElements(editablePathPair);
         contentProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {

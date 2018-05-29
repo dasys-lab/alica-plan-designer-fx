@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddAbstractPlanToState;
 import de.uni_kassel.vs.cn.planDesigner.controller.CreateNewDialogController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;

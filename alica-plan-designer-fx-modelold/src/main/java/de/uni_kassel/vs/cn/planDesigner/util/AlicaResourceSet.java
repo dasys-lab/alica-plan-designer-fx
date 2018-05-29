@@ -17,7 +17,7 @@ package de.uni_kassel.vs.cn.generator;
 import de.uni_kassel.vs.cn.generator.configuration.Configuration;
 import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.util.AlicaSerializationHelper;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;

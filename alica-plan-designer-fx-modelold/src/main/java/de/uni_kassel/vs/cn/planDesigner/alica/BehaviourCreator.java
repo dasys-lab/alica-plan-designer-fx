@@ -1,6 +1,6 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -8,24 +8,24 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the alica object '<em><b>Behaviour Creator</b></em>'.
+ * A representation of the alicamodel object '<em><b>Behaviour Creator</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator#getBehaviours <em>Behaviours</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.BehaviourCreator#getBehaviours <em>Behaviours</em>}</li>
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviourCreator()
+ * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getBehaviourCreator()
  * @model
  * @generated
  */
 public interface BehaviourCreator extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Behaviours</b></em>' reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Behaviours</em>' reference list isn't clear,
@@ -33,7 +33,7 @@ public interface BehaviourCreator extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Behaviours</em>' reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviourCreator_Behaviours()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getBehaviourCreator_Behaviours()
 	 * @model ordered="false"
 	 * @generated
 	 */

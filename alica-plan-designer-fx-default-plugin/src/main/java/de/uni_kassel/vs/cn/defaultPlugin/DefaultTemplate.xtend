@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.defaultPlugin;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.Plan
-import de.uni_kassel.vs.cn.planDesigner.alica.State
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.State
 import java.util.Map
 
 /**

@@ -1,11 +1,11 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.InternalRoleTaskMapping;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.InternalRoleTaskMapping;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskWrapper;
 
 import java.util.Collection;
 
@@ -24,13 +24,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Task Wrapper</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Task Wrapper</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskWrapperImpl#getTask <em>Task</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskWrapperImpl#getMappings <em>Mappings</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TaskWrapperImpl#getTask <em>Task</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TaskWrapperImpl#getMappings <em>Mappings</em>}</li>
  * </ul>
  * </p>
  *

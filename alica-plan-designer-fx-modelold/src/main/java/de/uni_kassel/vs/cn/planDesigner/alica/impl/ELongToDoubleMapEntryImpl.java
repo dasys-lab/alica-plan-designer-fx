@@ -1,8 +1,8 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -16,13 +16,13 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>ELong To Double Map Entry</b></em>'.
+ * An implementation of the alicamodel object '<em><b>ELong To Double Map Entry</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ELongToDoubleMapEntryImpl#getTypedKey <em>Key</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ELongToDoubleMapEntryImpl#getTypedValue <em>Value</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.ELongToDoubleMapEntryImpl#getTypedKey <em>Key</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.ELongToDoubleMapEntryImpl#getTypedValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *

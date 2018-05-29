@@ -1,10 +1,10 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Characteristic;
-import de.uni_kassel.vs.cn.planDesigner.alica.Role;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Characteristic;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Role;
 
 import java.util.Collection;
 
@@ -20,12 +20,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Role</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Role</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleImpl#getCharacteristics <em>Characteristics</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.RoleImpl#getCharacteristics <em>Characteristics</em>}</li>
  * </ul>
  * </p>
  *

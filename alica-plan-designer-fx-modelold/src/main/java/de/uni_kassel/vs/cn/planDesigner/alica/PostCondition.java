@@ -1,15 +1,15 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the alica object '<em><b>Post Condition</b></em>'.
+ * A representation of the alicamodel object '<em><b>Post Condition</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPostCondition()
+ * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getPostCondition()
  * @model
  * @generated
  */

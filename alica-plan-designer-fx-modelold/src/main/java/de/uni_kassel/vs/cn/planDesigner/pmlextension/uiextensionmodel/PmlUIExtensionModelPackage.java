@@ -9,7 +9,7 @@ import org.eclipse.emf.ecore.EReference;
 
 /**
  * <!-- begin-user-doc -->
- * The <b>Package</b> for the alica.
+ * The <b>Package</b> for the alicamodel.
  * It contains accessors for the meta objects to represent
  * <ul>
  *   <li>each class,</li>
@@ -416,10 +416,10 @@ public interface PmlUIExtensionModelPackage extends EPackage {
 	EAttribute getBendpoint_YPos();
 
 	/**
-	 * Returns the factory that creates the instances of the alica.
+	 * Returns the factory that creates the instances of the alicamodel.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the factory that creates the instances of the alica.
+	 * @return the factory that creates the instances of the alicamodel.
 	 * @generated
 	 */
 	PmlUIExtensionModelFactory getPmlUIExtensionModelFactory();

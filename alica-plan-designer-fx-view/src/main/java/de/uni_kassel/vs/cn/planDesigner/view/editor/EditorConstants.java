@@ -6,7 +6,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor;
 public class EditorConstants {
     /**
      * PLAN_SHIFTING_PARAMETER describes the number of pixels on the x and y-axis that
-     * the {@link de.uni_kassel.vs.cn.planDesigner.alica.PlanElement}s are shifted.
+     * the {@link de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement}s are shifted.
      * This is only a convenience parameter used for displaying values.
      * Under no circumstances should this be written back anywhere!
      */

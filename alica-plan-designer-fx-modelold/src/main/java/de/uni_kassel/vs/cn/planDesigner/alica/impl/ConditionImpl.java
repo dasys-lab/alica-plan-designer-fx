@@ -1,12 +1,12 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Quantifier;
-import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Quantifier;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -31,16 +31,16 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Condition</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Condition</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getConditionString <em>Condition String</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getVars <em>Vars</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getQuantifiers <em>Quantifiers</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getPluginName <em>Plugin Name</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionImpl#getParameters <em>Parameters</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.ConditionImpl#getConditionString <em>Condition String</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.ConditionImpl#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.ConditionImpl#getQuantifiers <em>Quantifiers</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.ConditionImpl#getPluginName <em>Plugin Name</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.ConditionImpl#getParameters <em>Parameters</em>}</li>
  * </ul>
  * </p>
  *

@@ -1,15 +1,15 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.RuntimeCondition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition;
 
 import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Runtime Condition</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Runtime Condition</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>

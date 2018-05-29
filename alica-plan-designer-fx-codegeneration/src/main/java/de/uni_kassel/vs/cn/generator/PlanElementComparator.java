@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.generator;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 
 import java.util.Comparator;
 

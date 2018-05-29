@@ -1,11 +1,11 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.CapValue;
-import de.uni_kassel.vs.cn.planDesigner.alica.Capability;
-import de.uni_kassel.vs.cn.planDesigner.alica.Characteristic;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.CapValue;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Capability;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Characteristic;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -16,14 +16,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Characteristic</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Characteristic</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl#getWeight <em>Weight</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl#getCapability <em>Capability</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.CharacteristicImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.CharacteristicImpl#getWeight <em>Weight</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.CharacteristicImpl#getCapability <em>Capability</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.CharacteristicImpl#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *

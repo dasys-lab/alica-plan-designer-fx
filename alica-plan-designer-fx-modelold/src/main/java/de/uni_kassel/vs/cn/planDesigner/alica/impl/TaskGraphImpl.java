@@ -1,11 +1,11 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Edge;
-import de.uni_kassel.vs.cn.planDesigner.alica.Node;
-import de.uni_kassel.vs.cn.planDesigner.alica.TaskGraph;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Edge;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Node;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskGraph;
 
 import java.util.Collection;
 
@@ -23,13 +23,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Task Graph</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Task Graph</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskGraphImpl#getNodes <em>Nodes</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskGraphImpl#getEdges <em>Edges</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TaskGraphImpl#getNodes <em>Nodes</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.TaskGraphImpl#getEdges <em>Edges</em>}</li>
  * </ul>
  * </p>
  *

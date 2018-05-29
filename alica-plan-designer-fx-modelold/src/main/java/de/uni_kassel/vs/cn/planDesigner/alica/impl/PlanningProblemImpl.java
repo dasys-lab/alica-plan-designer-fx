@@ -1,12 +1,12 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Planner;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanningProblem;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanningType;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Planner;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanningProblem;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanningType;
 
 import java.util.Collection;
 
@@ -23,20 +23,20 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Planning Problem</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Planning Problem</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl#getPlans <em>Plans</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl#getPlanner <em>Planner</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl#getAlternativePlan <em>Alternative Plan</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl#getWaitPlan <em>Wait Plan</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl#getUpdateRate <em>Update Rate</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl#isDistributeProblem <em>Distribute Problem</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl#getPlanningType <em>Planning Type</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl#getRequirements <em>Requirements</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.PlanningProblemImpl#getPlannerParams <em>Planner Params</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanningProblemImpl#getPlans <em>Plans</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanningProblemImpl#getPlanner <em>Planner</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanningProblemImpl#getAlternativePlan <em>Alternative Plan</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanningProblemImpl#getWaitPlan <em>Wait Plan</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanningProblemImpl#getUpdateRate <em>Update Rate</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanningProblemImpl#isDistributeProblem <em>Distribute Problem</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanningProblemImpl#getPlanningType <em>Planning Type</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanningProblemImpl#getRequirements <em>Requirements</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanningProblemImpl#getPlannerParams <em>Planner Params</em>}</li>
  * </ul>
  * </p>
  *

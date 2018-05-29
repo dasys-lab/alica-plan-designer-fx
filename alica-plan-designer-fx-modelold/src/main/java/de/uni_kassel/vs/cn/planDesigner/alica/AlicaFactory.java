@@ -1,15 +1,15 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import org.eclipse.emf.ecore.EFactory;
 
 /**
  * <!-- begin-user-doc -->
- * The <b>Factory</b> for the alica.
- * It provides a create method for each non-abstract class of the alica.
+ * The <b>Factory</b> for the alicamodel.
+ * It provides a create method for each non-abstract class of the alicamodel.
  * <!-- end-user-doc -->
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage
+ * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage
  * @generated
  */
 public interface AlicaFactory extends EFactory {
@@ -19,7 +19,7 @@ public interface AlicaFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	AlicaFactory eINSTANCE = de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl.init();
+	AlicaFactory eINSTANCE = de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.AlicaFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Transition</em>'.

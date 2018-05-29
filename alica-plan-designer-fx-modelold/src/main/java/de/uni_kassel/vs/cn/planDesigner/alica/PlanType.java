@@ -1,30 +1,30 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the alica object '<em><b>Plan Type</b></em>'.
+ * A representation of the alicamodel object '<em><b>Plan Type</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanType#getParametrisation <em>Parametrisation</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanType#getPlans <em>Plans</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType#getParametrisation <em>Parametrisation</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType#getPlans <em>Plans</em>}</li>
  * </ul>
  * </p>
  *
- * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlanType()
+ * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getPlanType()
  * @model
  * @generated
  */
 public interface PlanType extends AbstractPlan {
 	/**
 	 * Returns the value of the '<em><b>Parametrisation</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alicamodel.Parametrisation}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parametrisation</em>' containment reference list isn't clear,
@@ -32,7 +32,7 @@ public interface PlanType extends AbstractPlan {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parametrisation</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlanType_Parametrisation()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getPlanType_Parametrisation()
 	 * @model containment="true"
 	 * @generated
 	 */
@@ -40,7 +40,7 @@ public interface PlanType extends AbstractPlan {
 
 	/**
 	 * Returns the value of the '<em><b>Plans</b></em>' containment reference list.
-	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan}.
+	 * The list contents are of type {@link de.uni_kassel.vs.cn.planDesigner.alicamodel.AnnotatedPlan}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear,
@@ -48,7 +48,7 @@ public interface PlanType extends AbstractPlan {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Plans</em>' containment reference list.
-	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getPlanType_Plans()
+	 * @see de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage#getPlanType_Plans()
 	 * @model containment="true"
 	 * @generated
 	 */

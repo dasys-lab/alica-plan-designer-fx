@@ -1,11 +1,11 @@
 package de.uni_kassel.vs.cn.generator;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.generator.configuration.Configuration;
 import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.AlicaFactoryImpl;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.AlicaPackageImpl;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.util.AlicaSerializationHelper;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelFactory;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelPackage;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
@@ -44,13 +44,13 @@ public class EMFModelUtils {
      * Initializes EMF context, adds filetypes which can be read via means of EMF
      */
     public static void initializeEMF() {
-        // initialize the alica
+        // initialize the alicamodel
         EClass alicaPackageEClass = AlicaPackage.eINSTANCE.eClass();
         EClass uiExtensionEClass = PmlUIExtensionModelPackage.eINSTANCE.eClass();
         Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
         URIConverter extensibleURIConverter = ExtensibleURIConverterImpl.INSTANCE;
         Map<String, Object> m = reg.getExtensionToFactoryMap();
-        // Initialize the alica and the extensionUI package
+        // Initialize the alicamodel and the extensionUI package
         AlicaPackageImpl.init();
         PmlUIExtensionModelPackageImpl.init();
         m.put("pml", new XMIResourceFactoryImpl());

@@ -1,11 +1,11 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Constant;
-import de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription;
-import de.uni_kassel.vs.cn.planDesigner.alica.Fluent;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Constant;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.DomainDescription;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Fluent;
 
 import java.util.Collection;
 
@@ -26,15 +26,15 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Domain Description</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Domain Description</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl#getFluents <em>Fluents</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl#getTypes <em>Types</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl#getName <em>Name</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainDescriptionImpl#getConstants <em>Constants</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.DomainDescriptionImpl#getFluents <em>Fluents</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.DomainDescriptionImpl#getTypes <em>Types</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.DomainDescriptionImpl#getName <em>Name</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.DomainDescriptionImpl#getConstants <em>Constants</em>}</li>
  * </ul>
  * </p>
  *

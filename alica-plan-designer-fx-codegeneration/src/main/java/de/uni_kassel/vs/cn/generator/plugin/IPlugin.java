@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.generator.plugin;
 
 import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator;
-import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
 import javafx.scene.Parent;
 
 import java.io.File;

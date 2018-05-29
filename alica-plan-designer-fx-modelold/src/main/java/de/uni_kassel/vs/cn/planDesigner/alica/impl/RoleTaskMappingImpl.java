@@ -1,10 +1,10 @@
 /**
  */
-package de.uni_kassel.vs.cn.planDesigner.alica.impl;
+package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
-import de.uni_kassel.vs.cn.planDesigner.alica.Role;
-import de.uni_kassel.vs.cn.planDesigner.alica.RoleTaskMapping;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Role;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.RoleTaskMapping;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -22,13 +22,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the alica object '<em><b>Role Task Mapping</b></em>'.
+ * An implementation of the alicamodel object '<em><b>Role Task Mapping</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleTaskMappingImpl#getTaskPriorities <em>Task Priorities</em>}</li>
- *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.RoleTaskMappingImpl#getRole <em>Role</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.RoleTaskMappingImpl#getTaskPriorities <em>Task Priorities</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.RoleTaskMappingImpl#getRole <em>Role</em>}</li>
  * </ul>
  * </p>
  *
