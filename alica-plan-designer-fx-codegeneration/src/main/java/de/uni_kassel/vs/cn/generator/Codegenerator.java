@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * and serves as a simple way of generating code for the rest of the application.
  * If you want to generate a file just call {@link Codegenerator#generate(AbstractPlan)}
  * or {@link Codegenerator#generate()} to generate all files.
- *
+ * <p>
  * Do not cache this object.
  * A new instance should be created for every use or at least after creating a new ALICA object.
  */
@@ -35,113 +35,40 @@ public class Codegenerator {
 
     private static final Logger LOG = LogManager.getLogger(Codegenerator.class);
 
-    private List<Plan> allPlans;
-    private List<Behaviour> allBehaviours;
-    private List<PreCondition> preConditions;
-    private List<RuntimeCondition> runtimeConditions;
-    private List<PostCondition> postConditions;
-    private List<Condition> allConditions;
     private final IGenerator languageSpecificGenerator;
-
     private ModelManager modelManager;
+
+    private List<Plan> plans;
+    private List<Behaviour> behaviours;
+    private List<Condition> conditions;
 
     /**
      * This constructor initializes a C++ code generator
      */
     public Codegenerator() {
-        // TODO document this! Here can the programming language be changed
+        // TODO: Document this! Here can the programming language be changed.
         languageSpecificGenerator = new CPPGeneratorImpl();
         languageSpecificGenerator.setFormatter(ConfigurationManager.getInstance().getClangFormatPath());
 
-         modelManager = new ModelManager();
-        allPlans = modelManager.getPlans();
-        Collections.sort(allPlans, new PlanElementComparator());
-
-    }
-
-    /**
-     * Initializes all attributes with the "all" prefix or all lists of alica objects in general.
-     */
-    private void initialze() {
-
-        allBehaviours = RepoViewBackend
-                .getInstance()
-                .getBehaviours()
-                .stream()
-                .map(e -> e.getKey())
-                .sorted(Comparator.comparing(e -> e.getId()))
-                .collect(Collectors.toList());
-
-        preConditions = new ArrayList<>();
-        preConditions.addAll(allPlans
-                .stream()
-                .map(e -> e.getPreCondition())
-                .filter(e -> e != null)
-                .collect(Collectors.toList()));
-
-        runtimeConditions = new ArrayList<>();
-        runtimeConditions.addAll(allPlans
-                .stream()
-                .map(e -> e.getRuntimeCondition())
-                .filter(e -> e != null)
-                .collect(Collectors.toList()));
-
-        postConditions = new ArrayList<>();
-
-        // HACK fix this mess
-        allPlans.stream()
-                .map(e -> e.getTransitions())
-                .forEach(listOfTransitions ->
-                        listOfTransitions.forEach(transition ->
-                                preConditions.add(transition.getPreCondition())));
-
-        allPlans
-                .stream()
-                .map(e -> e.getStates())
-                .map(e -> e.stream().filter(f -> (f instanceof TerminalState)).collect(Collectors.toList()))
-                .filter(e -> e != null && e.isEmpty() == false)
-                .forEach(e -> e.forEach(f -> {
-                    PostCondition postCondition = ((TerminalState) f).getPostCondition();
-                    if (postCondition != null) {
-                        postConditions.add(postCondition);
-                    }
-                }));
-
-        allBehaviours
-                .forEach(e -> {
-                    RuntimeCondition runtimeCondition = e.getRuntimeCondition();
-                    if (runtimeCondition != null) {
-                        runtimeConditions.add(runtimeCondition);
-                    }
-
-                    PostCondition postCondition = e.getPostCondition();
-
-                    if (postCondition != null) {
-                        postConditions.add(postCondition);
-                    }
-
-                    PreCondition preCondition = e.getPreCondition();
-                    if (preCondition != null) {
-                        preConditions.add(preCondition);
-                    }
-                });
-
-        allConditions = new ArrayList<>();
-        allConditions.addAll(preConditions);
-        allConditions.addAll(postConditions);
-        allConditions.addAll(runtimeConditions);
+        modelManager = new ModelManager();
+        plans = modelManager.getPlans();
+        Collections.sort(plans, new PlanElementComparator());
+        behaviours = modelManager.getBehaviours();
+        Collections.sort(behaviours, new PlanElementComparator());
+        conditions = modelManager.getConditions();
+        Collections.sort(conditions, new PlanElementComparator());
     }
 
     /**
      * Generates source files for all ALICA plans and behaviours in workspace.
      */
+    // TODO: To be reviewed and maybe adapted, because of MVC pattern adaption.
     public void generate() {
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
         String expressionValidatorsPath = ConfigurationManager.getInstance().getActiveConfiguration()
                 .getGenSrcPath();
         try {
-
-            if(Files.notExists(Paths.get(expressionValidatorsPath))) {
+            if (Files.notExists(Paths.get(expressionValidatorsPath))) {
                 Files.createDirectories(Paths.get(expressionValidatorsPath));
             }
             Files.walk(Paths.get(expressionValidatorsPath)).filter(e -> {
@@ -170,15 +97,15 @@ public class Codegenerator {
         languageSpecificGenerator.createDomainBehaviour();
         languageSpecificGenerator.createDomainCondition();
 
-        languageSpecificGenerator.createUtilityFunctionCreator(allPlans);
-        languageSpecificGenerator.createBehaviourCreator(allBehaviours);
-        languageSpecificGenerator.createConditionCreator(allPlans, allConditions);
-        languageSpecificGenerator.createConstraintCreator(allPlans, allConditions);
+        languageSpecificGenerator.createUtilityFunctionCreator(plans);
+        languageSpecificGenerator.createBehaviourCreator(behaviours);
+        languageSpecificGenerator.createConditionCreator(plans, conditions);
+        languageSpecificGenerator.createConstraintCreator(plans, conditions);
 
-        languageSpecificGenerator.createConstraints(allPlans);
-        languageSpecificGenerator.createPlans(allPlans);
+        languageSpecificGenerator.createConstraints(plans);
+        languageSpecificGenerator.createPlans(plans);
 
-        for (Behaviour behaviour : allBehaviours) {
+        for (Behaviour behaviour : behaviours) {
             languageSpecificGenerator.createBehaviour(behaviour);
         }
         LOG.info("Generated all files successfully");
@@ -187,11 +114,12 @@ public class Codegenerator {
     /**
      * (Re)Generates source files for the given object.
      * If the given object is an instance of {@link Plan} or {@link Behaviour}.
+     *
      * @param planElement
      */
+    // TODO: To be reviewed and maybe adapted, because of MVC pattern adaption.
     public void generate(AbstractPlan planElement) {
-        if (!(planElement instanceof Behaviour || planElement instanceof Plan))
-        {
+        if (!(planElement instanceof Behaviour || planElement instanceof Plan)) {
             return;
         }
 
@@ -218,13 +146,13 @@ public class Codegenerator {
         languageSpecificGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
 
         if (planElement instanceof Behaviour) {
-            languageSpecificGenerator.createBehaviourCreator(allBehaviours);
+            languageSpecificGenerator.createBehaviourCreator(behaviours);
             languageSpecificGenerator.createBehaviour((Behaviour) planElement);
         } else if (planElement instanceof Plan) {
             languageSpecificGenerator.createConstraintsForPlan((Plan) planElement);
             languageSpecificGenerator.createPlan((Plan) planElement);
-            languageSpecificGenerator.createConditionCreator(allPlans, allConditions);
-            languageSpecificGenerator.createUtilityFunctionCreator(allPlans);
+            languageSpecificGenerator.createConditionCreator(plans, conditions);
+            languageSpecificGenerator.createUtilityFunctionCreator(plans);
         }
     }
 }
