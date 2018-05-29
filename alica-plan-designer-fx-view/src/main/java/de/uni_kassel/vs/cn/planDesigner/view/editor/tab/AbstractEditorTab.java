@@ -1,30 +1,24 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.generator.RepoViewBackend;
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TransitionContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
@@ -39,20 +33,19 @@ public abstract class AbstractEditorTab extends Tab {
 
     private Observer observer;
     private Pair<Long, Path> editablePathPair;
-    protected SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElement;
+    protected SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElements;
     //TODO add to scene
     private final KeyCombination ctrlA = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
 
     public AbstractEditorTab(Long planElementId) {
-        selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
-        selectedPlanElement.get().add(new Pair<>(planElementId, null));
+        selectedPlanElements = new SimpleObjectProperty<>(new ArrayList<>());
+        selectedPlanElements.get().add(new Pair<>(planElementId, null));
     }
 
     // TODO: Review necessary, due to MVC pattern adaption.
     public AbstractEditorTab(Pair<Long, Path> editablePathPair) {
+        // set Tab Caption to name of file, represented by this Tab
         super(editablePathPair.getValue().getFileName().toString());
-
-        RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
 
         this.editablePathPair = editablePathPair;
         initSelectedPlanElement(editablePathPair);
@@ -70,19 +63,31 @@ public abstract class AbstractEditorTab extends Tab {
             commandStack.addObserver(observer);
         }
 
+        // add Ctrl+A handler to scene
+        EditorTabPane editorTabPane = MainController.getInstance().getEditorTabPane();
+        editorTabPane.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            selectAllPlanElements(editorTabPane, event);
+        });
+
         // handle close tab
         setClosable(true);
         setOnCloseRequest(e -> {
+            // remove observer from command stack
             commandStack.deleteObserver(observer);
+
+            // popup for trying to close dirty tab
             if (isDirty()) {
                 IsDirtyWindowController.createIsDirtyWindow(this, e);
                 return;
             }
+
+            // Nothing to do for Task Repo Tab
             if (editablePathPair.getKey() instanceof TaskRepository) {
                 return;
             }
-            try {
 
+            try {
+                RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
                 File file = repositoryViewModel.getPathForAbstractPlan((AbstractPlan) getEditable()).toFile();
                 EObject key = EMFModelUtils.reloadAlicaFileFromDisk(file);
                 if (editablePathPair.getKey() instanceof Plan) {
@@ -121,10 +126,7 @@ public abstract class AbstractEditorTab extends Tab {
             }
         });
 
-        EditorTabPane editorTabPane = MainController.getInstance().getEditorTabPane();
-        editorTabPane.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            selectAllPlanElements(editorTabPane, event);
-        });
+
     }
 
     private void selectAllPlanElements(EditorTabPane editorTabPane, KeyEvent event) {
@@ -175,7 +177,7 @@ public abstract class AbstractEditorTab extends Tab {
      */
 
     // TODO: Review necessary, due to MVC pattern adaption.
-    protected void initSelectedPlanElement(Pair<T, Path> editablePathPair) {
+    protected void initSelectedPlanElement(Pair<Long, Path> editablePathPair) {
         selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
         selectedPlanElements.get().add(new Pair<>(editablePathPair.getKey(), null));
         selectedPlanElements.addListener((observable, oldValue, newValue) -> {
@@ -281,8 +283,8 @@ public abstract class AbstractEditorTab extends Tab {
         return editablePathPair.getKey();
     }
 
-    public SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> getSelectedPlanElement() {
-        return selectedPlanElement;
+    public SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> getSelectedPlanElements() {
+        return selectedPlanElements;
     }
 
     private void setEditablePathPair(Pair<Long, Path> editablePathPair) {
