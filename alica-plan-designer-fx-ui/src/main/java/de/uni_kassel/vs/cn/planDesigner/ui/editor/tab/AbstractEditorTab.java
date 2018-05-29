@@ -14,10 +14,15 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTab;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
@@ -37,11 +42,15 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
     private Observer observer;
     private Pair<T, Path> editablePathPair;
     private CommandStack commandStack;
-    protected SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement;
+    protected SimpleObjectProperty<ObservableList<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElements;
+
+
+    //TODO add to scene
+    private final KeyCombination ctrlA = new KeyCodeCombination(KeyCode.A,KeyCombination.CONTROL_DOWN);
 
     public AbstractEditorTab(T key) {
-        selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
-        selectedPlanElement.get().add(new Pair<>(key, null));
+        selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+        selectedPlanElements.get().add(new Pair<>(key, null));
     }
 
     public AbstractEditorTab(Pair<T, Path> editablePathPair, CommandStack commandStack) {
@@ -67,8 +76,8 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         this.editablePathPair = editablePathPair;
         initSelectedPlanElement(editablePathPair);
 
-
         this.commandStack = commandStack;
+
         observer = (o, arg) -> {
             if (((CommandStack) o).isAbstractPlanInItsCurrentFormSaved(getEditable())) {
                 setText(getEditablePathPair().getValue().getFileName().toString());
@@ -76,9 +85,11 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                 setText(getEditablePathPair().getValue().getFileName() + "*");
             }
         };
+
         if (commandStack != null) {
             commandStack.addObserver(observer);
         }
+
         setClosable(true);
         setOnCloseRequest(e -> {
             commandStack.deleteObserver(observer);
@@ -128,6 +139,50 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                 e1.printStackTrace();
             }
         });
+
+        EditorTabPane editorTabPane = MainController.getInstance().getEditorTabPane();
+        editorTabPane.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event ->  {
+            selectAllPlanElements(editorTabPane, event);
+        });
+    }
+
+    private void selectAllPlanElements(EditorTabPane editorTabPane, KeyEvent event) {
+        if (!ctrlA.match(event)) {
+            return;
+        }
+        Tab selectedTab = editorTabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab == null && !(selectedTab instanceof PlanTab)) {
+            return;
+        }
+
+        selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+        selectedPlanElements.get().addListener(new ListChangeListener<Pair<PlanElement, AbstractPlanElementContainer>>() {
+            @Override
+            public void onChanged(Change<? extends Pair<PlanElement, AbstractPlanElementContainer>> change) {
+                while (change.next()) {
+                    change.getAddedSubList().forEach(o -> {
+                        o.getValue().setEffect(createSelectedEffect());
+                    });
+                }
+            }
+        });
+        PlanTab tab = (PlanTab) selectedTab;
+        tab.getPlanEditorGroup().getStateContainers().forEach(stateContainer -> {
+            selectedPlanElements.get()
+                    .add(new Pair<PlanElement, AbstractPlanElementContainer>(stateContainer.getContainedElement(), stateContainer));
+        });
+        tab.getPlanEditorGroup().getEntryPointContainers().forEach(epContainer -> {
+            selectedPlanElements.get()
+                    .add(new Pair<PlanElement, AbstractPlanElementContainer>(epContainer.getContainedElement(), epContainer));
+        });
+        tab.getPlanEditorGroup().getTransitionContainers().forEach(transitionContainer -> {
+            selectedPlanElements.get()
+                    .add(new Pair<PlanElement, AbstractPlanElementContainer>(transitionContainer.getContainedElement(), transitionContainer));
+        });
+        tab.getPlanEditorGroup().getSynchronisationContainers().forEach(syncContainer -> {
+            selectedPlanElements.get()
+                    .add(new Pair<PlanElement, AbstractPlanElementContainer>(syncContainer.getContainedElement(), syncContainer));
+        });
     }
 
     /**
@@ -137,50 +192,53 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
      * @param editablePathPair
      */
     protected void initSelectedPlanElement(Pair<T, Path> editablePathPair) {
-        selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
-        selectedPlanElement.get().add(new Pair<>(editablePathPair.getKey(), null));
-        selectedPlanElement.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                DropShadow value = createSelectedEffect();
-                if (newValue.size() == 1 && newValue.get(0).getKey() instanceof AbstractPlan
-                        && newValue.get(0).getValue() != null
-                        && newValue.get(0).getValue() instanceof StateContainer) {
-                    ((StateContainer) newValue.get(0).getValue()).getStatePlans()
-                            .stream()
-                            .filter(abstractPlanHBox -> abstractPlanHBox.getAbstractPlan()
-                                    .equals(newValue.get(0).getKey()))
-                            .findFirst().orElseGet(() -> new AbstractPlanHBox(newValue.get(0).getKey(),
-                            (StateContainer) newValue.get(0).getValue())).setEffect(createSelectedEffect());
+        selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+        selectedPlanElements.get().add(new Pair<>(editablePathPair.getKey(), null));
+        selectedPlanElements.addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+            DropShadow value = createSelectedEffect();
+            if (newValue.size() == 1 && newValue.get(0).getKey() instanceof AbstractPlan
+                    && newValue.get(0).getValue() != null
+                    && newValue.get(0).getValue() instanceof StateContainer) {
+                ((StateContainer) newValue.get(0).getValue()).getStatePlans()
+                        .stream()
+                        .filter(abstractPlanHBox -> abstractPlanHBox.getAbstractPlan()
+                                .equals(newValue.get(0).getKey()))
+                        .findFirst().orElseGet(() -> new AbstractPlanHBox(newValue.get(0).getKey(),
+                        (StateContainer) newValue.get(0).getValue())).setEffect(createSelectedEffect());
 
-                } else {
-                    newValue.forEach(selectedPlanElementPair -> {
-                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
-                        if (planElementContainer != null) {
-                            planElementContainer.setEffect(value);
-                        }
-                    });
-                }
-                if (newValue.size() == 1 && newValue.get(0).getValue() instanceof TransitionContainer) {
-                    ((TransitionContainer)newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
-                }
+            } else {
+                newValue.forEach(selectedPlanElementPair -> {
+                    AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
+                    if (planElementContainer != null) {
+                        planElementContainer.setEffect(value);
+                    }
+                });
+            }
+            if (newValue.size() == 1 && newValue.get(0).getValue() instanceof TransitionContainer) {
+                ((TransitionContainer)newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
             }
 
-            if ((oldValue != null)) {
-                    oldValue.forEach(selectedPlanElementPair -> {
-                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
-                        if (planElementContainer != null) {
-                            // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
-                            if (planElementContainer.getContainedElement() == oldValue.get(0).getKey()) {
-                                planElementContainer.setEffect(null);
-                            }
-                            if (planElementContainer instanceof StateContainer) {
-                                ((StateContainer) planElementContainer)
-                                        .getStatePlans()
-                                        .forEach(abstractPlanHBox -> {
-                                            if (abstractPlanHBox.getAbstractPlan() != newValue.get(0).getKey()) {
-                                                abstractPlanHBox.setEffect(null);
-                                            }
-                                        });
+            if ((oldValue == null)) {
+                return;
+            }
+            oldValue.forEach(selectedPlanElementPair -> {
+                AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
+                if (planElementContainer != null) {
+                    // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
+                    if (planElementContainer.getContainedElement() == oldValue.get(0).getKey()) {
+                        planElementContainer.setEffect(null);
+                    }
+                    if (planElementContainer instanceof StateContainer) {
+                        ((StateContainer) planElementContainer)
+                                .getStatePlans()
+                                .forEach(abstractPlanHBox -> {
+                                    if (abstractPlanHBox.getAbstractPlan() != newValue.get(0).getKey()) {
+                                        abstractPlanHBox.setEffect(null);
+                                    }
+                                });
                             }
                         }
                     });
@@ -188,8 +246,17 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                 if (oldValue.size() == 1 && oldValue.get(0).getValue() instanceof TransitionContainer) {
                     ((TransitionContainer)oldValue.get(0).getValue()).setPotentialDraggableNodesVisible(false);
                 }
-            }
         });
+    }
+
+    public void clearSelectedElements() {
+        selectedPlanElements.get().forEach(element -> {
+            if (element.getValue() == null) {
+                return;
+            }
+            element.getValue().setEffect(null);
+        });
+        selectedPlanElements.get().clear();
     }
 
     private DropShadow createSelectedEffect() {
@@ -221,8 +288,8 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         return editablePathPair.getKey();
     }
 
-    public SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> getSelectedPlanElement() {
-        return selectedPlanElement;
+    public SimpleObjectProperty<ObservableList<Pair<PlanElement, AbstractPlanElementContainer>>> getSelectedPlanElements() {
+        return selectedPlanElements;
     }
 
     public CommandStack getCommandStack() {

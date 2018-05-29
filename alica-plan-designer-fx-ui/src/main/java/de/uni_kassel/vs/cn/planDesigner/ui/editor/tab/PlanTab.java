@@ -13,6 +13,8 @@ import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExten
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.PLDToolBar;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -74,7 +76,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);
-        conditionHBox = new ConditionHBox(planPathPair.getKey(), selectedPlanElement, commandStack);
+        conditionHBox = new ConditionHBox(planPathPair.getKey(), selectedPlanElements, commandStack);
         VBox vBox = new VBox(conditionHBox,hBox);
         VBox.setVgrow(scrollPane,Priority.ALWAYS);
         VBox.setVgrow(hBox,Priority.ALWAYS);
@@ -134,9 +136,10 @@ public class PlanTab extends AbstractEditorTab<Plan> {
             if (newValue != null) {
                 newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
                     if (event.getTarget() == planContent) {
-                        List<Pair<PlanElement, AbstractPlanElementContainer>> plan = new ArrayList<>();
+                        ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> plan = FXCollections.observableArrayList();;
                         plan.add(new Pair<>(getEditable(), null));
-                        getSelectedPlanElement().set(plan);
+                        clearSelectedElements();
+                        getSelectedPlanElements().set(plan);
                     }
                 });
             }

@@ -102,10 +102,10 @@ public class MainController implements Initializable {
 
     public boolean isSelectedPlanElement(Node node) {
         Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
-        if (selectedItem != null && ((AbstractEditorTab) selectedItem).getSelectedPlanElement() != null) {
+        if (selectedItem != null && ((AbstractEditorTab) selectedItem).getSelectedPlanElements() != null) {
             // TODO fix single
             Pair<PlanElement, AbstractPlanElementContainer> o = ((List<Pair<PlanElement, AbstractPlanElementContainer>>)
-                    ((AbstractEditorTab) selectedItem).getSelectedPlanElement().getValue()).get(0);
+                    ((AbstractEditorTab) selectedItem).getSelectedPlanElements().getValue()).get(0);
             if (o != null && o.getValue() != null) {
                 return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
             } else {

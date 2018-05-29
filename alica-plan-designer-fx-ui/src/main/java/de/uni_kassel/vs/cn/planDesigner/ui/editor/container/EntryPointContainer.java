@@ -8,6 +8,8 @@ import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -93,11 +95,6 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
         hBox.setLayoutX(visualRepresentation.getLayoutX() - taskName.getLayoutBounds().getWidth() / 2.0 - taskIcon.getFitWidth() / 2.0 - StateContainer.STATE_RADIUS / 2.0);
         hBox.setLayoutY(visualRepresentation.getLayoutY() - StateContainer.STATE_RADIUS * 1.2 - taskName.getFont().getSize());
         getChildren().add(hBox);
-//        taskName.setLayoutX(taskName.getLayoutX() - taskName.getLayoutBounds().getWidth() / 2);
-//        taskName.setLayoutY(taskName.getLayoutY() - StateContainer.STATE_RADIUS * 1.2);
-//        getChildren().add(taskIcon);
-//        taskIcon.setLayoutX(taskName.getLayoutX() - taskName.getFont().getSize() * 1.5);
-//        taskIcon.setLayoutY(taskName.getLayoutY() - taskName.getFont().getSize());
     }
 
     @Override
@@ -113,9 +110,9 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
 
     @Override
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPoint containedElement) {
-        List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
+        ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();;
         selected.add(new Pair<>(containedElement, this));
-        return event -> ((PlanEditorGroup) getParent()).getPlanEditorTab().getSelectedPlanElement().setValue(selected);
+        return event -> ((PlanEditorGroup) getParent()).getPlanEditorTab().getSelectedPlanElements().setValue(selected);
     }
 
     @Override

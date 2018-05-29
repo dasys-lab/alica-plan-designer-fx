@@ -6,6 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.ConditionContainer;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -15,17 +16,18 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by marci on 28.02.17.
  */
 public class ConditionHBox extends HBox {
 
-    private final SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement;
+    private final SimpleObjectProperty<ObservableList<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement;
     private final CommandStack commandStack;
     private final Plan plan;
 
-    public ConditionHBox(Plan abstractPlan, SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement, CommandStack commandStack) {
+    public ConditionHBox(Plan abstractPlan, SimpleObjectProperty<ObservableList<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement, CommandStack commandStack) {
         this.plan = abstractPlan;
         this.selectedPlanElement = selectedPlanElement;
         this.commandStack = commandStack;
@@ -49,7 +51,7 @@ public class ConditionHBox extends HBox {
         return selectedPlanElement.get().get(0);
     }
 
-    public SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElementProperty() {
+    public SimpleObjectProperty<ObservableList<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElementProperty() {
         return selectedPlanElement;
     }
 }

@@ -29,10 +29,10 @@ public class PropertyTabPane extends TabPane {
             }
             try {
                 getTabs().add(new PropertyTab(activeEditorTab, activeEditorTab.getCommandStack()));
-                if (newValue instanceof PlanTab && ((PlanTab) newValue).getSelectedPlanElement().get().size() == 1
-                        &&  ((PlanTab) newValue).getSelectedPlanElement().get().get(0).getKey() instanceof Plan
+                if (newValue instanceof PlanTab && ((PlanTab) newValue).getSelectedPlanElements().get().size() == 1
+                        &&  ((PlanTab) newValue).getSelectedPlanElements().get().get(0).getKey() instanceof Plan
                         || newValue instanceof BehaviourTab
-                        && ((BehaviourTab) newValue).getSelectedPlanElement().get().get(0).getKey() instanceof Behaviour) {
+                        && ((BehaviourTab) newValue).getSelectedPlanElements().get().get(0).getKey() instanceof Behaviour) {
                     getTabs().add(new VariablesTab(activeEditorTab, activeEditorTab.getCommandStack()));
                 }
                 getTabs().add(new ParametrisationTab(activeEditorTab, activeEditorTab.getCommandStack()));

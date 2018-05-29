@@ -10,6 +10,7 @@ import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -58,7 +59,7 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         taskListView.getItems().sort(Comparator.comparing(task -> task.getName()));
         taskListView.setCellFactory(param -> new TaskListCell());
         taskListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
+            ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();
             selected.add(new Pair<>(observable.getValue(),
                     new AbstractPlanElementContainer<Task>(observable.getValue(), null, getCommandStack()) {
                         @Override
@@ -71,7 +72,7 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
                             return null;
                         }
                     }));
-            selectedPlanElement.setValue(selected);
+            selectedPlanElements.setValue(selected);
         });
         HBox newTaskContainer = new HBox();
         Button createTaskButton = new Button();

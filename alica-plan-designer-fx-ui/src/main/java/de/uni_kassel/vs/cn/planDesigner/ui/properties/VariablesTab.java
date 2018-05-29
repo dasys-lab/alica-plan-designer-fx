@@ -35,7 +35,7 @@ public class VariablesTab extends AbstractPropertyTab {
 
     @Override
     protected void addListenersForActiveTab(AbstractEditorTab<PlanElement> activeEditorTab) {
-        activeEditorTab.getSelectedPlanElement().addListener((observable, oldValue, newValue) -> {
+        activeEditorTab.getSelectedPlanElements().addListener((observable, oldValue, newValue) -> {
             // TODO check fo single
             selectedPlanElement = newValue.get(0).getKey();
             if (selectedPlanElement instanceof Plan && selectedPlanElement == activeEditorTab.getEditable()) {
@@ -50,7 +50,7 @@ public class VariablesTab extends AbstractPropertyTab {
                 // TODO make this work! Conditions have no own variables. They hold references to that of plans or behaviours
                 this.setDisable(true);
                 /*this.setDisable(false);
-                textFieldTableView.setItems(FXCollections.observableArrayList(((Condition) selectedPlanElement).getVars()));
+                textFieldTableView.setItems(FXCollections.observableArrayList(((Condition) selectedPlanElements).getVars()));
                 createTabContent();*/
             } else {
                 this.setDisable(true);

@@ -3,6 +3,8 @@ package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.ui.img.AlicaIcon;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -33,10 +35,10 @@ public class AbstractPlanHBox extends HBox {
         setLayoutY(StateContainer.STATE_RADIUS +
                 (stateContainer.getContainedElement().getPlans().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with text-box
         setPickOnBounds(false);
-        List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
+        ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();;
         selected.add(new Pair<>(abstractPlan, stateContainer));
         addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorGroup) getParent().getParent())
-                .getPlanEditorTab().getSelectedPlanElement().setValue(selected));
+                .getPlanEditorTab().getSelectedPlanElements().setValue(selected));
     }
 
     public PlanElement getAbstractPlan() {

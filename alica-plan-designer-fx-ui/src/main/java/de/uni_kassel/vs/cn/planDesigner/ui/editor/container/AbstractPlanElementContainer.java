@@ -10,6 +10,8 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.PLDToolBar;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.ShowGeneratedSourcesMenuItem;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -68,10 +70,10 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
                     .getSelectedItem()).getPldToolBar();
             // Was the last click performed in the context of a tool?
             if (pldToolBar.anyToolsRecentlyDone() == false) {
-                ArrayList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
+                ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = FXCollections.observableArrayList();;
                 selectedElements.add(new Pair<>(containedElement, this));
                 ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
-                        .getSelectedItem()).getSelectedPlanElement().setValue(selectedElements);
+                        .getSelectedItem()).getSelectedPlanElements().setValue(selectedElements);
 
             } else {
                 AbstractTool recentlyDoneTool = pldToolBar.getRecentlyDoneTool();
