@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 
@@ -10,9 +11,15 @@ import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
  */
 public final class Controller {
 
-    private RepositoryViewModel repoViewModel;
-    private ModelManager modelManager;
+    // Common Objects
     private ConfigurationManager configurationManager;
+
+    // Model Objects
+    private ModelManager modelManager;
+    private CommandStack commandStack;
+
+    // View Objects
+    private RepositoryViewModel repoViewModel;
 
     public Controller () {
         configurationManager = ConfigurationManager.getInstance();

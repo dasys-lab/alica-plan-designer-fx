@@ -1,10 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
@@ -19,7 +16,6 @@ import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
-import org.eclipse.emf.ecore.EObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,46 +24,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
 
-/**
- * Created by marci on 18.11.16.
- */
-public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
+public abstract class AbstractEditorTab extends Tab {
 
     private Observer observer;
-    private Pair<T, Path> editablePathPair;
-    private CommandStack commandStack;
-    protected SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement;
 
-    public AbstractEditorTab(T key) {
+    private Pair<Long, Path> editablePathPair;
+
+
+
+    protected SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElement;
+
+    public AbstractEditorTab(Long planElementId) {
         selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
-        selectedPlanElement.get().add(new Pair<>(key, null));
+        selectedPlanElement.get().add(new Pair<>(planElementId, null));
     }
 
-    public AbstractEditorTab(Pair<T, Path> editablePathPair, CommandStack commandStack) {
+    // TODO: Review necessary, due to MVC pattern adaption.
+    public AbstractEditorTab(Pair<Long, Path> editablePathPair) {
         super(editablePathPair.getValue().getFileName().toString());
-        RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
-        repositoryViewModel.findListByType(editablePathPair).addListener(new ListChangeListener<Pair<T, Path>>() {
-            @Override
-            public void onChanged(Change<? extends Pair<T, Path>> c) {
-                c.next();
-                if (c.getAddedSize() > 0) {
-                    for (Pair<T, Path> pair : c.getAddedSubList()) {
-                        if (pair.getKey().equals(editablePathPair.getKey())) {
-                            setEditablePathPair(pair);
-                            setText(editablePathPair.getValue().getFileName().toString());
-                            break;
-                        }
-                    }
 
-                }
-            }
-        });
+        RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
 
         this.editablePathPair = editablePathPair;
         initSelectedPlanElement(editablePathPair);
 
-
-        this.commandStack = commandStack;
+        // create observer for dirty flag and add it to the command stack
         observer = (o, arg) -> {
             if (((CommandStack) o).isAbstractPlanInItsCurrentFormSaved(getEditable())) {
                 setText(getEditablePathPair().getValue().getFileName().toString());
@@ -78,6 +59,8 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         if (commandStack != null) {
             commandStack.addObserver(observer);
         }
+
+        // handle close tab
         setClosable(true);
         setOnCloseRequest(e -> {
             commandStack.deleteObserver(observer);
@@ -96,7 +79,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                     repositoryViewModel.getPlans().remove(planPathPair);
                     repositoryViewModel.getPlans().add(new Pair<>((Plan) key, planPathPair.getValue()));
                     File pmlexFile = new File(file.getAbsolutePath().replace(".pml", ".pmlex"));
-                    ((PlanTab)this).setPmlUiExtensionMap(EMFModelUtils.reloadAlicaFileFromDisk(pmlexFile));
+                    ((PlanTab) this).setPmlUiExtensionMap(EMFModelUtils.reloadAlicaFileFromDisk(pmlexFile));
                 }
                 if (editablePathPair.getKey() instanceof Behaviour) {
                     Pair<Behaviour, Path> behaviourPathPair = repositoryViewModel.getBehaviours()
@@ -115,8 +98,8 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                     repositoryViewModel.getPlanTypes().add(new Pair<>((PlanType) key, planTypePathPair.getValue()));
                 }
                 MainController.getInstance().getRepositoryTabPane().getTabs().forEach(tab -> {
-                    if(tab instanceof RepositoryTab) {
-                        ((RepositoryTab)tab).sort();
+                    if (tab instanceof RepositoryTab) {
+                        ((RepositoryTab) tab).sort();
                     }
                 });
             } catch (IOException e1) {
@@ -129,9 +112,11 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
      * initialization for the selected element property, which indicates what elements are selected.
      * specializations for specific selections of {@link AbstractPlanElementContainer}s can be found under
      * {@link AbstractPlanElementContainer#getMouseClickedEventHandler(PlanElement)}
+     *
      * @param editablePathPair
      */
-    protected void initSelectedPlanElement(Pair<T, Path> editablePathPair) {
+    // TODO: Review necessary, due to MVC pattern adaption.
+    protected void initSelectedPlanElement(Pair<Long, Path> editablePathPair) {
         selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
         selectedPlanElement.get().add(new Pair<>(editablePathPair.getKey(), null));
         selectedPlanElement.addListener((observable, oldValue, newValue) -> {
@@ -156,39 +141,39 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                     });
                 }
                 if (newValue.size() == 1 && newValue.get(0).getValue() instanceof TransitionContainer) {
-                    ((TransitionContainer)newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
+                    ((TransitionContainer) newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
                 }
             }
 
             if ((oldValue != null)) {
-                    oldValue.forEach(selectedPlanElementPair -> {
-                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
-                        if (planElementContainer != null) {
-                            // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
-                            if (planElementContainer.getContainedElement() == oldValue.get(0).getKey()) {
-                                planElementContainer.setEffect(null);
-                            }
-                            if (planElementContainer instanceof StateContainer) {
-                                ((StateContainer) planElementContainer)
-                                        .getStatePlans()
-                                        .forEach(abstractPlanHBox -> {
-                                            if (abstractPlanHBox.getAbstractPlan() != newValue.get(0).getKey()) {
-                                                abstractPlanHBox.setEffect(null);
-                                            }
-                                        });
-                            }
+                oldValue.forEach(selectedPlanElementPair -> {
+                    AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
+                    if (planElementContainer != null) {
+                        // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
+                        if (planElementContainer.getContainedElement() == oldValue.get(0).getKey()) {
+                            planElementContainer.setEffect(null);
                         }
-                    });
+                        if (planElementContainer instanceof StateContainer) {
+                            ((StateContainer) planElementContainer)
+                                    .getStatePlans()
+                                    .forEach(abstractPlanHBox -> {
+                                        if (abstractPlanHBox.getAbstractPlan() != newValue.get(0).getKey()) {
+                                            abstractPlanHBox.setEffect(null);
+                                        }
+                                    });
+                        }
+                    }
+                });
 
                 if (oldValue.size() == 1 && oldValue.get(0).getValue() instanceof TransitionContainer) {
-                    ((TransitionContainer)oldValue.get(0).getValue()).setPotentialDraggableNodesVisible(false);
+                    ((TransitionContainer) oldValue.get(0).getValue()).setPotentialDraggableNodesVisible(false);
                 }
             }
         });
     }
 
     private DropShadow createSelectedEffect() {
-        DropShadow value = new DropShadow(StateContainer.STATE_RADIUS, new Color(0,0.4,0.9,0.9));
+        DropShadow value = new DropShadow(StateContainer.STATE_RADIUS, new Color(0, 0.4, 0.9, 0.9));
         value.setBlurType(BlurType.ONE_PASS_BOX);
         value.setSpread(0.45);
         return value;
@@ -198,33 +183,30 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         return editablePathPair.getValue();
     }
 
+    // TODO: Review necessary, due to MVC pattern adaption.
     public void save() {
         try {
-            setText(getText().replace("*",""));
-            EMFModelUtils.saveAlicaFile(getEditable());
-            getCommandStack().setSavedForAbstractPlan(getEditable());
+            setText(getText().replace("*", ""));
+            //EMFModelUtils.saveAlicaFile(getEditable());
+            //getCommandStack().setSavedForAbstractPlan(editablePathPair.getKey());
         } catch (IOException e) {
             ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.save"), e);
         }
     }
 
-    public T getEditable() {
+    public Long getEditable() {
         return editablePathPair.getKey();
     }
 
-    public SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> getSelectedPlanElement() {
+    public SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> getSelectedPlanElement() {
         return selectedPlanElement;
     }
 
-    public CommandStack getCommandStack() {
-        return commandStack;
-    }
-
-    private void setEditablePathPair(Pair<T, Path> editablePathPair) {
+    private void setEditablePathPair(Pair<Long, Path> editablePathPair) {
         this.editablePathPair = editablePathPair;
     }
 
-    public Pair<T, Path> getEditablePathPair() {
+    public Pair<Long, Path> getEditablePathPair() {
         return editablePathPair;
     }
 }

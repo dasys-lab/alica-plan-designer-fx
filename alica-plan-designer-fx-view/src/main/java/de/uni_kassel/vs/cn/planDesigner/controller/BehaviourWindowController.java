@@ -12,7 +12,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.impl.PostConditionImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.PreConditionImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.RuntimeConditionImpl;
 import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.BehaviourTab;
 import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertyTab;

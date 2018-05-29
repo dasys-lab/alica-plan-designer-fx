@@ -74,10 +74,10 @@ public class CommandStack extends Observable {
         return true;
     }
 
-    public void setSavedForAbstractPlan(PlanElement abstractPlan) {
+    public void setSavedForAbstractPlan(Long abstractPlanId) {
         Optional<AbstractCommand> abstractCommand = undoStack
                 .stream()
-                .filter(e -> e.getAffectedPlan().equals(abstractPlan))
+                .filter(e -> e.getAffectedPlan().getId() == abstractPlanId)
                 .findFirst();
         if (abstractCommand.isPresent()) {
             abstractCommand.get().setSaved(true);

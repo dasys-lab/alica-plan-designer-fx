@@ -6,7 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.TaskImpl;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddTaskToRepository;
-import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import javafx.collections.FXCollections;
@@ -78,13 +78,12 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         createTaskButton.setText(I18NRepo.getInstance().getString("action.create.task"));
         TextField taskNameField = new TextField();
         createTaskButton.setOnAction(e -> {
-            if (taskNameField.getText() != null && taskNameField.getText().isEmpty() == false) {
+            if (taskNameField.getText() != null && !taskNameField.getText().isEmpty()) {
                 getCommandStack().storeAndExecute(new AddTaskToRepository(getEditable(), taskNameField.getText()));
                 createContentView();
             }
         });
         newTaskContainer.getChildren().addAll(taskNameField, createTaskButton);
-
         contentContainer.getChildren().addAll(taskListView, newTaskContainer);
         setContent(contentContainer);
     }

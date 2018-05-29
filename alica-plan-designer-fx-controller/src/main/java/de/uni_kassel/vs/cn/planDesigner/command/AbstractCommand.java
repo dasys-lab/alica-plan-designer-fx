@@ -1,17 +1,15 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * Base class for command pattern.
- * @param <T>
  */
-public abstract class AbstractCommand<T extends EObject> {
+public abstract class AbstractCommand {
 
     private PlanElement affectedPlan;
 
-    private T elementToEdit;
+    private PlanElement elementToEdit;
 
     private boolean saved;
 
@@ -19,7 +17,7 @@ public abstract class AbstractCommand<T extends EObject> {
     public abstract void undoCommand();
     public abstract String getCommandString();
 
-    public AbstractCommand(T element, PlanElement affectedPlan) {
+    public AbstractCommand(PlanElement element, PlanElement affectedPlan) {
         this.elementToEdit = element;
         this.affectedPlan = affectedPlan;
         saved = false;
@@ -33,7 +31,7 @@ public abstract class AbstractCommand<T extends EObject> {
         return affectedPlan;
     }
 
-    public T getElementToEdit() {
+    public PlanElement getElementToEdit() {
         return elementToEdit;
     }
 

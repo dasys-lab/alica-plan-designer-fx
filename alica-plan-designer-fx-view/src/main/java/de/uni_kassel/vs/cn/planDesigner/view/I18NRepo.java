@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.common;
+package de.uni_kassel.vs.cn.planDesigner.view;
 
 import java.util.ResourceBundle;
 import java.util.Locale;

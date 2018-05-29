@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.defaultPlugin;
 import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator;
 import de.uni_kassel.vs.cn.generator.plugin.IPlugin;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
-import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

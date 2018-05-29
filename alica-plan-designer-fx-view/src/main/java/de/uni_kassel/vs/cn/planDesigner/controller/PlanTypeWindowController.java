@@ -7,7 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.command.delete.RemoveAllPlansFromPlanTyp
 import de.uni_kassel.vs.cn.planDesigner.command.delete.RemovePlanFromPlanType;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;

@@ -2,11 +2,6 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
-import de.uni_kassel.vs.cn.planDesigner.alica.PostCondition;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.TerminalState;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.effect.BlurType;
@@ -19,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by marci on 02.12.16.
- */
 public class StateContainer extends AbstractPlanElementContainer<State> implements Observable {
 
     public static final double STATE_RADIUS = 20.0;
