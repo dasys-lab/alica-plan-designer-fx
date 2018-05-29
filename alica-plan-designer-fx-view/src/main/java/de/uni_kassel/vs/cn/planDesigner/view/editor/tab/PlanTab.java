@@ -1,18 +1,19 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.PLDToolBar;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -26,8 +27,6 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by marci on 23.11.16.
@@ -74,7 +73,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);
-        conditionHBox = new ConditionHBox(planPathPair.getKey(), selectedPlanElement, commandStack);
+        conditionHBox = new ConditionHBox(planPathPair.getKey(), selectedPlanElements, commandStack);
         VBox vBox = new VBox(conditionHBox,hBox);
         VBox.setVgrow(scrollPane,Priority.ALWAYS);
         VBox.setVgrow(hBox,Priority.ALWAYS);
@@ -134,9 +133,10 @@ public class PlanTab extends AbstractEditorTab<Plan> {
             if (newValue != null) {
                 newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
                     if (event.getTarget() == planContent) {
-                        List<Pair<PlanElement, AbstractPlanElementContainer>> plan = new ArrayList<>();
+                        ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> plan = FXCollections.observableArrayList();;
                         plan.add(new Pair<>(getEditable(), null));
-                        getSelectedPlanElement().set(plan);
+                        clearSelectedElements();
+                        getSelectedPlanElements().set(plan);
                     }
                 });
             }

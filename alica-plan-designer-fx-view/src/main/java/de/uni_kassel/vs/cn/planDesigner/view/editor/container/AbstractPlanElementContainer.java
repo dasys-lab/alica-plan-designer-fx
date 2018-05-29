@@ -1,21 +1,22 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.PLDToolBar;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
-
-import java.util.ArrayList;
 
 /**
  * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a alica object to hold changes from the visualisation
@@ -64,10 +65,10 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
                     .getSelectedItem()).getPldToolBar();
             // Was the last click performed in the context of a tool?
             if (pldToolBar.anyToolsRecentlyDone() == false) {
-                ArrayList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
+                ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = FXCollections.observableArrayList();;
                 selectedElements.add(new Pair<>(containedElement, this));
                 ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
-                        .getSelectedItem()).getSelectedPlanElement().setValue(selectedElements);
+                        .getSelectedItem()).getSelectedPlanElements().setValue(selectedElements);
 
             } else {
                 AbstractTool recentlyDoneTool = pldToolBar.getRecentlyDoneTool();

@@ -1,11 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alica.State;
 
-/**
- * Created by marci on 02.12.16.
- */
 public class AddAbstractPlanToState extends AbstractCommand<AbstractPlan> {
     private State parentOfElement;
 

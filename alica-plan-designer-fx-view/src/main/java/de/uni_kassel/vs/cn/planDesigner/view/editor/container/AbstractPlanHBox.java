@@ -1,7 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -12,9 +15,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AbstractPlanHBox extends HBox {
     private Long abstractPlan;
@@ -32,10 +32,10 @@ public class AbstractPlanHBox extends HBox {
         setLayoutY(StateContainer.STATE_RADIUS +
                 (stateContainer.getContainedElement().getPlans().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with text-box
         setPickOnBounds(false);
-        List<Pair<Long, AbstractPlanElementContainer>> selected = new ArrayList<>();
+        ObservableList<Pair<Long, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();
         selected.add(new Pair<>(abstractPlan, stateContainer));
         addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorGroup) getParent().getParent())
-                .getPlanEditorTab().getSelectedPlanElement().setValue(selected));
+                .getPlanEditorTab().getSelectedPlanElements().setValue(selected));
     }
 
     public PlanElement getAbstractPlan() {

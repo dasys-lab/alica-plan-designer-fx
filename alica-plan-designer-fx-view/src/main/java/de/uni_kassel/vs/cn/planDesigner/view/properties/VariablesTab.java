@@ -1,10 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.properties;
 
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddVariableToAbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddVariableToCondition;
-import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteVariableFromAbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteVariableFromCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ObservableValue;
@@ -20,9 +15,6 @@ import javafx.util.Callback;
 
 import java.lang.reflect.InvocationTargetException;
 
-/**
- * Created by marci on 24.02.17.
- */
 public class VariablesTab extends AbstractPropertyTab {
 
     private TableView<Variable> textFieldTableView;
@@ -35,7 +27,7 @@ public class VariablesTab extends AbstractPropertyTab {
 
     @Override
     protected void addListenersForActiveTab(AbstractEditorTab<PlanElement> activeEditorTab) {
-        activeEditorTab.getSelectedPlanElement().addListener((observable, oldValue, newValue) -> {
+        activeEditorTab.getSelectedPlanElements().addListener((observable, oldValue, newValue) -> {
             // TODO check fo single
             selectedPlanElement = newValue.get(0).getKey();
             if (selectedPlanElement instanceof Plan && selectedPlanElement == activeEditorTab.getEditable()) {
@@ -50,7 +42,7 @@ public class VariablesTab extends AbstractPropertyTab {
                 // TODO make this work! Conditions have no own variables. They hold references to that of plans or behaviours
                 this.setDisable(true);
                 /*this.setDisable(false);
-                textFieldTableView.setItems(FXCollections.observableArrayList(((Condition) selectedPlanElement).getVars()));
+                textFieldTableView.setItems(FXCollections.observableArrayList(((Condition) selectedPlanElements).getVars()));
                 createTabContent();*/
             } else {
                 this.setDisable(true);

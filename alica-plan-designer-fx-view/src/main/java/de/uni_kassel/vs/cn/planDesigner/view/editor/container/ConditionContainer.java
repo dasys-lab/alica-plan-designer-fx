@@ -1,15 +1,15 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
-
-import java.util.ArrayList;
 
 /**
  * Created by marci on 28.02.17.
@@ -27,7 +27,7 @@ public class ConditionContainer extends AbstractPlanElementContainer<Condition> 
 
     @Override
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(Condition containedElement) {
-        ArrayList selectedCondition = new ArrayList();
+        ObservableList selectedCondition = FXCollections.observableArrayList();
         selectedCondition.add(new Pair<>(containedElement, this));
         return event -> ((ConditionHBox) getParent()).selectedPlanElementProperty().setValue(selectedCondition);
     }

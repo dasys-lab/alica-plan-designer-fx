@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner;
 
+import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.controller.Controller;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileWatcherJob;
@@ -62,7 +63,11 @@ public class PlanDesigner extends Application {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                running = false;
+                if(IsDirtyWindowController.isAnyTabDirty()) {
+                    IsDirtyWindowController.createMultipleTabsDirtyWindow(event);
+                } else {
+                    running = false;
+                }
             }
         });
 

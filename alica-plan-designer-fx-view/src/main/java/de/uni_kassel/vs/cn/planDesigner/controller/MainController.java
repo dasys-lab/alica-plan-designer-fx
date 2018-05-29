@@ -1,9 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.Codegenerator;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
@@ -35,7 +35,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -102,10 +101,10 @@ public class MainController implements Initializable {
 
     public boolean isSelectedPlanElement(Node node) {
         Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
-        if (selectedItem != null && ((AbstractEditorTab) selectedItem).getSelectedPlanElement() != null) {
+        if (selectedItem != null && ((AbstractEditorTab) selectedItem).getSelectedPlanElements() != null) {
             // TODO fix single
             Pair<PlanElement, AbstractPlanElementContainer> o = ((List<Pair<PlanElement, AbstractPlanElementContainer>>)
-                    ((AbstractEditorTab) selectedItem).getSelectedPlanElement().getValue()).get(0);
+                    ((AbstractEditorTab) selectedItem).getSelectedPlanElements().getValue()).get(0);
             if (o != null && o.getValue() != null) {
                 return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
             } else {

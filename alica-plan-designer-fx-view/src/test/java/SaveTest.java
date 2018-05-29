@@ -1,15 +1,11 @@
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddStateInPlan;
-import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteAbstractPlan;
+
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.PLDFileTreeView;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,8 +20,6 @@ import org.testfx.framework.junit.ApplicationTest;
 
 import java.io.File;
 import java.io.IOException;
-
-import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
 public class SaveTest extends ApplicationTest {
 

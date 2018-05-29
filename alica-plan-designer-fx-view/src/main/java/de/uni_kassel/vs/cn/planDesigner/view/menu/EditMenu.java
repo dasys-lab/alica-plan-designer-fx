@@ -1,21 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.command.delete.*;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.EntryPointImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.SynchronisationImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.TransitionImpl;
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -29,9 +20,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import java.nio.file.Path;
-
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -138,7 +128,7 @@ public class EditMenu extends Menu {
             if (selectedItem instanceof PlanTab) {
                 PlanTab planTab = (PlanTab) selectedItem;
                 // TODO ask single
-                PlanElement selectedPlanElement = planTab.getSelectedPlanElement().get().get(0).getKey();
+                PlanElement selectedPlanElement = planTab.getSelectedPlanElements().get().get(0).getKey();
 
                 if(selectedPlanElement != null) {
                     deletePlanElement(commandStack, planTab, selectedPlanElement);
@@ -255,14 +245,14 @@ public class EditMenu extends Menu {
         } else if (selectedPlanElement instanceof EntryPointImpl) {
             commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
                     planTab.getPlanEditorGroup().getPlanModelVisualisationObject())); // TODO ask single * 3
-        } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElement().get().get(0).getValue() != null) {
-            State state = (State) planTab.getSelectedPlanElement().getValue().get(0).getValue().getContainedElement();
+        } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElements().get().get(0).getValue() != null) {
+            State state = (State) planTab.getSelectedPlanElements().getValue().get(0).getValue().getContainedElement();
             commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
         } else if(selectedPlanElement instanceof SynchronisationImpl) {
             commandStack.storeAndExecute(new DeleteSynchronisationFromPlan((Synchronisation) selectedPlanElement,
                     planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
         } else if (selectedPlanElement instanceof Condition) {
-            Condition condition = (Condition) planTab.getSelectedPlanElement().getValue().get(0).getKey();
+            Condition condition = (Condition) planTab.getSelectedPlanElements().getValue().get(0).getKey();
             commandStack.storeAndExecute(new DeleteConditionFromPlan(planTab.getPlanEditorGroup().getPlanModelVisualisationObject().getPlan(), condition));
         }
         planTab.getPlanEditorGroup().setupPlanVisualisation();
