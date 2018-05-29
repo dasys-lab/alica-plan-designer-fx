@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import javafx.geometry.Insets;
@@ -18,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AbstractPlanHBox extends HBox {
-    private PlanElement abstractPlan;
+    private Long abstractPlan;
 
-    public AbstractPlanHBox(PlanElement p, StateContainer stateContainer) {
+    public AbstractPlanHBox(Long p, StateContainer stateContainer) {
         super();
         this.abstractPlan = p;
         ImageView imageView = new ImageView(new AlicaIcon(p.getClass().getSimpleName()));
@@ -33,7 +32,7 @@ public class AbstractPlanHBox extends HBox {
         setLayoutY(StateContainer.STATE_RADIUS +
                 (stateContainer.getContainedElement().getPlans().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with text-box
         setPickOnBounds(false);
-        List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
+        List<Pair<Long, AbstractPlanElementContainer>> selected = new ArrayList<>();
         selected.add(new Pair<>(abstractPlan, stateContainer));
         addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorGroup) getParent().getParent())
                 .getPlanEditorTab().getSelectedPlanElement().setValue(selected));
