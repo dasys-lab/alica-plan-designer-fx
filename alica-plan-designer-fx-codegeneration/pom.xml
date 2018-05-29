@@ -55,16 +55,16 @@
                             <goal>compile</goal>
                             <goal>testCompile</goal>
                         </goals>
-                        <properties>
+                        <configuration>
                             <outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
                             <testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
-                        </properties>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <properties>
+                <configuration>
                     <archive>
                         <manifest>
                             <mainClass>de.uni_kassel.vs.cn.generator.StandaloneCodegenerator</mainClass>
@@ -73,15 +73,15 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                </properties>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7</version>
-                <properties>
+                <configuration>
                     <visitor>true</visitor>
-                </properties>
+                </configuration>
                 <executions>
                     <execution>
                         <id>antlr</id>
@@ -94,10 +94,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <properties>
+                <configuration>
                     <source>8</source>
                     <target>8</target>
-                </properties>
+                </configuration>
             </plugin>
         </plugins>
 

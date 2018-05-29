@@ -21,10 +21,6 @@
                     <source>8</source>
                     <target>8</target>
                 </configuration>
-                <properties>
-                    <source>8</source>
-                    <target>8</target>
-                </properties>
             </plugin>
         </plugins>
     </build>
