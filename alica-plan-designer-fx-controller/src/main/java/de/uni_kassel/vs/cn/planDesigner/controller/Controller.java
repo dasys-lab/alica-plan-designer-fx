@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 
 /**

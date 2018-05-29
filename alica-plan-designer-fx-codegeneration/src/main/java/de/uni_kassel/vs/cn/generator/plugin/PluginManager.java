@@ -1,7 +1,5 @@
 package de.uni_kassel.vs.cn.generator.plugin;
 
-import de.uni_kassel.vs.cn.generator.configuration.Configuration;
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;

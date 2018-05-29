@@ -6,7 +6,8 @@ import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsParser;
 import de.uni_kassel.vs.cn.generator.cpp.parser.ProtectedRegionsVisitor;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.controller.ModelManager;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,81 +41,28 @@ public class Codegenerator {
     private List<RuntimeCondition> runtimeConditions;
     private List<PostCondition> postConditions;
     private List<Condition> allConditions;
-    private final IGenerator actualGenerator;
+    private final IGenerator languageSpecificGenerator;
+
+    private ModelManager modelManager;
 
     /**
      * This constructor initializes a C++ code generator
      */
     public Codegenerator() {
         // TODO document this! Here can the programming language be changed
-        actualGenerator = new CPPGeneratorImpl();
-        actualGenerator.setFormatter(ConfigurationManager.getInstance().getClangFormatPath());
-        initialze();
-    }
+        languageSpecificGenerator = new CPPGeneratorImpl();
+        languageSpecificGenerator.setFormatter(ConfigurationManager.getInstance().getClangFormatPath());
 
-    /**
-     * Generates source files for all ALICA plans and behaviours in workspace.
-     */
-    public void generate() {
-        ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
-        String expressionValidatorsPath = ConfigurationManager.getInstance().getActiveConfiguration()
-                .getGenSrcPath();
-        try {
+         modelManager = new ModelManager();
+        allPlans = modelManager.getPlans();
+        Collections.sort(allPlans, new PlanElementComparator());
 
-            if(Files.notExists(Paths.get(expressionValidatorsPath))) {
-                Files.createDirectories(Paths.get(expressionValidatorsPath));
-            }
-            Files.walk(Paths.get(expressionValidatorsPath)).filter(e -> {
-                String fileName = e.getFileName().toString();
-                return fileName.endsWith(".h") || fileName.endsWith(".cpp");
-            }).forEach(e -> {
-                try {
-                    CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e));
-                    CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-                    CommentsParser parser = new CommentsParser(commonTokenStream);
-                    CommentsParser.All_textContext all_textContext = parser.all_text();
-                    protectedRegionsVisitor.visit(all_textContext);
-                } catch (IOException e1) {
-                    LOG.error("Could not parse existing source file " + e, e1);
-                    throw new RuntimeException(e1);
-                }
-            });
-        } catch (IOException e) {
-            LOG.error("Could not find expression validator path! ", e);
-            throw new RuntimeException(e);
-        }
-
-        PluginManager.getInstance().getDefaultPlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
-        actualGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
-
-        actualGenerator.createDomainBehaviour();
-        actualGenerator.createDomainCondition();
-
-        actualGenerator.createUtilityFunctionCreator(allPlans);
-        actualGenerator.createBehaviourCreator(allBehaviours);
-        actualGenerator.createConditionCreator(allPlans, allConditions);
-        actualGenerator.createConstraintCreator(allPlans, allConditions);
-
-        actualGenerator.createConstraints(allPlans);
-        actualGenerator.createPlans(allPlans);
-
-        for (Behaviour behaviour : allBehaviours) {
-            actualGenerator.createBehaviour(behaviour);
-        }
-        LOG.info("Generated all files successfully");
     }
 
     /**
      * Initializes all attributes with the "all" prefix or all lists of alica objects in general.
      */
     private void initialze() {
-        allPlans = RepoViewBackend
-                .getInstance()
-                .getPlans()
-                .stream()
-                .map(e -> e.getKey())
-                .sorted(Comparator.comparing(e -> e.getId()))
-                .collect(Collectors.toList());
 
         allBehaviours = RepoViewBackend
                 .getInstance()
@@ -144,7 +93,7 @@ public class Codegenerator {
                 .map(e -> e.getTransitions())
                 .forEach(listOfTransitions ->
                         listOfTransitions.forEach(transition ->
-                        preConditions.add(transition.getPreCondition())));
+                                preConditions.add(transition.getPreCondition())));
 
         allPlans
                 .stream()
@@ -184,6 +133,58 @@ public class Codegenerator {
     }
 
     /**
+     * Generates source files for all ALICA plans and behaviours in workspace.
+     */
+    public void generate() {
+        ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
+        String expressionValidatorsPath = ConfigurationManager.getInstance().getActiveConfiguration()
+                .getGenSrcPath();
+        try {
+
+            if(Files.notExists(Paths.get(expressionValidatorsPath))) {
+                Files.createDirectories(Paths.get(expressionValidatorsPath));
+            }
+            Files.walk(Paths.get(expressionValidatorsPath)).filter(e -> {
+                String fileName = e.getFileName().toString();
+                return fileName.endsWith(".h") || fileName.endsWith(".cpp");
+            }).forEach(e -> {
+                try {
+                    CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e));
+                    CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+                    CommentsParser parser = new CommentsParser(commonTokenStream);
+                    CommentsParser.All_textContext all_textContext = parser.all_text();
+                    protectedRegionsVisitor.visit(all_textContext);
+                } catch (IOException e1) {
+                    LOG.error("Could not parse existing source file " + e, e1);
+                    throw new RuntimeException(e1);
+                }
+            });
+        } catch (IOException e) {
+            LOG.error("Could not find expression validator path! ", e);
+            throw new RuntimeException(e);
+        }
+
+        PluginManager.getInstance().getDefaultPlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
+        languageSpecificGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
+
+        languageSpecificGenerator.createDomainBehaviour();
+        languageSpecificGenerator.createDomainCondition();
+
+        languageSpecificGenerator.createUtilityFunctionCreator(allPlans);
+        languageSpecificGenerator.createBehaviourCreator(allBehaviours);
+        languageSpecificGenerator.createConditionCreator(allPlans, allConditions);
+        languageSpecificGenerator.createConstraintCreator(allPlans, allConditions);
+
+        languageSpecificGenerator.createConstraints(allPlans);
+        languageSpecificGenerator.createPlans(allPlans);
+
+        for (Behaviour behaviour : allBehaviours) {
+            languageSpecificGenerator.createBehaviour(behaviour);
+        }
+        LOG.info("Generated all files successfully");
+    }
+
+    /**
      * (Re)Generates source files for the given object.
      * If the given object is an instance of {@link Plan} or {@link Behaviour}.
      * @param planElement
@@ -214,16 +215,16 @@ public class Codegenerator {
                 });
 
         PluginManager.getInstance().getDefaultPlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
-        actualGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
+        languageSpecificGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
 
         if (planElement instanceof Behaviour) {
-            actualGenerator.createBehaviourCreator(allBehaviours);
-            actualGenerator.createBehaviour((Behaviour) planElement);
+            languageSpecificGenerator.createBehaviourCreator(allBehaviours);
+            languageSpecificGenerator.createBehaviour((Behaviour) planElement);
         } else if (planElement instanceof Plan) {
-            actualGenerator.createConstraintsForPlan((Plan) planElement);
-            actualGenerator.createPlan((Plan) planElement);
-            actualGenerator.createConditionCreator(allPlans, allConditions);
-            actualGenerator.createUtilityFunctionCreator(allPlans);
+            languageSpecificGenerator.createConstraintsForPlan((Plan) planElement);
+            languageSpecificGenerator.createPlan((Plan) planElement);
+            languageSpecificGenerator.createConditionCreator(allPlans, allConditions);
+            languageSpecificGenerator.createUtilityFunctionCreator(allPlans);
         }
     }
 }

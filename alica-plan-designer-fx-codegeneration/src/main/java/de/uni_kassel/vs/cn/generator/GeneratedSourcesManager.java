@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.generator.configuration.Configuration;
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 
 import java.io.File;
 import java.util.*;

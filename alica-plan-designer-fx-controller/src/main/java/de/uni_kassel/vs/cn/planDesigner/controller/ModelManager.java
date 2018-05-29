@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.uni_kassel.vs.cn.generator.configuration.Configuration;
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import javafx.collections.FXCollections;
@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class ModelManager {
     HashMap<Long, PlanElement> planElementMap;
     HashMap<Long, Plan> planMap;
 
-    ModelManager() {
+    public ModelManager() {
         ConfigurationManager confManager = ConfigurationManager.getInstance();
         activeConf = confManager.getActiveConfiguration();
         planElementMap = new HashMap<>();
@@ -80,6 +81,11 @@ public class ModelManager {
         } else {
             planMap.put(plan.getId(), plan);
         }
+    }
+
+    public ArrayList<Plan> getPlans()
+    {
+        return new ArrayList<>(planMap.values());
     }
 
     public ObservableList<Pair<Long, String>> getPlansForUI ()

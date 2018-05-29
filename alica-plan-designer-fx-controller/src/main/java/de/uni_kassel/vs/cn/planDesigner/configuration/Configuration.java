@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.generator.configuration;
+package de.uni_kassel.vs.cn.planDesigner.configuration;
 
 import java.io.*;
 import java.nio.file.Paths;

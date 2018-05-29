@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.generator.configuration;
+package de.uni_kassel.vs.cn.planDesigner.configuration;
 
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import org.apache.logging.log4j.LogManager;
