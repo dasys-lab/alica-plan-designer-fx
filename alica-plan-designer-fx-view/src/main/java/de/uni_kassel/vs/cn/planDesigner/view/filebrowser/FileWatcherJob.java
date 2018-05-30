@@ -1,8 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.generator.configuration.Configuration;
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import javafx.application.Platform;
 
 import java.io.File;
@@ -15,9 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
-/**
- * Created by marci on 16.03.17.
- */
 public class FileWatcherJob implements Runnable {
 
     public static boolean stayAlive = true;

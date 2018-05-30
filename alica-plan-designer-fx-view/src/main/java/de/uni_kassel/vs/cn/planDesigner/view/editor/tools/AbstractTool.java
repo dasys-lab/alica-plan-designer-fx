@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
@@ -27,7 +26,6 @@ import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,16 +34,17 @@ import java.util.Map;
  * tool is selected (start of the phase) -> Event handler for special actions on the {@link PlanEditorGroup}
  * are registered -> The actions are performed. A new alicamodel object is created.
  * Or the actions are aborted. -> The phase ends. The event handlers will be removed. and the editor is usable as before.
- *
- * @param <T> type of the alicamodel object this tool is associated with
  */
-@SuppressWarnings("unchecked")
-public abstract class AbstractTool<T extends PlanElement> {
+public abstract class AbstractTool {
+    // Contains Icon and Text and triggers the drag events (start and stop).
+    protected DraggableHBox draggableHBox;
+    // Shadow Effect set on draggableHBox when dragged
+    protected static final DropShadow dropShadowEffect = new DropShadow(10, Color.GREY);
 
     protected TabPane workbench;
     protected Cursor originalCursor;
     protected Point2D localCoord;
-    protected DragableHBox<T> dragableHBox;
+
     private boolean recentlyDone;
     private HashMap<EventType, EventHandler> defaultHandlers;
     private EventHandler<? super ScrollEvent> onScrollInPlanTab;
@@ -56,11 +55,25 @@ public abstract class AbstractTool<T extends PlanElement> {
 
     public AbstractTool(TabPane workbench) {
         this.workbench = workbench;
+        dropShadowEffect.setSpread(0.5);
     }
 
-    public abstract T createNewObject();
     public abstract void draw();
+
     protected abstract Map<EventType, EventHandler> toolRequiredHandlers();
+
+    public void setDraggableHBox(DraggableHBox draggableHBox) {
+        this.draggableHBox = draggableHBox;
+        this.draggableHBox.setOnDragDetected(event -> {
+            this.draggableHBox.startFullDrag();
+            this.startPhase();
+            event.consume();
+
+            dragTool.setActiveElement(modelElementId);
+        });
+
+        this.draggableHBox.setOnDragDone(Event::consume);
+    }
 
     protected Node getWorkbench() {
         return workbench;
@@ -81,12 +94,8 @@ public abstract class AbstractTool<T extends PlanElement> {
         return defaultHandlers;
     }
 
-    public DragableHBox<T> createToolUI() {
-        dragableHBox = new DragableHBox<>(createNewObject(), this);
-        return dragableHBox;
-    }
-
     public void startPhase() {
+        draggableHBox.setEffect(dropShadowEffect);
         toolRequiredHandlers()
                 .entrySet()
                 .forEach(entry -> getWorkbench().getScene().addEventFilter(entry.getKey(), entry.getValue()));
@@ -112,14 +121,11 @@ public abstract class AbstractTool<T extends PlanElement> {
         }
 
         originalCursor = workbench.getScene().getCursor();
-        DropShadow value = new DropShadow(10, Color.GREY);
-        value.setSpread(0.5);
-        dragableHBox.setEffect(value);
         workbench.getScene().setCursor(new ImageCursor(new AlicaIcon(createNewObject().getClass().getSimpleName())));
     }
 
     public void endPhase() {
-        dragableHBox.setEffect(null);
+        draggableHBox.setEffect(null);
         toolRequiredHandlers()
                 .entrySet()
                 .forEach(entry -> getWorkbench().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
@@ -143,7 +149,7 @@ public abstract class AbstractTool<T extends PlanElement> {
         AbstractEditorTab selectedItem = (AbstractEditorTab) MainController.getInstance().getEditorTabPane().getSelectionModel()
                 .getSelectedItem();
         if (selectedItem != null) {
-            List<Pair<PlanElement, AbstractPlanElementContainer>> noSelection = new ArrayList<>();
+            List<Pair<Long, AbstractPlanElementContainer>> noSelection = new ArrayList<>();
             noSelection.add(new Pair<>(null, null));
             selectedItem
                     .getSelectedPlanElements().set(noSelection);
@@ -166,8 +172,8 @@ public abstract class AbstractTool<T extends PlanElement> {
             localCoord =
                     ((StackPane) event.getTarget()).getChildren().get(0)
                             .sceneToLocal(event.getX(), event.getY());
-        } else if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer) {
-            localCoord = ((Node)((Node)event.getTarget()).getParent().getParent())
+        } else if (((Node) event.getTarget()).getParent() instanceof AbstractPlanElementContainer) {
+            localCoord = ((Node) ((Node) event.getTarget()).getParent().getParent())
                     .sceneToLocal(event.getX(), event.getY());
         } else {
             return true;

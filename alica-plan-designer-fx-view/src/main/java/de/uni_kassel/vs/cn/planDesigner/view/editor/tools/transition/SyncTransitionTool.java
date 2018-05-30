@@ -10,7 +10,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TransitionContaine
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DragableHBox;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.TabChangeListener;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
@@ -121,9 +121,9 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
     }
 
     @Override
-    public DragableHBox<SyncTransition> createToolUI() {
-        dragableHBox = new SyncTransitionHBox();
-        return dragableHBox;
+    public DraggableHBox createToolUI() {
+        draggableHBox = new SyncTransitionHBox();
+        return draggableHBox;
     }
 
     /**
@@ -134,7 +134,7 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
     }
 
 
-    private class SyncTransitionHBox extends DragableHBox<SyncTransitionTool.SyncTransition> {
+    private class SyncTransitionHBox extends DraggableHBox<SyncTransition> {
         public SyncTransitionHBox() {
             super(SyncTransitionTool.this.createNewObject(), SyncTransitionTool.this);
             setOnDragDetected(Event::consume);

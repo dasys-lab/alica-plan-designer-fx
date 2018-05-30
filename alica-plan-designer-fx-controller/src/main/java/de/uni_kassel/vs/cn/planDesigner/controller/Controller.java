@@ -23,8 +23,11 @@ public final class Controller {
 
     public Controller () {
         configurationManager = ConfigurationManager.getInstance();
-        modelManager = new ModelManager();
 
+        modelManager = new ModelManager();
+        commandStack = new CommandStack();
+
+        repoViewModel = new RepositoryViewModel();
         repoViewModel.setPlans(modelManager.getPlansForUI());
     }
 }

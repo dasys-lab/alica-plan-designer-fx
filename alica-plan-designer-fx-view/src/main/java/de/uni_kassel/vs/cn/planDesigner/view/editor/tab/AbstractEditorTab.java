@@ -82,9 +82,9 @@ public abstract class AbstractEditorTab extends Tab {
         selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
         visualRepresentations = FXCollections.observableArrayList();
 
-        selectedPlanElements.get().addListener(new ListChangeListener<Pair<PlanElement, AbstractPlanElementContainer>>() {
+        selectedPlanElements.get().addListener(new ListChangeListener<Pair<Long, AbstractPlanElementContainer>>() {
             @Override
-            public void onChanged(Change<? extends Pair<PlanElement, AbstractPlanElementContainer>> change) {
+            public void onChanged(Change<? extends Pair<Long, AbstractPlanElementContainer>> change) {
                 while (change.next()) {
                     change.getAddedSubList().forEach(o -> {
                         o.getValue().setEffect(createSelectedEffect());
@@ -97,19 +97,19 @@ public abstract class AbstractEditorTab extends Tab {
         PlanTab tab = (PlanTab) selectedTab;
         tab.getPlanEditorGroup().getStateContainers().forEach(stateContainer -> {
             selectedPlanElements.get()
-                    .add(new Pair<PlanElement, AbstractPlanElementContainer>(stateContainer.getContainedElement(), stateContainer));
+                    .add(new Pair<Long, AbstractPlanElementContainer>(stateContainer.getContainedElement(), stateContainer));
         });
         tab.getPlanEditorGroup().getEntryPointContainers().forEach(epContainer -> {
             selectedPlanElements.get()
-                    .add(new Pair<PlanElement, AbstractPlanElementContainer>(epContainer.getContainedElement(), epContainer));
+                    .add(new Pair<Long, AbstractPlanElementContainer>(epContainer.getContainedElement(), epContainer));
         });
         tab.getPlanEditorGroup().getTransitionContainers().forEach(transitionContainer -> {
             selectedPlanElements.get()
-                    .add(new Pair<PlanElement, AbstractPlanElementContainer>(transitionContainer.getContainedElement(), transitionContainer));
+                    .add(new Pair<Long, AbstractPlanElementContainer>(transitionContainer.getContainedElement(), transitionContainer));
         });
         tab.getPlanEditorGroup().getSynchronisationContainers().forEach(syncContainer -> {
             selectedPlanElements.get()
-                    .add(new Pair<PlanElement, AbstractPlanElementContainer>(syncContainer.getContainedElement(), syncContainer));
+                    .add(new Pair<Long, AbstractPlanElementContainer>(syncContainer.getContainedElement(), syncContainer));
         });
     }
 

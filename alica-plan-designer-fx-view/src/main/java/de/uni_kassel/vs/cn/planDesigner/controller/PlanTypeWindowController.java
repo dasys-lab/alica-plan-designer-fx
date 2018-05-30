@@ -80,7 +80,7 @@ public class PlanTypeWindowController implements Initializable {
                 .stream()
                 .sorted(pairComparator)
                 .map(e -> {
-                    RepositoryHBox<Plan> planRepositoryHBox = new RepositoryHBox<>(e.getKey(), e.getValue());
+                    RepositoryHBox planRepositoryHBox = new RepositoryHBox(e.getKey(), e.getValue());
                     planRepositoryHBox.setOnMouseClicked(null);
                     return planRepositoryHBox;
                 })
@@ -100,7 +100,7 @@ public class PlanTypeWindowController implements Initializable {
         });
 
         addPlanButton.setOnAction(e -> {
-            RepositoryHBox<Plan> selectedItem = planListView.getSelectionModel().getSelectedItem();
+            RepositoryHBox selectedItem = planListView.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 AddPlanToPlanType command = new AddPlanToPlanType(selectedItem.getObject(), planType);
                 commandStack.storeAndExecute(command);
@@ -143,7 +143,7 @@ public class PlanTypeWindowController implements Initializable {
                     List<? extends AnnotatedPlan> addedSubList = c.getAddedSubList();
                     addedSubList
                             .forEach(e -> {
-                                List<RepositoryHBox<Plan>> toRemove = planListView
+                                List<RepositoryHBox> toRemove = planListView
                                         .getItems()
                                         .stream()
                                         .filter(f -> f.getObject().equals(e.getPlan()))
@@ -160,7 +160,7 @@ public class PlanTypeWindowController implements Initializable {
                                         .stream()
                                         .filter(f -> f.getKey().equals(e.getPlan()))
                                         .findFirst().get();
-                                RepositoryHBox<Plan> e1 = new RepositoryHBox<>(planPathPair.getKey(), planPathPair.getValue());
+                                RepositoryHBox e1 = new RepositoryHBox(planPathPair.getKey(), planPathPair.getValue());
                                 e1.setOnMouseClicked(null);
                                 planListView.getItems().add(e1);
                             });

@@ -8,7 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TerminalStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DragableHBox;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -109,12 +109,12 @@ public class TransitionTool extends AbstractTool<Transition> {
     }
 
     @Override
-    public DragableHBox<Transition> createToolUI() {
-        dragableHBox = new TransitionHBox();
-        return dragableHBox;
+    public DraggableHBox createToolUI() {
+        draggableHBox = new TransitionHBox();
+        return draggableHBox;
     }
 
-    private class TransitionHBox extends DragableHBox<Transition> {
+    private class TransitionHBox extends DraggableHBox<Transition> {
         public TransitionHBox() {
             super(TransitionTool.this.createNewObject(), TransitionTool.this);
             setOnDragDetected(Event::consume);

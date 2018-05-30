@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import javafx.fxml.FXMLLoader;
@@ -12,14 +11,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/**
- * Created by marci on 10.05.17.
- */
 public class ShowUsagesMenuItem extends MenuItem {
 
     private I18NRepo i18NRepo;
 
-    public ShowUsagesMenuItem(PlanElement planToGetUsageInformationAbout) {
+    public ShowUsagesMenuItem(long modelElementId) {
         i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getString("label.menu.usage"));
         setOnAction( e -> {
@@ -27,7 +23,7 @@ public class ShowUsagesMenuItem extends MenuItem {
             try {
                 Parent infoWindow = fxmlLoader.load();
                 UsagesWindowController controller = fxmlLoader.getController();
-                controller.createReferencesList(EMFModelUtils.getUsages(planToGetUsageInformationAbout));
+                controller.createReferencesList(modelElementId);
                 Stage stage = new Stage();
                 stage.setResizable(false);
                 stage.setTitle(i18NRepo.getString("label.usage.info"));

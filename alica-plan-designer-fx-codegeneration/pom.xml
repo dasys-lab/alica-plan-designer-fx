@@ -87,7 +87,7 @@
         </dependency>
         <dependency>
             <groupId>de.uks.vs.alica</groupId>
-            <artifactId>controller</artifactId>
+            <artifactId>tool</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.xtext/org.eclipse.xtext.xbase.lib -->

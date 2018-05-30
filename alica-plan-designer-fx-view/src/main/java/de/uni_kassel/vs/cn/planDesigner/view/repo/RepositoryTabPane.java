@@ -1,16 +1,15 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractPlanTool;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 public class RepositoryTabPane extends TabPane {
 
-    public RepositoryTabPane() {
-        getTabs().clear();
-    }
+//    public RepositoryTabPane() {
+//        getTabs().clear();
+//    }
 
     public void init() {
         getTabs().clear();
@@ -18,21 +17,21 @@ public class RepositoryTabPane extends TabPane {
     }
 
     private Tab[] createAllRepoTabs() {
-        AbstractPlanTool planTool = new AbstractPlanTool(MainController.getInstance().getEditorTabPane()) {
+        RepositoryTool planTool = new RepositoryTool(MainController.getInstance().getEditorTabPane()) {
             @Override
             public AbstractPlan createNewObject() {
                 return EMFModelUtils.getAlicaFactory().createPlan();
             }
         };
 
-        AbstractPlanTool behaviourTool = new AbstractPlanTool(MainController.getInstance().getEditorTabPane()) {
+        RepositoryTool behaviourTool = new RepositoryTool(MainController.getInstance().getEditorTabPane()) {
             @Override
             public AbstractPlan createNewObject() {
                 return EMFModelUtils.getAlicaFactory().createBehaviour();
             }
         };
 
-        AbstractPlanTool planTypeTool = new AbstractPlanTool(MainController.getInstance().getEditorTabPane()) {
+        RepositoryTool planTypeTool = new RepositoryTool(MainController.getInstance().getEditorTabPane()) {
             @Override
             public AbstractPlan createNewObject() {
                 return EMFModelUtils.getAlicaFactory().createPlanType();
@@ -45,7 +44,7 @@ public class RepositoryTabPane extends TabPane {
                 new RepositoryTab<>(RepositoryViewModel.getInstance().getTasks(), new TaskTool(), getAlicaFactory().createTask().eClass().getName())};
     }
 
-    public class TaskTool extends AbstractPlanTool {
+    public class TaskTool extends RepositoryTool {
         public TaskTool() {
             super(RepositoryTabPane.this);
         }

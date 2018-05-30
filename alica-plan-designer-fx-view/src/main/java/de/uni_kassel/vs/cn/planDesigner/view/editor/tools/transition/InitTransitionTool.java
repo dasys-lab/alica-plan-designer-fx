@@ -1,14 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition;
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanElementImpl;
-import de.uni_kassel.vs.cn.planDesigner.command.change.SetStateForEntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DragableHBox;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -20,10 +17,7 @@ import javafx.scene.input.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by marci on 08.03.17.
- */
-public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStateConnection> {
+public class InitTransitionTool extends AbstractTool {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private boolean initial = true;
@@ -103,14 +97,14 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
     }
 
     @Override
-    public DragableHBox<InitStateConnection> createToolUI() {
-        dragableHBox = new InitTransitionTool.InitStateConnectionHBox();
-        return dragableHBox;
+    public DraggableHBox createToolUI() {
+        draggableHBox = new InitTransitionTool.InitStateConnectionHBox();
+        return draggableHBox;
     }
 
-    private class InitStateConnectionHBox extends DragableHBox<InitStateConnection> {
+    private class InitStateConnectionHBox extends DraggableHBox {
         public InitStateConnectionHBox() {
-            super(InitTransitionTool.this.createNewObject(), InitTransitionTool.this);
+            super("initstateconnection", InitTransitionTool.this);
             setOnDragDetected(Event::consume);
             setOnMouseClicked(event -> startPhase());
         }
