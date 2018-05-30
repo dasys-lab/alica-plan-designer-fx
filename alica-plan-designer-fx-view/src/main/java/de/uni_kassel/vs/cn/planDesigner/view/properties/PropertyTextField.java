@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.properties;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
@@ -54,8 +54,8 @@ class PropertyTextField<T extends PlanElement> extends TextField {
 
        textProperty().addListener((observable, oldVal, newVal) -> {
            newValue = newVal;
-           if(MainController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem() instanceof PlanTab) {
-                ((PlanTab)MainController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem()).setupPlanVisualisation();
+           if(MainWindowController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem() instanceof PlanTab) {
+                ((PlanTab)MainWindowController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem()).setupPlanVisualisation();
            }
         });
     }

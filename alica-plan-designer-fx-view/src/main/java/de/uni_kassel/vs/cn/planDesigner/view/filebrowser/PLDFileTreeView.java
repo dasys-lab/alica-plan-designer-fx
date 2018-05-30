@@ -1,10 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.beans.value.ChangeListener;
@@ -21,7 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,14 +26,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.util.Optional;
 
-/**
- * Created by marci on 16.10.16.
- */
 public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
-    private MainController controller;
+    private MainWindowController controller;
 
     private boolean wasDragged;
     private TreeItem<FileWrapper> draggedItem;
@@ -227,7 +219,6 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
             }
             return fileWrapperTreeCell;
         });
-        new Thread(new FileWatcherJob(this)).start();
     }
 
     public synchronized void updateTreeView(WatchEvent.Kind kind, Path child) {
@@ -241,15 +232,15 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            RepositoryTabPane repositoryTabPane = MainController.getInstance().getRepositoryTabPane();
-            Tab previousTab = repositoryTabPane.getSelectionModel().getSelectedItem();
-            repositoryTabPane.init();
-            repositoryTabPane.getSelectionModel().select(previousTab);
+//            RepositoryTabPane repositoryTabPane = MainWindowController.getInstance().getRepositoryTabPane();
+//            Tab previousTab = repositoryTabPane.getSelectionModel().getSelectedItem();
+//            repositoryTabPane.init();
+//            repositoryTabPane.getSelectionModel().select(previousTab);
 
         }
     }
 
-    public void setController(MainController controller) {
+    public void setController(MainWindowController controller) {
         this.controller = controller;
     }
 }

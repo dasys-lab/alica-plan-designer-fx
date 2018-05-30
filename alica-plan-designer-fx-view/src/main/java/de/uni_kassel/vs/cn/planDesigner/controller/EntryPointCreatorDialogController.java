@@ -103,7 +103,7 @@ public class EntryPointCreatorDialogController implements Initializable {
 
     private void createTask() {
         if (newTaskNameTextField.getText() != null && newTaskNameTextField.getText().isEmpty() == false) {
-            MainController
+            MainWindowController
                     .getInstance()
                     .getCommandStack()
                     .storeAndExecute(new AddTaskToRepository(RepositoryViewModel.getInstance()
@@ -120,13 +120,13 @@ public class EntryPointCreatorDialogController implements Initializable {
     }
 
     private void createNewEntryPoint(Task selectedItem) {
-        PlanTab selectedPlanTab = (PlanTab) MainController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem();
+        PlanTab selectedPlanTab = (PlanTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem();
         AddEntryPointInPlan command = new AddEntryPointInPlan((selectedPlanTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
-        MainController.getInstance()
+        MainWindowController.getInstance()
                 .getCommandStack()
                 .storeAndExecute(command);
         command.getElementToEdit().setTask(selectedItem);
-        MainController.getInstance()
+        MainWindowController.getInstance()
                 .getCommandStack()
                 .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
                         x, y,selectedPlanTab.getEditable()));

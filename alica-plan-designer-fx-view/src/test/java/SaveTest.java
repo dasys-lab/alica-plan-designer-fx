@@ -2,7 +2,7 @@
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.PLDFileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
@@ -52,7 +52,7 @@ public class SaveTest extends ApplicationTest {
 
         // Speichern
         testInstance.getPlans().add(new Pair<>(plan, planFile.toPath()));
-        PLDFileTreeView pldFileTreeView = MainController.getInstance().getFileTreeView();
+        PLDFileTreeView pldFileTreeView = MainWindowController.getInstance().getFileTreeView();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -62,14 +62,14 @@ public class SaveTest extends ApplicationTest {
 
         Assert.assertTrue(fileWrapperTreeItem != null);
         Platform.runLater(() -> {
-            MainController.getInstance().getEditorTabPane().openTab(fileWrapperTreeItem.getValue().unwrap().toPath());
-            PlanTab selectedItem = (PlanTab) MainController.getInstance().getEditorTabPane().getTabs().get(0);
+            MainWindowController.getInstance().getEditorTabPane().openTab(fileWrapperTreeItem.getValue().unwrap().toPath());
+            PlanTab selectedItem = (PlanTab) MainWindowController.getInstance().getEditorTabPane().getTabs().get(0);
             State state = getAlicaFactory().createState();
             state.setName("State1");
             AddStateInPlan addStateInPlan = new AddStateInPlan(selectedItem.getPlanModelVisualisationObject(), state);
-            MainController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
+            MainWindowController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
             selectedItem.save();
-            MainController.getInstance().getCommandStack().storeAndExecute(new DeleteAbstractPlan(selectedItem.getEditable()));
+            MainWindowController.getInstance().getCommandStack().storeAndExecute(new DeleteAbstractPlan(selectedItem.getEditable()));
         });
 
         PlanDesigner.setRunning(false);
@@ -95,7 +95,7 @@ public class SaveTest extends ApplicationTest {
 
         // Speichern
         testInstance.getPlans().add(new Pair<>(plan, planFile.toPath()));
-        PLDFileTreeView pldFileTreeView = MainController.getInstance().getFileTreeView();
+        PLDFileTreeView pldFileTreeView = MainWindowController.getInstance().getFileTreeView();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -105,14 +105,14 @@ public class SaveTest extends ApplicationTest {
 
         Assert.assertTrue(fileWrapperTreeItem != null);
         Platform.runLater(() -> {
-            MainController.getInstance().getEditorTabPane().openTab(fileWrapperTreeItem.getValue().unwrap().toPath());
-            PlanTab selectedItem = (PlanTab) MainController.getInstance().getEditorTabPane().getTabs().get(0);
+            MainWindowController.getInstance().getEditorTabPane().openTab(fileWrapperTreeItem.getValue().unwrap().toPath());
+            PlanTab selectedItem = (PlanTab) MainWindowController.getInstance().getEditorTabPane().getTabs().get(0);
             State state = getAlicaFactory().createState();
             state.setName("State2");
             AddStateInPlan addStateInPlan = new AddStateInPlan(selectedItem.getPlanModelVisualisationObject(), state);
-            MainController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
+            MainWindowController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
             selectedItem.save();
-            MainController.getInstance().getCommandStack().storeAndExecute(new DeleteAbstractPlan(selectedItem.getEditable()));
+            MainWindowController.getInstance().getCommandStack().storeAndExecute(new DeleteAbstractPlan(selectedItem.getEditable()));
 
         });
 

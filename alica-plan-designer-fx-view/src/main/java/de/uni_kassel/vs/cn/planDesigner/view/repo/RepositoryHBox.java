@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.repo;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractPlanTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DragableHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
@@ -59,7 +59,7 @@ public class RepositoryHBox<T extends PlanElement> extends DragableHBox {
         }
         setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
-                MainController.getInstance().openFile(pathToObject.toFile());
+                MainWindowController.getInstance().openFile(pathToObject.toFile());
             }
         });
     }

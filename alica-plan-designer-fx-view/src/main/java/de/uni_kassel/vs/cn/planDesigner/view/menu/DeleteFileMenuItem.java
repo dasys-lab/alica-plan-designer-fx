@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
@@ -39,8 +39,8 @@ public class DeleteFileMenuItem extends MenuItem {
 
     public void deleteFile() {
         RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
-        MainController mainController = MainController.getInstance();
-        RepositoryTabPane repositoryTabPane = mainController.getRepositoryTabPane();
+        MainWindowController mainWindowController = MainWindowController.getInstance();
+        RepositoryTabPane repositoryTabPane = mainWindowController.getRepositoryTabPane();
 
         // Plans
         Optional<Pair<Plan, Path>> planPathPair = repositoryViewModel.getPlanPathPair(toDelete);
@@ -50,7 +50,7 @@ public class DeleteFileMenuItem extends MenuItem {
             }
             repositoryViewModel.getPlans().remove(planPathPair.get());
             Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
-            mainController.closeTabIfOpen(planPathPair.get().getKey());
+            mainWindowController.closeTabIfOpen(planPathPair.get().getKey());
             repositoryTabPane.init();
             repositoryTabPane.getSelectionModel().select(repoTab);
             return;
@@ -64,7 +64,7 @@ public class DeleteFileMenuItem extends MenuItem {
             }
             repositoryViewModel.getPlanTypes().remove(planTypePathPair.get());
             Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
-            mainController.closeTabIfOpen(planTypePathPair.get().getKey());
+            mainWindowController.closeTabIfOpen(planTypePathPair.get().getKey());
             repositoryTabPane.init();
             repositoryTabPane.getSelectionModel().select(repoTab);
             return;
@@ -78,7 +78,7 @@ public class DeleteFileMenuItem extends MenuItem {
             }
             repositoryViewModel.getBehaviours().remove(behaviourPathPair.get());
             Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
-            mainController.closeTabIfOpen(behaviourPathPair.get().getKey());
+            mainWindowController.closeTabIfOpen(behaviourPathPair.get().getKey());
             repositoryTabPane.init();
             repositoryTabPane.getSelectionModel().select(repoTab);
             return;

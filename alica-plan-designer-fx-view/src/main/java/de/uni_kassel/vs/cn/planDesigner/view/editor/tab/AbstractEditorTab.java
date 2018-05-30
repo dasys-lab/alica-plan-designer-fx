@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanHBox;
@@ -52,7 +52,7 @@ public abstract class AbstractEditorTab extends Tab {
         initSelectedPlanElements(editablePathPair);
 
         // add Ctrl+A handler to scene
-        EditorTabPane editorTabPane = MainController.getInstance().getEditorTabPane();
+        EditorTabPane editorTabPane = MainWindowController.getInstance().getEditorTabPane();
         editorTabPane.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (ctrlA.match(event)) {
                 selectAllPlanElements(editorTabPane, event);

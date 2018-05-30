@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddAbstractPlanToState;
 import de.uni_kassel.vs.cn.planDesigner.controller.CreateNewDialogController;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TerminalStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
@@ -82,7 +82,7 @@ public class BehaviourTool extends AbstractTool<Behaviour> {
 
                     AddAbstractPlanToState command =
                             new AddAbstractPlanToState(newBehaviour, stateContainer.getContainedElement());
-                    MainController.getInstance()
+                    MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
                 }

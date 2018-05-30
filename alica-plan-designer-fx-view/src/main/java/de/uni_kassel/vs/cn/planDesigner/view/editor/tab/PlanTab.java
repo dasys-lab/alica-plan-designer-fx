@@ -7,13 +7,11 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.PLDToolBar;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -69,7 +67,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
 
         planEditorGroup.setManaged(true);
 
-        pldToolBar = new PLDToolBar(MainController.getInstance().getEditorTabPane());
+        pldToolBar = new PLDToolBar(MainWindowController.getInstance().getEditorTabPane());
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);

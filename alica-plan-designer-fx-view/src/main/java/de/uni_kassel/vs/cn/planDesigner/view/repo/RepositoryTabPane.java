@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractPlanTool;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -18,21 +18,21 @@ public class RepositoryTabPane extends TabPane {
     }
 
     private Tab[] createAllRepoTabs() {
-        AbstractPlanTool planTool = new AbstractPlanTool(MainController.getInstance().getEditorTabPane()) {
+        AbstractPlanTool planTool = new AbstractPlanTool(MainWindowController.getInstance().getEditorTabPane()) {
             @Override
             public AbstractPlan createNewObject() {
                 return EMFModelUtils.getAlicaFactory().createPlan();
             }
         };
 
-        AbstractPlanTool behaviourTool = new AbstractPlanTool(MainController.getInstance().getEditorTabPane()) {
+        AbstractPlanTool behaviourTool = new AbstractPlanTool(MainWindowController.getInstance().getEditorTabPane()) {
             @Override
             public AbstractPlan createNewObject() {
                 return EMFModelUtils.getAlicaFactory().createBehaviour();
             }
         };
 
-        AbstractPlanTool planTypeTool = new AbstractPlanTool(MainController.getInstance().getEditorTabPane()) {
+        AbstractPlanTool planTypeTool = new AbstractPlanTool(MainWindowController.getInstance().getEditorTabPane()) {
             @Override
             public AbstractPlan createNewObject() {
                 return EMFModelUtils.getAlicaFactory().createPlanType();

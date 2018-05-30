@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddAbstractPlanToState;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TerminalStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
@@ -94,7 +94,7 @@ public class AbstractPlanTool extends AbstractTool<AbstractPlan> {
                         StateContainer stateContainer = (StateContainer) ((Node) event.getTarget()).getParent();
                         ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
                         AddAbstractPlanToState command = new AddAbstractPlanToState(activeElement, stateContainer.getContainedElement());
-                        MainController.getInstance()
+                        MainWindowController.getInstance()
                                 .getCommandStack()
                                 .storeAndExecute(command);
                         draw();

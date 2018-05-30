@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanElementImpl;
 import de.uni_kassel.vs.cn.planDesigner.command.change.SetStateForEntryPoint;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
@@ -60,7 +60,7 @@ public class InitTransitionTool extends AbstractTool<InitTransitionTool.InitStat
                     finish = (StateContainer) ((Node)event.getTarget()).getParent();
                     initial = true;
                     SetStateForEntryPoint command = new SetStateForEntryPoint(start.getContainedElement(), finish.getContainedElement());
-                    MainController.getInstance()
+                    MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
                 } else {

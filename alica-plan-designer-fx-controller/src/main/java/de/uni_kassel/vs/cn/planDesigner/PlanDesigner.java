@@ -1,9 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.Controller;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileWatcherJob;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -44,7 +43,6 @@ public class PlanDesigner extends Application {
     public static void main(String[] args) throws IOException, URISyntaxException {
         Controller controller = new Controller();
         launch(args);
-        FileWatcherJob.stayAlive = false;
     }
 
     @Override
@@ -52,9 +50,9 @@ public class PlanDesigner extends Application {
         running = true;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("mainWindow.fxml"));
-        // The next two lines replace this attribute in mainWindow.fxml::AnchorPane "fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainController"
-        MainController mainController = MainController.getInstance();
-        fxmlLoader.setController(mainController);
+        // The next two lines replace this attribute in mainWindow.fxml::AnchorPane "fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController"
+        MainWindowController mainWindowController = MainWindowController.getInstance();
+        fxmlLoader.setController(mainWindowController);
         Parent root = fxmlLoader.load();
 
         // TODO: does not load the icon.xpm

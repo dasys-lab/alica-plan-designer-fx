@@ -1,9 +1,9 @@
-package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
+package de.uni_kassel.vs.cn.planDesigner.filebrowser;
 
-import de.uni_kassel.vs.cn.generator.configuration.Configuration;
-import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import javafx.application.Platform;
+import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.controller.Controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,20 +15,15 @@ import java.util.concurrent.TimeUnit;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
-/**
- * Created by marci on 16.03.17.
- */
-public class FileWatcherJob implements Runnable {
+public class FileSystemEventHandler implements Runnable  {
 
-    public static boolean stayAlive = true;
-
-    private final PLDFileTreeView fileTreeView;
     private final Map<WatchKey, Path> keys = new HashMap<>();
     private boolean trace = false;
     private WatchService watcher;
+    private Controller controller;
 
-    public FileWatcherJob(PLDFileTreeView fileTreeView) {
-        this.fileTreeView = fileTreeView;
+    public FileSystemEventHandler(Controller controller) {
+        this.controller = controller;
     }
 
 
@@ -94,10 +89,6 @@ public class FileWatcherJob implements Runnable {
                     return;
                 }
 
-                if (stayAlive == false) {
-                    break;
-                }
-
                 Path dir = keys.get(key);
                 if (dir == null) {
                     continue;
@@ -130,7 +121,8 @@ public class FileWatcherJob implements Runnable {
                             throw new RuntimeException(x);
                         }
                     }
-                    Platform.runLater(() -> fileTreeView.updateTreeView(kind, child));
+                    controller.handleFileSystemEvent(event, child);
+//                    Platform.runLater(() -> fileTreeView.updateTreeView(kind, child));
                 }
 
                 // reset key and remove from set if directory no longer accessible

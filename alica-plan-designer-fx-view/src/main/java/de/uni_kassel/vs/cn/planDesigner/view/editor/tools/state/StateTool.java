@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationOb
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddStateInPlan;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
@@ -106,13 +106,13 @@ public class StateTool extends AbstractTool<State> {
                     PlanModelVisualisationObject planModelVisualisationObject = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject();
                     AddStateInPlan command = new AddStateInPlan(planModelVisualisationObject,
                             createNewObject());
-                    MainController.getInstance()
+                    MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
                     if (localCoord == null) {
                         localCoord = new Point2D(0,0);
                     }
-                    MainController.getInstance()
+                    MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(),command.getElementToEdit(),
                                     (int) (localCoord.getX()),

@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddTransitionInPlan;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TerminalStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
@@ -65,7 +65,7 @@ public class TransitionTool extends AbstractTool<Transition> {
                             AddTransitionInPlan command = new AddTransitionInPlan(
                                     ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject(),
                                     start.getContainedElement(), finish.getContainedElement());
-                            MainController.getInstance()
+                            MainWindowController.getInstance()
                                     .getCommandStack()
                                     .storeAndExecute(command);
                         }

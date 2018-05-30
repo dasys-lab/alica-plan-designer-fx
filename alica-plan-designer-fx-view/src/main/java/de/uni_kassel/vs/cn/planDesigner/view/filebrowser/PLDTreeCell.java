@@ -6,7 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.event.EventHandler;
@@ -29,10 +29,10 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
 
     private TextField textField;
 
-    private final MainController controller;
+    private final MainWindowController controller;
 
 
-    public PLDTreeCell(MainController controller) {
+    public PLDTreeCell(MainWindowController controller) {
         this.controller = controller;
         if (getItem() != null) {
             addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleDoubleClick);
