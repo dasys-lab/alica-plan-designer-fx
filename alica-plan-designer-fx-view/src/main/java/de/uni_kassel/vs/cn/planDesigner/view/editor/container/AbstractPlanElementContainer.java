@@ -65,7 +65,7 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
                     .getSelectedItem()).getPldToolBar();
             // Was the last click performed in the context of a tool?
             if (pldToolBar.anyToolsRecentlyDone() == false) {
-                ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = FXCollections.observableArrayList();;
+                ArrayList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
                 selectedElements.add(new Pair<>(containedElement, this));
                 ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
                         .getSelectedItem()).getSelectedPlanElements().setValue(selectedElements);

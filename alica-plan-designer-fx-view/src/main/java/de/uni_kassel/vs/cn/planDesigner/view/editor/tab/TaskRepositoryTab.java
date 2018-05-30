@@ -57,7 +57,7 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         taskListView.getItems().sort(Comparator.comparing(task -> task.getName()));
         taskListView.setCellFactory(param -> new TaskListCell());
         taskListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();
+            List<Pair<PlanElement, AbstractPlanElementContainer>> selected =new ArrayList<>();
             selected.add(new Pair<>(observable.getValue(),
                     new AbstractPlanElementContainer<Task>(observable.getValue(), null, getCommandStack()) {
                         @Override
