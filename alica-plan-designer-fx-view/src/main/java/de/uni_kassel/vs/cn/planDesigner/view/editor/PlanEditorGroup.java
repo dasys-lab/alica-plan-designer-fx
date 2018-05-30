@@ -52,7 +52,6 @@ public class PlanEditorGroup extends Group {
         getChildren().addAll(synchronisationContainers);
 
         this.setOnMouseClicked(new MouseClickHandler(transitionContainers));
-        //getChildren().add(new Line(EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, 0d, EditorConstants.PLAN_SHIFTING_PARAMETER + 20d, getHeight()));
     }
 
     public CommandStack getCommandStack() {

@@ -57,7 +57,7 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
     }
 
     @Override
-    protected Map<EventType, EventHandler> toolRequiredHandlers() {
+    protected Map<EventType, EventHandler> getCustomHandlerMap() {
         if (eventHandlerMap.isEmpty()) {
             eventHandlerMap.put(MouseEvent.MOUSE_CLICKED, event -> {
                 if(((Node)event.getTarget()).getParent() instanceof SynchronisationContainer) {

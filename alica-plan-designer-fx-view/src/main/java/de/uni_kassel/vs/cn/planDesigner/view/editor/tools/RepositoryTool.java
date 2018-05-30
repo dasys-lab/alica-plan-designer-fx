@@ -1,55 +1,26 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TerminalStateContainer;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class RepositoryTool extends AbstractTool {
 
-    private long modelElementId;
-    private Map<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private Cursor previousCursor;
 
     public RepositoryTool(TabPane workbench) {
         super(workbench);
     }
 
-    public long getModelElementId() {
-        return modelElementId;
-    }
-
-    public void setModelElementId(long modelElementId) {
-        this.modelElementId = modelElementId;
-    }
-
     @Override
-    public void draw() {
-        if (workbench != null && workbench.getSelectionModel().getSelectedItem() != null) {
-            ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
-        }
-    }
-
-    @Override
-    protected Map<EventType, EventHandler> toolRequiredHandlers() {
-        if (eventHandlerMap.isEmpty()) {
-            initHandlerMap();
-        }
-        return eventHandlerMap;
-    }
-
-    private void initHandlerMap () {
+    protected void initHandlerMap () {
         previousCursor = workbench.getScene().getCursor();
-        eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
+        customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
             @Override
             public void handle(MouseDragEvent event) {
                 if (event.getTarget() == null || ((Node) event.getTarget()).getParent() instanceof StateContainer == false ||
@@ -66,14 +37,14 @@ public class RepositoryTool extends AbstractTool {
         });
 
 
-        eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
+        customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
             @Override
             public void handle(MouseDragEvent event) {
                 if (event.getTarget() != null && ((Node) event.getTarget()).getParent() instanceof StateContainer &&
                         ((Node) event.getTarget()).getParent() instanceof TerminalStateContainer == false) {
                     StateContainer stateContainer = (StateContainer) ((Node) event.getTarget()).getParent();
                     AddAbstractPlanToState command = new AddAbstractPlanToState(modelElementId, stateContainer.getContainedElement());
-                    MainController.getInstance()
+                    MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
                     draw();

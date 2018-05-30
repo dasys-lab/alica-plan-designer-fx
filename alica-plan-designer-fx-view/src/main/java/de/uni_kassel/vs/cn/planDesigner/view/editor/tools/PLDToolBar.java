@@ -21,12 +21,13 @@ import java.util.List;
  * {@link PLDToolBar} is the toolbar on the side of the editor to add states, transitions and various other tools
  */
 public class PLDToolBar extends ToolBar {
-    private List<AbstractTool> tools;
+    protected List<AbstractTool> tools;
 
     public PLDToolBar(TabPane workbench) {
         super();
-        tools = new ArrayList<>();
         setOrientation(Orientation.VERTICAL);
+        tools = new ArrayList<>();
+
         StateTool stateTool = new StateTool(workbench);
         getItems().add(stateTool.createToolUI());
         TransitionTool transitionTool = new TransitionTool(workbench);
@@ -51,6 +52,7 @@ public class PLDToolBar extends ToolBar {
         getItems().add(synchronisationTool.createToolUI());
         SyncTransitionTool syncTransitionTool = new SyncTransitionTool(workbench);
         getItems().add(syncTransitionTool.createToolUI());
+
         tools.addAll(Arrays.asList(stateTool, transitionTool, behaviourTool, entryPointTool, successStateTool,
                 failureStateTool, runtimeConditionTool, preConditionTool, postConditionTool, initTransitionTool,
                 synchronisationTool, syncTransitionTool));

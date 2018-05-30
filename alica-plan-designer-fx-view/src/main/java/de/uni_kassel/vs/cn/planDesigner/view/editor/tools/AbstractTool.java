@@ -9,18 +9,14 @@ import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
@@ -36,17 +32,17 @@ import java.util.Map;
  * Or the actions are aborted. -> The phase ends. The event handlers will be removed. and the editor is usable as before.
  */
 public abstract class AbstractTool {
+    protected TabPane workbench;
     // Contains Icon and Text and triggers the drag events (start and stop).
     protected DraggableHBox draggableHBox;
     // Shadow Effect set on draggableHBox when dragged
     protected static final DropShadow dropShadowEffect = new DropShadow(10, Color.GREY);
+    protected HashMap<EventType, EventHandler> defaultHandlerMap;
+    protected HashMap<EventType, EventHandler> customHandlerMap;
 
-    protected TabPane workbench;
+
     protected Cursor originalCursor;
-    protected Point2D localCoord;
-
     private boolean recentlyDone;
-    private HashMap<EventType, EventHandler> defaultHandlers;
     private EventHandler<? super ScrollEvent> onScrollInPlanTab;
     private ScrollPane.ScrollBarPolicy vBarPolicy;
     private ScrollPane.ScrollBarPolicy hBarPolicy;
@@ -55,34 +51,30 @@ public abstract class AbstractTool {
 
     public AbstractTool(TabPane workbench) {
         this.workbench = workbench;
-        dropShadowEffect.setSpread(0.5);
-    }
-
-    public abstract void draw();
-
-    protected abstract Map<EventType, EventHandler> toolRequiredHandlers();
-
-    public void setDraggableHBox(DraggableHBox draggableHBox) {
-        this.draggableHBox = draggableHBox;
+        this.dropShadowEffect.setSpread(0.5);
+        
+        // should be done in the derived classes
+        this.draggableHBox = new DraggableHBox();
         this.draggableHBox.setOnDragDetected(event -> {
             this.draggableHBox.startFullDrag();
             this.startPhase();
             event.consume();
 
-            dragTool.setActiveElement(modelElementId);
+            this.setActiveElement(modelElementId);
         });
-
         this.draggableHBox.setOnDragDone(Event::consume);
     }
+
+    protected abstract void initHandlerMap();
 
     protected Node getWorkbench() {
         return workbench;
     }
 
     protected Map<EventType, EventHandler> defaultHandlers() {
-        if (defaultHandlers == null) {
-            defaultHandlers = new HashMap<>();
-            defaultHandlers.put(MouseEvent.MOUSE_DRAGGED, (event) -> {
+        if (defaultHandlerMap == null) {
+            defaultHandlerMap = new HashMap<>();
+            defaultHandlerMap.put(MouseEvent.MOUSE_DRAGGED, (event) -> {
                 MouseEvent e = (MouseEvent) event;
                 if (e.getSceneX() + 5 > getWorkbench().getScene().getWidth()
                         || e.getSceneY() + 5 > getWorkbench().getScene().getHeight()
@@ -91,20 +83,27 @@ public abstract class AbstractTool {
                 }
             });
         }
-        return defaultHandlers;
+        return defaultHandlerMap;
+    }
+
+    protected Map<EventType, EventHandler> getCustomHandlerMap() {
+        if (customHandlerMap.isEmpty()) {
+            this.initHandlerMap();
+        }
+        return customHandlerMap;
     }
 
     public void startPhase() {
         draggableHBox.setEffect(dropShadowEffect);
-        toolRequiredHandlers()
+        getCustomHandlerMap()
                 .entrySet()
-                .forEach(entry -> getWorkbench().getScene().addEventFilter(entry.getKey(), entry.getValue()));
+                .forEach(entry -> workbench.getScene().addEventFilter(entry.getKey(), entry.getValue()));
         defaultHandlers()
                 .entrySet()
-                .forEach(entry -> getWorkbench().getScene().addEventFilter(entry.getKey(), entry.getValue()));
+                .forEach(entry -> workbench.getScene().addEventFilter(entry.getKey(), entry.getValue()));
 
+        // deactivate scrolling, fixes scrolling to infinity when handling a tool
         if (workbench.getSelectionModel().getSelectedItem() instanceof PlanTab) {
-            // deactivate scrolling, fixes scrolling to infinity when handling a tool
             onScrollInPlanTab = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getOnScroll();
             vBarPolicy = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getHbarPolicy();
             hBarPolicy = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getScrollPane().getVbarPolicy();
@@ -121,12 +120,13 @@ public abstract class AbstractTool {
         }
 
         originalCursor = workbench.getScene().getCursor();
-        workbench.getScene().setCursor(new ImageCursor(new AlicaIcon(createNewObject().getClass().getSimpleName())));
+        // TODO: should be done in the derived tool classes' start phase methods
+        //workbench.getScene().setCursor(new ImageCursor(new AlicaIcon("special type of abstract tool")));
     }
 
     public void endPhase() {
         draggableHBox.setEffect(null);
-        toolRequiredHandlers()
+        getCustomHandlerMap()
                 .entrySet()
                 .forEach(entry -> getWorkbench().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
         defaultHandlers()
@@ -144,7 +144,8 @@ public abstract class AbstractTool {
 
         }
 
-        draw();
+        // TODO: fire event to signal successful termination of event
+        //draw();
         workbench.getScene().setCursor(originalCursor);
         AbstractEditorTab selectedItem = (AbstractEditorTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel()
                 .getSelectedItem();
@@ -155,30 +156,6 @@ public abstract class AbstractTool {
                     .getSelectedPlanElements().set(noSelection);
         }
         setRecentlyDone(true);
-    }
-
-    public boolean updateLocalCoords(MouseDragEvent event) {
-        if (event.getTarget() instanceof Scene) {
-            localCoord = new Point2D(event.getX(), event.getY());
-            return false;
-        }
-
-        if (event.getTarget() == null || event.getTarget() instanceof Node == false) {
-            return true;
-        }
-
-        if (event.getTarget() instanceof StackPane && ((StackPane) event.getTarget()).getChildren().size() > 0 &&
-                ((StackPane) event.getTarget()).getChildren().get(0) instanceof PlanEditorGroup) {
-            localCoord =
-                    ((StackPane) event.getTarget()).getChildren().get(0)
-                            .sceneToLocal(event.getX(), event.getY());
-        } else if (((Node) event.getTarget()).getParent() instanceof AbstractPlanElementContainer) {
-            localCoord = ((Node) ((Node) event.getTarget()).getParent().getParent())
-                    .sceneToLocal(event.getX(), event.getY());
-        } else {
-            return true;
-        }
-        return false;
     }
 
     public boolean isRecentlyDone() {

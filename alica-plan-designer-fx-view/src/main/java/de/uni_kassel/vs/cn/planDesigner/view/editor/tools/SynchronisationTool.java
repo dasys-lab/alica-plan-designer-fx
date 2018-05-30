@@ -45,7 +45,7 @@ public class SynchronisationTool extends AbstractTool<Synchronisation> {
     }
 
     @Override
-    protected Map<EventType, EventHandler> toolRequiredHandlers() {
+    protected Map<EventType, EventHandler> getCustomHandlerMap() {
         if (eventHandlerMap.isEmpty()) {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
                 @Override

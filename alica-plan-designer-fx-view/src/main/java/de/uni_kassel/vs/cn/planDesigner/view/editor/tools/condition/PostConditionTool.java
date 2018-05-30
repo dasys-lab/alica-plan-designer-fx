@@ -41,7 +41,7 @@ public class PostConditionTool extends AbstractConditionTool {
     }
 
     @Override
-    protected Map<EventType, EventHandler> toolRequiredHandlers() {
+    protected Map<EventType, EventHandler> getCustomHandlerMap() {
         if (eventHandlerMap.isEmpty()) {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
                 @Override

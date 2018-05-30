@@ -18,30 +18,21 @@ public class RepositoryTabPane extends TabPane {
 
     private Tab[] createAllRepoTabs() {
         RepositoryTool planTool = new RepositoryTool(MainWindowController.getInstance().getEditorTabPane()) {
-            @Override
-            public AbstractPlan createNewObject() {
-                return EMFModelUtils.getAlicaFactory().createPlan();
-            }
+
         };
 
         RepositoryTool behaviourTool = new RepositoryTool(MainWindowController.getInstance().getEditorTabPane()) {
-            @Override
-            public AbstractPlan createNewObject() {
-                return EMFModelUtils.getAlicaFactory().createBehaviour();
-            }
+
         };
 
         RepositoryTool planTypeTool = new RepositoryTool(MainWindowController.getInstance().getEditorTabPane()) {
-            @Override
-            public AbstractPlan createNewObject() {
-                return EMFModelUtils.getAlicaFactory().createPlanType();
-            }
+
         };
 
-        return new Tab[]{new RepositoryTab<>(RepositoryViewModel.getInstance().getPlans(), planTool, getAlicaFactory().createPlan().eClass().getName()),
-                new RepositoryTab<>(RepositoryViewModel.getInstance().getPlanTypes(), planTypeTool, getAlicaFactory().createPlanType().eClass().getName()),
-                new RepositoryTab<>(RepositoryViewModel.getInstance().getBehaviours(), behaviourTool, getAlicaFactory().createBehaviour().eClass().getName()),
-                new RepositoryTab<>(RepositoryViewModel.getInstance().getTasks(), new TaskTool(), getAlicaFactory().createTask().eClass().getName())};
+        return new Tab[]{new RepositoryTab<>(RepositoryViewModel.getInstance().getPlans(), planTool, "plan"),
+                new RepositoryTab<>(RepositoryViewModel.getInstance().getPlanTypes(), planTypeTool, "planType"),
+                new RepositoryTab<>(RepositoryViewModel.getInstance().getBehaviours(), behaviourTool, "behaviour"),
+                new RepositoryTab<>(RepositoryViewModel.getInstance().getTasks(), new TaskTool(), "task")};
     }
 
     public class TaskTool extends RepositoryTool {

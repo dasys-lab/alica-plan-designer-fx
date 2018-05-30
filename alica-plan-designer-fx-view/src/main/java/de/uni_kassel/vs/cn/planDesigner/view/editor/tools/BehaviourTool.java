@@ -44,7 +44,7 @@ public class BehaviourTool extends AbstractTool<Behaviour> {
     }
 
     @Override
-    protected Map<EventType, EventHandler> toolRequiredHandlers() {
+    protected Map<EventType, EventHandler> getCustomHandlerMap() {
         if (eventHandlerMap.isEmpty()) {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, event -> {
                 if (event.getTarget() instanceof Node == false) {

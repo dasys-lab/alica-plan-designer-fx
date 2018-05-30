@@ -26,9 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-/**
- * Created by marci on 23.11.16.
- */
 public class PlanTab extends AbstractEditorTab<Plan> {
 
     private PlanEditorGroup planEditorGroup;

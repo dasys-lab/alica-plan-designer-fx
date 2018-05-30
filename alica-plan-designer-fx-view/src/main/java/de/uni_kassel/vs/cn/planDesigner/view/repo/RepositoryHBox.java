@@ -10,9 +10,9 @@ import java.nio.file.Path;
 
 public class RepositoryHBox extends DraggableHBox {
 
-    private long modelElementId;
-    private String modelElementName;
-    private String modelElementType;
+    protected long modelElementId;
+    protected String modelElementName;
+    protected String modelElementType;
 
     public RepositoryHBox(long modelElementId , String modelElementName, String modelElementType, Path pathToObject) {
         this.modelElementId = modelElementId;
@@ -36,7 +36,7 @@ public class RepositoryHBox extends DraggableHBox {
         });
     }
 
-    /** TODO: make this obsolete:
+    /** TODO: make this obsolete because ...
      * - dragTool should create this RepositoryHBox, so it should know the modelElementId
      * - startFullDrag and startPhase is already done in AbstractTool-event subscription
      */

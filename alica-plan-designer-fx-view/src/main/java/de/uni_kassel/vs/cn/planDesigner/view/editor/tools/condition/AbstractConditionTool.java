@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Created by marci on 01.03.17.
  */
-public abstract class AbstractConditionTool extends AbstractTool<Condition> {
+public abstract class AbstractConditionTool extends AbstractTool {
 
     protected Map<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     protected Node visualRepresentation;
@@ -42,7 +42,7 @@ public abstract class AbstractConditionTool extends AbstractTool<Condition> {
     }
 
     @Override
-    protected Map<EventType, EventHandler> toolRequiredHandlers() {
+    protected Map<EventType, EventHandler> getCustomHandlerMap() {
         if (eventHandlerMap.isEmpty()) {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
                 @Override

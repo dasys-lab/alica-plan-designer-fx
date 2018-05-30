@@ -48,7 +48,7 @@ public class TransitionTool extends AbstractTool<Transition> {
     }
 
     @Override
-    protected Map<EventType, EventHandler> toolRequiredHandlers() {
+    protected Map<EventType, EventHandler> getCustomHandlerMap() {
         if (eventHandlerMap.isEmpty()) {
             eventHandlerMap.put(MouseEvent.MOUSE_CLICKED, event -> {
                     if (initial) {
