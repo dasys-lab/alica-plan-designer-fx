@@ -136,9 +136,8 @@ public class PlanTab extends AbstractEditorTab<Plan> {
             if (newValue != null) {
                 newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
                     if (event.getTarget() == planContent) {
-                        ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> plan = FXCollections.observableArrayList();;
+                        List<Pair<PlanElement, AbstractPlanElementContainer>> plan = new ArrayList<>();
                         plan.add(new Pair<>(getEditable(), null));
-                        clearSelectedElements();
                         getSelectedPlanElements().set(plan);
                     }
                 });

@@ -35,7 +35,7 @@ public class AbstractPlanHBox extends HBox {
         setLayoutY(StateContainer.STATE_RADIUS +
                 (stateContainer.getContainedElement().getPlans().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with text-box
         setPickOnBounds(false);
-        ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();;
+        ArrayList<Pair<PlanElement, AbstractPlanElementContainer>> selected =new ArrayList<>();
         selected.add(new Pair<>(abstractPlan, stateContainer));
         addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorGroup) getParent().getParent())
                 .getPlanEditorTab().getSelectedPlanElements().setValue(selected));

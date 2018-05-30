@@ -110,7 +110,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
 
     @Override
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPoint containedElement) {
-        ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();;
+        ArrayList<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
         selected.add(new Pair<>(containedElement, this));
         return event -> ((PlanEditorGroup) getParent()).getPlanEditorTab().getSelectedPlanElements().setValue(selected);
     }
