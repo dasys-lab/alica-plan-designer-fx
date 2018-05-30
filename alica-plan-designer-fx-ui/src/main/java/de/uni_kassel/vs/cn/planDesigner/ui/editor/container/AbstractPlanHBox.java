@@ -30,8 +30,12 @@ public class AbstractPlanHBox extends HBox {
         setLayoutX(-(text.getLayoutBounds().getWidth()/2));
         // TODO add constants and make image size a constant across the application.
         // 19px per abstract plan because every line is 16px high and the additional 3px are for spacing between elements
-        setLayoutY(StateContainer.STATE_RADIUS +
-                (stateContainer.getContainedElement().getPlans().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with text-box
+        if (stateContainer.getContainedElement().getPlans().indexOf(abstractPlan) < 0) {
+            setLayoutY(StateContainer.STATE_RADIUS + 3);
+        } else {
+            setLayoutY(StateContainer.STATE_RADIUS +
+                    (stateContainer.getContainedElement().getPlans().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with text-box
+        }
         setPickOnBounds(false);
         List<Pair<PlanElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
         selected.add(new Pair<>(abstractPlan, stateContainer));

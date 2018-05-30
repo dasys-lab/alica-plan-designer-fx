@@ -17,6 +17,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 
 import java.util.ArrayList;
 
@@ -45,6 +47,15 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
         setBackground(Background.EMPTY);
         setPickOnBounds(false);
         addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(containedElement));
+        if (containedElement != null) {
+            containedElement.eAdapters().add(new AdapterImpl() {
+                @Override
+                public void notifyChanged(Notification msg) {
+                    super.notifyChanged(msg);
+                    setupContainer();
+                }
+            });
+        }
         wrapper = this;
         setOnContextMenuRequested(e -> {
             ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem<T>(containedElement));
@@ -169,7 +180,7 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
     /**
      *
      */
-    public abstract void setupContainer();
+    protected abstract void setupContainer();
 
     /**
      * Sets the standard effect for the {@link AbstractPlanElementContainer}.

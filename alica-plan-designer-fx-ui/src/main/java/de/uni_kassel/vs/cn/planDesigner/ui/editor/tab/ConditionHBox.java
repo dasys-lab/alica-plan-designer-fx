@@ -32,6 +32,8 @@ public class ConditionHBox extends HBox {
         setupConditionVisualisation();
         setMinWidth(20);
         setMinHeight(20);
+        setSpacing(16);
+        setPadding(new Insets(2, 5, 2, 5));
         setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 

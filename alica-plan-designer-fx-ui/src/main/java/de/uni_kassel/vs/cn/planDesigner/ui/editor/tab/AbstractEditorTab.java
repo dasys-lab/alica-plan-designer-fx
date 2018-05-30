@@ -137,7 +137,8 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         selectedPlanElement.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 DropShadow value = createSelectedEffect();
-                if (newValue.size() == 1 && newValue.get(0).getKey() instanceof AbstractPlan
+                if (newValue.size() == 1 && (newValue.get(0).getKey() instanceof AbstractPlan ||
+                        newValue.get(0).getKey() instanceof PostCondition)
                         && newValue.get(0).getValue() != null
                         && newValue.get(0).getValue() instanceof StateContainer) {
                     ((StateContainer) newValue.get(0).getValue()).getStatePlans()

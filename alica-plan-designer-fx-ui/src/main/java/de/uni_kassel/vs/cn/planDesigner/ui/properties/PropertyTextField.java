@@ -25,6 +25,8 @@ class PropertyTextField<T extends PlanElement> extends TextField {
 
     String newValue = "";
 
+    boolean savedNewValue = false;
+
     public PropertyTextField(T object, String propertyName, CommandStack commandStack) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         this.commandStack = commandStack;
         setText(BeanUtils.getProperty(object, propertyName));
@@ -32,7 +34,13 @@ class PropertyTextField<T extends PlanElement> extends TextField {
             if (newVal) {
                 oldValue = this.getText();
             } else {
-                setText(oldValue);
+                // if the new value is saved it should stay
+                if (!savedNewValue) {
+                    setText(oldValue);
+                } else {
+                    // reset saved flag
+                    savedNewValue = false;
+                }
                 newValue = "";
             }
         });
@@ -46,10 +54,12 @@ class PropertyTextField<T extends PlanElement> extends TextField {
                     } else {
                         getCommandStack().storeAndExecute(
                                 new ChangeAttributeValue<>(object, propertyName, newValue, object));
+                        savedNewValue = true;
                     }
                 } else {
                     getCommandStack().storeAndExecute(
                         new ChangeAttributeValue<>(object, propertyName, newValue, object));
+                    savedNewValue = true;
                 }
             }
             newValue = "";

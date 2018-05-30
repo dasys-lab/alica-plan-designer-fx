@@ -46,6 +46,7 @@ public abstract class AbstractTool<T extends PlanElement> {
     protected Cursor originalCursor;
     protected Point2D localCoord;
     protected DragableHBox<T> dragableHBox;
+    protected ImageCursor toolCursor;
     private boolean recentlyDone;
     private HashMap<EventType, EventHandler> defaultHandlers;
     private EventHandler<? super ScrollEvent> onScrollInPlanTab;
@@ -56,6 +57,7 @@ public abstract class AbstractTool<T extends PlanElement> {
 
     public AbstractTool(TabPane workbench) {
         this.workbench = workbench;
+        toolCursor = new ImageCursor(new AlicaIcon(createNewObject().getClass().getSimpleName()));
     }
 
     public abstract T createNewObject();
@@ -115,7 +117,7 @@ public abstract class AbstractTool<T extends PlanElement> {
         DropShadow value = new DropShadow(10, Color.GREY);
         value.setSpread(0.5);
         dragableHBox.setEffect(value);
-        workbench.getScene().setCursor(new ImageCursor(new AlicaIcon(createNewObject().getClass().getSimpleName())));
+        workbench.getScene().setCursor(toolCursor);
     }
 
     public void endPhase() {
