@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
+import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import javafx.scene.control.MenuItem;
 

@@ -26,7 +26,9 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
     private String typeName;
 
     public RepositoryTab(ObservableList<Pair<T, Path>> objects, AbstractPlanTool dragTool, String typeName) {
-
+        if(objects == null) {
+            return;
+        }
         List<RepositoryHBox<T>> hBoxes = objects
                 .stream()
                 .map(pair -> {
@@ -34,6 +36,7 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
                     return tRepositoryHBox;
                 })
                 .collect(Collectors.toList());
+        init(typeName, hBoxes);
         objects.addListener(new ListChangeListener<Pair<T, Path>>() {
             @Override
             public void onChanged(Change<? extends Pair<T, Path>> c) {
@@ -48,14 +51,16 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
                     hBoxObservableList.remove(tRepositoryHBox);
                 }
 
-                hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
+                sort();
                 setContent(new ListView<>(hBoxObservableList));
             }
         });
-        init(typeName, hBoxes);
     }
 
     public RepositoryTab(Pair<List<T>, Path> pair, AbstractPlanTool dragTool, String typeName) {
+        if (pair == null) {
+            return;
+        }
         List<RepositoryHBox<T>> hBoxes = pair.getKey()
                 .stream()
                 .map(t -> {
@@ -64,16 +69,6 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
                 })
                 .collect(Collectors.toList());
         init(typeName, hBoxes);
-    }
-
-    private void init(String typeName, List<RepositoryHBox<T>> hBoxes) {
-        initComparator();
-        this.typeName = typeName;
-        setText(typeName);
-        hBoxObservableList = FXCollections.observableArrayList(hBoxes);
-        sort();
-        contentsListView = new ListView<>(hBoxObservableList);
-        setContent(contentsListView);
     }
 
     private void initComparator() {
@@ -89,8 +84,18 @@ public class RepositoryTab<T extends PlanElement> extends Tab {
         return typeName;
     }
 
+    private void init(String typeName, List<RepositoryHBox<T>> hBoxes) {
+        initComparator();
+        this.typeName = typeName;
+        setText(typeName);
+        hBoxObservableList = FXCollections.observableArrayList(hBoxes);
+        sort();
+        contentsListView = new ListView<>(hBoxObservableList);
+        setContent(contentsListView);
+    }
+
     public void sort() {
-        if(typeName.equals("Plan")) {
+        if (typeName.equals("Plan")) {
             //TODO find a better way
             hBoxObservableList.sort((Comparator<? super RepositoryHBox<T>>) (Object) planComparator);
         } else {

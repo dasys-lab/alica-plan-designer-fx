@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.generator.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryHBox;
 import javafx.collections.FXCollections;

@@ -1,10 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.EObjectToPmlUiExtensionMapEntryImpl;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUIExtensionModelFactoryImpl;

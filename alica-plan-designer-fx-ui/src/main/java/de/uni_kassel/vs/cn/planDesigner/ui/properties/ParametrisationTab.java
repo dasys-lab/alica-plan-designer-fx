@@ -1,13 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
+import de.uni_kassel.vs.cn.generator.AlicaModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alica.Parametrisation;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

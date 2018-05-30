@@ -77,7 +77,7 @@ public abstract class AbstractConditionTool<T extends Condition> extends Abstrac
                 if (event.getTarget() instanceof ConditionHBox) {
                     ((ConditionHBox)event.getTarget()).getChildren().remove(visualRepresentation);
                     Condition newCondition = createNewObject();
-                    newCondition.setPluginName(PluginManager.getInstance().getActivePlugin().getName());
+                    newCondition.setPluginName(PluginManager.getInstance().getDefaultPlugin().getName());
                     if (newCondition instanceof PostCondition == false) {
                         AddConditionToPlan command = new AddConditionToPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getEditable(),
                                 newCondition);

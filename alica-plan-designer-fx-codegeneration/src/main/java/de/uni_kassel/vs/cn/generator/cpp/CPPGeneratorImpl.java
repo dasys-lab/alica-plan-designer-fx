@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.generator.cpp;
 import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator;
 import de.uni_kassel.vs.cn.generator.IGenerator;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.GeneratedSourcesManager;
+import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -320,7 +319,7 @@ public class CPPGeneratorImpl implements IGenerator {
      */
     @Override
     public IConstraintCodeGenerator getActiveConstraintCodeGenerator() {
-        return PluginManager.getInstance().getActivePlugin().getConstraintCodeGenerator();
+        return PluginManager.getInstance().getDefaultPlugin().getConstraintCodeGenerator();
     }
 
 

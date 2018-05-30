@@ -2,9 +2,6 @@ package de.uni_kassel.vs.cn.planDesigner.common;
 
 import java.io.File;
 
-/**
- * Created by marci on 18.11.16.
- */
 public class FileWrapper {
 
     private File file;

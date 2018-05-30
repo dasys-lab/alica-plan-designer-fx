@@ -1,9 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddSynchronisationToPlan;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
-import de.uni_kassel.vs.cn.planDesigner.alica.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
@@ -19,7 +19,7 @@ import javafx.scene.shape.Circle;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
 /**
  * Created by marci on 08.03.17.

@@ -27,10 +27,10 @@
                             <goal>compile</goal>
                             <goal>testCompile</goal>
                         </goals>
-                        <configuration>
+                        <properties>
                             <outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
                             <testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
-                        </configuration>
+                        </properties>
                     </execution>
                 </executions>
             </plugin>

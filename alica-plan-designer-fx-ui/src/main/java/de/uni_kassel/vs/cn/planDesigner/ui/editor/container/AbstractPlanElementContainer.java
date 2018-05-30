@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
@@ -10,11 +10,14 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.PLDToolBar;
 import de.uni_kassel.vs.cn.planDesigner.ui.menu.ShowGeneratedSourcesMenuItem;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import org.eclipse.emf.common.notify.Notification;
@@ -81,7 +84,7 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
                 ArrayList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
                 selectedElements.add(new Pair<>(containedElement, this));
                 ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
-                        .getSelectedItem()).getSelectedPlanElement().setValue(selectedElements);
+                        .getSelectedItem()).getSelectedPlanElements().setValue(selectedElements);
 
             } else {
                 AbstractTool recentlyDoneTool = pldToolBar.getRecentlyDoneTool();

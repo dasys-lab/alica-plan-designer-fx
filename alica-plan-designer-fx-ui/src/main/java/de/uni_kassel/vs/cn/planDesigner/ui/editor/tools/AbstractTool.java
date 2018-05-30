@@ -148,7 +148,7 @@ public abstract class AbstractTool<T extends PlanElement> {
             List<Pair<PlanElement, AbstractPlanElementContainer>> noSelection = new ArrayList<>();
             noSelection.add(new Pair<>(null, null));
             selectedItem
-                    .getSelectedPlanElement().set(noSelection);
+                    .getSelectedPlanElements().set(noSelection);
         }
         setRecentlyDone(true);
     }

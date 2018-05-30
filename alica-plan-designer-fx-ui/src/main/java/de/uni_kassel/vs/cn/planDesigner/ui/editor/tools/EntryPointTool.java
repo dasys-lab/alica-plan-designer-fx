@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
 /**
  * Created by marci on 05.01.17.
@@ -129,9 +129,9 @@ public class EntryPointTool extends AbstractTool<EntryPoint> {
                         initial = true;
                     } catch (IOException e) {
                         // if the helper window is not loadable something is really wrong here
-                        LOG.error("Could not load entry point creator dialog. " +
+                        LOG.error("Could not loadFromDisk entry point creator dialog. " +
                                 "Your installation of the plan designer is probably broken!");
-                        ErrorWindowController.createErrorWindow("Could not load entry point window", e);
+                        ErrorWindowController.createErrorWindow("Could not loadFromDisk entry point window", e);
                     }
 
                 }

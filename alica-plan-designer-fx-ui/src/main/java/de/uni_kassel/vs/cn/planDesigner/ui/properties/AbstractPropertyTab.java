@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.properties;
 
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
@@ -23,9 +23,9 @@ public abstract class AbstractPropertyTab extends Tab {
     public AbstractPropertyTab(AbstractEditorTab<PlanElement> activeEditorTab, CommandStack commandStack) {
         i18NRepo = I18NRepo.getInstance();
         this.activeEditorTab = activeEditorTab;
-        if (activeEditorTab.getSelectedPlanElement().get().size() == 1) {
-            this.selectedPlanElement = activeEditorTab.getSelectedPlanElement().get().get(0).getKey();
-            this.selectedElementContainer = new SimpleObjectProperty<>(activeEditorTab.getSelectedPlanElement().get().get(0));
+        if (activeEditorTab.getSelectedPlanElements().get().size() == 1) {
+            this.selectedPlanElement = activeEditorTab.getSelectedPlanElements().get().get(0).getKey();
+            this.selectedElementContainer = new SimpleObjectProperty<>(activeEditorTab.getSelectedPlanElements().get().get(0));
         } else {
             this.selectedPlanElement = null;
             this.selectedElementContainer = null;
@@ -36,7 +36,7 @@ public abstract class AbstractPropertyTab extends Tab {
     }
 
     protected void addListenersForActiveTab(AbstractEditorTab<PlanElement> activeEditorTab) {
-        activeEditorTab.getSelectedPlanElement().addListener((observable, oldValue, newValue) -> {
+        activeEditorTab.getSelectedPlanElements().addListener((observable, oldValue, newValue) -> {
             if (newValue.size() == 1) {
                 selectedPlanElement = newValue.get(0).getKey();
             }

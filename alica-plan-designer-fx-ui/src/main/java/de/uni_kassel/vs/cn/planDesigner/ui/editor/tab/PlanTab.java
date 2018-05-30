@@ -1,10 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
+import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
@@ -12,6 +13,8 @@ import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExten
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.PLDToolBar;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -47,7 +50,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         String absolutePath = planPathPair.getValue().toFile().toString();
         String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
         URI relativeURI = EMFModelUtils.createRelativeURI(new File(uiExtensionMapPath));
-        setPmlUiExtensionMap((PmlUiExtensionMap) EMFModelUtils.getAlicaResourceSet().getResource(relativeURI, false).getContents().get(0));
+        setPmlUiExtensionMap((PmlUiExtensionMap) AlicaResourceSet.getInstance().getResource(relativeURI, false).getContents().get(0));
 
         draw(planPathPair, commandStack);
 
@@ -73,7 +76,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, pldToolBar);
-        conditionHBox = new ConditionHBox(planPathPair.getKey(), selectedPlanElement, commandStack);
+        conditionHBox = new ConditionHBox(planPathPair.getKey(), selectedPlanElements, commandStack);
         VBox vBox = new VBox(conditionHBox,hBox);
         VBox.setVgrow(scrollPane,Priority.ALWAYS);
         VBox.setVgrow(hBox,Priority.ALWAYS);
@@ -135,7 +138,7 @@ public class PlanTab extends AbstractEditorTab<Plan> {
                     if (event.getTarget() == planContent) {
                         List<Pair<PlanElement, AbstractPlanElementContainer>> plan = new ArrayList<>();
                         plan.add(new Pair<>(getEditable(), null));
-                        getSelectedPlanElement().set(plan);
+                        getSelectedPlanElements().set(plan);
                     }
                 });
             }

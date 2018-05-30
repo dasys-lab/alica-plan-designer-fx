@@ -1,7 +1,6 @@
-package de.uni_kassel.vs.cn.planDesigner.alica.util;
+package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -19,6 +18,7 @@ public class AlicaProxyResolvationHelper {
     public static EObject doResolve(EObject resolver, InternalEObject proxy) {
         String resourceURI = resolver.eResource().getURI().toString();
         String eProxyURI = proxy.eProxyURI().toString();
+        AlicaResourceSet alicaResourceSet = AlicaResourceSet.getInstance();
 
         if(eProxyURI.startsWith("#")) {
             proxy.eSetProxyURI(URI.createURI(resourceURI + eProxyURI));
@@ -26,13 +26,12 @@ public class AlicaProxyResolvationHelper {
         } else {
             EObject resolve = EcoreUtil.resolve(proxy, resolver);
             if (resolve.eIsProxy() && eProxyURI.startsWith("taskrepository.tsk")) {
-                Resource resource = EMFModelUtils.getAlicaResourceSet().getResources().stream().filter(e -> e.getURI().toString().startsWith("taskrepository.tsk")).findAny().get();
+                Resource resource = alicaResourceSet.getResources().stream().filter(e -> e.getURI().toString().startsWith("taskrepository.tsk")).findAny().get();
                 return EcoreUtil.resolve(proxy,resource.getContents().get(0));
             } else if(resolve.eIsProxy() == false) {
                 return resolve;
             } else {
-                Optional<Resource> resourceOptional = EMFModelUtils
-                        .getAlicaResourceSet()
+                Optional<Resource> resourceOptional = alicaResourceSet
                         .getResources()
                         .stream()
                         .filter(e -> e.getURI().toString().contains("/" + eProxyURI.replaceAll("#.*", "")))
@@ -40,8 +39,7 @@ public class AlicaProxyResolvationHelper {
                 Resource resource = null;
 
                 if (eProxyURI.toString().contains(".beh")) {
-                    Optional<Resource> first = EMFModelUtils
-                            .getAlicaResourceSet()
+                    Optional<Resource> first = alicaResourceSet
                             .getResources()
                             .stream()
                             .filter(e -> {

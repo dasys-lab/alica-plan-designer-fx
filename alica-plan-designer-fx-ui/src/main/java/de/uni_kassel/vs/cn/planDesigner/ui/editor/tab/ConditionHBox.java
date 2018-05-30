@@ -1,11 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.ConditionContainer;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -15,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by marci on 28.02.17.

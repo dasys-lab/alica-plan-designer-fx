@@ -1,5 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.alica.*;
+import de.uni_kassel.vs.cn.planDesigner.alica.impl.PostConditionImpl;
+import de.uni_kassel.vs.cn.planDesigner.alica.impl.PreConditionImpl;
+import de.uni_kassel.vs.cn.planDesigner.alica.impl.RuntimeConditionImpl;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddPostConditionToBehaviour;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddPreConditionToBehaviour;
@@ -7,11 +12,6 @@ import de.uni_kassel.vs.cn.planDesigner.command.add.AddRuntimeConditionToBehavio
 import de.uni_kassel.vs.cn.planDesigner.command.delete.RemovePostConditionFromBehaviour;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.RemovePreConditionFromBehaviour;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.RemoveRuntimeConditionFromBehaviour;
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.PostConditionImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.PreConditionImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.impl.RuntimeConditionImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.BehaviourTab;

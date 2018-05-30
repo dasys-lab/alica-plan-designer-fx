@@ -1,15 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.state;
 
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddStateInPlan;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
-import de.uni_kassel.vs.cn.planDesigner.alica.State;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.AbstractTool;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Point2D;
@@ -22,7 +21,7 @@ import javafx.scene.shape.Circle;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
 /**
  * The {@link StateTool} is used for adding new states to the currently edited {@link de.uni_kassel.vs.cn.planDesigner.alica.Plan}.

@@ -2,7 +2,7 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaProxyResolvationHelper;
+//import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaProxyResolvationHelper;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelPackage;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 
@@ -55,10 +55,10 @@ public class EObjectToPmlUiExtensionMapEntryImpl extends EObjectImpl implements 
 	protected PmlUiExtension value;
 
 
-	@Override
-	public EObject eResolveProxy(InternalEObject proxy) {
-		return AlicaProxyResolvationHelper.doResolve(this, proxy);
-	}
+	//@Override
+	//public EObject eResolveProxy(InternalEObject proxy) {
+	//	return AlicaProxyResolvationHelper.doResolve(this, proxy);
+	//}
 
 	/**
 	 * <!-- begin-user-doc -->

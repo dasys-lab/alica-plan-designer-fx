@@ -1,10 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
+import de.uni_kassel.vs.cn.generator.AlicaModelUtils;
+import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.RepoViewBackend;
+import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
@@ -19,7 +23,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import java.io.File;
@@ -97,8 +100,7 @@ public class PLDTreeCell extends TreeCell<FileWrapper> {
         if (unwrappedFile.getName().endsWith(".pml") ||
                 unwrappedFile.getName().endsWith(".pty") || unwrappedFile.getName().endsWith("beh")) {
 
-            Resource resource = EMFModelUtils
-                    .getAlicaResourceSet()
+            Resource resource = AlicaResourceSet.getInstance()
                     .getResources()
                     .stream()
                     .filter(e -> e.getURI().toFileString().contains(unwrappedFile.getName()))

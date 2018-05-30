@@ -1,8 +1,8 @@
-package de.uni_kassel.vs.cn.planDesigner.aggregatedModel;
+package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.generator.configuration.Configuration;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 
 import java.io.File;
 import java.util.*;
@@ -31,18 +31,18 @@ public class GeneratedSourcesManager {
     }
 
     private GeneratedSourcesManager() {
-        configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
+        configuration = ConfigurationManager.getInstance().getActiveConfiguration();
         stateCheckingCode = new HashMap<>();
         transitionConditionCode = new HashMap<>();
         conditionCode = new HashMap<>();
     }
 
     public String getIncludeDir() {
-        return Paths.get(configuration.getExpressionValidatorsPath(), "include").toString();
+        return Paths.get(configuration.getGenSrcPath(), "include").toString();
     }
 
     public String getSrcDir() {
-        return Paths.get(configuration.getExpressionValidatorsPath(), "src").toString();
+        return Paths.get(configuration.getGenSrcPath(), "src").toString();
     }
 
     public List<File> getAllGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {

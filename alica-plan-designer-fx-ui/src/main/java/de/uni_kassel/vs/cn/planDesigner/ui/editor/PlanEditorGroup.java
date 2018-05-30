@@ -1,9 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor;
 
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.*;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.AbstractEditorTab;
@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
  * The visualisation of certain elements is realised through {@link AbstractPlanElementContainer}.
  */
 public class PlanEditorGroup extends Group {
-
     private PlanModelVisualisationObject planModelVisualisationObject;
     private List<StateContainer> stateContainers;
     private List<TransitionContainer> transitionContainers;
@@ -66,6 +65,18 @@ public class PlanEditorGroup extends Group {
 
     public List<StateContainer> getStateContainers() {
         return stateContainers;
+    }
+
+    public List<TransitionContainer> getTransitionContainers() {
+        return transitionContainers;
+    }
+
+    public List<EntryPointContainer> getEntryPointContainers() {
+        return entryPointContainers;
+    }
+
+    public List<SynchronisationContainer> getSynchronisationContainers() {
+        return synchronisationContainers;
     }
 
     public AbstractEditorTab<Plan> getPlanEditorTab() {

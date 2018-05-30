@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
+import de.uni_kassel.vs.cn.generator.configuration.Configuration;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
 import javafx.application.Platform;
 
 import java.io.File;
@@ -23,7 +23,7 @@ public class FileWatcherJob implements Runnable {
     public static boolean stayAlive = true;
 
     private final PLDFileTreeView fileTreeView;
-    private final Map<WatchKey,Path> keys = new HashMap<>();
+    private final Map<WatchKey, Path> keys = new HashMap<>();
     private boolean trace = false;
     private WatchService watcher;
 
@@ -57,14 +57,13 @@ public class FileWatcherJob implements Runnable {
      */
     private void registerAll(final Path path) throws IOException {
         // register directory and sub-directories
-        if(Files.notExists(path)) {
+        if (Files.notExists(path)) {
             Files.createDirectories(path);
         }
         Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-                    throws IOException
-            {
+                    throws IOException {
                 register(dir);
                 return FileVisitResult.CONTINUE;
             }
@@ -73,15 +72,17 @@ public class FileWatcherJob implements Runnable {
 
     @SuppressWarnings("unchecked")
     private static <T> WatchEvent<T> cast(WatchEvent<?> event) {
-        return (WatchEvent<T>)event;
+        return (WatchEvent<T>) event;
     }
 
     @Override
     public void run() {
         try {
             watcher = FileSystems.getDefault().newWatchService();
-            Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
-            registerAll(new File(configuration.getPlansPath()).toPath());
+            Configuration conf = ConfigurationManager.getInstance().getActiveConfiguration();
+            if (conf != null && conf.getPlansPath() != null && !conf.getPlansPath().isEmpty()) {
+                registerAll(new File(conf.getPlansPath()).toPath());
+            }
             this.trace = true;
             while (PlanDesigner.isRunning()) {
 
@@ -102,7 +103,7 @@ public class FileWatcherJob implements Runnable {
                     continue;
                 }
 
-                for (WatchEvent<?> event: key.pollEvents()) {
+                for (WatchEvent<?> event : key.pollEvents()) {
                     WatchEvent.Kind kind = event.kind();
 
                     // TBD - provide example of how OVERFLOW event is handled
@@ -129,7 +130,7 @@ public class FileWatcherJob implements Runnable {
                             throw new RuntimeException(x);
                         }
                     }
-                    Platform.runLater(() ->fileTreeView.updateTreeView(kind, child));
+                    Platform.runLater(() -> fileTreeView.updateTreeView(kind, child));
                 }
 
                 // reset key and remove from set if directory no longer accessible

@@ -1,12 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.filebrowser;
 
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.RepoViewBackend;
+import de.uni_kassel.vs.cn.generator.configuration.Configuration;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
@@ -27,7 +27,6 @@ import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.common.util.URI;
 
 import java.io.File;
 import java.io.IOException;
@@ -261,16 +260,25 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 }
 
 class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
-    private static final Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
 
     VirtualDirectoryTreeItem() {
         super();
-        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getPlansPath()),
-                new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getRolesPath()),
-                new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(configuration.getMiscPath()),
-                new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
+        Configuration conf = ConfigurationManager.getInstance().getActiveConfiguration();
+        if (conf == null) {
+            return;
+        }
+        if (conf.getPlansPath() != null && !conf.getPlansPath().isEmpty()) {
+            this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(conf.getPlansPath()),
+                    new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
+        }
+        if (conf.getRolesPath() != null && !conf.getRolesPath().isEmpty()) {
+            this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(conf.getRolesPath()),
+                    new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
+        }
+        if (conf.getTasksPath() != null && !conf.getTasksPath().isEmpty()) {
+            this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(conf.getTasksPath()),
+                    new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
+        }
     }
 
     public void updateDirectory(WatchEvent.Kind kind, Path child) {

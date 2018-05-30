@@ -1,12 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
-import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
 /**
  * Created by marci on 26.02.17.

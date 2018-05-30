@@ -1,14 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.menu;
 
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;

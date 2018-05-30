@@ -1,9 +1,8 @@
-package de.uni_kassel.vs.cn.planDesigner.alica.util;
+package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.configuration.Configuration;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
@@ -31,28 +30,21 @@ import java.util.stream.Collectors;
  */
 public class RepoViewBackend {
 
-    private static final Logger LOG = LogManager.getLogger(RepoViewBackend.class);
-
-    private static RepoViewBackend instance;
-
-    private ObservableList<Pair<Plan, Path>> plans;
-
-    private ObservableList<Pair<PlanType, Path>> planTypes;
-
-    private ObservableList<Pair<Behaviour, Path>> behaviours;
-
-    private Pair<List<Task>, Path> tasks;
-
-    private List<Pair<TaskRepository, Path>> taskRepository;
+    // SINGLETON
+    private static volatile RepoViewBackend instance;
 
     public static RepoViewBackend getInstance() {
         if (instance == null) {
-            instance = new RepoViewBackend();
-            try {
-                instance.init();
-            } catch (URISyntaxException | IOException e) {
-                LOG.error("Could not initialize all ALICA files, this renders the PlanDesigner unusable", e);
-                throw new RuntimeException(e);
+            synchronized (RepoViewBackend.class) {
+                if (instance == null) {
+                    instance = new RepoViewBackend();
+                    try {
+                        instance.init();
+                    } catch (URISyntaxException | IOException e) {
+                        LOG.error("Could not initialize all ALICA files, this renders the PlanDesigner unusable", e);
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
 
@@ -60,9 +52,7 @@ public class RepoViewBackend {
     }
 
     /**
-     * For testing only.
-     *
-     * @return
+     * For testing only, don't call it unless you know what you are doing.
      */
     public static RepoViewBackend getTestInstance() {
         instance = new RepoViewBackend();
@@ -73,6 +63,14 @@ public class RepoViewBackend {
         instance.tasks = new Pair<>(new ArrayList<>(), null);
         return instance;
     }
+
+    private static final Logger LOG = LogManager.getLogger(RepoViewBackend.class);
+
+    private ObservableList<Pair<Plan, Path>> plans;
+    private ObservableList<Pair<PlanType, Path>> planTypes;
+    private ObservableList<Pair<Behaviour, Path>> behaviours;
+    private Pair<List<Task>, Path> tasks;
+    private List<Pair<TaskRepository, Path>> taskRepository;
 
     public List<Pair<TaskRepository, Path>> getTaskRepository() {
         return taskRepository;
@@ -95,24 +93,31 @@ public class RepoViewBackend {
     }
 
     public void init() throws URISyntaxException, IOException {
-        Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
-        String plansPath = configuration.getPlansPath();
-        plans = getRepositoryOf(plansPath, "pml");
+        Configuration conf = ConfigurationManager.getInstance().getActiveConfiguration();
+        if (conf == null) {
+            LOG.info("RepoViewBackend unable to initialize, because of missing active Configuration.");
+            return;
+        }
+        String plansPath = conf.getPlansPath();
+        if (plansPath != null && !plansPath.isEmpty()) {
+            plans = getRepositoryOf(plansPath, "pml");
 
-        behaviours = getRepositoryOf(plansPath, "beh");
+            behaviours = getRepositoryOf(plansPath, "beh");
 
-        planTypes = getRepositoryOf(plansPath, "pty");
-
-        taskRepository = getRepositoryOf(configuration.getMiscPath(), "tsk");
-
-        if (taskRepository == null || taskRepository.isEmpty()) {
-            EMFModelUtils.createAlicaFile(EMFModelUtils.getAlicaFactory().createTaskRepository(), false,
-                    new File(configuration.getMiscPath() + File.separator + "taskrepository.tsk"));
-            taskRepository = getRepositoryOf(configuration.getMiscPath(), "tsk");
+            planTypes = getRepositoryOf(plansPath, "pty");
         }
 
-        tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
-        EcoreUtil.resolveAll(EMFModelUtils.getAlicaResourceSet());
+        if (conf.getTasksPath() != null && !conf.getTasksPath().isEmpty()) {
+            taskRepository = getRepositoryOf(conf.getTasksPath(), "tsk");
+            if (taskRepository == null || taskRepository.isEmpty()) {
+                EMFModelUtils.createAlicaFile(EMFModelUtils.getAlicaFactory().createTaskRepository(), false,
+                        new File(conf.getTasksPath() + File.separator + "taskrepository.tsk"));
+                taskRepository = getRepositoryOf(conf.getTasksPath(), "tsk");
+            }
+            tasks = new Pair<>(taskRepository.get(0).getKey().getTasks(), taskRepository.get(0).getValue());
+        }
+
+        EcoreUtil.resolveAll(AlicaResourceSet.getInstance());
         LOG.info("RepoViewBackend successfully initialized");
     }
 
@@ -186,7 +191,7 @@ public class RepoViewBackend {
                         }
                         return tPathPair;
                     } catch (IOException e) {
-                        LOG.fatal("Could not load repository of " + path + "for file ending " + filePostfix, e);
+                        LOG.fatal("Could not loadFromDisk repository of " + path + "for file ending " + filePostfix, e);
                         throw new RuntimeException(e);
                     }
                 })

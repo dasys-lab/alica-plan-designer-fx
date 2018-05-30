@@ -1,22 +1,26 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
+import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanElementContainer;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.AbstractPlanHBox;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TransitionContainer;
+import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.*;
 import de.uni_kassel.vs.cn.planDesigner.ui.repo.RepositoryTab;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import org.eclipse.emf.ecore.EObject;
@@ -36,11 +40,11 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
     private Observer observer;
     private Pair<T, Path> editablePathPair;
     private CommandStack commandStack;
-    protected SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement;
+    protected SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElements;
 
     public AbstractEditorTab(T key) {
-        selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
-        selectedPlanElement.get().add(new Pair<>(key, null));
+        selectedPlanElements = new SimpleObjectProperty<>(new ArrayList<>());
+        selectedPlanElements.get().add(new Pair<>(key, null));
     }
 
     public AbstractEditorTab(Pair<T, Path> editablePathPair, CommandStack commandStack) {
@@ -66,8 +70,8 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         this.editablePathPair = editablePathPair;
         initSelectedPlanElement(editablePathPair);
 
-
         this.commandStack = commandStack;
+
         observer = (o, arg) -> {
             if (((CommandStack) o).isAbstractPlanInItsCurrentFormSaved(getEditable())) {
                 setText(getEditablePathPair().getValue().getFileName().toString());
@@ -75,12 +79,18 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                 setText(getEditablePathPair().getValue().getFileName() + "*");
             }
         };
+
         if (commandStack != null) {
             commandStack.addObserver(observer);
         }
+
         setClosable(true);
         setOnCloseRequest(e -> {
             commandStack.deleteObserver(observer);
+            if (isDirty()) {
+                IsDirtyWindowController.createIsDirtyWindow(this, e);
+                return;
+            }
             if (editablePathPair.getKey() instanceof TaskRepository) {
                 return;
             }
@@ -132,10 +142,11 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
      * @param editablePathPair
      */
     protected void initSelectedPlanElement(Pair<T, Path> editablePathPair) {
-        selectedPlanElement = new SimpleObjectProperty<>(new ArrayList<>());
-        selectedPlanElement.get().add(new Pair<>(editablePathPair.getKey(), null));
-        selectedPlanElement.addListener((observable, oldValue, newValue) -> {
+        selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+        selectedPlanElements.get().add(new Pair<>(editablePathPair.getKey(), null));
+        selectedPlanElements.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+
                 DropShadow value = createSelectedEffect();
                 if (newValue.size() == 1 && (newValue.get(0).getKey() instanceof AbstractPlan ||
                         newValue.get(0).getKey() instanceof PostCondition)
@@ -146,7 +157,7 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                             .filter(abstractPlanHBox -> abstractPlanHBox.getAbstractPlan()
                                     .equals(newValue.get(0).getKey()))
                             .findFirst().orElseGet(() -> new AbstractPlanHBox(newValue.get(0).getKey(),
-                            (StateContainer) newValue.get(0).getValue())).setEffect(createSelectedEffect());
+                            (StateContainer) newValue.get(0).getValue())).setEffect(value);
 
                 } else {
                     newValue.forEach(selectedPlanElementPair -> {
@@ -157,32 +168,31 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
                     });
                 }
                 if (newValue.size() == 1 && newValue.get(0).getValue() instanceof TransitionContainer) {
-                    ((TransitionContainer)newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
+                    ((TransitionContainer) newValue.get(0).getValue()).setPotentialDraggableNodesVisible(true);
                 }
             }
-
             if ((oldValue != null)) {
-                    oldValue.forEach(selectedPlanElementPair -> {
-                        AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
-                        if (planElementContainer != null) {
-                            // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
-                            if (planElementContainer.getContainedElement() == oldValue.get(0).getKey()) {
-                                planElementContainer.setEffect(null);
-                            }
-                            if (planElementContainer instanceof StateContainer) {
-                                ((StateContainer) planElementContainer)
-                                        .getStatePlans()
-                                        .forEach(abstractPlanHBox -> {
-                                            if (abstractPlanHBox.getAbstractPlan() != newValue.get(0).getKey()) {
-                                                abstractPlanHBox.setEffect(null);
-                                            }
-                                        });
-                            }
+                oldValue.forEach(selectedPlanElementPair -> {
+                    AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
+                    if (planElementContainer != null) {
+                        // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
+                        if (planElementContainer.getContainedElement() == oldValue.get(0).getKey()) {
+                            planElementContainer.setEffect(null);
                         }
-                    });
+                        if (planElementContainer instanceof StateContainer) {
+                            ((StateContainer) planElementContainer)
+                                    .getStatePlans()
+                                    .forEach(abstractPlanHBox -> {
+                                        if (abstractPlanHBox.getAbstractPlan() != newValue.get(0).getKey()) {
+                                            abstractPlanHBox.setEffect(null);
+                                        }
+                                    });
+                        }
+                    }
+                });
 
                 if (oldValue.size() == 1 && oldValue.get(0).getValue() instanceof TransitionContainer) {
-                    ((TransitionContainer)oldValue.get(0).getValue()).setPotentialDraggableNodesVisible(false);
+                    ((TransitionContainer) oldValue.get(0).getValue()).setPotentialDraggableNodesVisible(false);
                 }
             }
         });
@@ -193,6 +203,10 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         value.setBlurType(BlurType.ONE_PASS_BOX);
         value.setSpread(0.45);
         return value;
+    }
+
+    private boolean isDirty() {
+        return getText().contains("*");
     }
 
     public Path getFilePath() {
@@ -213,8 +227,8 @@ public abstract class AbstractEditorTab<T extends PlanElement> extends Tab {
         return editablePathPair.getKey();
     }
 
-    public SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> getSelectedPlanElement() {
-        return selectedPlanElement;
+    public SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> getSelectedPlanElements() {
+        return selectedPlanElements;
     }
 
     public CommandStack getCommandStack() {

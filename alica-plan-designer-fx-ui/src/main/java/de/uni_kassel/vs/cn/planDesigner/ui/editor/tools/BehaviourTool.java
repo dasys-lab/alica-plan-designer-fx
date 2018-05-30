@@ -5,7 +5,6 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddAbstractPlanToState;
 import de.uni_kassel.vs.cn.planDesigner.controller.CreateNewDialogController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
-import de.uni_kassel.vs.cn.planDesigner.ui.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TerminalStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.tab.PlanTab;
@@ -20,7 +19,7 @@ import javafx.scene.input.MouseDragEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
 /**
  * Created by marci on 05.01.17.

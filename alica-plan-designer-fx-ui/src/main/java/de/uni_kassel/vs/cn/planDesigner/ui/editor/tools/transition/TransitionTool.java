@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.ui.editor.tools.transition;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddTransitionInPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddTransitionInPlan;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.ui.editor.container.TerminalStateContainer;
@@ -20,7 +20,7 @@ import javafx.scene.input.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils.getAlicaFactory;
+import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
 /**
  * Created by marci on 05.01.17.

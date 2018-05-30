@@ -1,9 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.command.change;
 
+import de.uni_kassel.vs.cn.generator.AlicaModelUtils;
+import de.uni_kassel.vs.cn.generator.AlicaResourceSet;
+import de.uni_kassel.vs.cn.generator.EMFModelUtils;
+import de.uni_kassel.vs.cn.generator.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
-import de.uni_kassel.vs.cn.planDesigner.alica.xml.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.common.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
@@ -67,8 +68,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                             .toString().replace(path.getFileName().toString(),getNewFilePath(path).getName())));
                     final Path finalPath = path;
 
-                    Resource resourcePMLEX = EMFModelUtils
-                            .getAlicaResourceSet()
+                    Resource resourcePMLEX = AlicaResourceSet.getInstance()
                             .getResources()
                             .stream()
                             .filter(e -> e.getURI().toFileString().endsWith(finalPath.getFileName().toString() + "ex"))
@@ -115,8 +115,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
                     File newFilePath = getNewFilePath(path);
                     path.toFile().renameTo(newFilePath);
 
-                    EMFModelUtils
-                            .getAlicaResourceSet()
+                    AlicaResourceSet.getInstance()
                             .getResources()
                             .forEach(e -> {
                                 EObject content = e

@@ -1,13 +1,11 @@
-package de.uni_kassel.vs.cn.planDesigner.alica.xml;
+package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.*;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.alica.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.generator.configuration.Configuration;
+import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaFactoryImpl;
 import de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
-import de.uni_kassel.vs.cn.planDesigner.alica.util.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelFactory;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUIExtensionModelPackage;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
@@ -41,21 +39,10 @@ public class EMFModelUtils {
 
     private static final Logger LOG = LogManager.getLogger(EMFModelUtils.class);
     private static AlicaResourceSet alicaResourceSet;
-    private static Configuration configuration = ConfigurationManager.getInstance().getActiveWorkspace().getConfiguration();
-
-    @SuppressWarnings("unused")
-    private static void initAlicaResourceSet() {
-        alicaResourceSet = new AlicaResourceSet();
-        AlicaResourceSet alicaResourceSet = new AlicaResourceSet();
-        URIConverter uriConverter = ExtensibleURIConverterImpl.INSTANCE;
-
-        alicaResourceSet.getResources().forEach(e -> e.setTrackingModification(true));
-    }
 
     /**
      * Initializes EMF context, adds filetypes which can be read via means of EMF
      */
-    @SuppressWarnings("unused")
     public static void initializeEMF() {
         // initialize the model
         EClass alicaPackageEClass = AlicaPackage.eINSTANCE.eClass();
@@ -71,24 +58,23 @@ public class EMFModelUtils {
         m.put("beh", new XMIResourceFactoryImpl());
         m.put("pty", new XMIResourceFactoryImpl());
         m.put("tsk", new XMIResourceFactoryImpl());
-        if (alicaResourceSet == null) {
-            initAlicaResourceSet();
-        }
+        alicaResourceSet = AlicaResourceSet.getInstance();
         LOG.info("EMF Base Classes initialized");
     }
 
     /**
      * Loads given file from disk
      *
-     * @param file the file to load must not be null
+     * @param file the file to loadFromDisk must not be null
      * @return the returned {@link EObject}
      * @throws IOException if loading fails because of nonexistence or if problems happen while reading
      */
     public static <T extends EObject> T loadAlicaFileFromDisk(File file) throws IOException {
+        Configuration configuration = ConfigurationManager.getInstance().getActiveConfiguration();
         String relativePath = file.getAbsolutePath()
                 .replace(configuration.getPlansPath() + "/", "")
                 .replace(configuration.getRolesPath() + "/", "")
-                .replace(configuration.getMiscPath() + "/", "");
+                .replace(configuration.getTasksPath() + "/", "");
         URI uri = URI
                 .createURI(relativePath);
 
@@ -131,10 +117,11 @@ public class EMFModelUtils {
     }
 
     public static URI createRelativeURI(File file) {
+        Configuration configuration = ConfigurationManager.getInstance().getActiveConfiguration();
         String relativePath = file.getAbsolutePath()
                 .replace(configuration.getPlansPath() + "/", "")
                 .replace(configuration.getRolesPath() + "/", "")
-                .replace(configuration.getMiscPath() + "/", "");
+                .replace(configuration.getTasksPath() + "/", "");
         return URI
                 .createURI(relativePath);
     }
@@ -230,7 +217,7 @@ public class EMFModelUtils {
         setDestinationPath(emptyObject, targetDir);
 
         resource.save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
-        getAlicaResourceSet()
+        alicaResourceSet
                 .getResources()
                 .forEach(e -> {
                     try {
@@ -244,6 +231,7 @@ public class EMFModelUtils {
 
     private static <T extends EObject> void setDestinationPath(T emptyObject, File targetDir) {
         if (emptyObject instanceof AbstractPlan) {
+            Configuration configuration = ConfigurationManager.getInstance().getActiveConfiguration();
             String destinationPath = targetDir.getAbsolutePath().replace(configuration.getPlansPath(), "Plans");
             destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator));
             ((AbstractPlan) emptyObject).setDestinationPath(destinationPath);
@@ -260,13 +248,6 @@ public class EMFModelUtils {
     public static synchronized <T extends EObject> void saveAlicaFile(T alicaObject) throws IOException {
         alicaObject.eResource().save(AlicaSerializationHelper.getInstance().getLoadSaveOptions());
         LOG.info("Saved Alica successfully to disk specifically: " + alicaObject.eResource().getURI());
-    }
-
-    public static AlicaResourceSet getAlicaResourceSet() {
-        if (alicaResourceSet == null) {
-            initAlicaResourceSet();
-        }
-        return alicaResourceSet;
     }
 
     public static AlicaFactory getAlicaFactory() {
@@ -287,8 +268,7 @@ public class EMFModelUtils {
 
         List<AbstractPlan> references = new ArrayList<>();
 
-        EMFModelUtils
-                .getAlicaResourceSet().getResources().forEach(e -> {
+        alicaResourceSet.getResources().forEach(e -> {
             if (e.getContents().size() != 0) {
 
 
