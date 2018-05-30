@@ -132,7 +132,7 @@ public class CreateNewDialogController implements Initializable {
                 return;
             }
 
-            MainController.getInstance().getCommandStack()
+            MainWindowController.getInstance().getCommandStack()
                     .storeAndExecute(new CreateAbstractPlan((AbstractPlan) createdObject, alicaFilePath));
             ((Stage)pathTextField.getScene().getWindow()).close();
         } else {

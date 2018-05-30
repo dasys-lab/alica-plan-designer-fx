@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
@@ -146,7 +146,7 @@ public abstract class AbstractTool {
 
         draw();
         workbench.getScene().setCursor(originalCursor);
-        AbstractEditorTab selectedItem = (AbstractEditorTab) MainController.getInstance().getEditorTabPane().getSelectionModel()
+        AbstractEditorTab selectedItem = (AbstractEditorTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel()
                 .getSelectedItem();
         if (selectedItem != null) {
             List<Pair<Long, AbstractPlanElementContainer>> noSelection = new ArrayList<>();

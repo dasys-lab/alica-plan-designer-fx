@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -30,7 +30,7 @@ public class RepositoryHBox extends DraggableHBox {
         // double click for open the corresponding file
         setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
-                MainController.getInstance().openFile(pathToObject.toFile());
+                MainWindowController.getInstance().openFile(pathToObject.toFile());
                 e.consume();
             }
         });

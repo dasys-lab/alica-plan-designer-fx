@@ -1,9 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import de.uni_kassel.vs.cn.generator.Codegenerator;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
@@ -27,9 +23,6 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import javafx.util.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
@@ -37,18 +30,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable {
+public class MainWindowController implements Initializable {
 
     // SINGLETON
-    private static volatile MainController instance;
-    public static MainController getInstance() {
+    private static volatile MainWindowController instance;
+    public static MainWindowController getInstance() {
         if (instance == null)
         {
-            synchronized(MainController.class)
+            synchronized(MainWindowController.class)
             {
                 if (instance == null)
                 {
-                    instance = new MainController();
+                    instance = new MainWindowController();
                 }
             }
         }
@@ -56,7 +49,7 @@ public class MainController implements Initializable {
         return instance;
     }
 
-    private static final Logger LOG = LogManager.getLogger(MainController.class);
+    private static final Logger LOG = LogManager.getLogger(MainWindowController.class);
 
     @FXML
     private PLDFileTreeView fileTreeView;
@@ -79,11 +72,9 @@ public class MainController implements Initializable {
     @FXML
     private Text statusText;
 
-    private CommandStack commandStack = new CommandStack();
-
     private I18NRepo i18NRepo;
 
-    private MainController ()
+    private MainWindowController()
     {
         super();
         i18NRepo = I18NRepo.getInstance();
@@ -229,10 +220,6 @@ public class MainController implements Initializable {
      */
     public void openFile(File toOpen) {
         editorTabPane.openTab(toOpen.toPath());
-    }
-
-    public CommandStack getCommandStack() {
-        return commandStack;
     }
 
     public EditorTabPane getEditorTabPane() {

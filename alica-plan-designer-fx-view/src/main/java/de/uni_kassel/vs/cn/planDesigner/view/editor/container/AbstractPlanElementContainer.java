@@ -1,14 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.PLDToolBar;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -61,13 +59,13 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
     @SuppressWarnings("unchecked")
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(T containedElement) {
         return event -> {
-            PLDToolBar pldToolBar = ((PlanTab) MainController.getInstance().getEditorTabPane().getSelectionModel()
+            PLDToolBar pldToolBar = ((PlanTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel()
                     .getSelectedItem()).getPldToolBar();
             // Was the last click performed in the context of a tool?
             if (pldToolBar.anyToolsRecentlyDone() == false) {
-                ObservableList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = FXCollections.observableArrayList();;
+                ArrayList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
                 selectedElements.add(new Pair<>(containedElement, this));
-                ((AbstractEditorTab<PlanElement>)MainController.getInstance().getEditorTabPane().getSelectionModel()
+                ((AbstractEditorTab<PlanElement>)MainWindowController.getInstance().getEditorTabPane().getSelectionModel()
                         .getSelectedItem()).getSelectedPlanElements().setValue(selectedElements);
 
             } else {

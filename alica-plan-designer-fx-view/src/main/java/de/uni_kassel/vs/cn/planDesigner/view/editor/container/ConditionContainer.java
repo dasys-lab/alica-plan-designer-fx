@@ -27,7 +27,7 @@ public class ConditionContainer extends AbstractPlanElementContainer<Condition> 
 
     @Override
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(Condition containedElement) {
-        ObservableList selectedCondition = FXCollections.observableArrayList();
+        ArrayList selectedCondition = new ArrayList<>();
         selectedCondition.add(new Pair<>(containedElement, this));
         return event -> ((ConditionHBox) getParent()).selectedPlanElementProperty().setValue(selectedCondition);
     }

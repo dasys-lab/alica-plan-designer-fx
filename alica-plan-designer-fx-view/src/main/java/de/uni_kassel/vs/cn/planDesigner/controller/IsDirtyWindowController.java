@@ -95,7 +95,7 @@ public class IsDirtyWindowController {
     }
 
     public static boolean isAnyTabDirty() {
-        ObservableList<Tab> openTabs = MainController.getInstance().getEditorTabPane().getTabs();
+        ObservableList<Tab> openTabs = MainWindowController.getInstance().getEditorTabPane().getTabs();
         for(Tab openTab : openTabs) {
             if(openTab.getText().contains("*")) {
                 return true;

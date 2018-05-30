@@ -10,6 +10,9 @@ import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -168,4 +171,14 @@ public class ModelManager {
         return plansUIList;
     }
 
+    public void handleFileSystemEvent(WatchEvent event, Path path) {
+        //TODO implement
+        if (event.kind().equals(StandardWatchEventKinds.ENTRY_CREATE)) {
+            loadModelFile(new File(path.toUri()));
+        } else if (event.kind().equals(StandardWatchEventKinds.ENTRY_DELETE)) {
+
+        } else if (event.kind().equals((StandardWatchEventKinds.ENTRY_MODIFY))) {
+
+        }
+    }
 }

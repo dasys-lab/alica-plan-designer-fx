@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition;
 
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.EntryPointContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
@@ -54,7 +54,7 @@ public class InitTransitionTool extends AbstractTool {
                     finish = (StateContainer) ((Node)event.getTarget()).getParent();
                     initial = true;
                     SetStateForEntryPoint command = new SetStateForEntryPoint(start.getContainedElement(), finish.getContainedElement());
-                    MainController.getInstance()
+                    MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
                 } else {

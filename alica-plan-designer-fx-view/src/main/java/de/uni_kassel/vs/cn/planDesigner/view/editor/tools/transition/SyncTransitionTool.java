@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanElementImpl;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddTransitionToSynchronisation;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.SynchronisationContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TransitionContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
@@ -75,7 +75,7 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
                     AddTransitionToSynchronisation command =
                             new AddTransitionToSynchronisation(start.getContainedElement(), finish.getContainedElement(),
                                     ((AbstractEditorTab<PlanElement>)workbench.getSelectionModel().getSelectedItem()).getEditable());
-                    MainController.getInstance()
+                    MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
                     start = null;

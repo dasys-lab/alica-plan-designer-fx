@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
@@ -18,11 +17,9 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * Created by marci on 17.03.17.
@@ -116,8 +113,8 @@ public class EditMenu extends Menu {
 
     private void delete(CommandStack commandStack, EditorTabPane editorTabPane) {
         // TODO refactor
-        MainController mainController = MainController.getInstance();
-        RepositoryTabPane repositoryTabPane = mainController.getRepositoryTabPane();
+        MainWindowController mainWindowController = MainWindowController.getInstance();
+        RepositoryTabPane repositoryTabPane = mainWindowController.getRepositoryTabPane();
 
         if (editorTabPane.focusedProperty().get()) {
             Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
@@ -168,9 +165,9 @@ public class EditMenu extends Menu {
                 return;
             }
 
-            if (mainController.getFileTreeView().focusedProperty().get()) {
+            if (mainWindowController.getFileTreeView().focusedProperty().get()) {
 
-                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainController.getFileTreeView()
+                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainWindowController.getFileTreeView()
                         .getSelectionModel()
                         .getSelectedItem()
                         .getValue().unwrap());
@@ -209,7 +206,7 @@ public class EditMenu extends Menu {
             }
         } else {
             commandStack.storeAndExecute(new DeleteTaskFromRepository(taskRepository, taskToBeDeleted));
-            MainController.getInstance().closePropertyAndStatusTabIfOpen();
+            MainWindowController.getInstance().closePropertyAndStatusTabIfOpen();
 
         }
     }

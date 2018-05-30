@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddConditionToPlan;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
@@ -76,7 +76,7 @@ public abstract class AbstractConditionTool extends AbstractTool<Condition> {
                         if (newCondition instanceof PostCondition == false) {
                             AddConditionToPlan command = new AddConditionToPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getEditable(),
                                     newCondition);
-                            MainController.getInstance()
+                            MainWindowController.getInstance()
                                     .getCommandStack()
                                     .storeAndExecute(command);
                         }

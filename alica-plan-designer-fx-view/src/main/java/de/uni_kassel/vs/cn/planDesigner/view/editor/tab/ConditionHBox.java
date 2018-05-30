@@ -19,11 +19,11 @@ import javafx.util.Pair;
  */
 public class ConditionHBox extends HBox {
 
-    private final SimpleObjectProperty<ObservableList<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement;
+    private final SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement;
     private final CommandStack commandStack;
     private final Plan plan;
 
-    public ConditionHBox(Plan abstractPlan, SimpleObjectProperty<ObservableList<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement, CommandStack commandStack) {
+    public ConditionHBox(Plan abstractPlan, SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElement, CommandStack commandStack) {
         this.plan = abstractPlan;
         this.selectedPlanElement = selectedPlanElement;
         this.commandStack = commandStack;
@@ -47,7 +47,7 @@ public class ConditionHBox extends HBox {
         return selectedPlanElement.get().get(0);
     }
 
-    public SimpleObjectProperty<ObservableList<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElementProperty() {
+    public SimpleObjectProperty<List<Pair<PlanElement, AbstractPlanElementContainer>>> selectedPlanElementProperty() {
         return selectedPlanElement;
     }
 }

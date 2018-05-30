@@ -4,7 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationOb
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddSynchronisationToPlan;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
@@ -106,10 +106,10 @@ public class SynchronisationTool extends AbstractTool<Synchronisation> {
                     PlanModelVisualisationObject planModelVisualisationObject = ((PlanTab) workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject();
                     AddSynchronisationToPlan command = new AddSynchronisationToPlan(createNewObject(),
                             planModelVisualisationObject);
-                    MainController.getInstance()
+                    MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);
-                    MainController.getInstance()
+                    MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
                                     (int) (localCoord.getX()),
