@@ -1,8 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.TerminalState;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.effect.BlurType;
