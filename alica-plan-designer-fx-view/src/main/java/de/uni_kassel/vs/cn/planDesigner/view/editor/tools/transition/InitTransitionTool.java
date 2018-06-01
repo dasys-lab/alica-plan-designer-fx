@@ -9,7 +9,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
@@ -23,7 +22,6 @@ public class InitTransitionTool extends AbstractTool {
     private boolean initial = true;
     private EntryPointContainer start;
     private StateContainer finish;
-    private Cursor previousCursor;
 
     public InitTransitionTool(TabPane workbench) {
         super(workbench);
@@ -36,7 +34,7 @@ public class InitTransitionTool extends AbstractTool {
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
+        ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
     }
 
     @Override

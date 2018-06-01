@@ -1,24 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.util.Pair;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by marci on 18.11.16.
- */
 public class EditorTabPane extends TabPane {
-
-    private CommandStack commandStack;
 
     //FIXME closing tabs leads to NPE
     public void openTab(Path filePath) {
@@ -74,9 +63,5 @@ public class EditorTabPane extends TabPane {
                 return null;
 
         }
-    }
-
-    public void setCommandStack(CommandStack commandStack) {
-        this.commandStack = commandStack;
     }
 }

@@ -1,8 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddAbstractPlanToState;
 import de.uni_kassel.vs.cn.planDesigner.controller.CreateNewDialogController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
@@ -11,7 +8,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.NewResourceMenu;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
@@ -21,13 +17,9 @@ import java.util.Map;
 
 import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
-/**
- * Created by marci on 05.01.17.
- */
 public class BehaviourTool extends AbstractTool<Behaviour> {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
-    private Cursor previousCursor;
 
     public BehaviourTool(TabPane workbench) {
         super(workbench);
@@ -40,7 +32,7 @@ public class BehaviourTool extends AbstractTool<Behaviour> {
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
+        ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
     }
 
     @Override
@@ -69,7 +61,7 @@ public class BehaviourTool extends AbstractTool<Behaviour> {
                         ((Node)event.getTarget()).getParent() instanceof TerminalStateContainer == false) {
                     StateContainer stateContainer = (StateContainer) ((Node)event.getTarget()).getParent();
                     CreateNewDialogController newDialogController =
-                            NewResourceMenu.createFileDialog(((PlanTab) workbench.getSelectionModel().getSelectedItem())
+                            NewResourceMenu.createFileDialog(((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem())
                                     .getFilePath().getParent().toFile(),
                             getAlicaFactory().createBehaviour().eClass());
                     Behaviour newBehaviour = (Behaviour) newDialogController.getCreatedObject();

@@ -1,59 +1,37 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
-import javafx.collections.FXCollections;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * This class represents one tab of the Repository. It should be possible to drag elements of this
- * repository into the plan.
+ * repository into a plan.
  */
 public class RepositoryTab extends Tab {
 
-    private String typeName;
-    private ListView<RepositoryHBox> contentsListView;
-    // TODO: should work for every kind (not only plans)
-    private Comparator<RepositoryHBox> planComparator;
+    protected ListView<RepositoryHBox> repositoryListView;
+    protected Comparator<RepositoryHBox> modelElementComparator;
+    protected RepositoryTool repoTool;
 
-    public RepositoryTab (String typeName) {
-        this.typeName = typeName;
-        setText(typeName);
-        planComparator = Comparator.comparing(o -> !o.getModelElementId().isMasterPlan());
-        planComparator = planComparator.thenComparing(o -> o.getModelElementId().getName());
+    public RepositoryTab(String tabTitle, RepositoryTool repoTool) {
+        setText(tabTitle);
+        this.repoTool = repoTool;
+        this.repositoryListView = new ListView();
+        this.setContent(this.repositoryListView);
+
+        modelElementComparator = Comparator.comparing(o -> !o.getViewModelType().equals("masterplan"));
+        modelElementComparator = modelElementComparator.thenComparing(o -> o.getViewModelName());
     }
 
-    private void initComparator() {
-        planComparator = Comparator.comparing(o -> !o.getObject().isMasterPlan());
-        planComparator = planComparator.thenComparing(o -> o.getObject().getName());
-    }
-
-    public ListView<RepositoryHBox> getContentsListView() {
-        return contentsListView;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    private void init(String typeName, List<RepositoryHBox> hBoxes) {
-        initComparator();
-        this.typeName = typeName;
-        setText(typeName);
-        hBoxObservableList = FXCollections.observableArrayList(hBoxes);
+    public void addElement(ViewModelElement viewModelElement) {
+        repositoryListView.getItems().add(new RepositoryHBox(viewModelElement));
         sort();
-        contentsListView = new ListView<>(hBoxObservableList);
-        setContent(contentsListView);
     }
 
-    public void sort() {
-        if (typeName.equals("Plan")) {
-            //TODO find a better way
-            hBoxObservableList.sort((Comparator<? super RepositoryHBox>) (Object) planComparator);
-        } else {
-            hBoxObservableList.sort(Comparator.comparing(o -> o.getObject().getName()));
-        }
+    protected void sort() {
+        repositoryListView.getItems().sort((Comparator<? super RepositoryHBox>) (Object) modelElementComparator);
     }
 }

@@ -1,10 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition;
 
-import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddConditionToPlan;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TerminalStateContainer;
@@ -24,12 +19,7 @@ import java.util.Map;
 
 import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
-/**
- * Created by marci on 01.03.17.
- */
 public class PostConditionTool extends AbstractConditionTool {
-
-    private Cursor previousCursor;
 
     public PostConditionTool(TabPane workbench) {
         super(workbench);
@@ -91,7 +81,7 @@ public class PostConditionTool extends AbstractConditionTool {
                         Condition newCondition = createNewObject();
                         newCondition.setPluginName(PluginManager.getInstance().getDefaultPlugin().getName());
                         if (newCondition instanceof PostCondition == false) {
-                            AddConditionToPlan command = new AddConditionToPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getEditable(),
+                            AddConditionToPlan command = new AddConditionToPlan(((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getEditable(),
                                     newCondition);
                             MainWindowController.getInstance()
                                     .getCommandStack()

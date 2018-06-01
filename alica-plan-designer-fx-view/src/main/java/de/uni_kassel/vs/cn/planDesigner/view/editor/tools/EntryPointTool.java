@@ -50,7 +50,7 @@ public class EntryPointTool extends AbstractTool<EntryPoint> {
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
+        ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class EntryPointTool extends AbstractTool<EntryPoint> {
                     visualRepresentation.setTranslateX(x);
                     visualRepresentation.setTranslateY(y);
 
-                    if (event.getGestureSource() != workbench) {
+                    if (event.getGestureSource() != planEditorTabPane) {
                         visualRepresentation.setTranslateX(x);
                         visualRepresentation.setTranslateY(y);
                     }
@@ -85,9 +85,9 @@ public class EntryPointTool extends AbstractTool<EntryPoint> {
                 @Override
                 public void handle(MouseDragEvent event) {
                     updateLocalCoords(event);
-                    if (event.getGestureSource() != workbench && visualRepresentation == null) {
+                    if (event.getGestureSource() != planEditorTabPane && visualRepresentation == null) {
                         visualRepresentation = new Circle(localCoord.getX(),localCoord.getY(), 10, new EntryPointContainer().getVisualisationColor());
-                        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().add(visualRepresentation);
+                        ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().add(visualRepresentation);
                     }
                     event.consume();
                 }
@@ -96,7 +96,7 @@ public class EntryPointTool extends AbstractTool<EntryPoint> {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
-                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
+                    ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
                     visualRepresentation = null;
                 }
             });
@@ -111,7 +111,7 @@ public class EntryPointTool extends AbstractTool<EntryPoint> {
                         event.consume();
                         return;
                     }
-                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
+                    ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("entryPointCreatorDialog.fxml"));
                     try {
                         Parent rootOfDialog = fxmlLoader.load();

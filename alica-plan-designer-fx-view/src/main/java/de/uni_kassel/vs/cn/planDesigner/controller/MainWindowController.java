@@ -12,22 +12,29 @@ import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.Pair;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
@@ -50,9 +57,11 @@ public class MainWindowController implements Initializable {
     }
 
     private static final Logger LOG = LogManager.getLogger(MainWindowController.class);
+    public static Cursor FORBIDDEN_CURSOR = new ImageCursor(
+            new Image(MainWindowController.class.getClassLoader().getResourceAsStream("images/forbidden.png")));
 
     @FXML
-    private PLDFileTreeView fileTreeView;
+    private PLDFileTreeView pldFileTreeView;
 
     @FXML
     private PropertyTabPane propertyAndStatusTabPane;
@@ -81,10 +90,8 @@ public class MainWindowController implements Initializable {
     }
 
     public void initialize(URL location, ResourceBundle resources) {
-        fileTreeView.setController(this);
-        editorTabPane.setCommandStack(commandStack);
+        pldFileTreeView.setController(this);
         editorTabPane.getTabs().clear();
-        repositoryTabPane.init();
         menuBar.getMenus().addAll(createMenus());
         propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
@@ -92,34 +99,31 @@ public class MainWindowController implements Initializable {
 
     public boolean isSelectedPlanElement(Node node) {
         Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
-        if (selectedItem != null && ((AbstractEditorTab) selectedItem).getSelectedPlanElements() != null) {
-            // TODO fix single
-            Pair<PlanElement, AbstractPlanElementContainer> o = ((List<Pair<PlanElement, AbstractPlanElementContainer>>)
-                    ((AbstractEditorTab) selectedItem).getSelectedPlanElements().getValue()).get(0);
-            if (o != null && o.getValue() != null) {
-                return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
-            } else {
-                return false;
-            }
+        if (selectedItem == null || ((AbstractEditorTab) selectedItem).getSelectedPlanElements() == null) {
+            return false;
+        }
+
+        Pair<Long, AbstractPlanElementContainer> o = ((AbstractEditorTab) selectedItem).getSelectedPlanElements().getValue().get(0);
+        if (o != null && o.getValue() != null) {
+            return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
         } else {
             return false;
         }
     }
 
-    /**
-     *
-     * @return
-     */
     private List<Menu> createMenus() {
         List<Menu> menus = new ArrayList<>();
+
         Menu fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
         fileMenu.getItems().add(new NewResourceMenu());
         MenuItem saveItem = new MenuItem(i18NRepo.getString("label.menu.file.save"));
-        saveItem.setOnAction(event -> ((AbstractEditorTab<?>) editorTabPane.getSelectionModel().getSelectedItem()).save());
+        saveItem.setOnAction(event -> ((AbstractEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save());
         saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
         menus.add(fileMenu);
-        menus.add(new EditMenu(commandStack, editorTabPane));
+
+        menus.add(new EditMenu(editorTabPane));
+
         Menu codegenerationMenu = new Menu(i18NRepo.getString("label.menu.generation"));
         MenuItem regenerateItem = new MenuItem(i18NRepo.getString("label.menu.generation.regenerate"));
         MenuItem generateCurrentFile = new MenuItem(i18NRepo.getString("label.menu.generation.file"));
@@ -127,20 +131,21 @@ public class MainWindowController implements Initializable {
         getEditorTabPane().getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                PlanElement editable = ((AbstractEditorTab) newValue).getEditable();
-                if (editable instanceof AbstractPlan) {
-                    generateCurrentFile.setDisable(false);
-                }
+                // TODO: how to determine type of longId, for enabling code generation menu
+//                if (((AbstractEditorTab) newValue).getEditable() instanceof AbstractPlan) {
+//                    generateCurrentFile.setDisable(false);
+//                }
             } else {
                 generateCurrentFile.setDisable(true);
             }
         });
 
         generateCurrentFile.setOnAction(e -> {
-            PlanElement planElement = ((AbstractEditorTab) getEditorTabPane()
+            long modelElementId = ((AbstractEditorTab) getEditorTabPane()
                     .getSelectionModel().getSelectedItem()).getEditable();
             try {
-            	waitOnProgressWindow(() -> new Codegenerator().generate((AbstractPlan)planElement));
+                // TODO: couple codegeneration with gui (without dependencies)
+//            	waitOnProgressWindow(() -> new Codegenerator().generate(modelElementId));
             } catch (RuntimeException ex) {
                 LOG.error("error while generating code", ex);
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
@@ -148,8 +153,8 @@ public class MainWindowController implements Initializable {
         });
         regenerateItem.setOnAction(e -> {
             try {
-            	waitOnProgressWindow(() -> new Codegenerator().generate());
-                
+                // TODO: couple codegeneration with gui (without dependencies)
+//            	waitOnProgressWindow(() -> new Codegenerator().generate());
             } catch (RuntimeException ex) {
                 LOG.error("error while generating code", ex);
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
@@ -194,29 +199,26 @@ public class MainWindowController implements Initializable {
         }).start();
 	}
 
-	public void closeTabIfOpen (PlanElement planElement) {
-        Optional<AbstractEditorTab<PlanElement>> tabOptional = editorTabPane
+	public void closeTabIfOpen (long modelElementId) {
+        Optional<AbstractEditorTab> tabOptional = editorTabPane
                 .getTabs()
                 .stream()
-                .map(e -> (AbstractEditorTab<PlanElement>) e)
-                .filter(e -> e.getEditable().equals(planElement))
+                .map(e -> (AbstractEditorTab) e)
+                .filter(e -> e.getEditable().equals(modelElementId))
                 .findFirst();
-        if (tabOptional.isPresent()) {
-            editorTabPane.getTabs().remove(tabOptional.get());
-        }
+        tabOptional.ifPresent(abstractEditorTab -> editorTabPane.getTabs().remove(abstractEditorTab));
     }
 
     public void closePropertyAndStatusTabIfOpen() {
         if(propertyAndStatusTabPane != null) {
             propertyAndStatusTabPane.getTabs().clear();
         }
-
     }
 
     /**
      * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}
      *
-     * @param toOpen
+     * @param toOpen file that should be opened
      */
     public void openFile(File toOpen) {
         editorTabPane.openTab(toOpen.toPath());
@@ -230,7 +232,7 @@ public class MainWindowController implements Initializable {
         return repositoryTabPane;
     }
 
-    public PLDFileTreeView getFileTreeView() {
-        return fileTreeView;
+    public PLDFileTreeView getPldFileTreeView() {
+        return pldFileTreeView;
     }
 }

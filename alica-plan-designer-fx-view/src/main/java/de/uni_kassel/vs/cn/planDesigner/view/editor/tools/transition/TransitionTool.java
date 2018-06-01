@@ -1,18 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition;
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddTransitionInPlan;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TerminalStateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
@@ -20,18 +15,12 @@ import javafx.scene.input.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
-
-/**
- * Created by marci on 05.01.17.
- */
 public class TransitionTool extends AbstractTool<Transition> {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private boolean initial = true;
     private StateContainer start;
     private StateContainer finish;
-    private Cursor previousCursor;
 
     public TransitionTool(TabPane workbench) {
         super(workbench);
@@ -44,7 +33,7 @@ public class TransitionTool extends AbstractTool<Transition> {
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
+        ((PlanTab) parentTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
     }
 
     @Override
@@ -63,7 +52,7 @@ public class TransitionTool extends AbstractTool<Transition> {
                         if (((Node)event.getTarget()).getParent() instanceof StateContainer) {
                             finish = (StateContainer) ((Node)event.getTarget()).getParent();
                             AddTransitionInPlan command = new AddTransitionInPlan(
-                                    ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject(),
+                                    ((PlanTab) parentTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject(),
                                     start.getContainedElement(), finish.getContainedElement());
                             MainWindowController.getInstance()
                                     .getCommandStack()

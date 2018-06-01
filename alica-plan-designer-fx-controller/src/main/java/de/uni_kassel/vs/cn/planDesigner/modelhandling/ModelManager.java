@@ -1,22 +1,15 @@
-package de.uni_kassel.vs.cn.planDesigner.controller;
+package de.uni_kassel.vs.cn.planDesigner.modelhandling;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class ModelManager {
     private Configuration activeConf;
@@ -27,17 +20,28 @@ public class ModelManager {
     private HashMap<Long, PlanType> planTypeMap;
     private HashMap<Long, Task> taskMap;
 
-    public ModelManager() {
-        ConfigurationManager confManager = ConfigurationManager.getInstance();
-        activeConf = confManager.getActiveConfiguration();
+    private List<IModelEventHandler> eventHandlerList;
+
+    public ModelManager(Configuration conf) {
+        activeConf = conf;
 
         planElementMap = new HashMap<>();
-
         planMap = new HashMap<>();
         behaviourMap = new HashMap<>();
         planTypeMap = new HashMap<>();
         taskMap = new HashMap<>();
+        eventHandlerList = new ArrayList<IModelEventHandler>();
+    }
 
+    public void addListener(IModelEventHandler eventHandler) {
+        eventHandlerList.add(eventHandler);
+    }
+
+    public void removeListener(IModelEventHandler eventHandler) {
+        eventHandlerList.remove(eventHandler);
+    }
+
+    public void loadModelFromDisk() {
         loadModelFromDisk(activeConf.getPlansPath());
         loadModelFromDisk(activeConf.getTasksPath());
         loadModelFromDisk(activeConf.getRolesPath());
@@ -89,6 +93,7 @@ public class ModelManager {
                     } else {
                         planElementMap.put(plan.getId(), plan);
                         planMap.put(plan.getId(), plan);
+                        fireCreationEvent(plan);
                     }
                     break;
                 case ".beh":
@@ -98,6 +103,7 @@ public class ModelManager {
                     } else {
                         planElementMap.put(behaviour.getId(), behaviour);
                         behaviourMap.put(behaviour.getId(), behaviour);
+                        fireCreationEvent(behaviour);
                     }
                     break;
                 case ".pty":
@@ -107,6 +113,7 @@ public class ModelManager {
                     } else {
                         planElementMap.put(planType.getId(), planType);
                         planTypeMap.put(planType.getId(), planType);
+                        fireCreationEvent(planType);
                     }
                     break;
                 case ".tsk":
@@ -116,6 +123,7 @@ public class ModelManager {
                     } else {
                         planElementMap.put(task.getId(), task);
                         taskMap.put(task.getId(), task);
+                        fireCreationEvent(task);
                     }
                     break;
                 case ".rset":
@@ -126,6 +134,12 @@ public class ModelManager {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void fireCreationEvent(PlanElement element) {
+        for (IModelEventHandler eventHandler : eventHandlerList) {
+            eventHandler.handleModelEvent(new ModelEvent(ModelEventType.ELEMENT_CREATED, null, element));
         }
     }
 
@@ -163,21 +177,12 @@ public class ModelManager {
         return conditions;
     }
 
-    public ObservableList<Pair<Long, String>> getPlansForUI() {
-        ObservableList<Pair<Long, String>> plansUIList = FXCollections.observableArrayList();
-        for (Map.Entry<Long, Plan> entry : planMap.entrySet()) {
-            plansUIList.add(new Pair<Long, String>(entry.getKey(), entry.getValue().getName()));
-        }
-        return plansUIList;
-    }
-
-    public void handleFileSystemEvent(WatchEvent event, Path path) {
+    public void handleFileSystemEvent(WatchEvent.Kind kind, Path path) {
         //TODO implement
-        if (event.kind().equals(StandardWatchEventKinds.ENTRY_CREATE)) {
+        if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
             loadModelFile(new File(path.toUri()));
-        } else if (event.kind().equals(StandardWatchEventKinds.ENTRY_DELETE)) {
-
-        } else if (event.kind().equals((StandardWatchEventKinds.ENTRY_MODIFY))) {
+        } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
+        } else if (kind.equals((StandardWatchEventKinds.ENTRY_MODIFY))) {
 
         }
     }

@@ -52,7 +52,7 @@ public class SaveTest extends ApplicationTest {
 
         // Speichern
         testInstance.getPlans().add(new Pair<>(plan, planFile.toPath()));
-        PLDFileTreeView pldFileTreeView = MainWindowController.getInstance().getFileTreeView();
+        PLDFileTreeView pldFileTreeView = MainWindowController.getInstance().getPldFileTreeView();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -95,7 +95,7 @@ public class SaveTest extends ApplicationTest {
 
         // Speichern
         testInstance.getPlans().add(new Pair<>(plan, planFile.toPath()));
-        PLDFileTreeView pldFileTreeView = MainWindowController.getInstance().getFileTreeView();
+        PLDFileTreeView pldFileTreeView = MainWindowController.getInstance().getPldFileTreeView();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {

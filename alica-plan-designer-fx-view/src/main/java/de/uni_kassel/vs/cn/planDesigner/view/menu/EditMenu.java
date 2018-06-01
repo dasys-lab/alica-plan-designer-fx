@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
@@ -21,9 +22,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.nio.file.Path;
 
-/**
- * Created by marci on 17.03.17.
- */
 public class EditMenu extends Menu {
 
     private MenuItem deleteElementItem;
@@ -32,7 +30,7 @@ public class EditMenu extends Menu {
     private final MenuItem configItem;
     private I18NRepo i18NRepo;
 
-    public EditMenu(CommandStack commandStack, EditorTabPane editorTabPane) {
+    public EditMenu(EditorTabPane editorTabPane) {
         super(I18NRepo.getInstance().getString("label.menu.edit"));
         i18NRepo = I18NRepo.getInstance();
         deleteElementItem = new MenuItem(i18NRepo.getString("label.menu.edit.delete"));
@@ -133,13 +131,13 @@ public class EditMenu extends Menu {
             }
         } else {
             boolean isRepoFocused = repositoryTabPane.getTabs().stream()
-                    .anyMatch(e -> ((RepositoryTab) e).getContentsListView().focusedProperty().get());
+                    .anyMatch(e -> ((RepositoryTab) e).getRepositoryListView().focusedProperty().get());
             if (isRepoFocused) {
                 int selectedTabIndex = repositoryTabPane.getSelectionModel().getSelectedIndex();
                 PlanElement selectedPlanElement = ((RepositoryTab<PlanElement>) repositoryTabPane
                                 .getSelectionModel()
                                 .getSelectedItem())
-                                .getContentsListView()
+                                .getRepositoryListView()
                                 .getSelectionModel().getSelectedItem().getObject();
                 editorTabPane.getTabs()
                         .stream()
@@ -165,9 +163,9 @@ public class EditMenu extends Menu {
                 return;
             }
 
-            if (mainWindowController.getFileTreeView().focusedProperty().get()) {
+            if (mainWindowController.getPldFileTreeView().focusedProperty().get()) {
 
-                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainWindowController.getFileTreeView()
+                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainWindowController.getPldFileTreeView()
                         .getSelectionModel()
                         .getSelectedItem()
                         .getValue().unwrap());

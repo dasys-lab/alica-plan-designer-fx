@@ -23,9 +23,6 @@ public class PlanDesigner extends Application {
 
     private static Stage primaryStage;
 
-    public static Cursor FORBIDDEN_CURSOR = new ImageCursor(
-            new Image(PlanDesigner.class.getClassLoader().getResourceAsStream("images/forbidden.png")));
-
     public static Stage getPrimaryStage() {
         return primaryStage;
     }

@@ -33,12 +33,12 @@ public abstract class AbstractConditionTool extends AbstractTool {
 
     @Override
     public void draw() {
-        ((PlanTab)workbench.getSelectionModel().getSelectedItem()).getConditionHBox().setupConditionVisualisation();
+        ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getConditionHBox().setupConditionVisualisation();
     }
 
     @Override
-    protected Node getWorkbench() {
-        return ((PlanTab)(workbench.getSelectionModel().getSelectedItem())).getConditionHBox();
+    protected Node getPlanEditorTabPane() {
+        return ((PlanTab)(planEditorTabPane.getSelectionModel().getSelectedItem())).getConditionHBox();
     }
 
     @Override
@@ -74,7 +74,7 @@ public abstract class AbstractConditionTool extends AbstractTool {
                         Condition newCondition = createNewObject();
                         newCondition.setPluginName(PluginManager.getInstance().getDefaultPlugin().getName());
                         if (newCondition instanceof PostCondition == false) {
-                            AddConditionToPlan command = new AddConditionToPlan(((PlanTab)workbench.getSelectionModel().getSelectedItem()).getEditable(),
+                            AddConditionToPlan command = new AddConditionToPlan(((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getEditable(),
                                     newCondition);
                             MainWindowController.getInstance()
                                     .getCommandStack()

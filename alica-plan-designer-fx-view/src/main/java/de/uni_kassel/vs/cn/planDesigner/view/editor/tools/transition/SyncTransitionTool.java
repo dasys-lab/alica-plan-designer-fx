@@ -1,13 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition;
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.PlanElementImpl;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddTransitionToSynchronisation;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.SynchronisationContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.TransitionContainer;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
@@ -16,7 +11,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -25,16 +19,12 @@ import javafx.scene.input.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by marci on 22.03.17.
- */
 public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTransition> {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private boolean initial = true;
     private SynchronisationContainer start;
     private TransitionContainer finish;
-    private Cursor previousCursor;
 
     public SyncTransitionTool(TabPane workbench) {
         super(workbench);
@@ -47,10 +37,10 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
 
     @Override
     public void draw() {
-        PlanTab selectedItem = (PlanTab) workbench.getSelectionModel().getSelectedItem();
+        PlanTab selectedItem = (PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
-            ChangeListener<Tab> listener = new TabChangeListener(workbench);
-            workbench.getSelectionModel().selectedItemProperty().addListener(listener);
+            ChangeListener<Tab> listener = new TabChangeListener(planEditorTabPane);
+            planEditorTabPane.getSelectionModel().selectedItemProperty().addListener(listener);
         } else {
             (selectedItem).getPlanEditorGroup().setupPlanVisualisation();
         }
@@ -74,7 +64,7 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
 
                     AddTransitionToSynchronisation command =
                             new AddTransitionToSynchronisation(start.getContainedElement(), finish.getContainedElement(),
-                                    ((AbstractEditorTab<PlanElement>)workbench.getSelectionModel().getSelectedItem()).getEditable());
+                                    ((AbstractEditorTab<PlanElement>) planEditorTabPane.getSelectionModel().getSelectedItem()).getEditable());
                     MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);

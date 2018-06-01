@@ -2,55 +2,47 @@ package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
+/**
+ * Parent object for the tabs of the Repository View. Is created by loading
+ * the mainWindow.fxml file and initialized by the corresponding MainWindowController.
+ */
 public class RepositoryTabPane extends TabPane {
 
-//    public RepositoryTabPane() {
-//        getTabs().clear();
-//    }
+    RepositoryTab plansTab;
+    RepositoryTab planTypesTab;
+    RepositoryTab behavioursTab;
+    RepositoryTab tasksTab;
 
-    public void init() {
-        getTabs().clear();
-        getTabs().setAll(createAllRepoTabs());
+    public RepositoryTabPane() {
+        TabPane planEditorTabPane = MainWindowController.getInstance().getEditorTabPane();
+        RepositoryTool planTool = new RepositoryTool(planEditorTabPane);
+        RepositoryTool behaviourTool = new RepositoryTool(planEditorTabPane);
+        RepositoryTool planTypeTool = new RepositoryTool(planEditorTabPane);
+        RepositoryTool taskTool = new RepositoryTool(planEditorTabPane);
+
+        plansTab = new RepositoryTab("Plans",  planTool);
+        planTypesTab = new RepositoryTab("PlanTypes", planTypeTool);
+        behavioursTab = new RepositoryTab("Behaviours", behaviourTool);
+        tasksTab = new RepositoryTab("Tasks", taskTool);
+
+        getTabs().addAll(plansTab, planTypesTab, behavioursTab, tasksTab);
     }
 
-    private Tab[] createAllRepoTabs() {
-        RepositoryTool planTool = new RepositoryTool(MainWindowController.getInstance().getEditorTabPane()) {
-
-        };
-
-        RepositoryTool behaviourTool = new RepositoryTool(MainWindowController.getInstance().getEditorTabPane()) {
-
-        };
-
-        RepositoryTool planTypeTool = new RepositoryTool(MainWindowController.getInstance().getEditorTabPane()) {
-
-        };
-
-        return new Tab[]{new RepositoryTab<>(RepositoryViewModel.getInstance().getPlans(), planTool, "plan"),
-                new RepositoryTab<>(RepositoryViewModel.getInstance().getPlanTypes(), planTypeTool, "planType"),
-                new RepositoryTab<>(RepositoryViewModel.getInstance().getBehaviours(), behaviourTool, "behaviour"),
-                new RepositoryTab<>(RepositoryViewModel.getInstance().getTasks(), new TaskTool(), "task")};
+    public void addPlan(ViewModelElement plan) {
+        plansTab.addElement(plan);
     }
 
-    public class TaskTool extends RepositoryTool {
-        public TaskTool() {
-            super(RepositoryTabPane.this);
-        }
+    public void addBehaviour(ViewModelElement behaviour) {
+        behavioursTab.addElement(behaviour);
+    }
 
-        @Override
-        public void startPhase() {
-        }
+    public void addPlanType(ViewModelElement planType) {
+        planTypesTab.addElement(planType);
+    }
 
-        @Override
-        public void endPhase() {
-        }
-
-        @Override
-        public AbstractPlan createNewObject() {
-            return EMFModelUtils.getAlicaFactory().createBehaviour();
-        }
+    public void addTask(ViewModelElement task) {
+        tasksTab.addElement(task);
     }
 }
