@@ -1,151 +1,122 @@
 package de.uni_kassel.vs.cn.generator;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
-import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.nio.file.Paths;
 
-/**
- * Created by marci on 31.05.17.
- */
 public class GeneratedSourcesManager {
 
-    private Configuration configuration;
+    private String genSrcPath;
+    private String editorExecutablePath;
+    private Map<Long, Integer> linesForGeneratedElements;
 
-    private Map<State, Integer> stateCheckingCode;
-
-    private Map<Transition, Integer> transitionConditionCode;
-
-    private Map<Condition, Integer> conditionCode;
-
-    private static GeneratedSourcesManager INSTANCE;
-
-    public static GeneratedSourcesManager get() {
-        if (INSTANCE == null) {
-            INSTANCE = new GeneratedSourcesManager();
-        }
-        return INSTANCE;
-    }
-
-    private GeneratedSourcesManager() {
-        configuration = ConfigurationManager.getInstance().getActiveConfiguration();
-        stateCheckingCode = new HashMap<>();
-        transitionConditionCode = new HashMap<>();
-        conditionCode = new HashMap<>();
+    public GeneratedSourcesManager() {
+        linesForGeneratedElements = new HashMap<>();
     }
 
     public String getIncludeDir() {
-        return Paths.get(configuration.getGenSrcPath(), "include").toString();
+        return Paths.get(genSrcPath, "include").toString();
     }
 
     public String getSrcDir() {
-        return Paths.get(configuration.getGenSrcPath(), "src").toString();
+        return Paths.get(genSrcPath, "src").toString();
     }
 
-    public List<File> getAllGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
-        String destinationPath = abstractPlan.getDestinationPath();
-        if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
-            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
+    public void setGenSrcPath(String genSrcPath) {
+        this.genSrcPath = genSrcPath;
+    }
+
+    public void setEditorExecutablePath(String editorExecutablePath) {
+        this.editorExecutablePath = editorExecutablePath;
+    }
+
+    public void showSourceCode(PlanElement planElement) {
+        List<File> allGeneratedFilesForPlanElement = new ArrayList<>();
+        int lineNumber = 0;
+        if (planElement instanceof Behaviour) {
+            allGeneratedFilesForPlanElement.addAll(getGeneratedFilesForBehaviour((Behaviour) planElement));
+        } else if (planElement instanceof State) {
+            allGeneratedFilesForPlanElement.addAll(getGeneratedConditionFilesForPlan(((State) planElement).getParentPlan()));
+        } else if (planElement instanceof Transition) {
+            allGeneratedFilesForPlanElement.addAll(getGeneratedConditionFilesForPlan(((Transition) planElement).getOutState().getParentPlan()));
+        } else if (planElement instanceof Plan) {
+            allGeneratedFilesForPlanElement.addAll(getGeneratedConditionFilesForPlan((Plan) planElement));
+            allGeneratedFilesForPlanElement.addAll(getGeneratedConstraintFilesForPlan((Plan) planElement));
+        } else {
+            throw new RuntimeException("File for unkown generated source type requested!");
         }
+        lineNumber = getLineNumberForGeneratedElement(planElement.getId());
 
-        String headerFilename = (abstractPlan instanceof Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".h";
-        String sourceFilename = (abstractPlan instanceof Plan ? (abstractPlan.getName() + abstractPlan.getId()) : abstractPlan.getName()) + ".cpp";
-        File headerFile = new File(Paths.get(getIncludeDir(), destinationPath, headerFilename).toString());
-        File sourceFile = new File(Paths.get(getSrcDir(), destinationPath, sourceFilename).toString());
+        for (File generatedSource : allGeneratedFilesForPlanElement) {
+            try {
+                Runtime.getRuntime().exec(editorExecutablePath + " " + generatedSource.getAbsolutePath() + " +" + lineNumber);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    public List<File> getGeneratedFilesForBehaviour (Behaviour behaviour) {
         List<File> generatedFiles = new ArrayList<>();
-        generatedFiles.add(headerFile);
-        generatedFiles.add(sourceFile);
-
-        if (abstractPlan instanceof Plan) {
-            File constraintHeaderFile = new File(Paths.get(getIncludeDir(), destinationPath, "constraints", abstractPlan.getName() + abstractPlan.getId() + "Constraints.h").toString());
-            File constraintSourceFile = new File(Paths.get(getSrcDir(), destinationPath, "constraints", abstractPlan.getName() + abstractPlan.getId() + "Constraints.cpp").toString());
-            generatedFiles.add(constraintHeaderFile);
-            generatedFiles.add(constraintSourceFile);
-        }
+        String destinationPath = trimFileFromPath(behaviour.getDestinationPath());
+        generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, behaviour.getName() + ".h").toFile());
+        generatedFiles.add(Paths.get(getSrcDir(), destinationPath, behaviour.getName() + ".cpp").toFile());
         return generatedFiles;
     }
 
-    /**
-     * delegate {@link Map#put(Object, Object)}
-     *
-     * @param transition
-     * @param lineNumber
-     */
-    public void putTransitionLines(Transition transition, Integer lineNumber) {
-        transitionConditionCode.put(transition, lineNumber);
+    public List<File> getGeneratedConditionFilesForPlan (Plan plan) {
+        List<File> generatedFiles = new ArrayList<>();
+        String destinationPath = trimFileFromPath(plan.getDestinationPath());
+        String headerFilename = plan.getName() + plan.getId() + ".h";
+        String sourceFilename = plan.getName() + plan.getId() + ".cpp";
+        generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, headerFilename).toFile());
+        generatedFiles.add(Paths.get(getSrcDir(), destinationPath, sourceFilename).toFile());
+        return generatedFiles;
     }
 
-    /**
-     * if code has not been generated this method returns 0
-     *
-     * @param transition
-     * @return line number of generated code
-     */
-    public int getLineNumberForTransition(Transition transition) {
-        if (transitionConditionCode.containsKey(transition)) {
-            return transitionConditionCode.get(transition);
+    public List<File> getGeneratedConstraintFilesForPlan(AbstractPlan abstractPlan) {
+        List<File> generatedFiles = new ArrayList<>();
+        String destinationPath = trimFileFromPath(abstractPlan.getDestinationPath());
+        String constraintHeaderFileName = abstractPlan.getName() + abstractPlan.getId() + "Constraints.h";
+        String constraintSourceFileName = abstractPlan.getName() + abstractPlan.getId() + "Constraints.cpp";
+        generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, "constraints", constraintHeaderFileName).toFile());
+        generatedFiles.add(Paths.get(getSrcDir(), destinationPath, "constraints", constraintSourceFileName).toFile());
+        return generatedFiles;
+    }
+
+    private String trimFileFromPath(String destinationPath) {
+        if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
+            return destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
         } else {
-            return 0;
+            return destinationPath;
         }
     }
 
     /**
      * delegate {@link Map#put(Object, Object)}
      *
-     * @param state
+     * @param modelElementId
      * @param lineNumber
      */
-    public void putStateCheckingLines(State state, Integer lineNumber) {
-        stateCheckingCode.put(state, lineNumber);
+    public void putLineForModelElement(long modelElementId, Integer lineNumber) {
+        linesForGeneratedElements.put(modelElementId, lineNumber);
     }
 
     /**
      * if code has not been generated this method returns 0
      *
-     * @param state
+     * @param modelElementId
      * @return line number of generated code
      */
-    public int getLineNumberForState(State state) {
-        if (stateCheckingCode.containsKey(state)) {
-            return stateCheckingCode.get(state);
+    public int getLineNumberForGeneratedElement(long modelElementId) {
+        if (linesForGeneratedElements.containsKey(modelElementId)) {
+            return linesForGeneratedElements.get(modelElementId);
         } else {
             return 0;
         }
     }
 
-    /**
-     * @param state
-     * @return the file where the state code is located
-     */
-    public File getFileForState(State state) {
-        List<File> allGeneratedFilesForAbstractPlan = getAllGeneratedFilesForAbstractPlan(state.getParentPlan());
-        return allGeneratedFilesForAbstractPlan.stream()
-                .filter(e -> e.getAbsolutePath().endsWith("Constraints.cpp"))
-                .findFirst().orElse(null);
-    }
-
-    /**
-     * @param transition
-     * @return
-     */
-    public File getFileForTransition(Transition transition) {
-        Plan plan = transition.getOutState().getParentPlan();
-        List<File> allGeneratedFilesForAbstractPlan = getAllGeneratedFilesForAbstractPlan(plan);
-        return allGeneratedFilesForAbstractPlan
-                .stream()
-                .filter(e -> e.getAbsolutePath().endsWith(plan.getName() + plan.getId() + ".cpp"))
-                .findFirst().orElse(null);
-    }
-
-    public void putConditionLines(Condition condition, int lineNumber) {
-        conditionCode.put(condition, lineNumber);
-    }
-
-    public int getLineNumberForCondition(Condition condition) {
-        return conditionCode.get(condition);
-    }
 }

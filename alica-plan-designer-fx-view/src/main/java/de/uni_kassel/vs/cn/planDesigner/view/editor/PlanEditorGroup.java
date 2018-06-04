@@ -100,7 +100,7 @@ public class PlanEditorGroup extends Group {
                     pmlUiExtension = createPmlUiExtension(e, pmlUiExtension);
                     Optional<StateContainer> first = stateContainers
                             .stream()
-                            .filter(s -> e.getState() != null && s.getContainedElement().getId() == e.getState().getId())
+                            .filter(s -> e.getState() != null && s.getModelElementId().getId() == e.getState().getId())
                             .findFirst();
                     if (first.isPresent()) {
                         return new EntryPointContainer(e, pmlUiExtension, first.get(), commandStack);
@@ -123,12 +123,12 @@ public class PlanEditorGroup extends Group {
         for (Transition transition : planModelVisualisationObject.getPlan().getTransitions()) {
 
             StateContainer fromState = stateContainers.stream()
-                    .filter(e -> e.getContainedElement().equals(transition.getInState()))
+                    .filter(e -> e.getModelElementId().equals(transition.getInState()))
                     .findFirst()
                     .orElse(null);
 
             StateContainer toState = stateContainers.stream()
-                    .filter(e -> e.getContainedElement().equals(transition.getOutState()))
+                    .filter(e -> e.getModelElementId().equals(transition.getOutState()))
                     .findFirst()
                     .orElse(null);
 
@@ -191,7 +191,7 @@ public class PlanEditorGroup extends Group {
 
                     List<TransitionContainer> collect = transitionContainers
                             .stream()
-                            .filter(f -> e.getSynchedTransitions().contains(f.getContainedElement()))
+                            .filter(f -> e.getSynchedTransitions().contains(f.getModelElementId()))
                             .collect(Collectors.toList());
                     return new SynchronisationContainer(e,collect, pmlUiExtension, commandStack);
                 })

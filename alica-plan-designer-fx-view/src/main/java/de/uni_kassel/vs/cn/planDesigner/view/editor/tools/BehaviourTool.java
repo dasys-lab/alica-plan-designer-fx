@@ -73,7 +73,7 @@ public class BehaviourTool extends AbstractTool<Behaviour> {
                     }
 
                     AddAbstractPlanToState command =
-                            new AddAbstractPlanToState(newBehaviour, stateContainer.getContainedElement());
+                            new AddAbstractPlanToState(newBehaviour, stateContainer.getModelElementId());
                     MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);

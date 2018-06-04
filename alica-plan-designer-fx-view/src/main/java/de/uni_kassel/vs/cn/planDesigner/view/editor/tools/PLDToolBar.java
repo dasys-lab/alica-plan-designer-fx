@@ -59,10 +59,6 @@ public class PLDToolBar extends ToolBar {
 
     }
 
-    public boolean anyToolsRecentlyDone() {
-        return tools.stream().anyMatch(e -> e.isRecentlyDone() == true);
-    }
-
     public AbstractTool getRecentlyDoneTool() {
         return tools.stream().filter(AbstractTool::isRecentlyDone).findFirst().orElse(null);
     }

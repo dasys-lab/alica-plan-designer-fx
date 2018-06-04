@@ -241,7 +241,7 @@ public class CPPGeneratorImpl implements IGenerator {
                 LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
                 while (lineNumberReader.ready()) {
                     if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + inPlan.getId() + ") ENABLED START*/")) {
-                        generatedSourcesManager.putTransitionLines(inPlan, lineNumberReader.getLineNumber());
+                        generatedSourcesManager.putLineForModelElement(inPlan, lineNumberReader.getLineNumber());
                         break;
                     }
 

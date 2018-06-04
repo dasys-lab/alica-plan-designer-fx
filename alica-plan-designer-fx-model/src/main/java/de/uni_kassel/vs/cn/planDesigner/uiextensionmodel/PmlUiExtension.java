@@ -2,8 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.uiextensionmodel;
 
 import java.util.ArrayList;
 
-public class PmlUiExtension extends PositionedElement{
+public class PmlUiExtension extends PositionedElement {
 
+    // ID of the plan, this pmlUIExtension object helps to layout its elements in the Plan Designer
+    protected long layoutedModelElementId;
     protected int height;
     protected int width;
     protected boolean collapsed;
@@ -13,6 +15,15 @@ public class PmlUiExtension extends PositionedElement{
     public PmlUiExtension() {
         bendpoints = new ArrayList<>();
     }
+
+    public long getLayoutedModelElementId() {
+        return layoutedModelElementId;
+    }
+
+    public void setLayoutedModelElementId(long layoutedModelElementId) {
+        this.layoutedModelElementId = layoutedModelElementId;
+    }
+
     int getWidth() {return this.width;}
 
     void setWidth(int width) {this.width = width;}

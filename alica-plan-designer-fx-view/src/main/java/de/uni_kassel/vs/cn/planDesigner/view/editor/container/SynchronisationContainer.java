@@ -62,7 +62,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
         setEffectToStandard();
         ((Circle)visualRepresentation).setFill(new ImagePattern(new Image(getClass().getClassLoader()
                 .getResourceAsStream("images/synchronisation36x24.png"))));
-        Text e = new Text(getContainedElement().getName());
+        Text e = new Text(getModelElementId().getName());
         getChildren().add(e);
         e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth()/2);
         e.setLayoutY(e.getLayoutY() - StateContainer.STATE_RADIUS);
@@ -80,7 +80,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
                             middleS.getY());
                     line.setFill(Color.VIOLET);
                     getChildren().add(line);
-                    transitionToLineMap.put(transitionContainer.getContainedElement(), line);
+                    transitionToLineMap.put(transitionContainer.getModelElementId(), line);
                 } else if(transitionContainer.getVisualRepresentation() instanceof Polyline) {
                     Polyline visualRepresentation = (Polyline) transitionContainer.getVisualRepresentation();
                     double middleXT;
@@ -103,7 +103,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
                             middleS.getY());
                     line.setFill(Color.VIOLET);
                     getChildren().add(line);
-                    transitionToLineMap.put(transitionContainer.getContainedElement(), line);
+                    transitionToLineMap.put(transitionContainer.getModelElementId(), line);
                 }
             });
 
@@ -136,9 +136,9 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
 
     @Override
     public AbstractCommand createMoveElementCommand() {
-        return new ChangePosition(getPmlUiExtension(), getContainedElement(),
+        return new ChangePosition(getPmlUiExtension(), getModelElementId(),
                 (int) (getLayoutX()),
-                (int) (getLayoutY()), (PlanElement) getContainedElement().eResource().getContents().get(0));
+                (int) (getLayoutY()), (PlanElement) getModelElementId().eResource().getContents().get(0));
     }
 
     @Override
