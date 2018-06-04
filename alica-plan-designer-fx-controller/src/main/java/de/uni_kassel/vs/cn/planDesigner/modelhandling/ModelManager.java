@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.*;
@@ -18,7 +19,7 @@ public class ModelManager {
     private HashMap<Long, Plan> planMap;
     private HashMap<Long, Behaviour> behaviourMap;
     private HashMap<Long, PlanType> planTypeMap;
-    private HashMap<Long, Task> taskMap;
+    private HashMap<Long, TaskRepository> taskRepositoryMap;
 
     private List<IModelEventHandler> eventHandlerList;
 
@@ -29,7 +30,7 @@ public class ModelManager {
         planMap = new HashMap<>();
         behaviourMap = new HashMap<>();
         planTypeMap = new HashMap<>();
-        taskMap = new HashMap<>();
+        taskRepositoryMap = new HashMap<>();
         eventHandlerList = new ArrayList<IModelEventHandler>();
     }
 
@@ -78,7 +79,7 @@ public class ModelManager {
      *
      * @param modelFile the file to be parsed by jackson
      */
-    private void loadModelFile(File modelFile) {
+    private void loadModelFile(File modelFile) throws RuntimeException {
         String path = modelFile.toString();
         String ending = path.substring(path.lastIndexOf('.'), path.length());
 
@@ -117,13 +118,14 @@ public class ModelManager {
                     }
                     break;
                 case ".tsk":
-                    Task task = mapper.readValue(modelFile, Task.class);
-                    if (planElementMap.containsKey(task.getId())) {
-                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + task.getId());
+                    //
+                    TaskRepository taskRepository = mapper.readValue(modelFile, TaskRepository.class);
+                    if (planElementMap.containsKey(taskRepository.getId())) {
+                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
-                        planElementMap.put(task.getId(), task);
-                        taskMap.put(task.getId(), task);
-                        fireCreationEvent(task);
+                        planElementMap.put(taskRepository.getId(), taskRepository);
+                        taskRepositoryMap.put(taskRepository.getId(), taskRepository);
+                        fireCreationEvent(taskRepository);
                     }
                     break;
                 case ".rset":
@@ -140,6 +142,12 @@ public class ModelManager {
     private void fireCreationEvent(PlanElement element) {
         for (IModelEventHandler eventHandler : eventHandlerList) {
             eventHandler.handleModelEvent(new ModelEvent(ModelEventType.ELEMENT_CREATED, null, element));
+        }
+    }
+
+    private void fireDeletionEvent(PlanElement element) {
+        for (IModelEventHandler eventHandler : eventHandlerList) {
+            eventHandler.handleModelEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, null, element));
         }
     }
 
@@ -178,12 +186,121 @@ public class ModelManager {
     }
 
     public void handleFileSystemEvent(WatchEvent.Kind kind, Path path) {
-        //TODO implement
         if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
-            loadModelFile(new File(path.toUri()));
+            loadModelFile(path.toFile());
         } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
+            deletePlanElement(path);
         } else if (kind.equals((StandardWatchEventKinds.ENTRY_MODIFY))) {
+            PlanElement deletedElement = deletePlanElement(path);
+            try {
+                loadModelFile(path.toFile());
+            } catch (RuntimeException exception) {
+                planElementMap.put(deletedElement.getId(), deletedElement);
+                if (deletedElement instanceof Plan) {
+                    planMap.put(deletedElement.getId(), (Plan)deletedElement);
+                } else if (deletedElement instanceof Behaviour) {
+                    behaviourMap.put(deletedElement.getId(), (Behaviour)deletedElement);
+                } else if (deletedElement instanceof PlanType) {
+                    planTypeMap.put(deletedElement.getId(), (PlanType)deletedElement);
+                } else if (deletedElement instanceof TaskRepository) {
+                    taskRepositoryMap.put(deletedElement.getId(), (TaskRepository)deletedElement);
+                } else {
+                    exception.printStackTrace();
+                }
+            }
 
         }
+    }
+
+    private PlanElement deletePlanElement(Path path) {
+        PlanElement deletedElement = null;
+        String pathString = path.toString();
+        String ending = pathString.substring(pathString.lastIndexOf('.'), pathString.length());
+
+        try {
+            switch (ending) {
+                case ".pml":
+                    for (Plan plan : planMap.values()) {
+                        if (pathString.contains(Paths.get(plan.getDestinationPath(), plan.getName(), ".pml").toString())) {
+                            deletedElement = plan;
+                            break;
+                        }
+                    }
+                    if (deletedElement != null) {
+                        throw new RuntimeException("PlanElement not found! Path is: " + path);
+                    }
+                    if (planElementMap.containsValue(deletedElement.getId())){
+                        planElementMap.remove(deletedElement.getId());
+                        planMap.remove(deletedElement.getId());
+                        fireDeletionEvent(deletedElement);
+                    } else {
+                        throw new RuntimeException("PlanElement ID not found! ID is: " + deletedElement.getId() + " Type is Plan!");
+                    }
+                    break;
+                case ".beh":
+                    for (Behaviour behaviour : behaviourMap.values()) {
+                        if (pathString.contains(Paths.get(behaviour.getDestinationPath(), behaviour.getName(), ".beh").toString())) {
+                            deletedElement = behaviour;
+                            break;
+                        }
+                    }
+                    if (deletedElement != null) {
+                        throw new RuntimeException("PlanElement not found! Path is: " + path);
+                    }
+                    if (planElementMap.containsValue(deletedElement.getId())){
+                        planElementMap.remove(deletedElement.getId());
+                        behaviourMap.remove(deletedElement.getId());
+                        fireDeletionEvent(deletedElement);
+                    } else {
+                        throw new RuntimeException("PlanElement ID not found! ID is: " + deletedElement.getId() + " Type is Behaviour!");
+                    }
+                    break;
+                case ".pty":
+                    for (PlanType planType : planTypeMap.values()) {
+                        if (pathString.contains(Paths.get(planType.getDestinationPath(), planType.getName(), ".pty").toString())) {
+                            deletedElement = planType;
+                            break;
+                        }
+                    }
+                    if (deletedElement != null) {
+                        throw new RuntimeException("PlanElement not found! Path is: " + path);
+                    }
+                    if (planElementMap.containsValue(deletedElement.getId())){
+                        planElementMap.remove(deletedElement.getId());
+                        planMap.remove(deletedElement.getId());
+                        fireDeletionEvent(deletedElement);
+                    } else {
+                        throw new RuntimeException("PlanElement ID not found! ID is: " + deletedElement.getId() + " Type is PlanType!");
+                    }
+                    break;
+                case ".tsk":
+                    //TODO does only work if the taskrepository name is identical to the file name
+                    for (TaskRepository taskRepository : taskRepositoryMap.values()) {
+                        if (pathString.contains(Paths.get(taskRepository.getName(), ".tsk").toString())) {
+                            deletedElement = taskRepository;
+                            break;
+                        }
+                    }
+                    if (deletedElement != null) {
+                        throw new RuntimeException("PlanElement not found! Path is: " + path);
+                    }
+                    if (planElementMap.containsValue(deletedElement.getId())){
+                        planElementMap.remove(deletedElement.getId());
+                        planMap.remove(deletedElement.getId());
+                        fireDeletionEvent(deletedElement);
+                    } else {
+                        throw new RuntimeException("PlanElement ID not found! ID is: " + deletedElement.getId() + " Type is Task!");
+                    }
+                    break;
+                case ".rset":
+                    // TODO: Implement role and stuff parsing with jackson.
+                    throw new RuntimeException("Parsing roles not implemented, yet!");
+                default:
+                    throw new RuntimeException("Received file with unknown file ending, for parsing.");
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return deletedElement;
     }
 }

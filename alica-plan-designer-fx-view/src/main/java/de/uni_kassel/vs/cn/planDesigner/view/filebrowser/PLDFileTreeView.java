@@ -2,7 +2,6 @@ package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,12 +9,10 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 
@@ -242,32 +239,5 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
     public void setController(MainWindowController controller) {
         this.controller = controller;
-    }
-}
-
-class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
-
-    VirtualDirectoryTreeItem() {
-        super();
-        Configuration conf = ConfigurationManager.getInstance().getActiveConfiguration();
-        if (conf == null) {
-            return;
-        }
-        if (conf.getPlansPath() != null && !conf.getPlansPath().isEmpty()) {
-            this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(conf.getPlansPath()),
-                    new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        }
-        if (conf.getRolesPath() != null && !conf.getRolesPath().isEmpty()) {
-            this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(conf.getRolesPath()),
-                    new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        }
-        if (conf.getTasksPath() != null && !conf.getTasksPath().isEmpty()) {
-            this.getChildren().add(new PLDTreeItem(FileWrapper.wrap(conf.getTasksPath()),
-                    new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
-        }
-    }
-
-    public void updateDirectory(WatchEvent.Kind kind, Path child) {
-        getChildren().forEach(e -> ((PLDTreeItem) e).updateDirectory(kind, child));
     }
 }
