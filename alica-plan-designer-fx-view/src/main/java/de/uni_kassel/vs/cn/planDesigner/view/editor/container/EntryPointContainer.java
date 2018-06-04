@@ -4,8 +4,6 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -82,7 +80,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
         }
 
         getChildren().add(visualRepresentation);
-        Text taskName = new Text(getContainedElement().getTask().getName());
+        Text taskName = new Text(getModelElementId().getTask().getName());
         HBox hBox = new HBox();
         hBox.getChildren().addAll(taskIcon, taskName);
         hBox.setLayoutX(visualRepresentation.getLayoutX() - taskName.getLayoutBounds().getWidth() / 2.0 - taskIcon.getFitWidth() / 2.0 - StateContainer.STATE_RADIUS / 2.0);
@@ -120,9 +118,9 @@ public class EntryPointContainer extends AbstractPlanElementContainer<EntryPoint
 
     @Override
     public AbstractCommand createMoveElementCommand() {
-        return new ChangePosition(getPmlUiExtension(), getContainedElement(),
+        return new ChangePosition(getPmlUiExtension(), getModelElementId(),
                 (int) (getLayoutX()),
-                (int) (getLayoutY()), getContainedElement().getPlan());
+                (int) (getLayoutY()), getModelElementId().getPlan());
     }
 
     @Override

@@ -53,7 +53,7 @@ public class TransitionTool extends AbstractTool<Transition> {
                             finish = (StateContainer) ((Node)event.getTarget()).getParent();
                             AddTransitionInPlan command = new AddTransitionInPlan(
                                     ((PlanTab) parentTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject(),
-                                    start.getContainedElement(), finish.getContainedElement());
+                                    start.getModelElementId(), finish.getModelElementId());
                             MainWindowController.getInstance()
                                     .getCommandStack()
                                     .storeAndExecute(command);

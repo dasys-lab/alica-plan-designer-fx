@@ -94,7 +94,7 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
                 points[j] = currentBendpoint.getXPos();
                 points[j + 1] = currentBendpoint.getYPos();
                 BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint,
-                        getPmlUiExtension(), commandStack, fromState.getContainedElement().getInPlan());
+                        getPmlUiExtension(), commandStack, fromState.getModelElementId().getInPlan());
                 bendpointContainer.setVisible(false);
                 draggableNodes.add(bendpointContainer);
                 _fromX = points[j];
@@ -149,7 +149,7 @@ public class TransitionContainer extends AbstractPlanElementContainer<Transition
 
     protected PotentialBendPointContainer makePotentialBendpoint(Bendpoint bendpoint) {
         return new PotentialBendPointContainer(bendpoint, getPmlUiExtension(), commandStack,
-                fromState.getContainedElement().getInPlan(), this);
+                fromState.getModelElementId().getInPlan(), this);
     }
 
     protected Bendpoint createBendpointInMiddle(double _toX, double _toY, double _fromX, double _fromY) {

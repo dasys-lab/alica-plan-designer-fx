@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
@@ -32,6 +33,9 @@ public final class Controller implements IModelEventHandler {
     private RepositoryViewModel repoViewModel;
     private MainWindowController mainWindowController;
 
+    // Code Generation Objects
+    GeneratedSourcesManager generatedSourcesManager;
+
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
 
@@ -46,6 +50,10 @@ public final class Controller implements IModelEventHandler {
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
+
+        generatedSourcesManager = new GeneratedSourcesManager();
+        generatedSourcesManager.setGenSrcPath(configurationManager.getActiveConfiguration().getGenSrcPath());
+        generatedSourcesManager.setEditorExecutablePath(configurationManager.getEditorExecutablePath());
     }
 
     public void handleFileSystemEvent(WatchEvent event, Path path) {
@@ -77,11 +85,14 @@ public final class Controller implements IModelEventHandler {
                 }
                 break;
             case ELEMENT_DELETED:
-                break;
+                throw new RuntimeException("Not implemented, yet!");
+                //break;
             case ELEMENT_ATTRIBUTE_CHANGED:
-                break;
+                throw new RuntimeException("Not implemented, yet!");
+                //break;
             default:
-                break;
+                throw new RuntimeException("Unknown model event captured!");
+                //break;
         }
     }
 

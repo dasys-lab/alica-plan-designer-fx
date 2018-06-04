@@ -241,7 +241,7 @@ public class EditMenu extends Menu {
             commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
                     planTab.getPlanEditorGroup().getPlanModelVisualisationObject())); // TODO ask single * 3
         } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElements().get().get(0).getValue() != null) {
-            State state = (State) planTab.getSelectedPlanElements().getValue().get(0).getValue().getContainedElement();
+            State state = (State) planTab.getSelectedPlanElements().getValue().get(0).getValue().getModelElementId();
             commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
         } else if(selectedPlanElement instanceof SynchronisationImpl) {
             commandStack.storeAndExecute(new DeleteSynchronisationFromPlan((Synchronisation) selectedPlanElement,

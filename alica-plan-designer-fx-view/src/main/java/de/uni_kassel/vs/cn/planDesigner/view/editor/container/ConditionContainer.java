@@ -3,8 +3,6 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -35,7 +33,7 @@ public class ConditionContainer extends AbstractPlanElementContainer<Condition> 
     @Override
     public void setupContainer() {
         getChildren().clear();
-        getChildren().add(new ImageView(new AlicaIcon(getContainedElement().getClass().getSimpleName())));
+        getChildren().add(new ImageView(new AlicaIcon(getModelElementId().getClass().getSimpleName())));
     }
 
     @Override

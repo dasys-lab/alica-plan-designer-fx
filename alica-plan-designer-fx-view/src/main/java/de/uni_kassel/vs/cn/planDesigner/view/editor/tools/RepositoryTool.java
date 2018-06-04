@@ -58,7 +58,7 @@ public class RepositoryTool extends AbstractTool {
                     StateContainer stateContainer = (StateContainer) parent;
                     // TODO: determine the source of the drag event, via debugging and adapt the creation of the command accordingly
                     //event.getGestureSource();
-                    //AddAbstractPlanToState command = new AddAbstractPlanToState(modelElementId, stateContainer.getContainedElement());
+                    //AddAbstractPlanToState command = new AddAbstractPlanToState(modelElementId, stateContainer.getModelElementId());
                     //MainWindowController.getInstance().getCommandStack().storeAndExecute(command);
                 }
             }

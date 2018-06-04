@@ -97,19 +97,19 @@ public abstract class AbstractEditorTab extends Tab {
         PlanTab tab = (PlanTab) selectedTab;
         tab.getPlanEditorGroup().getStateContainers().forEach(stateContainer -> {
             selectedPlanElements.get()
-                    .add(new Pair<Long, AbstractPlanElementContainer>(stateContainer.getContainedElement(), stateContainer));
+                    .add(new Pair<Long, AbstractPlanElementContainer>(stateContainer.getModelElementId(), stateContainer));
         });
         tab.getPlanEditorGroup().getEntryPointContainers().forEach(epContainer -> {
             selectedPlanElements.get()
-                    .add(new Pair<Long, AbstractPlanElementContainer>(epContainer.getContainedElement(), epContainer));
+                    .add(new Pair<Long, AbstractPlanElementContainer>(epContainer.getModelElementId(), epContainer));
         });
         tab.getPlanEditorGroup().getTransitionContainers().forEach(transitionContainer -> {
             selectedPlanElements.get()
-                    .add(new Pair<Long, AbstractPlanElementContainer>(transitionContainer.getContainedElement(), transitionContainer));
+                    .add(new Pair<Long, AbstractPlanElementContainer>(transitionContainer.getModelElementId(), transitionContainer));
         });
         tab.getPlanEditorGroup().getSynchronisationContainers().forEach(syncContainer -> {
             selectedPlanElements.get()
-                    .add(new Pair<Long, AbstractPlanElementContainer>(syncContainer.getContainedElement(), syncContainer));
+                    .add(new Pair<Long, AbstractPlanElementContainer>(syncContainer.getModelElementId(), syncContainer));
         });
     }
 
@@ -163,7 +163,7 @@ public abstract class AbstractEditorTab extends Tab {
                 AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
                 if (planElementContainer != null) {
                     // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
-                    if (planElementContainer.getContainedElement() == oldValue.get(0).getKey()) {
+                    if (planElementContainer.getModelElementId() == oldValue.get(0).getKey()) {
                         planElementContainer.setEffect(null);
                     }
                     if (planElementContainer instanceof StateContainer) {

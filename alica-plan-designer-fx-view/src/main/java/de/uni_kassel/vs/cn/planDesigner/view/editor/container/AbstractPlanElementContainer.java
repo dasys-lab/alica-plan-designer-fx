@@ -1,11 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
+
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.PLDToolBar;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowGeneratedSourcesEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -16,34 +15,31 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
+
 /**
  * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a alicamodel object to hold changes from the visualisation
  * that will be written back to resource later.
  */
-public abstract class AbstractPlanElementContainer<T extends PlanElement> extends Pane implements DraggableEditorElement {
+public abstract class AbstractPlanElementContainer extends Pane implements DraggableEditorElement {
 
-    private T containedElement;
-    private PmlUiExtension pmlUiExtension;
+    private long modelElementId;
+    private IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler;
     protected Node visualRepresentation;
-    protected CommandStack commandStack;
     protected Node wrapper;
 
     /**
-     *
-     * @param containedElement
-     * @param pmlUiExtension
-     * @param commandStack
+     * @param modelElementId
      */
-    public AbstractPlanElementContainer(T containedElement, PmlUiExtension pmlUiExtension, CommandStack commandStack) {
-        this.containedElement = containedElement;
-        this.pmlUiExtension = pmlUiExtension;
-        this.commandStack = commandStack;
+    public AbstractPlanElementContainer(long modelElementId, IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler) {
+        this.modelElementId = modelElementId;
+        this.showGeneratedSourcesEventHandler = showGeneratedSourcesEventHandler;
         setBackground(Background.EMPTY);
         setPickOnBounds(false);
-        addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(containedElement));
+        addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(modelElementId));
         wrapper = this;
         setOnContextMenuRequested(e -> {
-            ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem<T>(containedElement));
+            ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem(this.modelElementId, this.showGeneratedSourcesEventHandler));
             contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY());
         });
         // prohibit containers from growing indefinitely (especially transition containers)
@@ -51,33 +47,42 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
     }
 
     /**
-     * Sets the selection flag for the editor when containedElement is clicked.
+     * Sets the selection flag for the editor when modelElementId is clicked.
      * Unless the last click was performed as part of a tool phase.
-     * @param containedElement
+     *
+     * @param modelElementId
      * @return
      */
     @SuppressWarnings("unchecked")
-    protected EventHandler<MouseEvent> getMouseClickedEventHandler(T containedElement) {
+    protected EventHandler<MouseEvent> getMouseClickedEventHandler(long modelElementId) {
         return event -> {
-            PLDToolBar pldToolBar = ((PlanTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel()
-                    .getSelectedItem()).getPldToolBar();
+            PlanTab planTab = ((PlanTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem());
             // Was the last click performed in the context of a tool?
-            if (pldToolBar.anyToolsRecentlyDone() == false) {
-                ArrayList<Pair<PlanElement, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
-                selectedElements.add(new Pair<>(containedElement, this));
-                ((AbstractEditorTab<PlanElement>)MainWindowController.getInstance().getEditorTabPane().getSelectionModel()
-                        .getSelectedItem()).getSelectedPlanElements().setValue(selectedElements);
-
+            AbstractTool recentlyDoneTool = planTab.getPldToolBar().getRecentlyDoneTool();
+            if (recentlyDoneTool != null) {
+                recentlyDoneTool.setRecentlyDone(false);
             } else {
-                AbstractTool recentlyDoneTool = pldToolBar.getRecentlyDoneTool();
-                if(recentlyDoneTool != null) {
-                    // Reset flag
-                    recentlyDoneTool.setRecentlyDone(false);
-                }
+                ArrayList<Pair<Long, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
+                selectedElements.add(new Pair<>(modelElementId, this));
+                planTab.getSelectedPlanElements().setValue(selectedElements);
             }
-
         };
     }
+
+
+    public Node getVisualRepresentation() {
+        return visualRepresentation;
+    }
+
+    public long getModelElementId() {
+        return modelElementId;
+    }
+
+    public Node getWrapper() {
+        return wrapper;
+    }
+
+    public abstract void setupContainer();
 
     @Override
     public void makeDraggable(Node node) {
@@ -124,48 +129,13 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
                 node.setLayoutX(dragContext.initialLayoutX + mouseEvent.getSceneX() - dragContext.mouseAnchorX);
                 node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getSceneY() - dragContext.mouseAnchorY);
 
-                System.out.println("AFTER DRAG X: " + (mouseEvent.getX() - dragContext.mouseAnchorX) + " Y:" +
-                        (mouseEvent.getY() - dragContext.mouseAnchorY));
-                System.out.println("LAYOUT X: " + node.getLayoutX() + " Y:" + node.getLayoutY());
-                getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
+                // TODO: fire move event, inorder to create move command in the Model Manager
+                //getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
                 mouseEvent.consume();
                 redrawElement();
             }
         });
     }
-
-    /**
-     *
-     * @return
-     */
-    public Node getVisualRepresentation() {
-        return visualRepresentation;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public T getContainedElement() {
-        return containedElement;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public PmlUiExtension getPmlUiExtension() {
-        return pmlUiExtension;
-    }
-
-    public Node getWrapper() {
-        return wrapper;
-    }
-
-    /**
-     *
-     */
-    public abstract void setupContainer();
 
     /**
      * Sets the standard effect for the {@link AbstractPlanElementContainer}.
@@ -178,18 +148,8 @@ public abstract class AbstractPlanElementContainer<T extends PlanElement> extend
     public abstract Color getVisualisationColor();
 
     @Override
-    public CommandStack getCommandStackForDrag() {
-        return commandStack;
-    }
-
-    @Override
     public void redrawElement() {
 
-    }
-
-    @Override
-    public AbstractCommand createMoveElementCommand() {
-        return null;
     }
 
     @Override

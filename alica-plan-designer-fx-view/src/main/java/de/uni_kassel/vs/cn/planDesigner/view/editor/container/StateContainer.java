@@ -42,18 +42,18 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
         visualRepresentation = new Circle(STATE_RADIUS, getVisualisationColor());
         setEffectToStandard();
         getChildren().add(visualRepresentation);
-        Text elementName = new Text(getContainedElement().getName());
+        Text elementName = new Text(getModelElementId().getName());
         getChildren().add(elementName);
         elementName.setLayoutX(elementName.getLayoutX() - elementName.getLayoutBounds().getWidth() / 2);
         elementName.setLayoutY(elementName.getLayoutY() - STATE_RADIUS * 1.3);
 
-        statePlans = getContainedElement()
+        statePlans = getModelElementId()
                 .getPlans()
                 .stream()
                 .map(abstractPlan -> new AbstractPlanHBox(abstractPlan, this))
                 .collect(Collectors.toList());
-        if (getContainedElement() instanceof TerminalState) {
-            PostCondition postCondition = ((TerminalState) getContainedElement()).getPostCondition();
+        if (getModelElementId() instanceof TerminalState) {
+            PostCondition postCondition = ((TerminalState) getModelElementId()).getPostCondition();
             if (postCondition != null) {
                 statePlans.add(new AbstractPlanHBox(postCondition, this));
             }
@@ -86,9 +86,9 @@ public class StateContainer extends AbstractPlanElementContainer<State> implemen
 
     @Override
     public AbstractCommand createMoveElementCommand() {
-        return new ChangePosition(getPmlUiExtension(), getContainedElement(),
+        return new ChangePosition(getPmlUiExtension(), getModelElementId(),
                 (int) (getLayoutX()),
-                (int) (getLayoutY()), getContainedElement().getInPlan());
+                (int) (getLayoutY()), getModelElementId().getInPlan());
     }
 
     @Override

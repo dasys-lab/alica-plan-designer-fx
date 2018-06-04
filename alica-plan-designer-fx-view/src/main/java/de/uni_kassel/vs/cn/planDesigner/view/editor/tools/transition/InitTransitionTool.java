@@ -51,7 +51,7 @@ public class InitTransitionTool extends AbstractTool {
                 } else if (((Node)event.getTarget()).getParent() instanceof StateContainer && initial == false) {
                     finish = (StateContainer) ((Node)event.getTarget()).getParent();
                     initial = true;
-                    SetStateForEntryPoint command = new SetStateForEntryPoint(start.getContainedElement(), finish.getContainedElement());
+                    SetStateForEntryPoint command = new SetStateForEntryPoint(start.getModelElementId(), finish.getModelElementId());
                     MainWindowController.getInstance()
                             .getCommandStack()
                             .storeAndExecute(command);

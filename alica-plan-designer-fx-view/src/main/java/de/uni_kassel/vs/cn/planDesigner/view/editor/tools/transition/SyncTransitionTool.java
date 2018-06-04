@@ -63,7 +63,7 @@ public class SyncTransitionTool extends AbstractTool<SyncTransitionTool.SyncTran
                     initial = true;
 
                     AddTransitionToSynchronisation command =
-                            new AddTransitionToSynchronisation(start.getContainedElement(), finish.getContainedElement(),
+                            new AddTransitionToSynchronisation(start.getModelElementId(), finish.getModelElementId(),
                                     ((AbstractEditorTab<PlanElement>) planEditorTabPane.getSelectionModel().getSelectedItem()).getEditable());
                     MainWindowController.getInstance()
                             .getCommandStack()
