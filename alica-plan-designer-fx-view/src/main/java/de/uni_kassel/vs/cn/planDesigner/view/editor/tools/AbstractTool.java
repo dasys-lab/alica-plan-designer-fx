@@ -103,7 +103,7 @@ public abstract class AbstractTool {
             hBarPolicy = planTab.getScrollPane().getVbarPolicy();
             planTab.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             planTab.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            vmax = planTab.getSelectedItem()).getScrollPane().getVmax();
+            vmax = planTab.getScrollPane().getVmax();
             hmax = planTab.getScrollPane().getHmax();
 
             planTab.getScrollPane().setVmax(0);
