@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.handler;
+package de.uni_kassel.vs.cn.planDesigner.handlerinterfaces;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController;
 import javafx.beans.value.ChangeListener;

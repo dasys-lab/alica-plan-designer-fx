@@ -45,7 +45,7 @@ public abstract class AbstractEditorTab extends Tab {
         this.editablePathPair = editablePathPair;
         initSelectedPlanElements(editablePathPair);
 
-        // add Ctrl+A handler to scene
+        // add Ctrl+A handlerinterfaces to scene
         EditorTabPane editorTabPane = MainWindowController.getInstance().getEditorTabPane();
         editorTabPane.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (ctrlA.match(event)) {
@@ -53,7 +53,7 @@ public abstract class AbstractEditorTab extends Tab {
             }
         });
 
-        // add close tab handler
+        // add close tab handlerinterfaces
         setClosable(true);
         setOnCloseRequest(e -> {
             // popup for trying to close dirty tab

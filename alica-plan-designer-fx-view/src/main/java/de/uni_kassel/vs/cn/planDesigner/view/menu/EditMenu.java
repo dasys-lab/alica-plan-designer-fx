@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
+import de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
@@ -28,8 +29,11 @@ public class EditMenu extends Menu {
     private final MenuItem configItem;
     private I18NRepo i18NRepo;
 
-    public EditMenu(EditorTabPane editorTabPane) {
+    private ConfigurationWindowController configWindowController;
+
+    public EditMenu(EditorTabPane editorTabPane, ConfigurationWindowController configWindowController) {
         super(I18NRepo.getInstance().getString("label.menu.edit"));
+        this.configWindowController = configWindowController;
         i18NRepo = I18NRepo.getInstance();
         deleteElementItem = new MenuItem(i18NRepo.getString("label.menu.edit.delete"));
         undoItem = new MenuItem(i18NRepo.getString("label.menu.edit.undo"));
@@ -94,6 +98,7 @@ public class EditMenu extends Menu {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("configurationWindow.fxml"));
 
         try {
+            fxmlLoader.setController(this.configWindowController);
             Parent window = fxmlLoader.load();
             //ConfigurationWindowController controller = fxmlLoader.getController();
             Stage stage = new Stage();

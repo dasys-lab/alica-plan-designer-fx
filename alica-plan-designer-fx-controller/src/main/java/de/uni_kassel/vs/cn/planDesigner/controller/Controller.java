@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelhandling.IModelEventHandler;
@@ -24,6 +25,7 @@ public final class Controller implements IModelEventHandler {
     // Common Objects
     private ConfigurationManager configurationManager;
     private FileSystemEventHandler fileSystemEventHandler;
+    private ConfigurationEventHandler configEventHandler;
 
     // Model Objects
     private ModelManager modelManager;
@@ -32,6 +34,7 @@ public final class Controller implements IModelEventHandler {
     // View Objects
     private RepositoryViewModel repoViewModel;
     private MainWindowController mainWindowController;
+    private ConfigurationWindowController configWindowController;
 
     // Code Generation Objects
     GeneratedSourcesManager generatedSourcesManager;
@@ -39,11 +42,13 @@ public final class Controller implements IModelEventHandler {
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
 
+
         modelManager = new ModelManager(configurationManager.getActiveConfiguration());
         modelManager.addListener(this);
         commandStack = new CommandStack();
 
         mainWindowController = MainWindowController.getInstance();
+        setupConfigGuiStuff();
         repoViewModel = new RepositoryViewModel();
         repoViewModel.setRepositoryTabPane(mainWindowController.getRepositoryTabPane());
         modelManager.loadModelFromDisk();
@@ -54,6 +59,16 @@ public final class Controller implements IModelEventHandler {
         generatedSourcesManager = new GeneratedSourcesManager();
         generatedSourcesManager.setGenSrcPath(configurationManager.getActiveConfiguration().getGenSrcPath());
         generatedSourcesManager.setEditorExecutablePath(configurationManager.getEditorExecutablePath());
+    }
+
+    protected void setupConfigGuiStuff() {
+        configWindowController = new ConfigurationWindowController();
+        configEventHandler = new ConfigurationEventHandler(configWindowController, configurationManager);
+        configWindowController.setHandler(configEventHandler);
+        configWindowController.setClangFormat(configurationManager.getClangFormatPath());
+        configWindowController.setSourceCodeEditor(configurationManager.getEditorExecutablePath());
+        configWindowController.addConfigNames(configurationManager.getConfigurationNames());
+        mainWindowController.setConfigWindowController(configWindowController);
     }
 
     public void handleFileSystemEvent(WatchEvent event, Path path) {

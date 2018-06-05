@@ -97,19 +97,20 @@ public abstract class AbstractTool {
 
         // deactivate scrolling, fixes scrolling to infinity when handling a tool
         if (planEditorTabPane.getSelectionModel().getSelectedItem() instanceof PlanTab) {
-            onScrollInPlanTab = ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().getOnScroll();
-            vBarPolicy = ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().getHbarPolicy();
-            hBarPolicy = ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().getVbarPolicy();
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            vmax = ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().getVmax();
-            hmax = ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().getHmax();
+            PlanTab planTab = (PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem();
+            onScrollInPlanTab = planTab.getScrollPane().getOnScroll();
+            vBarPolicy = planTab.getScrollPane().getHbarPolicy();
+            hBarPolicy = planTab.getScrollPane().getVbarPolicy();
+            planTab.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            planTab.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            vmax = planTab.getScrollPane().getVmax();
+            hmax = planTab.getScrollPane().getHmax();
 
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setVmax(0);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setHmax(0);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setOnScroll(Event::consume);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setAutoSizeChildren(false);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setManaged(false);
+            planTab.getScrollPane().setVmax(0);
+            planTab.getScrollPane().setHmax(0);
+            planTab.getScrollPane().setOnScroll(Event::consume);
+            planTab.getPlanEditorGroup().setAutoSizeChildren(false);
+            planTab.getPlanEditorGroup().setManaged(false);
         }
 
         previousCursor = planEditorTabPane.getScene().getCursor();
@@ -127,13 +128,14 @@ public abstract class AbstractTool {
                 .forEach(entry -> getPlanEditorTabPane().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
         if (planEditorTabPane.getSelectionModel().getSelectedItem() instanceof PlanTab) {
             // reactivate scrolling
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setOnScroll(onScrollInPlanTab);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setVbarPolicy(vBarPolicy);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setHbarPolicy(hBarPolicy);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setVmax(vmax);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getScrollPane().setHmax(hmax);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setAutoSizeChildren(true);
-            ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setManaged(true);
+            PlanTab planTab = (PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem();
+            planTab.getScrollPane().setOnScroll(onScrollInPlanTab);
+            planTab.getScrollPane().setVbarPolicy(vBarPolicy);
+            planTab.getScrollPane().setHbarPolicy(hBarPolicy);
+            planTab.getScrollPane().setVmax(vmax);
+            planTab.getScrollPane().setHmax(hmax);
+            planTab.getPlanEditorGroup().setAutoSizeChildren(true);
+            planTab.getPlanEditorGroup().setManaged(true);
 
         }
 
