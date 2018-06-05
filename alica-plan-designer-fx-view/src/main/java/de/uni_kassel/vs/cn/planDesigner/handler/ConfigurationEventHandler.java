@@ -8,8 +8,8 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 public class ConfigurationEventHandler<T extends ListView.EditEvent<String>> implements EventHandler<Event>, ChangeListener<String> {
 

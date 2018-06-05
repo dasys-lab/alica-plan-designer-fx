@@ -60,13 +60,13 @@ public class MainWindowController implements Initializable {
     private PLDFileTreeView pldFileTreeView;
 
     @FXML
-    private PropertyTabPane propertyAndStatusTabPane;
+    //private PropertyTabPane propertyAndStatusTabPane;
 
     @FXML
     private RepositoryTabPane repositoryTabPane;
 
     @FXML
-    private EditorTabPane editorTabPane;
+    //private EditorTabPane editorTabPane;
 
     @FXML
     private MenuBar menuBar;
