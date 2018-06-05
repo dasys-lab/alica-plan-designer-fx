@@ -71,4 +71,20 @@ public final class RepositoryViewModel {
     public void setRepositoryTabPane (RepositoryTabPane repositoryTabPane) {
         this.repositoryTabPane = repositoryTabPane;
     }
+
+    public ObservableList<ViewModelElement> getPlans() {
+        return plans;
+    }
+
+    public ObservableList<ViewModelElement> getPlanTypes() {
+        return planTypes;
+    }
+
+    public ObservableList<ViewModelElement> getBehaviours() {
+        return behaviours;
+    }
+
+    public ObservableList<ViewModelElement> getTasks() {
+        return tasks;
+    }
 }

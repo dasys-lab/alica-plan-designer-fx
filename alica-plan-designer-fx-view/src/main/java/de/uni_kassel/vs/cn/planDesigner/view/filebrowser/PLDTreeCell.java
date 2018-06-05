@@ -1,10 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
+import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
@@ -16,8 +13,8 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;

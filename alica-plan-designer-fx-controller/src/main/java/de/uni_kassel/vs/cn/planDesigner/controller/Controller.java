@@ -57,7 +57,6 @@ public final class Controller implements IModelEventHandler {
     }
 
     public void handleFileSystemEvent(WatchEvent event, Path path) {
-        mainWindowController.getPldFileTreeView().updateTreeView(event.kind(), path);
         modelManager.handleFileSystemEvent(event.kind(), path);
     }
 
@@ -79,6 +78,7 @@ public final class Controller implements IModelEventHandler {
                 } else if (planElement instanceof PlanType){
                     repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Behaviour){
+                    //TODO add beh file to tree view
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Task){
                     repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));

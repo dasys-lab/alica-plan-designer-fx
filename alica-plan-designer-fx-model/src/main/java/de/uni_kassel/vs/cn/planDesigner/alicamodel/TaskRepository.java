@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import java.util.ArrayList;
 
-public class TaskRepository extends PlanElement {
+public class TaskRepository extends SerializablePlanElement {
 
     protected ArrayList<Task> tasks;
     protected Task defaultTask;

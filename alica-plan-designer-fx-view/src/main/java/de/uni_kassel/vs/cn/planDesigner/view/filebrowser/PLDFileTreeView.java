@@ -45,7 +45,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 return;
             }
             draggedItem = ((PLDTreeCell) node).getTreeItem();
-            startFolder = EMFModelUtils.createRelativeURI(draggedItem.getValue().unwrap()).toString();
+            startFolder = draggedItem.getValue().unwrap().toString();
             startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
             String fileName = draggedItem.getValue().toString();
             if (fileName.endsWith(".beh")) {
@@ -77,7 +77,6 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
         addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
             getScene().setCursor(originalCursor);
-            RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
             if (!wasDragged) {
                 e.consume();
                 return;
@@ -108,7 +107,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 parent = treeCell.getTreeItem().getParent().getValue().unwrap();
             }
 
-            if (startFolder.equals(EMFModelUtils.createRelativeURI(parent).toString())) {
+            if (startFolder.equals(parent.toString())) {
                 e.consume();
                 return;
             }
@@ -120,69 +119,6 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 }
                 Files.move(draggedItem.getValue().unwrap().toPath(),
                         new File(parent, draggedItem.getValue().unwrap().getName()).toPath());
-
-                Optional<Pair<Plan, Path>> first = repositoryViewModel
-                        .getPlans()
-                        .stream()
-                        .filter(f -> f.getValue().toFile().equals(draggedItem.getValue().unwrap()))
-                        .findFirst();
-
-                EObject result = first.isPresent() ? first.get().getKey() : null;
-
-                if (result != null) {
-                    for (Pair<Plan, Path> pair : repositoryViewModel.getPlans()) {
-                        if (pair.getKey() == (Plan) result) {
-                            repositoryViewModel.getPlans().remove(pair);
-                            break;
-                        }
-                    }
-
-                } else {
-                    Optional<Pair<Behaviour, Path>> second = repositoryViewModel
-                            .getBehaviours()
-                            .stream()
-                            .filter(f -> f.getValue().toFile().equals(draggedItem.getValue().unwrap()))
-                            .findFirst();
-
-                    result = second.isPresent() ? second.get().getKey() : null;
-                    if (result != null) {
-                        for (Pair<Behaviour, Path> pair : repositoryViewModel.getBehaviours()) {
-                            if (pair.getKey() == (Behaviour) result) {
-                                repositoryViewModel.getBehaviours().remove(pair);
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (result == null) {
-                    Optional<Pair<PlanType, Path>> third = repositoryViewModel
-                            .getPlanTypes()
-                            .stream()
-                            .filter(f -> f.getValue().toFile().equals(draggedItem.getValue().unwrap()))
-                            .findFirst();
-
-                    result = third.isPresent() ? third.get().getKey() : null;
-                    if (result != null) {
-                        for (Pair<PlanType, Path> pair : repositoryViewModel.getPlanTypes()) {
-                            if (pair.getKey() == (PlanType) result) {
-                                repositoryViewModel.getPlanTypes().remove(pair);
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                //TODO tasks ?
-
-                if (draggedItem.getValue().unwrap().toString().endsWith("pml")) {
-                    EObject pmlExObject = EMFModelUtils.loadAlicaFileFromDisk(new File(draggedItem.getValue().unwrap().toString() + "ex"));
-                    EMFModelUtils.moveAlicaFile(result, (PmlUiExtensionMap) pmlExObject,
-                            new File(parent, draggedItem.getValue().unwrap().getName()));
-                } else {
-                    EMFModelUtils.moveAlicaFile(result, null,
-                            new File(parent, draggedItem.getValue().unwrap().getName()));
-                }
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
             }
@@ -216,25 +152,6 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
             }
             return fileWrapperTreeCell;
         });
-    }
-
-    public synchronized void updateTreeView(WatchEvent.Kind kind, Path child) {
-
-        ((VirtualDirectoryTreeItem) getRoot()).updateDirectory(kind, child);
-        if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
-            try {
-                RepositoryViewModel.getInstance().init();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-//            RepositoryTabPane repositoryTabPane = MainWindowController.getInstance().getRepositoryTabPane();
-//            Tab previousTab = repositoryTabPane.getSelectionModel().getSelectedItem();
-//            repositoryTabPane.init();
-//            repositoryTabPane.getSelectionModel().select(previousTab);
-
-        }
     }
 
     public void setController(MainWindowController controller) {

@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
+import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.controller.Controller;
@@ -79,7 +80,7 @@ public class FileSystemEventHandler implements Runnable  {
                 registerAll(new File(conf.getPlansPath()).toPath());
             }
             this.trace = true;
-            while (PlanDesigner.isRunning()) {
+            while (PlanDesignerApplication.isRunning()) {
 
                 // wait for key to be signalled
                 WatchKey key;
@@ -122,7 +123,6 @@ public class FileSystemEventHandler implements Runnable  {
                         }
                     }
                     controller.handleFileSystemEvent(event, child);
-//                    Platform.runLater(() -> fileTreeView.updateTreeView(kind, child));
                 }
 
                 // reset key and remove from set if directory no longer accessible
