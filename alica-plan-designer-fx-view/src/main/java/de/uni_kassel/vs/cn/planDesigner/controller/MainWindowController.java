@@ -78,17 +78,25 @@ public class MainWindowController implements Initializable {
     private Text statusText;
 
     private I18NRepo i18NRepo;
+    private ConfigurationWindowController configWindowController;
 
     private MainWindowController()
     {
         super();
-        i18NRepo = I18NRepo.getInstance();
+        this.i18NRepo = I18NRepo.getInstance();
+    }
+
+    public void setConfigWindowController(ConfigurationWindowController configWindowController) {
+        this.configWindowController = configWindowController;
     }
 
     public void initialize(URL location, ResourceBundle resources) {
         pldFileTreeView.setController(this);
         editorTabPane.getTabs().clear();
-        menuBar.getMenus().addAll(createMenus());
+        if (configWindowController == null) {
+            throw new RuntimeException("The member configWindowController need to be set through the public setter, before calling initialize()!");
+        }
+        menuBar.getMenus().addAll(createMenus(configWindowController));
         propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
     }
@@ -107,7 +115,7 @@ public class MainWindowController implements Initializable {
         }
     }
 
-    private List<Menu> createMenus() {
+    private List<Menu> createMenus(ConfigurationWindowController configWindowController) {
         List<Menu> menus = new ArrayList<>();
 
         Menu fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
@@ -118,7 +126,7 @@ public class MainWindowController implements Initializable {
         fileMenu.getItems().add(saveItem);
         menus.add(fileMenu);
 
-        menus.add(new EditMenu(editorTabPane));
+        menus.add(new EditMenu(editorTabPane, configWindowController));
 
         Menu codegenerationMenu = new Menu(i18NRepo.getString("label.menu.generation"));
         MenuItem regenerateItem = new MenuItem(i18NRepo.getString("label.menu.generation.regenerate"));

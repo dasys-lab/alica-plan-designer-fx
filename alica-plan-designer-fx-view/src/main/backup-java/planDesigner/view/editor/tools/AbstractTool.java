@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * The {@link AbstractTool} interface provides methods for the tools in the {@link PLDToolBar}.
  * It helps to generalize the usage of these tools for the following workflow:
- * tool is selected (start of the phase) -> Event handler for special actions on the {@link PlanEditorGroup}
+ * tool is selected (start of the phase) -> Event handlerinterfaces for special actions on the {@link PlanEditorGroup}
  * are registered -> The actions are performed. A new alicamodel object is created.
  * Or the actions are aborted. -> The phase ends. The event handlers will be removed. and the editor is usable as before.
  */

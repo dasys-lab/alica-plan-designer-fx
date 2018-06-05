@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.handler.ConfigurationEventHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,6 +13,8 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -97,14 +99,14 @@ public class ConfigurationWindowController implements Initializable {
     @FXML
     private Button saveButton;
 
-    private ConfigurationManager configManager;
-    private ConfigurationEventHandler configListViewEventHandler;
+    private IConfigurationEventHandler configEventHandler;
+
+    public void setHandler(IConfigurationEventHandler configEventHandler) {
+        this.configEventHandler = configEventHandler;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        configManager = ConfigurationManager.getInstance();
-        configListViewEventHandler = new ConfigurationEventHandler(this);
-
         // strings
         initLabelTexts();
 
@@ -112,13 +114,14 @@ public class ConfigurationWindowController implements Initializable {
         initFileChooserButtons();
 
         // external tools
-        setupExternalTools();
+        clangFormatTextField.setOnKeyReleased(configEventHandler);
+        sourceCodeEditorTextField.setOnKeyReleased(configEventHandler);
 
         // show available configurations in the list
         setupAvailableConfigurationsListView();
 
         // show the values of the selected configuration
-        showSelectedConfiguration();
+        configEventHandler.showSelectedConfiguration();
 
         saveButton.setOnAction(e -> onSave());
 
@@ -129,89 +132,97 @@ public class ConfigurationWindowController implements Initializable {
      * Writes everything possible to disk.
      */
     public void onSave() {
-        storeConfiguration(availableWorkspacesListView.getSelectionModel().getSelectedItem());
-        configManager.writeToDisk();
+        configEventHandler.save(availableWorkspacesListView.getSelectionModel().getSelectedItem());
     }
 
     public void setExternalToolValue(TextField tf) {
         if (tf == sourceCodeEditorTextField) {
-            configManager.setEditorExecutablePath(tf.getText());
+            configEventHandler.setEditorExecutablePath(tf.getText());
         } else if (tf == clangFormatTextField) {
-            configManager.setClangFormatPath(tf.getText());
+            configEventHandler.setClangFormatPath(tf.getText());
         }
     }
 
-    public boolean removeConfiguration(String confName)
-    {
-        return configManager.removeConfiguration(confName);
+    public String getSelectedConfName() {
+        return this.availableWorkspacesListView.getSelectionModel().getSelectedItem();
     }
 
-    public boolean renameConfiguration(String oldConfName, String newConfName) {
-        return configManager.renameConfiguration(oldConfName, newConfName);
+    public String getPlansFolder() {
+        return plansFolderTextField.getText();
     }
 
-    public boolean addConfiguration(String confName)
-    {
-        return configManager.addConfiguration(confName);
+    public void setPlansFolder(String plansFolder) {
+        plansFolderTextField.setText(plansFolder);
     }
 
-    /**
-     * Stores the current gui values into the corresponding configuration object.
-     *
-     * @param confName identifies the configuration object for storing the values
-     */
-    public void storeConfiguration(String confName) {
-        Configuration conf = configManager.getConfiguration(confName);
-        if (conf == null) {
-            return;
+    public String getRolesFolder() {
+        return plansFolderTextField.getText();
+    }
+
+    public void setRolesFolder(String rolesFolder) {
+        rolesFolderTextField.setText(rolesFolder);
+    }
+
+    public String getTasksFolder() {
+        return plansFolderTextField.getText();
+    }
+
+    public void setTasksFolder(String tasksFolder) {
+        tasksFolderTextField.setText(tasksFolder);
+    }
+
+    public String getSourceFolder() {
+        return plansFolderTextField.getText();
+    }
+
+    public void setSourceFolder(String sourceFolder) {
+        genSourceFolderTextField.setText(sourceFolder);
+    }
+
+    public String getPluginsFolder() {
+        return plansFolderTextField.getText();
+    }
+
+    public void setPluginsFolder(String pluginsFolder) {
+        pluginsFolderTextField.setText(pluginsFolder);
+    }
+
+    public void setPlugins(ObservableList<String> pluginNames) {
+        defaultPluginComboBox.setItems(pluginNames);
+    }
+
+    public String getDefaultPluginName () {
+        return defaultPluginComboBox.getSelectionModel().getSelectedItem();
+    }
+
+    public void selectDefaultPluginName(String defaultPlugin) {
+        defaultPluginComboBox.getSelectionModel().select(defaultPlugin);
+    }
+
+    public void setClangFormat(String clangFormatPath) {
+        clangFormatTextField.setText(clangFormatPath);
+    }
+
+    public void setSourceCodeEditor(String sourceCodeEditorPath) {
+        sourceCodeEditorTextField.setText(sourceCodeEditorPath);
+    }
+
+    public void addConfigNames(List<String> configNames) {
+        for (String confName : configNames) {
+            availableWorkspacesListView.getItems().add(confName);
         }
-
-        conf.setPlansPath(plansFolderTextField.getText());
-        conf.setRolesPath(rolesFolderTextField.getText());
-        conf.setTasksPath(tasksFolderTextField.getText());
-        conf.setGenSrcPath(genSourceFolderTextField.getText());
-        conf.setPluginsPath(pluginsFolderTextField.getText());
-        conf.setDefaultPluginName(defaultPluginComboBox.getSelectionModel().getSelectedItem());
-    }
-
-    /**
-     * Fills the gui with the values of the currently selected configuration.
-     */
-    public void showSelectedConfiguration() {
-        String selectedConfName = availableWorkspacesListView.getSelectionModel().getSelectedItem();
-        configManager.setActiveConfiguration(selectedConfName);
-        Configuration conf = configManager.getConfiguration(selectedConfName);
-        if (conf == null) {
-            return;
-        }
-
-        plansFolderTextField.setText(conf.getPlansPath());
-        rolesFolderTextField.setText(conf.getRolesPath());
-        tasksFolderTextField.setText(conf.getTasksPath());
-        genSourceFolderTextField.setText(conf.getGenSrcPath());
-        pluginsFolderTextField.setText(conf.getPluginsPath());
-        defaultPluginComboBox.setItems(PluginManager.getInstance().getAvailablePluginNames());
-        defaultPluginComboBox.getSelectionModel().select(conf.getDefaultPluginName());
-    }
-
-    private void setupExternalTools () {
-        clangFormatTextField.setText(configManager.getClangFormatPath());
-        clangFormatTextField.setOnKeyReleased(configListViewEventHandler);
-
-        sourceCodeEditorTextField.setText(configManager.getEditorExecutablePath());
-        sourceCodeEditorTextField.setOnKeyReleased(configListViewEventHandler);
     }
 
     private void setupAvailableConfigurationsListView() {
-        ObservableList<String> confNameList = FXCollections.observableArrayList(configManager.getConfigurationNames());
+        ObservableList<String> confNameList = FXCollections.observableArrayList();
         // for adding a new configuration, the empty entry is necessary and specially handled
         confNameList.add("");
         availableWorkspacesListView.setItems(confNameList);
         availableWorkspacesListView.setEditable(true);
         availableWorkspacesListView.setCellFactory(TextFieldListCell.forListView());
-        availableWorkspacesListView.setOnEditCommit(configListViewEventHandler);
-        availableWorkspacesListView.setOnMouseClicked(configListViewEventHandler);
-        availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configListViewEventHandler);
+        availableWorkspacesListView.setOnEditCommit(configEventHandler);
+        availableWorkspacesListView.setOnMouseClicked(configEventHandler);
+        availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configEventHandler);
     }
 
     /**
