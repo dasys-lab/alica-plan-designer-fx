@@ -1,7 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
@@ -9,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -17,10 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by marci on 11.11.16.
- */
 public class PLDTreeItem extends TreeItem<FileWrapper> {
+
     public PLDTreeItem(FileWrapper value, Node graphic) {
         super(value, graphic);
         if (value.unwrap().isDirectory()) {
@@ -100,17 +95,17 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
         if (content.getName().endsWith(".beh")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
         } else if (content.getName().endsWith(".pml")) {
-            try {
-                Plan plan = (Plan)EMFModelUtils.loadAlicaFileFromDisk(content);
-                if (plan.isMasterPlan()) {
-                    listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
-                } else {
+//            try {
+//                Plan plan = (Plan)EMFModelUtils.loadAlicaFileFromDisk(content);
+//                if (plan.isMasterPlan()) {
+//                    listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
+//                } else {
                     listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                return null;
-            }
+//                }
+//            } catch (IOException e1) {
+//                e1.printStackTrace();
+//                return null;
+//            }
         } else if (content.getName().endsWith(".pty")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
         } else if (content.getName().endsWith(".tsk")) {

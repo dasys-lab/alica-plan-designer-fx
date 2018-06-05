@@ -2,7 +2,6 @@ package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
@@ -13,16 +12,14 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
+import java.nio.file.Paths;
 
 public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
@@ -32,9 +29,11 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
     private TreeItem<FileWrapper> draggedItem;
     private Cursor originalCursor;
     private String startFolder;
+    private VirtualDirectoryTreeItem virtualDirectoryTreeItem;
 
     public PLDFileTreeView() {
         super(new VirtualDirectoryTreeItem());
+        virtualDirectoryTreeItem = (VirtualDirectoryTreeItem) getRoot();
 
         addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
             System.out.println("Source: " + e.getSource() + " Target: " + e.getTarget());
@@ -52,18 +51,18 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
                         .getResourceAsStream("images/behaviour24x24.png"))));
             } else if (fileName.endsWith(".pml")) {
-                try {
-                    Plan plan = (Plan) EMFModelUtils.loadAlicaFileFromDisk(draggedItem.getValue().unwrap());
-                    if (plan.isMasterPlan()) {
-                        getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
-                                .getResourceAsStream("images/masterplan24x24.png"))));
-                    } else {
+//                try {
+//                    Plan plan = (Plan) EMFModelUtils.loadAlicaFileFromDisk(draggedItem.getValue().unwrap());
+//                    if (plan.isMasterPlan()) {
+//                        getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+//                                .getResourceAsStream("images/masterplan24x24.png"))));
+//                    } else {
                         getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
                                 .getResourceAsStream("images/plan24x24.png"))));
-                    }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+//                    }
+//                } catch (IOException e1) {
+//                    e1.printStackTrace();
+//                }
             } else if (fileName.endsWith(".pty")) {
                 getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
                         .getResourceAsStream("images/planTyp24x24.png"))));
@@ -156,5 +155,58 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
 
     public void setController(MainWindowController controller) {
         this.controller = controller;
+    }
+
+    public void addBehaviour(PLDViewModelElement behaviour) {
+        String[] folders = behaviour.getDestinationPath().split(File.pathSeparator);
+        TreeItem folder = findFolder(folders, 0, virtualDirectoryTreeItem);
+        if (folder != null) {
+            File file = Paths.get(behaviour.getDestinationPath(), behaviour.getName(), ".beh").toFile();
+            folder.getChildren().add(new PLDTreeItem(new FileWrapper(file), new ImageView(getImage(file))));
+        }
+        //TODO runtime exception
+    }
+
+    private TreeItem findFolder(String[] path, int index, TreeItem treeItem) {
+        for (Object item : treeItem.getChildren()) {
+            TreeItem newItem = (TreeItem)item;
+            if (!(newItem.getValue().toString().endsWith(path[index]))) {
+                continue;
+            }
+            if (index == path.length - 1) {
+                return newItem;
+            }
+            return findFolder(path, index + 1, newItem;
+        }
+        return null;
+    }
+
+
+    private Image getImage(File file) {
+        Image listItemImage;
+        if (file.getName().endsWith(".beh")) {
+            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
+        } else if (file.getName().endsWith(".pml")) {
+//            try {
+//                Plan plan = (Plan)EMFModelUtils.loadAlicaFileFromDisk(content);
+//                if (plan.isMasterPlan()) {
+//                    listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
+//                } else {
+            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
+//                }
+//            } catch (IOException e1) {
+//                e1.printStackTrace();
+//                return null;
+//            }
+        } else if (file.getName().endsWith(".pty")) {
+            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
+        } else if (file.getName().endsWith(".tsk")) {
+            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/tasks24x24.png")));
+        } else if (file.isDirectory()) {
+            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
+        } else  {
+            return null;
+        }
+        return listItemImage;
     }
 }

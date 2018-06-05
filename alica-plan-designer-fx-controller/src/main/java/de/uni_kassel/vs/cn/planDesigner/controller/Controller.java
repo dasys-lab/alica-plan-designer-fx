@@ -9,6 +9,7 @@ import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelhandling.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelhandling.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelhandling.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.PLDViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 
@@ -93,7 +94,8 @@ public final class Controller implements IModelEventHandler {
                 } else if (planElement instanceof PlanType){
                     repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Behaviour){
-                    //TODO add beh file to tree view
+                    mainWindowController.getPldFileTreeView().addBehaviour(new PLDViewModelElement(planElement.getId(),
+                            planElement.getName(), planElement.getClass().toString(), ((Behaviour)planElement).getDestinationPath()));
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Task){
                     repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));

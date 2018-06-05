@@ -57,13 +57,13 @@ public class MainWindowController implements Initializable {
     @FXML
     private PLDFileTreeView pldFileTreeView;
 
-    @FXML
+    //@FXML
     //private PropertyTabPane propertyAndStatusTabPane;
 
     @FXML
     private RepositoryTabPane repositoryTabPane;
 
-    @FXML
+    //@FXML
     //private EditorTabPane editorTabPane;
 
     @FXML
@@ -90,28 +90,28 @@ public class MainWindowController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         pldFileTreeView.setController(this);
-        editorTabPane.getTabs().clear();
+//        editorTabPane.getTabs().clear();
         if (configWindowController == null) {
             throw new RuntimeException("The member configWindowController need to be set through the public setter, before calling initialize()!");
         }
         menuBar.getMenus().addAll(createMenus(configWindowController));
-        propertyAndStatusTabPane.init(editorTabPane);
+//        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
     }
 
-    public boolean isSelectedPlanElement(Node node) {
-        Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
-        if (selectedItem == null || ((AbstractEditorTab) selectedItem).getSelectedPlanElements() == null) {
-            return false;
-        }
-
-        Pair<Long, AbstractPlanElementContainer> o = ((AbstractEditorTab) selectedItem).getSelectedPlanElements().getValue().get(0);
-        if (o != null && o.getValue() != null) {
-            return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
-        } else {
-            return false;
-        }
-    }
+//    public boolean isSelectedPlanElement(Node node) {
+//        Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
+//        if (selectedItem == null || ((AbstractEditorTab) selectedItem).getSelectedPlanElements() == null) {
+//            return false;
+//        }
+//
+//        Pair<Long, AbstractPlanElementContainer> o = ((AbstractEditorTab) selectedItem).getSelectedPlanElements().getValue().get(0);
+//        if (o != null && o.getValue() != null) {
+//            return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
+//        } else {
+//            return false;
+//        }
+//    }
 
     private List<Menu> createMenus(ConfigurationWindowController configWindowController) {
         List<Menu> menus = new ArrayList<>();
@@ -201,34 +201,34 @@ public class MainWindowController implements Initializable {
         }).start();
 	}
 
-	public void closeTabIfOpen (long modelElementId) {
-        Optional<AbstractEditorTab> tabOptional = editorTabPane
-                .getTabs()
-                .stream()
-                .map(e -> (AbstractEditorTab) e)
-                .filter(e -> e.getEditable().equals(modelElementId))
-                .findFirst();
-        tabOptional.ifPresent(abstractEditorTab -> editorTabPane.getTabs().remove(abstractEditorTab));
-    }
+//	public void closeTabIfOpen (long modelElementId) {
+//        Optional<AbstractEditorTab> tabOptional = editorTabPane
+//                .getTabs()
+//                .stream()
+//                .map(e -> (AbstractEditorTab) e)
+//                .filter(e -> e.getEditable().equals(modelElementId))
+//                .findFirst();
+//        tabOptional.ifPresent(abstractEditorTab -> editorTabPane.getTabs().remove(abstractEditorTab));
+//    }
 
-    public void closePropertyAndStatusTabIfOpen() {
-        if(propertyAndStatusTabPane != null) {
-            propertyAndStatusTabPane.getTabs().clear();
-        }
-    }
+//    public void closePropertyAndStatusTabIfOpen() {
+//        if(propertyAndStatusTabPane != null) {
+//            propertyAndStatusTabPane.getTabs().clear();
+//        }
+//    }
 
-    /**
-     * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}
-     *
-     * @param toOpen file that should be opened
-     */
-    public void openFile(File toOpen) {
-        editorTabPane.openTab(toOpen.toPath());
-    }
+//    /**
+//     * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}
+//     *
+//     * @param toOpen file that should be opened
+//     */
+//    public void openFile(File toOpen) {
+//        editorTabPane.openTab(toOpen.toPath());
+//    }
 
-    public EditorTabPane getEditorTabPane() {
-        return editorTabPane;
-    }
+//    public EditorTabPane getEditorTabPane() {
+//        return editorTabPane;
+//    }
 
     public RepositoryTabPane getRepositoryTabPane() {
         return repositoryTabPane;
