@@ -161,9 +161,11 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         TreeItem folder = findFolder(folders, 0, virtualDirectoryTreeItem);
         if (folder != null) {
             File file = Paths.get(behaviour.getDestinationPath(), behaviour.getName(), ".beh").toFile();
-            folder.getChildren().add(new FileTreeItem(new FileWrapper(file), new ImageView(getImage(file))));
+            folder.getChildren().add(new FileTreeItem(new FileWrapper(file), new ImageView(getImage(behaviour.getType()))));
         }
-        //TODO runtime exception
+        else {
+            throw new RuntimeException("Destination folder for Behaviour " + behaviour.getName() + " does not exist!");
+        }
     }
 
     private TreeItem findFolder(String[] path, int index, TreeItem treeItem) {
@@ -181,27 +183,19 @@ public final class FileTreeView extends TreeView<FileWrapper> {
     }
 
 
-    private Image getImage(File file) {
+    private Image getImage(String type) {
         Image listItemImage;
-        if (file.getName().endsWith(".beh")) {
+        if (type.equals("behaviour")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
-        } else if (file.getName().endsWith(".pml")) {
-//            try {
-//                Plan plan = (Plan)EMFModelUtils.loadAlicaFileFromDisk(content);
-//                if (plan.isMasterPlan()) {
-//                    listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
-//                } else {
+        } else if (type.equals("masterplan")) {
+            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
+        } else if (type.equals("plan")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
-//                }
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//                return null;
-//            }
-        } else if (file.getName().endsWith(".pty")) {
+        } else if (type.equals("plantype")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
-        } else if (file.getName().endsWith(".tsk")) {
+        } else if (type.equals("taskrepository")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/tasks24x24.png")));
-        } else if (file.isDirectory()) {
+        } else if (type.isEmpty()) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
         } else  {
             return null;

@@ -68,23 +68,23 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
             return;
         }
         String name = newValue.unwrap().getName().substring(0, fileEndingPosition);
-        if (AlicaModelUtils.containsIllegalCharacter(name)) {
-            final TreeItem<FileWrapper> treeItem = getTreeItem();
-            final TreeView<FileWrapper> tree = getTreeView();
-            if (tree != null) {
-                // Inform the TreeView of the edit being ready to be committed.
-                tree.fireEvent(new TreeView.EditEvent<>(tree,
-                        TreeView.<FileWrapper>editCommitEvent(),
-                        treeItem,
-                        getItem(),
-                        treeItem.getValue()));
-            }
-            LOG.warn("User tried to set illegal name: " + newValue.unwrap().getName());
-            ErrorWindowController.createErrorWindow("This name is not allowed! These characters are forbidden: "
-                    + AlicaModelUtils.forbiddenCharacters, null);
-
-            return;
-        }
+//        if (AlicaModelUtils.containsIllegalCharacter(name)) {
+//            final TreeItem<FileWrapper> treeItem = getTreeItem();
+//            final TreeView<FileWrapper> tree = getTreeView();
+//            if (tree != null) {
+//                // Inform the TreeView of the edit being ready to be committed.
+//                tree.fireEvent(new TreeView.EditEvent<>(tree,
+//                        TreeView.<FileWrapper>editCommitEvent(),
+//                        treeItem,
+//                        getItem(),
+//                        treeItem.getValue()));
+//            }
+//            LOG.warn("User tried to set illegal name: " + newValue.unwrap().getName());
+//            ErrorWindowController.createErrorWindow("This name is not allowed! These characters are forbidden: "
+//                    + AlicaModelUtils.forbiddenCharacters, null);
+//
+//            return;
+//        }
         boolean isPlanElement = false;
         File unwrappedFile = getTreeItem().getValue().unwrap();
 //        AbstractPlan objectToChange = null;
