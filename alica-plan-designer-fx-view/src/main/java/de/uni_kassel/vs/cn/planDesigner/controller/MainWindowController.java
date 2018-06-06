@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -133,8 +134,9 @@ public class MainWindowController implements Initializable {
         getEditorTabPane().getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                // TODO: how to determine type of longId, for enabling code generation menu
-                if (((AbstractEditorTab) newValue).getEditable() instanceof AbstractPlan) {
+                // TODO: how to determine type of longId, for enabling code generation menu. Should be the same for these file endings
+                Path path = ((AbstractEditorTab) newValue).getEditablePathPair().getValue();
+                if (path.endsWith(".beh") || path.endsWith(".pml") || path.endsWith(".pty")) {
                     generateCurrentFile.setDisable(false);
                 }
             } else {
