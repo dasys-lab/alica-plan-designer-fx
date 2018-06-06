@@ -1,10 +1,7 @@
-package de.uni_kassel.vs.cn.planDesigner.modelhandling;
+package de.uni_kassel.vs.cn.planDesigner.modelmanagement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
-import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,12 +9,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
-public class ModelManager implements IShowUsageHandler {
-    private Configuration activeConf;
+public class ModelManager {
+
+    private String plansPath;
+    private String tasksPath;
+    private String rolesPath;
+
     private HashMap<Long, PlanElement> planElementMap;
-
     private HashMap<Long, Plan> planMap;
     private HashMap<Long, Behaviour> behaviourMap;
     private HashMap<Long, PlanType> planTypeMap;
@@ -25,15 +28,25 @@ public class ModelManager implements IShowUsageHandler {
 
     private List<IModelEventHandler> eventHandlerList;
 
-    public ModelManager(Configuration conf) {
-        activeConf = conf;
-
+    public ModelManager() {
         planElementMap = new HashMap<>();
         planMap = new HashMap<>();
         behaviourMap = new HashMap<>();
         planTypeMap = new HashMap<>();
         taskRepositoryMap = new HashMap<>();
         eventHandlerList = new ArrayList<IModelEventHandler>();
+    }
+
+    public void setPlansPath (String plansPath) {
+        this.plansPath = plansPath;
+    }
+
+    public void setTasksPath (String tasksPath) {
+        this.tasksPath = tasksPath;
+    }
+
+    public void setRolesPath (String rolesPath) {
+        this.rolesPath = rolesPath;
     }
 
     public void addListener(IModelEventHandler eventHandler) {
@@ -45,9 +58,9 @@ public class ModelManager implements IShowUsageHandler {
     }
 
     public void loadModelFromDisk() {
-        loadModelFromDisk(activeConf.getPlansPath());
-        loadModelFromDisk(activeConf.getTasksPath());
-        loadModelFromDisk(activeConf.getRolesPath());
+        loadModelFromDisk(plansPath);
+        loadModelFromDisk(tasksPath);
+        loadModelFromDisk(rolesPath);
     }
 
     /**
@@ -55,10 +68,6 @@ public class ModelManager implements IShowUsageHandler {
      * Anyway, temporarily this is a nice method for testing and is therefore called in the constr.
      */
     private void loadModelFromDisk(String path) {
-        if (activeConf == null) {
-            return;
-        }
-
         File plansDirectory = new File(path);
         if (!plansDirectory.exists()) {
             return;
@@ -305,11 +314,10 @@ public class ModelManager implements IShowUsageHandler {
         return deletedElement;
     }
 
-    @Override
-    public ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement) {
-        ArrayList<ViewModelElement> usages = new ArrayList<>();
+    public ArrayList<PlanElement> getUsages(long modelElementId) {
+        ArrayList<PlanElement> usages = new ArrayList<>();
 
-        PlanElement planElement = planElementMap.get(viewModelElement.getId());
+        PlanElement planElement = planElementMap.get(modelElementId);
         if (planElement == null) {
             return null;
         }
@@ -324,44 +332,42 @@ public class ModelManager implements IShowUsageHandler {
         } else if (planElement instanceof Task) {
             usages.addAll(getUsagesInEntryPoints(planElement));
         } else {
-            throw new RuntimeException("Usages requested for unhandled type " + viewModelElement.getType());
+            throw new RuntimeException("Usages requested for unhandled type of element with id  " + modelElementId);
         }
         return usages;
     }
 
-    private ArrayList<ViewModelElement> getUsagesInEntryPoints(PlanElement planElement) {
-        ArrayList<ViewModelElement> usages = new ArrayList<>();;
+    private ArrayList<Plan> getUsagesInEntryPoints(PlanElement planElement) {
+        ArrayList<Plan> usages = new ArrayList<>();
         for (Plan parent : planMap.values()) {
             for (EntryPoint entryPoint : parent.getEntryPoints()) {
                 if (entryPoint.getTask().getId() == planElement.getId()) {
-                    String type = (parent.getMasterPlan() ? "masterPlan" : "plan");
-                    usages.add(new ViewModelElement(parent.getId(), parent.getName(), type));
+                    usages.add(parent);
                 }
             }
         }
         return usages;
     }
 
-    private ArrayList<ViewModelElement> getUsagesInPlanTypes(PlanElement planElement) {
-        ArrayList<ViewModelElement> usages =  new ArrayList<>();
+    private ArrayList<PlanType> getUsagesInPlanTypes(PlanElement planElement) {
+        ArrayList<PlanType> usages =  new ArrayList<>();
         for (PlanType parent : planTypeMap.values()) {
             for (Plan child : parent.getPlans()) {
                 if (child.getId() == planElement.getId()) {
-                    usages.add(new ViewModelElement(parent.getId(), parent.getName(), "planType"));
+                    usages.add(parent);
                 }
             }
         }
         return usages;
     }
 
-    private ArrayList<ViewModelElement> gettUsagesInStates(PlanElement planElement) {
-        ArrayList<ViewModelElement> usages = new ArrayList<>();
+    private ArrayList<Plan> gettUsagesInStates(PlanElement planElement) {
+        ArrayList<Plan> usages = new ArrayList<>();
         for (Plan parent : planMap.values()) {
             for (State state : parent.getStates()) {
                 for (Plan child : state.getPlans()) {
                     if (child.getId() == planElement.getId()) {
-                        String type = (parent.getMasterPlan() ? "masterPlan" : "plan");
-                        usages.add(new ViewModelElement(parent.getId(), parent.getName(), type));
+                        usages.add(parent);
                     }
                 }
             }

@@ -134,7 +134,6 @@ public class MainWindowController implements Initializable {
         getEditorTabPane().getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                // TODO: how to determine type of longId, for enabling code generation menu. Should be the same for these file endings
                 Path path = ((AbstractEditorTab) newValue).getEditablePathPair().getValue();
                 if (path.endsWith(".beh") || path.endsWith(".pml") || path.endsWith(".pty")) {
                     generateCurrentFile.setDisable(false);

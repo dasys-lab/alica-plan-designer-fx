@@ -3,26 +3,29 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
-import de.uni_kassel.vs.cn.planDesigner.modelhandling.IModelEventHandler;
-import de.uni_kassel.vs.cn.planDesigner.modelhandling.ModelEvent;
-import de.uni_kassel.vs.cn.planDesigner.modelhandling.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.IModelEventHandler;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelEvent;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.util.ArrayList;
 
 /**
  * Central class that synchronizes model and view.
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler {
+public final class Controller implements IModelEventHandler, IShowUsageHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -44,10 +47,14 @@ public final class Controller implements IModelEventHandler {
 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
+        Configuration activeConfiguration = configurationManager.getActiveConfiguration();
 
-
-        modelManager = new ModelManager(configurationManager.getActiveConfiguration());
+        modelManager = new ModelManager();
+        modelManager.setPlansPath(activeConfiguration.getPlansPath());
+        modelManager.setTasksPath(activeConfiguration.getTasksPath());
+        modelManager.setRolesPath(activeConfiguration.getRolesPath());
         modelManager.addListener(this);
+
         commandStack = new CommandStack();
 
         mainWindowController = MainWindowController.getInstance();
@@ -55,7 +62,7 @@ public final class Controller implements IModelEventHandler {
 
         repoTabPane = mainWindowController.getRepositoryTabPane();
 
-        repoTabPane.setShowUsageHandler(modelManager);
+        repoTabPane.setShowUsageHandler(this);
 
         repoViewModel = new RepositoryViewModel();
         repoViewModel.setRepositoryTabPane(repoTabPane);
@@ -121,4 +128,13 @@ public final class Controller implements IModelEventHandler {
         }
     }
 
+    @Override
+    public ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement) {
+        ArrayList<ViewModelElement> usage = new ArrayList<>();
+        for (PlanElement planElement : this.modelManager.getUsages(viewModelElement.getId())){
+            // TODO: fix type string in viewModelElement for everywhere
+            usage.add(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().getTypeName()));
+        }
+        return usage;
+    }
 }

@@ -59,7 +59,7 @@ public class GeneratedSourcesManager {
         }
     }
 
-    public List<File> getGeneratedFilesForBehaviour (Behaviour behaviour) {
+    public List<File> getGeneratedFilesForBehaviour(Behaviour behaviour) {
         List<File> generatedFiles = new ArrayList<>();
         String destinationPath = trimFileFromPath(behaviour.getDestinationPath());
         generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, behaviour.getName() + ".h").toFile());
@@ -67,11 +67,11 @@ public class GeneratedSourcesManager {
         return generatedFiles;
     }
 
-    public List<File> getGeneratedConditionFilesForPlan (Plan plan) {
+    public List<File> getGeneratedConditionFilesForPlan(AbstractPlan abstractPlan) {
         List<File> generatedFiles = new ArrayList<>();
-        String destinationPath = trimFileFromPath(plan.getDestinationPath());
-        String headerFilename = plan.getName() + plan.getId() + ".h";
-        String sourceFilename = plan.getName() + plan.getId() + ".cpp";
+        String destinationPath = trimFileFromPath(abstractPlan.getDestinationPath());
+        String headerFilename = abstractPlan.getName() + abstractPlan.getId() + ".h";
+        String sourceFilename = abstractPlan.getName() + abstractPlan.getId() + ".cpp";
         generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, headerFilename).toFile());
         generatedFiles.add(Paths.get(getSrcDir(), destinationPath, sourceFilename).toFile());
         return generatedFiles;

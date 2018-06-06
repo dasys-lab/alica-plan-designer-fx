@@ -5,14 +5,16 @@ import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsLexer;
 import de.uni_kassel.vs.cn.generator.cpp.parser.CommentsParser;
 import de.uni_kassel.vs.cn.generator.cpp.parser.ProtectedRegionsVisitor;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
-import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.controller.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,7 +35,8 @@ public class Codegenerator {
     private static final Logger LOG = LogManager.getLogger(Codegenerator.class);
 
     private final IGenerator languageSpecificGenerator;
-    private ModelManager modelManager;
+    private final String codeGenerationDestination;
+    private final GeneratedSourcesManager generatedSourcesManager;
 
     private List<Plan> plans;
     private List<Behaviour> behaviours;
@@ -42,17 +45,18 @@ public class Codegenerator {
     /**
      * This constructor initializes a C++ code generator
      */
-    public Codegenerator() {
+    public Codegenerator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions, String formatter, String destination, GeneratedSourcesManager generatedSourcesManager) {
         // TODO: Document this! Here can the programming language be changed.
-        languageSpecificGenerator = new CPPGeneratorImpl();
-        languageSpecificGenerator.setFormatter(ConfigurationManager.getInstance().getClangFormatPath());
+        languageSpecificGenerator = new CPPGeneratorImpl(generatedSourcesManager);
+        languageSpecificGenerator.setFormatter(formatter);
+        codeGenerationDestination = destination;
+        this.generatedSourcesManager = generatedSourcesManager;
 
-        modelManager = new ModelManager();
-        plans = modelManager.getPlans();
+        this.plans = plans;
         Collections.sort(plans, new PlanElementComparator());
-        behaviours = modelManager.getBehaviours();
+        this.behaviours = behaviours;
         Collections.sort(behaviours, new PlanElementComparator());
-        conditions = modelManager.getConditions();
+        this.conditions = conditions;
         Collections.sort(conditions, new PlanElementComparator());
     }
 
@@ -62,13 +66,11 @@ public class Codegenerator {
     // TODO: To be reviewed and maybe adapted, because of MVC pattern adaption.
     public void generate() {
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
-        String expressionValidatorsPath = ConfigurationManager.getInstance().getActiveConfiguration()
-                .getGenSrcPath();
         try {
-            if (Files.notExists(Paths.get(expressionValidatorsPath))) {
-                Files.createDirectories(Paths.get(expressionValidatorsPath));
+            if (Files.notExists(Paths.get(codeGenerationDestination))) {
+                Files.createDirectories(Paths.get(codeGenerationDestination));
             }
-            Files.walk(Paths.get(expressionValidatorsPath)).filter(e -> {
+            Files.walk(Paths.get(codeGenerationDestination)).filter(e -> {
                 String fileName = e.getFileName().toString();
                 return fileName.endsWith(".h") || fileName.endsWith(".cpp");
             }).forEach(e -> {
@@ -112,44 +114,53 @@ public class Codegenerator {
      * (Re)Generates source files for the given object.
      * If the given object is an instance of {@link Plan} or {@link Behaviour}.
      *
-     * @param planElement
+     * @param abstractPlan
      */
-    // TODO: To be reviewed and maybe adapted, because of MVC pattern adaption.
-    public void generate(AbstractPlan planElement) {
-        if (!(planElement instanceof Behaviour || planElement instanceof Plan)) {
+    public void generate(AbstractPlan abstractPlan) {
+        if (abstractPlan instanceof Plan) {
+            generate((Plan) abstractPlan);
+        } else if (abstractPlan instanceof Behaviour) {
+            generate((Behaviour) abstractPlan);
+        } else {
+            LOG.error("Nothing to generate for something else than a plan or behaviour!");
             return;
         }
+    }
 
-        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
+    public void generate(Plan plan) {
+        List<File> generatedFiles = generatedSourcesManager.getGeneratedConditionFilesForPlan(plan);
+        generatedFiles.addAll(generatedSourcesManager.getGeneratedConstraintFilesForPlan(plan));
+        collectProtectedRegions(generatedFiles);
+        languageSpecificGenerator.createConstraintsForPlan( plan);
+        languageSpecificGenerator.createPlan(plan);
+        languageSpecificGenerator.createConditionCreator(plans, conditions);
+        languageSpecificGenerator.createUtilityFunctionCreator(plans);
+    }
+
+    public void generate(Behaviour behaviour) {
+        List<File> generatedFiles = generatedSourcesManager.getGeneratedFilesForBehaviour(behaviour);
+        collectProtectedRegions(generatedFiles);
+        languageSpecificGenerator.createBehaviourCreator(behaviours);
+        languageSpecificGenerator.createBehaviour(behaviour);
+    }
+
+    protected void collectProtectedRegions(List<File> filesToParse) {
         ProtectedRegionsVisitor protectedRegionsVisitor = new ProtectedRegionsVisitor();
-        generatedSourcesManager
-                .getAllGeneratedFilesForAbstractPlan(planElement)
-                .forEach(e -> {
-                    try {
-                        if (e.exists()) {
-                            CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e.toPath()));
-                            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-                            CommentsParser parser = new CommentsParser(commonTokenStream);
-                            CommentsParser.All_textContext all_textContext = parser.all_text();
-                            protectedRegionsVisitor.visit(all_textContext);
-                        }
-                    } catch (IOException e1) {
-                        LOG.error("Could not parse existing source file " + e.getAbsolutePath(), e1);
-                        throw new RuntimeException(e1);
-                    }
-                });
-
+        for (File genFile : filesToParse) {
+            try {
+                if (genFile.exists()) {
+                    CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(genFile.toPath()));
+                    CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+                    CommentsParser parser = new CommentsParser(commonTokenStream);
+                    CommentsParser.All_textContext all_textContext = parser.all_text();
+                    protectedRegionsVisitor.visit(all_textContext);
+                }
+            } catch (IOException e1) {
+                LOG.error("Could not parse existing source file " + genFile.getAbsolutePath(), e1);
+                throw new RuntimeException(e1);
+            }
+        }
         PluginManager.getInstance().getDefaultPlugin().setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
         languageSpecificGenerator.setProtectedRegions(protectedRegionsVisitor.getProtectedRegions());
-
-        if (planElement instanceof Behaviour) {
-            languageSpecificGenerator.createBehaviourCreator(behaviours);
-            languageSpecificGenerator.createBehaviour((Behaviour) planElement);
-        } else if (planElement instanceof Plan) {
-            languageSpecificGenerator.createConstraintsForPlan((Plan) planElement);
-            languageSpecificGenerator.createPlan((Plan) planElement);
-            languageSpecificGenerator.createConditionCreator(plans, conditions);
-            languageSpecificGenerator.createUtilityFunctionCreator(plans);
-        }
     }
 }

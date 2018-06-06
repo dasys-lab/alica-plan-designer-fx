@@ -27,6 +27,7 @@
         <module>alica-plan-designer-fx-view</module>
         <module>alica-plan-designer-fx-controller</module>
         <module>alica-plan-designer-fx-codegeneration</module>
+        <module>alica-plan-designer-fx-modelmanagement</module>
     </modules>
 
 </project>

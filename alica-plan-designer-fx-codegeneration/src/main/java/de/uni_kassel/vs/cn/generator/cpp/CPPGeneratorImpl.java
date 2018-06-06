@@ -20,25 +20,26 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Code generator for C++. It uses the {@link XtendTemplates} for creating the code.
+ * Code generator for C++. It uses the XtendTemplates for creating the code.
  * After this the created strings are written to disk according to {@link GeneratedSourcesManager}.
  * Every file that is written is formatted by the formatter that is set by setFormatter.
  */
 public class CPPGeneratorImpl implements IGenerator {
 
     private static final Logger LOG = LogManager.getLogger(CPPGeneratorImpl.class);
-    private XtendTemplates xtendTemplates;
+    private de.uni_kassel.vs.cn.generator.cpp.XtendTemplates xtendTemplates;
 
     private GeneratedSourcesManager generatedSourcesManager;
     private String formatter;
 
-    public CPPGeneratorImpl() {
-        generatedSourcesManager = GeneratedSourcesManager.get();
-        xtendTemplates = new XtendTemplates();
+    public CPPGeneratorImpl(GeneratedSourcesManager generatedSourcesManager) {
+        this.generatedSourcesManager = generatedSourcesManager;
+        xtendTemplates = new de.uni_kassel.vs.cn.generator.cpp.XtendTemplates();
     }
 
     /**
-     * delegate {@link XtendTemplates#setProtectedRegions(Map)}
+     * delegate XtendTemplates#setProtectedRegions(Map)
+     *
      * @param protectedRegions mapping from identifier to content of protected region
      */
     @Override
@@ -79,7 +80,7 @@ public class CPPGeneratorImpl implements IGenerator {
 
         formatFile(headerPath);
 
-        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(),"ConditionCreator.cpp").toString();
+        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "ConditionCreator.cpp").toString();
         String fileContentSource = xtendTemplates.conditionCreatorSource(plans, conditions);
         writeSourceFile(srcPath, fileContentSource);
 
@@ -88,13 +89,14 @@ public class CPPGeneratorImpl implements IGenerator {
 
     /**
      * Small helper for writing source files
-     * @param filePath filePath to write to
+     *
+     * @param filePath    filePath to write to
      * @param fileContent the content to write
      */
     private void writeSourceFile(String filePath, String fileContent) {
         try {
 
-            if(Files.notExists(Paths.get(filePath).getParent())) {
+            if (Files.notExists(Paths.get(filePath).getParent())) {
                 Files.createDirectories(Paths.get(filePath).getParent());
             }
             Files.write(Paths.get(filePath), fileContent.getBytes(StandardCharsets.UTF_8));
@@ -123,6 +125,7 @@ public class CPPGeneratorImpl implements IGenerator {
 
     /**
      * calls createConstraintsForPlan on each plan
+     *
      * @param plans
      */
     @Override
@@ -142,7 +145,7 @@ public class CPPGeneratorImpl implements IGenerator {
         if (cstrIncPathOnDisk.exists() == false) {
             cstrIncPathOnDisk.mkdir();
         }
-        String headerPath = Paths.get(constraintHeaderPath, plan.getName()+ plan.getId() + "Constraints.h").toString();
+        String headerPath = Paths.get(constraintHeaderPath, plan.getName() + plan.getId() + "Constraints.h").toString();
         String fileContentHeader = xtendTemplates.constraintsHeader(plan);
         writeSourceFile(headerPath, fileContentHeader);
 
@@ -164,7 +167,7 @@ public class CPPGeneratorImpl implements IGenerator {
                 LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
                 while (lineNumberReader.ready()) {
                     if (lineNumberReader.readLine().contains("// State: " + inPlan.getName())) {
-                        generatedSourcesManager.putStateCheckingLines(inPlan, lineNumberReader.getLineNumber());
+                        generatedSourcesManager.putLineForModelElement(inPlan.getId(), lineNumberReader.getLineNumber());
                         break;
                     }
                 }
@@ -177,6 +180,7 @@ public class CPPGeneratorImpl implements IGenerator {
 
     /**
      * calls createPlan for each plan
+     *
      * @param plans list of all plans to generate (usually this should be all plans in workspace)
      */
     @Override
@@ -208,7 +212,7 @@ public class CPPGeneratorImpl implements IGenerator {
                 LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
                 while (lineNumberReader.ready()) {
                     if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + runtimeCondition.getId() + ") ENABLED START*/")) {
-                        generatedSourcesManager.putConditionLines(runtimeCondition, lineNumberReader.getLineNumber());
+                        generatedSourcesManager.putLineForModelElement(runtimeCondition.getId(), lineNumberReader.getLineNumber());
                         break;
                     }
 
@@ -225,7 +229,7 @@ public class CPPGeneratorImpl implements IGenerator {
                 LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
                 while (lineNumberReader.ready()) {
                     if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + preCondition.getId() + ") ENABLED START*/")) {
-                        generatedSourcesManager.putConditionLines(preCondition, lineNumberReader.getLineNumber());
+                        generatedSourcesManager.putLineForModelElement(preCondition.getId(), lineNumberReader.getLineNumber());
                         break;
                     }
 
@@ -241,7 +245,7 @@ public class CPPGeneratorImpl implements IGenerator {
                 LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
                 while (lineNumberReader.ready()) {
                     if (lineNumberReader.readLine().contains("/*PROTECTED REGION ID(" + inPlan.getId() + ") ENABLED START*/")) {
-                        generatedSourcesManager.putLineForModelElement(inPlan, lineNumberReader.getLineNumber());
+                        generatedSourcesManager.putLineForModelElement(inPlan.getId(), lineNumberReader.getLineNumber());
                         break;
                     }
 
@@ -255,9 +259,8 @@ public class CPPGeneratorImpl implements IGenerator {
 
     private String cutDestinationPathToDirectory(AbstractPlan plan) {
         String destinationPath = plan.getDestinationPath();
-        if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator))
-        {
-            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator)+1);
+        if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
         }
         return destinationPath;
     }
@@ -315,6 +318,7 @@ public class CPPGeneratorImpl implements IGenerator {
     /**
      * This returns the {@link IConstraintCodeGenerator} of the active condition plugin.
      * TODO This maybe a candidate for a default method.
+     *
      * @return
      */
     @Override
@@ -338,6 +342,7 @@ public class CPPGeneratorImpl implements IGenerator {
     /**
      * Calls the executable found by the formatter attribute on the file found by filename.
      * It is assumed that the executable is clang-format or has the same CLI as clang-format.
+     *
      * @param fileName
      */
     private void formatFile(String fileName) {

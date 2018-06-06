@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.modelhandling;
+package de.uni_kassel.vs.cn.planDesigner.modelmanagement;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 
