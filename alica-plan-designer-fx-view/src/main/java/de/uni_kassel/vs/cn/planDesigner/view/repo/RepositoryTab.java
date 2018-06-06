@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 
@@ -15,6 +16,7 @@ public class RepositoryTab extends Tab {
     protected ListView<RepositoryHBox> repositoryListView;
     protected Comparator<RepositoryHBox> modelElementComparator;
     protected RepositoryTool repoTool;
+    protected IShowUsageHandler showUsageHandler;
 
     public RepositoryTab(String tabTitle, RepositoryTool repoTool) {
         setText(tabTitle);
@@ -26,8 +28,12 @@ public class RepositoryTab extends Tab {
         modelElementComparator = modelElementComparator.thenComparing(o -> o.getViewModelName());
     }
 
+    public void setShowUsageHandler(IShowUsageHandler showUsageHandler) {
+        this.showUsageHandler = showUsageHandler;
+    }
+
     public void addElement(ViewModelElement viewModelElement) {
-        repositoryListView.getItems().add(new RepositoryHBox(viewModelElement));
+        repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, showUsageHandler));
         sort();
     }
 

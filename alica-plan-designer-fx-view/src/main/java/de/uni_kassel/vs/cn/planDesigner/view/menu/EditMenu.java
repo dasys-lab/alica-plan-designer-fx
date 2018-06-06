@@ -166,9 +166,9 @@ public class EditMenu extends Menu {
                 return;
             }
 
-            if (mainWindowController.getPldFileTreeView().focusedProperty().get()) {
+            if (mainWindowController.getFileTreeView().focusedProperty().get()) {
 
-                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainWindowController.getPldFileTreeView()
+                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainWindowController.getFileTreeView()
                         .getSelectionModel()
                         .getSelectedItem()
                         .getValue().unwrap());

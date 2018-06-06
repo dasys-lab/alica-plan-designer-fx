@@ -195,7 +195,7 @@ public final class ConfigurationManager {
         return activeConfiguration;
     }
 
-    public boolean setActiveConfiguratsuper(new VirtualDirectoryTreeItem());ion(String confName) {
+    public boolean setActiveConfiguration(String confName) {
         for (Configuration conf : configurations) {
             if (conf.getName().equals(confName)) {
                 activeConfiguration = conf;

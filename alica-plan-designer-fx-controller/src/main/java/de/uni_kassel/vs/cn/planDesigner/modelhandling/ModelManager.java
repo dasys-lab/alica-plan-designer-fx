@@ -3,6 +3,8 @@ package de.uni_kassel.vs.cn.planDesigner.modelhandling;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +14,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.*;
 
-public class ModelManager {
+public class ModelManager implements IShowUsageHandler {
     private Configuration activeConf;
     private HashMap<Long, PlanElement> planElementMap;
 
@@ -165,11 +167,10 @@ public class ModelManager {
             conditions.add(plan.getPreCondition());
             conditions.add(plan.getRuntimeCondition());
             for (Transition transition : plan.getTransitions()) {
-                    conditions.add(transition.getPreCondition());
+                conditions.add(transition.getPreCondition());
             }
             for (State state : plan.getStates()) {
-                if (state instanceof TerminalState)
-                {
+                if (state instanceof TerminalState) {
                     conditions.add(((TerminalState) state).getPostCondition());
                 }
             }
@@ -197,13 +198,13 @@ public class ModelManager {
             } catch (RuntimeException exception) {
                 planElementMap.put(deletedElement.getId(), deletedElement);
                 if (deletedElement instanceof Plan) {
-                    planMap.put(deletedElement.getId(), (Plan)deletedElement);
+                    planMap.put(deletedElement.getId(), (Plan) deletedElement);
                 } else if (deletedElement instanceof Behaviour) {
-                    behaviourMap.put(deletedElement.getId(), (Behaviour)deletedElement);
+                    behaviourMap.put(deletedElement.getId(), (Behaviour) deletedElement);
                 } else if (deletedElement instanceof PlanType) {
-                    planTypeMap.put(deletedElement.getId(), (PlanType)deletedElement);
+                    planTypeMap.put(deletedElement.getId(), (PlanType) deletedElement);
                 } else if (deletedElement instanceof TaskRepository) {
-                    taskRepositoryMap.put(deletedElement.getId(), (TaskRepository)deletedElement);
+                    taskRepositoryMap.put(deletedElement.getId(), (TaskRepository) deletedElement);
                 } else {
                     exception.printStackTrace();
                 }
@@ -229,7 +230,7 @@ public class ModelManager {
                     if (deletedElement != null) {
                         throw new RuntimeException("PlanElement not found! Path is: " + path);
                     }
-                    if (planElementMap.containsValue(deletedElement.getId())){
+                    if (planElementMap.containsValue(deletedElement.getId())) {
                         planElementMap.remove(deletedElement.getId());
                         planMap.remove(deletedElement.getId());
                         fireDeletionEvent(deletedElement);
@@ -247,7 +248,7 @@ public class ModelManager {
                     if (deletedElement != null) {
                         throw new RuntimeException("PlanElement not found! Path is: " + path);
                     }
-                    if (planElementMap.containsValue(deletedElement.getId())){
+                    if (planElementMap.containsValue(deletedElement.getId())) {
                         planElementMap.remove(deletedElement.getId());
                         behaviourMap.remove(deletedElement.getId());
                         fireDeletionEvent(deletedElement);
@@ -265,7 +266,7 @@ public class ModelManager {
                     if (deletedElement != null) {
                         throw new RuntimeException("PlanElement not found! Path is: " + path);
                     }
-                    if (planElementMap.containsValue(deletedElement.getId())){
+                    if (planElementMap.containsValue(deletedElement.getId())) {
                         planElementMap.remove(deletedElement.getId());
                         planMap.remove(deletedElement.getId());
                         fireDeletionEvent(deletedElement);
@@ -284,7 +285,7 @@ public class ModelManager {
                     if (deletedElement != null) {
                         throw new RuntimeException("PlanElement not found! Path is: " + path);
                     }
-                    if (planElementMap.containsValue(deletedElement.getId())){
+                    if (planElementMap.containsValue(deletedElement.getId())) {
                         planElementMap.remove(deletedElement.getId());
                         planMap.remove(deletedElement.getId());
                         fireDeletionEvent(deletedElement);
@@ -302,5 +303,69 @@ public class ModelManager {
             e.printStackTrace();
         }
         return deletedElement;
+    }
+
+    @Override
+    public ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement) {
+        ArrayList<ViewModelElement> usages = new ArrayList<>();
+
+        PlanElement planElement = planElementMap.get(viewModelElement.getId());
+        if (planElement == null) {
+            return null;
+        }
+
+        if (planElement instanceof Plan) {
+            usages.addAll(gettUsagesInStates(planElement));
+            usages.addAll(getUsagesInPlanTypes(planElement));
+        } else if (planElement instanceof Behaviour) {
+            usages.addAll(gettUsagesInStates(planElement));
+        } else if (planElement instanceof PlanType) {
+            usages.addAll(gettUsagesInStates(planElement));
+        } else if (planElement instanceof Task) {
+            usages.addAll(getUsagesInEntryPoints(planElement));
+        } else {
+            throw new RuntimeException("Usages requested for unhandled type " + viewModelElement.getType());
+        }
+        return usages;
+    }
+
+    private ArrayList<ViewModelElement> getUsagesInEntryPoints(PlanElement planElement) {
+        ArrayList<ViewModelElement> usages = new ArrayList<>();;
+        for (Plan parent : planMap.values()) {
+            for (EntryPoint entryPoint : parent.getEntryPoints()) {
+                if (entryPoint.getTask().getId() == planElement.getId()) {
+                    String type = (parent.getMasterPlan() ? "masterPlan" : "plan");
+                    usages.add(new ViewModelElement(parent.getId(), parent.getName(), type));
+                }
+            }
+        }
+        return usages;
+    }
+
+    private ArrayList<ViewModelElement> getUsagesInPlanTypes(PlanElement planElement) {
+        ArrayList<ViewModelElement> usages =  new ArrayList<>();
+        for (PlanType parent : planTypeMap.values()) {
+            for (Plan child : parent.getPlans()) {
+                if (child.getId() == planElement.getId()) {
+                    usages.add(new ViewModelElement(parent.getId(), parent.getName(), "planType"));
+                }
+            }
+        }
+        return usages;
+    }
+
+    private ArrayList<ViewModelElement> gettUsagesInStates(PlanElement planElement) {
+        ArrayList<ViewModelElement> usages = new ArrayList<>();
+        for (Plan parent : planMap.values()) {
+            for (State state : parent.getStates()) {
+                for (Plan child : state.getPlans()) {
+                    if (child.getId() == planElement.getId()) {
+                        String type = (parent.getMasterPlan() ? "masterPlan" : "plan");
+                        usages.add(new ViewModelElement(parent.getId(), parent.getName(), type));
+                    }
+                }
+            }
+        }
+        return usages;
     }
 }

@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import javafx.collections.ObservableList;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -10,7 +10,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -95,12 +94,12 @@ public class IsDirtyWindowController {
     }
 
     public static boolean isAnyTabDirty() {
-        ObservableList<Tab> openTabs = MainWindowController.getInstance().getEditorTabPane().getTabs();
-        for(Tab openTab : openTabs) {
-            if(openTab.getText().contains("*")) {
-                return true;
-            }
-        }
+//        ObservableList<Tab> openTabs = MainWindowController.getInstance().getEditorTabPane().getTabs();
+//        for(Tab openTab : openTabs) {
+//            if(openTab.getText().contains("*")) {
+//                return true;
+//            }
+//        }
         return false;
     }
 

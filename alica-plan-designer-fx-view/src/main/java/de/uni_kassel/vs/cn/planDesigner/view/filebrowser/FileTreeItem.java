@@ -14,9 +14,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PLDTreeItem extends TreeItem<FileWrapper> {
+public class FileTreeItem extends TreeItem<FileWrapper> {
 
-    public PLDTreeItem(FileWrapper value, Node graphic) {
+    public FileTreeItem(FileWrapper value, Node graphic) {
         super(value, graphic);
         if (value.unwrap().isDirectory()) {
             for (File content : value.unwrap().listFiles()) {
@@ -24,7 +24,7 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
                 if (listItemImage == null) {
                     continue;
                 }
-                getChildren().add(new PLDTreeItem(new FileWrapper(content), new ImageView(listItemImage)));
+                getChildren().add(new FileTreeItem(new FileWrapper(content), new ImageView(listItemImage)));
             }
             getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
         }
@@ -38,7 +38,7 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
                 .filter(e -> newFile.getAbsolutePath().contains(e.getValue().unwrap().getAbsolutePath()))
                 .collect(Collectors.toList());
         if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE) && newFile.isDirectory() && collect.size() == 1) {
-            ((PLDTreeItem)collect.get(0)).updateDirectory(kind, child);
+            ((FileTreeItem)collect.get(0)).updateDirectory(kind, child);
             return;
         }
 
@@ -48,7 +48,7 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
                     if (collect.get(0).getValue().unwrap().equals(newFile)) {
                         getChildren().remove(collect.get(0));
                     } else {
-                        ((PLDTreeItem)collect.get(0)).updateDirectory(kind, child);
+                        ((FileTreeItem)collect.get(0)).updateDirectory(kind, child);
                     }
                 }
                 if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
@@ -60,7 +60,7 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
                             if (listItemImage == null) {
                                 continue;
                             }
-                            getChildren().add(new PLDTreeItem(new FileWrapper(content), new ImageView(listItemImage)));
+                            getChildren().add(new FileTreeItem(new FileWrapper(content), new ImageView(listItemImage)));
                             getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
                         }
                     }
@@ -70,22 +70,22 @@ public class PLDTreeItem extends TreeItem<FileWrapper> {
                 if (isAlreadyKnownToTreeItem == false && newFile.getParentFile().equals(value.unwrap())) {
                     Image listItemImage = getImageForFileType(newFile);
                     if (listItemImage != null) {
-                        getChildren().add(new PLDTreeItem(new FileWrapper(newFile), new ImageView(listItemImage)));
+                        getChildren().add(new FileTreeItem(new FileWrapper(newFile), new ImageView(listItemImage)));
                         getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
                     }
                 } else {
-                    ((PLDTreeItem)collect.get(0)).updateDirectory(kind, child);
+                    ((FileTreeItem)collect.get(0)).updateDirectory(kind, child);
                 }
             }
         } else if (newFile.isDirectory() && newFile.getParentFile().equals(value.unwrap())){
-            getChildren().add(new PLDTreeItem(new FileWrapper(newFile), new ImageView(getImageForFileType(newFile))));
+            getChildren().add(new FileTreeItem(new FileWrapper(newFile), new ImageView(getImageForFileType(newFile))));
             getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
         } else if(newFile.getParentFile().equals(value.unwrap()) && newFile.toString().endsWith("pmlex") == false
                 && getChildren().stream().noneMatch(e -> e.getValue().unwrap().equals(newFile))) {
-            getChildren().add(new PLDTreeItem(new FileWrapper(newFile), new ImageView(getImageForFileType(newFile))));
+            getChildren().add(new FileTreeItem(new FileWrapper(newFile), new ImageView(getImageForFileType(newFile))));
             getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
         } else {
-            collect.forEach(e -> ((PLDTreeItem)e).updateDirectory(kind, child));
+            collect.forEach(e -> ((FileTreeItem)e).updateDirectory(kind, child));
         }
         setExpanded(true);
     }

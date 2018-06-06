@@ -1,7 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.PLDFileTreeView;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.EditMenu;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
@@ -10,11 +12,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
-import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -25,7 +25,6 @@ import javafx.util.Duration;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class MainWindowController implements Initializable {
             new Image(MainWindowController.class.getClassLoader().getResourceAsStream("images/forbidden.png")));
 
     @FXML
-    private PLDFileTreeView pldFileTreeView;
+    private FileTreeView fileTreeView;
 
     //@FXML
     //private PropertyTabPane propertyAndStatusTabPane;
@@ -63,8 +62,8 @@ public class MainWindowController implements Initializable {
     @FXML
     private RepositoryTabPane repositoryTabPane;
 
-    //@FXML
-    //private EditorTabPane editorTabPane;
+    @FXML
+    private EditorTabPane editorTabPane;
 
     @FXML
     private MenuBar menuBar;
@@ -89,8 +88,8 @@ public class MainWindowController implements Initializable {
     }
 
     public void initialize(URL location, ResourceBundle resources) {
-        pldFileTreeView.setController(this);
-//        editorTabPane.getTabs().clear();
+        fileTreeView.setController(this);
+        editorTabPane.getTabs().clear();
         if (configWindowController == null) {
             throw new RuntimeException("The member configWindowController need to be set through the public setter, before calling initialize()!");
         }
@@ -134,9 +133,9 @@ public class MainWindowController implements Initializable {
                 .addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 // TODO: how to determine type of longId, for enabling code generation menu
-//                if (((AbstractEditorTab) newValue).getEditable() instanceof AbstractPlan) {
-//                    generateCurrentFile.setDisable(false);
-//                }
+                if (((AbstractEditorTab) newValue).getEditable() instanceof AbstractPlan) {
+                    generateCurrentFile.setDisable(false);
+                }
             } else {
                 generateCurrentFile.setDisable(true);
             }
@@ -226,15 +225,15 @@ public class MainWindowController implements Initializable {
 //        editorTabPane.openTab(toOpen.toPath());
 //    }
 
-//    public EditorTabPane getEditorTabPane() {
-//        return editorTabPane;
-//    }
+    public EditorTabPane getEditorTabPane() {
+        return editorTabPane;
+    }
 
     public RepositoryTabPane getRepositoryTabPane() {
         return repositoryTabPane;
     }
 
-    public PLDFileTreeView getPldFileTreeView() {
-        return pldFileTreeView;
+    public FileTreeView getFileTreeView() {
+        return fileTreeView;
     }
 }

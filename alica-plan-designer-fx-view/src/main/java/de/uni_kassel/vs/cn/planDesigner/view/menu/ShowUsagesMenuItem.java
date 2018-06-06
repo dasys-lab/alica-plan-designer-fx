@@ -1,6 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
+import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,7 +17,7 @@ public class ShowUsagesMenuItem extends MenuItem {
 
     private I18NRepo i18NRepo;
 
-    public ShowUsagesMenuItem(long modelElementId) {
+    public ShowUsagesMenuItem(ViewModelElement viewModelElement, IShowUsageHandler showUsageHandler) {
         i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getString("label.menu.usage"));
         setOnAction( e -> {
@@ -22,13 +25,13 @@ public class ShowUsagesMenuItem extends MenuItem {
             try {
                 Parent infoWindow = fxmlLoader.load();
                 UsagesWindowController controller = fxmlLoader.getController();
-                controller.createReferencesList(modelElementId);
+                controller.createReferencesList(showUsageHandler.getUsages(viewModelElement), showUsageHandler);
                 Stage stage = new Stage();
                 stage.setResizable(false);
                 stage.setTitle(i18NRepo.getString("label.usage.info"));
                 stage.setScene(new Scene(infoWindow));
                 stage.initModality(Modality.WINDOW_MODAL);
-                stage.initOwner(PlanDesigner.getPrimaryStage());
+                stage.initOwner(PlanDesignerApplication.getPrimaryStage());
                 stage.showAndWait();
             } catch (IOException ignored) {
             }

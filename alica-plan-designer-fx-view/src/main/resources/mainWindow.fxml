@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.PLDFileTreeView?>
+<?import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.SplitPane?>
@@ -15,8 +15,8 @@
         <SplitPane dividerPositions="0.1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
-                <PLDFileTreeView fx:id="fileTreeView" maxWidth="1.7976931348623157E308" minWidth="100.0"
-                                 prefWidth="300.0"/>
+                <FileTreeView fx:id="fileTreeView" maxWidth="1.7976931348623157E308" minWidth="100.0"
+                              prefWidth="300.0"/>
                 <SplitPane dividerPositions="0.9">
                     <items>
                         <EditorTabPane fx:id="editorTabPane" maxHeight="1.7976931348623157E308"

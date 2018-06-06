@@ -9,7 +9,8 @@ import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelhandling.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelhandling.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelhandling.ModelManager;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.PLDViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 
@@ -36,6 +37,7 @@ public final class Controller implements IModelEventHandler {
     private RepositoryViewModel repoViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
+    private RepositoryTabPane repoTabPane;
 
     // Code Generation Objects
     GeneratedSourcesManager generatedSourcesManager;
@@ -50,8 +52,14 @@ public final class Controller implements IModelEventHandler {
 
         mainWindowController = MainWindowController.getInstance();
         setupConfigGuiStuff();
+
+        repoTabPane = mainWindowController.getRepositoryTabPane();
+
+        repoTabPane.setShowUsageHandler(modelManager);
+
         repoViewModel = new RepositoryViewModel();
-        repoViewModel.setRepositoryTabPane(mainWindowController.getRepositoryTabPane());
+        repoViewModel.setRepositoryTabPane(repoTabPane);
+
         modelManager.loadModelFromDisk();
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
@@ -94,7 +102,7 @@ public final class Controller implements IModelEventHandler {
                 } else if (planElement instanceof PlanType){
                     repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Behaviour){
-                    mainWindowController.getPldFileTreeView().addBehaviour(new PLDViewModelElement(planElement.getId(),
+                    mainWindowController.getFileTreeView().addBehaviour(new TreeViewModelElement(planElement.getId(),
                             planElement.getName(), planElement.getClass().toString(), ((Behaviour)planElement).getDestinationPath()));
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Task){

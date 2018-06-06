@@ -7,7 +7,7 @@ import javafx.scene.text.Text;
 
 /**
  * GUI Container class for all [Icon,Text,Tool]-based entries.
- * Child classes are ToolHBox {@link PLDToolBar} and RepositoryHBox (for reusing plan elements from repo view).
+ * Child classes are ToolHBox {@link EditorToolBar} and RepositoryHBox (for reusing plan elements from repo view).
  */
 public class DraggableHBox extends HBox {
     protected ImageView icon;

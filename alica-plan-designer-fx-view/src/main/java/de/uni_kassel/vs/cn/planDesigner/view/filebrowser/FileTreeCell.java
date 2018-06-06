@@ -10,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -20,16 +19,16 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 
-public class PLDTreeCell extends TreeCell<FileWrapper> {
+public class FileTreeCell extends TreeCell<FileWrapper> {
 
-    private static final Logger LOG = LogManager.getLogger(PLDTreeCell.class);
+    private static final Logger LOG = LogManager.getLogger(FileTreeCell.class);
 
     private TextField textField;
 
     private final MainWindowController controller;
 
 
-    public PLDTreeCell(MainWindowController controller) {
+    public FileTreeCell(MainWindowController controller) {
         this.controller = controller;
         if (getItem() != null) {
             addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleDoubleClick);

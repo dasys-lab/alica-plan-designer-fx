@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public final class PLDFileTreeView extends TreeView<FileWrapper> {
+public final class FileTreeView extends TreeView<FileWrapper> {
 
     private MainWindowController controller;
 
@@ -31,7 +31,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
     private String startFolder;
     private VirtualDirectoryTreeItem virtualDirectoryTreeItem;
 
-    public PLDFileTreeView() {
+    public FileTreeView() {
         super(new VirtualDirectoryTreeItem());
         virtualDirectoryTreeItem = (VirtualDirectoryTreeItem) getRoot();
 
@@ -39,35 +39,35 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
             System.out.println("Source: " + e.getSource() + " Target: " + e.getTarget());
             originalCursor = getCursor();
             Node node = ((Node) e.getTarget()).getParent();
-            if (node instanceof PLDTreeCell == false) {
+            if (node instanceof FileTreeCell == false) {
                 e.consume();
                 return;
             }
-            draggedItem = ((PLDTreeCell) node).getTreeItem();
+            draggedItem = ((FileTreeCell) node).getTreeItem();
             startFolder = draggedItem.getValue().unwrap().toString();
             startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
             String fileName = draggedItem.getValue().toString();
             if (fileName.endsWith(".beh")) {
-                getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+                getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
                         .getResourceAsStream("images/behaviour24x24.png"))));
             } else if (fileName.endsWith(".pml")) {
 //                try {
 //                    Plan plan = (Plan) EMFModelUtils.loadAlicaFileFromDisk(draggedItem.getValue().unwrap());
 //                    if (plan.isMasterPlan()) {
-//                        getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+//                        getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
 //                                .getResourceAsStream("images/masterplan24x24.png"))));
 //                    } else {
-                        getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+                        getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
                                 .getResourceAsStream("images/plan24x24.png"))));
 //                    }
 //                } catch (IOException e1) {
 //                    e1.printStackTrace();
 //                }
             } else if (fileName.endsWith(".pty")) {
-                getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+                getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
                         .getResourceAsStream("images/planTyp24x24.png"))));
             } else if (fileName.endsWith(".tsk")) {
-                getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
+                getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
                         .getResourceAsStream("images/tasks24x24.png"))));
             }
             wasDragged = true;
@@ -88,16 +88,16 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 return;
             }
 
-            PLDTreeCell treeCell = null;
+            FileTreeCell treeCell = null;
             if (e.getPickResult().getIntersectedNode().getParent() instanceof Group) {
                 for (Node child : e.getPickResult().getIntersectedNode().getParent().getChildrenUnmodifiable()) {
                     if (child.getBoundsInParent().contains(e.getX(), e.getY(), e.getZ())) {
-                        treeCell = (PLDTreeCell) child;
+                        treeCell = (FileTreeCell) child;
                         break;
                     }
                 }
             } else {
-                treeCell = (PLDTreeCell) e.getPickResult().getIntersectedNode().getParent();
+                treeCell = (FileTreeCell) e.getPickResult().getIntersectedNode().getParent();
             }
 
             File parent = treeCell.getTreeItem().getValue().unwrap();
@@ -129,7 +129,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
         this.setContextMenu(new PLDFileTreeViewContextMenu());
         setEditable(true);
         setCellFactory(param -> {
-            TreeCell<FileWrapper> fileWrapperTreeCell = new PLDTreeCell(controller);
+            TreeCell<FileWrapper> fileWrapperTreeCell = new FileTreeCell(controller);
             fileWrapperTreeCell.setContextMenu(new PLDFileTreeViewContextMenu());
             fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
@@ -157,12 +157,12 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
         this.controller = controller;
     }
 
-    public void addBehaviour(PLDViewModelElement behaviour) {
+    public void addBehaviour(TreeViewModelElement behaviour) {
         String[] folders = behaviour.getDestinationPath().split(File.pathSeparator);
         TreeItem folder = findFolder(folders, 0, virtualDirectoryTreeItem);
         if (folder != null) {
             File file = Paths.get(behaviour.getDestinationPath(), behaviour.getName(), ".beh").toFile();
-            folder.getChildren().add(new PLDTreeItem(new FileWrapper(file), new ImageView(getImage(file))));
+            folder.getChildren().add(new FileTreeItem(new FileWrapper(file), new ImageView(getImage(file))));
         }
         //TODO runtime exception
     }
@@ -176,7 +176,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
             if (index == path.length - 1) {
                 return newItem;
             }
-            return findFolder(path, index + 1, newItem;
+            return findFolder(path, index + 1, newItem);
         }
         return null;
     }

@@ -3,7 +3,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.PLDFileTreeView;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -51,13 +51,13 @@ public class SaveTest extends ApplicationTest {
 
         // Speichern
         testInstance.getPlans().add(new Pair<>(plan, planFile.toPath()));
-        PLDFileTreeView pldFileTreeView = MainWindowController.getInstance().getPldFileTreeView();
+        FileTreeView fileTreeView = MainWindowController.getInstance().getFileTreeView();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TreeItem<FileWrapper> fileWrapperTreeItem = traverseFor(pldFileTreeView.getRoot().getChildren().get(0), planFile);
+        TreeItem<FileWrapper> fileWrapperTreeItem = traverseFor(fileTreeView.getRoot().getChildren().get(0), planFile);
 
         Assert.assertTrue(fileWrapperTreeItem != null);
         Platform.runLater(() -> {
@@ -94,13 +94,13 @@ public class SaveTest extends ApplicationTest {
 
         // Speichern
         testInstance.getPlans().add(new Pair<>(plan, planFile.toPath()));
-        PLDFileTreeView pldFileTreeView = MainWindowController.getInstance().getPldFileTreeView();
+        FileTreeView fileTreeView = MainWindowController.getInstance().getFileTreeView();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TreeItem<FileWrapper> fileWrapperTreeItem = traverseFor(pldFileTreeView.getRoot().getChildren().get(0), planFile);
+        TreeItem<FileWrapper> fileWrapperTreeItem = traverseFor(fileTreeView.getRoot().getChildren().get(0), planFile);
 
         Assert.assertTrue(fileWrapperTreeItem != null);
         Platform.runLater(() -> {

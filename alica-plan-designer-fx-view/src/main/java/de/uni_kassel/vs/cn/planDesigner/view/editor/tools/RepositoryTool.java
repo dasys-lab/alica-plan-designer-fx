@@ -24,16 +24,16 @@ public class RepositoryTool extends AbstractTool {
         customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
             @Override
             public void handle(MouseDragEvent event) {
-                if (event.getTarget() == null
-                        || !(((Node) event.getTarget()).getParent() instanceof StateContainer)
-                        || ((Node) event.getTarget()).getParent() instanceof TerminalStateContainer) {
-                    if (!planEditorTabPane.getScene().getCursor().equals(MainWindowController.FORBIDDEN_CURSOR)) {
-                        previousCursor = planEditorTabPane.getScene().getCursor();
-                        planEditorTabPane.getScene().setCursor(MainWindowController.FORBIDDEN_CURSOR);
-                    }
-                } else {
-                    planEditorTabPane.getScene().setCursor(previousCursor);
-                }
+//                if (event.getTarget() == null
+//                        || !(((Node) event.getTarget()).getParent() instanceof StateContainer)
+//                        || ((Node) event.getTarget()).getParent() instanceof TerminalStateContainer) {
+//                    if (!planEditorTabPane.getScene().getCursor().equals(MainWindowController.FORBIDDEN_CURSOR)) {
+//                        previousCursor = planEditorTabPane.getScene().getCursor();
+//                        planEditorTabPane.getScene().setCursor(MainWindowController.FORBIDDEN_CURSOR);
+//                    }
+//                } else {
+//                    planEditorTabPane.getScene().setCursor(previousCursor);
+//                }
                 event.consume();
             }
         });
@@ -49,16 +49,16 @@ public class RepositoryTool extends AbstractTool {
                 }
 
                 Parent parent = ((Node) event.getTarget()).getParent();
-                if (parent instanceof StateContainer && !(parent instanceof TerminalStateContainer)) {
-                    // Put the repository view element (plan, behaviour, plantype, or task) into a state...
-                    // TODO: exception for task...
-
-                    StateContainer stateContainer = (StateContainer) parent;
-                    // TODO: determine the source of the drag event, via debugging and adapt the creation of the command accordingly
-                    //event.getGestureSource();
-                    //AddAbstractPlanToState command = new AddAbstractPlanToState(modelElementId, stateContainer.getModelElementId());
-                    //MainWindowController.getInstance().getCommandStack().storeAndExecute(command);
-                }
+//                if (parent instanceof StateContainer && !(parent instanceof TerminalStateContainer)) {
+//                    // Put the repository view element (plan, behaviour, plantype, or task) into a state...
+//                    // TODO: exception for task...
+//
+//                    StateContainer stateContainer = (StateContainer) parent;
+//                    // TODO: determine the source of the drag event, via debugging and adapt the creation of the command accordingly
+//                    //event.getGestureSource();
+//                    //AddAbstractPlanToState command = new AddAbstractPlanToState(modelElementId, stateContainer.getModelElementId());
+//                    //MainWindowController.getInstance().getCommandStack().storeAndExecute(command);
+//                }
             }
         });
     }
