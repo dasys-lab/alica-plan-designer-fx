@@ -1,27 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
-/**
- * Created by marci on 20.04.17.
- */
 public class DeleteFileMenuItem extends MenuItem {
     private File toDelete;
 

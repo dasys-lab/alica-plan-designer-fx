@@ -196,7 +196,6 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
     private void createTextField() {
         textField = new TextField(getString());
         textField.setOnKeyReleased(new EventHandler<KeyEvent>() {
-
             @Override
             public void handle(KeyEvent t) {
                 if (t.getCode() == KeyCode.ENTER) {

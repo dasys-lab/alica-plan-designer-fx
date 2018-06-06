@@ -36,63 +36,59 @@ public class EditMenu extends Menu {
         super(I18NRepo.getInstance().getString("label.menu.edit"));
         this.configWindowController = configWindowController;
         i18NRepo = I18NRepo.getInstance();
+
         deleteElementItem = new MenuItem(i18NRepo.getString("label.menu.edit.delete"));
+        deleteElementItem.setOnAction(event -> delete(editorTabPane));
+
         undoItem = new MenuItem(i18NRepo.getString("label.menu.edit.undo"));
+        undoItem.setDisable(true);
+        undoItem.setOnAction(event -> undo(editorTabPane));
+
         redoItem = new MenuItem(i18NRepo.getString("label.menu.edit.redo"));
+        redoItem.setDisable(true);
+        redoItem.setOnAction(event -> redo(editorTabPane));
+
         configItem = new MenuItem(i18NRepo.getString("label.menu.edit.config"));
-
-        commandStack.addObserver((a, b) -> {
-            if (((CommandStack) a).getUndoStack().isEmpty()) {
-                undoItem.setDisable(true);
-            } else {
-                undoItem.setDisable(false);
-            }
-        });
-
-        commandStack.addObserver((a, b) -> {
-            if (((CommandStack) a).getRedoStack().isEmpty()) {
-                redoItem.setDisable(true);
-            } else {
-                redoItem.setDisable(false);
-            }
-        });
-
-        redoItem.setDisable(false);
-        undoItem.setDisable(false);
-
-        deleteElementItem.setOnAction(event -> delete(commandStack, editorTabPane));
-        redoItem.setOnAction(event -> redo(commandStack, editorTabPane));
-        undoItem.setOnAction(event -> undo(commandStack, editorTabPane));
         configItem.setOnAction(event -> openConfigMenu());
 
         getItems().addAll(undoItem, redoItem, deleteElementItem, configItem);
         defineAccelerator();
     }
 
-    private void undo(CommandStack commandStack, EditorTabPane editorTabPane) {
-        commandStack.undo();
-        Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
-        if (selectedItem instanceof PlanTab) {
-            ((PlanTab) selectedItem).getPlanEditorGroup().setupPlanVisualisation();
-            ((PlanTab) selectedItem).getConditionHBox().setupConditionVisualisation();
-        } else if (selectedItem instanceof PlanTypeTab) {
-            ((PlanTypeTab) selectedItem).refresh();
-        } else if (selectedItem instanceof TaskRepositoryTab) {
-            ((TaskRepositoryTab) selectedItem).createContentView();
-        }
+    // TODO: call this methods from the controller - reacting to changes in the commandstack
+    public void setUndoDisabled(boolean value) {
+        undoItem.setDisable(value);
     }
 
-    private void redo(CommandStack commandStack, EditorTabPane editorTabPane) {
-        commandStack.redo();
-        Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
-        if (selectedItem instanceof PlanTab) {
-            ((PlanTab) selectedItem).getPlanEditorGroup().setupPlanVisualisation();
-            ((PlanTab) selectedItem).getConditionHBox().setupConditionVisualisation();
-        } else if (selectedItem instanceof PlanTypeTab) {
-            ((PlanTypeTab) selectedItem).refresh();
-        } else if (selectedItem instanceof TaskRepositoryTab) {
-            ((TaskRepositoryTab) selectedItem).createContentView();
-        }
+    // TODO: call this methods from the controller - reacting to changes in the commandstack
+    public void setRedoItemDisabled(boolean value) {
+        redoItem.setDisable(value);
+    }
+
+    private void undo(EditorTabPane editorTabPane) {
+//        commandStack.undo();
+//        Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
+//        if (selectedItem instanceof PlanTab) {
+//            ((PlanTab) selectedItem).getPlanEditorGroup().setupPlanVisualisation();
+//            ((PlanTab) selectedItem).getConditionHBox().setupConditionVisualisation();
+//        } else if (selectedItem instanceof PlanTypeTab) {
+//            ((PlanTypeTab) selectedItem).refresh();
+//        } else if (selectedItem instanceof TaskRepositoryTab) {
+//            ((TaskRepositoryTab) selectedItem).createContentView();
+//        }
+    }
+
+    private void redo(EditorTabPane editorTabPane) {
+//        commandStack.redo();
+//        Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
+//        if (selectedItem instanceof PlanTab) {
+//            ((PlanTab) selectedItem).getPlanEditorGroup().setupPlanVisualisation();
+//            ((PlanTab) selectedItem).getConditionHBox().setupConditionVisualisation();
+//        } else if (selectedItem instanceof PlanTypeTab) {
+//            ((PlanTypeTab) selectedItem).refresh();
+//        } else if (selectedItem instanceof TaskRepositoryTab) {
+//            ((TaskRepositoryTab) selectedItem).createContentView();
+//        }
     }
 
     private void openConfigMenu() {
@@ -101,7 +97,6 @@ public class EditMenu extends Menu {
         try {
             fxmlLoader.setController(this.configWindowController);
             Parent window = fxmlLoader.load();
-            //ConfigurationWindowController controller = fxmlLoader.getController();
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setTitle(i18NRepo.getString("label.config.title"));
@@ -113,150 +108,155 @@ public class EditMenu extends Menu {
         }
     }
 
-    private void delete(CommandStack commandStack, EditorTabPane editorTabPane) {
+    private void delete(EditorTabPane editorTabPane) {
         // TODO refactor
         MainWindowController mainWindowController = MainWindowController.getInstance();
         RepositoryTabPane repositoryTabPane = mainWindowController.getRepositoryTabPane();
 
+        //
         if (editorTabPane.focusedProperty().get()) {
             Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
             if (selectedItem == null) {
                 return;
             }
 
-            if (selectedItem instanceof PlanTab) {
-                PlanTab planTab = (PlanTab) selectedItem;
-                // TODO ask single
-                PlanElement selectedPlanElement = planTab.getSelectedPlanElements().get().get(0).getKey();
+            // TODO: callback on editMenuEventHandler
+            // Plan Element in Plan Editor selected
+//            if (selectedItem instanceof PlanTab) {
+//                PlanTab planTab = (PlanTab) selectedItem;
+//                PlanElement selectedPlanElement = planTab.getSelectedPlanElements().get().get(0).getKey();
+//
+//                if (selectedPlanElement != null) {
+//                    deletePlanElement(commandStack, planTab, selectedPlanElement);
+//                }
+//            }
 
-                if (selectedPlanElement != null) {
-                    deletePlanElement(commandStack, planTab, selectedPlanElement);
-                }
-            }
-        } else {
-            boolean isRepoFocused = repositoryTabPane.getTabs().stream()
-                    .anyMatch(e -> ((RepositoryTab) e).getRepositoryListView().focusedProperty().get());
-            if (isRepoFocused) {
-                int selectedTabIndex = repositoryTabPane.getSelectionModel().getSelectedIndex();
-                PlanElement selectedPlanElement = ((RepositoryTab<PlanElement>) repositoryTabPane
-                        .getSelectionModel()
-                        .getSelectedItem())
-                        .getRepositoryListView()
-                        .getSelectionModel().getSelectedItem().getObject();
-                editorTabPane.getTabs()
-                        .stream()
-                        .filter(e -> ((AbstractEditorTab<PlanElement>) e).getEditable().equals(selectedPlanElement))
-                        .forEach(e -> editorTabPane.getTabs().remove(e));
-                if (selectedPlanElement instanceof AbstractPlan) {
-                    checkAbstractPlanUsage(commandStack, (AbstractPlan) selectedPlanElement);
-                } else if (selectedPlanElement instanceof Task) {
-                    List<Pair<TaskRepository, Path>> taskRepositories = RepositoryViewModel.getInstance().getTaskRepository();
-                    TaskRepository taskRepository = null;
-                    for (Pair<TaskRepository, Path> pair : taskRepositories) {
-                        if (pair.getKey().getTasks().contains((Task) selectedPlanElement)) {
-                            taskRepository = pair.getKey();
-                            break;
-                        }
-                    }
-                    if (taskRepository != null) {
-                        checkTaskUsage(commandStack, taskRepository, (Task) selectedPlanElement);
-                    }
-                }
-                repositoryTabPane.init();
-                repositoryTabPane.getSelectionModel().select(selectedTabIndex);
-                return;
-            }
-
-            if (mainWindowController.getFileTreeView().focusedProperty().get()) {
-
-                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainWindowController.getFileTreeView()
-                        .getSelectionModel()
-                        .getSelectedItem()
-                        .getValue().unwrap());
-                deleteFileMenuItem.setCommandStack(commandStack);
-                deleteFileMenuItem.deleteFile();
-                return;
-
-            }
-
-            if (editorTabPane.getSelectionModel().getSelectedItem() instanceof TaskRepositoryTab) {
-                TaskRepositoryTab repositoryTab = (TaskRepositoryTab) editorTabPane.getSelectionModel().getSelectedItem();
-                Task taskToBeDeleted = repositoryTab
-                        .getTaskListView()
-                        .getSelectionModel()
-                        .getSelectedItem();
-                checkTaskUsage(commandStack, repositoryTab.getEditable(), taskToBeDeleted);
-            }
+            // TaskRepository in editorTabPane selected
+//            if (selectedItem instanceof TaskRepositoryTab) {
+//                TaskRepositoryTab repositoryTab = (TaskRepositoryTab) selectedItem;
+//                Task taskToBeDeleted = repositoryTab
+//                        .getTaskListView()
+//                        .getSelectionModel()
+//                        .getSelectedItem();
+//                checkTaskUsage(commandStack, repositoryTab.getEditable(), taskToBeDeleted);
+//            }
+            return;
         }
-    }
 
-    private void checkTaskUsage(CommandStack commandStack, TaskRepository taskRepository, Task taskToBeDeleted) {
-        List<AbstractPlan> usages = EMFModelUtils.getUsages(taskToBeDeleted);
-        if (usages.size() > 0) {
-            FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
-            try {
-                Parent infoWindow = fxmlLoader.load();
-                UsagesWindowController controller = fxmlLoader.getController();
-                controller.createReferencesList(usages);
-                Stage stage = new Stage();
-                stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
-                stage.setScene(new Scene(infoWindow));
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.initOwner(PlanDesigner.getPrimaryStage());
-                stage.showAndWait();
-            } catch (IOException ignored) {
-            }
-        } else {
-            commandStack.storeAndExecute(new DeleteTaskFromRepository(taskRepository, taskToBeDeleted));
-            MainWindowController.getInstance().closePropertyAndStatusTabIfOpen();
+        // RepositoryView selected
+//        boolean isRepoFocused = repositoryTabPane.getTabs().stream()
+//                .anyMatch(e -> ((RepositoryTab) e).getRepositoryListView().focusedProperty().get());
+
+//        if (isRepoFocused) {
+//            int selectedTabIndex = repositoryTabPane.getSelectionModel().getSelectedIndex();
+//            PlanElement selectedPlanElement = ((RepositoryTab) repositoryTabPane
+//                    .getSelectionModel()
+//                    .getSelectedItem())
+//                    .getRepositoryListView()
+//                    .getSelectionModel().getSelectedItem().getObject();
+//            editorTabPane.getTabs()
+//                    .stream()
+//                    .filter(e -> ((AbstractEditorTab<PlanElement>) e).getEditable().equals(selectedPlanElement))
+//                    .forEach(e -> editorTabPane.getTabs().remove(e));
+//            if (selectedPlanElement instanceof AbstractPlan) {
+//                checkAbstractPlanUsage(commandStack, (AbstractPlan) selectedPlanElement);
+//            } else if (selectedPlanElement instanceof Task) {
+//                List<Pair<TaskRepository, Path>> taskRepositories = RepositoryViewModel.getInstance().getTaskRepository();
+//                TaskRepository taskRepository = null;
+//                for (Pair<TaskRepository, Path> pair : taskRepositories) {
+//                    if (pair.getKey().getTasks().contains((Task) selectedPlanElement)) {
+//                        taskRepository = pair.getKey();
+//                        break;
+//                    }
+//                }
+//                if (taskRepository != null) {
+//                    checkTaskUsage(commandStack, taskRepository, (Task) selectedPlanElement);
+//                }
+//            }
+//            repositoryTabPane.init();
+//            repositoryTabPane.getSelectionModel().select(selectedTabIndex);
+//            return;
+//        }
+
+        // FileTreeView selected
+        if (mainWindowController.getFileTreeView().focusedProperty().get()) {
+            DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainWindowController.getFileTreeView()
+                    .getSelectionModel()
+                    .getSelectedItem()
+                    .getValue().unwrap());
+            deleteFileMenuItem.deleteFile();
+            return;
 
         }
     }
 
-    private void checkAbstractPlanUsage(CommandStack commandStack, AbstractPlan toBeDeleted) {
-        List<AbstractPlan> usages = EMFModelUtils.getUsages(toBeDeleted);
-        if (usages.size() > 0) {
-            FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
-            try {
-                Parent infoWindow = fxmlLoader.load();
-                UsagesWindowController controller = fxmlLoader.getController();
-                controller.createReferencesList(usages);
-                Stage stage = new Stage();
-                stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
-                stage.setScene(new Scene(infoWindow));
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.initOwner(PlanDesigner.getPrimaryStage());
-                stage.showAndWait();
-            } catch (IOException ignored) {
-            }
-        } else {
-            commandStack.storeAndExecute(new DeleteAbstractPlan(toBeDeleted));
-        }
-    }
+//    private void checkTaskUsage(TaskRepository taskRepository, Task taskToBeDeleted) {
+//        List<AbstractPlan> usages = EMFModelUtils.getUsages(taskToBeDeleted);
+//        if (usages.size() > 0) {
+//            FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
+//            try {
+//                Parent infoWindow = fxmlLoader.load();
+//                UsagesWindowController controller = fxmlLoader.getController();
+//                controller.createReferencesList(usages);
+//                Stage stage = new Stage();
+//                stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
+//                stage.setScene(new Scene(infoWindow));
+//                stage.initModality(Modality.WINDOW_MODAL);
+//                stage.initOwner(PlanDesigner.getPrimaryStage());
+//                stage.showAndWait();
+//            } catch (IOException ignored) {
+//            }
+//        } else {
+//            commandStack.storeAndExecute(new DeleteTaskFromRepository(taskRepository, taskToBeDeleted));
+//            MainWindowController.getInstance().closePropertyAndStatusTabIfOpen();
+//
+//        }
+//    }
 
-    private void deletePlanElement(CommandStack commandStack, PlanTab planTab, PlanElement selectedPlanElement) {
-        if (selectedPlanElement instanceof StateImpl) {
-            commandStack.storeAndExecute(new DeleteStateInPlan((State) selectedPlanElement,
-                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
-        } else if (selectedPlanElement instanceof TransitionImpl) {
-            commandStack.storeAndExecute(new DeleteTransitionInPlan((Transition) selectedPlanElement,
-                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
-        } else if (selectedPlanElement instanceof EntryPointImpl) {
-            commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
-                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject())); // TODO ask single * 3
-        } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElements().get().get(0).getValue() != null) {
-            State state = (State) planTab.getSelectedPlanElements().getValue().get(0).getValue().getModelElementId();
-            commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
-        } else if (selectedPlanElement instanceof SynchronisationImpl) {
-            commandStack.storeAndExecute(new DeleteSynchronisationFromPlan((Synchronisation) selectedPlanElement,
-                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
-        } else if (selectedPlanElement instanceof Condition) {
-            Condition condition = (Condition) planTab.getSelectedPlanElements().getValue().get(0).getKey();
-            commandStack.storeAndExecute(new DeleteConditionFromPlan(planTab.getPlanEditorGroup().getPlanModelVisualisationObject().getPlan(), condition));
-        }
-        planTab.getPlanEditorGroup().setupPlanVisualisation();
-        planTab.getConditionHBox().setupConditionVisualisation();
-    }
+//    private void checkAbstractPlanUsage(AbstractPlan toBeDeleted) {
+//        List<AbstractPlan> usages = EMFModelUtils.getUsages(toBeDeleted);
+//        if (usages.size() > 0) {
+//            FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
+//            try {
+//                Parent infoWindow = fxmlLoader.load();
+//                UsagesWindowController controller = fxmlLoader.getController();
+//                controller.createReferencesList(usages);
+//                Stage stage = new Stage();
+//                stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
+//                stage.setScene(new Scene(infoWindow));
+//                stage.initModality(Modality.WINDOW_MODAL);
+//                stage.initOwner(PlanDesigner.getPrimaryStage());
+//                stage.showAndWait();
+//            } catch (IOException ignored) {
+//            }
+//        } else {
+//            commandStack.storeAndExecute(new DeleteAbstractPlan(toBeDeleted));
+//        }
+//    }
+
+//    private void deletePlanElement(PlanTab planTab, PlanElement selectedPlanElement) {
+//        if (selectedPlanElement instanceof StateImpl) {
+//            commandStack.storeAndExecute(new DeleteStateInPlan((State) selectedPlanElement,
+//                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
+//        } else if (selectedPlanElement instanceof TransitionImpl) {
+//            commandStack.storeAndExecute(new DeleteTransitionInPlan((Transition) selectedPlanElement,
+//                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
+//        } else if (selectedPlanElement instanceof EntryPointImpl) {
+//            commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
+//                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject())); // TODO ask single * 3
+//        } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElements().get().get(0).getValue() != null) {
+//            State state = (State) planTab.getSelectedPlanElements().getValue().get(0).getValue().getModelElementId();
+//            commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
+//        } else if (selectedPlanElement instanceof SynchronisationImpl) {
+//            commandStack.storeAndExecute(new DeleteSynchronisationFromPlan((Synchronisation) selectedPlanElement,
+//                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
+//        } else if (selectedPlanElement instanceof Condition) {
+//            Condition condition = (Condition) planTab.getSelectedPlanElements().getValue().get(0).getKey();
+//            commandStack.storeAndExecute(new DeleteConditionFromPlan(planTab.getPlanEditorGroup().getPlanModelVisualisationObject().getPlan(), condition));
+//        }
+//        planTab.getPlanEditorGroup().setupPlanVisualisation();
+//        planTab.getConditionHBox().setupConditionVisualisation();
+//    }
 
     private void defineAccelerator() {
         this.deleteElementItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
