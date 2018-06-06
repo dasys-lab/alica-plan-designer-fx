@@ -87,62 +87,62 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
         }
         boolean isPlanElement = false;
         File unwrappedFile = getTreeItem().getValue().unwrap();
-        AbstractPlan objectToChange = null;
+//        AbstractPlan objectToChange = null;
         if (unwrappedFile.getName().endsWith(".pml") ||
                 unwrappedFile.getName().endsWith(".pty") || unwrappedFile.getName().endsWith("beh")) {
 
-            Resource resource = AlicaResourceSet.getInstance()
-                    .getResources()
-                    .stream()
-                    .filter(e -> e.getURI().toFileString().contains(unwrappedFile.getName()))
-                    .filter(e -> e.getURI().toFileString().contains("pmlex") == false)
-                    .findFirst()
-                    .get();
-            objectToChange = (AbstractPlan) resource.getContents().get(0);
-
-            boolean hasSameName = false;
-            if (objectToChange instanceof Plan) {
-                if (checkForCorrectFileEnding(newValue, ".pml")) return;
-                hasSameName = RepositoryViewModel.getInstance().getPlans()
-                        .stream()
-                        .anyMatch(planPathPair -> planPathPair.getKey().getName().equals(name));
-            }
-
-            if (objectToChange instanceof Behaviour) {
-                if (checkForCorrectFileEnding(newValue, ".beh")) return;
-                hasSameName = RepositoryViewModel.getInstance().getBehaviours()
-                        .stream()
-                        .anyMatch(behaviourPathPair -> behaviourPathPair.getKey().getName().equals(name));
-            }
-
-            if (objectToChange instanceof PlanType) {
-                if (checkForCorrectFileEnding(newValue, ".pty")) return;
-                hasSameName = RepositoryViewModel.getInstance().getPlanTypes()
-                        .stream()
-                        .anyMatch(planTypePathPair -> planTypePathPair.getKey().getName().equals(name));
-            }
-
-            if (hasSameName) {
-                getTreeView()
-                        .fireEvent(new TreeView.EditEvent<>(getTreeView(),
-                                TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));
-                ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.rename"), null);
-                return;
-            }
-            controller.getCommandStack()
-                    .storeAndExecute(new ChangeAttributeValue(objectToChange, "name", name, objectToChange));
+//            Resource resource = AlicaResourceSet.getInstance()
+//                    .getResources()
+//                    .stream()
+//                    .filter(e -> e.getURI().toFileString().contains(unwrappedFile.getName()))
+//                    .filter(e -> e.getURI().toFileString().contains("pmlex") == false)
+//                    .findFirst()
+//                    .get();
+//            objectToChange = (AbstractPlan) resource.getContents().get(0);
+//
+//            boolean hasSameName = false;
+//            if (objectToChange instanceof Plan) {
+//                if (checkForCorrectFileEnding(newValue, ".pml")) return;
+//                hasSameName = RepositoryViewModel.getInstance().getPlans()
+//                        .stream()
+//                        .anyMatch(planPathPair -> planPathPair.getKey().getName().equals(name));
+//            }
+//
+//            if (objectToChange instanceof Behaviour) {
+//                if (checkForCorrectFileEnding(newValue, ".beh")) return;
+//                hasSameName = RepositoryViewModel.getInstance().getBehaviours()
+//                        .stream()
+//                        .anyMatch(behaviourPathPair -> behaviourPathPair.getKey().getName().equals(name));
+//            }
+//
+//            if (objectToChange instanceof PlanType) {
+//                if (checkForCorrectFileEnding(newValue, ".pty")) return;
+//                hasSameName = RepositoryViewModel.getInstance().getPlanTypes()
+//                        .stream()
+//                        .anyMatch(planTypePathPair -> planTypePathPair.getKey().getName().equals(name));
+//            }
+//
+//            if (hasSameName) {
+//                getTreeView()
+//                        .fireEvent(new TreeView.EditEvent<>(getTreeView(),
+//                                TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));
+//                ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.rename"), null);
+//                return;
+//            }
+//            controller.getCommandStack()
+//                    .storeAndExecute(new ChangeAttributeValue(objectToChange, "name", name, objectToChange));
             isPlanElement = true;
         }
 
         unwrappedFile.renameTo(newValue.unwrap());
 
-        if (isPlanElement && objectToChange != null) {
-            try {
-                EMFModelUtils.saveAlicaFile(objectToChange);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        if (isPlanElement && objectToChange != null) {
+//            try {
+//                EMFModelUtils.saveAlicaFile(objectToChange);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
 
         final TreeItem<FileWrapper> treeItem = getTreeItem();
         final TreeView<FileWrapper> tree = getTreeView();

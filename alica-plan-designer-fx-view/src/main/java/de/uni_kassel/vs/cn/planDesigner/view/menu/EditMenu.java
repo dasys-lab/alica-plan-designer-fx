@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.menu;
 import de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
@@ -40,16 +41,16 @@ public class EditMenu extends Menu {
         redoItem = new MenuItem(i18NRepo.getString("label.menu.edit.redo"));
         configItem = new MenuItem(i18NRepo.getString("label.menu.edit.config"));
 
-        commandStack.addObserver((a,b) -> {
-            if (((CommandStack)a).getUndoStack().isEmpty()) {
+        commandStack.addObserver((a, b) -> {
+            if (((CommandStack) a).getUndoStack().isEmpty()) {
                 undoItem.setDisable(true);
             } else {
                 undoItem.setDisable(false);
             }
         });
 
-        commandStack.addObserver((a,b) -> {
-            if (((CommandStack)a).getRedoStack().isEmpty()) {
+        commandStack.addObserver((a, b) -> {
+            if (((CommandStack) a).getRedoStack().isEmpty()) {
                 redoItem.setDisable(true);
             } else {
                 redoItem.setDisable(false);
@@ -72,12 +73,12 @@ public class EditMenu extends Menu {
         commandStack.undo();
         Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
         if (selectedItem instanceof PlanTab) {
-            ((PlanTab)selectedItem).getPlanEditorGroup().setupPlanVisualisation();
-            ((PlanTab)selectedItem).getConditionHBox().setupConditionVisualisation();
+            ((PlanTab) selectedItem).getPlanEditorGroup().setupPlanVisualisation();
+            ((PlanTab) selectedItem).getConditionHBox().setupConditionVisualisation();
         } else if (selectedItem instanceof PlanTypeTab) {
-            ((PlanTypeTab)selectedItem).refresh();
+            ((PlanTypeTab) selectedItem).refresh();
         } else if (selectedItem instanceof TaskRepositoryTab) {
-            ((TaskRepositoryTab)selectedItem).createContentView();
+            ((TaskRepositoryTab) selectedItem).createContentView();
         }
     }
 
@@ -85,10 +86,10 @@ public class EditMenu extends Menu {
         commandStack.redo();
         Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
         if (selectedItem instanceof PlanTab) {
-            ((PlanTab)selectedItem).getPlanEditorGroup().setupPlanVisualisation();
-            ((PlanTab)selectedItem).getConditionHBox().setupConditionVisualisation();
+            ((PlanTab) selectedItem).getPlanEditorGroup().setupPlanVisualisation();
+            ((PlanTab) selectedItem).getConditionHBox().setupConditionVisualisation();
         } else if (selectedItem instanceof PlanTypeTab) {
-            ((PlanTypeTab)selectedItem).refresh();
+            ((PlanTypeTab) selectedItem).refresh();
         } else if (selectedItem instanceof TaskRepositoryTab) {
             ((TaskRepositoryTab) selectedItem).createContentView();
         }
@@ -128,7 +129,7 @@ public class EditMenu extends Menu {
                 // TODO ask single
                 PlanElement selectedPlanElement = planTab.getSelectedPlanElements().get().get(0).getKey();
 
-                if(selectedPlanElement != null) {
+                if (selectedPlanElement != null) {
                     deletePlanElement(commandStack, planTab, selectedPlanElement);
                 }
             }
@@ -138,28 +139,28 @@ public class EditMenu extends Menu {
             if (isRepoFocused) {
                 int selectedTabIndex = repositoryTabPane.getSelectionModel().getSelectedIndex();
                 PlanElement selectedPlanElement = ((RepositoryTab<PlanElement>) repositoryTabPane
-                                .getSelectionModel()
-                                .getSelectedItem())
-                                .getRepositoryListView()
-                                .getSelectionModel().getSelectedItem().getObject();
+                        .getSelectionModel()
+                        .getSelectedItem())
+                        .getRepositoryListView()
+                        .getSelectionModel().getSelectedItem().getObject();
                 editorTabPane.getTabs()
                         .stream()
-                        .filter(e -> ((AbstractEditorTab<PlanElement>)e).getEditable().equals(selectedPlanElement))
+                        .filter(e -> ((AbstractEditorTab<PlanElement>) e).getEditable().equals(selectedPlanElement))
                         .forEach(e -> editorTabPane.getTabs().remove(e));
-                if (selectedPlanElement instanceof  AbstractPlan) {
+                if (selectedPlanElement instanceof AbstractPlan) {
                     checkAbstractPlanUsage(commandStack, (AbstractPlan) selectedPlanElement);
                 } else if (selectedPlanElement instanceof Task) {
-                        List<Pair<TaskRepository, Path>> taskRepositories = RepositoryViewModel.getInstance().getTaskRepository();
-                        TaskRepository taskRepository = null;
-                        for (Pair<TaskRepository, Path> pair : taskRepositories) {
-                            if(pair.getKey().getTasks().contains((Task) selectedPlanElement)) {
-                                taskRepository = pair.getKey();
-                                break;
-                            }
+                    List<Pair<TaskRepository, Path>> taskRepositories = RepositoryViewModel.getInstance().getTaskRepository();
+                    TaskRepository taskRepository = null;
+                    for (Pair<TaskRepository, Path> pair : taskRepositories) {
+                        if (pair.getKey().getTasks().contains((Task) selectedPlanElement)) {
+                            taskRepository = pair.getKey();
+                            break;
                         }
-                        if(taskRepository != null) {
-                            checkTaskUsage(commandStack, taskRepository, (Task) selectedPlanElement);
-                        }
+                    }
+                    if (taskRepository != null) {
+                        checkTaskUsage(commandStack, taskRepository, (Task) selectedPlanElement);
+                    }
                 }
                 repositoryTabPane.init();
                 repositoryTabPane.getSelectionModel().select(selectedTabIndex);
@@ -234,7 +235,7 @@ public class EditMenu extends Menu {
     }
 
     private void deletePlanElement(CommandStack commandStack, PlanTab planTab, PlanElement selectedPlanElement) {
-        if(selectedPlanElement instanceof StateImpl) {
+        if (selectedPlanElement instanceof StateImpl) {
             commandStack.storeAndExecute(new DeleteStateInPlan((State) selectedPlanElement,
                     planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
         } else if (selectedPlanElement instanceof TransitionImpl) {
@@ -246,7 +247,7 @@ public class EditMenu extends Menu {
         } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElements().get().get(0).getValue() != null) {
             State state = (State) planTab.getSelectedPlanElements().getValue().get(0).getValue().getModelElementId();
             commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
-        } else if(selectedPlanElement instanceof SynchronisationImpl) {
+        } else if (selectedPlanElement instanceof SynchronisationImpl) {
             commandStack.storeAndExecute(new DeleteSynchronisationFromPlan((Synchronisation) selectedPlanElement,
                     planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
         } else if (selectedPlanElement instanceof Condition) {

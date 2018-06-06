@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.FileTreeViewContextMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
@@ -126,20 +127,18 @@ public final class FileTreeView extends TreeView<FileWrapper> {
 
 
         this.setShowRoot(false);
-        this.setContextMenu(new PLDFileTreeViewContextMenu());
+        this.setContextMenu(new FileTreeViewContextMenu());
         setEditable(true);
         setCellFactory(param -> {
             TreeCell<FileWrapper> fileWrapperTreeCell = new FileTreeCell(controller);
-            fileWrapperTreeCell.setContextMenu(new PLDFileTreeViewContextMenu());
+            fileWrapperTreeCell.setContextMenu(new FileTreeViewContextMenu());
             fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if (newValue) {
-                        ((PLDFileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
-                                .setCommandStack(controller.getCommandStack());
-                        ((PLDFileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
+                        ((FileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
                                 .setHintFile(fileWrapperTreeCell.getTreeItem().getValue().unwrap());
-                        ((PLDFileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
+                        ((FileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
                                 .setTreeCell(fileWrapperTreeCell);
                     }
                 }
