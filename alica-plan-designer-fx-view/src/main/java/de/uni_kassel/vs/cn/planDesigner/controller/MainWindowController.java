@@ -25,6 +25,7 @@ import javafx.util.Duration;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -216,14 +217,14 @@ public class MainWindowController implements Initializable {
 //        }
 //    }
 
-//    /**
-//     * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}
-//     *
-//     * @param toOpen file that should be opened
-//     */
-//    public void openFile(File toOpen) {
-//        editorTabPane.openTab(toOpen.toPath());
-//    }
+    /**
+     * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}
+     *
+     * @param toOpen file that should be opened
+     */
+    public void openFile(File toOpen) {
+        editorTabPane.openTab(toOpen.toPath());
+    }
 
     public EditorTabPane getEditorTabPane() {
         return editorTabPane;
