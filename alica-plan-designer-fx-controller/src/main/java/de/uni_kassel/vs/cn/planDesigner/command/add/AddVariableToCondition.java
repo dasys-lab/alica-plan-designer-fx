@@ -10,7 +10,7 @@ public class AddVariableToCondition extends AbstractCommand {
     private final Condition parentOfElement;
 
     public AddVariableToCondition(Condition parentOfElement, Plan affectedPlan) {
-        super(getAlicaFactory().createVariable(), affectedPlan);
+        super(new Variable(), affectedPlan);
         this.parentOfElement = parentOfElement;
     }
 
