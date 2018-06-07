@@ -1,47 +1,34 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.AnnotatedPlan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
-
-/**
- * Created by marci on 17.03.17.
- */
-public class AddPlanToPlanType extends AbstractCommand<Plan> {
+public class AddPlanToPlanType extends AbstractCommand {
 
     private PlanType parentOfElement;
 
-    private AnnotatedPlan copyForRemoval;
+    private Plan plan;
 
-    public AddPlanToPlanType(Plan element, PlanType parentOfElement) {
-        super(element, parentOfElement);
+    public AddPlanToPlanType(ModelManager modelManager, Plan plan, PlanType parentOfElement) {
+        super(modelManager);
+        this.plan = plan;
         this.parentOfElement = parentOfElement;
-    }
-
-    public AnnotatedPlan getCopyForRemoval() {
-        return copyForRemoval;
     }
 
     @Override
     public void doCommand() {
-        if (copyForRemoval == null) {
-            copyForRemoval = getAlicaFactory().createAnnotatedPlan();
-            copyForRemoval.setActivated(true);
-            copyForRemoval.setPlan(getElementToEdit());
-        }
-        parentOfElement.getPlans().add(copyForRemoval);
+        parentOfElement.getPlans().add(plan);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlans().remove(copyForRemoval);
+        parentOfElement.getPlans().remove(plan);
     }
 
     @Override
     public String getCommandString() {
-        return "Add Plan " + getElementToEdit().getName() + "to Plantype " + parentOfElement.getName();
+        return "Add Plan " + plan.getName() + "to Plantype " + parentOfElement.getName();
     }
 }

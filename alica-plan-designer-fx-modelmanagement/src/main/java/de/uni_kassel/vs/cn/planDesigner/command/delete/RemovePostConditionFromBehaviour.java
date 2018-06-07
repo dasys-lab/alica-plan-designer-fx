@@ -3,31 +3,30 @@ package de.uni_kassel.vs.cn.planDesigner.command.delete;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-/**
- * Created by marci on 16.06.17.
- */
-public class RemovePostConditionFromBehaviour extends AbstractCommand<PostCondition> {
+public class RemovePostConditionFromBehaviour extends AbstractCommand {
 
-    private PostCondition previousPostCondition;
+    protected PostCondition postCondition;
+    protected Behaviour behaviour;
 
-    public RemovePostConditionFromBehaviour(Behaviour affectedPlan) {
-        super(null, affectedPlan);
+    public RemovePostConditionFromBehaviour(ModelManager modelManager, Behaviour behaviour) {
+        super(modelManager);
     }
 
     @Override
     public void doCommand() {
-        previousPostCondition = ((Behaviour)getAffectedPlan()).getPostCondition();
-        ((Behaviour)getAffectedPlan()).setPostCondition(getElementToEdit());
+        postCondition = behaviour.getPostCondition();
+        behaviour.setPostCondition(null);
     }
 
     @Override
     public void undoCommand() {
-        ((Behaviour)getAffectedPlan()).setPostCondition(previousPostCondition);
+        (behaviour).setPostCondition(postCondition);
     }
 
     @Override
     public String getCommandString() {
-        return "Remove Postcondtion from Behaviour " + getAffectedPlan().getName();
+        return "Remove Postcondtion from Behaviour " + behaviour.getName();
     }
 }
