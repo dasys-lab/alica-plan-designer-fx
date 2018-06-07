@@ -1,29 +1,26 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
+
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronization;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
-import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getPmlUiExtensionModelFactory;
-
-/**
- * Created by marci on 19.03.17.
- */
-public class AddSynchronisationToPlan extends AbstractCommand<Synchronisation> {
+public class AddSynchronisationToPlan extends AbstractCommand {
 
     private PlanModelVisualisationObject parentOfElement;
     private PmlUiExtension newlyCreatedPmlUiExtension;
 
-    public AddSynchronisationToPlan(Synchronisation element, PlanModelVisualisationObject parentOfElement) {
-        super(element, parentOfElement.getPlan());
+    public AddSynchronisationToPlan(ModelManager manager, Synchronization element, PlanModelVisualisationObject parentOfElement, PmlUiExtension extension) {
+        super(manager, element, parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
-        this.newlyCreatedPmlUiExtension = getPmlUiExtensionModelFactory().createPmlUiExtension();
+        this.newlyCreatedPmlUiExtension = extension;
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.getPlan().getSynchronisations().add(getElementToEdit());
+        parentOfElement.getPlan().getSynchronizations().add((Synchronization) getElementToEdit());
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
@@ -32,7 +29,7 @@ public class AddSynchronisationToPlan extends AbstractCommand<Synchronisation> {
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlan().getSynchronisations().remove(getElementToEdit());
+        parentOfElement.getPlan().getSynchronizations().remove(getElementToEdit());
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()

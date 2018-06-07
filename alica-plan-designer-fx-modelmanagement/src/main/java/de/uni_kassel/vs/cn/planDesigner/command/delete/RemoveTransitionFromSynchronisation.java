@@ -1,30 +1,28 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronization;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-/**
- * Created by marci on 22.03.17.
- */
-public class RemoveTransitionFromSynchronisation extends AbstractCommand<Synchronisation> {
+public class RemoveTransitionFromSynchronisation extends AbstractCommand {
 
     private Transition toRemove;
 
-    public RemoveTransitionFromSynchronisation(Synchronisation element, Transition toRemove) {
-        super(element, (PlanElement) element.eResource().getContents().get(0));
+    public RemoveTransitionFromSynchronisation(ModelManager manager, Synchronization element, Transition toRemove) {
+        // TODO think about other solution for getting the plan
+        super(manager, element, toRemove.getInState().getParentPlan());
         this.toRemove = toRemove;
     }
 
     @Override
     public void doCommand() {
-        getElementToEdit().getSynchedTransitions().remove(toRemove);
+        ((Synchronization) getElementToEdit()).getSynchedTransitions().remove(toRemove);
     }
 
     @Override
     public void undoCommand() {
-        getElementToEdit().getSynchedTransitions().add(toRemove);
+        ((Synchronization) getElementToEdit()).getSynchedTransitions().add(toRemove);
     }
 
     @Override
