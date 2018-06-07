@@ -5,10 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
-/**
- * Created by marci on 16.06.17.
- */
-public class AddPostConditionToBehaviour extends AbstractCommand<PostCondition> {
+public class AddPostConditionToBehaviour extends AbstractCommand {
 
     public AddPostConditionToBehaviour(PostCondition element, PlanElement affectedPlan) {
         super(element, affectedPlan);
@@ -16,7 +13,7 @@ public class AddPostConditionToBehaviour extends AbstractCommand<PostCondition> 
 
     @Override
     public void doCommand() {
-        ((Behaviour) getAffectedPlan()).setPostCondition(getElementToEdit());
+        ((Behaviour) getAffectedPlan()).setPostCondition((PostCondition) getElementToEdit());
     }
 
     @Override
