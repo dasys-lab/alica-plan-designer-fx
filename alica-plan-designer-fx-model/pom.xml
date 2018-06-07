@@ -26,7 +26,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.uni_kassel.vs.cn.planDesigner.serialize.JSonSerializer</mainClass>
+                            <mainClass>JSonSerializer</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

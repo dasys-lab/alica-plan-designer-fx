@@ -6,10 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
-/**
- * Created by marci on 26.02.17.
- */
-public class DeleteVariableFromAbstractPlan extends AbstractCommand<Variable> {
+public class DeleteVariableFromAbstractPlan extends AbstractCommand {
 
     private final PlanElement parentOfElement;
 
@@ -21,18 +18,18 @@ public class DeleteVariableFromAbstractPlan extends AbstractCommand<Variable> {
     @Override
     public void doCommand() {
         if (parentOfElement instanceof Plan) {
-            ((Plan)parentOfElement).getVars().remove(getElementToEdit());
+            ((Plan)parentOfElement).getVariables().remove(getElementToEdit());
         } else {
-            ((Behaviour)parentOfElement).getVars().remove(getElementToEdit());
+            ((Behaviour)parentOfElement).getVariables().remove(getElementToEdit());
         }
     }
 
     @Override
     public void undoCommand() {
         if (parentOfElement instanceof Plan) {
-            ((Plan)parentOfElement).getVars().add(getElementToEdit());
+            ((Plan)parentOfElement).getVariables().add((Variable) getElementToEdit());
         } else {
-            ((Behaviour)parentOfElement).getVars().add(getElementToEdit());
+            ((Behaviour)parentOfElement).getVariables().add((Variable) getElementToEdit());
         }
     }
 

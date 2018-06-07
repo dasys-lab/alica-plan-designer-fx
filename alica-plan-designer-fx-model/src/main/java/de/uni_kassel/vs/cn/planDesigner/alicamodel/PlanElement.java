@@ -6,6 +6,8 @@ public class PlanElement {
     protected String comment;
     protected boolean dirty;
 
+    public static final String forbiddenCharacters = ".*[\\./\\*\\\\$§?\\[\\]!{}\\-äüö#\"%~'ÄÖÜß@]+.*";
+
     public long getId() {
         return id;
     }
@@ -18,8 +20,13 @@ public class PlanElement {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public boolean setName(String name) {
+        if (name.matches(forbiddenCharacters)) {
+            return false;
+        } else {
+            this.name = name;
+            return true;
+        }
     }
 
     public String getComment() {
