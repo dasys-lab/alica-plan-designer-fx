@@ -11,37 +11,35 @@ public class AddSynchronisationToPlan extends AbstractCommand {
 
     private PlanModelVisualisationObject parentOfElement;
     private PmlUiExtension newlyCreatedPmlUiExtension;
+    protected Synchronization synchronization;
 
-    public AddSynchronisationToPlan(ModelManager manager, Synchronization element, PlanModelVisualisationObject parentOfElement, PmlUiExtension extension) {
-        super(manager, element, parentOfElement.getPlan());
+    public AddSynchronisationToPlan(ModelManager manager, Synchronization synchronization, PlanModelVisualisationObject parentOfElement, PmlUiExtension extension) {
+        super(manager);
+        this.synchronization = synchronization;
         this.parentOfElement = parentOfElement;
         this.newlyCreatedPmlUiExtension = extension;
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.getPlan().getSynchronizations().add((Synchronization) getElementToEdit());
+        parentOfElement.getPlan().getSynchronizations().add(synchronization);
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .put(getElementToEdit(), newlyCreatedPmlUiExtension);
+                .put(synchronization, newlyCreatedPmlUiExtension);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlan().getSynchronizations().remove(getElementToEdit());
+        parentOfElement.getPlan().getSynchronizations().remove(synchronization);
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .remove(getElementToEdit());
+                .remove(synchronization);
     }
 
     @Override
     public String getCommandString() {
-        return "Add Synchronisation to Plan.";
-    }
-
-    public PmlUiExtension getNewlyCreatedPmlUiExtension() {
-        return newlyCreatedPmlUiExtension;
+        return "Add Synchronisation " + synchronization.getName() + " to Plan.";
     }
 }
