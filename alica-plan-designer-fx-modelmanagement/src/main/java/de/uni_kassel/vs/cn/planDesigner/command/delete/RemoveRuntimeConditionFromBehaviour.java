@@ -1,34 +1,32 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-/**
- * Created by marci on 16.06.17.
- */
-public class RemoveRuntimeConditionFromBehaviour extends AbstractCommand<RuntimeCondition> {
+public class RemoveRuntimeConditionFromBehaviour extends AbstractCommand {
 
-    private RuntimeCondition previousRuntimeCondition;
+    protected RuntimeCondition condition;
+    protected Behaviour behaviour;
 
-    public RemoveRuntimeConditionFromBehaviour(PlanElement affectedPlan) {
-        super(null, affectedPlan);
+    public RemoveRuntimeConditionFromBehaviour(ModelManager modelManager, Behaviour behaviour) {
+        super(modelManager);
     }
 
     @Override
     public void doCommand() {
-        previousRuntimeCondition = ((Behaviour)getAffectedPlan()).getRuntimeCondition();
-        ((Behaviour)getAffectedPlan()).setRuntimeCondition(getElementToEdit());
+        condition = behaviour.getRuntimeCondition();
+        behaviour.setRuntimeCondition(null);
     }
 
     @Override
     public void undoCommand() {
-        ((Behaviour)getAffectedPlan()).setRuntimeCondition(previousRuntimeCondition);
+        behaviour.setRuntimeCondition(condition);
     }
 
     @Override
     public String getCommandString() {
-        return "Remove Precondition from Behaviour " + getAffectedPlan().getName();
+        return "Remove Precondition from Behaviour " + behaviour.getName();
     }
 }
