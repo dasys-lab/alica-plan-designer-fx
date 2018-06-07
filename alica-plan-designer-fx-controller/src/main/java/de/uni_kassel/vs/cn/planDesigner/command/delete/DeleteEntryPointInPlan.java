@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
@@ -8,20 +9,24 @@ import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 public class DeleteEntryPointInPlan extends AbstractCommand {
 
     private State associatedState;
-    private final PlanModelVisualisationObject parentOfElement;
+    // was mapping a plan to its pmlex
+//  private final PlanModelVisualisationObject parentOfElement;
+    private Plan parentOfElement;
     private PmlUiExtension pmlUiExtension;
 
-    public DeleteEntryPointInPlan(EntryPoint element, PlanModelVisualisationObject parentOfElement) {
-        super(element, parentOfElement.getPlan());
+    public DeleteEntryPointInPlan(EntryPoint element, Plan parentOfElement) {
+        super(element, parentOfElement);
         this.parentOfElement = parentOfElement;
-        this.pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(getElementToEdit());
+        //TODO needs to be replaced since its emf
+        //this.pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(getElementToEdit());
         this.associatedState = element.getState();
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.getPlan().getEntryPoints().remove(getElementToEdit());
-        parentOfElement.getPmlUiExtensionMap().getExtension().remove(pmlUiExtension);
+        parentOfElement.getEntryPoints().remove(getElementToEdit());
+        //TODO needs to be replaced since its emf
+        //parentOfElement.getPmlUiExtensionMap().getExtension().remove(pmlUiExtension);
         if (associatedState != null) {
             associatedState.setEntryPoint(null);
         }
@@ -29,8 +34,9 @@ public class DeleteEntryPointInPlan extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlan().getEntryPoints().add(getElementToEdit());
-        parentOfElement.getPmlUiExtensionMap().getExtension().put(getElementToEdit(), pmlUiExtension);
+        parentOfElement.getEntryPoints().add((EntryPoint) getElementToEdit());
+        //TODO needs to be replaced since its emf
+        //parentOfElement.getPmlUiExtensionMap().getExtension().put(getElementToEdit(), pmlUiExtension);
         if (associatedState != null) {
             associatedState.setEntryPoint((EntryPoint) getElementToEdit());
         }
