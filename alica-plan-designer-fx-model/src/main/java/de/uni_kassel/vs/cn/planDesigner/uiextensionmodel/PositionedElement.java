@@ -5,15 +5,15 @@ public class PositionedElement {
     protected int xPos;
     protected int yPos;
 
-    int getXPos() {return this.xPos;}
+    public int getXPos() {return this.xPos;}
 
-    void setXPos(int xPos) {this.xPos = xPos;}
+    public void setXPos(int xPos) {this.xPos = xPos;}
 
-    int getYPos() {
+    public int getYPos() {
         return this.yPos;
     }
 
-    void setYPos(int yPos) {
+    public void setYPos(int yPos) {
         this.yPos = yPos;
     }
 }

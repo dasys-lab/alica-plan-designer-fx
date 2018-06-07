@@ -7,34 +7,36 @@ import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
 public class ChangePosition extends AbstractCommand {
 
-    private PlanElement planElement;
-    private int newX;
-    private int newY;
+    protected PlanElement planElement;
+    protected PmlUiExtension uiElement;
+    protected int newX;
+    protected int newY;
 
-    private int oldX;
-    private int oldY;
+    protected int oldX;
+    protected int oldY;
 
-    public ChangePosition(PmlUiExtension element, PlanElement planElement, int newX, int newY, PlanElement affectedPlan, ModelManager modelManager) {
-        super(element, affectedPlan);
+    public ChangePosition(ModelManager modelManager, PmlUiExtension uiElement, PlanElement planElement, int newX, int newY) {
+        super(modelManager);
+        this.uiElement = uiElement;
         this.planElement = planElement;
         this.newX = newX;
         this.newY = newY;
 
         // save old position for undo
-        oldX = getElementToEdit().getXPos();
-        oldY = getElementToEdit().getYPos();
+        oldX = uiElement.getXPos();
+        oldY = uiElement.getYPos();
     }
 
     @Override
     public void doCommand() {
-        getElementToEdit().setXPos(newX);
-        getElementToEdit().setYPos(newY);
+        uiElement.setXPos(newX);
+        uiElement.setYPos(newY);
     }
 
     @Override
     public void undoCommand() {
-        getElementToEdit().setXPos(oldX);
-        getElementToEdit().setYPos(oldY);
+        uiElement.setXPos(oldX);
+        uiElement.setYPos(oldY);
     }
 
     @Override
