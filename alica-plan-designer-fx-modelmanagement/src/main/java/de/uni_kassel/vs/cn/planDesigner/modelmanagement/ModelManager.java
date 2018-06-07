@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
@@ -37,15 +38,15 @@ public class ModelManager {
         eventHandlerList = new ArrayList<IModelEventHandler>();
     }
 
-    public void setPlansPath (String plansPath) {
+    public void setPlansPath(String plansPath) {
         this.plansPath = plansPath;
     }
 
-    public void setTasksPath (String tasksPath) {
+    public void setTasksPath(String tasksPath) {
         this.tasksPath = tasksPath;
     }
 
-    public void setRolesPath (String rolesPath) {
+    public void setRolesPath(String rolesPath) {
         this.rolesPath = rolesPath;
     }
 
@@ -222,6 +223,30 @@ public class ModelManager {
         }
     }
 
+    public ArrayList<PlanElement> getPlanElements() {
+        return new ArrayList<>(planElementMap.values());
+    }
+
+    public void removeAbstarctPlan(AbstractPlan abstractPlan) {
+        PlanElement deletedElement = planElementMap.remove(abstractPlan.getId());
+        if (deletedElement == null) {
+            return;
+        }
+        else if (deletedElement instanceof Plan) {
+            planMap.remove(deletedElement.getId());
+        }
+        else if (deletedElement instanceof Behaviour) {
+            behaviourMap.remove(deletedElement.getId());
+        }
+        else if (deletedElement instanceof PlanType) {
+            planTypeMap.remove(deletedElement.getId());
+        }
+        else if (deletedElement instanceof TaskRepository) {
+            taskRepositoryMap.remove(deletedElement.getId());
+        }
+
+    }
+
     private PlanElement deletePlanElement(Path path) {
         PlanElement deletedElement = null;
         String pathString = path.toString();
@@ -350,7 +375,7 @@ public class ModelManager {
     }
 
     private ArrayList<PlanType> getUsagesInPlanTypes(PlanElement planElement) {
-        ArrayList<PlanType> usages =  new ArrayList<>();
+        ArrayList<PlanType> usages = new ArrayList<>();
         for (PlanType parent : planTypeMap.values()) {
             for (Plan child : parent.getPlans()) {
                 if (child.getId() == planElement.getId()) {
