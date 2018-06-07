@@ -1,19 +1,23 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 public class PlanElement {
+    public static final String forbiddenCharacters = ".*[\\./\\*\\\\$§?\\[\\]!{}\\-äüö#\"%~'ÄÖÜß@]+.*";
+    protected static int PLAN_ELEMENT_COUNTER = 0;
     protected long id;
     protected String name;
     protected String comment;
     protected boolean dirty;
 
-    public static final String forbiddenCharacters = ".*[\\./\\*\\\\$§?\\[\\]!{}\\-äüö#\"%~'ÄÖÜß@]+.*";
+    public PlanElement() {
+        this.id = generateId();
+    }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    protected long generateId() {
+        return System.currentTimeMillis() + PLAN_ELEMENT_COUNTER++;
     }
 
     public String getName() {
