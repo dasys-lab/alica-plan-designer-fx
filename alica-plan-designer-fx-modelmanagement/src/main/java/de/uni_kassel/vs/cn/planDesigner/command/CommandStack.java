@@ -1,11 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Observable;
-import java.util.Optional;
 import java.util.Stack;
 
 /**
@@ -25,7 +23,7 @@ public class CommandStack extends Observable {
      */
     public void storeAndExecute(AbstractCommand command) {
         command.doCommand();
-        command.setSaved(false);
+//        command.setSaved(false);
         undoStack.push(command);
         redoStack.clear();
         notifyObserversCompound();
@@ -37,7 +35,7 @@ public class CommandStack extends Observable {
     public void undo() {
         AbstractCommand undone = undoStack.pop();
         undone.undoCommand();
-        undone.setSaved(false);
+//        undone.setSaved(false);
         redoStack.push(undone);
         notifyObserversCompound();
     }
@@ -48,7 +46,7 @@ public class CommandStack extends Observable {
     public void redo() {
         AbstractCommand redone = redoStack.pop();
         redone.doCommand();
-        redone.setSaved(false);
+//        redone.setSaved(false);
         undoStack.push(redone);
         notifyObserversCompound();
     }
@@ -64,37 +62,37 @@ public class CommandStack extends Observable {
      * @param abstractPlan
      * @return
      */
-    public boolean isAbstractPlanInItsCurrentFormSaved(PlanElement abstractPlan) {
-        for (int i = undoStack.indexOf(undoStack.lastElement()); i >= 0; i--) {
-            AbstractCommand currentCommand = undoStack.elementAt(i);
-            if (currentCommand.getAffectedPlan().equals(abstractPlan)) {
-                return currentCommand.isSaved();
-            }
-        }
-        return true;
-    }
+//    public boolean isAbstractPlanInItsCurrentFormSaved(PlanElement abstractPlan) {
+//        for (int i = undoStack.indexOf(undoStack.lastElement()); i >= 0; i--) {
+//            AbstractCommand currentCommand = undoStack.elementAt(i);
+//            if (currentCommand.getAffectedPlan().equals(abstractPlan)) {
+//                return currentCommand.isSaved();
+//            }
+//        }
+//        return true;
+//    }
 
-    public void setSavedForAbstractPlan(Long abstractPlanId) {
-        Optional<AbstractCommand> abstractCommand = undoStack
-                .stream()
-                .filter(e -> e.getAffectedPlan().getId() == abstractPlanId)
-                .findFirst();
-        if (abstractCommand.isPresent()) {
-            abstractCommand.get().setSaved(true);
-        }
-    }
+//    public void setSavedForAbstractPlan(Long abstractPlanId) {
+//        Optional<AbstractCommand> abstractCommand = undoStack
+//                .stream()
+//                .filter(e -> e.getAffectedPlan().getId() == abstractPlanId)
+//                .findFirst();
+//        if (abstractCommand.isPresent()) {
+//            abstractCommand.get().setSaved(true);
+//        }
+//    }
 
     /**
      *
      * @return saved the saved flag of the top most command on the undo stack.
      */
-    public boolean isCurrentCommandSaved() {
-        if (undoStack.empty()) {
-            return true;
-        } else {
-            return undoStack.peek().isSaved();
-        }
-    }
+//    public boolean isCurrentCommandSaved() {
+//        if (undoStack.empty()) {
+//            return true;
+//        } else {
+//            return undoStack.peek().isSaved();
+//        }
+//    }
 
     public Stack<AbstractCommand> getUndoStack() {
         return undoStack;

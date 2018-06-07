@@ -3,31 +3,34 @@ package de.uni_kassel.vs.cn.planDesigner.command.change;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 public class SetStateForEntryPoint extends AbstractCommand {
 
-    private State stateToSet;
-    private State previousState;
+    protected EntryPoint entryPoint;
+    protected State newState;
+    protected State previousState;
 
-    public SetStateForEntryPoint(EntryPoint elementToEdit, State stateToSet) {
-        super(elementToEdit, elementToEdit.getPlan());
-        this.stateToSet = stateToSet;
+    public SetStateForEntryPoint(ModelManager modelManager, EntryPoint entryPoint, State state) {
+        super(modelManager);
+        this.entryPoint = entryPoint;
+        this.newState = state;
     }
 
     @Override
     public void doCommand() {
-        EntryPoint ep = ((EntryPoint)getElementToEdit());
+        EntryPoint ep = (entryPoint);
         previousState = ep.getState();
-        ep.setState(stateToSet);
+        ep.setState(newState);
     }
 
     @Override
     public void undoCommand() {
-        ((EntryPoint)getElementToEdit()).setState(previousState);
+        entryPoint.setState(previousState);
     }
 
     @Override
     public String getCommandString() {
-        return "Set State of EntryPoint to " + stateToSet;
+        return "Set State of EntryPoint " + entryPoint.getName() + " to " + newState;
     }
 }

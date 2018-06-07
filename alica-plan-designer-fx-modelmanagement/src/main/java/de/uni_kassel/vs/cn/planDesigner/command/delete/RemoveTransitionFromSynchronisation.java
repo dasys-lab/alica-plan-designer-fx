@@ -7,26 +7,27 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 public class RemoveTransitionFromSynchronisation extends AbstractCommand {
 
-    private Transition toRemove;
+    protected Transition transition;
+    protected Synchronization synchronization;
 
-    public RemoveTransitionFromSynchronisation(ModelManager manager, Synchronization element, Transition toRemove) {
-        // TODO think about other solution for getting the plan
-        super(manager, element, toRemove.getInState().getParentPlan());
-        this.toRemove = toRemove;
+    public RemoveTransitionFromSynchronisation(ModelManager manager, Synchronization synchronization, Transition transition) {
+        super(manager);
+        this.synchronization = synchronization;
+        this.transition = transition;
     }
 
     @Override
     public void doCommand() {
-        ((Synchronization) getElementToEdit()).getSynchedTransitions().remove(toRemove);
+        synchronization.getSynchedTransitions().remove(transition);
     }
 
     @Override
     public void undoCommand() {
-        ((Synchronization) getElementToEdit()).getSynchedTransitions().add(toRemove);
+        synchronization.getSynchedTransitions().add(transition);
     }
 
     @Override
     public String getCommandString() {
-        return "Remove Transition from Synchronisation";
+        return "Remove Transition " + transition.getName() + " from Synchronisation" + synchronization.getName();
     }
 }
