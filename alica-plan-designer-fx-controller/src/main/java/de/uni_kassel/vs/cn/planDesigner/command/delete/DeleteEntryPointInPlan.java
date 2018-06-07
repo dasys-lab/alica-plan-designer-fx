@@ -4,17 +4,17 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
 public class DeleteEntryPointInPlan extends AbstractCommand {
 
     private State associatedState;
     private final PlanModelVisualisationObject parentOfElement;
-    private Plan parentOfElement;
     private PmlUiExtension pmlUiExtension;
 
-    public DeleteEntryPointInPlan(EntryPoint element, Plan parentOfElement) {
-        super(element, parentOfElement);
+    public DeleteEntryPointInPlan(EntryPoint element, PlanModelVisualisationObject parentOfElement) {
+        super(element, parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
         this.pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(getElementToEdit());
         this.associatedState = element.getState();
@@ -22,7 +22,7 @@ public class DeleteEntryPointInPlan extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        parentOfElement.getEntryPoints().remove(getElementToEdit());
+        parentOfElement.getPlan().getEntryPoints().remove(getElementToEdit());
         parentOfElement.getPmlUiExtensionMap().getExtension().remove(pmlUiExtension);
         if (associatedState != null) {
             associatedState.setEntryPoint(null);
@@ -31,9 +31,8 @@ public class DeleteEntryPointInPlan extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        parentOfElement.getEntryPoints().add((EntryPoint) getElementToEdit());
-        //TODO needs to be replaced since its emf
-        //parentOfElement.getPmlUiExtensionMap().getExtension().put(getElementToEdit(), pmlUiExtension);
+        parentOfElement.getPlan().getEntryPoints().add((EntryPoint) getElementToEdit());
+        parentOfElement.getPmlUiExtensionMap().getExtension().put(getElementToEdit(), pmlUiExtension);
         if (associatedState != null) {
             associatedState.setEntryPoint((EntryPoint) getElementToEdit());
         }
