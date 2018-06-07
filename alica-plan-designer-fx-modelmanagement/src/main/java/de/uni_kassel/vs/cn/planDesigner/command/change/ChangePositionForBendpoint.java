@@ -2,39 +2,40 @@ package de.uni_kassel.vs.cn.planDesigner.command.change;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.Bendpoint;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.Bendpoint;
 
-/**
- * Created by marci on 03.01.17.
- */
-public class ChangePositionForBendpoint extends AbstractCommand<Bendpoint> {
+public class ChangePositionForBendpoint extends AbstractCommand {
 
-    private int newX;
-    private int newY;
+    protected Bendpoint bendpoint;
+    protected Plan plan;
 
-    private int oldX;
-    private int oldY;
+    protected int newX;
+    protected int newY;
 
-    public ChangePositionForBendpoint(Bendpoint element, int newX, int newY, Plan parent) {
-        super(element, parent);
+    protected int oldX;
+    protected int oldY;
+
+    public ChangePositionForBendpoint(ModelManager modelManager, Plan plan, Bendpoint bendpoint, int newX, int newY) {
+        super(modelManager);
         this.newX = newX;
         this.newY = newY;
 
         // save old position for undo
-        oldX = getElementToEdit().getXPos();
-        oldY = getElementToEdit().getYPos();
+        oldX = bendpoint.getXPos();
+        oldY = bendpoint.getYPos();
     }
 
     @Override
     public void doCommand() {
-        getElementToEdit().setXPos(newX);
-        getElementToEdit().setYPos(newY);
+        bendpoint.setXPos(newX);
+        bendpoint.setYPos(newY);
     }
 
     @Override
     public void undoCommand() {
-        getElementToEdit().setXPos(oldX);
-        getElementToEdit().setYPos(oldY);
+        bendpoint.setXPos(oldX);
+        bendpoint.setYPos(oldY);
     }
 
     @Override
