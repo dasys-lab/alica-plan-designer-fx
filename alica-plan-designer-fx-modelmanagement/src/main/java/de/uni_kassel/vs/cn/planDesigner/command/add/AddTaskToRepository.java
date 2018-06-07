@@ -3,36 +3,32 @@ package de.uni_kassel.vs.cn.planDesigner.command.add;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
 
-/**
- * Created by marci on 23.02.17.
- */
-public class AddTaskToRepository extends AbstractCommand<Task> {
+public class AddTaskToRepository extends AbstractCommand {
 
-    private final TaskRepository parentOfElement;
-    private final String name;
+    private final TaskRepository taskRepository;
+    private final Task task;
 
-    public AddTaskToRepository(TaskRepository parentOfElement, String name) {
-        super(getAlicaFactory().createTask(), parentOfElement);
-        this.parentOfElement = parentOfElement;
-        this.name = name;
+    public AddTaskToRepository(ModelManager manager, TaskRepository taskRepository, Task task) {
+        super(manager);
+        this.taskRepository = taskRepository;
+        this.task = task;
     }
 
     @Override
     public void doCommand() {
-        getElementToEdit().setName(name);
-        parentOfElement.getTasks().add(getElementToEdit());
+        taskRepository.getTasks().add(task);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getTasks().remove(getElementToEdit());
+        taskRepository.getTasks().remove(task);
     }
 
     @Override
     public String getCommandString() {
-        return "Create new task " + name;
+        return "Create new task " + task.getName();
     }
 }
