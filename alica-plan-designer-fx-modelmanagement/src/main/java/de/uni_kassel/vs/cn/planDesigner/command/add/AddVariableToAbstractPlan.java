@@ -5,42 +5,40 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
+public class AddVariableToAbstractPlan extends AbstractCommand {
 
-/**
- * Created by marci on 26.02.17.
- */
-public class AddVariableToAbstractPlan extends AbstractCommand<Variable> {
+    private final PlanElement planElement;
+    private final Variable variable;
 
-    private final PlanElement parentOfElement;
-
-    public AddVariableToAbstractPlan(PlanElement parentOfElement) {
-        super(getAlicaFactory().createVariable(), parentOfElement);
-        this.parentOfElement = parentOfElement;
+    public AddVariableToAbstractPlan(ModelManager manager, PlanElement planElement, Variable variable) {
+        super(manager);
+        this.planElement = planElement;
+        this.variable = variable;
     }
 
     @Override
     public void doCommand() {
-        if (parentOfElement instanceof Plan) {
-            ((Plan)parentOfElement).getVars().add(getElementToEdit());
+        if (planElement instanceof Plan) {
+            ((Plan)planElement).getVariables().add(variable);
         } else {
-            ((Behaviour)parentOfElement).getVars().add(getElementToEdit());
+            ((Behaviour)planElement).getVariables().add(variable);
         }
     }
 
     @Override
     public void undoCommand() {
-        if (parentOfElement instanceof Plan) {
-            ((Plan)parentOfElement).getVars().remove(getElementToEdit());
+        if (planElement instanceof Plan) {
+            ((Plan)planElement).getVariables().remove(variable);
         } else {
-            ((Behaviour)parentOfElement).getVars().remove(getElementToEdit());
+            ((Behaviour)planElement).getVariables().remove(variable);
         }
     }
 
     @Override
     public String getCommandString() {
-        return "Add new variable to" + parentOfElement.getName();
+        return "Add new variable to" + variable.getName();
     }
 
 
