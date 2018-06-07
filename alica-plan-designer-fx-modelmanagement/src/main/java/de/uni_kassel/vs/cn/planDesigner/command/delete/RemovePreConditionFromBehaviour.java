@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
@@ -24,7 +23,7 @@ public class RemovePreConditionFromBehaviour extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        (behaviour.setPreCondition(previousPreCondition);
+        behaviour.setPreCondition(previousPreCondition);
     }
 
     @Override
