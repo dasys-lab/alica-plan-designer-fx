@@ -3,32 +3,34 @@ package de.uni_kassel.vs.cn.planDesigner.command.change;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 
 public class SetTaskOfEntryPoint extends AbstractCommand {
 
-    private EntryPoint parentOfElement;
-    private Task previousTask;
+    protected EntryPoint entryPoint;
+    protected Task previousTask;
+    protected Task newTask;
 
-    public SetTaskOfEntryPoint(Task element, EntryPoint parentOfElement) {
-        super(element, parentOfElement.getPlan());
-        this.parentOfElement = parentOfElement;
+    public SetTaskOfEntryPoint(ModelManager modelManager, Task newTask, EntryPoint entryPoint) {
+        super(modelManager);
+        this.entryPoint = entryPoint;
     }
 
     @Override
     public void doCommand() {
-        previousTask = parentOfElement.getTask();
-        parentOfElement.setTask((Task) getElementToEdit());
+        previousTask = entryPoint.getTask();
+        entryPoint.setTask(newTask);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.setTask(previousTask);
+        entryPoint.setTask(previousTask);
     }
 
     @Override
     public String getCommandString() {
-        return "Set Task of EntryPoint " + parentOfElement.getId() + " from " + previousTask.getName()
-                + " to " + getElementToEdit().getName();
+        return "Set Task of EntryPoint " + entryPoint.getId() + " from " + previousTask.getName()
+                + " to " + newTask.getName();
     }
 }
