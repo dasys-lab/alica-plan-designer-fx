@@ -1,33 +1,33 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.AnnotatedPlan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-/**
- * Created by marci on 17.03.17.
- */
-public class RemovePlanFromPlanType extends AbstractCommand<AnnotatedPlan> {
+public class RemovePlanFromPlanType extends AbstractCommand {
 
-    private PlanType parentOfElement;
+    protected PlanType planType;
+    protected Plan plan;
 
-    public RemovePlanFromPlanType(AnnotatedPlan element, PlanType parentOfElement) {
-        super(element, parentOfElement);
-        this.parentOfElement = parentOfElement;
+    public RemovePlanFromPlanType(ModelManager modelManager, Plan plan, PlanType planType) {
+        super(modelManager);
+        this.plan = plan;
+        this.planType = planType;
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.getPlans().remove(getElementToEdit());
+        planType.getPlans().remove(plan);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlans().add(getElementToEdit());
+        planType.getPlans().add(plan);
     }
 
     @Override
     public String getCommandString() {
-        return "Remove plan " + getElementToEdit().getName() + " from plantype " + parentOfElement.getName();
+        return "Remove plan " + plan.getName() + " from plantype " + planType.getName();
     }
 }
