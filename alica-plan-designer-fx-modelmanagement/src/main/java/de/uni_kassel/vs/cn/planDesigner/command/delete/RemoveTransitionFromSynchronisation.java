@@ -3,14 +3,15 @@ package de.uni_kassel.vs.cn.planDesigner.command.delete;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronization;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 public class RemoveTransitionFromSynchronisation extends AbstractCommand {
 
     private Transition toRemove;
 
-    public RemoveTransitionFromSynchronisation(Synchronization element, Transition toRemove) {
+    public RemoveTransitionFromSynchronisation(ModelManager manager, Synchronization element, Transition toRemove) {
         // TODO think about other solution for getting the plan
-        super(element, toRemove.getInState().getParentPlan());
+        super(manager, element, toRemove.getInState().getParentPlan());
         this.toRemove = toRemove;
     }
 
