@@ -1,35 +1,29 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.EObjectToPmlUiExtensionMapEntryImpl;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUIExtensionModelFactoryImpl;
-import org.eclipse.emf.ecore.EObject;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by marci on 01.12.16.
- */
-public class DeleteStateInPlan extends AbstractCommand<State> {
+public class DeleteStateInPlan extends AbstractCommand {
 
-    private PlanModelVisualisationObject parentOfDeleted;
+    protected PlanModelVisualisationObject parentOfDeleted;
 
-    private Map<Transition, State> outStatesOfInTransitions = new HashMap<>();
-    private Map<Transition, State> inStatesOfOutTransitions = new HashMap<>();
+    protected Map<Transition, State> outStatesOfInTransitions = new HashMap<>();
+    protected Map<Transition, State> inStatesOfOutTransitions = new HashMap<>();
+    protected Map<Transition ,PmlUiExtension> pmlUiExtensionsOfTransitions = new HashMap<>();
+    protected PmlUiExtension pmlUiExtension;
+    protected State state;
 
-    private Map<Transition ,PmlUiExtension> pmlUiExtensionsOfTransitions = new HashMap<>();
-
-    private PmlUiExtension pmlUiExtension;
-
-    public DeleteStateInPlan(State state, PlanModelVisualisationObject parentOfDeleted) {
-        super(state, parentOfDeleted.getPlan());
+    public DeleteStateInPlan(ModelManager modelManager, State state, PlanModelVisualisationObject parentOfDeleted) {
+        super(modelManager);
         this.parentOfDeleted = parentOfDeleted;
+        this.state = state;
     }
 
     @Override
@@ -43,7 +37,6 @@ public class DeleteStateInPlan extends AbstractCommand<State> {
 
         // Delete
         delete();
-
     }
 
     /**
@@ -52,7 +45,7 @@ public class DeleteStateInPlan extends AbstractCommand<State> {
      * IMPORTANT this also includes pml view extensions
      */
     private void delete() {
-        parentOfDeleted.getPlan().getStates().remove(getElementToEdit());
+        parentOfDeleted.getPlan().getStates().remove(state);
         parentOfDeleted.getPlan().getTransitions().removeAll(inStatesOfOutTransitions.keySet());
         parentOfDeleted.getPlan().getTransitions().removeAll(outStatesOfInTransitions.keySet());
 
@@ -64,7 +57,7 @@ public class DeleteStateInPlan extends AbstractCommand<State> {
             inTransition.setOutState(null);
         }
         
-        parentOfDeleted.getPmlUiExtensionMap().getExtension().remove(getElementToEdit());
+        parentOfDeleted.getPmlUiExtensionMap().getExtension().remove(state);
 
         pmlUiExtensionsOfTransitions
                 .keySet()
@@ -79,18 +72,18 @@ public class DeleteStateInPlan extends AbstractCommand<State> {
         parentOfDeleted.getPlan()
                 .getTransitions()
                 .stream()
-                .filter(e -> e.getInState().equals(getElementToEdit()))
+                .filter(e -> e.getInState().equals(state))
                 .forEach(t -> outStatesOfInTransitions.put(t, t.getOutState()));
 
         // save out transitions and their in states
         parentOfDeleted.getPlan()
                 .getTransitions()
                 .stream()
-                .filter(e -> e.getOutState().equals(getElementToEdit()))
+                .filter(e -> e.getOutState().equals(state))
                 .forEach(t -> inStatesOfOutTransitions.put(t, t.getInState()));
 
         // save pml view extension of state
-        pmlUiExtension = parentOfDeleted.getPmlUiExtensionMap().getExtension().get(getElementToEdit());
+        pmlUiExtension = parentOfDeleted.getPmlUiExtensionMap().getExtension().get(state);
 
 
         // save pml view extensions of transitions, if they have any
@@ -115,7 +108,7 @@ public class DeleteStateInPlan extends AbstractCommand<State> {
 
     @Override
     public void undoCommand() {
-        parentOfDeleted.getPlan().getStates().add(getElementToEdit());
+        parentOfDeleted.getPlan().getStates().add(state);
         parentOfDeleted.getPlan().getTransitions().addAll(outStatesOfInTransitions.keySet());
         parentOfDeleted.getPlan().getTransitions().addAll(inStatesOfOutTransitions.keySet());
 
@@ -127,10 +120,7 @@ public class DeleteStateInPlan extends AbstractCommand<State> {
             inTransition.setOutState(outStatesOfInTransitions.get(inTransition));
         }
 
-        Map.Entry<EObject, PmlUiExtension> eObjectToPmlUiExtensionMapEntry = ((PmlUIExtensionModelFactoryImpl) EMFModelUtils.getPmlUiExtensionModelFactory()).createEObjectToPmlUiExtensionMapEntry();
-        ((EObjectToPmlUiExtensionMapEntryImpl)eObjectToPmlUiExtensionMapEntry).setKey(getElementToEdit());
-        eObjectToPmlUiExtensionMapEntry.setValue(pmlUiExtension);
-        parentOfDeleted.getPmlUiExtensionMap().getExtension().add(eObjectToPmlUiExtensionMapEntry);
+        parentOfDeleted.getPmlUiExtensionMap().getExtension().put(state, new PmlUiExtension());
         pmlUiExtensionsOfTransitions
                 .entrySet()
                 .forEach(e -> parentOfDeleted.getPmlUiExtensionMap().getExtension().put(e.getKey(), e.getValue()));
@@ -138,6 +128,6 @@ public class DeleteStateInPlan extends AbstractCommand<State> {
 
     @Override
     public String getCommandString() {
-        return "Delete State " + getElementToEdit().getName() + " in Plan " + parentOfDeleted.getPlan().getName();
+        return "Delete State " + state.getName() + " in Plan " + parentOfDeleted.getPlan().getName();
     }
 }
