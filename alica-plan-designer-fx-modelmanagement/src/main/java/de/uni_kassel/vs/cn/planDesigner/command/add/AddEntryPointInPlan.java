@@ -9,38 +9,39 @@ import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
 
 public class AddEntryPointInPlan extends AbstractCommand {
-    private final PlanModelVisualisationObject parentOfElement;
-    private final PmlUiExtension newlyCreatedPmlUiExtension;
-    private final ModelManager manager;
+    protected PlanModelVisualisationObject parentOfElement;
+    protected PmlUiExtension newlyCreatedPmlUiExtension;
+    protected ModelManager manager;
+    protected EntryPoint entryPoint;
 
-    public AddEntryPointInPlan(PlanModelVisualisationObject parentOfElement, EntryPoint entryPoint, PmlUiExtension pmlUiExtension, ModelManager manager) {
-        super(entryPoint, parentOfElement.getPlan());
+    public AddEntryPointInPlan(ModelManager manager, PlanModelVisualisationObject parentOfElement, EntryPoint entryPoint, PmlUiExtension pmlUiExtension) {
+        super(manager);
+        this.entryPoint = entryPoint;
         this.parentOfElement = parentOfElement;
-        this.manager = manager;
         this.newlyCreatedPmlUiExtension = pmlUiExtension;
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.getPlan().getEntryPoints().add((EntryPoint) getElementToEdit());
+        parentOfElement.getPlan().getEntryPoints().add(entryPoint);
         for(Plan plan : manager.getPlans()) {
             if(plan.getId() == parentOfElement.getPlan().getId()) {
-                plan.getEntryPoints().add((EntryPoint) getElementToEdit());
+                plan.getEntryPoints().add(entryPoint);
                 break;
             }
         }
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .put(getElementToEdit(), newlyCreatedPmlUiExtension);
+                .put(entryPoint, newlyCreatedPmlUiExtension);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlan().getEntryPoints().remove(getElementToEdit());
+        parentOfElement.getPlan().getEntryPoints().remove(entryPoint);
         for(Plan plan : manager.getPlans()) {
             if(plan.getId() == parentOfElement.getPlan().getId()) {
-                plan.getEntryPoints().remove(getElementToEdit());
+                plan.getEntryPoints().remove(entryPoint);
                 break;
             }
         }
@@ -48,7 +49,7 @@ public class AddEntryPointInPlan extends AbstractCommand {
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .remove(getElementToEdit());
+                .remove(entryPoint);
 
     }
 
