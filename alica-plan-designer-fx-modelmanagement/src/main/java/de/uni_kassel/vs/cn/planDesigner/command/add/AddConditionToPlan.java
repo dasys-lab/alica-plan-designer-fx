@@ -5,36 +5,39 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 public class AddConditionToPlan extends AbstractCommand {
 
-    private Plan parentOfElement;
+    protected Condition condition;
+    protected Plan plan;
 
-    public AddConditionToPlan(Plan parentOfElement, Condition element) {
-        super(element, parentOfElement);
-        this.parentOfElement = parentOfElement;
+    public AddConditionToPlan(ModelManager modelManager, Condition condition, Plan plan) {
+        super(modelManager);
+        this.condition = condition;
+        this.plan = plan;
     }
 
     @Override
     public void doCommand() {
-        if (getElementToEdit() instanceof PreCondition) {
-            parentOfElement.setPreCondition((PreCondition) getElementToEdit());
-        } else if (getElementToEdit() instanceof RuntimeCondition) {
-            parentOfElement.setRuntimeCondition((RuntimeCondition) getElementToEdit());
+        if (condition instanceof PreCondition) {
+            plan.setPreCondition((PreCondition) condition);
+        } else if (condition instanceof RuntimeCondition) {
+            plan.setRuntimeCondition((RuntimeCondition) condition);
         }
     }
 
     @Override
     public void undoCommand() {
-        if (getElementToEdit() instanceof PreCondition) {
-            parentOfElement.setPreCondition((PreCondition) getElementToEdit());
-        } else if (getElementToEdit() instanceof RuntimeCondition) {
-            parentOfElement.setRuntimeCondition((RuntimeCondition) getElementToEdit());
+        if (condition instanceof PreCondition) {
+            plan.setPreCondition((PreCondition)condition);
+        } else if (condition instanceof RuntimeCondition) {
+            plan.setRuntimeCondition((RuntimeCondition) condition);
         }
     }
 
     @Override
     public String getCommandString() {
-        return "Add new condition to " + parentOfElement.getName();
+        return "Add new condition to " + plan.getName();
     }
 }
