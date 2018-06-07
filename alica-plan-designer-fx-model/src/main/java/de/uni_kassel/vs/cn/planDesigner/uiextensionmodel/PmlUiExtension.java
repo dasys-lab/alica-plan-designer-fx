@@ -36,7 +36,7 @@ public class PmlUiExtension extends PositionedElement {
 
     void setCollapsed(boolean collapsed) {this.collapsed = collapsed;}
 
-    ArrayList<Bendpoint> getBendpoints() {return this.bendpoints;}
+    public ArrayList<Bendpoint> getBendpoints() {return this.bendpoints;}
 
     boolean isVisible() {return this.visible;}
 
