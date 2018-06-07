@@ -1,32 +1,15 @@
 package de.uni_kassel.vs.cn.planDesigner.command.change;
 
-import de.uni_kassel.vs.cn.generator.AlicaModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.generator.RepoViewBackend;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
-import javafx.util.Pair;
 import org.apache.commons.beanutils.BeanUtils;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
-import java.util.Optional;
 
-/**
- * Created by marci on 17.03.17.
- */
-public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
+public class ChangeAttributeValue<T> extends AbstractCommand {
 
     private String attribute;
 
@@ -43,154 +26,42 @@ public class ChangeAttributeValue<T> extends AbstractCommand<PlanElement> {
     @Override
     public void doCommand() {
         try {
-            RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
             oldValue = (T) BeanUtils.getProperty(getElementToEdit(), attribute);
             BeanUtils.setProperty(getElementToEdit(), attribute, newValue);
             if (attribute.equals("masterPlan")) {
-                reinitializeRepoTabs();
+                // TODO: what has to be done, in case of changing the masterPlan flag?
             }
             if (attribute.equals("name")) {
-                if (AlicaModelUtils.containsIllegalCharacter(newValue.toString())) {
-                    throw new RuntimeException("Illegal name for element");
-                }
                 Path path = null;
                 if(getElementToEdit() instanceof Plan) {
-                    Pair<Plan, Path> planPathPair = repositoryViewModel.getPlans()
-                            .stream()
-                            .filter(e -> e.getKey().equals(getElementToEdit()))
-                            .findFirst()
-                            .get();
-                    path = planPathPair.getValue();
-                    repositoryViewModel.getPlans().remove(planPathPair);
-                    repositoryViewModel.getPlans().add(new Pair<>((Plan) getElementToEdit(), getNewFilePath(path).toPath()));
-                    getElementToEdit().eResource().setURI(URI.createURI(getElementToEdit().eResource().getURI()
-                            .toString().replace(path.getFileName().toString(),getNewFilePath(path).getName())));
-                    final Path finalPath = path;
-
-                    Resource resourcePMLEX = AlicaResourceSet.getInstance()
-                            .getResources()
-                            .stream()
-                            .filter(e -> e.getURI().toFileString().endsWith(finalPath.getFileName().toString() + "ex"))
-                            .findFirst().get();
-
-                    resourcePMLEX.setURI(URI.createURI(resourcePMLEX.getURI()
-                            .toString().replace(path.getFileName().toString()+ "ex",getNewFilePath(path).getName() + "ex")));
-                    new File(finalPath.toString() + "ex").renameTo(new File(finalPath.toString().replace(finalPath.getFileName()+ "",getNewFilePath(path).getName()+ "ex")));
+                    // TODO:
+                    // 1. Rename plan, pml-file, and pmlex-file
+                    // 2. Fire event for updating gui (Repository, FileTreeView, PlanEditor if the plan is currently opened)
                 }
 
                 if (getElementToEdit() instanceof PlanType) {
-                    Pair<PlanType, Path> planTypePathPair = repositoryViewModel.getPlanTypes()
-                            .stream()
-                            .filter(e -> e.getKey().equals(getElementToEdit()))
-                            .findFirst()
-                            .get();
-                    path = planTypePathPair.getValue();
-                    repositoryViewModel.getPlanTypes().remove(planTypePathPair);
-                    repositoryViewModel.getPlanTypes().add(new Pair<>((PlanType) getElementToEdit(), getNewFilePath(path).toPath()));
+                    // TODO:
+                    // 1. Rename plantype, and pty-file
+                    // 2. Fire event for updating gui (Repository, FileTreeView, PlanEditor if the planType is currently opened)
                 }
 
                 if (getElementToEdit() instanceof Behaviour) {
-                    Pair<Behaviour, Path> behaviourPathPair = RepositoryViewModel.getInstance().getBehaviours()
-                            .stream()
-                            .filter(e -> e.getKey().equals(getElementToEdit()))
-                            .findFirst()
-                            .get();
-                    path = behaviourPathPair.getValue();
-                    repositoryViewModel.getBehaviours().remove(behaviourPathPair);
-                    repositoryViewModel.getBehaviours().add(new Pair<>((Behaviour) getElementToEdit(), getNewFilePath(path).toPath()));
+                    // TODO:
+                    // 1. Rename behaviour, and beh-file
+                    // 2. Fire event for updating gui (Repository, FileTreeView, PlanEditor if the behaviour is currently opened)
                 }
 
                 if (getElementToEdit() instanceof Task) {
-                    RepositoryViewModel.getInstance()
-                            .getTaskRepository()
-                            .get(0).getKey().getTasks().remove(getElementToEdit());
-                    repositoryViewModel.getTaskRepository()
-                            .get(0).getKey().getTasks().add((Task) getElementToEdit());
+                    // TODO:
+                    // 1. Rename task
+                    // 2. Fire event for updating gui (Repository, PlanEditor if the taskrepository is currently opened)
                 }
-
-                if (path != null) {
-                    getElementToEdit().eResource().setURI(URI.createURI(getElementToEdit().eResource().getURI()
-                            .toString().replace(path.getFileName().toString(),getNewFilePath(path).getName())));
-                    File newFilePath = getNewFilePath(path);
-                    path.toFile().renameTo(newFilePath);
-
-                    AlicaResourceSet.getInstance()
-                            .getResources()
-                            .forEach(e -> {
-                                EObject content = e
-                                        .getContents()
-                                        .get(0);
-                                if (content instanceof Plan) {
-                                    if (((Plan)content)
-                                            .getStates()
-                                            .stream()
-                                            .anyMatch(f -> f.getPlans().contains(getElementToEdit()))) {
-                                        try {
-                                            EMFModelUtils.saveAlicaFile(content);
-                                        } catch (IOException e1) {
-                                            throw new RuntimeException(e1);
-                                        }
-                                    }
-                                }
-
-                                if (content instanceof PlanType) {
-                                    if (((PlanType)content)
-                                            .getPlans()
-                                            .stream()
-                                            .filter(f -> f.getPlan().equals(getElementToEdit()))
-                                            .count() > 0) {
-                                        try {
-                                            EMFModelUtils.saveAlicaFile(content);
-                                        } catch (IOException e1) {
-                                            throw new RuntimeException(e1);
-                                        }
-                                    }
-                                }
-
-                                if (content instanceof PmlUiExtensionMap) {
-                                    if (((PmlUiExtensionMap) content)
-                                            .getExtension()
-                                            .entrySet()
-                                            .stream()
-                                            .filter(f -> f.getKey().equals(getElementToEdit()))
-                                            .count() > 0) {
-                                        try {
-                                            EMFModelUtils.saveAlicaFile(content);
-                                        } catch (IOException e1) {
-                                            throw new RuntimeException(e1);
-                                        }
-                                    }
-                                }
-                            });
-                } else {
-                    if (getElementToEdit() instanceof Task) {
-                        EMFModelUtils.saveAlicaFile(RepositoryViewModel.getInstance().getTaskRepository().get(0).getKey());
-                        reinitializeRepoTabs();
-                    }
-                }
-
             }
+
+            // TODO: Check all other attributes of all model objects...
 
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private void reinitializeRepoTabs() {
-        RepositoryTabPane repositoryTabPane = MainWindowController.getInstance().getRepositoryTabPane();
-        String previousSelectedTabTypeName =  ((RepositoryTab<?>)repositoryTabPane.getSelectionModel()
-                .getSelectedItem()).getTypeName();
-        repositoryTabPane.init();
-        Optional<RepositoryTab> repositoryTab = repositoryTabPane.getTabs().stream()
-                .map(t -> (RepositoryTab) t)
-                .filter(t -> previousSelectedTabTypeName.equals(t.getTypeName()))
-                .findFirst();
-        if (repositoryTab.isPresent()) {
-            repositoryTabPane.getSelectionModel().select(repositoryTab.get());
-        } else {
-            // if this happens something went wrong.
-            ErrorWindowController
-                    .createErrorWindow(I18NRepo.getInstance().getString("label.error.repoview"), null);
         }
     }
 
