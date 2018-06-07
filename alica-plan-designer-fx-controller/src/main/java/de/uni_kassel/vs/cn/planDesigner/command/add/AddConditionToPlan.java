@@ -6,10 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
-/**
- * Created by marci on 02.12.16.
- */
-public class AddConditionToPlan extends AbstractCommand<Condition> {
+public class AddConditionToPlan extends AbstractCommand {
 
     private Plan parentOfElement;
 
