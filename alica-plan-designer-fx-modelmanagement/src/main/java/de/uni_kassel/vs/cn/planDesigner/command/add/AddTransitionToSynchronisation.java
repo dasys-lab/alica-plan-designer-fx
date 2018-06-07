@@ -1,30 +1,32 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronization;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-/**
- * Created by marci on 22.03.17.
- */
-public class AddTransitionToSynchronisation extends AbstractCommand<Synchronisation> {
+public class AddTransitionToSynchronisation extends AbstractCommand {
 
     private Transition transitionToAdd;
+    private Synchronization synchronization;
+    private Plan plan;
 
-    public AddTransitionToSynchronisation(Synchronisation element, Transition transitionToAdd, PlanElement affectedPlan) {
-        super(element, affectedPlan);
+    public AddTransitionToSynchronisation(ModelManager manager, Synchronization synchronization, Transition transitionToAdd, Plan plan) {
+        super(manager);
         this.transitionToAdd = transitionToAdd;
+        this.plan = plan;
+        this.synchronization = synchronization;
     }
 
     @Override
     public void doCommand() {
-        getElementToEdit().getSynchedTransitions().add(transitionToAdd);
+        synchronization.getSynchedTransitions().add(transitionToAdd);
     }
 
     @Override
     public void undoCommand() {
-        getElementToEdit().getSynchedTransitions().remove(transitionToAdd);
+        synchronization.getSynchedTransitions().remove(transitionToAdd);
     }
 
     @Override
