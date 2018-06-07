@@ -1,11 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-/**
- * Base class for command pattern.
- */
 public abstract class AbstractCommand {
+
+    private ModelManager modelManager;
 
     private PlanElement affectedPlan;
 
@@ -17,7 +17,8 @@ public abstract class AbstractCommand {
     public abstract void undoCommand();
     public abstract String getCommandString();
 
-    public AbstractCommand(PlanElement element, PlanElement affectedPlan) {
+    public AbstractCommand(ModelManager modelManager, PlanElement element, PlanElement affectedPlan) {
+        this.modelManager = modelManager;
         this.elementToEdit = element;
         this.affectedPlan = affectedPlan;
         saved = false;

@@ -2,12 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.command.change;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
-/**
- * Created by marci on 03.01.17.
- */
-public class ChangePosition extends AbstractCommand<PmlUiExtension> {
+public class ChangePosition extends AbstractCommand {
 
     private PlanElement planElement;
     private int newX;
@@ -16,7 +14,7 @@ public class ChangePosition extends AbstractCommand<PmlUiExtension> {
     private int oldX;
     private int oldY;
 
-    public ChangePosition(PmlUiExtension element, PlanElement planElement, int newX, int newY, PlanElement affectedPlan) {
+    public ChangePosition(PmlUiExtension element, PlanElement planElement, int newX, int newY, PlanElement affectedPlan, ModelManager modelManager) {
         super(element, affectedPlan);
         this.planElement = planElement;
         this.newX = newX;
