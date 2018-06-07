@@ -1,40 +1,40 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 public class DeleteVariableFromAbstractPlan extends AbstractCommand {
 
-    private final PlanElement parentOfElement;
+    protected Variable variable;
+    protected AbstractPlan abstractPlan;
 
-    public DeleteVariableFromAbstractPlan(Variable toDelete, PlanElement parentOfElement) {
-        super(toDelete, parentOfElement);
-        this.parentOfElement = parentOfElement;
+    public DeleteVariableFromAbstractPlan(ModelManager modelManager, Variable variable, AbstractPlan abstractPlan) {
+        super(modelManager);
+        this.variable = variable;
+        this.abstractPlan = abstractPlan;
     }
 
     @Override
     public void doCommand() {
-        if (parentOfElement instanceof Plan) {
-            ((Plan)parentOfElement).getVariables().remove(getElementToEdit());
+        if (abstractPlan instanceof Plan) {
+            ((Plan) abstractPlan).getVariables().remove(variable);
         } else {
-            ((Behaviour)parentOfElement).getVariables().remove(getElementToEdit());
+            ((Behaviour) abstractPlan).getVariables().remove(variable);
         }
     }
 
     @Override
     public void undoCommand() {
-        if (parentOfElement instanceof Plan) {
-            ((Plan)parentOfElement).getVariables().add((Variable) getElementToEdit());
+        if (abstractPlan instanceof Plan) {
+            ((Plan) abstractPlan).getVariables().add(variable);
         } else {
-            ((Behaviour)parentOfElement).getVariables().add((Variable) getElementToEdit());
+            ((Behaviour) abstractPlan).getVariables().add(variable);
         }
     }
 
     @Override
     public String getCommandString() {
-        return "Remove Variable " + getElementToEdit().getName() + " from " + parentOfElement.getName();
+        return "Remove Variable " + variable.getName() + " from " + abstractPlan.getName();
     }
 }
