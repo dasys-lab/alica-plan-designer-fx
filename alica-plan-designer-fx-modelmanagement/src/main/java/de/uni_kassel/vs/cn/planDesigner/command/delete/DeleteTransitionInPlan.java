@@ -1,62 +1,54 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
-import de.uni_kassel.vs.cn.generator.EMFModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.EObjectToPmlUiExtensionMapEntryImpl;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.impl.PmlUIExtensionModelFactoryImpl;
-import org.eclipse.emf.ecore.EObject;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
 import java.util.Map;
 
-/**
- * Created by marci on 01.12.16.
- */
-public class DeleteTransitionInPlan extends AbstractCommand<Transition> {
+public class DeleteTransitionInPlan extends AbstractCommand{
 
     private final PlanModelVisualisationObject parentOfElement;
     private PmlUiExtension pmlUiExtension;
     private State inState;
     private State outState;
+    private Transition transition;
 
-    public DeleteTransitionInPlan(Transition element, PlanModelVisualisationObject parentOfElement) {
-        super(element, parentOfElement.getPlan());
+    public DeleteTransitionInPlan(ModelManager manager, Transition transition, PlanModelVisualisationObject parentOfElement) {
+        super(manager);
         this.parentOfElement = parentOfElement;
+        this.transition = transition;
     }
 
     private void saveForLaterRetrieval() {
-        pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(getElementToEdit());
-        outState = getElementToEdit().getOutState();
-        inState = getElementToEdit().getInState();
+        pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(transition);
+        outState = transition.getOutState();
+        inState = transition.getInState();
     }
 
     @Override
     public void doCommand() {
         saveForLaterRetrieval();
 
-        parentOfElement.getPlan().getTransitions().remove(getElementToEdit());
-        parentOfElement.getPmlUiExtensionMap().getExtension().remove(getElementToEdit());
-        getElementToEdit().setInState(null);
-        getElementToEdit().setOutState(null);
+        parentOfElement.getPlan().getTransitions().remove(transition);
+        parentOfElement.getPmlUiExtensionMap().getExtension().remove(transition);
+        transition.setInState(null);
+        transition.setOutState(null);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlan().getTransitions().add(getElementToEdit());
-        Map.Entry<EObject, PmlUiExtension> eObjectToPmlUiExtensionMapEntry = ((PmlUIExtensionModelFactoryImpl) EMFModelUtils.getPmlUiExtensionModelFactory()).createEObjectToPmlUiExtensionMapEntry();
-        ((EObjectToPmlUiExtensionMapEntryImpl)eObjectToPmlUiExtensionMapEntry).setKey(getElementToEdit());
-        eObjectToPmlUiExtensionMapEntry.setValue(pmlUiExtension);
-        parentOfElement.getPmlUiExtensionMap().getExtension()
-                .add(eObjectToPmlUiExtensionMapEntry);
-        getElementToEdit().setInState(inState);
-        getElementToEdit().setOutState(outState);
+        parentOfElement.getPlan().getTransitions().add(transition);
+        parentOfElement.getPmlUiExtensionMap().getExtension().put(transition, pmlUiExtension);
+        transition.setInState(inState);
+        transition.setOutState(outState);
     }
 
     @Override
     public String getCommandString() {
-        return "Delete Transition " + getElementToEdit().getComment() + " in Plan " + parentOfElement.getPlan().getName();
+        return "Delete Transition " + transition.getComment() + " in Plan " + parentOfElement.getPlan().getName();
     }
 }
