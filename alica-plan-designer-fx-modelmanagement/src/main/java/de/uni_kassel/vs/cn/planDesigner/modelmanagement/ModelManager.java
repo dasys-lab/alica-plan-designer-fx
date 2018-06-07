@@ -323,12 +323,12 @@ public class ModelManager {
         }
 
         if (planElement instanceof Plan) {
-            usages.addAll(gettUsagesInStates(planElement));
+            usages.addAll(getUsagesInStates(planElement));
             usages.addAll(getUsagesInPlanTypes(planElement));
         } else if (planElement instanceof Behaviour) {
-            usages.addAll(gettUsagesInStates(planElement));
+            usages.addAll(getUsagesInStates(planElement));
         } else if (planElement instanceof PlanType) {
-            usages.addAll(gettUsagesInStates(planElement));
+            usages.addAll(getUsagesInStates(planElement));
         } else if (planElement instanceof Task) {
             usages.addAll(getUsagesInEntryPoints(planElement));
         } else {
@@ -361,11 +361,11 @@ public class ModelManager {
         return usages;
     }
 
-    private ArrayList<Plan> gettUsagesInStates(PlanElement planElement) {
+    private ArrayList<Plan> getUsagesInStates(PlanElement planElement) {
         ArrayList<Plan> usages = new ArrayList<>();
         for (Plan parent : planMap.values()) {
             for (State state : parent.getStates()) {
-                for (Plan child : state.getPlans()) {
+                for (AbstractPlan child : state.getPlans()) {
                     if (child.getId() == planElement.getId()) {
                         usages.add(parent);
                     }
