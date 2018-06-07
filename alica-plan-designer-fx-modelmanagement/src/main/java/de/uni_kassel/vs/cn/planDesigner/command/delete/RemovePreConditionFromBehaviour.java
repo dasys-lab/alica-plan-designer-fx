@@ -4,31 +4,31 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-/**
- * Created by marci on 16.06.17.
- */
-public class RemovePreConditionFromBehaviour extends AbstractCommand<PreCondition> {
+public class RemovePreConditionFromBehaviour extends AbstractCommand {
 
     private PreCondition previousPreCondition;
+    private Behaviour behaviour;
 
-    public RemovePreConditionFromBehaviour(PlanElement affectedPlan) {
-        super(null, affectedPlan);
+    public RemovePreConditionFromBehaviour(ModelManager manager, Behaviour behaviour) {
+        super(manager);
+        this.behaviour = behaviour;
     }
 
     @Override
     public void doCommand() {
-        previousPreCondition = ((Behaviour)getAffectedPlan()).getPreCondition();
-        ((Behaviour)getAffectedPlan()).setPreCondition(getElementToEdit());
+        previousPreCondition = behaviour.getPreCondition();
+        behaviour.setPreCondition(null);
     }
 
     @Override
     public void undoCommand() {
-        ((Behaviour)getAffectedPlan()).setPreCondition(previousPreCondition);
+        (behaviour.setPreCondition(previousPreCondition);
     }
 
     @Override
     public String getCommandString() {
-        return "Remove Precondition from Behaviour " + getAffectedPlan().getName();
+        return "Remove Precondition from Behaviour " + behaviour.getName();
     }
 }
