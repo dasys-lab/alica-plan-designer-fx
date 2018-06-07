@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane?>
 <?import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane?>
-<?import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertyTabPane?>
+<!--<?import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertyTabPane?>-->
 <?import javafx.scene.text.Text?>
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
     <children>
@@ -26,7 +26,7 @@
                                    orientation="VERTICAL" prefWidth="300.0">
                             <items>
                                 <RepositoryTabPane fx:id="repositoryTabPane" tabClosingPolicy="UNAVAILABLE"/>
-                                <PropertyTabPane fx:id="propertyAndStatusTabPane" tabClosingPolicy="UNAVAILABLE"/>
+                                <!--<PropertyTabPane fx:id="propertyAndStatusTabPane" tabClosingPolicy="UNAVAILABLE"/>-->
                             </items>
                         </SplitPane>
                     </items>
