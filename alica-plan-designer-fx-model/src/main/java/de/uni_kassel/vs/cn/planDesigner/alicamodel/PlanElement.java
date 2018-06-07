@@ -21,6 +21,10 @@ public class PlanElement {
     }
 
     public String getName() {
+        if (name.isEmpty())
+        {
+            return Long.toString(id);
+        }
         return name;
     }
 

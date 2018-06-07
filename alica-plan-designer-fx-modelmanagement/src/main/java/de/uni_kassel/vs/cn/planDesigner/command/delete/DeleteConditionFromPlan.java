@@ -5,38 +5,38 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.RuntimeCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-/**
- * Created by marci on 28.02.17.
- */
-public class DeleteConditionFromPlan extends AbstractCommand<Condition> {
-    private final Plan parentOfElement;
+public class DeleteConditionFromPlan extends AbstractCommand {
 
-    public DeleteConditionFromPlan(Plan parentOfElement, Condition toDelete) {
-        super(toDelete, parentOfElement);
-        this.parentOfElement = parentOfElement;
+    protected Plan plan;
+    protected Condition condition;
+
+    public DeleteConditionFromPlan(ModelManager modelManager, Plan plan, Condition condition) {
+        super(modelManager);
+        this.plan = plan;
     }
 
     @Override
     public void doCommand() {
-        if (getElementToEdit() instanceof RuntimeCondition) {
-            parentOfElement.setRuntimeCondition(null);
-        } else if (getElementToEdit() instanceof PreCondition) {
-            parentOfElement.setPreCondition(null);
+        if (condition instanceof RuntimeCondition) {
+            plan.setRuntimeCondition(null);
+        } else if (condition instanceof PreCondition) {
+            plan.setPreCondition(null);
         }
     }
 
     @Override
     public void undoCommand() {
-        if (getElementToEdit() instanceof RuntimeCondition) {
-            parentOfElement.setRuntimeCondition((RuntimeCondition) getElementToEdit());
-        } else if (getElementToEdit() instanceof PreCondition) {
-            parentOfElement.setPreCondition((PreCondition) getElementToEdit());
+        if (condition instanceof RuntimeCondition) {
+            plan.setRuntimeCondition((RuntimeCondition) condition);
+        } else if (condition instanceof PreCondition) {
+            plan.setPreCondition((PreCondition) condition);
         }
     }
 
     @Override
     public String getCommandString() {
-        return "Remove Condition " + getElementToEdit() + " from " + parentOfElement.getName();
+        return "Remove Condition " + condition.getName() + " from " + plan.getName();
     }
 }
