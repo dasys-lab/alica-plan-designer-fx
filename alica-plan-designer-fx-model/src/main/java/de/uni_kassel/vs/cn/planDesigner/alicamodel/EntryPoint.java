@@ -4,6 +4,7 @@ public class EntryPoint extends PlanElement{
     protected Task task;
     protected boolean successRequired;
     protected State state;
+    protected Plan plan;
     protected int minCardinality;
     protected int maxCardinality;
 
@@ -45,5 +46,13 @@ public class EntryPoint extends PlanElement{
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public Plan getPlan() {
+        return plan;
+    }
+
+    public void setPlan(Plan plan) {
+        this.plan = plan;
     }
 }
