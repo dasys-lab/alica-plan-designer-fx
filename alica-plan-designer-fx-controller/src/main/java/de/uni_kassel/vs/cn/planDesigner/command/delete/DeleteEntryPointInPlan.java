@@ -1,15 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
-/**
- * Created by marci on 08.02.17.
- */
-public class DeleteEntryPointInPlan extends AbstractCommand<EntryPoint> {
+public class DeleteEntryPointInPlan extends AbstractCommand {
 
     private State associatedState;
     private final PlanModelVisualisationObject parentOfElement;
@@ -19,7 +15,7 @@ public class DeleteEntryPointInPlan extends AbstractCommand<EntryPoint> {
         super(element, parentOfElement.getPlan());
         this.parentOfElement = parentOfElement;
         this.pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(getElementToEdit());
-        this.associatedState = getElementToEdit().getState();
+        this.associatedState = element.getState();
     }
 
     @Override
@@ -36,7 +32,7 @@ public class DeleteEntryPointInPlan extends AbstractCommand<EntryPoint> {
         parentOfElement.getPlan().getEntryPoints().add(getElementToEdit());
         parentOfElement.getPmlUiExtensionMap().getExtension().put(getElementToEdit(), pmlUiExtension);
         if (associatedState != null) {
-            associatedState.setEntryPoint(getElementToEdit());
+            associatedState.setEntryPoint((EntryPoint) getElementToEdit());
         }
     }
 

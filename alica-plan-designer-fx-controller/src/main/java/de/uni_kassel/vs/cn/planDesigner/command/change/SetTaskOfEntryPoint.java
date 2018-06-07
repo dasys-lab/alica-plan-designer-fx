@@ -4,10 +4,8 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
-/**
- * Created by marci on 07.04.17.
- */
-public class SetTaskOfEntryPoint extends AbstractCommand<Task> {
+
+public class SetTaskOfEntryPoint extends AbstractCommand {
 
     private EntryPoint parentOfElement;
     private Task previousTask;
@@ -20,7 +18,7 @@ public class SetTaskOfEntryPoint extends AbstractCommand<Task> {
     @Override
     public void doCommand() {
         previousTask = parentOfElement.getTask();
-        parentOfElement.setTask(getElementToEdit());
+        parentOfElement.setTask((Task) getElementToEdit());
     }
 
     @Override
