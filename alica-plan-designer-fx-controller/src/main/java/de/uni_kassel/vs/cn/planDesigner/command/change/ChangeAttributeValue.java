@@ -5,7 +5,6 @@ import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 
@@ -60,7 +59,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
 
             // TODO: Check all other attributes of all model objects...
 
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }
