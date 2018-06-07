@@ -21,12 +21,12 @@ public class AddVariableToCondition extends AbstractCommand<Variable> {
 
     @Override
     public void doCommand() {
-        parentOfElement.getVars().add(getElementToEdit());
+        parentOfElement.getVariables().add(getElementToEdit());
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getVars().remove(getElementToEdit());
+        parentOfElement.getVariables().remove(getElementToEdit());
     }
 
     @Override

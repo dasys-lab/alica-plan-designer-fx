@@ -24,7 +24,7 @@ public class Condition extends PlanElement {
         this.pluginName = pluginName;
     }
 
-    public ArrayList<Variable> getVars() {
+    public ArrayList<Variable> getVariables() {
         return vars;
     }
 

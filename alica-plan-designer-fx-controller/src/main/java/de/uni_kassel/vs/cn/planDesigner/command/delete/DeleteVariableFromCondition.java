@@ -5,10 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
-/**
- * Created by marci on 26.02.17.
- */
-public class DeleteVariableFromCondition extends AbstractCommand<Variable> {
+public class DeleteVariableFromCondition extends AbstractCommand {
 
     private final Condition parentOfElement;
 
@@ -19,12 +16,12 @@ public class DeleteVariableFromCondition extends AbstractCommand<Variable> {
 
     @Override
     public void doCommand() {
-        parentOfElement.getVars().remove(getElementToEdit());
+        parentOfElement.getVariables().remove(getElementToEdit());
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getVars().add(getElementToEdit());
+        parentOfElement.getVariables().add((Variable)getElementToEdit());
     }
 
     @Override
