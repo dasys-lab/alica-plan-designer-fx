@@ -1,32 +1,34 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 public class AddVariableToCondition extends AbstractCommand {
 
-    private final Condition parentOfElement;
+    protected Condition condition;
+    protected Variable variable;
 
-    public AddVariableToCondition(Condition parentOfElement, Plan affectedPlan) {
-        super(new Variable(), affectedPlan);
-        this.parentOfElement = parentOfElement;
+    public AddVariableToCondition(ModelManager modelManager, Condition condition) {
+        super(modelManager);
+        this.variable = new Variable();
+        this.condition = condition;
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.getVariables().add((Variable)getElementToEdit());
+        condition.getVariables().add(variable);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getVariables().remove(getElementToEdit());
+        condition.getVariables().remove(variable);
     }
 
     @Override
     public String getCommandString() {
-        return "Add new variable to" + parentOfElement.getName();
+        return "Add new variable " + variable.getName() + " to " + condition.getName();
     }
 
 
