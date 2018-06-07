@@ -5,12 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Variable;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 
-import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
-
-/**
- * Created by marci on 26.02.17.
- */
-public class AddVariableToCondition extends AbstractCommand<Variable> {
+public class AddVariableToCondition extends AbstractCommand {
 
     private final Condition parentOfElement;
 
@@ -21,7 +16,7 @@ public class AddVariableToCondition extends AbstractCommand<Variable> {
 
     @Override
     public void doCommand() {
-        parentOfElement.getVariables().add(getElementToEdit());
+        parentOfElement.getVariables().add((Variable)getElementToEdit());
     }
 
     @Override
