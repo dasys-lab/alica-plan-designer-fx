@@ -1,52 +1,50 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
-import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
-import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getAlicaFactory;
-import static de.uni_kassel.vs.cn.generator.EMFModelUtils.getPmlUiExtensionModelFactory;
+public class AddTransitionInPlan extends AbstractCommand {
+    protected final PmlUiExtension newlyCreatedPmlUiExtension;
+    protected PlanModelVisualisationObject parentOfElement;
+    protected State from;
+    protected State to;
+    protected Transition transition;
 
-/**
- * Created by marci on 02.12.16.
- */
-public class AddTransitionInPlan extends AbstractCommand<Transition> {
-    private final PmlUiExtension newlyCreatedPmlUiExtension;
-    private PlanModelVisualisationObject parentOfElement;
-    private State from;
-    private State to;
-
-    public AddTransitionInPlan(PlanModelVisualisationObject parentOfElement, State from, State to) {
-        super(getAlicaFactory().createTransition(), parentOfElement.getPlan());
+    public AddTransitionInPlan(ModelManager modelManager, PlanModelVisualisationObject parentOfElement, State from, State to) {
+        super(modelManager);
+        this.transition = new Transition();
         this.parentOfElement = parentOfElement;
         this.from = from;
         this.to = to;
-        this.newlyCreatedPmlUiExtension = getPmlUiExtensionModelFactory().createPmlUiExtension();
+        this.newlyCreatedPmlUiExtension = new PmlUiExtension();
     }
 
     @Override
     public void doCommand() {
-        getElementToEdit().setPreCondition(getAlicaFactory().createPreCondition());
-        getElementToEdit().setInState(from);
-        getElementToEdit().setOutState(to);
-        parentOfElement.getPlan().getTransitions().add(getElementToEdit());
+        transition.setPreCondition(new PreCondition());
+        transition.setInState(from);
+        transition.setOutState(to);
+        parentOfElement.getPlan().getTransitions().add(transition);
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .put(getElementToEdit(), newlyCreatedPmlUiExtension);
+                .put(transition, newlyCreatedPmlUiExtension);
     }
 
     @Override
     public void undoCommand() {
-        getElementToEdit().setOutState(null);
-        getElementToEdit().setInState(null);
-        parentOfElement.getPlan().getTransitions().remove(getElementToEdit());
+        transition.setOutState(null);
+        transition.setInState(null);
+        parentOfElement.getPlan().getTransitions().remove(transition);
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .remove(getElementToEdit());
+                .remove(transition);
     }
 
     @Override
