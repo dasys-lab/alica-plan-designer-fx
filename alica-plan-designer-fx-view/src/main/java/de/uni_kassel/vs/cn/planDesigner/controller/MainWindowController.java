@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.EditMenu;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import javafx.animation.FadeTransition;
@@ -36,6 +37,8 @@ public class MainWindowController implements Initializable {
 
     // SINGLETON
     private static volatile MainWindowController instance;
+
+
     public static MainWindowController getInstance() {
         if (instance == null)
         {
@@ -78,6 +81,7 @@ public class MainWindowController implements Initializable {
 
     private I18NRepo i18NRepo;
     private ConfigurationWindowController configWindowController;
+    private IShowUsageHandler usageHandler;
 
     private MainWindowController()
     {
@@ -96,6 +100,7 @@ public class MainWindowController implements Initializable {
             throw new RuntimeException("The member configWindowController need to be set through the public setter, before calling initialize()!");
         }
         menuBar.getMenus().addAll(createMenus(configWindowController));
+        repositoryTabPane.setShowUsageHandler(usageHandler);
 //        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
     }
@@ -237,5 +242,9 @@ public class MainWindowController implements Initializable {
 
     public FileTreeView getFileTreeView() {
         return fileTreeView;
+    }
+
+    public void setShowUsageHandler(IShowUsageHandler usageHandler) {
+        this.usageHandler = usageHandler;
     }
 }

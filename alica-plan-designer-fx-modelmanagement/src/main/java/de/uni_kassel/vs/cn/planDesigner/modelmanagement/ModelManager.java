@@ -92,8 +92,16 @@ public class ModelManager {
      * @param modelFile the file to be parsed by jackson
      */
     private void loadModelFile(File modelFile) throws RuntimeException {
+        if (modelFile.isDirectory()) {
+            return;
+        }
+
         String path = modelFile.toString();
-        String ending = path.substring(path.lastIndexOf('.'), path.length());
+        int pointIdx = path.lastIndexOf('.');
+        String ending = "";
+        if (pointIdx != -1) {
+            ending = path.substring(pointIdx, path.length());
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -144,7 +152,7 @@ public class ModelManager {
                     // TODO: Implement role and stuff parsing with jackson.
                     throw new RuntimeException("Parsing roles not implemented, yet!");
                 default:
-                    throw new RuntimeException("Received file with unknown file ending, for parsing.");
+                    throw new RuntimeException("Received file with unknown file ending, for parsing. File is: '" + path + "'");
             }
         } catch (IOException e) {
             e.printStackTrace();

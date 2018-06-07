@@ -60,9 +60,8 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler {
         mainWindowController = MainWindowController.getInstance();
         setupConfigGuiStuff();
 
+        mainWindowController.setShowUsageHandler(this);
         repoTabPane = mainWindowController.getRepositoryTabPane();
-
-        repoTabPane.setShowUsageHandler(this);
 
         repoViewModel = new RepositoryViewModel();
         repoViewModel.setRepositoryTabPane(repoTabPane);
@@ -81,9 +80,9 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler {
         configWindowController = new ConfigurationWindowController();
         configEventHandler = new ConfigurationEventHandler(configWindowController, configurationManager);
         configWindowController.setHandler(configEventHandler);
-        configWindowController.setClangFormat(configurationManager.getClangFormatPath());
-        configWindowController.setSourceCodeEditor(configurationManager.getEditorExecutablePath());
-        configWindowController.addConfigNames(configurationManager.getConfigurationNames());
+//        configWindowController.setClangFormat(configurationManager.getClangFormatPath());
+//        configWindowController.setSourceCodeEditor(configurationManager.getEditorExecutablePath());
+//        configWindowController.addConfigNames(configurationManager.getConfigurationNames());
         mainWindowController.setConfigWindowController(configWindowController);
     }
 
