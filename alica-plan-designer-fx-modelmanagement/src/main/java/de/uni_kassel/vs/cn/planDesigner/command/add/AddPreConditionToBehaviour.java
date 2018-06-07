@@ -1,31 +1,33 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
-/**
- * Created by marci on 16.06.17.
- */
-public class AddPreConditionToBehaviour extends AbstractCommand<PreCondition> {
+public class AddPreConditionToBehaviour extends AbstractCommand {
 
-    public AddPreConditionToBehaviour(PreCondition element, PlanElement affectedPlan) {
-        super(element, affectedPlan);
+    protected Behaviour behaviour;
+    protected PreCondition preCondition;
+
+    public AddPreConditionToBehaviour(ModelManager modelManager, PreCondition preCondition, Behaviour behaviour) {
+        super(modelManager);
+        this.behaviour = behaviour;
+        this.preCondition = preCondition;
     }
 
     @Override
     public void doCommand() {
-        ((Behaviour) getAffectedPlan()).setPreCondition(getElementToEdit());
+        behaviour.setPreCondition(preCondition);
     }
 
     @Override
     public void undoCommand() {
-        ((Behaviour) getAffectedPlan()).setPreCondition(null);
+        behaviour.setPreCondition(null);
     }
 
     @Override
     public String getCommandString() {
-        return "Add Precondition to Behaviour " + getAffectedPlan().getName();
+        return "Add Precondition to Behaviour " + behaviour.getName();
     }
 }
