@@ -2,6 +2,8 @@ package de.uni_kassel.vs.cn.planDesigner.modelmanagement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +18,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class ModelManager {
+
+    private static final Logger LOG = LogManager.getLogger(ModelManager.class);
 
     private String plansPath;
     private String tasksPath;
@@ -152,7 +156,8 @@ public class ModelManager {
                     // TODO: Implement role and stuff parsing with jackson.
                     throw new RuntimeException("Parsing roles not implemented, yet!");
                 default:
-                    throw new RuntimeException("Received file with unknown file ending, for parsing. File is: '" + path + "'");
+                    LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
+//                    throw new RuntimeException("Received file with unknown file ending, for parsing. File is: '" + path + "'");
             }
         } catch (IOException e) {
             e.printStackTrace();
