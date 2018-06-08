@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IShowUsageHandler {
+public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -47,12 +48,14 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler {
 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
+        configurationManager.setController(this);
 
         setupModelManager();
+        mainWindowController = MainWindowController.getInstance();
+        mainWindowController.setGuiStatusHandler(this);
 
         commandStack = new CommandStack();
 
-        mainWindowController = MainWindowController.getInstance();
         setupConfigGuiStuff();
 
         mainWindowController.setShowUsageHandler(this);
@@ -60,8 +63,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler {
 
         repoViewModel = new RepositoryViewModel();
         repoViewModel.setRepositoryTabPane(repoTabPane);
-
-
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -143,5 +144,14 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler {
             usage.add(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().getTypeName()));
         }
         return usage;
+    }
+
+    public void configurationChanged() {
+        //TODO for future purposes
+    }
+
+    @Override
+    public void guiInitialized() {
+        mainWindowController.enableMenuBar();
     }
 }
