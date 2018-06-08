@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.configuration;
 
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IConfigurationEventHandler;
 import javafx.beans.value.ObservableValue;
@@ -45,9 +46,9 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
      * @param event
      */
     public void handleEditCommit(ListView.EditEvent<String> event) {
-        if (event.getNewValue().contains(","))
+        if (event.getNewValue().matches(PlanElement.forbiddenCharacters))
         {
-            LOG.info("Comma character (,) is not allowed in configuration names! Value: " + event.getNewValue());
+            LOG.info("Configuration name is not valid! Value is '" + event.getNewValue() + "'");
             return;
         }
         if (!event.getNewValue().isEmpty()) {

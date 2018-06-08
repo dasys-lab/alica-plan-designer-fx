@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 public class PlanElement {
-    public static final String forbiddenCharacters = ".*[\\./\\*\\\\$§?\\[\\]!{}\\-äüö#\"%~'ÄÖÜß@]+.*";
+    public static final String forbiddenCharacters = ".*[\\./\\*\\\\$§?\\[\\]!{}\\-äüö#\"%~'ÄÖÜß@,]+.*";
     protected static int PLAN_ELEMENT_COUNTER = 0;
     protected long id;
     protected String name;
