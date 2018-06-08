@@ -65,6 +65,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         repoViewModel.setRepositoryTabPane(repoTabPane);
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
+        new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
 
         setupGeneratedSourcesManager();
     }
@@ -161,5 +162,8 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
             mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
             new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
         }
+	repoTabPane = mainWindowController.getRepositoryTabPane();
+        repoViewModel.setRepositoryTabPane(repoTabPane);
+        repoViewModel.initGuiContent();
     }
 }

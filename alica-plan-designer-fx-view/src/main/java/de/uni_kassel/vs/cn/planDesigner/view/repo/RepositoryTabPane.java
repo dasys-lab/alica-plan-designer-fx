@@ -5,6 +5,9 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
 import javafx.scene.control.TabPane;
 
+import javax.swing.text.View;
+import java.util.List;
+
 /**
  * Parent object for the tabs of the Repository View. Is created by loading
  * the mainWindow.fxml file and initialized by the corresponding MainWindowController.
@@ -42,15 +45,38 @@ public class RepositoryTabPane extends TabPane {
         plansTab.addElement(plan);
     }
 
+    public void addPlans(List<ViewModelElement> plans) {
+        plansTab.addElements(plans);
+    }
+
     public void addBehaviour(ViewModelElement behaviour) {
         behavioursTab.addElement(behaviour);
+    }
+
+    public void addBehaviours(List<ViewModelElement> behaviours) {
+        plansTab.addElements(behaviours);
     }
 
     public void addPlanType(ViewModelElement planType) {
         planTypesTab.addElement(planType);
     }
 
+    public void addPlanTypes(List<ViewModelElement> planTypes) {
+        plansTab.addElements(planTypes);
+    }
+
     public void addTask(ViewModelElement task) {
         tasksTab.addElement(task);
+    }
+
+    public void addTasks(List<ViewModelElement> tasks) {
+        plansTab.addElements(tasks);
+    }
+
+    public void clearGuiContent() {
+        plansTab.clearGuiContent();
+        planTypesTab.clearGuiContent();
+        behavioursTab.clearGuiContent();
+        tasksTab.clearGuiContent();
     }
 }

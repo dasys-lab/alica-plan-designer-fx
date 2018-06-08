@@ -6,6 +6,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * This class represents one tab of the Repository. It should be possible to drag elements of this
@@ -37,7 +38,19 @@ public class RepositoryTab extends Tab {
         sort();
     }
 
+    public void addElements(List<ViewModelElement> viewModelElements) {
+        for (ViewModelElement viewModelElement : viewModelElements) {
+            repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, showUsageHandler));
+        }
+        sort();
+    }
+
+    public void clearGuiContent() {
+        repositoryListView.getItems().clear();
+    }
+
     protected void sort() {
         repositoryListView.getItems().sort((Comparator<? super RepositoryHBox>) (Object) modelElementComparator);
     }
+
 }
