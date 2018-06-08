@@ -121,9 +121,6 @@ public class ConfigurationWindowController implements Initializable {
         // show available configurations in the list
         setupAvailableConfigurationsListView();
 
-        // show the values of the selected configuration
-        configEventHandler.showSelectedConfiguration();
-
         saveButton.setOnAction(e -> onSave());
 
         // TODO handle plugin drop down box
