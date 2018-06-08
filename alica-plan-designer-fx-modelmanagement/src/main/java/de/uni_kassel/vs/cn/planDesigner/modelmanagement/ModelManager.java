@@ -142,7 +142,6 @@ public class ModelManager {
                     }
                     break;
                 case ".tsk":
-                    //
                     TaskRepository taskRepository = mapper.readValue(modelFile, TaskRepository.class);
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
