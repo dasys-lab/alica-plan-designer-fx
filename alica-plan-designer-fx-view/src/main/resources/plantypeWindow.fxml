@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
-      fx:tool="de.uni_kassel.vs.cn.planDesigner.tool.PlanTypeWindowController">
+      fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.PlanTypeWindowController">
     <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" spacing="15.0" VBox.vgrow="ALWAYS">
         <ListView fx:id="planListView" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS"/>
         <VBox spacing="20.0" HBox.hgrow="ALWAYS">
