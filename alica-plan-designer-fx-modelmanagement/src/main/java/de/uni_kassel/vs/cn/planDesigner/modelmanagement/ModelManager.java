@@ -270,7 +270,7 @@ public class ModelManager {
             switch (ending) {
                 case ".pml":
                     for (Plan plan : planMap.values()) {
-                        if (pathString.contains(Paths.get(plan.getDestinationPath(), plan.getName(), ".pml").toString())) {
+                        if (pathString.contains(Paths.get(plan.getRelativeDir(), plan.getName(), ".pml").toString())) {
                             deletedElement = plan;
                             break;
                         }
@@ -288,7 +288,7 @@ public class ModelManager {
                     break;
                 case ".beh":
                     for (Behaviour behaviour : behaviourMap.values()) {
-                        if (pathString.contains(Paths.get(behaviour.getDestinationPath(), behaviour.getName(), ".beh").toString())) {
+                        if (pathString.contains(Paths.get(behaviour.getRelativeDir(), behaviour.getName(), ".beh").toString())) {
                             deletedElement = behaviour;
                             break;
                         }
@@ -306,7 +306,7 @@ public class ModelManager {
                     break;
                 case ".pty":
                     for (PlanType planType : planTypeMap.values()) {
-                        if (pathString.contains(Paths.get(planType.getDestinationPath(), planType.getName(), ".pty").toString())) {
+                        if (pathString.contains(Paths.get(planType.getRelativeDir(), planType.getName(), ".pty").toString())) {
                             deletedElement = planType;
                             break;
                         }

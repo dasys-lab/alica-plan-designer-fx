@@ -267,8 +267,8 @@ public class MainWindowController implements Initializable {
     }
 
     public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {
-        fileTreeView.addTopLevelFolder(plansPath);
-        fileTreeView.addTopLevelFolder(rolesPath);
-        fileTreeView.addTopLevelFolder(tasksPath);
+        fileTreeView.setPlansPath(plansPath);
+        fileTreeView.setRolesPath(rolesPath);
+        fileTreeView.setTaskPath(tasksPath);
     }
 }

@@ -1,13 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 public class SerializablePlanElement extends PlanElement {
-    protected String destinationPath;
+    protected String relativeDir;
 
-    public String getDestinationPath() {
-        return destinationPath;
+    public String getRelativeDir() {
+        return relativeDir;
     }
 
-    public void setDestinationPath(String destinationPath) {
-        this.destinationPath = destinationPath;
+    public void setRelativeDir(String relativeDir) {
+        this.relativeDir = relativeDir;
     }
 }

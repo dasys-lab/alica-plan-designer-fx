@@ -118,14 +118,16 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                 PlanElement planElement = event.getNewElement();
                 if (planElement instanceof Plan) {
                     Plan plan = (Plan) planElement;
+                    addTreeViewElement(plan, (plan.getMasterPlan() ? "masterplan" : "plan"));
                     repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), (plan.getMasterPlan() ? "masterplan" : "plan")));
                 } else if (planElement instanceof PlanType) {
+                    addTreeViewElement((AbstractPlan) planElement, "plantype");
                     repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Behaviour) {
-                    mainWindowController.getFileTreeView().addBehaviour(new TreeViewModelElement(planElement.getId(),
-                            planElement.getName(), planElement.getClass().toString(), ((Behaviour) planElement).getDestinationPath()));
+                    addTreeViewElement((AbstractPlan) planElement, "behaviour");
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Task) {
+                    addTreeViewElement((AbstractPlan) planElement, "task");
                     repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 }
                 break;
@@ -136,6 +138,11 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
             default:
                 throw new RuntimeException("Unknown model event captured!");
         }
+    }
+
+    private void addTreeViewElement(AbstractPlan planElement, String type) {
+        mainWindowController.getFileTreeView().addTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
+                planElement.getName(), type, planElement.getRelativeDir()));
     }
 
     @Override
