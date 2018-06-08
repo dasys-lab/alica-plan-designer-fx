@@ -123,7 +123,8 @@ public class CreateNewDialogController implements Initializable {
         }
 
         // Notification of resourceCreationHandler for plans, plantypes, etc...
-        resourceCreationHandler.handle(new ResourceCreationEvent(name, type, pathTextField.getText()));
+        resourceCreationHandler.handleResourceCreationEvent(new ResourceCreationEvent(name, type, pathTextField.getText()));
+        ((Stage) pathTextField.getScene().getWindow()).close();
     }
 
     /**
