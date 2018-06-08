@@ -107,7 +107,7 @@ public class MainWindowController implements Initializable {
         repositoryTabPane.setShowUsageHandler(usageHandler);
 //        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
-        guiStatusHandler.guiInitialized();
+        guiStatusHandler.handleGuiInitialzed();
     }
 
     public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {

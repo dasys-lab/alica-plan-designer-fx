@@ -13,6 +13,7 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandl
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
@@ -34,6 +35,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     private ConfigurationManager configurationManager;
     private FileSystemEventHandler fileSystemEventHandler;
     private ConfigurationEventHandler configEventHandler;
+    private I18NRepo i18NRepo;
 
     // Model Objects
     private ModelManager modelManager;
@@ -51,6 +53,8 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
         configurationManager.setController(this);
+
+        i18NRepo = I18NRepo.getInstance();
 
         setupModelManager();
         mainWindowController = MainWindowController.getInstance();
@@ -76,10 +80,10 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
     protected void setupGeneratedSourcesManager() {
         generatedSourcesManager = new GeneratedSourcesManager();
-        Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         generatedSourcesManager.setEditorExecutablePath(configurationManager.getEditorExecutablePath());
+        Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
-            generatedSourcesManager.setGenSrcPath(configurationManager.getActiveConfiguration().getGenSrcPath());
+            generatedSourcesManager.setGenSrcPath(activeConfiguration.getGenSrcPath());
         }
     }
 
@@ -102,8 +106,40 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         mainWindowController.setConfigWindowController(configWindowController);
     }
 
+    /**
+     * Determines the type string corresponding to the given PlanElement.
+     * @param planElement whose type is to be determined
+     * @return type of the plan element
+     */
+    public String getTypeString(PlanElement planElement) {
+        if (planElement instanceof Plan) {
+            Plan plan = (Plan) planElement;
+            if (plan.getMasterPlan()) {
+                return i18NRepo.getString("alicatype.masterplan");
+            } else {
+                return i18NRepo.getString("alicatype.plan");
+            }
+        } else if (planElement instanceof Behaviour) {
+            return i18NRepo.getString("alicatype.behaviour");
+        } else if (planElement instanceof PlanType) {
+            return i18NRepo.getString("alicatype.plantype");
+        } else if (planElement instanceof Task) {
+            return i18NRepo.getString("alicatype.task");
+        } else if (planElement instanceof Role) {
+            return i18NRepo.getString("alicatype.role");
+        } else {
+            return null;
+        }
+    }
+
+    // Handler Event Methods
+
+    /**
+     * Called when something relevant in the filesystem has changed.
+     * @param event
+     * @param path
+     */
     public void handleFileSystemEvent(WatchEvent event, Path path) {
-        System.out.println("handle file system called");
         modelManager.handleFileSystemEvent(event.kind(), path);
     }
 
@@ -142,23 +178,33 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         }
     }
 
+    /**
+     * Called by the 'ShowUsage'-ContextMenu of RepositoryHBoxes
+     * @param viewModelElement
+     * @return
+     */
     @Override
     public ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement) {
         ArrayList<ViewModelElement> usage = new ArrayList<>();
         for (PlanElement planElement : this.modelManager.getUsages(viewModelElement.getId())) {
-            // TODO: fix type string in viewModelElement for everywhere
-            usage.add(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().getTypeName()));
+            usage.add(new ViewModelElement(planElement.getId(), planElement.getName(), getTypeString(planElement)));
         }
         return usage;
     }
 
-    public void configurationChanged() {
+    /**
+     * Called by the configuration manager, if the active configuration has changed.
+     */
+    public void handleConfigurationChanged() {
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
     }
 
+    /**
+     * Called by the main window controlled at the end of its initialized method.
+     */
     @Override
-    public void guiInitialized() {
+    public void handleGuiInitialzed() {
         mainWindowController.enableMenuBar();
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
@@ -170,8 +216,13 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         repoViewModel.initGuiContent();
     }
 
+    /**
+     * Called by the context menu for creating plans, behaviours etc.
+     * @param event
+     */
     @Override
-    public void handle(ResourceCreationEvent event) {
+    public void handleResourceCreationEvent(ResourceCreationEvent event) {
         System.out.println("event" + event);
+        // TODO: implment
     }
 }

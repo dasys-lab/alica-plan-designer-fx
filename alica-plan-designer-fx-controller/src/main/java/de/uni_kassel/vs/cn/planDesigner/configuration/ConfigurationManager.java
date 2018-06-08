@@ -213,7 +213,7 @@ public final class ConfigurationManager {
                     activeConfiguration = conf;
                     PluginManager.getInstance().updateAvailablePlugins(conf.getPluginsPath());
                     if (controller != null) {
-                        controller.configurationChanged();
+                        controller.handleConfigurationChanged();
                     }
                     LOG.info("Set active configuration to " + confName);
                     return true;
