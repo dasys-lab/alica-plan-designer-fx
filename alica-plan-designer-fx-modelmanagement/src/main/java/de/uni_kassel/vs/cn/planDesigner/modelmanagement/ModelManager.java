@@ -158,6 +158,7 @@ public class ModelManager {
                     break;
                 default:
                     LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
+//                    throw new RuntimeException("Received file with unknown file ending, for parsing. File is: '" + path + "'");
             }
         } catch (IOException e) {
             e.printStackTrace();
