@@ -116,6 +116,7 @@ public class ConfigurationWindowController implements Initializable {
         // external tools
         clangFormatTextField.setOnKeyReleased(configEventHandler);
         sourceCodeEditorTextField.setOnKeyReleased(configEventHandler);
+        configEventHandler.updateExternalTools();
 
         // show available configurations in the list
         setupAvailableConfigurationsListView();
@@ -156,7 +157,7 @@ public class ConfigurationWindowController implements Initializable {
     }
 
     public String getRolesFolder() {
-        return plansFolderTextField.getText();
+        return rolesFolderTextField.getText();
     }
 
     public void setRolesFolder(String rolesFolder) {
@@ -164,7 +165,7 @@ public class ConfigurationWindowController implements Initializable {
     }
 
     public String getTasksFolder() {
-        return plansFolderTextField.getText();
+        return tasksFolderTextField.getText();
     }
 
     public void setTasksFolder(String tasksFolder) {
@@ -172,7 +173,7 @@ public class ConfigurationWindowController implements Initializable {
     }
 
     public String getSourceFolder() {
-        return plansFolderTextField.getText();
+        return genSourceFolderTextField.getText();
     }
 
     public void setSourceFolder(String sourceFolder) {
@@ -180,7 +181,7 @@ public class ConfigurationWindowController implements Initializable {
     }
 
     public String getPluginsFolder() {
-        return plansFolderTextField.getText();
+        return pluginsFolderTextField.getText();
     }
 
     public void setPluginsFolder(String pluginsFolder) {
@@ -207,22 +208,23 @@ public class ConfigurationWindowController implements Initializable {
         sourceCodeEditorTextField.setText(sourceCodeEditorPath);
     }
 
-    public void addConfigNames(List<String> configNames) {
+    public void setAvailableConfigs(List<String> configNames) {
+        availableWorkspacesListView.getItems().clear();
         for (String confName : configNames) {
             availableWorkspacesListView.getItems().add(confName);
         }
+        // for adding a new configuration, the empty entry is necessary and specially handled
+        availableWorkspacesListView.getItems().add("");
     }
 
     private void setupAvailableConfigurationsListView() {
-        ObservableList<String> confNameList = FXCollections.observableArrayList();
-        // for adding a new configuration, the empty entry is necessary and specially handled
-        confNameList.add("");
-        availableWorkspacesListView.setItems(confNameList);
+        availableWorkspacesListView.setItems(FXCollections.observableArrayList());
         availableWorkspacesListView.setEditable(true);
         availableWorkspacesListView.setCellFactory(TextFieldListCell.forListView());
         availableWorkspacesListView.setOnEditCommit(configEventHandler);
         availableWorkspacesListView.setOnMouseClicked(configEventHandler);
         availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configEventHandler);
+        configEventHandler.updateAvailableConfigurations();
     }
 
     /**

@@ -116,6 +116,16 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
         configWindowController.setSourceFolder(conf.getGenSrcPath());
     }
 
+    public void updateAvailableConfigurations() {
+        configWindowController.setAvailableConfigs(configManager.getConfigurationNames());
+    }
+
+    @Override
+    public void updateExternalTools() {
+        configWindowController.setClangFormat(configManager.getClangFormatPath());
+        configWindowController.setSourceCodeEditor(configManager.getEditorExecutablePath());
+    }
+
     @Override
     public void save(String confName) {
         storeConfiguration(confName);
