@@ -1,9 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
 
-import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowGeneratedSourcesEventHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowGeneratedSourcesEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -12,9 +10,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
-
-import java.util.ArrayList;
 
 /**
  * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a alicamodel object to hold changes from the visualisation

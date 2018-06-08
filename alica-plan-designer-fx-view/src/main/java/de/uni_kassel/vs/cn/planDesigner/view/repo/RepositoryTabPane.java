@@ -2,10 +2,9 @@ package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import javafx.scene.control.TabPane;
 
-import javax.swing.text.View;
 import java.util.List;
 
 /**

@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseButton;

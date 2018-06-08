@@ -219,7 +219,7 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
     private void handleDoubleClick(MouseEvent event) {
         if (event.getClickCount() == 2) {
             if (getItem().unwrap().isDirectory()) {
-                getTreeItem().setExpanded(getTreeItem().isExpanded() == false);
+                getTreeItem().setExpanded(!getTreeItem().isExpanded());
             } else {
                 controller.openFile(getItem().unwrap());
             }

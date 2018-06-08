@@ -1,12 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.EditMenu;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import javafx.animation.FadeTransition;
@@ -84,6 +85,7 @@ public class MainWindowController implements Initializable {
     private ConfigurationWindowController configWindowController;
     private IGuiStatusHandler guiStatusHandler;
     private IShowUsageHandler usageHandler;
+    private IResourceCreationHandler resourceCreationHandler;
     private Menu fileMenu;
     private Menu codeGenerationMenu;
 
@@ -92,10 +94,6 @@ public class MainWindowController implements Initializable {
         super();
         this.i18NRepo = I18NRepo.getInstance();
 
-    }
-
-    public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
-        this.guiStatusHandler = guiStatusHandler;
     }
 
     public void setConfigWindowController(ConfigurationWindowController configWindowController) {
@@ -133,7 +131,7 @@ public class MainWindowController implements Initializable {
         List<Menu> menus = new ArrayList<>();
 
         fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
-        fileMenu.getItems().add(new NewResourceMenu());
+        fileMenu.getItems().add(new NewResourceMenu(null));
 
         MenuItem saveItem = new MenuItem(i18NRepo.getString("label.menu.file.save"));
         saveItem.setOnAction(event -> ((AbstractEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save());
@@ -264,6 +262,17 @@ public class MainWindowController implements Initializable {
 
     public void setShowUsageHandler(IShowUsageHandler usageHandler) {
         this.usageHandler = usageHandler;
+    }
+public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
+        this.guiStatusHandler = guiStatusHandler;
+    }
+
+    public void setResourceCreationHandler(IResourceCreationHandler creationHandler) {
+        this.resourceCreationHandler = creationHandler;
+    }
+
+    public IResourceCreationHandler getResourceCreationHandler() {
+        return resourceCreationHandler;
     }
 
     public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {

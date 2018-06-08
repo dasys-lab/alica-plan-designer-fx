@@ -1,5 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
+import de.uni_kassel.vs.cn.planDesigner.events.ResourceCreationEvent;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,16 +12,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 public class CreateNewDialogController implements Initializable {
+
+    private static final Logger LOG = LogManager.getLogger(CreateNewDialogController.class);
 
     @FXML
     private Label pathLabel;
@@ -39,11 +45,9 @@ public class CreateNewDialogController implements Initializable {
     private Button createButton;
 
     private File initialDirectoryHint;
-
-    private String alicaType;
-//    private EObject createdObject;
-
+    private String type;
     private I18NRepo i18NRepo;
+    private IResourceCreationHandler resourceCreationHandler;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -55,15 +59,23 @@ public class CreateNewDialogController implements Initializable {
         });
         openFileChooserButton.setText(i18NRepo.getString("action.choose"));
         createButton.setText(i18NRepo.getString("action.create"));
-        createButton.setOnAction(e -> createFile());
+        createButton.setOnAction(e -> createResource());
     }
 
     public void setInitialDirectoryHint(File initialDirectoryHint) {
+        if (initialDirectoryHint == null) {
+            return;
+        }
+
         this.initialDirectoryHint = initialDirectoryHint;
-        if (initialDirectoryHint.isDirectory() == false) {
+        if (!initialDirectoryHint.isDirectory()) {
             this.initialDirectoryHint = initialDirectoryHint.getParentFile();
         }
         pathTextField.setText(this.initialDirectoryHint.getAbsolutePath());
+    }
+
+    public void setResourceCreationHandler (IResourceCreationHandler resourceCreationHandler) {
+        this.resourceCreationHandler = resourceCreationHandler;
     }
 
     private void openFileChooser(Stage stage) {
@@ -84,64 +96,53 @@ public class CreateNewDialogController implements Initializable {
 
     }
 
-    private void createFile() {
-        String fileName = nameTextField.getText();
-        if (fileName == null || fileName.length() == 0 /*|| AlicaModelUtils.containsIllegalCharacter(fileName)*/) {
-            ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.save.name"), null);
+    private void createResource() {
+        String name = trimEnding(nameTextField.getText());
+        LOG.info("Corrected name is " + name);
+
+        if (name == null || name.isEmpty() || name.matches(PlanDesignerApplication.forbiddenCharacters)) {
+            ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.save.name") + "'" + name + "'", null);
             return;
         }
 
-        if (alicaType != null) {
-            if (alicaType.equals("behaviour") && fileName.endsWith(".beh") == false) {
-                fileName = fileName + ".beh";
-            }
+        if (type == null) {
+            ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.create.type"), null);
+            return;
+        }
 
-            if (alicaType.equals("plan") && fileName.endsWith(".pml") == false) {
-                fileName = fileName + ".pml";
-            }
-
-            if (alicaType.equals("plantype") && fileName.endsWith(".pty") == false) {
-                fileName = fileName + ".pty";
-            }
-
-            File alicaFile = new File(Paths.get(pathTextField.getText(), fileName).toString());
-            if (alicaFile.exists()) {
-                ErrorWindowController
-                        .createErrorWindow(i18NRepo.getString("label.error.save.alreadyExists"), null);
-                return;
-            }
-            ((Stage)pathTextField.getScene().getWindow()).close();
-
-//            createdObject = getAlicaFactory().create(alicaType);
-//            ((PlanElement) createdObject).setName(fileName.replace(".beh","")
-//                    .replace(".pty","").replace(".pml", ""));
-            Path alicaFilePath = Paths.get(pathTextField.getText(), fileName);
-            if (Files.exists(alicaFilePath)) {
-                ErrorWindowController
-                        .createErrorWindow(i18NRepo.getString("label.error.save.alreadyExists"), null);
-                return;
-            }
-
-//            MainWindowController.getInstance().getCommandStack()
-//                    .storeAndExecute(new CreateAbstractPlan((AbstractPlan) createdObject, alicaFilePath));
-            ((Stage)pathTextField.getScene().getWindow()).close();
-        } else {
+        // Special handling for creating folders
+        if (type.equals(i18NRepo.getString("alicatype.folder"))) {
             try {
-                Files.createDirectory(new File(Paths.get(pathTextField.getText(), fileName).toString()).toPath());
+                Files.createDirectory(new File(Paths.get(pathTextField.getText(), name).toString()).toPath());
             } catch (IOException e) {
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.create.folder"), e);
+                return;
             }
-            ((Stage)pathTextField.getScene().getWindow()).close();
+            ((Stage) pathTextField.getScene().getWindow()).close();
+            return;
         }
+
+        // Notification of resourceCreationHandler for plans, plantypes, etc...
+        resourceCreationHandler.handle(new ResourceCreationEvent(name, type, pathTextField.getText()));
     }
 
-    public void setAlicaType(String alicaType) {
-        this.alicaType = alicaType;
-        String nameString = i18NRepo.getString("label.name");
-        if (alicaType != null) {
-            nameLabel.setText(i18NRepo.getString("label.menu.new." + alicaType) + " " + nameString);
-        } else {
-            nameLabel.setText(i18NRepo.getString("label.menu.new.folder") + " " + nameString);
+    /**
+     * Cuts the end starting at the last occurrence of '.'
+     * @param filename
+     * @return filename without ending
+     */
+    protected String trimEnding(String filename) {
+        if (filename != null && !filename.isEmpty() && filename.contains(".")){
+            filename = filename.substring(0,filename.length()-filename.lastIndexOf('.')+1);
         }
+        return filename;
+    }
+
+    public void setType(String type) {
+        if (type == null) {
+            return;
+        }
+        this.type = type;
+        nameLabel.setText(i18NRepo.getString("label.menu.new." + type) + " " + i18NRepo.getString("label.name") + ":");
     }
 }
