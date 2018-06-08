@@ -82,6 +82,8 @@ public class MainWindowController implements Initializable {
     private I18NRepo i18NRepo;
     private ConfigurationWindowController configWindowController;
     private IShowUsageHandler usageHandler;
+    private Menu fileMenu;
+    private Menu codeGenerationMenu;
 
     private MainWindowController()
     {
@@ -122,17 +124,19 @@ public class MainWindowController implements Initializable {
     private List<Menu> createMenus(ConfigurationWindowController configWindowController) {
         List<Menu> menus = new ArrayList<>();
 
-        Menu fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
+        fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
         fileMenu.getItems().add(new NewResourceMenu());
+
         MenuItem saveItem = new MenuItem(i18NRepo.getString("label.menu.file.save"));
         saveItem.setOnAction(event -> ((AbstractEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save());
         saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
+        fileMenu.setDisable(true);
         menus.add(fileMenu);
 
         menus.add(new EditMenu(editorTabPane, configWindowController));
 
-        Menu codegenerationMenu = new Menu(i18NRepo.getString("label.menu.generation"));
+        codeGenerationMenu = new Menu(i18NRepo.getString("label.menu.generation"));
         MenuItem regenerateItem = new MenuItem(i18NRepo.getString("label.menu.generation.regenerate"));
         MenuItem generateCurrentFile = new MenuItem(i18NRepo.getString("label.menu.generation.file"));
         generateCurrentFile.setDisable(true);
@@ -242,6 +246,10 @@ public class MainWindowController implements Initializable {
 
     public FileTreeView getFileTreeView() {
         return fileTreeView;
+    }
+
+    public void enableMenuBar() {
+
     }
 
     public void setShowUsageHandler(IShowUsageHandler usageHandler) {

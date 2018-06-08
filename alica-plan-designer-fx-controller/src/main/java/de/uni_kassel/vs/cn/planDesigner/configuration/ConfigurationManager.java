@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.configuration;
 
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -201,6 +202,7 @@ public final class ConfigurationManager {
                 if (conf.getName().equals(confName)) {
                     activeConfiguration = conf;
                     PluginManager.getInstance().updateAvailablePlugins(conf.getPluginsPath());
+                    MainWindowController.getInstance();
                     LOG.info("Set active configuration to " + confName);
                     return true;
                 }
