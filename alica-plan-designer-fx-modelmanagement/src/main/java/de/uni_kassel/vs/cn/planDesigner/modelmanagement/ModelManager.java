@@ -151,8 +151,11 @@ public class ModelManager {
                     }
                     break;
                 case ".rset":
-                    // TODO: Implement role and stuff parsing with jackson.
+                case ".cdefset":
+                case ".graph":
+                case ".rdefset":
                     LOG.error("Parsing roles not implemented, yet!");
+                    break;
                 default:
                     LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
             }
