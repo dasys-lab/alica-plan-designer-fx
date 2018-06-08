@@ -165,8 +165,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                     addTreeViewElement((AbstractPlan) planElement, "plantype");
                     repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Behaviour) {
-                    mainWindowController.getFileTreeView().addBehaviour(new TreeViewModelElement(planElement.getId(),
-                            planElement.getName(), planElement.getClass().toString(), ((Behaviour) planElement).getDestinationPath()));
+                    addTreeViewElement((AbstractPlan) planElement, "behaviour");
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 } else if (planElement instanceof Task) {
                     addTreeViewElement((AbstractPlan) planElement, "task");
