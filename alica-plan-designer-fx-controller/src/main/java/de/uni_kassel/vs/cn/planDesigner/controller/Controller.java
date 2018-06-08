@@ -149,8 +149,8 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     }
 
     public void configurationChanged() {
-        Configuration actiConfiguration = configurationManager.getActiveConfiguration();
-        mainWindowController.setUpFileTreeView(actiConfiguration.getPlansPath(), actiConfiguration.getRolesPath(), actiConfiguration.getTasksPath());
+        Configuration activeConfiguration = configurationManager.getActiveConfiguration();
+        mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
     }
 
     @Override
