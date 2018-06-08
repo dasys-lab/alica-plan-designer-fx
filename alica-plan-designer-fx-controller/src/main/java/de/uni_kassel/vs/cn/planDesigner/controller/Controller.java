@@ -108,6 +108,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
     /**
      * Determines the type string corresponding to the given PlanElement.
+     *
      * @param planElement whose type is to be determined
      * @return type of the plan element
      */
@@ -136,10 +137,12 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
     /**
      * Called when something relevant in the filesystem has changed.
+     *
      * @param event
      * @param path
      */
     public void handleFileSystemEvent(WatchEvent event, Path path) {
+        System.out.println("handle file system called");
         modelManager.handleFileSystemEvent(event.kind(), path);
     }
 
@@ -156,17 +159,20 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         switch (event.getType()) {
             case ELEMENT_CREATED:
                 PlanElement planElement = event.getNewElement();
+                String typeString = getTypeString(planElement);
                 if (planElement instanceof Plan) {
                     Plan plan = (Plan) planElement;
-                    repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), getTypeString(planElement)));
+                    addTreeViewElement(plan, typeString);
+                    repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), typeString));
                 } else if (planElement instanceof PlanType) {
-                    repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), getTypeString(planElement)));
+                    addTreeViewElement((AbstractPlan) planElement, typeString);
+                    repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
                 } else if (planElement instanceof Behaviour) {
-                    mainWindowController.getFileTreeView().addBehaviour(new TreeViewModelElement(planElement.getId(),
-                            planElement.getName(), getTypeString(planElement), ((Behaviour) planElement).getRelativeDirectory()));
-                    repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), getTypeString(planElement)));
+                    addTreeViewElement((AbstractPlan) planElement, typeString);
+                    repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
                 } else if (planElement instanceof Task) {
-                    repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), getTypeString(planElement)));
+                    addTreeViewElement((AbstractPlan) planElement, typeString);
+                    repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
                 }
                 break;
             case ELEMENT_DELETED:
@@ -178,8 +184,14 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         }
     }
 
+    private void addTreeViewElement(AbstractPlan planElement, String type) {
+        mainWindowController.getFileTreeView().addTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
+                planElement.getName(), type, planElement.getRelativeDirectory()));
+    }
+
     /**
      * Called by the 'ShowUsage'-ContextMenu of RepositoryHBoxes
+     *
      * @param viewModelElement
      * @return
      */
@@ -211,13 +223,14 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
             mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
             new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
         }
-	    repoTabPane = mainWindowController.getRepositoryTabPane();
+        repoTabPane = mainWindowController.getRepositoryTabPane();
         repoViewModel.setRepositoryTabPane(repoTabPane);
         repoViewModel.initGuiContent();
     }
 
     /**
      * Called by the context menu for creating plans, behaviours etc.
+     *
      * @param event
      */
     @Override

@@ -66,7 +66,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 }
             } else if (fileName.endsWith(".pty")) {
                 getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
-                        .getResourceAsStream("images/planTyp24x24.png"))));
+                        .getResourceAsStream("images/plantype24x24.png"))));
             } else if (fileName.endsWith(".tsk")) {
                 getScene().setCursor(new ImageCursor(new Image(PLDFileTreeView.class.getClassLoader()
                         .getResourceAsStream("images/tasks24x24.png"))));

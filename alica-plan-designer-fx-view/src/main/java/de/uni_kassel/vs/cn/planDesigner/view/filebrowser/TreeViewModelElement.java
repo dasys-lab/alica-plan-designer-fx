@@ -4,14 +4,14 @@ import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 
 public class TreeViewModelElement extends ViewModelElement {
 
-    protected String destinationPath;
+    protected String relativeDirectory;
 
-    public TreeViewModelElement(long id, String name, String type, String path) {
+    public TreeViewModelElement(long id, String name, String type, String relativeDirectory) {
         super(id, name, type);
-        this.destinationPath = path;
+        this.relativeDirectory = relativeDirectory;
     }
 
-    public String getDestinationPath() {
-        return destinationPath;
+    public String getRelativeDirectory() {
+        return relativeDirectory;
     }
 }

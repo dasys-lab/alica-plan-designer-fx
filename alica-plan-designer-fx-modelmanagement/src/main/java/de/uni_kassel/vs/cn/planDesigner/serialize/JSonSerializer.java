@@ -62,6 +62,7 @@ public class JSonSerializer {
         role.getCharacteristics().add(charac);
 
         try {
+
         File outfile = new File(behaviour.getRelativeDirectory());
             mapper.writeValue(outfile, Arrays.asList(behaviour,role));
         } catch (IOException e) {

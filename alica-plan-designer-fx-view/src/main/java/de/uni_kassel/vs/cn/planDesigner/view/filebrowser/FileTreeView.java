@@ -31,6 +31,9 @@ public final class FileTreeView extends TreeView<FileWrapper> {
     private Cursor originalCursor;
     private String startFolder;
     private VirtualDirectoryTreeItem virtualDirectoryTreeItem;
+    private String plansPath;
+    private String taskPath;
+    private String rolesPath;
 
     public FileTreeView() {
         super(new VirtualDirectoryTreeItem());
@@ -58,15 +61,15 @@ public final class FileTreeView extends TreeView<FileWrapper> {
 //                        getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
 //                                .getResourceAsStream("images/masterplan24x24.png"))));
 //                    } else {
-                        getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                                .getResourceAsStream("images/plan24x24.png"))));
+                getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
+                        .getResourceAsStream("images/plan24x24.png"))));
 //                    }
 //                } catch (IOException e1) {
 //                    e1.printStackTrace();
 //                }
             } else if (fileName.endsWith(".pty")) {
                 getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                        .getResourceAsStream("images/planTyp24x24.png"))));
+                        .getResourceAsStream("images/plantype24x24.png"))));
             } else if (fileName.endsWith(".tsk")) {
                 getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
                         .getResourceAsStream("images/tasks24x24.png"))));
@@ -156,21 +159,21 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         this.controller = controller;
     }
 
-    public void addBehaviour(TreeViewModelElement behaviour) {
-        String[] folders = behaviour.getDestinationPath().split(File.pathSeparator);
+    public void addTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
+        // TODO: does not work for empty relative directory
+        String[] folders = treeViewModelElement.getRelativeDirectory().split(File.pathSeparator);
         TreeItem folder = findFolder(folders, 0, virtualDirectoryTreeItem);
         if (folder != null) {
-            File file = Paths.get(behaviour.getDestinationPath(), behaviour.getName(), ".beh").toFile();
-            folder.getChildren().add(new FileTreeItem(new FileWrapper(file), new ImageView(getImage(behaviour.getType()))));
-        }
-        else {
-            throw new RuntimeException("Destination folder for Behaviour " + behaviour.getName() + " does not exist!");
+            File file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".beh").toFile();
+            folder.getChildren().add(new FileTreeItem(new FileWrapper(file), new ImageView(getImage(treeViewModelElement.getType()))));
+        } else {
+            throw new RuntimeException("Destination folder for Behaviour " + treeViewModelElement.getName() + " does not exist!");
         }
     }
 
     private TreeItem findFolder(String[] path, int index, TreeItem treeItem) {
         for (Object item : treeItem.getChildren()) {
-            TreeItem newItem = (TreeItem)item;
+            TreeItem newItem = (TreeItem) item;
             if (!(newItem.getValue().toString().endsWith(path[index]))) {
                 continue;
             }
@@ -182,10 +185,6 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         return null;
     }
 
-    public void addTopLevelFolder(String path) {
-        this.virtualDirectoryTreeItem.addTopLevelFolder(path);
-    }
-
     private Image getImage(String type) {
         Image listItemImage;
         if (type.equals("behaviour")) {
@@ -195,14 +194,29 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         } else if (type.equals("plan")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
         } else if (type.equals("plantype")) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/planTyp24x24.png")));
+            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plantype24x24.png")));
         } else if (type.equals("taskrepository")) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/tasks24x24.png")));
         } else if (type.isEmpty()) {
             listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
-        } else  {
+        } else {
             return null;
         }
         return listItemImage;
+    }
+
+    public void setPlansPath(String plansPath) {
+        this.plansPath = plansPath;
+        this.virtualDirectoryTreeItem.addTopLevelFolder(plansPath);
+    }
+
+    public void setTaskPath(String taskPath) {
+        this.taskPath = taskPath;
+        this.virtualDirectoryTreeItem.addTopLevelFolder(taskPath);
+    }
+
+    public void setRolesPath(String rolesPath) {
+        this.rolesPath = rolesPath;
+        this.virtualDirectoryTreeItem.addTopLevelFolder(rolesPath);
     }
 }
