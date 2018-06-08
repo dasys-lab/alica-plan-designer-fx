@@ -27,6 +27,7 @@ hs_err_pid*
 RemoteSystemsTempFiles/
 alica-plan-designer-fx-ui/log/
 *.properties
+!pld_globals.properties
 alica-plan-designer-fx-default-plugin/src/main/xtend-gen/
 alica-plan-designer-fx-codegeneration/src/main/xtend-gen/
 de.uni-kassel.vs.cn.planDesigner.alica/
