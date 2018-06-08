@@ -19,7 +19,7 @@ class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
     }
 
     public void addTopLevelFolder(String path) {
-        if (path != null && path.isEmpty()) {
+        if (path != null && !path.isEmpty()) {
             this.getChildren().add(new FileTreeItem(FileWrapper.wrap(path),
                     new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
         }

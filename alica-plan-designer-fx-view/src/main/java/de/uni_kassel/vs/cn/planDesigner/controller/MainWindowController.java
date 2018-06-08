@@ -265,4 +265,10 @@ public class MainWindowController implements Initializable {
     public void setShowUsageHandler(IShowUsageHandler usageHandler) {
         this.usageHandler = usageHandler;
     }
+
+    public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {
+        fileTreeView.addTopLevelFolder(plansPath);
+        fileTreeView.addTopLevelFolder(rolesPath);
+        fileTreeView.addTopLevelFolder(tasksPath);
+    }
 }

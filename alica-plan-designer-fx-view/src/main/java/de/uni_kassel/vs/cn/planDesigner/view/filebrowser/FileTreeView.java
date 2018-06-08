@@ -182,6 +182,9 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         return null;
     }
 
+    public void addTopLevelFolder(String path) {
+        this.virtualDirectoryTreeItem.addTopLevelFolder(path);
+    }
 
     private Image getImage(String type) {
         Image listItemImage;

@@ -65,7 +65,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         repoViewModel.setRepositoryTabPane(repoTabPane);
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
-        new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
 
         setupGeneratedSourcesManager();
     }
@@ -99,11 +98,13 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     }
 
     public void handleFileSystemEvent(WatchEvent event, Path path) {
+        System.out.println("handle file system called");
         modelManager.handleFileSystemEvent(event.kind(), path);
     }
 
     /**
      * Handles events fired by the model manager, when the model has changed.
+     *
      * @param event Object that describes the purpose/context of the fired event.
      */
     public void handleModelEvent(ModelEvent event) {
@@ -117,13 +118,13 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                 if (planElement instanceof Plan) {
                     Plan plan = (Plan) planElement;
                     repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), (plan.getMasterPlan() ? "masterplan" : "plan")));
-                } else if (planElement instanceof PlanType){
+                } else if (planElement instanceof PlanType) {
                     repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
-                } else if (planElement instanceof Behaviour){
+                } else if (planElement instanceof Behaviour) {
                     mainWindowController.getFileTreeView().addBehaviour(new TreeViewModelElement(planElement.getId(),
-                            planElement.getName(), planElement.getClass().toString(), ((Behaviour)planElement).getDestinationPath()));
+                            planElement.getName(), planElement.getClass().toString(), ((Behaviour) planElement).getDestinationPath()));
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
-                } else if (planElement instanceof Task){
+                } else if (planElement instanceof Task) {
                     repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
                 }
                 break;
@@ -139,7 +140,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     @Override
     public ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement) {
         ArrayList<ViewModelElement> usage = new ArrayList<>();
-        for (PlanElement planElement : this.modelManager.getUsages(viewModelElement.getId())){
+        for (PlanElement planElement : this.modelManager.getUsages(viewModelElement.getId())) {
             // TODO: fix type string in viewModelElement for everywhere
             usage.add(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().getTypeName()));
         }
@@ -148,10 +149,17 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
     public void configurationChanged() {
         //TODO for future purposes
+        Configuration actiConfiguration = configurationManager.getActiveConfiguration();
+        mainWindowController.setUpFileTreeView(actiConfiguration.getPlansPath(), actiConfiguration.getRolesPath(), actiConfiguration.getTasksPath());
     }
 
     @Override
     public void guiInitialized() {
         mainWindowController.enableMenuBar();
+        Configuration activeConfiguration = configurationManager.getActiveConfiguration();
+        if (activeConfiguration != null) {
+            mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
+            new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
+        }
     }
 }

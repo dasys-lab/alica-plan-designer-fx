@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesigner;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
@@ -81,7 +80,6 @@ public class FileSystemEventHandler implements Runnable  {
             }
             this.trace = true;
             while (PlanDesignerApplication.isRunning()) {
-
                 // wait for key to be signalled
                 WatchKey key;
                 try {
@@ -98,6 +96,7 @@ public class FileSystemEventHandler implements Runnable  {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     WatchEvent.Kind kind = event.kind();
 
+                    System.out.println(kind);
                     // TBD - provide example of how OVERFLOW event is handled
                     if (kind == StandardWatchEventKinds.OVERFLOW) {
                         continue;
