@@ -40,6 +40,18 @@ public final class RepositoryViewModel {
         tasks = FXCollections.observableArrayList(new ArrayList<>());
     }
 
+    public void initGuiContent() {
+        if (repositoryTabPane == null) {
+            return;
+        }
+
+        repositoryTabPane.clearGuiContent();
+        repositoryTabPane.addPlans(plans);
+        repositoryTabPane.addPlanTypes(planTypes);
+        repositoryTabPane.addTasks(tasks);
+        repositoryTabPane.addBehaviours(behaviours);
+    }
+
     public void addPlan(ViewModelElement plan) {
         this.plans.add(plan);
         if (repositoryTabPane != null) {
@@ -87,4 +99,6 @@ public final class RepositoryViewModel {
     public ObservableList<ViewModelElement> getTasks() {
         return tasks;
     }
+
+
 }

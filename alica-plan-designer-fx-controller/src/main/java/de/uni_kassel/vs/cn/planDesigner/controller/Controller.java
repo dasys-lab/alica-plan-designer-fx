@@ -58,10 +58,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
         setupConfigGuiStuff();
 
-        repoTabPane = mainWindowController.getRepositoryTabPane();
-
         repoViewModel = new RepositoryViewModel();
-        repoViewModel.setRepositoryTabPane(repoTabPane);
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -152,11 +149,15 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     }
 
     public void configurationChanged() {
-        //TODO for future purposes
+        System.out.println("Test");
     }
 
     @Override
     public void guiInitialized() {
         mainWindowController.enableMenuBar();
+
+        repoTabPane = mainWindowController.getRepositoryTabPane();
+        repoViewModel.setRepositoryTabPane(repoTabPane);
+        repoViewModel.initGuiContent();
     }
 }
