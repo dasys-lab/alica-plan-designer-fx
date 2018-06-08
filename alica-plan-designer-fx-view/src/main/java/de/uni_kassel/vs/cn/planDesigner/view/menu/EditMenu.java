@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
@@ -109,6 +110,7 @@ public class EditMenu extends Menu {
             configStage.setResizable(false);
             configStage.setTitle(i18NRepo.getString("label.config.title"));
             configStage.setScene(new Scene(window));
+            configStage.initOwner(PlanDesignerApplication.getPrimaryStage());
         }
         configStage.show();
         configStage.toFront();

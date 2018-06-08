@@ -6,13 +6,15 @@ import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.events.ResourceCreationEvent;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler {
+public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler, IResourceCreationHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -53,12 +55,14 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         setupModelManager();
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
+        mainWindowController.setResourceCreationHandler(this);
+        mainWindowController.setShowUsageHandler(this);
 
         commandStack = new CommandStack();
 
         setupConfigGuiStuff();
 
-        mainWindowController.setShowUsageHandler(this);
+
         repoTabPane = mainWindowController.getRepositoryTabPane();
 
         repoViewModel = new RepositoryViewModel();
@@ -164,5 +168,10 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 	    repoTabPane = mainWindowController.getRepositoryTabPane();
         repoViewModel.setRepositoryTabPane(repoTabPane);
         repoViewModel.initGuiContent();
+    }
+
+    @Override
+    public void handle(ResourceCreationEvent event) {
+        System.out.println("event" + event);
     }
 }

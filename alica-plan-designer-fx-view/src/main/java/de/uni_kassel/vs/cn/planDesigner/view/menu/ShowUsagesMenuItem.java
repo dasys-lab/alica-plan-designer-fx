@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.fxml.FXMLLoader;

@@ -16,6 +16,7 @@ import javafx.stage.WindowEvent;
 import java.io.IOException;
 
 public class PlanDesignerApplication extends Application {
+    public static final String forbiddenCharacters = ".*[\\./\\*\\\\$§?\\[\\]!{}\\-äüö#\"%~'ÄÖÜß@,]+.*";
 
     private static Stage primaryStage;
 

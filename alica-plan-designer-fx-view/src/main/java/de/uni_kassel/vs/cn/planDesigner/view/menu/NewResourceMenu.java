@@ -2,6 +2,8 @@ package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.CreateNewDialogController;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,66 +16,54 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 
-
-
 public class NewResourceMenu extends Menu {
 
     private I18NRepo i18NRepo;
+    private File initialDirectoryHint;
 
-    public NewResourceMenu() {
+    public NewResourceMenu(File initialDirectoryHint) {
         super(I18NRepo.getInstance().getString("label.menu.new"));
+        this.initialDirectoryHint = initialDirectoryHint;
         i18NRepo = I18NRepo.getInstance();
         MenuItem newPlanMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plan"));
-        newPlanMenuItem.setOnAction(e -> onElementClick("plan"));
+        newPlanMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, i18NRepo.getString("alicatype.plan")));
         getItems().add(newPlanMenuItem);
         MenuItem newPlanTypeMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plantype"));
-        newPlanTypeMenuItem.setOnAction(e -> onElementClick("plantype"));
+        newPlanTypeMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, i18NRepo.getString("alicatype.plantype")));
         getItems().add(newPlanTypeMenuItem);
         MenuItem newBehaviourMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.behaviour"));
-        newBehaviourMenuItem.setOnAction(e -> onElementClick("behaviour"));
+        newBehaviourMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, i18NRepo.getString("alicatype.behaviour")));
         getItems().add(newBehaviourMenuItem);
         MenuItem newFolderMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.folder"));
-        newFolderMenuItem.setOnAction(e -> onElementClick(null));
+        newFolderMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, i18NRepo.getString("alicatype.folder")));
         getItems().add(newFolderMenuItem);
     }
 
-    protected File getHintFile() {
-        return null;
-        //new File(ConfigurationManager.getInstance().getActiveConfiguration().getPlansPath());
+    public void setInitialDirectoryHint(File initialDirectoryHint) {
+        this.initialDirectoryHint = initialDirectoryHint;
     }
 
-    private void onElementClick(String className) {
-        createFileDialog(getHintFile(), className);
-    }
-
-    public static CreateNewDialogController createFileDialog(File unwrappedFile, String className) {
+    public CreateNewDialogController createFileDialog(File initialDirectoryHint, String type) {
         FXMLLoader fxmlLoader = new FXMLLoader(NewResourceMenu.class.getClassLoader().getResource("createNewDialog.fxml"));
-        I18NRepo i18 = I18NRepo.getInstance();
+
         try {
             Parent rootOfDialog = fxmlLoader.load();
-            CreateNewDialogController controller = fxmlLoader.getController();
-            controller.setAlicaType(className);
-            controller.setInitialDirectoryHint(unwrappedFile);
+            CreateNewDialogController createNewDialogController = fxmlLoader.getController();
+            createNewDialogController.setResourceCreationHandler(MainWindowController.getInstance().getResourceCreationHandler());
+            createNewDialogController.setType(type);
+            createNewDialogController.setInitialDirectoryHint(initialDirectoryHint);
             Stage stage = new Stage();
             stage.setResizable(false);
-            if (className != null) {
-                stage.setTitle(i18.getString("label.menu.new") + " " +
-                        i18.getInstance().getString("label.menu.new." + className));
-            } else {
-                stage.setTitle(i18.getString("label.menu.new") + " " +
-                        i18.getString("label.menu.new.folder"));
-            }
+            stage.setTitle(i18NRepo.getString("label.menu.new") + " " + i18NRepo.getString("label.menu.new." + type));
             stage.setScene(new Scene(rootOfDialog));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(PlanDesignerApplication.getPrimaryStage());
             stage.showAndWait();
-            return controller;
-
+            return createNewDialogController;
         } catch (IOException e) {
             // if the helper window is not loadable something is really wrong here
             e.printStackTrace();
-            System.exit(1);
-            // unreachable statement
+            PlanDesignerApplication.setRunning(false);
             return null;
         }
     }

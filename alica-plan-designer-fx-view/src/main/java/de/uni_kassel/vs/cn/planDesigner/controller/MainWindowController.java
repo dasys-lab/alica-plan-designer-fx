@@ -1,12 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.EditMenu;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import javafx.animation.FadeTransition;
@@ -41,12 +42,9 @@ public class MainWindowController implements Initializable {
 
 
     public static MainWindowController getInstance() {
-        if (instance == null)
-        {
-            synchronized(MainWindowController.class)
-            {
-                if (instance == null)
-                {
+        if (instance == null) {
+            synchronized (MainWindowController.class) {
+                if (instance == null) {
                     instance = new MainWindowController();
                 }
             }
@@ -84,19 +82,16 @@ public class MainWindowController implements Initializable {
     private ConfigurationWindowController configWindowController;
     private IGuiStatusHandler guiStatusHandler;
     private IShowUsageHandler usageHandler;
+    private IResourceCreationHandler resourceCreationHandler;
     private Menu fileMenu;
     private Menu codeGenerationMenu;
 
-    private MainWindowController()
-    {
+    private MainWindowController() {
         super();
         this.i18NRepo = I18NRepo.getInstance();
 
     }
 
-    public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
-        this.guiStatusHandler = guiStatusHandler;
-    }
 
     public void setConfigWindowController(ConfigurationWindowController configWindowController) {
         this.configWindowController = configWindowController;
@@ -113,6 +108,12 @@ public class MainWindowController implements Initializable {
 //        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
         guiStatusHandler.guiInitialized();
+    }
+
+    public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {
+        fileTreeView.addTopLevelFolder(plansPath);
+        fileTreeView.addTopLevelFolder(rolesPath);
+        fileTreeView.addTopLevelFolder(tasksPath);
     }
 
 //    public boolean isSelectedPlanElement(Node node) {
@@ -133,7 +134,7 @@ public class MainWindowController implements Initializable {
         List<Menu> menus = new ArrayList<>();
 
         fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
-        fileMenu.getItems().add(new NewResourceMenu());
+        fileMenu.getItems().add(new NewResourceMenu(null));
 
         MenuItem saveItem = new MenuItem(i18NRepo.getString("label.menu.file.save"));
         saveItem.setOnAction(event -> ((AbstractEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save());
@@ -150,15 +151,15 @@ public class MainWindowController implements Initializable {
         generateCurrentFile.setDisable(true);
         getEditorTabPane().getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                Path path = ((AbstractEditorTab) newValue).getEditablePathPair().getValue();
-                if (path.endsWith(".beh") || path.endsWith(".pml") || path.endsWith(".pty")) {
-                    generateCurrentFile.setDisable(false);
-                }
-            } else {
-                generateCurrentFile.setDisable(true);
-            }
-        });
+                    if (newValue != null) {
+                        Path path = ((AbstractEditorTab) newValue).getEditablePathPair().getValue();
+                        if (path.endsWith(".beh") || path.endsWith(".pml") || path.endsWith(".pty")) {
+                            generateCurrentFile.setDisable(false);
+                        }
+                    } else {
+                        generateCurrentFile.setDisable(true);
+                    }
+                });
 
         generateCurrentFile.setOnAction(e -> {
             long modelElementId = ((AbstractEditorTab) getEditorTabPane()
@@ -188,17 +189,17 @@ public class MainWindowController implements Initializable {
         return menus;
     }
 
-	private void waitOnProgressWindow(Runnable toWaitOn) {
-		new Thread(() -> {
-		    toWaitOn.run();
+    private void waitOnProgressWindow(Runnable toWaitOn) {
+        new Thread(() -> {
+            toWaitOn.run();
             statusText.toFront();
             statusText.setOpacity(1.0);
             statusBlob.setOpacity(1.0);
-            statusText.setLayoutY(statusBlob.getLayoutY()+statusText.getFont().getSize()+2);
-		    statusText.setText(i18NRepo.getString("label.generation.completed"));
-            statusText.setLayoutX(statusBlob.getLayoutX() + (statusBlob.getWidth()/2)-statusText.getBoundsInLocal().getWidth()/2);
-		    statusBlob.setVisible(true);
-		    statusText.setVisible(true);
+            statusText.setLayoutY(statusBlob.getLayoutY() + statusText.getFont().getSize() + 2);
+            statusText.setText(i18NRepo.getString("label.generation.completed"));
+            statusText.setLayoutX(statusBlob.getLayoutX() + (statusBlob.getWidth() / 2) - statusText.getBoundsInLocal().getWidth() / 2);
+            statusBlob.setVisible(true);
+            statusText.setVisible(true);
             FadeTransition fadeTransition = new FadeTransition();
             fadeTransition.setFromValue(1.0);
             fadeTransition.setToValue(0.0);
@@ -218,7 +219,7 @@ public class MainWindowController implements Initializable {
                 statusText.setVisible(false);
             });
         }).start();
-	}
+    }
 
 //	public void closeTabIfOpen (long modelElementId) {
 //        Optional<AbstractEditorTab> tabOptional = editorTabPane
@@ -262,13 +263,21 @@ public class MainWindowController implements Initializable {
         fileMenu.setDisable(false);
     }
 
+    // HANDLER METHODS
+
     public void setShowUsageHandler(IShowUsageHandler usageHandler) {
         this.usageHandler = usageHandler;
     }
 
-    public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {
-        fileTreeView.addTopLevelFolder(plansPath);
-        fileTreeView.addTopLevelFolder(rolesPath);
-        fileTreeView.addTopLevelFolder(tasksPath);
+    public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
+        this.guiStatusHandler = guiStatusHandler;
+    }
+
+    public void setResourceCreationHandler(IResourceCreationHandler creationHandler) {
+        this.resourceCreationHandler = creationHandler;
+    }
+
+    public IResourceCreationHandler getResourceCreationHandler() {
+        return resourceCreationHandler;
     }
 }

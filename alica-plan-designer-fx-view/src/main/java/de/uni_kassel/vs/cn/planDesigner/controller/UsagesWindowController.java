@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.IShowUsageHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.collections.FXCollections;

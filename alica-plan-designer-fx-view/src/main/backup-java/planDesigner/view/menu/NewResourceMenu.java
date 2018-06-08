@@ -43,7 +43,7 @@ public class NewResourceMenu extends Menu {
     }
 
     private void onElementClick(EClass resourceInstanceClass) {
-        createFileDialog(getHintFile(), resourceInstanceClass);
+        createFileDialog(getInitialDirectoryHint(), resourceInstanceClass);
     }
 
     public static CreateNewDialogController createFileDialog(File unwrappedFile, EClass planClass) {
