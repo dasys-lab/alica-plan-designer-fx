@@ -197,7 +197,7 @@ public final class ConfigurationManager {
     }
 
     public boolean setActiveConfiguration(String confName) {
-        if (!confName.isEmpty()) {
+        if (confName != null && !confName.isEmpty()) {
            for (Configuration conf : configurations) {
                 if (conf.getName().equals(confName)) {
                     activeConfiguration = conf;
@@ -208,7 +208,7 @@ public final class ConfigurationManager {
                 }
             }
         }
-        LOG.error("Not configuration with the name '" + confName + "' found!");
+        LOG.error("No configuration with the name '" + confName + "' found!");
         activeConfiguration = null;
         return false;
     }

@@ -10,4 +10,6 @@ public interface IConfigurationEventHandler<T extends ListView.EditEvent<String>
     public void setEditorExecutablePath(String editorExecutablePath);
     public void setClangFormatPath(String clangFormatPath);
     public void showSelectedConfiguration();
+    public void updateAvailableConfigurations();
+    public void updateExternalTools();
 }

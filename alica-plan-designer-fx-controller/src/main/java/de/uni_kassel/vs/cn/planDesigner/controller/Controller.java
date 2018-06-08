@@ -61,25 +61,33 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler {
         repoViewModel = new RepositoryViewModel();
         repoViewModel.setRepositoryTabPane(repoTabPane);
 
-        modelManager.loadModelFromDisk();
+
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
 
+        setupGeneratedSourcesManager();
+    }
+
+    protected void setupGeneratedSourcesManager() {
         generatedSourcesManager = new GeneratedSourcesManager();
-        generatedSourcesManager.setGenSrcPath(configurationManager.getActiveConfiguration().getGenSrcPath());
+        Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         generatedSourcesManager.setEditorExecutablePath(configurationManager.getEditorExecutablePath());
+        if (activeConfiguration != null) {
+            generatedSourcesManager.setGenSrcPath(configurationManager.getActiveConfiguration().getGenSrcPath());
+        }
     }
 
     protected void setupModelManager() {
         modelManager = new ModelManager();
+        modelManager.addListener(this);
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
             modelManager.setPlansPath(activeConfiguration.getPlansPath());
             modelManager.setTasksPath(activeConfiguration.getTasksPath());
             modelManager.setRolesPath(activeConfiguration.getRolesPath());
+            modelManager.loadModelFromDisk();
         }
-        modelManager.addListener(this);
     }
 
     protected void setupConfigGuiStuff() {
@@ -120,13 +128,10 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler {
                 break;
             case ELEMENT_DELETED:
                 throw new RuntimeException("Not implemented, yet!");
-                //break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 throw new RuntimeException("Not implemented, yet!");
-                //break;
             default:
                 throw new RuntimeException("Unknown model event captured!");
-                //break;
         }
     }
 
