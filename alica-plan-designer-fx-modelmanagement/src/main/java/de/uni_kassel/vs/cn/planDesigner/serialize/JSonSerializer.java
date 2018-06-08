@@ -45,7 +45,7 @@ public class JSonSerializer {
         postCondition.setName("TestPostCondition");
         behaviour.setPostCondition(postCondition);
 
-        behaviour.setDestinationPath("result.json");
+        behaviour.setRelativeDirectory("result.json");
 
         CapValue val = new CapValue();
         val.setName("TestCapValue");
@@ -62,7 +62,7 @@ public class JSonSerializer {
         role.getCharacteristics().add(charac);
 
         try {
-        File outfile = new File(behaviour.getDestinationPath());
+        File outfile = new File(behaviour.getRelativeDirectory());
             mapper.writeValue(outfile, Arrays.asList(behaviour,role));
         } catch (IOException e) {
             e.printStackTrace();

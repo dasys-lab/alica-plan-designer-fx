@@ -15,6 +15,14 @@ public class Plan extends AbstractPlan implements IInhabitable {
     protected ArrayList<EntryPoint> entryPoints;
     protected ArrayList<Variable> variables;
 
+    public Plan() {
+        transitions = new ArrayList<>();
+        states = new ArrayList<>();
+        synchronizations = new ArrayList<>();
+        entryPoints = new ArrayList<>();
+        variables = new ArrayList<>();
+    }
+
     public ArrayList<Transition> getTransitions() {
         return transitions;
     }

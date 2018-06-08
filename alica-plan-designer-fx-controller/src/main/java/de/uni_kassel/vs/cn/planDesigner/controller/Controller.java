@@ -158,15 +158,15 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                 PlanElement planElement = event.getNewElement();
                 if (planElement instanceof Plan) {
                     Plan plan = (Plan) planElement;
-                    repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), (plan.getMasterPlan() ? "masterplan" : "plan")));
+                    repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), getTypeString(planElement)));
                 } else if (planElement instanceof PlanType) {
-                    repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
+                    repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), getTypeString(planElement)));
                 } else if (planElement instanceof Behaviour) {
                     mainWindowController.getFileTreeView().addBehaviour(new TreeViewModelElement(planElement.getId(),
-                            planElement.getName(), planElement.getClass().toString(), ((Behaviour) planElement).getDestinationPath()));
-                    repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
+                            planElement.getName(), getTypeString(planElement), ((Behaviour) planElement).getRelativeDirectory()));
+                    repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), getTypeString(planElement)));
                 } else if (planElement instanceof Task) {
-                    repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), planElement.getClass().toString()));
+                    repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), getTypeString(planElement)));
                 }
                 break;
             case ELEMENT_DELETED:
@@ -222,7 +222,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
      */
     @Override
     public void handleResourceCreationEvent(ResourceCreationEvent event) {
-        System.out.println("event" + event);
-        // TODO: implment
+        this.modelManager.createResource(event.getAbsoluteDirectory(), event.getType(), event.getName());
     }
 }

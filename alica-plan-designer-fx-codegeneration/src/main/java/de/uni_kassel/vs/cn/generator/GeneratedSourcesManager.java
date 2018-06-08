@@ -61,7 +61,7 @@ public class GeneratedSourcesManager {
 
     public List<File> getGeneratedFilesForBehaviour(Behaviour behaviour) {
         List<File> generatedFiles = new ArrayList<>();
-        String destinationPath = trimFileFromPath(behaviour.getDestinationPath());
+        String destinationPath = trimFileFromPath(behaviour.getRelativeDirectory());
         generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, behaviour.getName() + ".h").toFile());
         generatedFiles.add(Paths.get(getSrcDir(), destinationPath, behaviour.getName() + ".cpp").toFile());
         return generatedFiles;
@@ -69,7 +69,7 @@ public class GeneratedSourcesManager {
 
     public List<File> getGeneratedConditionFilesForPlan(AbstractPlan abstractPlan) {
         List<File> generatedFiles = new ArrayList<>();
-        String destinationPath = trimFileFromPath(abstractPlan.getDestinationPath());
+        String destinationPath = trimFileFromPath(abstractPlan.getRelativeDirectory());
         String headerFilename = abstractPlan.getName() + abstractPlan.getId() + ".h";
         String sourceFilename = abstractPlan.getName() + abstractPlan.getId() + ".cpp";
         generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, headerFilename).toFile());
@@ -79,7 +79,7 @@ public class GeneratedSourcesManager {
 
     public List<File> getGeneratedConstraintFilesForPlan(AbstractPlan abstractPlan) {
         List<File> generatedFiles = new ArrayList<>();
-        String destinationPath = trimFileFromPath(abstractPlan.getDestinationPath());
+        String destinationPath = trimFileFromPath(abstractPlan.getRelativeDirectory());
         String constraintHeaderFileName = abstractPlan.getName() + abstractPlan.getId() + "Constraints.h";
         String constraintSourceFileName = abstractPlan.getName() + abstractPlan.getId() + "Constraints.cpp";
         generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, "constraints", constraintHeaderFileName).toFile());

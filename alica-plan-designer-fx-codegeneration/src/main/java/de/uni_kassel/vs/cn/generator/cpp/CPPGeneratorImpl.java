@@ -258,7 +258,7 @@ public class CPPGeneratorImpl implements IGenerator {
     }
 
     private String cutDestinationPathToDirectory(AbstractPlan plan) {
-        String destinationPath = plan.getDestinationPath();
+        String destinationPath = plan.getRelativeDirectory();
         if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
             destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
         }

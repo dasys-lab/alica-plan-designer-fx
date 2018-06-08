@@ -6,6 +6,11 @@ public class PlanType extends AbstractPlan {
     ArrayList<Parametrisation> parametrisations;
     ArrayList<Plan> plans;
 
+    public PlanType () {
+        parametrisations = new ArrayList<>();
+        plans = new ArrayList<>();
+    }
+
     public ArrayList<Parametrisation> getParametrisations() {
         return parametrisations;
     }
