@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.configuration;
 
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.controller.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,6 +45,8 @@ public final class ConfigurationManager {
 
     private List<Configuration> configurations;
     private Configuration activeConfiguration;
+
+    private Controller controller;
 
     private ConfigurationManager() {
         mainConfigProperties = new Properties();
@@ -102,6 +104,10 @@ public final class ConfigurationManager {
 
         // set active configuration, if configured
         setActiveConfiguration(mainConfigProperties.getProperty(ACTIVE_DOMAIN_CONF));
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public void writeToDisk() {
@@ -197,12 +203,18 @@ public final class ConfigurationManager {
     }
 
     public boolean setActiveConfiguration(String confName) {
+        if (activeConfiguration != null && activeConfiguration.getName().equals(confName)) {
+            LOG.info("Active configuration already set to " + confName);
+            return false;
+        }
         if (confName != null && !confName.isEmpty()) {
-           for (Configuration conf : configurations) {
+            for (Configuration conf : configurations) {
                 if (conf.getName().equals(confName)) {
                     activeConfiguration = conf;
                     PluginManager.getInstance().updateAvailablePlugins(conf.getPluginsPath());
-                    MainWindowController.getInstance();
+                    if (controller != null) {
+                        controller.configurationChanged();
+                    }
                     LOG.info("Set active configuration to " + confName);
                     return true;
                 }

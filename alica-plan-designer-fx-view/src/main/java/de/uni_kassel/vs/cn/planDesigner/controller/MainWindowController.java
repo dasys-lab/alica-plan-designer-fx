@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
@@ -81,6 +82,7 @@ public class MainWindowController implements Initializable {
 
     private I18NRepo i18NRepo;
     private ConfigurationWindowController configWindowController;
+    private IGuiStatusHandler guiStatusHandler;
     private IShowUsageHandler usageHandler;
     private Menu fileMenu;
     private Menu codeGenerationMenu;
@@ -89,6 +91,11 @@ public class MainWindowController implements Initializable {
     {
         super();
         this.i18NRepo = I18NRepo.getInstance();
+
+    }
+
+    public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
+        this.guiStatusHandler = guiStatusHandler;
     }
 
     public void setConfigWindowController(ConfigurationWindowController configWindowController) {
@@ -105,6 +112,7 @@ public class MainWindowController implements Initializable {
         repositoryTabPane.setShowUsageHandler(usageHandler);
 //        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
+        guiStatusHandler.guiInitialized();
     }
 
 //    public boolean isSelectedPlanElement(Node node) {
@@ -137,7 +145,7 @@ public class MainWindowController implements Initializable {
         menus.add(new EditMenu(editorTabPane, configWindowController));
 
         codeGenerationMenu = new Menu(i18NRepo.getString("label.menu.generation"));
-        MenuItem regenerateItem = new MenuItem(i18NRepo.getString("label.menu.generation.regenerate"));
+        MenuItem generateItem = new MenuItem(i18NRepo.getString("label.menu.generation.generate"));
         MenuItem generateCurrentFile = new MenuItem(i18NRepo.getString("label.menu.generation.file"));
         generateCurrentFile.setDisable(true);
         getEditorTabPane().getSelectionModel().selectedItemProperty()
@@ -163,7 +171,7 @@ public class MainWindowController implements Initializable {
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
             }
         });
-        regenerateItem.setOnAction(e -> {
+        generateItem.setOnAction(e -> {
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
 //            	waitOnProgressWindow(() -> new Codegenerator().generate());
@@ -173,8 +181,9 @@ public class MainWindowController implements Initializable {
             }
 
         });
-        codegenerationMenu.getItems().addAll(generateCurrentFile, regenerateItem);
-        menus.add(codegenerationMenu);
+
+        codeGenerationMenu.getItems().addAll(generateCurrentFile, generateItem);
+        menus.add(codeGenerationMenu);
 
         return menus;
     }
@@ -249,7 +258,8 @@ public class MainWindowController implements Initializable {
     }
 
     public void enableMenuBar() {
-
+        codeGenerationMenu.setDisable(false);
+        fileMenu.setDisable(false);
     }
 
     public void setShowUsageHandler(IShowUsageHandler usageHandler) {

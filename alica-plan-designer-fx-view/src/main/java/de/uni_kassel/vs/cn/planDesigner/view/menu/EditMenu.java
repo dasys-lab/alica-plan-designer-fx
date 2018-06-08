@@ -38,7 +38,7 @@ public class EditMenu extends Menu {
         i18NRepo = I18NRepo.getInstance();
 
         deleteElementItem = new MenuItem(i18NRepo.getString("label.menu.edit.delete"));
-        undoItem.setDisable(true);
+        deleteElementItem.setDisable(true);
         deleteElementItem.setOnAction(event -> delete(editorTabPane));
 
         undoItem = new MenuItem(i18NRepo.getString("label.menu.edit.undo"));
