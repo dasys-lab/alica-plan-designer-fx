@@ -149,7 +149,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     }
 
     public void configurationChanged() {
-        //TODO for future purposes
         Configuration actiConfiguration = configurationManager.getActiveConfiguration();
         mainWindowController.setUpFileTreeView(actiConfiguration.getPlansPath(), actiConfiguration.getRolesPath(), actiConfiguration.getTasksPath());
     }
@@ -162,7 +161,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
             mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
             new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
         }
-	repoTabPane = mainWindowController.getRepositoryTabPane();
+	    repoTabPane = mainWindowController.getRepositoryTabPane();
         repoViewModel.setRepositoryTabPane(repoTabPane);
         repoViewModel.initGuiContent();
     }
