@@ -51,14 +51,13 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         configurationManager.setController(this);
 
         setupModelManager();
-        mainWindowController = MainWindowController.getInstance();
-        mainWindowController.setGuiStatusHandler(this);
+
+        setupMainWindowController();
 
         commandStack = new CommandStack();
 
         setupConfigGuiStuff();
 
-        mainWindowController.setShowUsageHandler(this);
         repoTabPane = mainWindowController.getRepositoryTabPane();
 
         repoViewModel = new RepositoryViewModel();
@@ -68,6 +67,12 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
 
         setupGeneratedSourcesManager();
+    }
+
+    protected void setupMainWindowController() {
+        mainWindowController = MainWindowController.getInstance();
+        mainWindowController.setGuiStatusHandler(this);
+        mainWindowController.setShowUsageHandler(this);
     }
 
     protected void setupGeneratedSourcesManager() {

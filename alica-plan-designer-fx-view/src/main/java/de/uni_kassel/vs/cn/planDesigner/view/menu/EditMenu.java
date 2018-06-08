@@ -4,9 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,11 +14,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 public class EditMenu extends Menu {
 
@@ -29,6 +25,7 @@ public class EditMenu extends Menu {
     private MenuItem redoItem;
     private final MenuItem configItem;
     private I18NRepo i18NRepo;
+    private Stage configStage;
 
     private ConfigurationWindowController configWindowController;
 
@@ -98,20 +95,23 @@ public class EditMenu extends Menu {
     }
 
     private void openConfigMenu() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("configurationWindow.fxml"));
-
-        try {
+        if (configStage == null) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("configurationWindow.fxml"));
             fxmlLoader.setController(this.configWindowController);
-            Parent window = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setResizable(false);
-            stage.setTitle(i18NRepo.getString("label.config.title"));
-            stage.setScene(new Scene(window));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            Parent window;
+            try {
+                 window = fxmlLoader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            configStage = new Stage();
+            configStage.setResizable(false);
+            configStage.setTitle(i18NRepo.getString("label.config.title"));
+            configStage.setScene(new Scene(window));
         }
+        configStage.show();
+        configStage.toFront();
     }
 
     private void delete(EditorTabPane editorTabPane) {
