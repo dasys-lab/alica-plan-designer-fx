@@ -29,5 +29,12 @@
         <module>alica-plan-designer-fx-codegeneration</module>
         <module>alica-plan-designer-fx-modelmanagement</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.xtend</groupId>
+            <artifactId>org.eclipse.xtend.lib</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+    </dependencies>
 
 </project>
