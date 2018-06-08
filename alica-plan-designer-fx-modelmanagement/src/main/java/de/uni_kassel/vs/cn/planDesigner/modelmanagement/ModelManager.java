@@ -154,7 +154,8 @@ public class ModelManager {
                     break;
                 case ".rset":
                     // TODO: Implement role and stuff parsing with jackson.
-                    throw new RuntimeException("Parsing roles not implemented, yet!");
+                    LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
+//                    throw new RuntimeException("Parsing roles not implemented, yet!");
                 default:
                     LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
 //                    throw new RuntimeException("Received file with unknown file ending, for parsing. File is: '" + path + "'");
