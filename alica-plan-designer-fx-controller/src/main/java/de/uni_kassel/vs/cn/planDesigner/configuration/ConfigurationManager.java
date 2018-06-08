@@ -90,16 +90,16 @@ public final class ConfigurationManager {
             for (String domainName : split) {
                 if (!domainName.isEmpty()) {
                     Configuration conf = new Configuration(domainName, planDesignerConfigFolder);
-                    if (!conf.loadFromDisk()) {
-                        LOG.error("Could not loadFromDisk " + conf.getName() + ".");
-                    } else {
+                    if (conf.loadFromDisk()) {
                         configurations.add(conf);
+                    } else {
+                        LOG.error("Could not loadFromDisk " + conf.getName() + ".");
                     }
                 }
             }
         }
 
-        // set active workspace
+        // set active configuration, if configured
         setActiveConfiguration(mainConfigProperties.getProperty(ACTIVE_DOMAIN_CONF));
     }
 
@@ -196,14 +196,17 @@ public final class ConfigurationManager {
     }
 
     public boolean setActiveConfiguration(String confName) {
-        for (Configuration conf : configurations) {
-            if (conf.getName().equals(confName)) {
-                activeConfiguration = conf;
-                PluginManager.getInstance().updateAvailablePlugins(conf.getPluginsPath());
-                LOG.info("Set active configuration to " + confName);
-                return true;
+        if (!confName.isEmpty()) {
+           for (Configuration conf : configurations) {
+                if (conf.getName().equals(confName)) {
+                    activeConfiguration = conf;
+                    PluginManager.getInstance().updateAvailablePlugins(conf.getPluginsPath());
+                    LOG.info("Set active configuration to " + confName);
+                    return true;
+                }
             }
         }
+        LOG.error("Not configuration with the name '" + confName + "' found!");
         activeConfiguration = null;
         return false;
     }

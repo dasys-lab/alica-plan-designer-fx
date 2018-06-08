@@ -47,13 +47,8 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler {
 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
-        Configuration activeConfiguration = configurationManager.getActiveConfiguration();
 
-        modelManager = new ModelManager();
-        modelManager.setPlansPath(activeConfiguration.getPlansPath());
-        modelManager.setTasksPath(activeConfiguration.getTasksPath());
-        modelManager.setRolesPath(activeConfiguration.getRolesPath());
-        modelManager.addListener(this);
+        setupModelManager();
 
         commandStack = new CommandStack();
 
@@ -76,13 +71,21 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler {
         generatedSourcesManager.setEditorExecutablePath(configurationManager.getEditorExecutablePath());
     }
 
+    protected void setupModelManager() {
+        modelManager = new ModelManager();
+        Configuration activeConfiguration = configurationManager.getActiveConfiguration();
+        if (activeConfiguration != null) {
+            modelManager.setPlansPath(activeConfiguration.getPlansPath());
+            modelManager.setTasksPath(activeConfiguration.getTasksPath());
+            modelManager.setRolesPath(activeConfiguration.getRolesPath());
+        }
+        modelManager.addListener(this);
+    }
+
     protected void setupConfigGuiStuff() {
         configWindowController = new ConfigurationWindowController();
         configEventHandler = new ConfigurationEventHandler(configWindowController, configurationManager);
         configWindowController.setHandler(configEventHandler);
-//        configWindowController.setClangFormat(configurationManager.getClangFormatPath());
-//        configWindowController.setSourceCodeEditor(configurationManager.getEditorExecutablePath());
-//        configWindowController.addConfigNames(configurationManager.getConfigurationNames());
         mainWindowController.setConfigWindowController(configWindowController);
     }
 
