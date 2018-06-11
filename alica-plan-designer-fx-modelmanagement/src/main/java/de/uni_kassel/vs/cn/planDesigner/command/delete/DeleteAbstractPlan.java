@@ -110,7 +110,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
 //                        .getExtension()
 //                        .entrySet()
 //                        .stream()
-//                        .filter(f -> f.getKey().equals(abstractPlan))
+//                        .filter(f -> f.getKey().equals(plan))
 //                        .map(f -> f.getValue())
 //                        .collect(Collectors.toList());
 //                if (pmlUiExtensions.size() > 0) {
@@ -118,8 +118,8 @@ public class DeleteAbstractPlan extends AbstractCommand {
 //                    // The pmluiextensionmap is more of a list of pairs,
 //                    // which means removing a key removes only one entry with the named key.
 //                    // The EMF documentation hints at this with the description of removeKey() which says it removes an entry.
-//                    while (pmlUiExtensionMap.getExtension().containsKey(abstractPlan)) {
-//                        pmlUiExtensionMap.getExtension().remove(abstractPlan);
+//                    while (pmlUiExtensionMap.getExtension().containsKey(plan)) {
+//                        pmlUiExtensionMap.getExtension().remove(plan);
 //                    }
 //                    saveForDeletionConfirmation[0] = true;
 //                }
@@ -139,7 +139,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
 
         //TODO commads for file deletion
 //        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
-//        switch (type) {
+//        switch (modelElementType) {
 //            case "plan":
 //                Pair<Plan, Path> planPathPair = RepositoryViewModel.getInstance().getPlans()
 //                        .stream()

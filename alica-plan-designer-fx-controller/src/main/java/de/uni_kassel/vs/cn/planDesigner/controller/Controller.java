@@ -6,13 +6,15 @@ import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelOperationType;
 import de.uni_kassel.vs.cn.planDesigner.events.ResourceCreationEvent;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
-import de.uni_kassel.vs.cn.planDesigner.modelmanagement.IModelEventHandler;
-import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
@@ -107,10 +109,10 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     }
 
     /**
-     * Determines the type string corresponding to the given PlanElement.
+     * Determines the modelElementType string corresponding to the given PlanElement.
      *
-     * @param planElement whose type is to be determined
-     * @return type of the plan element
+     * @param planElement whose modelElementType is to be determined
+     * @return modelElementType of the plan element
      */
     public String getTypeString(PlanElement planElement) {
         if (planElement instanceof Plan) {
@@ -235,6 +237,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
      */
     @Override
     public void handleResourceCreationEvent(ResourceCreationEvent event) {
-        this.modelManager.createResource(event.getAbsoluteDirectory(), event.getType(), event.getName());
+        ModelModificationQuery mmq = new ModelModificationQuery(ModelOperationType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getType(), event.getName());
+        this.modelManager.handleModelModificationQuery(mmq);
     }
 }

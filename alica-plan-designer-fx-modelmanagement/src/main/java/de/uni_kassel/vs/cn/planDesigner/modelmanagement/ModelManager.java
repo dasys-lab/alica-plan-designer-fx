@@ -2,6 +2,12 @@ package de.uni_kassel.vs.cn.planDesigner.modelmanagement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
+import de.uni_kassel.vs.cn.planDesigner.command.CreatePlan;
+import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelOperationType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +37,7 @@ public class ModelManager {
     private TaskRepository taskRepository;
 
     private List<IModelEventHandler> eventHandlerList;
+    private CommandStack commandStack;
 
     public ModelManager() {
         planElementMap = new HashMap<>();
@@ -39,6 +46,7 @@ public class ModelManager {
         planTypeMap = new HashMap<>();
         taskRepository = new TaskRepository();
         eventHandlerList = new ArrayList<IModelEventHandler>();
+        commandStack = new CommandStack();
     }
 
     public void setPlansPath(String plansPath) {
@@ -167,13 +175,13 @@ public class ModelManager {
 
     private void fireCreationEvent(PlanElement element) {
         for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelEventType.ELEMENT_CREATED, null, element));
+            eventHandler.handleModelEvent(new ModelEvent(ModelOperationType.ELEMENT_CREATED, null, element));
         }
     }
 
     private void fireDeletionEvent(PlanElement element) {
         for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, null, element));
+            eventHandler.handleModelEvent(new ModelEvent(ModelOperationType.ELEMENT_DELETED, null, element));
         }
     }
 
@@ -183,6 +191,10 @@ public class ModelManager {
 
     public ArrayList<Behaviour> getBehaviours() {
         return new ArrayList<>(behaviourMap.values());
+    }
+
+    public ArrayList<PlanElement> getPlanElements() {
+        return new ArrayList<>(planElementMap.values());
     }
 
     public ArrayList<Condition> getConditions() {
@@ -237,9 +249,7 @@ public class ModelManager {
         }
     }
 
-    public ArrayList<PlanElement> getPlanElements() {
-        return new ArrayList<>(planElementMap.values());
-    }
+
 
     public void removeAbstarctPlan(AbstractPlan abstractPlan) {
         PlanElement deletedElement = planElementMap.remove(abstractPlan.getId());
@@ -335,7 +345,7 @@ public class ModelManager {
         } else if (planElement instanceof Task) {
             usages.addAll(getUsagesInEntryPoints(planElement));
         } else {
-            throw new RuntimeException("Usages requested for unhandled type of element with id  " + modelElementId);
+            throw new RuntimeException("Usages requested for unhandled modelElementType of element with id  " + modelElementId);
         }
         return usages;
     }
@@ -378,58 +388,29 @@ public class ModelManager {
         return usages;
     }
 
-    public void createResource(String absoluteDirectory, String type, String name) {
-        // TODO: utilise the command pattern and move the stack into here...
-        PlanElement planElement;
-        switch (type) {
-            case "plan":
-                planElement = createPlan(absoluteDirectory, name);
-                break;
-            case "behaviour":
-                planElement = createBehaviour(absoluteDirectory, name);
-                break;
-            case "task":
-                planElement = createTask(name);
-                break;
-            case "plantype":
-                planElement = createPlanType(absoluteDirectory, name);
+    public void handleModelModificationQuery(ModelModificationQuery mmq) {
+        AbstractCommand cmd;
+        switch (mmq.getOperationType()) {
+            case CREATE_ELEMENT:
+                cmd = new CreatePlan(this, mmq);
                 break;
             default:
-                planElement = null;
+                System.out.println("Unkown model modification requested!");
+                cmd = null;
         }
-
-        planElementMap.put(planElement.getId(), planElement);
-        fireCreationEvent(planElement);
+        commandStack.storeAndExecute(cmd);
     }
 
-    private Plan createPlan(String absoluteDirectory, String name) {
-        Plan plan = new Plan();
-        plan.setRelativeDirectory(absoluteDirectory.replace(plansPath, ""));
-        plan.setName(name);
+    /**
+     * This method should only be called through the command stack!
+     * @param plan
+     */
+    public void addPlan(Plan plan) {
         planMap.put(plan.getId(), plan);
-        return plan;
+        planElementMap.put(plan.getId(), plan);
     }
 
-    private PlanType createPlanType(String absoluteDirectory, String name) {
-        PlanType planType = new PlanType();
-        planType.setRelativeDirectory(absoluteDirectory.replace(plansPath, ""));
-        planType.setName(name);
-        planTypeMap.put(planType.getId(), planType);
-        return planType;
-    }
-
-    private Behaviour createBehaviour(String absoluteDirectory, String name) {
-        Behaviour behaviour = new Behaviour();
-        behaviour.setRelativeDirectory(absoluteDirectory.replace(plansPath, ""));
-        behaviour.setName(name);
-        behaviourMap.put(behaviour.getId(), behaviour);
-        return behaviour;
-    }
-
-    private Task createTask(String name) {
-        Task task = new Task();
-        task.setName(name);
-        taskRepository.getTasks().add(task);
-        return task;
+    public String makeRelativePlansDirectory(String absoluteDirectory){
+        return absoluteDirectory.replace(plansPath, "");
     }
 }

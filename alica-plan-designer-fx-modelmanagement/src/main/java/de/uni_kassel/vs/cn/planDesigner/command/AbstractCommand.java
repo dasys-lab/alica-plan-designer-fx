@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
+
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 public abstract class AbstractCommand {
