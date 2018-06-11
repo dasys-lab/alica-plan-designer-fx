@@ -96,7 +96,6 @@ public class FileSystemEventHandler implements Runnable  {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     WatchEvent.Kind kind = event.kind();
 
-                    System.out.println(kind);
                     // TBD - provide example of how OVERFLOW event is handled
                     if (kind == StandardWatchEventKinds.OVERFLOW) {
                         continue;

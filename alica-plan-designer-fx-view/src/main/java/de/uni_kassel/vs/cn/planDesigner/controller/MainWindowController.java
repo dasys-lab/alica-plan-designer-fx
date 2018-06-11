@@ -134,7 +134,12 @@ public class MainWindowController implements Initializable {
         fileMenu.getItems().add(new NewResourceMenu(null));
 
         MenuItem saveItem = new MenuItem(i18NRepo.getString("label.menu.file.save"));
-        saveItem.setOnAction(event -> ((AbstractEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save());
+        saveItem.setOnAction(event -> {
+            if(editorTabPane.getSelectionModel().getSelectedItem() == null) {
+                return;
+            }
+            ((AbstractEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save();
+        });
         saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
         fileMenu.setDisable(true);
