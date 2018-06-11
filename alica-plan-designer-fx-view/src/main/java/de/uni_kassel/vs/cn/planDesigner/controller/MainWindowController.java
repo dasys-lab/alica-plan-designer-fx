@@ -88,6 +88,7 @@ public class MainWindowController implements Initializable {
     private IResourceCreationHandler resourceCreationHandler;
     private Menu fileMenu;
     private Menu codeGenerationMenu;
+    private EditMenu editMenu;
 
     private MainWindowController()
     {
@@ -145,7 +146,8 @@ public class MainWindowController implements Initializable {
         fileMenu.setDisable(true);
         menus.add(fileMenu);
 
-        menus.add(new EditMenu(editorTabPane, configWindowController));
+        editMenu = new EditMenu(editorTabPane, configWindowController);
+        menus.add(editMenu);
 
         codeGenerationMenu = new Menu(i18NRepo.getString("label.menu.generation"));
         MenuItem generateItem = new MenuItem(i18NRepo.getString("label.menu.generation.generate"));
@@ -263,6 +265,10 @@ public class MainWindowController implements Initializable {
     public void enableMenuBar() {
         codeGenerationMenu.setDisable(false);
         fileMenu.setDisable(false);
+    }
+
+    public void setDeleteDisabled(boolean disabled) {
+        editMenu.setDeleteItemDisabled(disabled);
     }
 
     public void setShowUsageHandler(IShowUsageHandler usageHandler) {

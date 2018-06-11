@@ -64,7 +64,7 @@ public class EditMenu extends Menu {
         redoItem.setDisable(value);
     }
 
-    // TODO: call this methods from the controller - reacting to changes in the commandstack
+    // TODO: call this methods from the controller - reacting to changes in the commandstack and selected treeviewitem
     public void setDeleteItemDisabled(boolean value) {
         deleteElementItem.setDisable(value);
     }

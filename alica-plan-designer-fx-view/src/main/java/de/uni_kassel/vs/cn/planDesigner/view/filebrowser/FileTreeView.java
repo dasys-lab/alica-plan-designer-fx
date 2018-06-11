@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 
+import javax.swing.event.TreeSelectionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -152,6 +153,9 @@ public final class FileTreeView extends TreeView<FileWrapper> {
                 fileWrapperTreeCell.setGraphic(param.getEditingItem().getGraphic());
             }
             return fileWrapperTreeCell;
+        });
+        this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                controller.setDeleteDisabled(newValue == null);
         });
     }
 
