@@ -30,9 +30,6 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
 
     public FileTreeCell(MainWindowController controller) {
         this.controller = controller;
-        if (getItem() != null) {
-            addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleDoubleClick);
-        }
     }
 
     @Override
@@ -178,7 +175,18 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
             setGraphic(null);
         } else {
             if (getItem() != null) {
-                addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleDoubleClick);
+                setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (event.getClickCount() == 2) {
+                            if (getItem().unwrap().isDirectory()) {
+                                getTreeItem().setExpanded(!getTreeItem().isExpanded());
+                            } else {
+                                controller.openFile(getItem().unwrap());
+                            }
+                        }
+                    }
+                });
             }
             if (isEditing()) {
                 if (textField != null) {
@@ -214,15 +222,5 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
 
     private String getString() {
         return getItem() == null ? "" : getItem().toString();
-    }
-
-    private void handleDoubleClick(MouseEvent event) {
-        if (event.getClickCount() == 2) {
-            if (getItem().unwrap().isDirectory()) {
-                getTreeItem().setExpanded(!getTreeItem().isExpanded());
-            } else {
-                controller.openFile(getItem().unwrap());
-            }
-        }
     }
 }
