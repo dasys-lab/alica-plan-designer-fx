@@ -1,56 +1,108 @@
-[ {http://www.baeldung.com/jackson-object-mapper-tutorial
-  "id" : 1,
-  "name" : "TestBehaviour",
-  "comment" : "Behaviour Comment String",
-  "destinationPath" : "result.json",
-  "preCondition" : {
-    "id" : 3,
-    "name" : "TestPreCondition",
-    "comment" : "PreCondition Comment String",
-    "conditionString" : null,
-    "pluginName" : "Plugin Name String",
-    "vars" : null,
-    "quantifiers" : null
-  },
-  "runtimeCondition" : {
-    "id" : 4,
-    "name" : "TestRuntimeCondition",
-    "comment" : "RuntimeCondition Comment String",
-    "conditionString" : null,
-    "pluginName" : "Plugin Name String",
-    "vars" : null,
-    "quantifiers" : null
-  },
-  "postCondition" : {
-    "id" : 5,
-    "name" : "TestPostCondition",
-    "comment" : "PostCondition Comment String",
-    "conditionString" : null,
-    "pluginName" : "Plugin Name String",
-    "vars" : null,
-    "quantifiers" : null
-  },
-  "variables" : [ {
-    "id" : 2,
-    "name" : "TestVariable",
-    "comment" : "Variable Comment String",
-    "type" : "Variable Type String"
+[ {
+  "id" : 1528731281022,
+  "name" : "TestMasterPlan",
+  "comment" : "Test Comment String",
+  "dirty" : false,
+  "relativeDirectory" : "result.json",
+  "masterPlan" : true,
+  "activated" : true,
+  "utilityThreshold" : 0.0,
+  "preCondition" : null,
+  "runtimeCondition" : null,
+  "transitions" : [ ],
+  "states" : [ {
+    "id" : 1528731281024,
+    "name" : "Stop",
+    "comment" : "Stops the robot",
+    "dirty" : false,
+    "entryPoint" : {
+      "id" : 1528731281026,
+      "name" : "TestEP",
+      "comment" : null,
+      "dirty" : false,
+      "task" : {
+        "id" : 1528731281028,
+        "name" : "DefaultTask",
+        "comment" : null,
+        "dirty" : false
+      },
+      "successRequired" : false,
+      "state" : null,
+      "plan" : null,
+      "minCardinality" : 1,
+      "maxCardinality" : 2
+    },
+    "parentPlan" : null,
+    "plans" : null,
+    "parametrisations" : null,
+    "inTransitions" : null,
+    "outTransitions" : null
   } ],
-  "frequency" : 30
+  "synchronizations" : [ ],
+  "entryPoints" : [ {
+    "id" : 1528731281026,
+    "name" : "TestEP",
+    "comment" : null,
+    "dirty" : false,
+    "task" : {
+      "id" : 1528731281028,
+      "name" : "DefaultTask",
+      "comment" : null,
+      "dirty" : false
+    },
+    "successRequired" : false,
+    "state" : null,
+    "plan" : null,
+    "minCardinality" : 1,
+    "maxCardinality" : 2
+  } ],
+  "variables" : [ ]
 }, {
-  "id" : 7,
-  "name" : "TestRole",
-  "comment" : "Role Comment String",
-  "characteristics" : [ {
-    "id" : 0,
-    "name" : "TestCharacteristic",
-    "comment" : "Characteristic Comment String",
-    "weight" : 0.0,
-    "capabilty" : null,
-    "value" : {
-      "id" : 6,
-      "name" : "TestCapValue",
-      "comment" : "CapValue Comment String"
-    }
-  } ]
+  "id" : 1528731281024,
+  "name" : "Stop",
+  "comment" : "Stops the robot",
+  "dirty" : false,
+  "entryPoint" : {
+    "id" : 1528731281026,
+    "name" : "TestEP",
+    "comment" : null,
+    "dirty" : false,
+    "task" : {
+      "id" : 1528731281028,
+      "name" : "DefaultTask",
+      "comment" : null,
+      "dirty" : false
+    },
+    "successRequired" : false,
+    "state" : null,
+    "plan" : null,
+    "minCardinality" : 1,
+    "maxCardinality" : 2
+  },
+  "parentPlan" : null,
+  "plans" : null,
+  "parametrisations" : null,
+  "inTransitions" : null,
+  "outTransitions" : null
+}, {
+  "id" : 1528731281026,
+  "name" : "TestEP",
+  "comment" : null,
+  "dirty" : false,
+  "task" : {
+    "id" : 1528731281028,
+    "name" : "DefaultTask",
+    "comment" : null,
+    "dirty" : false
+  },
+  "successRequired" : false,
+  "state" : null,
+  "plan" : null,
+  "minCardinality" : 1,
+  "maxCardinality" : 2
+}, {
+  "id" : 1528731281028,
+  "name" : "DefaultTask",
+  "comment" : null,
+  "dirty" : false
 } ]
