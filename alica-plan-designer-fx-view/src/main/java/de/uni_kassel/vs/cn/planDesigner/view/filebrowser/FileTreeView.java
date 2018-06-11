@@ -160,15 +160,39 @@ public final class FileTreeView extends TreeView<FileWrapper> {
     }
 
     public void addTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
-        // TODO: does not work for empty relative directory
-        String[] folders = treeViewModelElement.getRelativeDirectory().split(File.pathSeparator);
+        String relativePath = treeViewModelElement.getRelativeDirectory();
+        if (relativePath.isEmpty()) {
+            virtualDirectoryTreeItem.getChildren()
+                    .add(new FileTreeItem(new FileWrapper(createFile(treeViewModelElement)), new ImageView(getImage(treeViewModelElement.getType()))));
+        }
+        String[] folders = relativePath.split(File.pathSeparator);
         TreeItem folder = findFolder(folders, 0, virtualDirectoryTreeItem);
         if (folder != null) {
-            File file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".beh").toFile();
-            folder.getChildren().add(new FileTreeItem(new FileWrapper(file), new ImageView(getImage(treeViewModelElement.getType()))));
+            folder.getChildren().add(new FileTreeItem(new FileWrapper(createFile(treeViewModelElement)), new ImageView(getImage(treeViewModelElement.getType()))));
         } else {
             throw new RuntimeException("Destination folder for Behaviour " + treeViewModelElement.getName() + " does not exist!");
         }
+    }
+
+    private File createFile(TreeViewModelElement treeViewModelElement) {
+        File file;
+        switch (treeViewModelElement.getType()) {
+            case "behaviour":
+                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".beh").toFile();
+                break;
+            case "plan":
+                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".pml").toFile();
+                break;
+            case "plantype":
+                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".pty").toFile();
+                break;
+            case "taskrepository":
+                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".tsk").toFile();
+                break;
+            default:
+                throw new RuntimeException("Trying to create file for unknown type " + treeViewModelElement.getType() + "!");
+        }
+        return file;
     }
 
     private TreeItem findFolder(String[] path, int index, TreeItem treeItem) {
