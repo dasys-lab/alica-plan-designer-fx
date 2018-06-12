@@ -1,6 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.uni_kassel.vs.cn.planDesigner.serialization.CustomFileReferenceSerializer;
+
 public class Parametrisation extends PlanElement{
+    @JsonSerialize(using = CustomFileReferenceSerializer.class)
     protected AbstractPlan subPlan;
     protected Variable subVariable;
     protected Variable variable;

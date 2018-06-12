@@ -1,9 +1,15 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.uni_kassel.vs.cn.planDesigner.serialization.CustomPlanElementSerializer;
+
 public class Transition extends  PlanElement{
+    @JsonSerialize(using = CustomPlanElementSerializer.class)
     protected State inState;
+    @JsonSerialize(using = CustomPlanElementSerializer.class)
     protected State outState;
     protected PreCondition preCondition;
+    @JsonSerialize(using = CustomPlanElementSerializer.class)
     protected Synchronization synchronization;
 
     public State getInState() {

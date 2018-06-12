@@ -1,9 +1,20 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
-public class EntryPoint extends PlanElement{
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.uni_kassel.vs.cn.planDesigner.deserialization.CustomTaskDeserializer;
+import de.uni_kassel.vs.cn.planDesigner.serialization.CustomFileReferenceSerializer;
+import de.uni_kassel.vs.cn.planDesigner.serialization.CustomPlanElementSerializer;
+import de.uni_kassel.vs.cn.planDesigner.serialization.CustomTaskSerializer;
+
+public class EntryPoint extends PlanElement {
+    @JsonSerialize(using = CustomTaskSerializer.class)
+    @JsonDeserialize(using = CustomTaskDeserializer.class)
     protected Task task;
     protected boolean successRequired;
+    @JsonSerialize(using = CustomPlanElementSerializer.class)
     protected State state;
+    @JsonSerialize(using = CustomPlanElementSerializer.class)
     protected Plan plan;
     protected int minCardinality;
     protected int maxCardinality;

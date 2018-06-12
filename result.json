@@ -1,108 +1,46 @@
-[ {
-  "id" : 1528731281022,
+{
+  "id" : 1528814873094,
   "name" : "TestMasterPlan",
   "comment" : "Test Comment String",
-  "dirty" : false,
   "relativeDirectory" : "result.json",
   "masterPlan" : true,
   "activated" : true,
   "utilityThreshold" : 0.0,
   "preCondition" : null,
   "runtimeCondition" : null,
-  "transitions" : [ ],
+  "entryPoints" : [ {
+    "id" : 1528814873206,
+    "name" : "TestEP",
+    "comment" : null,
+    "task" : "result.json/taskrepository.tsk#1528814873209",
+    "successRequired" : false,
+    "state" : 1528814873096,
+    "plan" : 1528814873094,
+    "minCardinality" : 1,
+    "maxCardinality" : 2
+  } ],
   "states" : [ {
-    "id" : 1528731281024,
+    "id" : 1528814873096,
     "name" : "Stop",
     "comment" : "Stops the robot",
-    "dirty" : false,
-    "entryPoint" : {
-      "id" : 1528731281026,
-      "name" : "TestEP",
-      "comment" : null,
-      "dirty" : false,
-      "task" : {
-        "id" : 1528731281028,
-        "name" : "DefaultTask",
-        "comment" : null,
-        "dirty" : false
-      },
-      "successRequired" : false,
-      "state" : null,
-      "plan" : null,
-      "minCardinality" : 1,
-      "maxCardinality" : 2
-    },
-    "parentPlan" : null,
-    "plans" : null,
-    "parametrisations" : null,
-    "inTransitions" : null,
-    "outTransitions" : null
+    "entryPoint" : 1528814873206,
+    "parentPlan" : 1528814873094,
+    "plans" : "result.json/TestBehaviour.beh#1528814873097, result.json/TestBehaviour2.beh#1528814873202, ",
+    "parametrisations" : [ ],
+    "inTransitions" : [ ],
+    "outTransitions" : [ ]
+  }, {
+    "id" : 1528814873204,
+    "name" : "Stop2",
+    "comment" : "Stops the robot too",
+    "entryPoint" : null,
+    "parentPlan" : 1528814873094,
+    "plans" : "",
+    "parametrisations" : [ ],
+    "inTransitions" : [ ],
+    "outTransitions" : [ ]
   } ],
+  "transitions" : [ ],
   "synchronizations" : [ ],
-  "entryPoints" : [ {
-    "id" : 1528731281026,
-    "name" : "TestEP",
-    "comment" : null,
-    "dirty" : false,
-    "task" : {
-      "id" : 1528731281028,
-      "name" : "DefaultTask",
-      "comment" : null,
-      "dirty" : false
-    },
-    "successRequired" : false,
-    "state" : null,
-    "plan" : null,
-    "minCardinality" : 1,
-    "maxCardinality" : 2
-  } ],
   "variables" : [ ]
-}, {
-  "id" : 1528731281024,
-  "name" : "Stop",
-  "comment" : "Stops the robot",
-  "dirty" : false,
-  "entryPoint" : {
-    "id" : 1528731281026,
-    "name" : "TestEP",
-    "comment" : null,
-    "dirty" : false,
-    "task" : {
-      "id" : 1528731281028,
-      "name" : "DefaultTask",
-      "comment" : null,
-      "dirty" : false
-    },
-    "successRequired" : false,
-    "state" : null,
-    "plan" : null,
-    "minCardinality" : 1,
-    "maxCardinality" : 2
-  },
-  "parentPlan" : null,
-  "plans" : null,
-  "parametrisations" : null,
-  "inTransitions" : null,
-  "outTransitions" : null
-}, {
-  "id" : 1528731281026,
-  "name" : "TestEP",
-  "comment" : null,
-  "dirty" : false,
-  "task" : {
-    "id" : 1528731281028,
-    "name" : "DefaultTask",
-    "comment" : null,
-    "dirty" : false
-  },
-  "successRequired" : false,
-  "state" : null,
-  "plan" : null,
-  "minCardinality" : 1,
-  "maxCardinality" : 2
-}, {
-  "id" : 1528731281028,
-  "name" : "DefaultTask",
-  "comment" : null,
-  "dirty" : false
-} ]
+}

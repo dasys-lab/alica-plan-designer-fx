@@ -9,10 +9,10 @@ public class Plan extends AbstractPlan implements IInhabitable {
     protected double utilityThreshold;
     protected PreCondition preCondition;
     protected RuntimeCondition runtimeCondition;
-    protected ArrayList<Transition> transitions;
-    protected ArrayList<State> states;
-    protected ArrayList<Synchronization> synchronizations;
     protected ArrayList<EntryPoint> entryPoints;
+    protected ArrayList<State> states;
+    protected ArrayList<Transition> transitions;
+    protected ArrayList<Synchronization> synchronizations;
     protected ArrayList<Variable> variables;
 
     public Plan() {
