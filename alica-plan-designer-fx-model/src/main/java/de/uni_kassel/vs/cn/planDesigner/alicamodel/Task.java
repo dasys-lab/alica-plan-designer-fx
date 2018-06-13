@@ -1,12 +1,16 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.uni_kassel.vs.cn.planDesigner.serialization.CustomFileReferenceSerializer;
-
 public class Task extends PlanElement implements IInhabitable {
 
-    @JsonSerialize(using = CustomFileReferenceSerializer.class)
     TaskRepository taskRepository;
+
+    public Task() {
+        super();
+    }
+
+    public Task (long id) {
+        this.id = id;
+    }
 
     public TaskRepository getTaskRepository() {
         return taskRepository;

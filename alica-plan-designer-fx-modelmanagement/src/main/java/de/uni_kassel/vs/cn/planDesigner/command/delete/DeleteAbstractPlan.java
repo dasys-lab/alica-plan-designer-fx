@@ -8,7 +8,6 @@ import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtensionMap;
 
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DeleteAbstractPlan extends AbstractCommand {
 
@@ -135,7 +134,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
             }
         });
 
-        modelManager.removeAbstarctPlan(abstractPlan);
+        modelManager.removeAbstractPlan(abstractPlan);
 
         //TODO commads for file deletion
 //        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();

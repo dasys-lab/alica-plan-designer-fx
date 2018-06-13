@@ -1,46 +1,13 @@
 {
-  "id" : 1528814873094,
-  "name" : "TestMasterPlan",
-  "comment" : "Test Comment String",
+  "id" : 1528875085487,
+  "name" : "taskrepository",
+  "comment" : null,
   "relativeDirectory" : "result.json",
-  "masterPlan" : true,
-  "activated" : true,
-  "utilityThreshold" : 0.0,
-  "preCondition" : null,
-  "runtimeCondition" : null,
-  "entryPoints" : [ {
-    "id" : 1528814873206,
-    "name" : "TestEP",
+  "tasks" : [ {
+    "id" : 1528875085489,
+    "name" : "DefaultTask",
     "comment" : null,
-    "task" : "result.json/taskrepository.tsk#1528814873209",
-    "successRequired" : false,
-    "state" : 1528814873096,
-    "plan" : 1528814873094,
-    "minCardinality" : 1,
-    "maxCardinality" : 2
+    "taskRepository" : 1528875085487
   } ],
-  "states" : [ {
-    "id" : 1528814873096,
-    "name" : "Stop",
-    "comment" : "Stops the robot",
-    "entryPoint" : 1528814873206,
-    "parentPlan" : 1528814873094,
-    "plans" : "result.json/TestBehaviour.beh#1528814873097, result.json/TestBehaviour2.beh#1528814873202, ",
-    "parametrisations" : [ ],
-    "inTransitions" : [ ],
-    "outTransitions" : [ ]
-  }, {
-    "id" : 1528814873204,
-    "name" : "Stop2",
-    "comment" : "Stops the robot too",
-    "entryPoint" : null,
-    "parentPlan" : 1528814873094,
-    "plans" : "",
-    "parametrisations" : [ ],
-    "inTransitions" : [ ],
-    "outTransitions" : [ ]
-  } ],
-  "transitions" : [ ],
-  "synchronizations" : [ ],
-  "variables" : [ ]
+  "defaultTask" : 1528875085489
 }

@@ -16,6 +16,7 @@ import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
@@ -58,7 +59,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
         i18NRepo = I18NRepo.getInstance();
 
-        setupModelManager();
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
         mainWindowController.setResourceCreationHandler(this);
@@ -68,7 +68,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
         setupConfigGuiStuff();
 
-
         repoTabPane = mainWindowController.getRepositoryTabPane();
 
         repoViewModel = new RepositoryViewModel();
@@ -77,6 +76,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
 
+        setupModelManager();
         setupGeneratedSourcesManager();
     }
 
@@ -97,7 +97,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
             modelManager.setPlansPath(activeConfiguration.getPlansPath());
             modelManager.setTasksPath(activeConfiguration.getTasksPath());
             modelManager.setRolesPath(activeConfiguration.getRolesPath());
-            modelManager.loadModelFromDisk();
         }
     }
 
@@ -128,6 +127,8 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
             return i18NRepo.getString("alicatype.plantype");
         } else if (planElement instanceof Task) {
             return i18NRepo.getString("alicatype.task");
+        } else if (planElement instanceof TaskRepository) {
+            return i18NRepo.getString("alicatype.taskrepository");
         } else if (planElement instanceof Role) {
             return i18NRepo.getString("alicatype.role");
         } else {
@@ -173,8 +174,13 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                     addTreeViewElement((AbstractPlan) planElement, typeString);
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
                 } else if (planElement instanceof Task) {
-                    addTreeViewElement((AbstractPlan) planElement, typeString);
                     repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
+                } else if (planElement instanceof TaskRepository) {
+                    addTreeViewElement((AbstractPlan) planElement, typeString);
+                    for (Task task : ((TaskRepository) planElement).getTasks()) {
+                        typeString = getTypeString(task);
+                        repoTabPane.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
+                    }
                 }
                 break;
             case ELEMENT_DELETED:
@@ -187,8 +193,11 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     }
 
     private void addTreeViewElement(AbstractPlan planElement, String type) {
-        mainWindowController.getFileTreeView().addTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
-                planElement.getName(), type, planElement.getRelativeDirectory()));
+        FileTreeView fileTreeView = mainWindowController.getFileTreeView();
+        if (fileTreeView != null) {
+            mainWindowController.getFileTreeView().addTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
+                    planElement.getName(), type, planElement.getRelativeDirectory()));
+        }
     }
 
     /**
@@ -224,10 +233,12 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         if (activeConfiguration != null) {
             mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
             new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
+            modelManager.loadModelFromDisk();
         }
         repoTabPane = mainWindowController.getRepositoryTabPane();
         repoViewModel.setRepositoryTabPane(repoTabPane);
         repoViewModel.initGuiContent();
+
     }
 
     /**

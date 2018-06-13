@@ -1,13 +1,19 @@
 package de.uni_kassel.vs.cn.planDesigner.modelmanagement;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.command.CreatePlan;
+import de.uni_kassel.vs.cn.planDesigner.deserialization.TaskRepositoryDefaultTaskDeserializer;
+import de.uni_kassel.vs.cn.planDesigner.deserialization.TaskRepositoryTasksDeserializer;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelOperationType;
+import de.uni_kassel.vs.cn.planDesigner.modelMixIns.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,6 +44,9 @@ public class ModelManager {
 
     private List<IModelEventHandler> eventHandlerList;
     private CommandStack commandStack;
+    private ObjectMapper objectMapper;
+
+    private long defaultTaskId;
 
     public ModelManager() {
         planElementMap = new HashMap<>();
@@ -47,6 +56,24 @@ public class ModelManager {
         taskRepository = new TaskRepository();
         eventHandlerList = new ArrayList<IModelEventHandler>();
         commandStack = new CommandStack();
+
+        setupObjectMapper();
+    }
+
+    private void setupObjectMapper() {
+        objectMapper = new ObjectMapper();
+
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
+        objectMapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
+        objectMapper.addMixIn(Parametrisation.class, ParametrisationMixIn.class);
+        objectMapper.addMixIn(PlanType.class, PlanTypeMixIn.class);
+        objectMapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
+        objectMapper.addMixIn(State.class, StateMixIn.class);
+        objectMapper.addMixIn(Synchronization.class, SynchronizationMixIn.class);
+        objectMapper.addMixIn(Task.class, TaskMixIn.class);
+        objectMapper.addMixIn(TaskRepository.class, TaskRepositoryMixIn.class);
+        objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
     }
 
     public void setPlansPath(String plansPath) {
@@ -114,12 +141,11 @@ public class ModelManager {
             ending = path.substring(pointIdx, path.length());
         }
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
             // TODO: Test parsing model objects with jackson.
             switch (ending) {
                 case ".pml":
-                    Plan plan = mapper.readValue(modelFile, Plan.class);
+                    Plan plan = objectMapper.readValue(modelFile, Plan.class);
                     if (planElementMap.containsKey(plan.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
                     } else {
@@ -129,7 +155,7 @@ public class ModelManager {
                     }
                     break;
                 case ".beh":
-                    Behaviour behaviour = mapper.readValue(modelFile, Behaviour.class);
+                    Behaviour behaviour = objectMapper.readValue(modelFile, Behaviour.class);
                     if (planElementMap.containsKey(behaviour.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + behaviour.getId());
                     } else {
@@ -139,7 +165,7 @@ public class ModelManager {
                     }
                     break;
                 case ".pty":
-                    PlanType planType = mapper.readValue(modelFile, PlanType.class);
+                    PlanType planType = objectMapper.readValue(modelFile, PlanType.class);
                     if (planElementMap.containsKey(planType.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + planType.getId());
                     } else {
@@ -149,7 +175,7 @@ public class ModelManager {
                     }
                     break;
                 case ".tsk":
-                    TaskRepository taskRepository = mapper.readValue(modelFile, TaskRepository.class);
+                    TaskRepository taskRepository = objectMapper.readValue(modelFile, TaskRepository.class);
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
@@ -249,9 +275,7 @@ public class ModelManager {
         }
     }
 
-
-
-    public void removeAbstarctPlan(AbstractPlan abstractPlan) {
+    public void removeAbstractPlan(AbstractPlan abstractPlan) {
         PlanElement deletedElement = planElementMap.remove(abstractPlan.getId());
         if (deletedElement == null) {
             return;
@@ -403,6 +427,7 @@ public class ModelManager {
 
     /**
      * This method should only be called through the command stack!
+     *
      * @param plan
      */
     public void addPlan(Plan plan) {
@@ -410,7 +435,11 @@ public class ModelManager {
         planElementMap.put(plan.getId(), plan);
     }
 
-    public String makeRelativePlansDirectory(String absoluteDirectory){
+    public String makeRelativePlansDirectory(String absoluteDirectory) {
         return absoluteDirectory.replace(plansPath, "");
+    }
+
+    public void setDefaultTaskId(long defaultTaskId) {
+        this.defaultTaskId = defaultTaskId;
     }
 }

@@ -287,6 +287,7 @@ public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
     }
 
     public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {
+        fileTreeView.getRoot().getChildren().clear();
         fileTreeView.setPlansPath(plansPath);
         fileTreeView.setRolesPath(rolesPath);
         fileTreeView.setTaskPath(tasksPath);

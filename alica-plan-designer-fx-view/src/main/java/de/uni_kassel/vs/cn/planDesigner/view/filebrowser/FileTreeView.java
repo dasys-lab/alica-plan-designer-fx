@@ -164,34 +164,31 @@ public final class FileTreeView extends TreeView<FileWrapper> {
     }
 
     public void addTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
-        String relativePath = treeViewModelElement.getRelativeDirectory();
-        if (relativePath.isEmpty()) {
-            virtualDirectoryTreeItem.getChildren()
-                    .add(new FileTreeItem(new FileWrapper(createFile(treeViewModelElement)), new ImageView(getImage(treeViewModelElement.getType()))));
-        }
-        String[] folders = relativePath.split(File.pathSeparator);
-        TreeItem folder = findFolder(folders, 0, virtualDirectoryTreeItem);
+        TreeItem topLevelFolder = findTopLevelFolder(treeViewModelElement, virtualDirectoryTreeItem);
+        TreeItem folder = findFolder(treeViewModelElement, topLevelFolder, 0);
         if (folder != null) {
             folder.getChildren().add(new FileTreeItem(new FileWrapper(createFile(treeViewModelElement)), new ImageView(getImage(treeViewModelElement.getType()))));
         } else {
-            throw new RuntimeException("Destination folder for Behaviour " + treeViewModelElement.getName() + " does not exist!");
+            throw new RuntimeException("Destination folder for PlanElement " + treeViewModelElement.getName() + " does not exist!");
         }
     }
 
     private File createFile(TreeViewModelElement treeViewModelElement) {
         File file;
         switch (treeViewModelElement.getType()) {
+            // TODO: use i18N repo for cases
             case "behaviour":
-                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".beh").toFile();
+                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".beh").toFile();
                 break;
+            case "masterplan":
             case "plan":
-                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".pml").toFile();
+                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pml").toFile();
                 break;
             case "plantype":
-                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".pty").toFile();
+                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pty").toFile();
                 break;
             case "taskrepository":
-                file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName(), ".tsk").toFile();
+                file = Paths.get(taskPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".tsk").toFile();
                 break;
             default:
                 throw new RuntimeException("Trying to create file for unknown type " + treeViewModelElement.getType() + "!");
@@ -199,16 +196,26 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         return file;
     }
 
-    private TreeItem findFolder(String[] path, int index, TreeItem treeItem) {
+    private TreeItem findTopLevelFolder(TreeViewModelElement treeViewModelElement, TreeItem treeItem) {
+        //TODO fix
+
+    }
+
+    private TreeItem findFolder(TreeViewModelElement modelElement, TreeItem treeItem, int index) {
+        String relativePath = modelElement.getRelativeDirectory();
+        String[] folders = relativePath.split(File.pathSeparator);
+        if (folders.length == 0) {
+            return treeItem;
+        }
         for (Object item : treeItem.getChildren()) {
             TreeItem newItem = (TreeItem) item;
-            if (!(newItem.getValue().toString().endsWith(path[index]))) {
+            if (!(newItem.getValue().toString().endsWith(folders[index]))) {
                 continue;
             }
-            if (index == path.length - 1) {
+            if (index == folders.length - 1) {
                 return newItem;
             }
-            return findFolder(path, index + 1, newItem);
+            return findFolder(modelElement, newItem, index + 1);
         }
         return null;
     }

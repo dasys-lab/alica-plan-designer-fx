@@ -1,30 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.uni_kassel.vs.cn.planDesigner.deserialization.CustomArrayDeserializer;
-import de.uni_kassel.vs.cn.planDesigner.serialization.CustomArrayFileReferenceSerializer;
-import de.uni_kassel.vs.cn.planDesigner.serialization.CustomArraySerializer;
-import de.uni_kassel.vs.cn.planDesigner.serialization.CustomPlanElementSerializer;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class State extends PlanElement implements IInhabitable {
-    @JsonSerialize(using = CustomPlanElementSerializer.class)
     protected EntryPoint entryPoint;
-    @JsonSerialize(using = CustomPlanElementSerializer.class)
     protected Plan parentPlan;
-    @JsonSerialize(using = CustomArrayFileReferenceSerializer.class)
     protected ArrayList<AbstractPlan> plans;
-    @JsonSerialize(using = CustomArraySerializer.class)
-    @JsonDeserialize(using = CustomArrayDeserializer.class)
     protected ArrayList<Parametrisation> parametrisations;
-    @JsonSerialize(using = CustomArraySerializer.class)
-    @JsonDeserialize(using = CustomArrayDeserializer.class)
     protected ArrayList<Transition> inTransitions;
-    @JsonSerialize(using = CustomArraySerializer.class)
-    @JsonDeserialize(using = CustomArrayDeserializer.class)
     protected ArrayList<Transition> outTransitions;
 
     public State ()
