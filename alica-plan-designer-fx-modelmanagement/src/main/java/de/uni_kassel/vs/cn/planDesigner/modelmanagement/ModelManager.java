@@ -292,12 +292,11 @@ public class ModelManager {
         PlanElement deletedElement = null;
         String pathString = path.toString();
         String ending = pathString.substring(pathString.lastIndexOf('.'), pathString.length());
-
         try {
             switch (ending) {
                 case ".pml":
                     for (Plan plan : planMap.values()) {
-                        if (pathString.contains(Paths.get(plan.getRelativeDirectory(), plan.getName(), ".pml").toString())) {
+                        if (pathString.contains(Paths.get(plan.getRelativeDirectory(), plan.getName() + ".pml").toString())) {
                             deletedElement = plan;
                             planMap.remove(plan.getId());
                             break;
@@ -306,7 +305,7 @@ public class ModelManager {
                     break;
                 case ".beh":
                     for (Behaviour behaviour : behaviourMap.values()) {
-                        if (pathString.contains(Paths.get(behaviour.getRelativeDirectory(), behaviour.getName(), ".beh").toString())) {
+                        if (pathString.contains(Paths.get(behaviour.getRelativeDirectory(), behaviour.getName() + ".beh").toString())) {
                             deletedElement = behaviour;
                             behaviourMap.remove(behaviour.getId());
                             break;
@@ -315,7 +314,7 @@ public class ModelManager {
                     break;
                 case ".pty":
                     for (PlanType planType : planTypeMap.values()) {
-                        if (pathString.contains(Paths.get(planType.getRelativeDirectory(), planType.getName(), ".pty").toString())) {
+                        if (pathString.contains(Paths.get(planType.getRelativeDirectory(), planType.getName() + ".pty").toString())) {
                             deletedElement = planType;
                             planTypeMap.remove(planType.getId());
                             break;
@@ -323,7 +322,7 @@ public class ModelManager {
                     }
                     break;
                 case ".tsk":
-                    if (pathString.contains(Paths.get(this.taskRepository.getName(), ".tsk").toString())) {
+                    if (pathString.contains(Paths.get(this.taskRepository.getName() + ".tsk").toString())) {
                         deletedElement = this.taskRepository;
                         this.taskRepository = null;
                     }
@@ -336,14 +335,16 @@ public class ModelManager {
                     throw new RuntimeException("Received file with unknown file ending, for parsing.");
             }
 
-            if (deletedElement != null) {
+            if (deletedElement == null) {
                 throw new RuntimeException("PlanElement not found! Path is: " + path);
             }
-            if (planElementMap.containsValue(deletedElement.getId())) {
+
+            System.out.println(deletedElement.getId() + " " + deletedElement.getName());
+            if (planElementMap.containsKey(deletedElement.getId())) {
                 planElementMap.remove(deletedElement.getId());
                 fireDeletionEvent(deletedElement);
             } else {
-                throw new RuntimeException("PlanElement ID not found! ID is: " + deletedElement.getId() + " Type is Task!");
+                throw new RuntimeException("PlanElement ID not found! ID is: " + deletedElement.getId() + " Type is " + deletedElement.getClass());
             }
         } catch (RuntimeException e) {
             e.printStackTrace();

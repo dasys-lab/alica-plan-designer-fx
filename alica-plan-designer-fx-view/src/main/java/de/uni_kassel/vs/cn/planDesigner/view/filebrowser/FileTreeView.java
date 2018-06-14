@@ -129,17 +129,17 @@ public final class FileTreeView extends TreeView<FileWrapper> {
                 return;
             }
 
-            try {
-                //TODO implement pmlex support
-                if (draggedItem.getValue().unwrap().getName().endsWith("pml")) {
+            //TODO fire file moved event
+//            try {
+//                if (draggedItem.getValue().unwrap().getName().endsWith("pml")) {
 //                    Files.move(new File(draggedItem.getValue().unwrap().toString() + "ex").toPath(),
 //                            new File(parent, draggedItem.getValue().unwrap().getName() + "ex").toPath());
-                }
-                Files.move(draggedItem.getValue().unwrap().toPath(),
-                        new File(parent, draggedItem.getValue().unwrap().getName()).toPath());
-            } catch (IOException e1) {
-                throw new RuntimeException(e1);
-            }
+//                }
+//                Files.move(draggedItem.getValue().unwrap().toPath(),
+//                        new File(parent, draggedItem.getValue().unwrap().getName()).toPath());
+//            } catch (IOException e1) {
+//                throw new RuntimeException(e1);
+//            }
             e.consume();
         });
 
