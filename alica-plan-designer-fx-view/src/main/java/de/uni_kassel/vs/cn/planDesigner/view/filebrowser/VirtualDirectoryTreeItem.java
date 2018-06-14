@@ -14,14 +14,17 @@ class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
         super();
     }
 
-    public void updateDirectory(WatchEvent.Kind kind, Path child) {
-        getChildren().forEach(e -> ((FileTreeItem) e).updateDirectory(kind, child));
-    }
+//    public void updateDirectory(WatchEvent.Kind kind, Path child) {
+//        getChildren().forEach(e -> ((FileTreeItem) e).updateDirectory(kind, child));
+//    }
 
-    public void addTopLevelFolder(String path) {
+    public FileTreeItem addTopLevelFolder(String path) {
         if (path != null && !path.isEmpty()) {
-            this.getChildren().add(new FileTreeItem(FileWrapper.wrap(path),
-                    new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")))));
+            FileTreeItem treeItem = new FileTreeItem(FileWrapper.wrap(path),
+                    new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png"))), null);
+            this.getChildren().add(treeItem);
+            return treeItem;
         }
+        return null;
     }
 }

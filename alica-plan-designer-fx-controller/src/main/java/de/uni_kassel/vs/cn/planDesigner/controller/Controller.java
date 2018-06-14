@@ -227,7 +227,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
      * Called by the main window controlled at the end of its initialized method.
      */
     @Override
-    public void handleGuiInitialzed() {
+    public void handleGuiInitialized() {
         mainWindowController.enableMenuBar();
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {

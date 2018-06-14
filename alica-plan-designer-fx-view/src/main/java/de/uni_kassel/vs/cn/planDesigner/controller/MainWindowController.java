@@ -111,7 +111,7 @@ public class MainWindowController implements Initializable {
         repositoryTabPane.setShowUsageHandler(usageHandler);
 //        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
-        guiStatusHandler.handleGuiInitialzed();
+        guiStatusHandler.handleGuiInitialized();
     }
 
 //    public boolean isSelectedPlanElement(Node node) {
@@ -288,8 +288,8 @@ public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
 
     public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {
         fileTreeView.getRoot().getChildren().clear();
-        fileTreeView.setPlansPath(plansPath);
-        fileTreeView.setRolesPath(rolesPath);
-        fileTreeView.setTaskPath(tasksPath);
+        fileTreeView.setupPlansPath(plansPath);
+        fileTreeView.setupRolesPath(rolesPath);
+        fileTreeView.setupTaskPath(tasksPath);
     }
 }
