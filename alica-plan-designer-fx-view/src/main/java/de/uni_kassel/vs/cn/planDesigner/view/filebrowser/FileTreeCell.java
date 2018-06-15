@@ -182,7 +182,7 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
                             if (getItem().unwrap().isDirectory()) {
                                 getTreeItem().setExpanded(!getTreeItem().isExpanded());
                             } else {
-                                controller.openFile(getItem().unwrap());
+                                controller.openFile(((FileTreeItem)getTreeItem()).getTreeViewModelElement());
                             }
                         }
                     }

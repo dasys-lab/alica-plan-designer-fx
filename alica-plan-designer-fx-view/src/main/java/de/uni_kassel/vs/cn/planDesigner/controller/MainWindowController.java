@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.EditMenu;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.NewResourceMenu;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
@@ -246,8 +247,8 @@ public class MainWindowController implements Initializable {
      *
      * @param toOpen file that should be opened
      */
-    public void openFile(File toOpen) {
-        editorTabPane.openTab(toOpen.toPath());
+    public void openFile(TreeViewModelElement toOpen) {
+        editorTabPane.openTab(toOpen);
     }
 
     public EditorTabPane getEditorTabPane() {

@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
@@ -8,12 +10,12 @@ import java.util.Optional;
 
 public class EditorTabPane extends TabPane {
 
-    public void openTab(Path filePath) {
+    public void openTab(TreeViewModelElement treeViewModelElement) {
         Tab tab = getTabs()
                 .stream()
-                .filter(e -> e != null && ((AbstractEditorTab) e).getFilePath().equals(filePath))
+                .filter(e -> e != null && ((AbstractEditorTab) e).getEditable().equals(treeViewModelElement.getId()))
                 .findFirst()
-                .orElse(createNewTab(filePath));
+                .orElse(createNewTab(treeViewModelElement));
 
         if (this.getTabs().contains(tab) == false) {
             getTabs().add(tab);
@@ -27,8 +29,16 @@ public class EditorTabPane extends TabPane {
         this.requestFocus();
     }
 
-    private Tab createNewTab(Path filePath) {
-        String filePathAsString = filePath.toString();
+    private Tab createNewTab(TreeViewModelElement treeViewModelElement) {
+        String type = treeViewModelElement.getType();
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+        if (type == i18NRepo.getString("alicatype.masterplan") || type == i18NRepo.getString("alicatype.plan") ) {
+            return null;
+        } else {
+            return null;
+        }
+
+
 //        switch (filePathAsString.substring(filePathAsString.lastIndexOf('.') + 1)) {
 //            case "pml":
 //                Pair<Plan, Path> planPathPair = RepositoryViewModel
@@ -59,8 +69,6 @@ public class EditorTabPane extends TabPane {
 //                return new BehaviourTab(behaviourPathPair, commandStack);
 //            default:
 //                return null;
-//
-//        }
-        return null;
+
     }
 }
