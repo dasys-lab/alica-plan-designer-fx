@@ -1,7 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -15,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +26,7 @@ public abstract class AbstractEditorTab extends Tab {
     protected boolean dirty;
     protected SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElements;
 
-    private Pair<Long, Path> editablePathPair;
+    private TreeViewModelElement editableElement;
     private ObservableList<Node> visualRepresentations;
 
     //TODO add to scene
@@ -35,12 +38,12 @@ public abstract class AbstractEditorTab extends Tab {
     }
 
     // TODO: Review necessary, due to MVC pattern adaption.
-    public AbstractEditorTab(Pair<Long, Path> editablePathPair) {
+    public AbstractEditorTab(TreeViewModelElement editableElement) {
         // set Tab Caption to name of file, represented by this Tab
-        super(editablePathPair.getValue().getFileName().toString());
+        super(editableElement.getName());
 
-        this.editablePathPair = editablePathPair;
-        initSelectedPlanElements(editablePathPair);
+        this.editableElement = editableElement;
+        initSelectedPlanElements(editableElement);
 
         // add Ctrl+A handlerinterfaces to scene
 //        EditorTabPane editorTabPane = MainWindowController.getInstance().getEditorTabPane();
@@ -112,9 +115,9 @@ public abstract class AbstractEditorTab extends Tab {
      * @param editablePathPair
      */
     // TODO: Review necessary, due to MVC pattern adaption.
-    protected void initSelectedPlanElements(Pair<Long, Path> editablePathPair) {
+    protected void initSelectedPlanElements(TreeViewModelElement editablePathPair) {
 //        selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-//        selectedPlanElements.get().add(new Pair<>(editablePathPair.getKey(), null));
+//        selectedPlanElements.get().add(new Pair<>(editableElement.getKey(), null));
 //        selectedPlanElements.addListener((observable, oldValue, newValue) -> {
 //            if (newValue == null) {
 //                // TODO: cannot return here because this avoid deleting selectedEffect on oldValue
@@ -204,7 +207,18 @@ public abstract class AbstractEditorTab extends Tab {
     }
 
     public Path getFilePath() {
-        return editablePathPair.getValue();
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+        if (editableElement.getType() == i18NRepo.getString("alicatype.plan")) {
+            return Paths.get(editableElement.getRelativeDirectory(), editableElement.getName() + ".pml");
+        } else if (editableElement.getType() == i18NRepo.getString("alicatype.plantype")) {
+            return Paths.get(editableElement.getRelativeDirectory(), editableElement.getName() + ".pty");
+        } else if (editableElement.getType() == i18NRepo.getString("alicatype.behaviour")) {
+            return Paths.get(editableElement.getRelativeDirectory(), editableElement.getName() + ".beh");
+        } else if (editableElement.getType() == i18NRepo.getString("alicatype.taskrepository")) {
+            return Paths.get(editableElement.getRelativeDirectory(), editableElement.getName() + ".tsk");
+        } else {
+            return null;
+        }
     }
 
     // TODO: Review necessary, due to MVC pattern adaption.
@@ -212,25 +226,25 @@ public abstract class AbstractEditorTab extends Tab {
 //        try {
 //            setText(getText().replace("*", ""));
 //            EMFModelUtils.saveAlicaFile(getEditable());
-//            getCommandStack().setSavedForAbstractPlan(editablePathPair.getKey());
+//            getCommandStack().setSavedForAbstractPlan(editableElement.getKey());
 //        } catch (IOException e) {
 //            ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.save"), e);
 //        }
     }
 
     public Long getEditable() {
-        return editablePathPair.getKey();
+        return editableElement.getId();
     }
 
     public SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> getSelectedPlanElements() {
         return selectedPlanElements;
     }
 
-    private void setEditablePathPair(Pair<Long, Path> editablePathPair) {
-        this.editablePathPair = editablePathPair;
+    private void setEditableElement(TreeViewModelElement editableElement) {
+        this.editableElement = editableElement;
     }
 
-    public Pair<Long, Path> getEditablePathPair() {
-        return editablePathPair;
+    public TreeViewModelElement getEditableElement() {
+        return editableElement;
     }
 }

@@ -1,66 +1,70 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.container.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.EditorToolBar;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
 
-import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class PlanTab extends AbstractEditorTab {
 
-//    private PlanEditorGroup planEditorGroup;
-//    private ConditionHBox conditionHBox;
-//    private PlanModelVisualisationObject planModelVisualisationObject;
-//    private PmlUiExtensionMap pmlUiExtensionMap;
-//    private PLDToolBar pldToolBar;
+    private Group planEditorGroup;
+    private ConditionHBox conditionHBox;
+    private PlanModelVisualisationObject planModelVisualisationObject;
+    //    private PmlUiExtensionMap pmlUiExtensionMap;
+    private EditorToolBar editorToolBar;
     private StackPane planContent;
     private ScrollPane scrollPane;
 
-    public PlanTab(Pair<Long, Path> planPathPair) {
-        super(planPathPair);
-
-        String absolutePath = planPathPair.getValue().toFile().toString();
+    public PlanTab(TreeViewModelElement treeViewModelElement) {
+        super(treeViewModelElement);
+        String plansPath = MainWindowController.getInstance().getPlansPath();
+        String absolutePath = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pml")
+                .toFile().toString();
         String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
+        Path relativePath = Paths.get(treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pml");
 //        URI relativeURI = EMFModelUtils.createRelativeURI(new File(uiExtensionMapPath));
 //        setPmlUiExtensionMap((PmlUiExtensionMap) AlicaResourceSet.getInstance().getResource(relativeURI, false).getContents().get(0));
 
-        draw(planPathPair);
+        draw(treeViewModelElement);
 
 //        EContentAdapter adapter = new EContentAdapter() {
 //            public void notifyChanged(Notification n) {
-//                draw(planPathPair, commandStack);
+//                draw(treeViewModelElement, commandStack);
 //            }
 //        };
 //
 //        planModelVisualisationObject.getPlan().eAdapters().add(adapter);
     }
 
-    private void draw(Pair<Long, Path> planPathPair) {
-//        planModelVisualisationObject = new PlanModelVisualisationObject(getEditable(), getPmlUiExtensionMap());
-//        planEditorGroup = new PlanEditorGroup(planModelVisualisationObject, this);
-//        planContent = new StackPane(planEditorGroup);
+    private void draw(TreeViewModelElement planPathPair) {
+        planModelVisualisationObject = new PlanModelVisualisationObject(getEditable());
+        planEditorGroup = new Group();
+        planContent = new StackPane(planEditorGroup);
         planContent.setPadding(new Insets(50, 50, 50, 50));
         planContent.setManaged(true);
 
-//        planEditorGroup.setManaged(true);
+        planEditorGroup.setManaged(true);
 //
-//        pldToolBar = new PLDToolBar(MainWindowController.getInstance().getEditorTabPane());
+        editorToolBar = new EditorToolBar(MainWindowController.getInstance().getEditorTabPane());
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
-//        HBox hBox = new HBox(scrollPane, pldToolBar);
-//        conditionHBox = new ConditionHBox(planPathPair.getKey(), selectedPlanElements, commandStack);
-//        VBox vBox = new VBox(conditionHBox,hBox);
-        VBox.setVgrow(scrollPane,Priority.ALWAYS);
-//        VBox.setVgrow(hBox,Priority.ALWAYS);
-//        HBox.setHgrow(scrollPane, Priority.ALWAYS);
-//
-//        hBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-//        setContent(vBox);
+        HBox hBox = new HBox(scrollPane, editorToolBar);
+        conditionHBox = new ConditionHBox(getEditableElement(), selectedPlanElements);
+        VBox vBox = new VBox(conditionHBox, hBox);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+        VBox.setVgrow(hBox,Priority.ALWAYS);
+        HBox.setHgrow(scrollPane, Priority.ALWAYS);
+
+        hBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        setContent(vBox);
     }
 
 //    public PlanEditorGroup getPlanEditorGroup() {
@@ -72,7 +76,7 @@ public class PlanTab extends AbstractEditorTab {
 //    }
 //
 //    public PLDToolBar getPldToolBar() {
-//        return pldToolBar;
+//        return editorToolBar;
 //    }
 
     public ScrollPane getScrollPane() {
@@ -106,8 +110,8 @@ public class PlanTab extends AbstractEditorTab {
 //        return planModelVisualisationObject;
 //    }
 
-    protected void initSelectedPlanElement(Pair<Long, Path> editablePathPair) {
-        super.initSelectedPlanElements(editablePathPair);
+    protected void initSelectedPlanElement(TreeViewModelElement treeViewModelElement) {
+        super.initSelectedPlanElements(treeViewModelElement);
         contentProperty().addListener((observable, oldValue, newValue) -> {
 //            if (newValue != null) {
 //                newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {

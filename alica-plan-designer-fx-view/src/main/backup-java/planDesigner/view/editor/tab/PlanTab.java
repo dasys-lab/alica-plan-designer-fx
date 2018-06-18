@@ -8,7 +8,6 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtensionMap;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.PLDToolBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;

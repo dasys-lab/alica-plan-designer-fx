@@ -29,9 +29,7 @@ import javafx.util.Duration;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -43,12 +41,9 @@ public class MainWindowController implements Initializable {
 
 
     public static MainWindowController getInstance() {
-        if (instance == null)
-        {
-            synchronized(MainWindowController.class)
-            {
-                if (instance == null)
-                {
+        if (instance == null) {
+            synchronized (MainWindowController.class) {
+                if (instance == null) {
                     instance = new MainWindowController();
                 }
             }
@@ -90,9 +85,11 @@ public class MainWindowController implements Initializable {
     private Menu fileMenu;
     private Menu codeGenerationMenu;
     private EditMenu editMenu;
+    private String plansPath;
+    private String tasksPath;
+    private String rolesPath;
 
-    private MainWindowController()
-    {
+    private MainWindowController() {
         super();
         this.i18NRepo = I18NRepo.getInstance();
 
@@ -137,7 +134,7 @@ public class MainWindowController implements Initializable {
 
         MenuItem saveItem = new MenuItem(i18NRepo.getString("label.menu.file.save"));
         saveItem.setOnAction(event -> {
-            if(editorTabPane.getSelectionModel().getSelectedItem() == null) {
+            if (editorTabPane.getSelectionModel().getSelectedItem() == null) {
                 return;
             }
             ((AbstractEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save();
@@ -156,15 +153,16 @@ public class MainWindowController implements Initializable {
         generateCurrentFile.setDisable(true);
         getEditorTabPane().getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                Path path = ((AbstractEditorTab) newValue).getEditablePathPair().getValue();
-                if (path.endsWith(".beh") || path.endsWith(".pml") || path.endsWith(".pty")) {
-                    generateCurrentFile.setDisable(false);
-                }
-            } else {
-                generateCurrentFile.setDisable(true);
-            }
-        });
+                    if (newValue != null) {
+                        String type = ((AbstractEditorTab) newValue).getEditableElement().getType();
+                        if (type.equals(i18NRepo.getString("alicatype.behaviour")) || type.equals(i18NRepo.getString("alicatype.plan")) || type.equals
+                                (i18NRepo.getString("alicatype.masterplan")) || type.equals(i18NRepo.getString("alicatype.plantype"))) {
+                            generateCurrentFile.setDisable(false);
+                        }
+                    } else {
+                        generateCurrentFile.setDisable(true);
+                    }
+                });
 
         generateCurrentFile.setOnAction(e -> {
             long modelElementId = ((AbstractEditorTab) getEditorTabPane()
@@ -194,17 +192,17 @@ public class MainWindowController implements Initializable {
         return menus;
     }
 
-	private void waitOnProgressWindow(Runnable toWaitOn) {
-		new Thread(() -> {
-		    toWaitOn.run();
+    private void waitOnProgressWindow(Runnable toWaitOn) {
+        new Thread(() -> {
+            toWaitOn.run();
             statusText.toFront();
             statusText.setOpacity(1.0);
             statusBlob.setOpacity(1.0);
-            statusText.setLayoutY(statusBlob.getLayoutY()+statusText.getFont().getSize()+2);
-		    statusText.setText(i18NRepo.getString("label.generation.completed"));
-            statusText.setLayoutX(statusBlob.getLayoutX() + (statusBlob.getWidth()/2)-statusText.getBoundsInLocal().getWidth()/2);
-		    statusBlob.setVisible(true);
-		    statusText.setVisible(true);
+            statusText.setLayoutY(statusBlob.getLayoutY() + statusText.getFont().getSize() + 2);
+            statusText.setText(i18NRepo.getString("label.generation.completed"));
+            statusText.setLayoutX(statusBlob.getLayoutX() + (statusBlob.getWidth() / 2) - statusText.getBoundsInLocal().getWidth() / 2);
+            statusBlob.setVisible(true);
+            statusText.setVisible(true);
             FadeTransition fadeTransition = new FadeTransition();
             fadeTransition.setFromValue(1.0);
             fadeTransition.setToValue(0.0);
@@ -224,7 +222,7 @@ public class MainWindowController implements Initializable {
                 statusText.setVisible(false);
             });
         }).start();
-	}
+    }
 
 //	public void closeTabIfOpen (long modelElementId) {
 //        Optional<AbstractEditorTab> tabOptional = editorTabPane
@@ -243,7 +241,7 @@ public class MainWindowController implements Initializable {
 //    }
 
     /**
-     * delegate to {@link EditorTabPane#openTab(java.nio.file.Path)}
+     * delegate to { EditorTabPane#openTab(java.nio.file.Path)}
      *
      * @param toOpen file that should be opened
      */
@@ -275,7 +273,8 @@ public class MainWindowController implements Initializable {
     public void setShowUsageHandler(IShowUsageHandler usageHandler) {
         this.usageHandler = usageHandler;
     }
-public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
+
+    public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
         this.guiStatusHandler = guiStatusHandler;
     }
 
@@ -289,8 +288,23 @@ public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
 
     public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {
         fileTreeView.getRoot().getChildren().clear();
-        fileTreeView.setupPlansPath(plansPath);
-        fileTreeView.setupRolesPath(rolesPath);
-        fileTreeView.setupTaskPath(tasksPath);
+        this.plansPath = plansPath;
+        fileTreeView.setupPlansPath(this.plansPath);
+        this.rolesPath = rolesPath;
+        fileTreeView.setupRolesPath(this.rolesPath);
+        this.tasksPath = tasksPath;
+        fileTreeView.setupTaskPath(this.tasksPath);
+    }
+
+    public String getPlansPath() {
+        return plansPath;
+    }
+
+    public String getTasksPath() {
+        return tasksPath;
+    }
+
+    public String getRolesPath() {
+        return rolesPath;
     }
 }

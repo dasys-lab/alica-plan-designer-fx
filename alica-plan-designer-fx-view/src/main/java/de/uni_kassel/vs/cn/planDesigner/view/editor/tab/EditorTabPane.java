@@ -4,8 +4,10 @@ import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.util.Pair;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 public class EditorTabPane extends TabPane {
@@ -21,7 +23,7 @@ public class EditorTabPane extends TabPane {
             getTabs().add(tab);
             getSelectionModel().select(tab);
         } else {
-            Optional<Tab> result = getTabs().stream().filter(e ->  e != null && e.equals(tab)).findFirst();
+            Optional<Tab> result = getTabs().stream().filter(e -> e != null && e.equals(tab)).findFirst();
             if (result.isPresent()) {
                 getSelectionModel().select(result.get());
             }
@@ -32,8 +34,8 @@ public class EditorTabPane extends TabPane {
     private Tab createNewTab(TreeViewModelElement treeViewModelElement) {
         String type = treeViewModelElement.getType();
         I18NRepo i18NRepo = I18NRepo.getInstance();
-        if (type == i18NRepo.getString("alicatype.masterplan") || type == i18NRepo.getString("alicatype.plan") ) {
-            return null;
+        if (type == i18NRepo.getString("alicatype.masterplan") || type == i18NRepo.getString("alicatype.plan")) {
+            return new PlanTab(treeViewModelElement);
         } else {
             return null;
         }
