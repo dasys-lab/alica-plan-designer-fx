@@ -443,4 +443,23 @@ public class ModelManager {
     public void setDefaultTaskId(long defaultTaskId) {
         this.defaultTaskId = defaultTaskId;
     }
+
+    public void moveFile(long movedFileId, Path originalPath, Path newPath) {
+        System.out.println("move file called" + planElementMap.size());
+        for(long planElementId : planElementMap.keySet()){
+            System.out.println(planElementId + " " + movedFileId);
+            if(planElementId == movedFileId) {
+                System.out.println("plan found");
+                PlanElement planElement = planElementMap.get(planElementId);
+                if(planElement instanceof Plan) {
+                    Plan plan = planMap.get(planElementId);
+                    String relativeDirectory = makeRelativePlansDirectory(newPath.toString());
+                    relativeDirectory = relativeDirectory.replace(plan.getName() + ".pml", "");
+                    plan.setRelativeDirectory(relativeDirectory);
+                    ((Plan) planElement).setRelativeDirectory(relativeDirectory);
+                    System.out.println("relative dir " + relativeDirectory);
+                }
+            }
+        }
+    }
 }

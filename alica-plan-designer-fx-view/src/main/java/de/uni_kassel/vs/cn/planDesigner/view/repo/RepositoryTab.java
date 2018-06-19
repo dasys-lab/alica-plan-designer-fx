@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.repo;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
+import javafx.application.Platform;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 
@@ -37,15 +38,25 @@ public class RepositoryTab extends Tab {
     }
 
     public void addElement(ViewModelElement viewModelElement) {
-        repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, showUsageHandler));
-        sort();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, showUsageHandler));
+                sort();
+            }
+        });
     }
 
     public void addElements(List<ViewModelElement> viewModelElements) {
-        for (ViewModelElement viewModelElement : viewModelElements) {
-            repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, showUsageHandler));
-        }
-        sort();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                for (ViewModelElement viewModelElement : viewModelElements) {
+                    repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, showUsageHandler));
+                }
+                sort();
+            }
+        });
     }
 
     public void clearGuiContent() {

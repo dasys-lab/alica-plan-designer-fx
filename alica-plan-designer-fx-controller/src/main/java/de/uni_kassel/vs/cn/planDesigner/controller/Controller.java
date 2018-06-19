@@ -10,6 +10,7 @@ import de.uni_kassel.vs.cn.planDesigner.events.ModelOperationType;
 import de.uni_kassel.vs.cn.planDesigner.events.ResourceCreationEvent;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
@@ -23,6 +24,9 @@ import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
@@ -32,7 +36,7 @@ import java.util.ArrayList;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler, IResourceCreationHandler {
+public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler, IResourceCreationHandler, IMoveFileHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -63,6 +67,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         mainWindowController.setGuiStatusHandler(this);
         mainWindowController.setResourceCreationHandler(this);
         mainWindowController.setShowUsageHandler(this);
+        mainWindowController.setMoveFileHandler(this);
 
         commandStack = new CommandStack();
 
@@ -159,10 +164,10 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
             return;
         }
 
+        PlanElement planElement = event.getNewElement();
+        String typeString = getTypeString(planElement);
         switch (event.getType()) {
             case ELEMENT_CREATED:
-                PlanElement planElement = event.getNewElement();
-                String typeString = getTypeString(planElement);
                 if (planElement instanceof Plan) {
                     Plan plan = (Plan) planElement;
                     addTreeViewElement(plan, typeString);
@@ -184,7 +189,10 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                 }
                 break;
             case ELEMENT_DELETED:
-                throw new RuntimeException("Not implemented, yet!");
+                System.out.println("Controller: ELEMENT_DELETED not implemented yet!");
+                removeTreeViewElement((AbstractPlan) planElement, typeString);
+                break;
+//                throw new RuntimeException("Not implemented, yet!");
             case ELEMENT_ATTRIBUTE_CHANGED:
                 throw new RuntimeException("Not implemented, yet!");
             default:
@@ -196,6 +204,14 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         FileTreeView fileTreeView = mainWindowController.getFileTreeView();
         if (fileTreeView != null) {
             mainWindowController.getFileTreeView().addTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
+                    planElement.getName(), type, planElement.getRelativeDirectory()));
+        }
+    }
+
+    private void removeTreeViewElement(AbstractPlan planElement, String type) {
+        FileTreeView fileTreeView = mainWindowController.getFileTreeView();
+        if (fileTreeView != null) {
+            mainWindowController.getFileTreeView().removeTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
                     planElement.getName(), type, planElement.getRelativeDirectory()));
         }
     }
@@ -250,5 +266,22 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     public void handleResourceCreationEvent(ResourceCreationEvent event) {
         ModelModificationQuery mmq = new ModelModificationQuery(ModelOperationType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getType(), event.getName());
         this.modelManager.handleModelModificationQuery(mmq);
+    }
+
+    /**
+     * Called by the FileTreeView when moving files
+     */
+    public void moveFile(long id, Path originalPath, Path newPath) {
+            modelManager.moveFile(id, originalPath, newPath);
+            try {
+                if (originalPath.endsWith("pml")) {
+                    //TODO implement once pmlex is supported
+//                    Files.move(new File(originalPath + "ex").toPath(),
+//                            new File(newPath + "ex").toPath());
+                }
+                Files.move(originalPath, newPath);
+            } catch (IOException e1) {
+                throw new RuntimeException(e1);
+            }
     }
 }

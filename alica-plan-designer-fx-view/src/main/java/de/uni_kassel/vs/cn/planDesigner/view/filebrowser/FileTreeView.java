@@ -130,16 +130,9 @@ public final class FileTreeView extends TreeView<FileWrapper> {
             }
 
             //TODO fire file moved event
-//            try {
-//                if (draggedItem.getValue().unwrap().getName().endsWith("pml")) {
-//                    Files.move(new File(draggedItem.getValue().unwrap().toString() + "ex").toPath(),
-//                            new File(parent, draggedItem.getValue().unwrap().getName() + "ex").toPath());
-//                }
-//                Files.move(draggedItem.getValue().unwrap().toPath(),
-//                        new File(parent, draggedItem.getValue().unwrap().getName()).toPath());
-//            } catch (IOException e1) {
-//                throw new RuntimeException(e1);
-//            }
+            controller.getMoveFileHandler().moveFile(draggedItem.getTreeViewModelElement().getId(),
+                    draggedItem.getValue().unwrap().toPath(),
+                    new File(parent, draggedItem.getValue().unwrap().getName()).toPath());
             e.consume();
         });
 
@@ -195,6 +188,23 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         if (folder != null) {
             folder.getChildren().add(new FileTreeItem(new FileWrapper(createFile(treeViewModelElement)), new ImageView(getImage(treeViewModelElement.getType
                     ())), treeViewModelElement));
+            folder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+        } else {
+            throw new RuntimeException("Destination folder for PlanElement " + treeViewModelElement.getName() + " does not exist!");
+        }
+    }
+
+    public void removeTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
+        FileTreeItem topLevelFolder = findTopLevelFolder(treeViewModelElement);
+        System.out.println(topLevelFolder);
+        FileTreeItem folder = findFolder(treeViewModelElement, topLevelFolder, 0);
+        if (folder != null) {
+            for (TreeItem child : folder.getChildren()) {
+                if (((FileTreeItem) child).getTreeViewModelElement().getId() == treeViewModelElement.getId()) {
+                    folder.getChildren().remove(child);
+                    break;
+                }
+            }
             folder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
         } else {
             throw new RuntimeException("Destination folder for PlanElement " + treeViewModelElement.getName() + " does not exist!");
