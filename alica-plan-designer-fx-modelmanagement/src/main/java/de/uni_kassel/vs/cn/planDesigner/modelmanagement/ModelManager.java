@@ -296,7 +296,7 @@ public class ModelManager {
             switch (ending) {
                 case ".pml":
                     for (Plan plan : planMap.values()) {
-                        if (pathString.contains(Paths.get(plan.getRelativeDirectory(), plan.getName() + ".pml").toString())) {
+                        if (pathString.contains(plan.getName() + ".pml")) {
                             deletedElement = plan;
                             planMap.remove(plan.getId());
                             break;
@@ -305,7 +305,7 @@ public class ModelManager {
                     break;
                 case ".beh":
                     for (Behaviour behaviour : behaviourMap.values()) {
-                        if (pathString.contains(Paths.get(behaviour.getRelativeDirectory(), behaviour.getName() + ".beh").toString())) {
+                        if (pathString.contains(behaviour.getName() + ".beh")) {
                             deletedElement = behaviour;
                             behaviourMap.remove(behaviour.getId());
                             break;
@@ -314,7 +314,7 @@ public class ModelManager {
                     break;
                 case ".pty":
                     for (PlanType planType : planTypeMap.values()) {
-                        if (pathString.contains(Paths.get(planType.getRelativeDirectory(), planType.getName() + ".pty").toString())) {
+                        if (pathString.contains(planType.getName() + ".pty")) {
                             deletedElement = planType;
                             planTypeMap.remove(planType.getId());
                             break;
@@ -322,7 +322,7 @@ public class ModelManager {
                     }
                     break;
                 case ".tsk":
-                    if (pathString.contains(Paths.get(this.taskRepository.getName() + ".tsk").toString())) {
+                    if (pathString.contains(this.taskRepository.getName() + ".tsk")) {
                         deletedElement = this.taskRepository;
                         this.taskRepository = null;
                     }
@@ -339,7 +339,6 @@ public class ModelManager {
                 throw new RuntimeException("PlanElement not found! Path is: " + path);
             }
 
-            System.out.println(deletedElement.getId() + " " + deletedElement.getName());
             if (planElementMap.containsKey(deletedElement.getId())) {
                 planElementMap.remove(deletedElement.getId());
                 fireDeletionEvent(deletedElement);
@@ -445,11 +444,8 @@ public class ModelManager {
     }
 
     public void moveFile(long movedFileId, Path originalPath, Path newPath) {
-        System.out.println("move file called" + planElementMap.size());
         for(long planElementId : planElementMap.keySet()){
-            System.out.println(planElementId + " " + movedFileId);
             if(planElementId == movedFileId) {
-                System.out.println("plan found");
                 PlanElement planElement = planElementMap.get(planElementId);
                 if(planElement instanceof Plan) {
                     Plan plan = planMap.get(planElementId);
@@ -457,7 +453,6 @@ public class ModelManager {
                     relativeDirectory = relativeDirectory.replace(plan.getName() + ".pml", "");
                     plan.setRelativeDirectory(relativeDirectory);
                     ((Plan) planElement).setRelativeDirectory(relativeDirectory);
-                    System.out.println("relative dir " + relativeDirectory);
                 }
             }
         }

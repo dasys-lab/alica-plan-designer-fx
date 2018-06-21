@@ -158,7 +158,8 @@ public class MainWindowController implements Initializable {
                     if (newValue != null) {
                         String type = ((AbstractEditorTab) newValue).getEditableElement().getType();
                         if (type.equals(i18NRepo.getString("alicatype.behaviour")) || type.equals(i18NRepo.getString("alicatype.plan")) || type.equals
-                                (i18NRepo.getString("alicatype.masterplan")) || type.equals(i18NRepo.getString("alicatype.plantype"))) {
+                                (i18NRepo.getString("alicatype.masterplan")) || type.equals(i18NRepo.getString("alicatype.plantype"))
+                                || type.equals(i18NRepo.getString("alicatype.taskrepository"))) {
                             generateCurrentFile.setDisable(false);
                         }
                     } else {

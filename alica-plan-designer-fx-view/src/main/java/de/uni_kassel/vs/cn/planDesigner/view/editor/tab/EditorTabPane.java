@@ -36,6 +36,8 @@ public class EditorTabPane extends TabPane {
         I18NRepo i18NRepo = I18NRepo.getInstance();
         if (type == i18NRepo.getString("alicatype.masterplan") || type == i18NRepo.getString("alicatype.plan")) {
             return new PlanTab(treeViewModelElement);
+        } else if (type == i18NRepo.getString("alicatype.taskrepository")) {
+            return new TaskRepositoryTab(treeViewModelElement);
         } else {
             return null;
         }

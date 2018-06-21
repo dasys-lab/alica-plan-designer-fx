@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public final class FileTreeView extends TreeView<FileWrapper> {
@@ -196,19 +197,47 @@ public final class FileTreeView extends TreeView<FileWrapper> {
 
     public void removeTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
         FileTreeItem topLevelFolder = findTopLevelFolder(treeViewModelElement);
-        System.out.println(topLevelFolder);
-        FileTreeItem folder = findFolder(treeViewModelElement, topLevelFolder, 0);
-        if (folder != null) {
-            for (TreeItem child : folder.getChildren()) {
-                if (((FileTreeItem) child).getTreeViewModelElement().getId() == treeViewModelElement.getId()) {
-                    folder.getChildren().remove(child);
-                    break;
+        ArrayList<TreeItem> foldersToCheck = new ArrayList<>();
+        for(TreeItem item : topLevelFolder.getChildren()) {
+            if(!item.isLeaf()) {
+                foldersToCheck.add(item);
+                continue;
+            }
+            FileTreeItem treeItem = (FileTreeItem)item;
+            if(treeItem.getTreeViewModelElement().getId() == treeViewModelElement.getId()) {
+                topLevelFolder.getChildren().remove(treeItem);
+                topLevelFolder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+                return;
+            }
+
+        }
+        while (foldersToCheck.size() > 0) {
+            for (TreeItem item : foldersToCheck) {
+                foldersToCheck.remove(item);
+                if (!item.isLeaf()) {
+                    foldersToCheck.add(item);
+                    continue;
+                }
+                FileTreeItem treeItem = (FileTreeItem) item;
+                if (treeItem.getTreeViewModelElement().getId() == treeViewModelElement.getId()) {
+                    topLevelFolder.getChildren().remove(treeItem);
+                    topLevelFolder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+                    return;
                 }
             }
-            folder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
-        } else {
-            throw new RuntimeException("Destination folder for PlanElement " + treeViewModelElement.getName() + " does not exist!");
         }
+//        FileTreeItem folder = findFolder(treeViewModelElement, topLevelFolder, 0);
+//        if (folder != null) {
+//            for (TreeItem child : folder.getChildren()) {
+//                if (((FileTreeItem) child).getTreeViewModelElement().getId() == treeViewModelElement.getId()) {
+//                    folder.getChildren().remove(child);
+//                    break;
+//                }
+//            }
+//            folder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+//        } else {
+//            throw new RuntimeException("Destination folder for PlanElement " + treeViewModelElement.getName() + " does not exist!");
+//        }
     }
 
     /**
