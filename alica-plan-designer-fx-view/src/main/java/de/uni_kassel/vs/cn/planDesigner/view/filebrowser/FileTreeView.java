@@ -197,47 +197,23 @@ public final class FileTreeView extends TreeView<FileWrapper> {
 
     public void removeTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
         FileTreeItem topLevelFolder = findTopLevelFolder(treeViewModelElement);
-        ArrayList<TreeItem> foldersToCheck = new ArrayList<>();
-        for(TreeItem item : topLevelFolder.getChildren()) {
-            if(!item.isLeaf()) {
-                foldersToCheck.add(item);
-                continue;
-            }
-            FileTreeItem treeItem = (FileTreeItem)item;
-            if(treeItem.getTreeViewModelElement().getId() == treeViewModelElement.getId()) {
-                topLevelFolder.getChildren().remove(treeItem);
-                topLevelFolder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
-                return;
-            }
+        FileTreeItem deletedItem = removeFromFolder(treeViewModelElement, topLevelFolder);
 
-        }
-        while (foldersToCheck.size() > 0) {
-            for (TreeItem item : foldersToCheck) {
-                foldersToCheck.remove(item);
-                if (!item.isLeaf()) {
-                    foldersToCheck.add(item);
-                    continue;
-                }
-                FileTreeItem treeItem = (FileTreeItem) item;
-                if (treeItem.getTreeViewModelElement().getId() == treeViewModelElement.getId()) {
-                    topLevelFolder.getChildren().remove(treeItem);
-                    topLevelFolder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
-                    return;
-                }
+    }
+
+    private FileTreeItem removeFromFolder(TreeViewModelElement modelElement, FileTreeItem treeItem) {
+        for(TreeItem item : treeItem.getChildren()) {
+            FileTreeItem itemToDelete = (FileTreeItem)item;
+            if(item.isLeaf())
+                if(((FileTreeItem) item).getTreeViewModelElement().getId() == modelElement.getId()) {
+                treeItem.getChildren().remove(item);
+                treeItem.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+                return itemToDelete;
+            } else {
+                return removeFromFolder(modelElement, itemToDelete);
             }
         }
-//        FileTreeItem folder = findFolder(treeViewModelElement, topLevelFolder, 0);
-//        if (folder != null) {
-//            for (TreeItem child : folder.getChildren()) {
-//                if (((FileTreeItem) child).getTreeViewModelElement().getId() == treeViewModelElement.getId()) {
-//                    folder.getChildren().remove(child);
-//                    break;
-//                }
-//            }
-//            folder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
-//        } else {
-//            throw new RuntimeException("Destination folder for PlanElement " + treeViewModelElement.getName() + " does not exist!");
-//        }
+        return null;
     }
 
     /**
