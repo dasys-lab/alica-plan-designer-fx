@@ -94,8 +94,8 @@ public class ModelManager {
     }
 
     public void loadModelFromDisk() {
-        loadModelFromDisk(plansPath);
         loadModelFromDisk(tasksPath);
+        loadModelFromDisk(plansPath);
         loadModelFromDisk(rolesPath);
     }
 
