@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.node.ValueNode;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ParsedModelReference;
 
@@ -26,10 +27,9 @@ public class EntryPointTaskDeserializer extends StdDeserializer<Task> {
             DeserializationContext context)
             throws IOException, JsonProcessingException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
-        String taskString = tree.toString();
+        String taskString = ((ValueNode) tree).asText();
         int idIndex = taskString.indexOf('#');
         taskString = taskString.substring(idIndex + 1);
-        taskString.replace("\"", "");
         Task task = new Task(Long.parseLong(taskString));
         ParsedModelReference.getInstance().addIncompleteTask(task);
         return task;
