@@ -20,13 +20,13 @@ public class ParsedModelReference {
 
     long defaultTaskId;
 
-    ArrayList<Task> entryPointIdTaskIdMapping = new ArrayList<>();
+    ArrayList<Task> incompleteTasks = new ArrayList<>();
 
     public void setDefaultTaskId(long defaultTaskId) {
         this.defaultTaskId = defaultTaskId;
     }
 
     public void addIncompleteTask(Task incompleteTask) {
-        entryPointIdTaskIdMapping.add(incompleteTask);
+        incompleteTasks.add(incompleteTask);
     }
 }

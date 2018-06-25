@@ -146,6 +146,17 @@ public class ModelManager {
                     if (planElementMap.containsKey(plan.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
                     } else {
+                        ArrayList<Task> incompleteTasks = ParsedModelReference.getInstance().incompleteTasks;
+                        for(EntryPoint ep : plan.getEntryPoints()) {
+                            if(incompleteTasks.contains(ep.getTask())) {
+                                for(Task task: taskRepository.getTasks()) {
+                                    if(task.getId() == ep.getTask().getId()) {
+                                        ep.setTask(task);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                         planElementMap.put(plan.getId(), plan);
                         planMap.put(plan.getId(), plan);
                         fireCreationEvent(plan);
@@ -173,19 +184,19 @@ public class ModelManager {
                     break;
                 case ".tsk":
                     TaskRepository taskRepository = objectMapper.readValue(modelFile, TaskRepository.class);
-                    for(Task task : taskRepository.getTasks()) {
-                        task.setTaskRepository(taskRepository);
-                    }
-                    long defaultTaskId = ParsedModelReference.getInstance().defaultTaskId;
-                    for(Task task : taskRepository.getTasks()) {
-                        if(task.getId() == defaultTaskId) {
-                            taskRepository.setDefaultTask(task);
-                            break;
-                        }
-                    }
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
+                        for(Task task : taskRepository.getTasks()) {
+                            task.setTaskRepository(taskRepository);
+                        }
+                        long defaultTaskId = ParsedModelReference.getInstance().defaultTaskId;
+                        for(Task task : taskRepository.getTasks()) {
+                            if(task.getId() == defaultTaskId) {
+                                taskRepository.setDefaultTask(task);
+                                break;
+                            }
+                        }
                         planElementMap.put(taskRepository.getId(), taskRepository);
                         this.taskRepository = taskRepository;
                         fireCreationEvent(this.taskRepository);
