@@ -26,10 +26,10 @@ public class EntryPointTaskDeserializer extends StdDeserializer<Task> {
             DeserializationContext context)
             throws IOException, JsonProcessingException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
-        String taskString = tree.toString();
+        String taskString = tree.asToken().asString();
         int idIndex = taskString.indexOf('#');
         taskString = taskString.substring(idIndex + 1);
-        taskString.replace("\"", "");
+        taskString = taskString.replace("\"", "");
         Task task = new Task(Long.parseLong(taskString));
         ParsedModelReference.getInstance().addIncompleteTask(task);
         return task;

@@ -201,6 +201,9 @@ public class ModelManager {
                     LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
 //                    throw new RuntimeException("Received file with unknown file ending, for parsing. File is: '" + path + "'");
             }
+        } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException e) {
+            System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
+            System.err.println(e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
         }
