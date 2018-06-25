@@ -69,7 +69,7 @@ public class RepositoryTabPane extends TabPane {
     }
 
     public void addTasks(List<ViewModelElement> tasks) {
-        plansTab.addElements(tasks);
+        tasksTab.addElements(tasks);
     }
 
     public void clearGuiContent() {

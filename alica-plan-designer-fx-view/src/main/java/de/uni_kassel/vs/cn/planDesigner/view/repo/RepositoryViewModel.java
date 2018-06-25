@@ -99,6 +99,4 @@ public final class RepositoryViewModel {
     public ObservableList<ViewModelElement> getTasks() {
         return tasks;
     }
-
-
 }

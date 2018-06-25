@@ -178,13 +178,11 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                 } else if (planElement instanceof Behaviour) {
                     addTreeViewElement((AbstractPlan) planElement, typeString);
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
-                } else if (planElement instanceof Task) {
-                    repoViewModel.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
                 } else if (planElement instanceof TaskRepository) {
                     addTreeViewElement((AbstractPlan) planElement, typeString);
                     for (Task task : ((TaskRepository) planElement).getTasks()) {
                         typeString = getTypeString(task);
-                        repoTabPane.addTask(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
+                        repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), typeString));
                     }
                 }
                 break;
@@ -254,7 +252,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         repoTabPane = mainWindowController.getRepositoryTabPane();
         repoViewModel.setRepositoryTabPane(repoTabPane);
         repoViewModel.initGuiContent();
-
     }
 
     /**
