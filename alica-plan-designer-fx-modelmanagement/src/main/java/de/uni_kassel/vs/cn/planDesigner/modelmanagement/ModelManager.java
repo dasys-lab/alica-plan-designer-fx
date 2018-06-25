@@ -19,10 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -176,6 +173,16 @@ public class ModelManager {
                     break;
                 case ".tsk":
                     TaskRepository taskRepository = objectMapper.readValue(modelFile, TaskRepository.class);
+                    for(Task task : taskRepository.getTasks()) {
+                        task.setTaskRepository(taskRepository);
+                    }
+                    long defaultTaskId = ParsedModelReference.getInstance().defaultTaskId;
+                    for(Task task : taskRepository.getTasks()) {
+                        if(task.getId() == defaultTaskId) {
+                            taskRepository.setDefaultTask(task);
+                            break;
+                        }
+                    }
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
@@ -444,17 +451,29 @@ public class ModelManager {
     }
 
     public void moveFile(long movedFileId, Path originalPath, Path newPath) {
-        for(long planElementId : planElementMap.keySet()){
-            if(planElementId == movedFileId) {
-                PlanElement planElement = planElementMap.get(planElementId);
-                if(planElement instanceof Plan) {
-                    Plan plan = planMap.get(planElementId);
-                    String relativeDirectory = makeRelativePlansDirectory(newPath.toString());
-                    relativeDirectory = relativeDirectory.replace(plan.getName() + ".pml", "");
-                    plan.setRelativeDirectory(relativeDirectory);
-                    ((Plan) planElement).setRelativeDirectory(relativeDirectory);
+        try {
+            if (originalPath.endsWith("pml")) {
+                //TODO implement once pmlex is supported
+//                    Files.move(new File(originalPath + "ex").toPath(),
+//                            new File(newPath + "ex").toPath());
+            }
+            Files.move(originalPath, newPath);
+            for (long planElementId : planElementMap.keySet()) {
+                if (planElementId == movedFileId) {
+                    PlanElement planElement = planElementMap.get(planElementId);
+                    if (planElement instanceof Plan) {
+                        Plan plan = planMap.get(planElementId);
+                        String relativeDirectory = makeRelativePlansDirectory(newPath.toString());
+                        relativeDirectory = relativeDirectory.replace(plan.getName() + ".pml", "");
+                        plan.setRelativeDirectory(relativeDirectory);
+                        ((Plan) planElement).setRelativeDirectory(relativeDirectory);
+                        File outfile = new File(newPath.toString());
+                        objectMapper.writeValue(outfile, plan);
+                    }
                 }
             }
+        } catch (IOException e1) {
+            throw new RuntimeException(e1);
         }
     }
 }

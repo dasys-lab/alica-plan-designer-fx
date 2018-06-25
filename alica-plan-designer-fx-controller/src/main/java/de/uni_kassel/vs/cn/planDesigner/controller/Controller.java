@@ -273,15 +273,5 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
      */
     public void moveFile(long id, Path originalPath, Path newPath) {
             modelManager.moveFile(id, originalPath, newPath);
-            try {
-                if (originalPath.endsWith("pml")) {
-                    //TODO implement once pmlex is supported
-//                    Files.move(new File(originalPath + "ex").toPath(),
-//                            new File(newPath + "ex").toPath());
-                }
-                Files.move(originalPath, newPath);
-            } catch (IOException e1) {
-                throw new RuntimeException(e1);
-            }
     }
 }

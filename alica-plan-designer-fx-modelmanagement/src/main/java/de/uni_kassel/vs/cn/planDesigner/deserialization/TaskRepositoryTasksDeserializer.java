@@ -27,10 +27,14 @@ public class TaskRepositoryTasksDeserializer extends StdDeserializer<ArrayList<T
             DeserializationContext context)
             throws IOException, JsonProcessingException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
-        Iterator<String> iter = tree.fieldNames();
-        while (iter.hasNext()) {
-            System.out.println(iter.next());
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        for(int i = 0; i < tree.size(); i++) {
+            TreeNode currentTreeNode = tree.get(i);
+            Task task = new Task(Long.parseLong(currentTreeNode.get("id").toString()));
+            task.setName(currentTreeNode.get("name").toString().replaceAll("\"", ""));
+            task.setComment(currentTreeNode.get("comment").toString());
+            tasks.add(task);
         }
-        return new ArrayList<Task>();
+        return tasks;
     }
 }

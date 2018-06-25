@@ -195,9 +195,10 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         }
     }
 
-    public void removeTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
+    public FileTreeItem removeTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
         FileTreeItem topLevelFolder = findTopLevelFolder(treeViewModelElement);
         FileTreeItem deletedItem = removeFromFolder(treeViewModelElement, topLevelFolder);
+        return deletedItem;
 
     }
 
