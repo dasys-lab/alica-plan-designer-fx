@@ -150,6 +150,9 @@ public class ModelManager {
         }
 
         for (File modelFile : allModelFiles) {
+            if (modelFile.isDirectory()) {
+                loadModelFromDisk(modelFile.getPath());
+            }
             loadModelFile(modelFile);
         }
     }
@@ -163,8 +166,12 @@ public class ModelManager {
      *
      * @param modelFile the file to be parsed by jackson
      */
-    public void loadModelFile(File modelFile) throws RuntimeException {
-        if (modelFile.isDirectory()) {
+    private void loadModelFile(File modelFile) throws RuntimeException {
+        if(modelFile.isDirectory()) {
+            return;
+        }
+        
+        if(modelFile.length() == 0) {
             return;
         }
 
