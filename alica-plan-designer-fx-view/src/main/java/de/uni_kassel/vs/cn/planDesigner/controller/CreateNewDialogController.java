@@ -139,6 +139,11 @@ public class CreateNewDialogController implements Initializable {
         return filename;
     }
 
+
+    /**
+     * Must be called before user hits the "Create"-Button
+     * @param type
+     */
     public void setType(String type) {
         if (type == null) {
             return;
