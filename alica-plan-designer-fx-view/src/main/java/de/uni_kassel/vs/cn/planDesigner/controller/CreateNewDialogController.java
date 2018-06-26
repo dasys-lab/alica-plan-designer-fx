@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.events.ResourceCreationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -111,7 +112,7 @@ public class CreateNewDialogController implements Initializable {
         }
 
         // Special handling for creating folders
-        if (type.equals(i18NRepo.getString("alicatype.folder"))) {
+        if (type.equals(Types.FOLDER)) {
             try {
                 Files.createDirectory(new File(Paths.get(pathTextField.getText(), name).toString()).toPath());
             } catch (IOException e) {
