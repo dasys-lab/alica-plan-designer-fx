@@ -458,8 +458,16 @@ public class ModelManager {
         fireCreationEvent(plan);
     }
 
-    public String makeRelativePlansDirectory(String absoluteDirectory) {
-        return absoluteDirectory.replace(plansPath, "");
+    public String makeRelativePlansDirectory(String absoluteDirectory, String fileName) {
+        String relativeDirectory = absoluteDirectory.replace(plansPath, "");
+        relativeDirectory = relativeDirectory.replace(fileName, "");
+        if(relativeDirectory.startsWith(File.separator)) {
+            relativeDirectory = relativeDirectory.substring(1);
+        }
+        if (relativeDirectory.endsWith(File.separator)) {
+            relativeDirectory = relativeDirectory.substring(0, relativeDirectory.length() - 1);
+        }
+        return relativeDirectory;
     }
 
     public void setDefaultTaskId(long defaultTaskId) {
@@ -479,8 +487,7 @@ public class ModelManager {
                     PlanElement planElement = planElementMap.get(planElementId);
                     if (planElement instanceof Plan) {
                         Plan plan = planMap.get(planElementId);
-                        String relativeDirectory = makeRelativePlansDirectory(newPath.toString());
-                        relativeDirectory = relativeDirectory.replace(plan.getName() + ".pml", "");
+                        String relativeDirectory = makeRelativePlansDirectory(newPath.toString(), plan.getName() + ".pml" );
                         plan.setRelativeDirectory(relativeDirectory);
                         ((Plan) planElement).setRelativeDirectory(relativeDirectory);
                         File outfile = new File(newPath.toString());
