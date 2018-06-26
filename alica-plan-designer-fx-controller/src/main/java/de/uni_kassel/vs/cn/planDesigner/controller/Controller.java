@@ -150,7 +150,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
      * @param path
      */
     public void handleFileSystemEvent(WatchEvent event, Path path) {
-        System.out.println("handle file system called");
         modelManager.handleFileSystemEvent(event.kind(), path);
     }
 
