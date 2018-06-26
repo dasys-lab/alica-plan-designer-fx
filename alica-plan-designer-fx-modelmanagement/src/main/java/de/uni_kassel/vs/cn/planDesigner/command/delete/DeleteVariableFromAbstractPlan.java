@@ -32,9 +32,4 @@ public class DeleteVariableFromAbstractPlan extends AbstractCommand {
             ((Behaviour) abstractPlan).getVariables().add(variable);
         }
     }
-
-    @Override
-    public String getCommandString() {
-        return "Remove Variable " + variable.getName() + " from " + abstractPlan.getName();
-    }
 }

@@ -36,10 +36,5 @@ public class AddVariableToAbstractPlan extends AbstractCommand {
         }
     }
 
-    @Override
-    public String getCommandString() {
-        return "Add new variable to" + variable.getName();
-    }
-
 
 }

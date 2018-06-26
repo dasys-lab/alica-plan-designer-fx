@@ -14,6 +14,7 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 
@@ -112,46 +114,8 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         mainWindowController.setConfigWindowController(configWindowController);
     }
 
-    /**
-     * Determines the modelElementType string corresponding to the given PlanElement.
-     *
-     * @param planElement whose modelElementType is to be determined
-     * @return modelElementType of the plan element
-     */
-    public String getTypeString(PlanElement planElement) {
-        if (planElement instanceof Plan) {
-            Plan plan = (Plan) planElement;
-            if (plan.getMasterPlan()) {
-                return i18NRepo.getString("alicatype.masterplan");
-            } else {
-                return i18NRepo.getString("alicatype.plan");
-            }
-        } else if (planElement instanceof Behaviour) {
-            return i18NRepo.getString("alicatype.behaviour");
-        } else if (planElement instanceof PlanType) {
-            return i18NRepo.getString("alicatype.plantype");
-        } else if (planElement instanceof Task) {
-            return i18NRepo.getString("alicatype.task");
-        } else if (planElement instanceof TaskRepository) {
-            return i18NRepo.getString("alicatype.taskrepository");
-        } else if (planElement instanceof Role) {
-            return i18NRepo.getString("alicatype.role");
-        } else {
-            return null;
-        }
-    }
-
     // Handler Event Methods
 
-    /**
-     * Called when something relevant in the filesystem has changed.
-     *
-     * @param event
-     * @param path
-     */
-    public void handleFileSystemEvent(WatchEvent event, Path path) {
-        modelManager.handleFileSystemEvent(event.kind(), path);
-    }
 
     /**
      * Handles events fired by the model manager, when the model has changed.
@@ -164,7 +128,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         }
 
         PlanElement planElement = event.getNewElement();
-        String typeString = getTypeString(planElement);
+        String typeString = FileSystemUtil.getTypeString(planElement);
         switch (event.getType()) {
             case ELEMENT_CREATED:
                 if (planElement instanceof Plan) {
@@ -180,7 +144,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                 } else if (planElement instanceof TaskRepository) {
                     addTreeViewElement((AbstractPlan) planElement, typeString);
                     for (Task task : ((TaskRepository) planElement).getTasks()) {
-                        typeString = getTypeString(task);
+                        typeString = FileSystemUtil.getTypeString(task);
                         repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), typeString));
                     }
                 }
@@ -189,7 +153,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                 System.out.println("Controller: ELEMENT_DELETED not implemented yet!");
                 removeTreeViewElement((AbstractPlan) planElement, typeString);
                 break;
-//                throw new RuntimeException("Not implemented, yet!");
             case ELEMENT_ATTRIBUTE_CHANGED:
                 throw new RuntimeException("Not implemented, yet!");
             default:
@@ -223,7 +186,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     public ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement) {
         ArrayList<ViewModelElement> usage = new ArrayList<>();
         for (PlanElement planElement : this.modelManager.getUsages(viewModelElement.getId())) {
-            usage.add(new ViewModelElement(planElement.getId(), planElement.getName(), getTypeString(planElement)));
+            usage.add(new ViewModelElement(planElement.getId(), planElement.getName(), FileSystemUtil.getTypeString(planElement)));
         }
         return usage;
     }
@@ -265,9 +228,29 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     }
 
     /**
+     * Called when something relevant in the filesystem has changed.
+     *
+     * @param event
+     * @param path
+     */
+    public void handleFileSystemEvent(WatchEvent event, Path path) {
+        WatchEvent.Kind kind = event.kind();
+        ModelModificationQuery mmq;
+        if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE) || kind.equals((StandardWatchEventKinds.ENTRY_MODIFY))) {
+            mmq = new ModelModificationQuery(ModelOperationType.PARSE_ELEMENT, path.toString(), null, null);
+        } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
+            mmq = new ModelModificationQuery(ModelOperationType.DELETE_ELEMENT, path.toString(), null, null);
+        } else {
+            System.err.println("Controller: Unknown filesystem event type received that gets ignored!");
+            return;
+        }
+        modelManager.handleModelModificationQuery(mmq);
+    }
+
+    /**
      * Called by the FileTreeView when moving files
      */
     public void moveFile(long id, Path originalPath, Path newPath) {
-            modelManager.moveFile(id, originalPath, newPath);
+        modelManager.moveFile(id, originalPath, newPath);
     }
 }

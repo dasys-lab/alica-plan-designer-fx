@@ -9,7 +9,6 @@ public abstract class AbstractCommand {
 
     public abstract void doCommand();
     public abstract void undoCommand();
-    public abstract String getCommandString();
 
     public AbstractCommand(ModelManager modelManager) {
         this.modelManager = modelManager;

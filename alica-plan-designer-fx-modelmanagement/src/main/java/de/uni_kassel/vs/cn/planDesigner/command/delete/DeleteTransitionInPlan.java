@@ -46,9 +46,4 @@ public class DeleteTransitionInPlan extends AbstractCommand{
         transition.setInState(inState);
         transition.setOutState(outState);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Delete Transition " + transition.getComment() + " in Plan " + parentOfElement.getPlan().getName();
-    }
 }

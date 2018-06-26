@@ -46,9 +46,4 @@ public class AddTransitionInPlan extends AbstractCommand {
                 .getExtension()
                 .remove(transition);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add new transition";
-    }
 }

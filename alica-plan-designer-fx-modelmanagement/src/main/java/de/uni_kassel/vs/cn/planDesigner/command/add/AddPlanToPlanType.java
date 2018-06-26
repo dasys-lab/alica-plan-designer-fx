@@ -26,9 +26,4 @@ public class AddPlanToPlanType extends AbstractCommand {
     public void undoCommand() {
         parentOfElement.getPlans().remove(plan);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add Plan " + plan.getName() + "to Plantype " + parentOfElement.getName();
-    }
 }

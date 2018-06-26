@@ -25,9 +25,4 @@ public class DeleteVariableFromCondition extends AbstractCommand {
     public void undoCommand() {
         condition.getVariables().add(variable);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Remove Variable " + variable.getName() + " from " + condition.getName();
-    }
 }

@@ -25,11 +25,4 @@ public class AddVariableToCondition extends AbstractCommand {
     public void undoCommand() {
         condition.getVariables().remove(variable);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add new variable " + variable.getName() + " to " + condition.getName();
-    }
-
-
 }

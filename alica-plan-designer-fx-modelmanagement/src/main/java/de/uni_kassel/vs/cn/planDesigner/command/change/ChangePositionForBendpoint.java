@@ -37,9 +37,4 @@ public class ChangePositionForBendpoint extends AbstractCommand {
         bendpoint.setXPos(oldX);
         bendpoint.setYPos(oldY);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Change Bendpoint position to " + newX + ", " + newY;
-    }
 }

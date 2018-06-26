@@ -40,9 +40,4 @@ public class DeleteEntryPointInPlan extends AbstractCommand {
             associatedState.setEntryPoint(entryPoint);
         }
     }
-
-    @Override
-    public String getCommandString() {
-        return null;
-    }
 }

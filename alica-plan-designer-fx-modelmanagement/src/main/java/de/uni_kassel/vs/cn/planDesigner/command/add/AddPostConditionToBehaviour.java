@@ -25,9 +25,4 @@ public class AddPostConditionToBehaviour extends AbstractCommand {
     public void undoCommand() {
         behaviour.setPostCondition(null);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add Postcondition " + postCondition.getName() + " to Behaviour " + behaviour.getName();
-    }
 }

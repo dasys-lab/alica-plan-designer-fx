@@ -25,9 +25,4 @@ public class AddBendpointToPlan extends AbstractCommand {
     public void undoCommand() {
         pmlUiExtension.getBendpoints().remove(bendpoint);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add Bendpoint to Transition";
-    }
 }

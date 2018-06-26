@@ -125,9 +125,4 @@ public class DeleteStateInPlan extends AbstractCommand {
                 .entrySet()
                 .forEach(e -> parentOfDeleted.getPmlUiExtensionMap().getExtension().put(e.getKey(), e.getValue()));
     }
-
-    @Override
-    public String getCommandString() {
-        return "Delete State " + state.getName() + " in Plan " + parentOfDeleted.getPlan().getName();
-    }
 }

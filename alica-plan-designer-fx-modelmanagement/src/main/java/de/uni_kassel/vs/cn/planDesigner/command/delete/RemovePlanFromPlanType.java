@@ -25,9 +25,4 @@ public class RemovePlanFromPlanType extends AbstractCommand {
     public void undoCommand() {
         planType.getPlans().add(plan);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Remove plan " + plan.getName() + " from plantype " + planType.getName();
-    }
 }

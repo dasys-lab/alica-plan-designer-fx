@@ -26,9 +26,4 @@ public class CreatePlan extends AbstractCommand {
     public void undoCommand() {
 
     }
-
-    @Override
-    public String getCommandString() {
-        return "Create " + plan.getName();
-    }
 }

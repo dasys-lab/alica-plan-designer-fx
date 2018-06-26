@@ -26,9 +26,4 @@ public class AddTaskToRepository extends AbstractCommand {
     public void undoCommand() {
         taskRepository.getTasks().remove(task);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Create new task " + task.getName();
-    }
 }

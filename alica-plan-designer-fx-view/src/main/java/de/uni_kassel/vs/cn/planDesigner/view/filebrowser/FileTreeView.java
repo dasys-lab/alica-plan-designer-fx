@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.FileTreeViewContextMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -42,22 +43,12 @@ public final class FileTreeView extends TreeView<FileWrapper> {
     private FileTreeItem rolesFileTreeItem;
     private FileTreeItem tasksFileTreeItem;
     private I18NRepo i18NRepo;
-    private final String planString;
-    private final String planTypeString;
-    private final String masterPlanString;
-    private final String behaviourString;
-    private final String taskRepositoryString;
 
     public FileTreeView() {
         super(new VirtualDirectoryTreeItem());
         virtualDirectoryTreeItem = (VirtualDirectoryTreeItem) getRoot();
 
         i18NRepo = I18NRepo.getInstance();
-        behaviourString = i18NRepo.getString("alicatype.behaviour");
-        planString = i18NRepo.getString("alicatype.plan");
-        planTypeString = i18NRepo.getString("alicatype.plantype");
-        masterPlanString = i18NRepo.getString("alicatype.masterplan");
-        taskRepositoryString = i18NRepo.getString("alicatype.taskrepository");
 
         // Setup Drag support
         addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
@@ -72,22 +63,30 @@ public final class FileTreeView extends TreeView<FileWrapper> {
             draggedItem = (FileTreeItem) ((FileTreeCell) node).getTreeItem();
             startFolder = draggedItem.getValue().unwrap().toString();
             startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
-            String type = draggedItem.getTreeViewModelElement().getType();
-            if (type.equals(behaviourString)) {
-                getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                        .getResourceAsStream("images/behaviour24x24.png"))));
-            } else if (type.equals(planString)) {
-                getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                        .getResourceAsStream("images/plan24x24.png"))));
-            } else if (type.equals(masterPlanString)) {
-                getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                        .getResourceAsStream("images/masterplan24x24.png"))));
-            } else if (type.equals(planTypeString)) {
-                getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                        .getResourceAsStream("images/plantype24x24.png"))));
-            } else if (type.equals(taskRepositoryString)) {
-                getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                        .getResourceAsStream("images/tasks24x24.png"))));
+            switch (draggedItem.getTreeViewModelElement().getType()) {
+                case Types.BEHAVIOUR:
+                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
+                            .getResourceAsStream("images/behaviour24x24.png"))));
+                    break;
+                case Types.PLAN:
+                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
+                            .getResourceAsStream("images/plan24x24.png"))));
+                    break;
+                case Types.MASTERPLAN:
+
+                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
+                            .getResourceAsStream("images/masterplan24x24.png"))));
+                    break;
+                case Types.PLANTYPE:
+                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
+                            .getResourceAsStream("images/plantype24x24.png"))));
+                    break;
+                case Types.TASKREPOSITORY:
+                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
+                            .getResourceAsStream("images/tasks24x24.png"))));
+                    break;
+                default:
+                    System.err.println("FileTreeView: " + draggedItem.getTreeViewModelElement().getType() + " not handled!");
             }
             wasDragged = true;
             e.consume();
@@ -203,16 +202,16 @@ public final class FileTreeView extends TreeView<FileWrapper> {
     }
 
     private FileTreeItem removeFromFolder(TreeViewModelElement modelElement, FileTreeItem treeItem) {
-        for(TreeItem item : treeItem.getChildren()) {
-            FileTreeItem itemToDelete = (FileTreeItem)item;
-            if(item.isLeaf())
-                if(((FileTreeItem) item).getTreeViewModelElement().getId() == modelElement.getId()) {
-                treeItem.getChildren().remove(item);
-                treeItem.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
-                return itemToDelete;
-            } else {
-                return removeFromFolder(modelElement, itemToDelete);
-            }
+        for (TreeItem item : treeItem.getChildren()) {
+            FileTreeItem itemToDelete = (FileTreeItem) item;
+            if (item.isLeaf())
+                if (((FileTreeItem) item).getTreeViewModelElement().getId() == modelElement.getId()) {
+                    treeItem.getChildren().remove(item);
+                    treeItem.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+                    return itemToDelete;
+                } else {
+                    return removeFromFolder(modelElement, itemToDelete);
+                }
         }
         return null;
     }
@@ -225,19 +224,20 @@ public final class FileTreeView extends TreeView<FileWrapper> {
      * @return
      */
     private File createFile(TreeViewModelElement treeViewModelElement) {
-        File file;
-        if (treeViewModelElement.getType().equals(behaviourString)) {
-            file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".beh").toFile();
-        } else if (treeViewModelElement.getType().equals(masterPlanString) || treeViewModelElement.getType().equals(planString)) {
-            file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pml").toFile();
-        } else if (treeViewModelElement.getType().equals(planTypeString)) {
-            file = Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pty").toFile();
-        } else if (treeViewModelElement.getType().equals(taskRepositoryString)) {
-            file = Paths.get(taskPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".tsk").toFile();
-        } else {
-            throw new RuntimeException("Trying to create file for unknown type " + treeViewModelElement.getType() + "!");
+        switch (treeViewModelElement.getType()) {
+            case Types.BEHAVIOUR:
+                return Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".beh").toFile();
+            case Types.PLAN:
+            case Types.MASTERPLAN:
+                return Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pml").toFile();
+            case Types.PLANTYPE:
+                return Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pty").toFile();
+            case Types.TASKREPOSITORY:
+                return Paths.get(taskPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".tsk").toFile();
+            default:
+                System.err.println("FileTreeView: " + treeViewModelElement.getType() + " not handled!");
+                return null;
         }
-        return file;
     }
 
     /**
@@ -247,13 +247,19 @@ public final class FileTreeView extends TreeView<FileWrapper> {
      * @return
      */
     private FileTreeItem findTopLevelFolder(TreeViewModelElement treeViewModelElement) {
-        if (treeViewModelElement.getType().equals(planTypeString) || treeViewModelElement.getType().equals(planString) || treeViewModelElement.getType()
-                .equals(masterPlanString)) {
-            return plansFileTreeItem;
-        } else if (treeViewModelElement.getType().equals(taskRepositoryString)) {
-            return tasksFileTreeItem;
-        } else {
-            return rolesFileTreeItem;
+        switch (treeViewModelElement.getType()) {
+            case Types.BEHAVIOUR:
+            case Types.MASTERPLAN:
+            case Types.PLAN:
+            case Types.PLANTYPE:
+                return plansFileTreeItem;
+            case Types.TASKREPOSITORY:
+                return tasksFileTreeItem;
+            case Types.ROLE:
+                return rolesFileTreeItem;
+            default:
+                System.err.println("FileTreeView: No top level folder for " + treeViewModelElement.getType() + " available!");
+                return null;
         }
     }
 
@@ -294,24 +300,25 @@ public final class FileTreeView extends TreeView<FileWrapper> {
      */
 
     private Image getImage(String type) {
-        Image listItemImage;
-        if (type.equals(behaviourString)) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
-        } else if (type.equals(masterPlanString)) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
-        } else if (type.equals(planString)) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
-        } else if (type.equals(planTypeString)) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plantype24x24.png")));
-        } else if (type.equals(taskRepositoryString)) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/tasks24x24.png")));
-        } else if (type.isEmpty()) {
-            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
-        } else {
-            return null;
+        switch (type) {
+            case Types.BEHAVIOUR:
+                return new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
+            case Types.MASTERPLAN:
+                return new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
+            case Types.PLAN:
+                return new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
+            case Types.PLANTYPE:
+                return new Image((getClass().getClassLoader().getResourceAsStream("images/plantype24x24.png")));
+            case Types.TASKREPOSITORY:
+                return new Image((getClass().getClassLoader().getResourceAsStream("images/tasks24x24.png")));
+            case Types.FOLDER:
+                return new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
+            default:
+                System.err.println("FileTreeView: No image available for " + type + "!");
+                return null;
         }
-        return listItemImage;
     }
+
 
     /**
      * Sets the PlansPath and adds a new {@link FileTreeItem} as top level folder

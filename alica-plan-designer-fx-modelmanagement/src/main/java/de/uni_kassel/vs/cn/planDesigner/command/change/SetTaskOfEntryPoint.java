@@ -27,10 +27,4 @@ public class SetTaskOfEntryPoint extends AbstractCommand {
     public void undoCommand() {
         entryPoint.setTask(previousTask);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Set Task of EntryPoint " + entryPoint.getId() + " from " + previousTask.getName()
-                + " to " + newTask.getName();
-    }
 }

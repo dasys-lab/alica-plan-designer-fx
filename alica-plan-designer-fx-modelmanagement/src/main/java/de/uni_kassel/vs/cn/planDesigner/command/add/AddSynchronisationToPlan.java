@@ -37,9 +37,4 @@ public class AddSynchronisationToPlan extends AbstractCommand {
                 .getExtension()
                 .remove(synchronization);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add Synchronisation " + synchronization.getName() + " to Plan.";
-    }
 }

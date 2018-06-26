@@ -24,9 +24,4 @@ public class AddAbstractPlanToState extends AbstractCommand {
     public void undoCommand() {
         state.removeAbstractPlan(abstractPlan);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add AbstractPlan " + abstractPlan.getName() + " in State " + state.getName();
-    }
 }

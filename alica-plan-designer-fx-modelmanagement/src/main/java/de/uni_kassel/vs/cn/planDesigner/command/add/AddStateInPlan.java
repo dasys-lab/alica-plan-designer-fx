@@ -41,11 +41,6 @@ public class AddStateInPlan extends AbstractCommand {
                 .remove(newState);
     }
 
-    @Override
-    public String getCommandString() {
-        return "Add State to Plan " + parentOfElement.getPlan().getName();
-    }
-
     public PmlUiExtension getNewlyCreatedPmlUiExtension() {
         return newlyCreatedPmlUiExtension;
     }

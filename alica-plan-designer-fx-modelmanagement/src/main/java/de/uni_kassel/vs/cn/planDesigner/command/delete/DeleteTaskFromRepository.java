@@ -24,9 +24,4 @@ public class DeleteTaskFromRepository extends AbstractCommand {
     public void undoCommand() {
         taskRepository.getTasks().add(task);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Remove Task " + task.getName() + "from Repository";
-    }
 }

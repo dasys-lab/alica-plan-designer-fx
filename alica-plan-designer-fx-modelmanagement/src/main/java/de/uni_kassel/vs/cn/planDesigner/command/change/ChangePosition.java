@@ -38,10 +38,4 @@ public class ChangePosition extends AbstractCommand {
         uiElement.setXPos(oldX);
         uiElement.setYPos(oldY);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Change " + planElement.getClass().getSuperclass().getSimpleName() + " "
-                + planElement.getName() + " position to " + newX + ", " + newY;
-    }
 }

@@ -35,9 +35,4 @@ public class AddConditionToPlan extends AbstractCommand {
             plan.setRuntimeCondition((RuntimeCondition) condition);
         }
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add new condition to " + plan.getName();
-    }
 }
