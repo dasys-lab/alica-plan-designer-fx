@@ -60,7 +60,12 @@ public class RepositoryTab extends Tab {
     }
 
     public void clearGuiContent() {
-        repositoryListView.getItems().clear();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                repositoryListView.getItems().clear();
+            }
+        });
     }
 
     protected void sort() {

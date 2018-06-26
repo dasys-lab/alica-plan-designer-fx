@@ -78,4 +78,20 @@ public class RepositoryTabPane extends TabPane {
         behavioursTab.clearGuiContent();
         tasksTab.clearGuiContent();
     }
+
+    public void clearPlansTab() {
+        plansTab.clearGuiContent();
+    }
+
+    public void clearPlanTypesTab() {
+        planTypesTab.clearGuiContent();
+    }
+
+    public void clearBehavioursTab() {
+        behavioursTab.clearGuiContent();
+    }
+
+    public void clearTasksTab() {
+        tasksTab.clearGuiContent();
+    }
 }
