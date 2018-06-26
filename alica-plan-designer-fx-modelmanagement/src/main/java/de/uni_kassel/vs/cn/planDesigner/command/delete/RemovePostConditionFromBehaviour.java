@@ -24,9 +24,4 @@ public class RemovePostConditionFromBehaviour extends AbstractCommand {
     public void undoCommand() {
         (behaviour).setPostCondition(postCondition);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Remove Postcondtion from Behaviour " + behaviour.getName();
-    }
 }

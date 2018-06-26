@@ -81,9 +81,4 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public String getCommandString() {
-        return null;
-    }
 }

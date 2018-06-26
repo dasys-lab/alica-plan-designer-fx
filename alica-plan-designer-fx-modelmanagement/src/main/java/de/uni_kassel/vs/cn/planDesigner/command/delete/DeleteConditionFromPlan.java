@@ -34,9 +34,4 @@ public class DeleteConditionFromPlan extends AbstractCommand {
             plan.setPreCondition((PreCondition) condition);
         }
     }
-
-    @Override
-    public String getCommandString() {
-        return "Remove Condition " + condition.getName() + " from " + plan.getName();
-    }
 }

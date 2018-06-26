@@ -53,11 +53,6 @@ public class AddEntryPointInPlan extends AbstractCommand {
 
     }
 
-    @Override
-    public String getCommandString() {
-        return "Create new EntryPoint";
-    }
-
     public PmlUiExtension getNewlyCreatedPmlUiExtension() {
         return newlyCreatedPmlUiExtension;
     }

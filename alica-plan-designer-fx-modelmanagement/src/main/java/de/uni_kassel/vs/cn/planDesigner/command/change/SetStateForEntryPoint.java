@@ -28,9 +28,4 @@ public class SetStateForEntryPoint extends AbstractCommand {
     public void undoCommand() {
         entryPoint.setState(previousState);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Set State of EntryPoint " + entryPoint.getName() + " to " + newState;
-    }
 }

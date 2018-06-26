@@ -24,9 +24,4 @@ public class RenameElement extends AbstractCommand {
     public void undoCommand() {
         element.setName(oldName);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Rename Element  from " + oldName + " to " + newName;
-    }
 }

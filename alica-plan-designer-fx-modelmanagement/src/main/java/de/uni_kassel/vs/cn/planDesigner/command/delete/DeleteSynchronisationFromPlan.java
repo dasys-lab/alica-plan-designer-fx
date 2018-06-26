@@ -30,9 +30,4 @@ public class DeleteSynchronisationFromPlan extends AbstractCommand {
         parentOfElement.getPlan().getSynchronizations().add(synchronization);
         parentOfElement.getPmlUiExtensionMap().getExtension().put(synchronization, pmlUiExtension);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Remove Synchronisation " + synchronization.getName() + " from Plan";
-    }
 }

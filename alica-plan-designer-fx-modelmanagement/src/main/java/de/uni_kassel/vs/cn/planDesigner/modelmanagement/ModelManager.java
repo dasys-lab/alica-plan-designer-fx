@@ -3,13 +3,11 @@ package de.uni_kassel.vs.cn.planDesigner.modelmanagement;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.command.CreatePlan;
-import de.uni_kassel.vs.cn.planDesigner.deserialization.TaskRepositoryDefaultTaskDeserializer;
-import de.uni_kassel.vs.cn.planDesigner.deserialization.TaskRepositoryTasksDeserializer;
+import de.uni_kassel.vs.cn.planDesigner.command.ParseAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelOperationType;
@@ -85,160 +83,6 @@ public class ModelManager {
         this.rolesPath = rolesPath;
     }
 
-    public void addListener(IModelEventHandler eventHandler) {
-        eventHandlerList.add(eventHandler);
-    }
-
-    public void removeListener(IModelEventHandler eventHandler) {
-        eventHandlerList.remove(eventHandler);
-    }
-
-    public void loadModelFromDisk() {
-        loadModelFromDisk(tasksPath);
-        loadModelFromDisk(plansPath);
-        loadModelFromDisk(rolesPath);
-    }
-
-    /**
-     * This method could be superfluous, as "loadModelFile" is maybe called by the file watcher.
-     * Anyway, temporarily this is a nice method for testing and is therefore called in the constr.
-     */
-    private void loadModelFromDisk(String path) {
-        File plansDirectory = new File(path);
-        if (!plansDirectory.exists()) {
-            return;
-        }
-
-        File[] allModelFiles = plansDirectory.listFiles();
-        if (allModelFiles == null || allModelFiles.length == 0) {
-            return;
-        }
-
-        for (File modelFile : allModelFiles) {
-            if (modelFile.isDirectory()) {
-                loadModelFromDisk(modelFile.getPath());
-            }
-            loadModelFile(modelFile);
-        }
-    }
-
-    /**
-     * Determines the file ending and loads the model object, accordingly.
-     * The constructed object is inserted in the corresponding model element maps, if no
-     * duplicated ID was found.
-     *
-     * @param modelFile the file to be parsed by jackson
-     */
-    private void loadModelFile(File modelFile) throws RuntimeException {
-        if(modelFile.isDirectory()) {
-            return;
-        }
-
-        if(modelFile.length() == 0) {
-            return;
-        }
-
-        String path = modelFile.toString();
-        int pointIdx = path.lastIndexOf('.');
-        String ending = "";
-        if (pointIdx != -1) {
-            ending = path.substring(pointIdx, path.length());
-        }
-
-        try {
-            // TODO: Test parsing model objects with jackson.
-            switch (ending) {
-                case ".pml":
-                    Plan plan = objectMapper.readValue(modelFile, Plan.class);
-                    if (planElementMap.containsKey(plan.getId())) {
-                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
-                    } else {
-                        ArrayList<Task> incompleteTasks = ParsedModelReference.getInstance().incompleteTasks;
-                        for(EntryPoint ep : plan.getEntryPoints()) {
-                            if(incompleteTasks.contains(ep.getTask())) {
-                                for(Task task: taskRepository.getTasks()) {
-                                    if(task.getId() == ep.getTask().getId()) {
-                                        ep.setTask(task);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        planElementMap.put(plan.getId(), plan);
-                        planMap.put(plan.getId(), plan);
-                        fireCreationEvent(plan);
-                    }
-                    break;
-                case ".beh":
-                    Behaviour behaviour = objectMapper.readValue(modelFile, Behaviour.class);
-                    if (planElementMap.containsKey(behaviour.getId())) {
-                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + behaviour.getId());
-                    } else {
-                        planElementMap.put(behaviour.getId(), behaviour);
-                        behaviourMap.put(behaviour.getId(), behaviour);
-                        fireCreationEvent(behaviour);
-                    }
-                    break;
-                case ".pty":
-                    PlanType planType = objectMapper.readValue(modelFile, PlanType.class);
-                    if (planElementMap.containsKey(planType.getId())) {
-                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + planType.getId());
-                    } else {
-                        planElementMap.put(planType.getId(), planType);
-                        planTypeMap.put(planType.getId(), planType);
-                        fireCreationEvent(planType);
-                    }
-                    break;
-                case ".tsk":
-                    TaskRepository taskRepository = objectMapper.readValue(modelFile, TaskRepository.class);
-                    if (planElementMap.containsKey(taskRepository.getId())) {
-                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
-                    } else {
-                        for(Task task : taskRepository.getTasks()) {
-                            task.setTaskRepository(taskRepository);
-                        }
-                        long defaultTaskId = ParsedModelReference.getInstance().defaultTaskId;
-                        for(Task task : taskRepository.getTasks()) {
-                            if(task.getId() == defaultTaskId) {
-                                taskRepository.setDefaultTask(task);
-                                break;
-                            }
-                        }
-                        planElementMap.put(taskRepository.getId(), taskRepository);
-                        this.taskRepository = taskRepository;
-                        fireCreationEvent(this.taskRepository);
-                    }
-                    break;
-                case ".rset":
-                case ".cdefset":
-                case ".graph":
-                case ".rdefset":
-                    LOG.error("Parsing roles not implemented, yet!");
-                    break;
-                default:
-                    LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
-//                    throw new RuntimeException("Received file with unknown file ending, for parsing. File is: '" + path + "'");
-            }
-        } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException e) {
-            System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
-            System.err.println(e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void fireCreationEvent(PlanElement element) {
-        for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelOperationType.ELEMENT_CREATED, null, element));
-        }
-    }
-
-    private void fireDeletionEvent(PlanElement element) {
-        for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelOperationType.ELEMENT_DELETED, null, element));
-        }
-    }
-
     public ArrayList<Plan> getPlans() {
         return new ArrayList<>(planMap.values());
     }
@@ -276,44 +120,206 @@ public class ModelManager {
         return conditions;
     }
 
-    public void handleFileSystemEvent(WatchEvent.Kind kind, Path path) {
-        if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
-            loadModelFile(path.toFile());
-        } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
-            deletePlanElement(path);
-        } else if (kind.equals((StandardWatchEventKinds.ENTRY_MODIFY))) {
-            PlanElement deletedElement = deletePlanElement(path);
-            try {
-                loadModelFile(path.toFile());
-            } catch (RuntimeException exception) {
-                planElementMap.put(deletedElement.getId(), deletedElement);
-                if (deletedElement instanceof Plan) {
-                    planMap.put(deletedElement.getId(), (Plan) deletedElement);
-                } else if (deletedElement instanceof Behaviour) {
-                    behaviourMap.put(deletedElement.getId(), (Behaviour) deletedElement);
-                } else if (deletedElement instanceof PlanType) {
-                    planTypeMap.put(deletedElement.getId(), (PlanType) deletedElement);
-                } else if (deletedElement instanceof TaskRepository) {
-                    this.taskRepository = (TaskRepository) deletedElement;
-                } else {
-                    exception.printStackTrace();
-                }
-            }
+    public void addListener(IModelEventHandler eventHandler) {
+        eventHandlerList.add(eventHandler);
+    }
 
+    public void removeListener(IModelEventHandler eventHandler) {
+        eventHandlerList.remove(eventHandler);
+    }
+
+    public void loadModelFromDisk() {
+        loadModelFromDisk(tasksPath);
+        loadModelFromDisk(plansPath);
+        loadModelFromDisk(rolesPath);
+    }
+
+    /**
+     * This method could be superfluous, as "loadModelFile" is maybe called by the file watcher.
+     * Anyway, temporarily this is a nice method for testing and is therefore called in the constr.
+     */
+    private void loadModelFromDisk(String directory) {
+        File plansDirectory = new File(directory);
+        if (!plansDirectory.exists()) {
+            return;
+        }
+
+        File[] allModelFiles = plansDirectory.listFiles();
+        if (allModelFiles == null || allModelFiles.length == 0) {
+            return;
+        }
+
+        for (File modelFile : allModelFiles) {
+            if (modelFile.isDirectory()) {
+                loadModelFromDisk(modelFile.getPath());
+            }
+            loadModelFile(modelFile);
         }
     }
 
-    public void removeAbstractPlan(AbstractPlan abstractPlan) {
-        PlanElement deletedElement = planElementMap.remove(abstractPlan.getId());
-        if (deletedElement == null) {
+    /**
+     * Determines the file ending and loads the model object, accordingly.
+     * The constructed object is inserted in the corresponding model element maps, if no
+     * duplicated ID was found.
+     * <p>
+     * This method should only be called through a command or within the model manager itself!
+     *
+     * @param modelFile the file to be parsed by jackson
+     */
+    private void loadModelFile(File modelFile) throws RuntimeException {
+        if(modelFile.isDirectory()) {
             return;
-        } else if (deletedElement instanceof Plan) {
-            planMap.remove(deletedElement.getId());
-        } else if (deletedElement instanceof Behaviour) {
-            behaviourMap.remove(deletedElement.getId());
-        } else if (deletedElement instanceof PlanType) {
-            planTypeMap.remove(deletedElement.getId());
         }
+
+        if(modelFile.length() == 0) {
+            return;
+        }
+
+        String path = modelFile.toString();
+        int pointIdx = path.lastIndexOf('.');
+        String ending = "";
+        if (pointIdx != -1) {
+            ending = path.substring(pointIdx, path.length());
+        }
+
+        try {
+            switch (ending) {
+                case ".pml":
+                    Plan plan = objectMapper.readValue(modelFile, Plan.class);
+                    if (planElementMap.containsKey(plan.getId())) {
+                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
+                    } else {
+                        ArrayList<Task> incompleteTasks = ParsedModelReference.getInstance().incompleteTasks;
+                        for (EntryPoint ep : plan.getEntryPoints()) {
+                            if (incompleteTasks.contains(ep.getTask())) {
+                                for (Task task : taskRepository.getTasks()) {
+                                    if (task.getId() == ep.getTask().getId()) {
+                                        ep.setTask(task);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        planElementMap.put(plan.getId(), plan);
+                        planMap.put(plan.getId(), plan);
+                        fireCreationEvent(plan);
+                    }
+                    break;
+                case ".beh":
+                    Behaviour behaviour = objectMapper.readValue(modelFile, Behaviour.class);
+                    if (planElementMap.containsKey(behaviour.getId())) {
+                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + behaviour.getId());
+                    } else {
+                        planElementMap.put(behaviour.getId(), behaviour);
+                        behaviourMap.put(behaviour.getId(), behaviour);
+                        fireCreationEvent(behaviour);
+                    }
+                    break;
+                case ".pty":
+                    PlanType planType = objectMapper.readValue(modelFile, PlanType.class);
+                    if (planElementMap.containsKey(planType.getId())) {
+                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + planType.getId());
+                    } else {
+                        planElementMap.put(planType.getId(), planType);
+                        planTypeMap.put(planType.getId(), planType);
+                        fireCreationEvent(planType);
+                    }
+                    break;
+                case ".tsk":
+                    TaskRepository taskRepository = objectMapper.readValue(modelFile, TaskRepository.class);
+                    if (planElementMap.containsKey(taskRepository.getId())) {
+                        throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
+                    } else {
+                        for (Task task : taskRepository.getTasks()) {
+                            task.setTaskRepository(taskRepository);
+                        }
+                        long defaultTaskId = ParsedModelReference.getInstance().defaultTaskId;
+                        for (Task task : taskRepository.getTasks()) {
+                            if (task.getId() == defaultTaskId) {
+                                taskRepository.setDefaultTask(task);
+                                break;
+                            }
+                        }
+                        planElementMap.put(taskRepository.getId(), taskRepository);
+                        this.taskRepository = taskRepository;
+                        fireCreationEvent(this.taskRepository);
+                    }
+                    break;
+                case ".rset":
+                case ".cdefset":
+                case ".graph":
+                case ".rdefset":
+                    LOG.error("Parsing roles not implemented, yet!");
+                    break;
+                default:
+                    LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
+//                    throw new RuntimeException("Received file with unknown file ending, for parsing. File is: '" + path + "'");
+            }
+        } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException e) {
+            System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
+            System.err.println(e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public <T> T parseFile(File modelFile, Class<T> type) {
+        T planElement;
+        try {
+            planElement = objectMapper.readValue(modelFile, type);
+        } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException e) {
+            System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
+            System.err.println(e.getMessage());
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return planElement;
+    }
+
+    private void fireCreationEvent(PlanElement element) {
+        for (IModelEventHandler eventHandler : eventHandlerList) {
+            eventHandler.handleModelEvent(new ModelEvent(ModelOperationType.ELEMENT_CREATED, null, element));
+        }
+    }
+
+    private void fireDeletionEvent(PlanElement element) {
+        for (IModelEventHandler eventHandler : eventHandlerList) {
+            eventHandler.handleModelEvent(new ModelEvent(ModelOperationType.ELEMENT_DELETED, null, element));
+        }
+    }
+
+    public PlanElement addPlanElement(PlanElement newElement, String type) {
+        switch (type) {
+            case Types.PLAN:
+                planMap.put(newElement.getId(), (Plan) newElement);
+                break;
+            default:
+                System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
+                return null;
+        }
+        PlanElement oldElement = planElementMap.get(newElement.getId());
+        planElementMap.put(newElement.getId(), newElement);
+        fireDeletionEvent(oldElement);
+        fireCreationEvent(newElement);
+        return oldElement;
+    }
+
+    public void removePlanElement(PlanElement planElement, String type) {
+        switch (type) {
+            case Types.PLAN:
+                planMap.remove(planElement.getId());
+                break;
+            default:
+                System.err.println("ModelManager: removing " + type + " not implemented, yet!");
+        }
+        planElementMap.remove(planElement.getId());
+        fireDeletionEvent(planElement);
+    }
+
+    public void removeAbstractPlan(AbstractPlan abstractPlan) {
+        System.err.println("ModelManager: Method removeAbstractPlan(AbstractPlan abstractPlan) should be deleted when commands are corrected. See removePlanElement(..).");
     }
 
     private PlanElement deletePlanElement(Path path) {
@@ -446,9 +452,12 @@ public class ModelManager {
             case CREATE_ELEMENT:
                 cmd = new CreatePlan(this, mmq);
                 break;
+            case PARSE_ELEMENT:
+                cmd = new ParseAbstractPlan(this, mmq);
+                break;
             default:
-                System.out.println("Unkown model modification requested!");
-                cmd = null;
+                System.err.println("Unkown model modification query gets ignored!");
+                return;
         }
         commandStack.storeAndExecute(cmd);
     }
@@ -468,7 +477,7 @@ public class ModelManager {
     public String makeRelativePlansDirectory(String absoluteDirectory, String fileName) {
         String relativeDirectory = absoluteDirectory.replace(plansPath, "");
         relativeDirectory = relativeDirectory.replace(fileName, "");
-        if(relativeDirectory.startsWith(File.separator)) {
+        if (relativeDirectory.startsWith(File.separator)) {
             relativeDirectory = relativeDirectory.substring(1);
         }
         if (relativeDirectory.endsWith(File.separator)) {
@@ -494,7 +503,7 @@ public class ModelManager {
                     PlanElement planElement = planElementMap.get(planElementId);
                     if (planElement instanceof Plan) {
                         Plan plan = planMap.get(planElementId);
-                        String relativeDirectory = makeRelativePlansDirectory(newPath.toString(), plan.getName() + ".pml" );
+                        String relativeDirectory = makeRelativePlansDirectory(newPath.toString(), plan.getName() + ".pml");
                         plan.setRelativeDirectory(relativeDirectory);
                         ((Plan) planElement).setRelativeDirectory(relativeDirectory);
                         File outfile = new File(newPath.toString());
@@ -509,12 +518,12 @@ public class ModelManager {
 
     /**
      * Serializes an AbstractPlan to disk.
+     *
      * @param abstractPlan
      */
-    public void serializeToDisk(AbstractPlan abstractPlan)
-    {
+    public void serializeToDisk(AbstractPlan abstractPlan) {
         try {
-            File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName()+".pml").toFile();
+            File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + ".pml").toFile();
             objectMapper.writeValue(outfile, abstractPlan);
         } catch (IOException e) {
             e.printStackTrace();

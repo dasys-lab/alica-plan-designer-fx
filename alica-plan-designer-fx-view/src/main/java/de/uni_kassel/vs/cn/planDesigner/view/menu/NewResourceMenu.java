@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.controller.CreateNewDialogController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,16 +27,16 @@ public class NewResourceMenu extends Menu {
         this.initialDirectoryHint = initialDirectoryHint;
         i18NRepo = I18NRepo.getInstance();
         MenuItem newPlanMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plan"));
-        newPlanMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, i18NRepo.getString("alicatype.plan")));
+        newPlanMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.PLAN));
         getItems().add(newPlanMenuItem);
         MenuItem newPlanTypeMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plantype"));
-        newPlanTypeMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, i18NRepo.getString("alicatype.plantype")));
+        newPlanTypeMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.PLANTYPE));
         getItems().add(newPlanTypeMenuItem);
         MenuItem newBehaviourMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.behaviour"));
-        newBehaviourMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, i18NRepo.getString("alicatype.behaviour")));
+        newBehaviourMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.BEHAVIOUR));
         getItems().add(newBehaviourMenuItem);
         MenuItem newFolderMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.folder"));
-        newFolderMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, i18NRepo.getString("alicatype.folder")));
+        newFolderMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.FOLDER));
         getItems().add(newFolderMenuItem);
     }
 

@@ -28,9 +28,4 @@ public class AddTransitionToSynchronisation extends AbstractCommand {
     public void undoCommand() {
         synchronization.getSynchedTransitions().remove(transitionToAdd);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add Transition to  Synchronisation";
-    }
 }

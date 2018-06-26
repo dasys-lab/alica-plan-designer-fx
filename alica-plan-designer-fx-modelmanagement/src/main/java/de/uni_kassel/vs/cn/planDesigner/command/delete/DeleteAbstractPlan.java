@@ -266,9 +266,4 @@ public class DeleteAbstractPlan extends AbstractCommand {
 //            throw new RuntimeException(e);
 //        }
     }
-
-    @Override
-    public String getCommandString() {
-        return "Delete " + abstractPlan.getName();
-    }
 }

@@ -25,10 +25,4 @@ public class DeleteAbstractPlansFromState extends AbstractCommand {
     public void undoCommand() {
         state.getPlans().add(element);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Delete Object " + element.getName() + " from State "
-                + state + " in Plan " + state.getParentPlan().getName();
-    }
 }

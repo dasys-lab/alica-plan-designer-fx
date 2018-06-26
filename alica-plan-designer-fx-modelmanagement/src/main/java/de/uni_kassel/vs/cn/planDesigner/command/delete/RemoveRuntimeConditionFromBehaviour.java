@@ -24,9 +24,4 @@ public class RemoveRuntimeConditionFromBehaviour extends AbstractCommand {
     public void undoCommand() {
         behaviour.setRuntimeCondition(condition);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Remove Precondition from Behaviour " + behaviour.getName();
-    }
 }

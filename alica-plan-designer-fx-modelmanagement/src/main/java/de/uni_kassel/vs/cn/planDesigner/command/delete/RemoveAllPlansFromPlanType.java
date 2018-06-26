@@ -33,8 +33,4 @@ public class RemoveAllPlansFromPlanType extends AbstractCommand {
         planType.getPlans().addAll(backupPlans);
     }
 
-    @Override
-    public String getCommandString() {
-        return "Remove all plans from plantype " + planType.getName();
-    }
 }

@@ -25,9 +25,4 @@ public class AddPreConditionToBehaviour extends AbstractCommand {
     public void undoCommand() {
         behaviour.setPreCondition(null);
     }
-
-    @Override
-    public String getCommandString() {
-        return "Add Precondition to Behaviour " + behaviour.getName();
-    }
 }

@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import javafx.application.Platform;
@@ -20,16 +21,14 @@ public class RepositoryTab extends Tab {
     protected Comparator<RepositoryHBox> modelElementComparator;
     protected RepositoryTool repoTool;
     protected IShowUsageHandler showUsageHandler;
-    private I18NRepo i18NRepo;
 
     public RepositoryTab(String tabTitle, RepositoryTool repoTool) {
         setText(tabTitle);
         this.repoTool = repoTool;
         this.repositoryListView = new ListView();
         this.setContent(this.repositoryListView);
-        i18NRepo = I18NRepo.getInstance();
 
-        modelElementComparator = Comparator.comparing(o -> !o.getViewModelType().equals(i18NRepo.getString("alicatype.masterplan")));
+        modelElementComparator = Comparator.comparing(o -> !o.getViewModelType().equals(Types.MASTERPLAN));
         modelElementComparator = modelElementComparator.thenComparing(o -> o.getViewModelName());
     }
 
