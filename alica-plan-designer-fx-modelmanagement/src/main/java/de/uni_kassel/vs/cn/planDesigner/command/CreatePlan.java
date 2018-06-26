@@ -13,7 +13,7 @@ public class CreatePlan extends AbstractCommand {
         if (mmq.getModelElementType().equals("plan")) {
             this.plan = new Plan();
             this.plan.setName(mmq.getName());
-            this.plan.setRelativeDirectory(modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory()));
+            this.plan.setRelativeDirectory(modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), plan.getName()+ ".pml"));
         }
     }
 
