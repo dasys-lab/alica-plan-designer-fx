@@ -454,6 +454,8 @@ public class ModelManager {
     public void addPlan(Plan plan) {
         planMap.put(plan.getId(), plan);
         planElementMap.put(plan.getId(), plan);
+        serializeToDisk(plan);
+        fireCreationEvent(plan);
     }
 
     public String makeRelativePlansDirectory(String absoluteDirectory) {
@@ -488,6 +490,20 @@ public class ModelManager {
             }
         } catch (IOException e1) {
             throw new RuntimeException(e1);
+        }
+    }
+
+    /**
+     * Serializes an AbstractPlan to disk.
+     * @param abstractPlan
+     */
+    public void serializeToDisk(AbstractPlan abstractPlan)
+    {
+        try {
+            File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName()+".pml").toFile();
+            objectMapper.writeValue(outfile, abstractPlan);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -20,8 +20,6 @@ public class CreatePlan extends AbstractCommand {
     @Override
     public void doCommand() {
         modelManager.addPlan(plan);
-//        planElementMap.put(planElement.getId(), planElement);
-//        fireCreationEvent(planElement);
     }
 
     @Override
