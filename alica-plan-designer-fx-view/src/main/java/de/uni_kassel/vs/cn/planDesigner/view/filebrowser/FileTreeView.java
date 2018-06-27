@@ -211,14 +211,15 @@ public final class FileTreeView extends TreeView<FileWrapper> {
     private FileTreeItem removeFromFolder(TreeViewModelElement modelElement, FileTreeItem treeItem) {
         for (TreeItem item : treeItem.getChildren()) {
             FileTreeItem itemToDelete = (FileTreeItem) item;
-            if (item.isLeaf())
+            if (!itemToDelete.getValue().unwrap().isDirectory()) {
                 if (((FileTreeItem) item).getTreeViewModelElement().getId() == modelElement.getId()) {
                     treeItem.getChildren().remove(item);
                     treeItem.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
                     return itemToDelete;
-                } else {
-                    return removeFromFolder(modelElement, itemToDelete);
                 }
+            } else {
+                return removeFromFolder(modelElement, itemToDelete);
+            }
         }
         return null;
     }
