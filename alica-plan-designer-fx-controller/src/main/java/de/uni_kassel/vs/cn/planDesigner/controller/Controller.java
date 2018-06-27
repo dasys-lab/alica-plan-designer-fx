@@ -128,31 +128,31 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         }
 
         PlanElement planElement = event.getNewElement();
-        String typeString = FileSystemUtil.getTypeString(planElement);
+        String type = FileSystemUtil.getTypeString(planElement);
         switch (event.getType()) {
             case ELEMENT_CREATED:
                 if (planElement instanceof Plan) {
                     Plan plan = (Plan) planElement;
-                    addTreeViewElement(plan, typeString);
-                    repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), typeString));
+                    addTreeViewElement(plan, type);
+                    repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), type));
                 } else if (planElement instanceof PlanType) {
-                    addTreeViewElement((AbstractPlan) planElement, typeString);
-                    repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
+                    addTreeViewElement((AbstractPlan) planElement, type);
+                    repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), type));
                 } else if (planElement instanceof Behaviour) {
-                    addTreeViewElement((AbstractPlan) planElement, typeString);
-                    repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
+                    addTreeViewElement((AbstractPlan) planElement, type);
+                    repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), type));
                 } else if (planElement instanceof TaskRepository) {
-                    addTreeViewElement((AbstractPlan) planElement, typeString);
+                    addTreeViewElement((AbstractPlan) planElement, type);
                     for (Task task : ((TaskRepository) planElement).getTasks()) {
-                        typeString = FileSystemUtil.getTypeString(task);
-                        repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), typeString));
+                        type = FileSystemUtil.getTypeString(task);
+                        repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), type));
                     }
                 }
                 break;
             case ELEMENT_DELETED:
                 System.out.println("Controller: ELEMENT_DELETED not implemented yet!");
-                removeTreeViewElement((AbstractPlan) planElement, typeString);
-                repoViewModel.removePlanElement(new ViewModelElement(planElement.getId(), planElement.getName(), typeString));
+                removeTreeViewElement((AbstractPlan) planElement, type);
+                repoViewModel.removePlanElement(new ViewModelElement(planElement.getId(), planElement.getName(), type));
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 throw new RuntimeException("Not implemented, yet!");
