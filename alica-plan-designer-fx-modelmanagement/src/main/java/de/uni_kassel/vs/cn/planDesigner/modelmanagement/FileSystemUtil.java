@@ -16,6 +16,8 @@ public class FileSystemUtil {
         switch (mmq.getModelElementType()) {
             case Types.PLAN:
                 return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLAN_ENDING).toFile();
+            case Types.PLANTYPE:
+                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLANTYPE_ENDING).toFile();
             default:
                 System.err.println("FileSystemUtil: Unknown type gets ignored!");
                 return null;
