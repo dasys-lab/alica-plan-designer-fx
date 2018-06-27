@@ -38,8 +38,6 @@ public class ModelManager {
     private CommandStack commandStack;
     private ObjectMapper objectMapper;
 
-    private long defaultTaskId;
-
     public ModelManager() {
         planElementMap = new HashMap<>();
         planMap = new HashMap<>();
@@ -186,7 +184,7 @@ public class ModelManager {
                     if (planElementMap.containsKey(plan.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
                     } else {
-                        ArrayList<Task> incompleteTasks = ParsedModelReference.getInstance().incompleteTasks;
+                        ArrayList<Task> incompleteTasks = ParsedModelReferences.getInstance().incompleteTasks;
                         for (EntryPoint ep : plan.getEntryPoints()) {
                             if (incompleteTasks.contains(ep.getTask())) {
                                 for (Task task : taskRepository.getTasks()) {
@@ -227,7 +225,7 @@ public class ModelManager {
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
-                        long defaultTaskId = ParsedModelReference.getInstance().defaultTaskId;
+                        long defaultTaskId = ParsedModelReferences.getInstance().defaultTaskId;
                         for (Task task : taskRepository.getTasks()) {
                             task.setTaskRepository(taskRepository);
                             if (task.getId() == defaultTaskId) {
@@ -482,6 +480,8 @@ public class ModelManager {
                     case Types.PLANTYPE:
                         cmd = new CreatePlanType(this, mmq);
                         break;
+                    case Types.BEHAVIOUR:
+                        cmd = new CreateBehaviour(this, mmq);
                     default:
                         System.err.println("ModelManager: Creation of unkonwn model element type gets ignored!");
                         return;
@@ -523,10 +523,6 @@ public class ModelManager {
         return relativeDirectory;
     }
 
-    public void setDefaultTaskId(long defaultTaskId) {
-        this.defaultTaskId = defaultTaskId;
-    }
-
     public void moveFile(long movedFileId, Path originalPath, Path newPath) {
         try {
             if (originalPath.endsWith("pml")) {
@@ -534,7 +530,7 @@ public class ModelManager {
 //                    Files.move(new File(originalPath + "ex").toPath(),
 //                            new File(newPath + "ex").toPath());
             }
-            //TODO commapd pattern
+            //TODO command pattern
             Files.move(originalPath, newPath);
             for (long planElementId : planElementMap.keySet()) {
                 if (planElementId == movedFileId) {
@@ -573,7 +569,7 @@ public class ModelManager {
      *
      * @param abstractPlan
      */
-    private void removeFromDisk(AbstractPlan abstractPlan, String ending) {
+    public void removeFromDisk(AbstractPlan abstractPlan, String ending) {
         File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + "." + ending).toFile();
         outfile.delete();
     }

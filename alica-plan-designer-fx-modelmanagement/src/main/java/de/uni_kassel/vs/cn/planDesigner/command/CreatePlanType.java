@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
@@ -17,15 +16,19 @@ public class CreatePlanType extends AbstractCommand {
             this.planType.setName(mmq.getName());
             this.planType.setRelativeDirectory(modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), planType.getName()+ "." + FileSystemUtil.PLANTYPE_ENDING));
         }
+        else
+        {
+            System.err.println("CreatePlanType: Type does not match command!");
+        }
     }
 
     @Override
     public void doCommand() {
-        modelManager.addPlanElement(planType, Types.PLANTYPE, true);
+        modelManager.serializeToDisk(planType, FileSystemUtil.PLANTYPE_ENDING);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.removePlanElement(planType, Types.PLANTYPE, true);
+        modelManager.removeFromDisk(planType, FileSystemUtil.PLANTYPE_ENDING);
     }
 }

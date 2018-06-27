@@ -15,17 +15,21 @@ public class CreatePlan extends AbstractCommand {
         if (mmq.getModelElementType().equals(Types.PLAN)) {
             this.plan = new Plan();
             this.plan.setName(mmq.getName());
-            this.plan.setRelativeDirectory(modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), plan.getName()+ "." + FileSystemUtil.PLAN_ENDING));
+            this.plan.setRelativeDirectory(modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), plan.getName() + "." + FileSystemUtil.PLAN_ENDING));
+        }
+        else
+        {
+            System.err.println("CreatePlan: Type does not match command!");
         }
     }
 
     @Override
     public void doCommand() {
-        modelManager.addPlanElement(plan, Types.PLAN, true);
+        modelManager.serializeToDisk(plan, FileSystemUtil.PLAN_ENDING);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.removePlanElement(plan, Types.PLAN, true);
+        modelManager.removeFromDisk(plan, FileSystemUtil.PLAN_ENDING);
     }
 }
