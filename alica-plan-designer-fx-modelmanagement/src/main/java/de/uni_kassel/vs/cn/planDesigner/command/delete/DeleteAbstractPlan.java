@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.command.delete;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtensionMap;
 
@@ -134,7 +135,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
             }
         });
 
-        modelManager.removeAbstractPlan(abstractPlan);
+        modelManager.removePlanElement(abstractPlan, Types.PLAN, false);
 
         //TODO commads for file deletion
 //        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();

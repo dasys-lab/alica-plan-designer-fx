@@ -7,10 +7,10 @@ import java.nio.file.Paths;
 
 public class FileSystemUtil {
 
-    public static String PLAN_ENDING = "pml";
-    public static String TASKREPOSITORY_ENDING = "tsk";
-    public static String BEHAVIOUR_ENDING = "beh";
-    public static String PLANTYPE_ENDING = "pty";
+    public static final String PLAN_ENDING = "pml";
+    public static final String TASKREPOSITORY_ENDING = "tsk";
+    public static final String BEHAVIOUR_ENDING = "beh";
+    public static final String PLANTYPE_ENDING = "pty";
 
     public static File getFile(ModelModificationQuery mmq) {
         switch (mmq.getModelElementType()) {
