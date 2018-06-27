@@ -306,8 +306,10 @@ public class ModelManager {
                 return null;
         }
         PlanElement oldElement = planElementMap.get(newElement.getId());
+        if (oldElement != null) {
+            fireDeletionEvent(oldElement);
+        }
         planElementMap.put(newElement.getId(), newElement);
-        fireDeletionEvent(oldElement);
         fireCreationEvent(newElement);
         return oldElement;
     }

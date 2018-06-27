@@ -13,10 +13,9 @@ public class DeletePlan extends AbstractCommand {
 
     public DeletePlan(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        String planName = extractName(modelManager, mmq);
         if (mmq.getModelElementType().equals(Types.PLAN)) {
            for(Plan currentPlan: modelManager.getPlans()) {
-                if (currentPlan.getName().equals(planName)) {
+                if (currentPlan.getName().equals(mmq.getName())) {
                     plan = currentPlan;
                     break;
                 }
@@ -31,15 +30,6 @@ public class DeletePlan extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        modelManager.addPlanElement(plan, Types.PLAN, true);;
-    }
-
-    private String extractName(ModelManager modelManager, ModelModificationQuery mmq) {
-        String planName = mmq.getAbsoluteDirectory().replace(modelManager.getPlansPath(), "").replace(".pml", "");
-        int index = planName.lastIndexOf(File.separator);
-        if (index != -1) {
-            planName = planName.substring(index + 1);
-        }
-        return planName;
+        modelManager.addPlanElement(plan, Types.PLAN, true);
     }
 }
