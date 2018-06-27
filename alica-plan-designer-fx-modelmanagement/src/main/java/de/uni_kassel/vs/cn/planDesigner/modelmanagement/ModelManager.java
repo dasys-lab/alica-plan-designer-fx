@@ -230,15 +230,13 @@ public class ModelManager {
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
-                        for (Task task : taskRepository.getTasks()) {
-                            task.setTaskRepository(taskRepository);
-                        }
                         long defaultTaskId = ParsedModelReference.getInstance().defaultTaskId;
                         for (Task task : taskRepository.getTasks()) {
+                            task.setTaskRepository(taskRepository);
                             if (task.getId() == defaultTaskId) {
                                 taskRepository.setDefaultTask(task);
-                                break;
                             }
+                            planElementMap.put(task.getId(), task);
                         }
                         planElementMap.put(taskRepository.getId(), taskRepository);
                         this.taskRepository = taskRepository;

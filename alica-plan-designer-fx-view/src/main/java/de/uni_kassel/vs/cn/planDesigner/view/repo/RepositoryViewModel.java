@@ -133,9 +133,9 @@ public final class RepositoryViewModel {
         return behaviours;
     }
 
-    public ObservableList<ViewModelElement> getTasks() {
-        return tasks;
-    }
+//    public ObservableList<ViewModelElement> getTasks() {
+//        return tasks;
+//    }
 
     public void removePlanElement(ViewModelElement elementToDelete) {
         if (elementToDelete.getType().equals(i18NRepo.getString("alicatype.plan")) ||
