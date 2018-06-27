@@ -562,5 +562,4 @@ public class ModelManager {
         File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + "." + ending).toFile();
         outfile.delete();
     }
-
 }
