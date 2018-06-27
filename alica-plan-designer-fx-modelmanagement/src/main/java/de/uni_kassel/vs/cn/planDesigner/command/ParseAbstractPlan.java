@@ -29,7 +29,7 @@ public class ParseAbstractPlan extends AbstractCommand {
         switch (modelModificationQuery.getModelElementType()) {
             case Types.PLAN:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
-                modelManager.addPlanElement(newElement, modelModificationQuery.getModelElementType());
+                modelManager.addPlanElement(newElement, modelModificationQuery.getModelElementType(), false);
                 break;
             default:
                 System.err.println("ParseAbstractPlan: Parsing model type " + modelModificationQuery.getModelElementType() + " not implemented, yet!");
@@ -41,10 +41,10 @@ public class ParseAbstractPlan extends AbstractCommand {
     public void undoCommand() {
         if (oldElement != null) {
             // replace new object with former old one
-            modelManager.addPlanElement(oldElement, modelModificationQuery.getModelElementType());
+            modelManager.addPlanElement(oldElement, modelModificationQuery.getModelElementType(), false);
         } else {
             // remove new object
-            modelManager.removePlanElement(newElement, modelModificationQuery.getModelElementType());
+            modelManager.removePlanElement(newElement, modelModificationQuery.getModelElementType(), false);
         }
     }
 }

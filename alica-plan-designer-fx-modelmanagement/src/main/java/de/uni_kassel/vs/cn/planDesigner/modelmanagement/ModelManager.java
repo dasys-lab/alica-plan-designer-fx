@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
-import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.command.CreatePlan;
-import de.uni_kassel.vs.cn.planDesigner.command.ParseAbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.command.*;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelOperationType;
@@ -288,10 +285,21 @@ public class ModelManager {
         }
     }
 
-    public PlanElement addPlanElement(PlanElement newElement, String type) {
+    public PlanElement addPlanElement(PlanElement newElement, String type, boolean serializeToDisk) {
         switch (type) {
             case Types.PLAN:
-                planMap.put(newElement.getId(), (Plan) newElement);
+                Plan plan = (Plan) newElement;
+                planMap.put(plan.getId(), plan);
+                if (serializeToDisk) {
+                    serializeToDisk(plan, FileSystemUtil.PLAN_ENDING);
+                }
+                break;
+            case Types.PLANTYPE:
+                PlanType planType = (PlanType) newElement;
+                planTypeMap.put(planType.getId(), planType);
+                if (serializeToDisk) {
+                    serializeToDisk(planType, FileSystemUtil.PLANTYPE_ENDING);
+                }
                 break;
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
@@ -304,20 +312,27 @@ public class ModelManager {
         return oldElement;
     }
 
-    public void removePlanElement(PlanElement planElement, String type) {
+    public void removePlanElement(PlanElement planElement, String type, boolean removeFromDisk) {
         switch (type) {
             case Types.PLAN:
-                planMap.remove(planElement.getId());
+                Plan plan = (Plan) planElement;
+                planMap.remove(plan.getId());
+                if (removeFromDisk) {
+                    removeFromDisk(plan, FileSystemUtil.PLAN_ENDING);
+                }
+                break;
+            case Types.PLANTYPE:
+                PlanType planType = (PlanType) planElement;
+                planTypeMap.remove(planType.getId());
+                if (removeFromDisk) {
+                    removeFromDisk(planType, FileSystemUtil.PLANTYPE_ENDING);
+                }
                 break;
             default:
                 System.err.println("ModelManager: removing " + type + " not implemented, yet!");
         }
         planElementMap.remove(planElement.getId());
         fireDeletionEvent(planElement);
-    }
-
-    public void removeAbstractPlan(AbstractPlan abstractPlan) {
-        System.err.println("ModelManager: Method removeAbstractPlan(AbstractPlan abstractPlan) should be deleted when commands are corrected. See removePlanElement(..).");
     }
 
     private PlanElement deletePlanElement(Path path) {
@@ -449,7 +464,18 @@ public class ModelManager {
         AbstractCommand cmd;
         switch (mmq.getOperationType()) {
             case CREATE_ELEMENT:
-                cmd = new CreatePlan(this, mmq);
+                switch (mmq.getModelElementType()) {
+                    case Types.PLAN:
+                        cmd = new CreatePlan(this, mmq);
+                        break;
+                    case Types.PLANTYPE:
+                        cmd = new CreatePlanType(this, mmq);
+                        break;
+                    default:
+                        System.err.println("Creation of unkonwn model element type gets ignored!");
+                        return;
+                }
+
                 break;
             case PARSE_ELEMENT:
                 cmd = new ParseAbstractPlan(this, mmq);
@@ -459,18 +485,6 @@ public class ModelManager {
                 return;
         }
         commandStack.storeAndExecute(cmd);
-    }
-
-    /**
-     * This method should only be called through the command stack!
-     *
-     * @param plan
-     */
-    public void addPlan(Plan plan) {
-        planMap.put(plan.getId(), plan);
-        planElementMap.put(plan.getId(), plan);
-        serializeToDisk(plan);
-        fireCreationEvent(plan);
     }
 
     public String makeRelativePlansDirectory(String absoluteDirectory, String fileName) {
@@ -502,7 +516,7 @@ public class ModelManager {
                     PlanElement planElement = planElementMap.get(planElementId);
                     if (planElement instanceof Plan) {
                         Plan plan = planMap.get(planElementId);
-                        String relativeDirectory = makeRelativePlansDirectory(newPath.toString(), plan.getName() + ".pml");
+                        String relativeDirectory = makeRelativePlansDirectory(newPath.toString(), plan.getName() + "." + FileSystemUtil.PLAN_ENDING);
                         plan.setRelativeDirectory(relativeDirectory);
                         ((Plan) planElement).setRelativeDirectory(relativeDirectory);
                         File outfile = new File(newPath.toString());
@@ -520,12 +534,22 @@ public class ModelManager {
      *
      * @param abstractPlan
      */
-    public void serializeToDisk(AbstractPlan abstractPlan) {
+    public void serializeToDisk(AbstractPlan abstractPlan, String ending) {
         try {
-            File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + ".pml").toFile();
+            File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + "." + ending).toFile();
             objectMapper.writeValue(outfile, abstractPlan);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Deletes AbstractPlan from disk.
+     *
+     * @param abstractPlan
+     */
+    private void removeFromDisk(AbstractPlan abstractPlan, String ending) {
+        File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + "." + ending).toFile();
+        outfile.delete();
     }
 }

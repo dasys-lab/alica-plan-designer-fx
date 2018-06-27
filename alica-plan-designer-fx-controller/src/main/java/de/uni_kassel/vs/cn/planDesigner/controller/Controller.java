@@ -241,9 +241,9 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         WatchEvent.Kind kind = event.kind();
         ModelModificationQuery mmq;
         if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE) || kind.equals((StandardWatchEventKinds.ENTRY_MODIFY))) {
-            mmq = new ModelModificationQuery(ModelOperationType.PARSE_ELEMENT, path.toString(), null, null);
+            mmq = new ModelModificationQuery(ModelOperationType.PARSE_ELEMENT, path.toString());
         } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
-            mmq = new ModelModificationQuery(ModelOperationType.DELETE_ELEMENT, path.toString(), null, null);
+            mmq = new ModelModificationQuery(ModelOperationType.DELETE_ELEMENT, path.toString());
         } else {
             System.err.println("Controller: Unknown filesystem event type received that gets ignored!");
             return;
