@@ -5,8 +5,6 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 
-import java.io.File;
-
 public class DeletePlan extends AbstractCommand {
 
     protected Plan plan;

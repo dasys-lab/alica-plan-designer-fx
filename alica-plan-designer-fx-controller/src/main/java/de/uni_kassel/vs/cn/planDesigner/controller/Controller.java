@@ -150,7 +150,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                 }
                 break;
             case ELEMENT_DELETED:
-                System.out.println("Controller: ELEMENT_DELETED not implemented yet!");
                 removeTreeViewElement((AbstractPlan) planElement, type);
                 repoViewModel.removePlanElement(new ViewModelElement(planElement.getId(), planElement.getName(), type));
                 break;

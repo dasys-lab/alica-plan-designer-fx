@@ -474,7 +474,7 @@ public class ModelManager {
                         cmd = new CreatePlanType(this, mmq);
                         break;
                     default:
-                        System.err.println("Creation of unkonwn model element type gets ignored!");
+                        System.err.println("ModelManager: Creation of unkonwn model element type gets ignored!");
                         return;
                 }
 
@@ -482,8 +482,21 @@ public class ModelManager {
             case PARSE_ELEMENT:
                 cmd = new ParseAbstractPlan(this, mmq);
                 break;
+            case DELETE_ELEMENT:
+                switch (mmq.getModelElementType()) {
+                    case Types.PLAN:
+                        cmd = new DeletePlan(this, mmq);
+                        break;
+                    case Types.PLANTYPE:
+                        cmd = null;
+                        break;
+                    default:
+                        System.err.println("ModelManager: Creation of unkonwn model element type gets ignored!");
+                        return;
+                }
+                break;
             default:
-                System.err.println("Unkown model modification query gets ignored!");
+                System.err.println("ModelManager: Unkown model modification query gets ignored!");
                 return;
         }
         commandStack.storeAndExecute(cmd);
@@ -512,6 +525,7 @@ public class ModelManager {
 //                    Files.move(new File(originalPath + "ex").toPath(),
 //                            new File(newPath + "ex").toPath());
             }
+            //TODO commapd pattern
             Files.move(originalPath, newPath);
             for (long planElementId : planElementMap.keySet()) {
                 if (planElementId == movedFileId) {

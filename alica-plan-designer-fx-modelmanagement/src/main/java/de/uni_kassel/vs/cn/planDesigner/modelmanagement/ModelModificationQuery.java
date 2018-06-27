@@ -13,7 +13,7 @@ public class ModelModificationQuery {
 
     public ModelModificationQuery(ModelOperationType operationType, String absolutePath) {
         this.operationType = operationType;
-        int lastSeparatorIdx = absolutePath.lastIndexOf(File.pathSeparatorChar);
+        int lastSeparatorIdx = absolutePath.lastIndexOf(File.separator);
         if (lastSeparatorIdx == -1)
             lastSeparatorIdx = 0;
         this.absoluteDirectory = absolutePath.substring(0, lastSeparatorIdx);
