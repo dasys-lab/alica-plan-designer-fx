@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -35,14 +36,11 @@ public final class RepositoryViewModel {
 
     private RepositoryTabPane repositoryTabPane;
 
-    private I18NRepo i18NRepo;
-
     public RepositoryViewModel() {
         plans = FXCollections.observableArrayList(new ArrayList<>());
         planTypes = FXCollections.observableArrayList(new ArrayList<>());
         behaviours = FXCollections.observableArrayList(new ArrayList<>());
         tasks = FXCollections.observableArrayList(new ArrayList<>());
-        i18NRepo = I18NRepo.getInstance();
     }
 
     public void initGuiContent() {
@@ -138,8 +136,8 @@ public final class RepositoryViewModel {
 //    }
 
     public void removePlanElement(ViewModelElement elementToDelete) {
-        if (elementToDelete.getType().equals(i18NRepo.getString("alicatype.plan")) ||
-                elementToDelete.getType().equals(i18NRepo.getString("alicatype.masterplan")))
+        if (elementToDelete.getType().equals(Types.PLAN) ||
+                elementToDelete.getType().equals(Types.MASTERPLAN))
         {
             for (ViewModelElement element : plans) {
                 if(element.getId() == elementToDelete.getId()) {
@@ -148,7 +146,7 @@ public final class RepositoryViewModel {
                 }
             }
         }
-        else if (elementToDelete.getType().equals(i18NRepo.getString("alicatype.behaviour")))
+        else if (elementToDelete.getType().equals(Types.BEHAVIOUR))
         {
             for (ViewModelElement element : behaviours) {
                 if(element.getId() == elementToDelete.getId()) {
@@ -157,7 +155,7 @@ public final class RepositoryViewModel {
                 }
             }
         }
-        else if (elementToDelete.getType().equals(i18NRepo.getString("alicatype.plantype")))
+        else if (elementToDelete.getType().equals(Types.PLANTYPE))
         {
             for (ViewModelElement element : planTypes) {
                 if(element.getId() == elementToDelete.getId()) {
@@ -166,7 +164,7 @@ public final class RepositoryViewModel {
                 }
             }
         }
-        else if (elementToDelete.getType().equals(i18NRepo.getString("alicatype.task")))
+        else if (elementToDelete.getType().equals(Types.TASK))
         {
             for (ViewModelElement element : tasks) {
                 if(element.getId() == elementToDelete.getId()) {

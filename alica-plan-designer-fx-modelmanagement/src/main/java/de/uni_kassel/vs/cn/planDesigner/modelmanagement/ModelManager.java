@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
-import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
-import de.uni_kassel.vs.cn.planDesigner.command.CreatePlan;
-import de.uni_kassel.vs.cn.planDesigner.command.ParseAbstractPlan;
+import de.uni_kassel.vs.cn.planDesigner.command.*;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelOperationType;
@@ -264,6 +261,7 @@ public class ModelManager {
     public <T> T parseFile(File modelFile, Class<T> type) {
         T planElement;
         try {
+            System.out.println(modelFile.toString());
             planElement = objectMapper.readValue(modelFile, type);
         } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException e) {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
@@ -454,6 +452,9 @@ public class ModelManager {
             case PARSE_ELEMENT:
                 cmd = new ParseAbstractPlan(this, mmq);
                 break;
+            case DELETE_ELEMENT:
+                cmd = new DeletePlan(this, mmq);
+                break;
             default:
                 System.err.println("Unkown model modification query gets ignored!");
                 return;
@@ -472,6 +473,18 @@ public class ModelManager {
         serializeToDisk(plan);
         fireCreationEvent(plan);
     }
+
+    /**
+     * This method should only be called through the command stack!
+     *
+     * @param plan
+     */
+    public void removePlan(Plan plan) {
+        planMap.remove(plan.getId(), plan);
+        planElementMap.remove(plan.getId(), plan);
+        fireDeletionEvent(plan);
+    }
+
 
     public String makeRelativePlansDirectory(String absoluteDirectory, String fileName) {
         String relativeDirectory = absoluteDirectory.replace(plansPath, "");
@@ -527,5 +540,17 @@ public class ModelManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getPlansPath() {
+        return plansPath;
+    }
+
+    public String getTasksPath() {
+        return tasksPath;
+    }
+
+    public String getRolesPath() {
+        return rolesPath;
     }
 }
