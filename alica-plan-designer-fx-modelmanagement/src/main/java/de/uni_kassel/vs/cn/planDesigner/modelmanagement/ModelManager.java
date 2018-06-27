@@ -240,6 +240,7 @@ public class ModelManager {
                         fireCreationEvent(this.taskRepository);
                     }
                     break;
+
                 case ".rset":
                 case ".cdefset":
                 case ".graph":
@@ -261,12 +262,20 @@ public class ModelManager {
     public <T> T parseFile(File modelFile, Class<T> type) {
         T planElement;
         try {
+            while (!modelFile.canRead())
+            {
+                System.out.println("ModelManager: wait to read file: " + modelFile.toString());
+                Thread.sleep(1000);
+            }
             planElement = objectMapper.readValue(modelFile, type);
         } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException e) {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
             System.err.println(e.getMessage());
             return null;
         } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InterruptedException e) {
             e.printStackTrace();
             return null;
         }

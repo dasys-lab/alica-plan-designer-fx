@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.command;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
@@ -29,12 +30,15 @@ public class ParseAbstractPlan extends AbstractCommand {
         switch (modelModificationQuery.getModelElementType()) {
             case Types.PLAN:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
-                modelManager.addPlanElement(newElement, modelModificationQuery.getModelElementType(), false);
+                break;
+            case Types.PLANTYPE:
+                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
                 break;
             default:
                 System.err.println("ParseAbstractPlan: Parsing model type " + modelModificationQuery.getModelElementType() + " not implemented, yet!");
                 return;
         }
+        modelManager.addPlanElement(newElement, modelModificationQuery.getModelElementType(), false);
     }
 
     @Override
