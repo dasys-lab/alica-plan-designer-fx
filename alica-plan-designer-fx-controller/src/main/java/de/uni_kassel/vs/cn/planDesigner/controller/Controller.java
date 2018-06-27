@@ -185,11 +185,14 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
      */
     @Override
     public ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement) {
-        ArrayList<ViewModelElement> usage = new ArrayList<>();
-        for (PlanElement planElement : this.modelManager.getUsages(viewModelElement.getId())) {
-            usage.add(new ViewModelElement(planElement.getId(), planElement.getName(), FileSystemUtil.getTypeString(planElement)));
+        ArrayList<ViewModelElement> usageViewModelElements = new ArrayList<>();
+        ArrayList<PlanElement> usagePlanElements = this.modelManager.getUsages(viewModelElement.getId());
+        if (usagePlanElements != null) {
+            for (PlanElement planElement : usagePlanElements) {
+                usageViewModelElements.add(new ViewModelElement(planElement.getId(), planElement.getName(), FileSystemUtil.getTypeString(planElement)));
+            }
         }
-        return usage;
+        return usageViewModelElements;
     }
 
     /**

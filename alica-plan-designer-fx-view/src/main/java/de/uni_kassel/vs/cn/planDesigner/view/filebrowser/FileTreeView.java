@@ -42,23 +42,10 @@ public final class FileTreeView extends TreeView<FileWrapper> {
     private FileTreeItem plansFileTreeItem;
     private FileTreeItem rolesFileTreeItem;
     private FileTreeItem tasksFileTreeItem;
-    private I18NRepo i18NRepo;
-    private final String planString;
-    private final String planTypeString;
-    private final String masterPlanString;
-    private final String behaviourString;
-    private final String taskRepositoryString;
 
     public FileTreeView() {
         super(new VirtualDirectoryTreeItem());
         virtualDirectoryTreeItem = (VirtualDirectoryTreeItem) getRoot();
-
-        i18NRepo = I18NRepo.getInstance();
-        behaviourString = i18NRepo.getString("alicatype.behaviour");
-        planString = i18NRepo.getString("alicatype.plan");
-        planTypeString = i18NRepo.getString("alicatype.plantype");
-        masterPlanString = i18NRepo.getString("alicatype.masterplan");
-        taskRepositoryString = i18NRepo.getString("alicatype.taskrepository");
 
         // Setup Drag support
         addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {

@@ -390,6 +390,7 @@ public class ModelManager {
 
         PlanElement planElement = planElementMap.get(modelElementId);
         if (planElement == null) {
+            System.err.println("ModelManager: Usages for unkown plan element (ID: " + modelElementId + ") requested!");
             return null;
         }
 

@@ -40,5 +40,4 @@ public class ShowUsagesMenuItem extends MenuItem {
     }
 
 
-
 }
