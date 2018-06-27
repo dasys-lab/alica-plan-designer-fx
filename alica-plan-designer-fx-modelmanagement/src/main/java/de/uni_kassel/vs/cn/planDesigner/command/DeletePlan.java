@@ -26,12 +26,12 @@ public class DeletePlan extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.removePlan(plan);
+        modelManager.removePlanElement(plan, Types.PLAN, true);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.addPlan(plan);
+        modelManager.addPlanElement(plan, Types.PLAN, true);;
     }
 
     private String extractName(ModelManager modelManager, ModelModificationQuery mmq) {
