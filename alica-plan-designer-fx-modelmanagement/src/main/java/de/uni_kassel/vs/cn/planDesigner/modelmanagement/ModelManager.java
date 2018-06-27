@@ -337,7 +337,7 @@ public class ModelManager {
         fireDeletionEvent(planElement);
     }
 
-    private PlanElement deletePlanElement(Path path) {
+     private PlanElement deletePlanElement(Path path) {
         PlanElement deletedElement = null;
         String pathString = path.toString();
         String ending = pathString.substring(pathString.lastIndexOf('.'), pathString.length());
@@ -553,5 +553,17 @@ public class ModelManager {
     private void removeFromDisk(AbstractPlan abstractPlan, String ending) {
         File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + "." + ending).toFile();
         outfile.delete();
+    }
+
+    public String getPlansPath() {
+        return plansPath;
+    }
+
+    public String getTasksPath() {
+        return tasksPath;
+    }
+
+    public String getRolesPath() {
+        return rolesPath;
     }
 }
