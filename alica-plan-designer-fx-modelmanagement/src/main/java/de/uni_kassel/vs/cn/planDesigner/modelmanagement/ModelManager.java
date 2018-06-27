@@ -528,30 +528,19 @@ public class ModelManager {
     }
 
     public void moveFile(long movedFileId, Path originalPath, Path newPath) {
-        try {
-            if (originalPath.endsWith("pml")) {
-                //TODO implement once pmlex is supported
-//                    Files.move(new File(originalPath + "ex").toPath(),
-//                            new File(newPath + "ex").toPath());
+        PlanElement elementToMove = null;
+        for (long elementId : planElementMap.keySet()) {
+            if(elementId == movedFileId) {
+                elementToMove = planElementMap.get(elementId);
+                break;
             }
-            //TODO commapd pattern
-            Files.move(originalPath, newPath);
-            for (long planElementId : planElementMap.keySet()) {
-                if (planElementId == movedFileId) {
-                    PlanElement planElement = planElementMap.get(planElementId);
-                    if (planElement instanceof Plan) {
-                        Plan plan = planMap.get(planElementId);
-                        String relativeDirectory = makeRelativePlansDirectory(newPath.toString(), plan.getName() + "." + FileSystemUtil.PLAN_ENDING);
-                        plan.setRelativeDirectory(relativeDirectory);
-                        ((Plan) planElement).setRelativeDirectory(relativeDirectory);
-                        File outfile = new File(newPath.toString());
-                        objectMapper.writeValue(outfile, plan);
-                    }
-                }
-            }
-        } catch (IOException e1) {
-            throw new RuntimeException(e1);
         }
+        if(elementToMove == null) {
+            System.out.println("ModelManager: PlanElement " + movedFileId + " to move is not found!");
+            return;
+        }
+        MoveFile moveFileCommand = new MoveFile(this, elementToMove, originalPath, newPath);
+        commandStack.storeAndExecute(moveFileCommand);
     }
 
     /**
@@ -578,15 +567,4 @@ public class ModelManager {
         outfile.delete();
     }
 
-    public String getPlansPath() {
-        return plansPath;
-    }
-
-    public String getTasksPath() {
-        return tasksPath;
-    }
-
-    public String getRolesPath() {
-        return rolesPath;
-    }
 }
