@@ -4,14 +4,14 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
 
 import java.util.ArrayList;
 
-public class ParsedModelReference {
+public class ParsedModelReferences {
     // SINGLETON
-    private static volatile ParsedModelReference instance;
-    public static ParsedModelReference getInstance() {
+    private static volatile ParsedModelReferences instance;
+    public static ParsedModelReferences getInstance() {
         if (instance == null) {
-            synchronized (ParsedModelReference.class) {
+            synchronized (ParsedModelReferences.class) {
                 if (instance == null) {
-                    instance = new ParsedModelReference();
+                    instance = new ParsedModelReferences();
                 }
             }
         }
@@ -29,4 +29,6 @@ public class ParsedModelReference {
     public void addIncompleteTask(Task incompleteTask) {
         incompleteTasks.add(incompleteTask);
     }
+
+
 }

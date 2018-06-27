@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Comparator;
 
 public class FileTreeItem extends TreeItem<FileWrapper> {
@@ -16,16 +17,34 @@ public class FileTreeItem extends TreeItem<FileWrapper> {
     public FileTreeItem(FileWrapper value, Node graphic, TreeViewModelElement treeViewModelElement) {
         super(value, graphic);
         this.treeViewModelElement = treeViewModelElement;
-        if (value.unwrap().isDirectory()) {
-            for (File content : value.unwrap().listFiles()) {
-                if (!content.isDirectory()) {
-                    continue;
+        updateDirectories();
+    }
+
+    public void updateDirectories() {
+        if (!getValue().unwrap().isDirectory()) {
+            return;
+        }
+
+        for (File content : getValue().unwrap().listFiles()) {
+            if (!content.isDirectory()) {
+                continue;
+            }
+            // Check if child already exists
+            boolean childExists = false;
+            for (TreeItem<FileWrapper> child : getChildren()) {
+                if (child.getValue().unwrap() == content) {
+                    // child already exists, so just trigger update directories
+                    ((FileTreeItem) child).updateDirectories();
+                    childExists = true;
                 }
+            }
+
+            if (!childExists) {
                 getChildren().add(new FileTreeItem(new FileWrapper(content), new ImageView(new Image((getClass().getClassLoader()
                         .getResourceAsStream("images/folder24x24.png")))), null));
             }
-            getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
         }
+        getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
     }
 
     public TreeViewModelElement getTreeViewModelElement() {

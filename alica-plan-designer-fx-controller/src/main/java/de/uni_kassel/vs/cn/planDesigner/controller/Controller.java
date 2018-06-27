@@ -163,7 +163,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     private void addTreeViewElement(AbstractPlan planElement, String type) {
         FileTreeView fileTreeView = mainWindowController.getFileTreeView();
         if (fileTreeView != null) {
-            mainWindowController.getFileTreeView().addTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
+            fileTreeView.addTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
                     planElement.getName(), type, planElement.getRelativeDirectory()));
         }
     }
@@ -171,7 +171,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     private void removeTreeViewElement(AbstractPlan planElement, String type) {
         FileTreeView fileTreeView = mainWindowController.getFileTreeView();
         if (fileTreeView != null) {
-            mainWindowController.getFileTreeView().removeTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
+            fileTreeView.removeTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
                     planElement.getName(), type, planElement.getRelativeDirectory()));
         }
     }
@@ -243,6 +243,13 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
             mmq = new ModelModificationQuery(ModelOperationType.PARSE_ELEMENT, path.toString());
         } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
             mmq = new ModelModificationQuery(ModelOperationType.DELETE_ELEMENT, path.toString());
+        } else if (kind.equals((StandardWatchEventKinds.ENTRY_CREATE))) {
+            if (path.toFile().isDirectory()) {
+                mainWindowController.getFileTreeView().updateDirectories(path);
+            } else {
+                System.out.println("Controller: ENTRY_CREATE filesystem event is ignored!");
+            }
+            return;
         } else {
             System.err.println("Controller: Unknown filesystem event type received that gets ignored!");
             return;

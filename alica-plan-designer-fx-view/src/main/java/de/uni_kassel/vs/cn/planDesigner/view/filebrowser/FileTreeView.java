@@ -23,6 +23,7 @@ import javax.swing.event.TreeSelectionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -195,7 +196,16 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         FileTreeItem topLevelFolder = findTopLevelFolder(treeViewModelElement);
         FileTreeItem deletedItem = removeFromFolder(treeViewModelElement, topLevelFolder);
         return deletedItem;
+    }
 
+    public void updateDirectories(Path path) {
+        if (path.toString().contains(plansPath)) {
+            plansFileTreeItem.updateDirectories();
+        } else if (path.toString().contains(rolesPath)) {
+            rolesFileTreeItem.updateDirectories();
+        } else if (path.toString().contains(taskPath)) {
+            tasksFileTreeItem.updateDirectories();
+        }
     }
 
     private FileTreeItem removeFromFolder(TreeViewModelElement modelElement, FileTreeItem treeItem) {
