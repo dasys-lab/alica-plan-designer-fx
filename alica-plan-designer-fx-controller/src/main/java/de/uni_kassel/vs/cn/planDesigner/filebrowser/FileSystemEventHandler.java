@@ -115,8 +115,6 @@ public class FileSystemEventHandler implements Runnable  {
                         try {
                             if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
                                 registerAll(child);
-                                // don't send event for directories
-                                continue;
                             }
                         } catch (IOException x) {
                             throw new RuntimeException(x);

@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Comparator;
 
@@ -32,10 +33,15 @@ public class FileTreeItem extends TreeItem<FileWrapper> {
             // Check if child already exists
             boolean childExists = false;
             for (TreeItem<FileWrapper> child : getChildren()) {
-                if (child.getValue().unwrap() == content) {
-                    // child already exists, so just trigger update directories
-                    ((FileTreeItem) child).updateDirectories();
-                    childExists = true;
+                try {
+                    if (child.getValue().unwrap().getCanonicalPath().equals(content.getCanonicalPath()))
+                    {
+                        // child already exists, so just trigger update directories
+                        ((FileTreeItem) child).updateDirectories();
+                        childExists = true;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
 
