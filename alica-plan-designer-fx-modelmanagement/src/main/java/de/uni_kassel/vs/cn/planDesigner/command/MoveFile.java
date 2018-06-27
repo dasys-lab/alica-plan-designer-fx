@@ -37,7 +37,7 @@ public class MoveFile extends AbstractCommand {
 //                    Files.move(new File(originalPath + "ex").toPath(),
 //                            new File(newPath + "ex").toPath());
             }
-            Files.move(originalPath, newPath);
+            Files.delete(originalPath);
 
             newRelativeDirectory = modelManager.makeRelativePlansDirectory(newPath.toString(), elementToMove.getName() + "." + FileSystemUtil.PLAN_ENDING);
             elementToMove.setRelativeDirectory(newRelativeDirectory);
@@ -56,7 +56,7 @@ public class MoveFile extends AbstractCommand {
 //                    Files.move(new File(originalPath + "ex").toPath(),
 //                            new File(newPath + "ex").toPath());
             }
-            Files.move(newPath, originalPath);
+            Files.delete(newPath);
 
             elementToMove.setRelativeDirectory(originalRelativeDirectory);
 
