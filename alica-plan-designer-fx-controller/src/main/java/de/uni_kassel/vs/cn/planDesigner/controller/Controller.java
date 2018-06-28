@@ -259,6 +259,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     /**
      * Called by the FileTreeView when moving files
      */
+    @Override
     public void moveFile(long id, Path originalPath, Path newPath) {
         modelManager.moveFile(id, originalPath, newPath);
     }
@@ -285,4 +286,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     public void handleTabOpenedEvent(BehaviourTab behaviourTab) {
         System.err.println("Controller: Opening Behaviours not implemented, yet!");
     }
+
+    @Override
+    public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {System.err.println("Controller: Opening PlanTypes not implemented, yet!");}
 }
