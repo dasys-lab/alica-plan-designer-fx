@@ -1,22 +1,15 @@
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddStateInPlan;
-import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteAbstractPlan;
-import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +55,7 @@ public class SaveTest extends ApplicationTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TreeItem<FileWrapper> fileWrapperTreeItem = traverseFor(fileTreeView.getRoot().getChildren().get(0), planFile);
+        TreeItem<File> fileWrapperTreeItem = traverseFor(fileTreeView.getRoot().getChildren().get(0), planFile);
 
         Assert.assertTrue(fileWrapperTreeItem != null);
 //        Platform.runLater(() -> {
@@ -106,7 +99,7 @@ public class SaveTest extends ApplicationTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TreeItem<FileWrapper> fileWrapperTreeItem = traverseFor(fileTreeView.getRoot().getChildren().get(0), planFile);
+        TreeItem<File> fileWrapperTreeItem = traverseFor(fileTreeView.getRoot().getChildren().get(0), planFile);
 
         Assert.assertTrue(fileWrapperTreeItem != null);
 //        Platform.runLater(() -> {
@@ -123,12 +116,12 @@ public class SaveTest extends ApplicationTest {
         PlanDesignerApplication.setRunning(false);
     }
 
-    private TreeItem<FileWrapper> traverseFor(TreeItem<FileWrapper> root, File planFile) {
-        if (root.getValue().unwrap().equals(planFile)) {
+    private TreeItem<File> traverseFor(TreeItem<File> root, File planFile) {
+        if (root.getValue().equals(planFile)) {
             return root;
         } else {
-            for (TreeItem<FileWrapper> e : root.getChildren()) {
-                TreeItem<FileWrapper> fileWrapperTreeItem = traverseFor(e, planFile);
+            for (TreeItem<File> e : root.getChildren()) {
+                TreeItem<File> fileWrapperTreeItem = traverseFor(e, planFile);
                 if (fileWrapperTreeItem != null) {
                     return fileWrapperTreeItem;
                 }

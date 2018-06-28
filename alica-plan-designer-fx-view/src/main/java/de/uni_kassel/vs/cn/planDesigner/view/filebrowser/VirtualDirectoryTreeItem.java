@@ -1,14 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.nio.file.Path;
-import java.nio.file.WatchEvent;
+import java.io.File;
 
-class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
+class VirtualDirectoryTreeItem extends TreeItem<File> {
 
     VirtualDirectoryTreeItem() {
         super();
@@ -20,7 +18,7 @@ class VirtualDirectoryTreeItem extends TreeItem<FileWrapper> {
 
     public FileTreeItem addTopLevelFolder(String path) {
         if (path != null && !path.isEmpty()) {
-            FileTreeItem treeItem = new FileTreeItem(FileWrapper.wrap(path),
+            FileTreeItem treeItem = new FileTreeItem(new File(path),
                     new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png"))), null);
             this.getChildren().add(treeItem);
             return treeItem;

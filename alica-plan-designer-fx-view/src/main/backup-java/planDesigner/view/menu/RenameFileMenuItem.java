@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
-import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;

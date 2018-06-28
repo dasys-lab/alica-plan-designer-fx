@@ -191,7 +191,7 @@ public class EditMenu extends Menu {
             DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(mainWindowController.getFileTreeView()
                     .getSelectionModel()
                     .getSelectedItem()
-                    .getValue().unwrap());
+                    .getValue());
             deleteFileMenuItem.deleteFile();
             return;
 

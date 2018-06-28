@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
@@ -8,33 +7,32 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Comparator;
 
-public class FileTreeItem extends TreeItem<FileWrapper> {
+public class FileTreeItem extends TreeItem<File> {
 
     private TreeViewModelElement treeViewModelElement;
 
-    public FileTreeItem(FileWrapper value, Node graphic, TreeViewModelElement treeViewModelElement) {
+    public FileTreeItem(File value, Node graphic, TreeViewModelElement treeViewModelElement) {
         super(value, graphic);
         this.treeViewModelElement = treeViewModelElement;
         updateDirectories();
     }
 
     public void updateDirectories() {
-        if (!getValue().unwrap().isDirectory()) {
+        if (!getValue().isDirectory()) {
             return;
         }
 
-        for (File content : getValue().unwrap().listFiles()) {
+        for (File content : getValue().listFiles()) {
             if (!content.isDirectory()) {
                 continue;
             }
             // Check if child already exists
             boolean childExists = false;
-            for (TreeItem<FileWrapper> child : getChildren()) {
+            for (TreeItem<File> child : getChildren()) {
                 try {
-                    if (child.getValue().unwrap().getCanonicalPath().equals(content.getCanonicalPath()))
+                    if (child.getValue().getCanonicalPath().equals(content.getCanonicalPath()))
                     {
                         // child already exists, so just trigger update directories
                         ((FileTreeItem) child).updateDirectories();
@@ -46,77 +44,16 @@ public class FileTreeItem extends TreeItem<FileWrapper> {
             }
 
             if (!childExists) {
-                getChildren().add(new FileTreeItem(new FileWrapper(content), new ImageView(new Image((getClass().getClassLoader()
+                getChildren().add(new FileTreeItem(content, new ImageView(new Image((getClass().getClassLoader()
                         .getResourceAsStream("images/folder24x24.png")))), null));
             }
         }
-        getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+        getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
     }
 
     public TreeViewModelElement getTreeViewModelElement() {
         return treeViewModelElement;
     }
-
-    //    public void updateDirectory(WatchEvent.Kind kind, Path child) {
-//        FileWrapper value = getValue();
-//        File newFile = child.toFile();
-//        List<TreeItem<FileWrapper>> collect = getChildren()
-//                .stream()
-//                .filter(e -> newFile.getAbsolutePath().contains(e.getValue().unwrap().getAbsolutePath()))
-//                .collect(Collectors.toList());
-//        if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE) && newFile.isDirectory() && collect.size() == 1) {
-//            ((FileTreeItem) collect.get(0)).updateDirectory(kind, child);
-//            return;
-//        }
-//
-//        if (collect.size() == 1 && collect.get(0).getChildren().stream().noneMatch(e -> newFile.getAbsolutePath().contains(e.getValue().unwrap()
-//                .getAbsolutePath()))) {
-//            if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY) || kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
-//                if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
-//                    if (collect.get(0).getValue().unwrap().equals(newFile)) {
-//                        getChildren().remove(collect.get(0));
-//                    } else {
-//                        ((FileTreeItem) collect.get(0)).updateDirectory(kind, child);
-//                    }
-//                }
-//                if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
-//                    for (File content : value.unwrap().listFiles()) {
-//
-//                        boolean isAlreadyKnownToTreeItem = getChildren().stream().anyMatch(e -> e.getValue().unwrap().equals(content));
-//                        if (isAlreadyKnownToTreeItem == false) {
-//                            Image listItemImage = getImageForFileType(content);
-//                            if (listItemImage == null) {
-//                                continue;
-//                            }
-//                            getChildren().add(new FileTreeItem(new FileWrapper(content), new ImageView(listItemImage)));
-//                            getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
-//                        }
-//                    }
-//                }
-//            } else if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
-//                boolean isAlreadyKnownToTreeItem = getChildren().stream().anyMatch(e -> e.getValue().unwrap().equals(newFile));
-//                if (isAlreadyKnownToTreeItem == false && newFile.getParentFile().equals(value.unwrap())) {
-//                    Image listItemImage = getImageForFileType(newFile);
-//                    if (listItemImage != null) {
-//                        getChildren().add(new FileTreeItem(new FileWrapper(newFile), new ImageView(listItemImage)));
-//                        getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
-//                    }
-//                } else {
-//                    ((FileTreeItem) collect.get(0)).updateDirectory(kind, child);
-//                }
-//            }
-//        } else if (newFile.isDirectory() && newFile.getParentFile().equals(value.unwrap())) {
-//            getChildren().add(new FileTreeItem(new FileWrapper(newFile), new ImageView(getImageForFileType(newFile))));
-//            getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
-//        } else if (newFile.getParentFile().equals(value.unwrap()) && newFile.toString().endsWith("pmlex") == false
-//                && getChildren().stream().noneMatch(e -> e.getValue().unwrap().equals(newFile))) {
-//            getChildren().add(new FileTreeItem(new FileWrapper(newFile), new ImageView(getImageForFileType(newFile))));
-//            getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
-//        } else {
-//            collect.forEach(e -> ((FileTreeItem) e).updateDirectory(kind, child));
-//        }
-//        setExpanded(true);
-//    }
 
 //    private Image getImageForFileType(File content) {
 //        Image listItemImage;

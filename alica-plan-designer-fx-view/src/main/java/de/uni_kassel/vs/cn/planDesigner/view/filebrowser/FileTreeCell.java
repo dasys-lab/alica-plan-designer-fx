@@ -1,10 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -17,9 +15,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
 
-public class FileTreeCell extends TreeCell<FileWrapper> {
+public class FileTreeCell extends TreeCell<File> {
 
     private static final Logger LOG = LogManager.getLogger(FileTreeCell.class);
 
@@ -39,7 +36,7 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
         if (textField == null) {
             createTextField();
         }
-        setText(getItem().unwrap().getName());
+        setText(getItem().getName());
         setGraphic(textField);
         textField.selectAll();
     }
@@ -47,15 +44,15 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-        setText(getItem().unwrap().getName());
+        setText(getItem().getName());
         setGraphic(getTreeItem().getGraphic());
     }
 
     @Override
-    public void commitEdit(FileWrapper newValue) {
-        if (! isEditing()) return;
+    public void commitEdit(File newValue) {
+        if (!isEditing()) return;
 
-        int fileEndingPosition = newValue.unwrap().getName().lastIndexOf(".");
+        int fileEndingPosition = newValue.getName().lastIndexOf(".");
         if (fileEndingPosition < 0) {
             getTreeView()
                     .fireEvent(new TreeView.EditEvent<>(getTreeView(),
@@ -64,7 +61,7 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
                     I18NRepo.getInstance().getString("label.error.rename.illegalEnding"), null);
             return;
         }
-        String name = newValue.unwrap().getName().substring(0, fileEndingPosition);
+        String name = newValue.getName().substring(0, fileEndingPosition);
 //        if (AlicaModelUtils.containsIllegalCharacter(name)) {
 //            final TreeItem<FileWrapper> treeItem = getTreeItem();
 //            final TreeView<FileWrapper> tree = getTreeView();
@@ -83,7 +80,7 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
 //            return;
 //        }
         boolean isPlanElement = false;
-        File unwrappedFile = getTreeItem().getValue().unwrap();
+        File unwrappedFile = getTreeItem().getValue();
 //        AbstractPlan objectToChange = null;
         if (unwrappedFile.getName().endsWith(".pml") ||
                 unwrappedFile.getName().endsWith(".pty") || unwrappedFile.getName().endsWith("beh")) {
@@ -131,7 +128,7 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
             isPlanElement = true;
         }
 
-        unwrappedFile.renameTo(newValue.unwrap());
+        unwrappedFile.renameTo(newValue);
 
 //        if (isPlanElement && objectToChange != null) {
 //            try {
@@ -141,12 +138,12 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
 //            }
 //        }
 
-        final TreeItem<FileWrapper> treeItem = getTreeItem();
-        final TreeView<FileWrapper> tree = getTreeView();
+        final TreeItem<File> treeItem = getTreeItem();
+        final TreeView<File> tree = getTreeView();
         if (tree != null) {
             // Inform the TreeView of the edit being ready to be committed.
             tree.fireEvent(new TreeView.EditEvent<>(tree,
-                    TreeView.<FileWrapper>editCommitEvent(),
+                    TreeView.<File>editCommitEvent(),
                     treeItem,
                     getItem(),
                     newValue));
@@ -154,8 +151,8 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
 
     }
 
-    private boolean checkForCorrectFileEnding(FileWrapper newValue, String ending) {
-        if (newValue.unwrap().getName().endsWith(ending) == false) {
+    private boolean checkForCorrectFileEnding(File newValue, String ending) {
+        if (newValue.getName().endsWith(ending) == false) {
             getTreeView()
                     .fireEvent(new TreeView.EditEvent<>(getTreeView(),
                             TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));
@@ -167,7 +164,7 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
     }
 
     @Override
-    public void updateItem(FileWrapper item, boolean empty) {
+    public void updateItem(File item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty) {
@@ -179,10 +176,10 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
                     @Override
                     public void handle(MouseEvent event) {
                         if (event.getClickCount() == 2) {
-                            if (getItem().unwrap().isDirectory()) {
+                            if (getItem().isDirectory()) {
                                 getTreeItem().setExpanded(!getTreeItem().isExpanded());
                             } else {
-                                controller.openFile(((FileTreeItem)getTreeItem()).getTreeViewModelElement());
+                                controller.openFile(((FileTreeItem) getTreeItem()).getTreeViewModelElement());
                             }
                         }
                     }
@@ -207,10 +204,10 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
             @Override
             public void handle(KeyEvent t) {
                 if (t.getCode() == KeyCode.ENTER) {
-                    String absolutePath = getTreeItem().getValue().unwrap().getAbsolutePath();
-                    FileWrapper fileWrapper = null;
+                    String absolutePath = getTreeItem().getValue().getAbsolutePath();
+                    File fileWrapper = null;
                     if (absolutePath != null) {
-                        fileWrapper = new FileWrapper(new File(absolutePath.replace(getItem().unwrap().getName(), textField.getText())));
+                        fileWrapper = new File(absolutePath.replace(getItem().getName(), textField.getText()));
                     }
                     commitEdit(fileWrapper);
                 } else if (t.getCode() == KeyCode.ESCAPE) {
@@ -221,6 +218,6 @@ public class FileTreeCell extends TreeCell<FileWrapper> {
     }
 
     private String getString() {
-        return getItem() == null ? "" : getItem().toString();
+        return getItem() == null ? "" : getItem().getName();
     }
 }

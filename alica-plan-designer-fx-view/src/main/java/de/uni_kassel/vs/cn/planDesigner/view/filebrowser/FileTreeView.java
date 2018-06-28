@@ -1,8 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.FileTreeViewContextMenu;
 import javafx.beans.value.ChangeListener;
@@ -19,16 +17,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 
-import javax.swing.event.TreeSelectionEvent;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Comparator;
 
-public final class FileTreeView extends TreeView<FileWrapper> {
+public final class FileTreeView extends TreeView<File> {
 
     private MainWindowController controller;
 
@@ -59,7 +53,7 @@ public final class FileTreeView extends TreeView<FileWrapper> {
             }
             System.out.println("Source: " + e.getSource() + " Target: " + e.getTarget());
             draggedItem = (FileTreeItem) ((FileTreeCell) node).getTreeItem();
-            startFolder = draggedItem.getValue().unwrap().toString();
+            startFolder = draggedItem.getValue().getAbsolutePath();
             startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
             switch (draggedItem.getTreeViewModelElement().getType()) {
                 case Types.BEHAVIOUR:
@@ -116,10 +110,10 @@ public final class FileTreeView extends TreeView<FileWrapper> {
                 treeCell = (FileTreeCell) e.getPickResult().getIntersectedNode().getParent();
             }
 
-            File parent = treeCell.getTreeItem().getValue().unwrap();
+            File parent = treeCell.getTreeItem().getValue();
 
             if (parent.isDirectory() == false) {
-                parent = treeCell.getTreeItem().getParent().getValue().unwrap();
+                parent = treeCell.getTreeItem().getParent().getValue();
             }
 
             if (startFolder.equals(parent.toString())) {
@@ -129,8 +123,8 @@ public final class FileTreeView extends TreeView<FileWrapper> {
 
             //TODO fire file moved event
             controller.getMoveFileHandler().moveFile(draggedItem.getTreeViewModelElement().getId(),
-                    draggedItem.getValue().unwrap().toPath(),
-                    new File(parent, draggedItem.getValue().unwrap().getName()).toPath());
+                    draggedItem.getValue().toPath(),
+                    new File(parent, draggedItem.getValue().getName()).toPath());
             e.consume();
         });
 
@@ -140,14 +134,14 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         this.setEditable(true);
 
         setCellFactory(param -> {
-            TreeCell<FileWrapper> fileWrapperTreeCell = new FileTreeCell(controller);
+            TreeCell<File> fileWrapperTreeCell = new FileTreeCell(controller);
             fileWrapperTreeCell.setContextMenu(new FileTreeViewContextMenu());
             fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if (newValue) {
                         ((FileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
-                                .setHintFile(fileWrapperTreeCell.getTreeItem().getValue().unwrap());
+                                .setHintFile(fileWrapperTreeCell.getTreeItem().getValue());
                         ((FileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
                                 .setTreeCell(fileWrapperTreeCell);
                     }
@@ -155,7 +149,7 @@ public final class FileTreeView extends TreeView<FileWrapper> {
             });
 
             if (param.getEditingItem() != null) {
-                fileWrapperTreeCell.setText(param.getEditingItem().getValue().unwrap().getName());
+                fileWrapperTreeCell.setText(param.getEditingItem().getValue().getName());
                 fileWrapperTreeCell.setGraphic(param.getEditingItem().getGraphic());
             }
             return fileWrapperTreeCell;
@@ -184,9 +178,9 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         FileTreeItem topLevelFolder = findTopLevelFolder(treeViewModelElement);
         FileTreeItem folder = findFolder(treeViewModelElement, topLevelFolder, 0);
         if (folder != null) {
-            folder.getChildren().add(new FileTreeItem(new FileWrapper(createFile(treeViewModelElement)), new ImageView(getImage(treeViewModelElement.getType
+            folder.getChildren().add(new FileTreeItem(createFile(treeViewModelElement), new ImageView(getImage(treeViewModelElement.getType
                     ())), treeViewModelElement));
-            folder.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+            folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
         } else {
             throw new RuntimeException("Destination folder for PlanElement " + treeViewModelElement.getName() + " does not exist!");
         }
@@ -211,10 +205,10 @@ public final class FileTreeView extends TreeView<FileWrapper> {
     private FileTreeItem removeFromFolder(TreeViewModelElement modelElement, FileTreeItem treeItem) {
         for (TreeItem item : treeItem.getChildren()) {
             FileTreeItem itemToDelete = (FileTreeItem) item;
-            if (!itemToDelete.getValue().unwrap().isDirectory()) {
+            if (!itemToDelete.getValue().isDirectory()) {
                 if (((FileTreeItem) item).getTreeViewModelElement().getId() == modelElement.getId()) {
                     treeItem.getChildren().remove(item);
-                    treeItem.getChildren().sort(Comparator.comparing(o -> o.getValue().unwrap().toURI().toString()));
+                    treeItem.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
                     return itemToDelete;
                 }
             } else {
@@ -273,7 +267,7 @@ public final class FileTreeView extends TreeView<FileWrapper> {
 
     /**
      * Recursively looks for a fitting folder by using the relative path of a {@link TreeViewModelElement}
-     * Returns the found {@link FileTreeItem} representing to folder, else null
+     * Returns the found {@link FileTreeItem} representing the folder, else null
      *
      * @param modelElement
      * @param treeItem
@@ -286,7 +280,7 @@ public final class FileTreeView extends TreeView<FileWrapper> {
         if (folders.length == 1 && folders[0].isEmpty()) {
             return treeItem;
         }
-        System.out.println(treeItem.toString());
+        System.out.println("FileTreeView::findFolder(): " + treeItem.toString());
         for (Object item : treeItem.getChildren()) {
             FileTreeItem newItem = (FileTreeItem) item;
             if (!(newItem.getValue().toString().endsWith(folders[index]))) {
