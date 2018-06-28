@@ -37,9 +37,22 @@ public class RepositoryTab extends Tab {
     }
 
     public void addElement(ViewModelElement viewModelElement) {
+        RepositoryHBox[] removeBeforeAdding = new RepositoryHBox[1];
+        removeBeforeAdding[0] = null;
+        for (RepositoryHBox item : repositoryListView.getItems()) {
+            if (item.getViewModelElement().equals(viewModelElement)) {
+                return;
+            } else if (item.getViewModelId() == viewModelElement.getId() && !item.getViewModelName().equals(viewModelElement.getName())) {
+                removeBeforeAdding[0] = item;
+                break;
+            }
+        }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                if(removeBeforeAdding[0] != null) {
+                    repositoryListView.getItems().remove(removeBeforeAdding[0]);
+                }
                 repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, showUsageHandler));
                 sort();
             }

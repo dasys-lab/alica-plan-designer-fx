@@ -41,6 +41,10 @@ public class RepositoryHBox extends DraggableHBox {
         return viewModelElement.getId();
     }
 
+    public ViewModelElement getViewModelElement() {
+        return viewModelElement;
+    }
+
     public String getViewModelName() {
         return viewModelElement.getName();
     }
