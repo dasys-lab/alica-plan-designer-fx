@@ -157,7 +157,7 @@ public class MainWindowController implements Initializable {
         getEditorTabPane().getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
-                        String type = ((AbstractEditorTab) newValue).getEditableElement().getType();
+                        String type = ((AbstractEditorTab) newValue).getTreeViewModelElement().getType();
                         if (type.equals(Types.BEHAVIOUR) ||
                                 type.equals(Types.PLAN) ||
                                 type.equals(Types.MASTERPLAN) ||

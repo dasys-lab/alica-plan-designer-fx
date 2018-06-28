@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
@@ -21,23 +22,10 @@ import java.util.List;
 
 public class TaskRepositoryTab extends AbstractEditorTab {
 
-//    private final AdapterImpl taskRepoListener;
     private ListView<TreeViewModelElement> taskListView;
 
     public TaskRepositoryTab(TreeViewModelElement taskRepository) {
         super(taskRepository);
-//        taskRepoListener = new AdapterImpl() {
-//            @Override
-//            public void notifyChanged(Notification msg) {
-//                super.notifyChanged(msg);
-//                createContentView();
-//            }
-//        };
-//        getEditable().eAdapters().add(taskRepoListener);
-//
-//        onClosedProperty().addListener((observable, oldValue, newValue) -> {
-//            getEditable().eAdapters().remove(taskRepoListener);
-//        });
         createContentView();
     }
 
@@ -89,7 +77,7 @@ public class TaskRepositoryTab extends AbstractEditorTab {
         public TaskListCell() {
             // only create icon once to save resources
             if (image == null) {
-                image = new AlicaIcon(I18NRepo.getInstance().getString("alicatype.task"));
+                image = new AlicaIcon(Types.TASK);
             }
             getChildren().add(new ImageView(image));
         }

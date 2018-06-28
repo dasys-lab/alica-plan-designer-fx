@@ -26,7 +26,7 @@ public abstract class AbstractEditorTab extends Tab {
     protected boolean dirty;
     protected SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElements;
 
-    private TreeViewModelElement editableElement;
+    private TreeViewModelElement treeViewModelElement;
     private ObservableList<Node> visualRepresentations;
 
     //TODO add to scene
@@ -38,12 +38,12 @@ public abstract class AbstractEditorTab extends Tab {
     }
 
     // TODO: Review necessary, due to MVC pattern adaption.
-    public AbstractEditorTab(TreeViewModelElement editableElement) {
+    public AbstractEditorTab(TreeViewModelElement treeViewModelElement) {
         // set Tab Caption to name of file, represented by this Tab
-        super(editableElement.getName());
+        super(treeViewModelElement.getName());
 
-        this.editableElement = editableElement;
-        initSelectedPlanElements(editableElement);
+        this.treeViewModelElement = treeViewModelElement;
+        initSelectedPlanElements(treeViewModelElement);
 
         // add Ctrl+A handlerinterfaces to scene
 //        EditorTabPane editorTabPane = MainWindowController.getInstance().getEditorTabPane();
@@ -117,7 +117,7 @@ public abstract class AbstractEditorTab extends Tab {
     // TODO: Review necessary, due to MVC pattern adaption.
     protected void initSelectedPlanElements(TreeViewModelElement editablePathPair) {
 //        selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-//        selectedPlanElements.get().add(new Pair<>(editableElement.getKey(), null));
+//        selectedPlanElements.get().add(new Pair<>(treeViewModelElement.getKey(), null));
 //        selectedPlanElements.addListener((observable, oldValue, newValue) -> {
 //            if (newValue == null) {
 //                // TODO: cannot return here because this avoid deleting selectedEffect on oldValue
@@ -208,14 +208,14 @@ public abstract class AbstractEditorTab extends Tab {
 
     public Path getFilePath() {
         I18NRepo i18NRepo = I18NRepo.getInstance();
-        if (editableElement.getType() == i18NRepo.getString("alicatype.plan")) {
-            return Paths.get(editableElement.getRelativeDirectory(), editableElement.getName() + ".pml");
-        } else if (editableElement.getType() == i18NRepo.getString("alicatype.plantype")) {
-            return Paths.get(editableElement.getRelativeDirectory(), editableElement.getName() + ".pty");
-        } else if (editableElement.getType() == i18NRepo.getString("alicatype.behaviour")) {
-            return Paths.get(editableElement.getRelativeDirectory(), editableElement.getName() + ".beh");
-        } else if (editableElement.getType() == i18NRepo.getString("alicatype.taskrepository")) {
-            return Paths.get(editableElement.getRelativeDirectory(), editableElement.getName() + ".tsk");
+        if (treeViewModelElement.getType() == i18NRepo.getString("alicatype.plan")) {
+            return Paths.get(treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pml");
+        } else if (treeViewModelElement.getType() == i18NRepo.getString("alicatype.plantype")) {
+            return Paths.get(treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pty");
+        } else if (treeViewModelElement.getType() == i18NRepo.getString("alicatype.behaviour")) {
+            return Paths.get(treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".beh");
+        } else if (treeViewModelElement.getType() == i18NRepo.getString("alicatype.taskrepository")) {
+            return Paths.get(treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".tsk");
         } else {
             return null;
         }
@@ -226,25 +226,21 @@ public abstract class AbstractEditorTab extends Tab {
 //        try {
 //            setText(getText().replace("*", ""));
 //            EMFModelUtils.saveAlicaFile(getEditable());
-//            getCommandStack().setSavedForAbstractPlan(editableElement.getKey());
+//            getCommandStack().setSavedForAbstractPlan(treeViewModelElement.getKey());
 //        } catch (IOException e) {
 //            ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.save"), e);
 //        }
-    }
-
-    public Long getEditable() {
-        return editableElement.getId();
     }
 
     public SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> getSelectedPlanElements() {
         return selectedPlanElements;
     }
 
-    private void setEditableElement(TreeViewModelElement editableElement) {
-        this.editableElement = editableElement;
+    private void setTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
+        this.treeViewModelElement = treeViewModelElement;
     }
 
-    public TreeViewModelElement getEditableElement() {
-        return editableElement;
+    public TreeViewModelElement getTreeViewModelElement() {
+        return treeViewModelElement;
     }
 }

@@ -1,79 +1,44 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.util.Pair;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
 
 public class EditorTabPane extends TabPane {
 
     public void openTab(TreeViewModelElement treeViewModelElement) {
-        Tab tab = getTabs()
-                .stream()
-                .filter(e -> e != null && ((AbstractEditorTab) e).getEditable().equals(treeViewModelElement.getId()))
-                .findFirst()
-                .orElse(createNewTab(treeViewModelElement));
-
-        if (this.getTabs().contains(tab) == false) {
-            getTabs().add(tab);
-            getSelectionModel().select(tab);
-        } else {
-            Optional<Tab> result = getTabs().stream().filter(e -> e != null && e.equals(tab)).findFirst();
-            if (result.isPresent()) {
-                getSelectionModel().select(result.get());
+        // find tab if it already opened
+        Tab openedTab = null;
+        for (Tab tab : getTabs()) {
+            if (((AbstractEditorTab) tab).getTreeViewModelElement().equals(treeViewModelElement)) {
+                openedTab = tab;
             }
         }
+
+        // create new tab if not already opened
+        if (openedTab == null) {
+            openedTab = createNewTab(treeViewModelElement);
+            getTabs().add(openedTab);
+        }
+
+        // make it the selected tab
+        getSelectionModel().select(openedTab);
         this.requestFocus();
     }
 
     private Tab createNewTab(TreeViewModelElement treeViewModelElement) {
-        String type = treeViewModelElement.getType();
-        switch (type) {
+        switch (treeViewModelElement.getType()) {
             case Types.MASTERPLAN:
             case Types.PLAN:
                 return new PlanTab(treeViewModelElement);
             case Types.TASKREPOSITORY:
                 return new TaskRepositoryTab(treeViewModelElement);
+            case Types.BEHAVIOUR:
+                System.err.println("EditorTabPane: Opening Behaviours not implemented, yet!");
+                return null;
             default:
                 return null;
         }
-
-//        switch (filePathAsString.substring(filePathAsString.lastIndexOf('.') + 1)) {
-//            case "pml":
-//                Pair<Plan, Path> planPathPair = RepositoryViewModel
-//                        .getInstance()
-//                        .getPlans()
-//                        .stream()
-//                        .filter(e -> e.getValue().equals(filePath))
-//                        .findFirst().get();
-//                return new PlanTab(planPathPair, commandStack);
-//            case "tsk":
-//                List<Pair<TaskRepository, Path>> taskRepositoryPathPair = RepositoryViewModel.getInstance().getTaskRepository();
-//                return new TaskRepositoryTab(taskRepositoryPathPair.get(0), commandStack);
-//            case "pty":
-//                Pair<PlanType, Path> plantypePathPair = RepositoryViewModel
-//                        .getInstance()
-//                        .getPlanTypes()
-//                        .stream()
-//                        .filter(e -> e.getValue().equals(filePath))
-//                        .findFirst().get();
-//                return new PlanTypeTab(plantypePathPair, commandStack);
-//            case "beh":
-//                Pair<Behaviour, Path> behaviourPathPair = RepositoryViewModel
-//                        .getInstance()
-//                        .getBehaviours()
-//                        .stream()
-//                        .filter(e -> e.getValue().equals(filePath))
-//                        .findFirst().get();
-//                return new BehaviourTab(behaviourPathPair, commandStack);
-//            default:
-//                return null;
-
     }
 }
