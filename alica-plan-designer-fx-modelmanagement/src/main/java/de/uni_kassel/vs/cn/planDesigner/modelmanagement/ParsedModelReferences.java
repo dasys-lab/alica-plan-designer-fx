@@ -18,9 +18,9 @@ public class ParsedModelReferences {
         return instance;
     }
 
-    long defaultTaskId;
+    public long defaultTaskId;
 
-    ArrayList<Task> incompleteTasks = new ArrayList<>();
+    public ArrayList<Task> incompleteTasks = new ArrayList<>();
 
     public void setDefaultTaskId(long defaultTaskId) {
         this.defaultTaskId = defaultTaskId;

@@ -36,6 +36,7 @@ public class ModelManager {
 
     private List<IModelEventHandler> eventHandlerList;
     private CommandStack commandStack;
+
     private ObjectMapper objectMapper;
 
     public ModelManager() {
@@ -344,70 +345,7 @@ public class ModelManager {
         fireDeletionEvent(planElement);
     }
 
-     private PlanElement deletePlanElement(Path path) {
-        PlanElement deletedElement = null;
-        String pathString = path.toString();
-        String ending = pathString.substring(pathString.lastIndexOf('.'), pathString.length());
-        try {
-            switch (ending) {
-                case ".pml":
-                    for (Plan plan : planMap.values()) {
-                        if (pathString.contains(plan.getName() + ".pml")) {
-                            deletedElement = plan;
-                            planMap.remove(plan.getId());
-                            break;
-                        }
-                    }
-                    break;
-                case ".beh":
-                    for (Behaviour behaviour : behaviourMap.values()) {
-                        if (pathString.contains(behaviour.getName() + ".beh")) {
-                            deletedElement = behaviour;
-                            behaviourMap.remove(behaviour.getId());
-                            break;
-                        }
-                    }
-                    break;
-                case ".pty":
-                    for (PlanType planType : planTypeMap.values()) {
-                        if (pathString.contains(planType.getName() + ".pty")) {
-                            deletedElement = planType;
-                            planTypeMap.remove(planType.getId());
-                            break;
-                        }
-                    }
-                    break;
-                case ".tsk":
-                    if (pathString.contains(this.taskRepository.getName() + ".tsk")) {
-                        deletedElement = this.taskRepository;
-                        this.taskRepository = null;
-                    }
-
-                    break;
-                case ".rset":
-                    // TODO: Implement role and stuff parsing with jackson.
-                    throw new RuntimeException("Parsing roles not implemented, yet!");
-                default:
-                    throw new RuntimeException("Received file with unknown file ending, for parsing.");
-            }
-
-            if (deletedElement == null) {
-                throw new RuntimeException("PlanElement not found! Path is: " + path);
-            }
-
-            if (planElementMap.containsKey(deletedElement.getId())) {
-                planElementMap.remove(deletedElement.getId());
-                fireDeletionEvent(deletedElement);
-            } else {
-                throw new RuntimeException("PlanElement ID not found! ID is: " + deletedElement.getId() + " Type is " + deletedElement.getClass());
-            }
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
-        return deletedElement;
-    }
-
-    public ArrayList<PlanElement> getUsages(long modelElementId) {
+         public ArrayList<PlanElement> getUsages(long modelElementId) {
         ArrayList<PlanElement> usages = new ArrayList<>();
 
         PlanElement planElement = planElementMap.get(modelElementId);
@@ -547,7 +485,18 @@ public class ModelManager {
     public void serializeToDisk(AbstractPlan abstractPlan, String ending) {
         try {
             File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + "." + ending).toFile();
-            objectMapper.writeValue(outfile, abstractPlan);
+            if (ending.equals(FileSystemUtil.PLAN_ENDING)) {
+                objectMapper.writeValue(outfile, (Plan) abstractPlan);
+            } else if (ending.equals(FileSystemUtil.PLANTYPE_ENDING)) {
+                objectMapper.writeValue(outfile, (PlanType) abstractPlan);
+            } else if (ending.equals(FileSystemUtil.BEHAVIOUR_ENDING)) {
+                objectMapper.writeValue(outfile, (Behaviour) abstractPlan);
+            } else if (ending.equals(FileSystemUtil.TASKREPOSITORY_ENDING)) {
+                objectMapper.writeValue(outfile, (TaskRepository) abstractPlan);
+            } else {
+                throw new RuntimeException("Modelmanager: Trying to serialize a file with unknow ending: " + ending);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -561,5 +510,9 @@ public class ModelManager {
     public void removeFromDisk(AbstractPlan abstractPlan, String ending) {
         File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + "." + ending).toFile();
         outfile.delete();
+    }
+
+    public TaskRepository getTaskRepository() {
+        return taskRepository;
     }
 }
