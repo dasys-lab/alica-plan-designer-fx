@@ -1,12 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
-import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
-import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
-import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
-import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.*;
+
+import java.util.ArrayList;
 
 /**
  * Parses a given file and adds the resulting object to the corresponding maps of the model manager.
@@ -30,6 +27,7 @@ public class ParseAbstractPlan extends AbstractCommand {
         switch (modelModificationQuery.getModelElementType()) {
             case Types.PLAN:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
+                replaceIncompleteTasks();
                 break;
             case Types.PLANTYPE:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
@@ -39,6 +37,20 @@ public class ParseAbstractPlan extends AbstractCommand {
                 return;
         }
         modelManager.addPlanElement(newElement, modelModificationQuery.getModelElementType(), false);
+    }
+
+    private void replaceIncompleteTasks() {
+        ArrayList<Task> incompleteTasks = ParsedModelReferences.getInstance().incompleteTasks;
+        for (EntryPoint ep : ((Plan)newElement).getEntryPoints()) {
+            if (incompleteTasks.contains(ep.getTask())) {
+                for (Task task : modelManager.getTaskRepository().getTasks()) {
+                    if (task.getId() == ep.getTask().getId()) {
+                        ep.setTask(task);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     @Override
