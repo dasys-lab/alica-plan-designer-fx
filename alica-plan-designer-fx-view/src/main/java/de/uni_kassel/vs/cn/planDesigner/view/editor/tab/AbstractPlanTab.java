@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -21,7 +22,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractEditorTab extends Tab {
+public abstract class AbstractPlanTab extends Tab implements IEditorTab{
 
     protected boolean dirty;
     protected SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElements;
@@ -32,13 +33,13 @@ public abstract class AbstractEditorTab extends Tab {
     //TODO add to scene
     private final KeyCombination ctrlA = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
 
-    public AbstractEditorTab(Long planElementId) {
+    public AbstractPlanTab(Long planElementId) {
         selectedPlanElements = new SimpleObjectProperty<>(new ArrayList<>());
         selectedPlanElements.get().add(new Pair<>(planElementId, null));
     }
 
     // TODO: Review necessary, due to MVC pattern adaption.
-    public AbstractEditorTab(TreeViewModelElement treeViewModelElement) {
+    public AbstractPlanTab(TreeViewModelElement treeViewModelElement) {
         // set Tab Caption to name of file, represented by this Tab
         super(treeViewModelElement.getName());
 
@@ -240,7 +241,8 @@ public abstract class AbstractEditorTab extends Tab {
         this.treeViewModelElement = treeViewModelElement;
     }
 
-    public TreeViewModelElement getTreeViewModelElement() {
+    @Override
+    public ViewModelElement getViewModelElement() {
         return treeViewModelElement;
     }
 }

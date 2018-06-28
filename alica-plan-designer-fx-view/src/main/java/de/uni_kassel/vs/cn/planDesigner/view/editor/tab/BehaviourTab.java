@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 
 import java.io.IOException;
 
-public class BehaviourTab extends AbstractEditorTab {
+public class BehaviourTab extends AbstractPlanTab {
 
 //    private BehaviourWindowController controller;
 

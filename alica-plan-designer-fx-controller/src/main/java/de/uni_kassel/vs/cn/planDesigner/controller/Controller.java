@@ -18,6 +18,7 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
@@ -264,8 +265,15 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
     @Override
     public void handleTabOpenedEvent(TaskRepositoryTab taskRepositoryTab) {
+        taskViewModel.clearTasks();
+        TaskRepository taskRepo = modelManager.getTaskRepository();
+        if (taskRepo != null) {
+            for (Task task : taskRepo.getTasks()) {
+                taskViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), Types.TASK));
+            }
+        }
+
         taskViewModel.setTaskRepositoryTab(taskRepositoryTab);
-        taskViewModel.initGuiContent();
     }
 
     @Override

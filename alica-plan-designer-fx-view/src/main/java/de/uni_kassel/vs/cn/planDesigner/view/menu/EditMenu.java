@@ -164,7 +164,7 @@ public class EditMenu extends Menu {
 //                    .getSelectionModel().getSelectedItem().getObject();
 //            editorTabPane.getTabs()
 //                    .stream()
-//                    .filter(e -> ((AbstractEditorTab<PlanElement>) e).getEditable().equals(selectedPlanElement))
+//                    .filter(e -> ((AbstractPlanTab<PlanElement>) e).getEditable().equals(selectedPlanElement))
 //                    .forEach(e -> editorTabPane.getTabs().remove(e));
 //            if (selectedPlanElement instanceof AbstractPlan) {
 //                checkAbstractPlanUsage(commandStack, (AbstractPlan) selectedPlanElement);

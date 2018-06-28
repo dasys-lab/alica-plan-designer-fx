@@ -6,6 +6,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElemen
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -20,10 +21,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class TaskRepositoryTab extends RepositoryTab {
+public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
+
+    private TreeViewModelElement taskRepository;
 
     public TaskRepositoryTab(TreeViewModelElement taskRepository) {
         super(taskRepository.getName(), null);
+        this.taskRepository = taskRepository;
         initGui();
     }
 
@@ -53,5 +57,10 @@ public class TaskRepositoryTab extends RepositoryTab {
 
         // override base class gui content
         setContent(contentContainer);
+    }
+
+    @Override
+    public ViewModelElement getViewModelElement() {
+        return taskRepository;
     }
 }

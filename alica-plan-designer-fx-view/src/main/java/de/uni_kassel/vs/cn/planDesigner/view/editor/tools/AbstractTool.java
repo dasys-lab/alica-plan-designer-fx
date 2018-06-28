@@ -141,7 +141,7 @@ public abstract class AbstractTool {
         // TODO: fire event to signal successful termination of event
         //draw();
         planEditorTabPane.getScene().setCursor(previousCursor);
-//        AbstractEditorTab selectedItem = (AbstractEditorTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel()
+//        AbstractPlanTab selectedItem = (AbstractPlanTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel()
 //                .getSelectedItem();
 //        if (selectedItem != null) {
 //            List<Pair<Long, AbstractPlanElementContainer>> noSelection = new ArrayList<>();

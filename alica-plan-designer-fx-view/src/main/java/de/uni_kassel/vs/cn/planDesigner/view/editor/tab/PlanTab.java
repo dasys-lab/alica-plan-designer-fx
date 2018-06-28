@@ -9,11 +9,12 @@ import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import sun.reflect.generics.tree.Tree;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class PlanTab extends AbstractEditorTab {
+public class PlanTab extends AbstractPlanTab {
 
     private Group planEditorGroup;
     private ConditionHBox conditionHBox;
@@ -45,7 +46,7 @@ public class PlanTab extends AbstractEditorTab {
     }
 
     private void draw(TreeViewModelElement planPathPair) {
-        planModelVisualisationObject = new PlanModelVisualisationObject(getTreeViewModelElement().getId());
+        planModelVisualisationObject = new PlanModelVisualisationObject(getViewModelElement().getId());
         planEditorGroup = new Group();
         planContent = new StackPane(planEditorGroup);
         planContent.setPadding(new Insets(50, 50, 50, 50));
@@ -57,7 +58,7 @@ public class PlanTab extends AbstractEditorTab {
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, editorToolBar);
-        conditionHBox = new ConditionHBox(getTreeViewModelElement(), selectedPlanElements);
+        conditionHBox = new ConditionHBox((TreeViewModelElement) getViewModelElement(), selectedPlanElements);
         VBox vBox = new VBox(conditionHBox, hBox);
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
         VBox.setVgrow(hBox,Priority.ALWAYS);
