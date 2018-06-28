@@ -132,13 +132,13 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                     addTreeViewElement(plan, type);
                     repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), type));
                 } else if (planElement instanceof PlanType) {
-                    addTreeViewElement((AbstractPlan) planElement, type);
+                    addTreeViewElement((PlanType) planElement, type);
                     repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), type));
                 } else if (planElement instanceof Behaviour) {
-                    addTreeViewElement((AbstractPlan) planElement, type);
+                    addTreeViewElement((Behaviour) planElement, type);
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), type));
                 } else if (planElement instanceof TaskRepository) {
-                    addTreeViewElement((AbstractPlan) planElement, type);
+                    addTreeViewElement((TaskRepository) planElement, type);
                     for (Task task : ((TaskRepository) planElement).getTasks()) {
                         type = FileSystemUtil.getTypeString(task);
                         repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), type));

@@ -48,6 +48,10 @@ public class EditorTabPane extends TabPane {
                 BehaviourTab behaviourTab = new BehaviourTab(treeViewModelElement);
                 tabEventHandler.handleTabOpenedEvent(behaviourTab);
                 return behaviourTab;
+            case Types.PLANTYPE:
+                PlanTypeTab planTypeTab = new PlanTypeTab(treeViewModelElement);
+                tabEventHandler.handleTabOpenedEvent(planTypeTab);
+                return planTypeTab;
             default:
                 System.err.println("EditorTabPane: Opening tab of type " + treeViewModelElement.getType() + " not implemented!");
                 return null;

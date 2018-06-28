@@ -61,7 +61,7 @@ public class RepositoryTabPane extends TabPane {
     }
 
     public void addPlanTypes(List<ViewModelElement> planTypes) {
-        plansTab.addElements(planTypes);
+        planTypesTab.addElements(planTypes);
     }
 
     public void addTask(ViewModelElement task) {
