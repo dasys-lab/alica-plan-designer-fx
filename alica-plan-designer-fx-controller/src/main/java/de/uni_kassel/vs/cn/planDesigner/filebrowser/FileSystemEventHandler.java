@@ -36,10 +36,10 @@ public class FileSystemEventHandler implements Runnable  {
         if (trace) {
             Path prev = keys.get(key);
             if (prev == null) {
-                System.out.format("register: %s%n", dir);
+                System.out.format("FileSystemEventHandler: register: %s%n", dir);
             } else {
                 if (!dir.equals(prev)) {
-                    System.out.format("update: %s -> %s%n", prev, dir);
+                    System.out.format("FileSystemEventHandler: update: %s -> %s%n", prev, dir);
                 }
             }
         }
@@ -107,7 +107,7 @@ public class FileSystemEventHandler implements Runnable  {
                     Path child = dir.resolve(name);
 
                     // print out event
-                    System.out.format("%s: %s%n", event.kind().name(), child);
+                    System.out.format("FileSystemEventHandler: %s: %s%n", event.kind().name(), child);
 
                     // if directory is created, and watching recursively, then
                     // register it and its sub-directories

@@ -12,10 +12,6 @@ class VirtualDirectoryTreeItem extends TreeItem<File> {
         super();
     }
 
-//    public void updateDirectory(WatchEvent.Kind kind, Path child) {
-//        getChildren().forEach(e -> ((FileTreeItem) e).updateDirectory(kind, child));
-//    }
-
     public FileTreeItem addTopLevelFolder(String path) {
         if (path != null && !path.isEmpty()) {
             FileTreeItem treeItem = new FileTreeItem(new File(path),
