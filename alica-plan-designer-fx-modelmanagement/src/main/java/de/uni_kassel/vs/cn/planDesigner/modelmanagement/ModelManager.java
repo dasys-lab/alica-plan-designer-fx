@@ -163,11 +163,11 @@ public class ModelManager {
      * @param modelFile the file to be parsed by jackson
      */
     private void loadModelFile(File modelFile) throws RuntimeException {
-        if(modelFile.isDirectory()) {
+        if (modelFile.isDirectory()) {
             return;
         }
 
-        if(modelFile.length() == 0) {
+        if (modelFile.length() == 0) {
             return;
         }
 
@@ -175,33 +175,28 @@ public class ModelManager {
         int pointIdx = path.lastIndexOf('.');
         String ending = "";
         if (pointIdx != -1) {
-            ending = path.substring(pointIdx, path.length());
+            ending = path.substring(pointIdx + 1, path.length());
+        }
+
+        boolean correctTopLevelFolder = correctTopLevelFolder(path);
+        if (!correctTopLevelFolder) {
+            return;
         }
 
         try {
             switch (ending) {
-                case ".pml":
+                case FileSystemUtil.PLAN_ENDING:
                     Plan plan = objectMapper.readValue(modelFile, Plan.class);
                     if (planElementMap.containsKey(plan.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
                     } else {
-                        ArrayList<Task> incompleteTasks = ParsedModelReferences.getInstance().incompleteTasks;
-                        for (EntryPoint ep : plan.getEntryPoints()) {
-                            if (incompleteTasks.contains(ep.getTask())) {
-                                for (Task task : taskRepository.getTasks()) {
-                                    if (task.getId() == ep.getTask().getId()) {
-                                        ep.setTask(task);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                        replaceIncompleteTasks(plan);
                         planElementMap.put(plan.getId(), plan);
                         planMap.put(plan.getId(), plan);
                         fireCreationEvent(plan);
                     }
                     break;
-                case ".beh":
+                case FileSystemUtil.BEHAVIOUR_ENDING:
                     Behaviour behaviour = objectMapper.readValue(modelFile, Behaviour.class);
                     if (planElementMap.containsKey(behaviour.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + behaviour.getId());
@@ -211,7 +206,7 @@ public class ModelManager {
                         fireCreationEvent(behaviour);
                     }
                     break;
-                case ".pty":
+                case FileSystemUtil.PLANTYPE_ENDING:
                     PlanType planType = objectMapper.readValue(modelFile, PlanType.class);
                     if (planElementMap.containsKey(planType.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + planType.getId());
@@ -221,7 +216,7 @@ public class ModelManager {
                         fireCreationEvent(planType);
                     }
                     break;
-                case ".tsk":
+                case FileSystemUtil.TASKREPOSITORY_ENDING:
                     TaskRepository taskRepository = objectMapper.readValue(modelFile, TaskRepository.class);
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
@@ -240,15 +235,14 @@ public class ModelManager {
                     }
                     break;
 
-                case ".rset":
-                case ".cdefset":
-                case ".graph":
-                case ".rdefset":
+                case FileSystemUtil.ROLESET_ENDING:
+                case FileSystemUtil.CAPABILITY_DEFINITION_ENDING:
+                case FileSystemUtil.ROLESET_GRAPH_ENDING:
+                case FileSystemUtil.ROLES_DEFINITION_ENDING:
                     LOG.error("Parsing roles not implemented, yet!");
                     break;
                 default:
                     LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
-//                    throw new RuntimeException("Received file with unknown file ending, for parsing. File is: '" + path + "'");
             }
         } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException e) {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
@@ -258,11 +252,48 @@ public class ModelManager {
         }
     }
 
+    /**
+     * Replaces all incomplete Tasks attached to the plan's entrypoints by already parsed ones
+     * @param plan
+     */
+    public void replaceIncompleteTasks(Plan plan) {
+        ArrayList<Task> incompleteTasks = ParsedModelReferences.getInstance().incompleteTasks;
+        for (EntryPoint ep : plan.getEntryPoints()) {
+            if (incompleteTasks.contains(ep.getTask())) {
+                for (Task task : taskRepository.getTasks()) {
+                    if (task.getId() == ep.getTask().getId()) {
+                        ep.setTask(task);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean correctTopLevelFolder(String path) {
+
+        if (path.endsWith(FileSystemUtil.BEHAVIOUR_ENDING) || path.endsWith(FileSystemUtil.PLAN_ENDING) || path.endsWith(FileSystemUtil.PLANTYPE_ENDING)) {
+            if (path.contains(rolesPath) || path.contains(tasksPath)) {
+                return false;
+            }
+        } else if (path.endsWith(FileSystemUtil.TASKREPOSITORY_ENDING)) {
+            if (path.contains(plansPath) || path.contains(rolesPath)) {
+                return false;
+            }
+        } else if (path.endsWith(FileSystemUtil.CAPABILITY_DEFINITION_ENDING) || path.endsWith(FileSystemUtil.ROLES_DEFINITION_ENDING) || path.endsWith
+                (FileSystemUtil.ROLESET_ENDING)
+                || path.endsWith(FileSystemUtil.ROLESET_GRAPH_ENDING)) {
+            if (path.contains(plansPath) || path.contains(tasksPath)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public <T> T parseFile(File modelFile, Class<T> type) {
         T planElement;
         try {
-            while (!modelFile.canRead())
-            {
+            while (!modelFile.canRead()) {
                 System.out.println("ModelManager: wait to read file: " + modelFile.toString());
                 Thread.sleep(1000);
             }
@@ -345,7 +376,7 @@ public class ModelManager {
         fireDeletionEvent(planElement);
     }
 
-         public ArrayList<PlanElement> getUsages(long modelElementId) {
+    public ArrayList<PlanElement> getUsages(long modelElementId) {
         ArrayList<PlanElement> usages = new ArrayList<>();
 
         PlanElement planElement = planElementMap.get(modelElementId);
@@ -449,6 +480,12 @@ public class ModelManager {
         commandStack.storeAndExecute(cmd);
     }
 
+    /**
+     * Creates a path relative to the plansPath
+     * @param absoluteDirectory
+     * @param fileName
+     * @return
+     */
     public String makeRelativePlansDirectory(String absoluteDirectory, String fileName) {
         String relativeDirectory = absoluteDirectory.replace(plansPath, "");
         relativeDirectory = relativeDirectory.replace(fileName, "");
@@ -461,15 +498,21 @@ public class ModelManager {
         return relativeDirectory;
     }
 
+    /**
+     * Creates a move file command and executes it
+     * @param movedFileId
+     * @param originalPath
+     * @param newPath
+     */
     public void moveFile(long movedFileId, Path originalPath, Path newPath) {
         PlanElement elementToMove = null;
         for (long elementId : planElementMap.keySet()) {
-            if(elementId == movedFileId) {
+            if (elementId == movedFileId) {
                 elementToMove = planElementMap.get(elementId);
                 break;
             }
         }
-        if(elementToMove == null) {
+        if (elementToMove == null) {
             System.out.println("ModelManager: PlanElement " + movedFileId + " to move is not found!");
             return;
         }

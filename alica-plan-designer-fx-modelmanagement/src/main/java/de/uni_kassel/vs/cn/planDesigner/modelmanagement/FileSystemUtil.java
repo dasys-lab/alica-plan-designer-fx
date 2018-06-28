@@ -11,6 +11,11 @@ public class FileSystemUtil {
     public static final String TASKREPOSITORY_ENDING = "tsk";
     public static final String BEHAVIOUR_ENDING = "beh";
     public static final String PLANTYPE_ENDING = "pty";
+    public static final String CAPABILITY_DEFINITION_ENDING = "cdefset";
+    public static final String ROLES_DEFINITION_ENDING = "rdefset";
+    public static final String ROLESET_GRAPH_ENDING = "graph";
+    public static final String ROLESET_ENDING = "rset";
+
 
     public static File getFile(ModelModificationQuery mmq) {
         switch (mmq.getModelElementType()) {
