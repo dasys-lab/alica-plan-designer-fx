@@ -18,6 +18,7 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler, IResourceCreationHandler, IMoveFileHandler {
+public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler, IResourceCreationHandler, IMoveFileHandler, ITabEventHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -52,9 +53,11 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
     // View Objects
     private RepositoryViewModel repoViewModel;
+    private TaskRepositoryViewModel taskViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
     private RepositoryTabPane repoTabPane;
+    private EditorTabPane editorTabPane;
 
     // Code Generation Objects
     GeneratedSourcesManager generatedSourcesManager;
@@ -75,10 +78,8 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
         setupConfigGuiStuff();
 
-        repoTabPane = mainWindowController.getRepositoryTabPane();
-
         repoViewModel = new RepositoryViewModel();
-        repoViewModel.setRepositoryTabPane(repoTabPane);
+        taskViewModel = new TaskRepositoryViewModel();
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -217,6 +218,9 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         repoTabPane = mainWindowController.getRepositoryTabPane();
         repoViewModel.setRepositoryTabPane(repoTabPane);
         repoViewModel.initGuiContent();
+
+        editorTabPane = mainWindowController.getEditorTabPane();
+        editorTabPane.setTabEventHandler(this);
     }
 
     /**
@@ -262,5 +266,21 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
      */
     public void moveFile(long id, Path originalPath, Path newPath) {
         modelManager.moveFile(id, originalPath, newPath);
+    }
+
+    @Override
+    public void handleTabOpenedEvent(TaskRepositoryTab taskRepositoryTab) {
+        taskViewModel.setTaskRepositoryTab(taskRepositoryTab);
+        taskViewModel.initGuiContent();
+    }
+
+    @Override
+    public void handleTabOpenedEvent(PlanTab planTab) {
+        System.err.println("Controller: Opening Plans not implemented, yet!");
+    }
+
+    @Override
+    public void handleTabOpenedEvent(BehaviourTab behaviourTab) {
+        System.err.println("Controller: Opening Behaviours not implemented, yet!");
     }
 }

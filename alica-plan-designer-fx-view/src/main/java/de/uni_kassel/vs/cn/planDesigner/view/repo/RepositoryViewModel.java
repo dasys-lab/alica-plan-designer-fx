@@ -123,18 +123,6 @@ public final class RepositoryViewModel {
         return plans;
     }
 
-    public ObservableList<ViewModelElement> getPlanTypes() {
-        return planTypes;
-    }
-
-    public ObservableList<ViewModelElement> getBehaviours() {
-        return behaviours;
-    }
-
-//    public ObservableList<ViewModelElement> getTasks() {
-//        return tasks;
-//    }
-
     public void removePlanElement(ViewModelElement elementToDelete) {
         if (elementToDelete.getType().equals(Types.PLAN) ||
                 elementToDelete.getType().equals(Types.MASTERPLAN))

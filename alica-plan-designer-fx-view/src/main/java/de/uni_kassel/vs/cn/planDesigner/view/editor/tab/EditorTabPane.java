@@ -7,6 +7,8 @@ import javafx.scene.control.TabPane;
 
 public class EditorTabPane extends TabPane {
 
+    private ITabEventHandler tabEventHandler;
+
     public void openTab(TreeViewModelElement treeViewModelElement) {
         // find tab if it already opened
         Tab openedTab = null;
@@ -20,6 +22,7 @@ public class EditorTabPane extends TabPane {
         if (openedTab == null) {
             openedTab = createNewTab(treeViewModelElement);
             getTabs().add(openedTab);
+            // TODO: send event that new task repository tab was opened
         }
 
         // make it the selected tab
@@ -31,14 +34,24 @@ public class EditorTabPane extends TabPane {
         switch (treeViewModelElement.getType()) {
             case Types.MASTERPLAN:
             case Types.PLAN:
-                return new PlanTab(treeViewModelElement);
+                PlanTab planTab = new PlanTab(treeViewModelElement);
+                tabEventHandler.handleTabOpenedEvent(planTab);
+                return planTab;
             case Types.TASKREPOSITORY:
-                return new TaskRepositoryTab(treeViewModelElement);
+                TaskRepositoryTab taskTab = new TaskRepositoryTab(treeViewModelElement);
+                tabEventHandler.handleTabOpenedEvent(taskTab);
+                return taskTab;
             case Types.BEHAVIOUR:
-                System.err.println("EditorTabPane: Opening Behaviours not implemented, yet!");
-                return null;
+                BehaviourTab behaviourTab = new BehaviourTab(treeViewModelElement);
+                tabEventHandler.handleTabOpenedEvent(behaviourTab);
+                return behaviourTab;
             default:
+                System.err.println("EditorTabPane: Opening tab of type " + treeViewModelElement.getType() + " not implemented!");
                 return null;
         }
+    }
+
+    public void setTabEventHandler (ITabEventHandler handler) {
+        this.tabEventHandler = handler;
     }
 }
