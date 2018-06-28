@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.beans.value.ChangeListener;

@@ -2,7 +2,6 @@ package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
 import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
-import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;

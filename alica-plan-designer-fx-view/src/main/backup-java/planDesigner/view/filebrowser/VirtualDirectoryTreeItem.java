@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
-import de.uni_kassel.vs.cn.planDesigner.common.FileWrapper;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

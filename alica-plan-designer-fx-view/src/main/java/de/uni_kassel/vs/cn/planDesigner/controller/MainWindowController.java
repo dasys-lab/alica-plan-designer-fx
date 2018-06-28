@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
@@ -157,9 +158,11 @@ public class MainWindowController implements Initializable {
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         String type = ((AbstractEditorTab) newValue).getEditableElement().getType();
-                        if (type.equals(i18NRepo.getString("alicatype.behaviour")) || type.equals(i18NRepo.getString("alicatype.plan")) || type.equals
-                                (i18NRepo.getString("alicatype.masterplan")) || type.equals(i18NRepo.getString("alicatype.plantype"))
-                                || type.equals(i18NRepo.getString("alicatype.taskrepository"))) {
+                        if (type.equals(Types.BEHAVIOUR) ||
+                                type.equals(Types.PLAN) ||
+                                type.equals(Types.MASTERPLAN) ||
+                                type.equals(Types.PLANTYPE) ||
+                                type.equals(Types.TASKREPOSITORY)) {
                             generateCurrentFile.setDisable(false);
                         }
                     } else {
@@ -285,13 +288,17 @@ public class MainWindowController implements Initializable {
         this.resourceCreationHandler = creationHandler;
     }
 
-    public void setMoveFileHandler(IMoveFileHandler moveFileHandler) {this.moveFileHandler = moveFileHandler;}
+    public void setMoveFileHandler(IMoveFileHandler moveFileHandler) {
+        this.moveFileHandler = moveFileHandler;
+    }
 
     public IResourceCreationHandler getResourceCreationHandler() {
         return resourceCreationHandler;
     }
 
-    public IMoveFileHandler getMoveFileHandler() { return moveFileHandler; }
+    public IMoveFileHandler getMoveFileHandler() {
+        return moveFileHandler;
+    }
 
     public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {
         fileTreeView.getRoot().getChildren().clear();
