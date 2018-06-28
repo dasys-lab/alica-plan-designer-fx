@@ -45,7 +45,7 @@ public class PlanTab extends AbstractEditorTab {
     }
 
     private void draw(TreeViewModelElement planPathPair) {
-        planModelVisualisationObject = new PlanModelVisualisationObject(getEditable());
+        planModelVisualisationObject = new PlanModelVisualisationObject(getTreeViewModelElement().getId());
         planEditorGroup = new Group();
         planContent = new StackPane(planEditorGroup);
         planContent.setPadding(new Insets(50, 50, 50, 50));

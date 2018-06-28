@@ -172,7 +172,7 @@ public class MainWindowController implements Initializable {
 
         generateCurrentFile.setOnAction(e -> {
             long modelElementId = ((AbstractEditorTab) getEditorTabPane()
-                    .getSelectionModel().getSelectedItem()).getEditable();
+                    .getSelectionModel().getSelectedItem()).getTreeViewModelElement().getId();
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
 //            	waitOnProgressWindow(() -> new Codegenerator().generate(modelElementId));
