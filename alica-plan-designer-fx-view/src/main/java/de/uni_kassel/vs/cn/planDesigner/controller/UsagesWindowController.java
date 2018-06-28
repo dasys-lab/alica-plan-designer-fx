@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.collections.FXCollections;
@@ -25,7 +25,7 @@ public class UsagesWindowController implements Initializable {
     private Button continueButton;
 
 
-    public void createReferencesList(ArrayList<ViewModelElement> usages, IShowUsageHandler usageHandler) {
+    public void createReferencesList(ArrayList<ViewModelElement> usages, IGuiModificationHandler usageHandler) {
         List<RepositoryHBox> repositoryHBoxes = new ArrayList<>();
         for (ViewModelElement usage : usages) {
             repositoryHBoxes.add(new RepositoryHBox(usage, usageHandler));

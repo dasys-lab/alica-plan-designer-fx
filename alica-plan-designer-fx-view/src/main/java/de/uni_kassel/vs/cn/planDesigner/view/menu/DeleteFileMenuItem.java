@@ -18,7 +18,7 @@ public class DeleteFileMenuItem extends MenuItem {
     }
 
     public void deleteFile() {
-        RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
+//        RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
         MainWindowController mainWindowController = MainWindowController.getInstance();
         RepositoryTabPane repositoryTabPane = mainWindowController.getRepositoryTabPane();
 

@@ -16,7 +16,6 @@ import javafx.scene.layout.VBox;
 public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
     private TreeViewModelElement taskRepository;
-    private IGuiModificationHandler guiModificationHandler;
 
     public TaskRepositoryTab(TreeViewModelElement taskRepository) {
         super(taskRepository.getName(), null);
@@ -41,7 +40,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
             if (taskNameField.getText() != null && !taskNameField.getText().isEmpty()) {
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.TASK, taskNameField.getText());
                 event.setParentId(this.taskRepository.getId());
-                this.guiModificationHandler.handle(event);
+                guiModificationHandler.handle(event);
             }
         });
         createTaskHBox.getChildren().addAll(taskNameField, createTaskButton);
@@ -58,7 +57,4 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         return taskRepository;
     }
 
-    public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
-        this.guiModificationHandler = guiModificationHandler;
-    }
 }

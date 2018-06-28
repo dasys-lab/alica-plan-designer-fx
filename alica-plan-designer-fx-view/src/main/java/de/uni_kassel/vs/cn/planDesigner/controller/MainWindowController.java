@@ -3,7 +3,6 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
@@ -83,7 +82,6 @@ public class MainWindowController implements Initializable {
     private I18NRepo i18NRepo;
     private ConfigurationWindowController configWindowController;
     private IGuiStatusHandler guiStatusHandler;
-    private IShowUsageHandler usageHandler;
     private IGuiModificationHandler guiModificationHandler;
     private IMoveFileHandler moveFileHandler;
     private Menu fileMenu;
@@ -110,9 +108,8 @@ public class MainWindowController implements Initializable {
             throw new RuntimeException("The member configWindowController need to be set through the public setter, before calling initialize()!");
         }
         menuBar.getMenus().addAll(createMenus(configWindowController));
-        repositoryTabPane.setShowUsageHandler(usageHandler);
+        repositoryTabPane.setGuiModificationHandler(guiModificationHandler);
         editorTabPane.setGuiModificationHandler(guiModificationHandler);
-        editorTabPane.setShowUsageHandler(usageHandler);
 //        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
         guiStatusHandler.handleGuiInitialized();
@@ -277,10 +274,6 @@ public class MainWindowController implements Initializable {
 
     public void setDeleteDisabled(boolean disabled) {
         editMenu.setDeleteItemDisabled(disabled);
-    }
-
-    public void setShowUsageHandler(IShowUsageHandler usageHandler) {
-        this.usageHandler = usageHandler;
     }
 
     public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {

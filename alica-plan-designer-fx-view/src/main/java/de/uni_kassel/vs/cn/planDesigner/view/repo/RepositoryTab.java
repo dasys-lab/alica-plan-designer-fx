@@ -1,9 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import javafx.application.Platform;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
@@ -20,7 +19,7 @@ public class RepositoryTab extends Tab {
     protected ListView<RepositoryHBox> repositoryListView;
     protected Comparator<RepositoryHBox> modelElementComparator;
     protected RepositoryTool repoTool;
-    protected IShowUsageHandler showUsageHandler;
+    protected IGuiModificationHandler guiModificationHandler;
 
     public RepositoryTab(String tabTitle, RepositoryTool repoTool) {
         setText(tabTitle);
@@ -32,8 +31,9 @@ public class RepositoryTab extends Tab {
         modelElementComparator = modelElementComparator.thenComparing(o -> o.getViewModelName());
     }
 
-    public void setShowUsageHandler(IShowUsageHandler showUsageHandler) {
-        this.showUsageHandler = showUsageHandler;
+
+    public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
+        this.guiModificationHandler = guiModificationHandler;
     }
 
 
@@ -54,7 +54,7 @@ public class RepositoryTab extends Tab {
                 if(removeBeforeAdding[0] != null) {
                     repositoryListView.getItems().remove(removeBeforeAdding[0]);
                 }
-                repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, showUsageHandler));
+                repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
                 sort();
             }
         });
@@ -65,7 +65,7 @@ public class RepositoryTab extends Tab {
             @Override
             public void run() {
                 for (ViewModelElement viewModelElement : viewModelElements) {
-                    repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, showUsageHandler));
+                    repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
                 }
                 sort();
             }

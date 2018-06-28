@@ -15,20 +15,6 @@ import java.util.ArrayList;
  */
 public final class RepositoryViewModel {
 
-    // SINGLETON
-    private static volatile RepositoryViewModel instance;
-
-    public static RepositoryViewModel getInstance() {
-        if (instance == null) {
-            synchronized (RepositoryViewModel.class) {
-                if (instance == null) {
-                    instance = new RepositoryViewModel();
-                }
-            }
-        }
-        return instance;
-    }
-
     private ObservableList<ViewModelElement> plans;
     private ObservableList<ViewModelElement> planTypes;
     private ObservableList<ViewModelElement> behaviours;

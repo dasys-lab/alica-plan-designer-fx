@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import javafx.scene.control.Tab;
@@ -10,7 +9,6 @@ import javafx.scene.control.TabPane;
 public class EditorTabPane extends TabPane {
 
     private ITabEventHandler tabEventHandler;
-    private IShowUsageHandler showUsageHandler;
     private IGuiModificationHandler guiModificationHandler;
 
     public void openTab(TreeViewModelElement treeViewModelElement) {
@@ -43,7 +41,6 @@ public class EditorTabPane extends TabPane {
                 return planTab;
             case Types.TASKREPOSITORY:
                 TaskRepositoryTab taskTab = new TaskRepositoryTab(treeViewModelElement);
-                taskTab.setShowUsageHandler(this.showUsageHandler);
                 taskTab.setGuiModificationHandler(this.guiModificationHandler);
                 tabEventHandler.handleTabOpenedEvent(taskTab);
                 return taskTab;
@@ -63,10 +60,6 @@ public class EditorTabPane extends TabPane {
 
     public void setTabEventHandler(ITabEventHandler handler) {
         this.tabEventHandler = handler;
-    }
-
-    public void setShowUsageHandler(IShowUsageHandler handler) {
-        this.showUsageHandler = handler;
     }
 
     public void setGuiModificationHandler (IGuiModificationHandler handler) {

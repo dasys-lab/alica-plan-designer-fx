@@ -1,25 +1,25 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseButton;
 
 public class RepositoryHBox extends DraggableHBox {
 
-    protected IShowUsageHandler showUsageHandler;
+    protected IGuiModificationHandler guiModificationHandler;
     protected ViewModelElement viewModelElement;
 
-    public RepositoryHBox(ViewModelElement viewModelElement, IShowUsageHandler showUsageHandler) {
-        this.showUsageHandler = showUsageHandler;
+    public RepositoryHBox(ViewModelElement viewModelElement, IGuiModificationHandler guiModificationHandler) {
+        this.guiModificationHandler = guiModificationHandler;
         this.viewModelElement = viewModelElement;
         setIcon(this.viewModelElement.getType());
         setText(this.viewModelElement.getName());
 
         // right click for opening context menu with option to show usage of model element
         setOnContextMenuRequested(e -> {
-            ContextMenu contextMenu = new ContextMenu(new ShowUsagesMenuItem(this.viewModelElement, showUsageHandler));
+            ContextMenu contextMenu = new ContextMenu(new ShowUsagesMenuItem(this.viewModelElement, guiModificationHandler));
             contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
         });
 

@@ -1,8 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import javafx.scene.control.TabPane;
 
 import java.util.List;
@@ -33,11 +33,11 @@ public class RepositoryTabPane extends TabPane {
         getTabs().addAll(plansTab, planTypesTab, behavioursTab, tasksTab);
     }
 
-    public void setShowUsageHandler(IShowUsageHandler usageHandler) {
-        plansTab.setShowUsageHandler(usageHandler);
-        planTypesTab.setShowUsageHandler(usageHandler);
-        behavioursTab.setShowUsageHandler(usageHandler);
-        tasksTab.setShowUsageHandler(usageHandler);
+    public void setGuiModificationHandler(IGuiModificationHandler usageHandler) {
+        plansTab.setGuiModificationHandler(usageHandler);
+        planTypesTab.setGuiModificationHandler(usageHandler);
+        behavioursTab.setGuiModificationHandler(usageHandler);
+        tasksTab.setGuiModificationHandler(usageHandler);
     }
 
     public void addPlan(ViewModelElement plan) {

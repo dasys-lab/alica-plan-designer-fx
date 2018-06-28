@@ -20,7 +20,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler, IGuiModificationHandler, IMoveFileHandler, ITabEventHandler {
+public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, IMoveFileHandler, ITabEventHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -63,7 +62,6 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
         mainWindowController.setGuiModificationHandler(this);
-        mainWindowController.setShowUsageHandler(this);
         mainWindowController.setMoveFileHandler(this);
 
         setupConfigGuiStuff();
