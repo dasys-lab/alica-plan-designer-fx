@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -33,15 +34,15 @@ public class EditorTabPane extends TabPane {
 
     private Tab createNewTab(TreeViewModelElement treeViewModelElement) {
         String type = treeViewModelElement.getType();
-        I18NRepo i18NRepo = I18NRepo.getInstance();
-        if (type == i18NRepo.getString("alicatype.masterplan") || type == i18NRepo.getString("alicatype.plan")) {
-            return new PlanTab(treeViewModelElement);
-        } else if (type == i18NRepo.getString("alicatype.taskrepository")) {
-            return new TaskRepositoryTab(treeViewModelElement);
-        } else {
-            return null;
+        switch (type) {
+            case Types.MASTERPLAN:
+            case Types.PLAN:
+                return new PlanTab(treeViewModelElement);
+            case Types.TASKREPOSITORY:
+                return new TaskRepositoryTab(treeViewModelElement);
+            default:
+                return null;
         }
-
 
 //        switch (filePathAsString.substring(filePathAsString.lastIndexOf('.') + 1)) {
 //            case "pml":
