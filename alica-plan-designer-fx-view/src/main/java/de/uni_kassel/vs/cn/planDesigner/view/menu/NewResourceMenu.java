@@ -3,7 +3,6 @@ package de.uni_kassel.vs.cn.planDesigner.view.menu;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.CreateNewDialogController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import javafx.fxml.FXMLLoader;
@@ -50,7 +49,7 @@ public class NewResourceMenu extends Menu {
         try {
             Parent rootOfDialog = fxmlLoader.load();
             CreateNewDialogController createNewDialogController = fxmlLoader.getController();
-            createNewDialogController.setResourceCreationHandler(MainWindowController.getInstance().getResourceCreationHandler());
+            createNewDialogController.setGuiModificationHandler(MainWindowController.getInstance().getGuiModificationHandler());
             createNewDialogController.setType(type);
             createNewDialogController.setInitialDirectoryHint(initialDirectoryHint);
             Stage stage = new Stage();

@@ -127,7 +127,7 @@ public class MainWindowController implements Initializable {
         getEditorTabPane().getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                // TODO: how to determine type of longId, for enabling code generation menu
+                // TODO: how to determine elementType of longId, for enabling code generation menu
 //                if (((AbstractPlanTab) newValue).getEditable() instanceof AbstractPlan) {
 //                    generateCurrentFile.setDisable(false);
 //                }

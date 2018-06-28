@@ -296,7 +296,7 @@ public final class FileTreeView extends TreeView<File> {
     }
 
     /**
-     * Gets the fitting optical representation according to the given PlanElement type
+     * Gets the fitting optical representation according to the given PlanElement elementType
      *
      * @param type
      * @return

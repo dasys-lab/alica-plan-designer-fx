@@ -7,7 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.*;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelOperationType;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
 import de.uni_kassel.vs.cn.planDesigner.modelMixIns.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -314,16 +314,23 @@ public class ModelManager {
 
     private void fireCreationEvent(PlanElement element) {
         for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelOperationType.ELEMENT_CREATED, null, element));
+            eventHandler.handleModelEvent(new ModelEvent(ModelQueryType.ELEMENT_CREATED, null, element));
         }
     }
 
     private void fireDeletionEvent(PlanElement element) {
         for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelOperationType.ELEMENT_DELETED, null, element));
+            eventHandler.handleModelEvent(new ModelEvent(ModelQueryType.ELEMENT_DELETED, null, element));
         }
     }
 
+    /**
+     * This methods should only be called through commands.
+     * @param newElement
+     * @param type
+     * @param serializeToDisk
+     * @return
+     */
     public PlanElement addPlanElement(PlanElement newElement, String type, boolean serializeToDisk) {
         switch (type) {
             case Types.PLAN:
@@ -339,6 +346,11 @@ public class ModelManager {
                 if (serializeToDisk) {
                     serializeToDisk(planType, FileSystemUtil.PLANTYPE_ENDING);
                 }
+                break;
+            case Types.TASK:
+                Task task = (Task) newElement;
+                taskRepository.getTasks().add(task);
+                task.setTaskRepository(taskRepository);
                 break;
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
@@ -369,6 +381,11 @@ public class ModelManager {
                     removeFromDisk(planType, FileSystemUtil.PLANTYPE_ENDING);
                 }
                 break;
+            case Types.TASK:
+                Task task = (Task) planElement;
+                taskRepository.getTasks().add(task);
+                task.setTaskRepository(taskRepository);
+                break;
             default:
                 System.err.println("ModelManager: removing " + type + " not implemented, yet!");
         }
@@ -395,7 +412,7 @@ public class ModelManager {
         } else if (planElement instanceof Task) {
             usages.addAll(getUsagesInEntryPoints(planElement));
         } else {
-            throw new RuntimeException("Usages requested for unhandled modelElementType of element with id  " + modelElementId);
+            throw new RuntimeException("Usages requested for unhandled elementType of element with id  " + modelElementId);
         }
         return usages;
     }
@@ -440,9 +457,9 @@ public class ModelManager {
 
     public void handleModelModificationQuery(ModelModificationQuery mmq) {
         AbstractCommand cmd;
-        switch (mmq.getOperationType()) {
+        switch (mmq.getQueryType()) {
             case CREATE_ELEMENT:
-                switch (mmq.getModelElementType()) {
+                switch (mmq.getElementType()) {
                     case Types.PLAN:
                         cmd = new CreatePlan(this, mmq);
                         break;
@@ -451,8 +468,12 @@ public class ModelManager {
                         break;
                     case Types.BEHAVIOUR:
                         cmd = new CreateBehaviour(this, mmq);
+                        break;
+                    case Types.TASK:
+                        cmd = new CreateTask(this, mmq);
+                        break;
                     default:
-                        System.err.println("ModelManager: Creation of unkonwn model element type gets ignored!");
+                        System.err.println("ModelManager: Creation of unknown model element type gets ignored!");
                         return;
                 }
 
@@ -461,7 +482,7 @@ public class ModelManager {
                 cmd = new ParseAbstractPlan(this, mmq);
                 break;
             case DELETE_ELEMENT:
-                switch (mmq.getModelElementType()) {
+                switch (mmq.getElementType()) {
                     case Types.PLAN:
                         cmd = new DeletePlan(this, mmq);
                         break;

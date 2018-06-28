@@ -11,7 +11,7 @@ public class CreatePlanType extends AbstractCommand {
 
     public CreatePlanType(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        if (mmq.getModelElementType().equals(Types.PLANTYPE)) {
+        if (mmq.getElementType().equals(Types.PLANTYPE)) {
             this.planType = new PlanType();
             this.planType.setName(mmq.getName());
             this.planType.setRelativeDirectory(modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), planType.getName()+ "." + FileSystemUtil.PLANTYPE_ENDING));

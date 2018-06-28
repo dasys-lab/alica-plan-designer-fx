@@ -46,7 +46,7 @@ public class GeneratedSourcesManager {
             allGeneratedFilesForPlanElement.addAll(getGeneratedConditionFilesForPlan((Plan) planElement));
             allGeneratedFilesForPlanElement.addAll(getGeneratedConstraintFilesForPlan((Plan) planElement));
         } else {
-            throw new RuntimeException("File for unkown generated source modelElementType requested!");
+            throw new RuntimeException("File for unkown generated source elementType requested!");
         }
         lineNumber = getLineNumberForGeneratedElement(planElement.getId());
 

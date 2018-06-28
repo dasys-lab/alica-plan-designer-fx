@@ -18,7 +18,7 @@ public class FileSystemUtil {
 
 
     public static File getFile(ModelModificationQuery mmq) {
-        switch (mmq.getModelElementType()) {
+        switch (mmq.getElementType()) {
             case Types.PLAN:
                 return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLAN_ENDING).toFile();
             case Types.PLANTYPE:
@@ -30,10 +30,10 @@ public class FileSystemUtil {
     }
 
     /**
-     * Determines the modelElementType string corresponding to the given PlanElement.
+     * Determines the elementType string corresponding to the given PlanElement.
      *
-     * @param planElement whose modelElementType is to be determined
-     * @return modelElementType of the plan element
+     * @param planElement whose elementType is to be determined
+     * @return elementType of the plan element
      */
     public static String getTypeString(PlanElement planElement) {
         if (planElement instanceof Plan) {

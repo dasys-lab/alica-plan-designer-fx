@@ -115,7 +115,7 @@ public abstract class AbstractTool {
 
         previousCursor = planEditorTabPane.getScene().getCursor();
         // TODO: should be done in the derived tool classes' start phase methods
-        //planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon("special type of abstract tool")));
+        //planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon("special elementType of abstract tool")));
     }
 
     public void endPhase() {

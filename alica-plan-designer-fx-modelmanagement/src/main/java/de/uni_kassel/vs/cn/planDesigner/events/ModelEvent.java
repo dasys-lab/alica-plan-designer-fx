@@ -3,17 +3,17 @@ package de.uni_kassel.vs.cn.planDesigner.events;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 
 public class ModelEvent {
-    protected ModelOperationType type;
+    protected ModelQueryType type;
     protected PlanElement oldElement;
     protected PlanElement newElement;
 
-    public ModelEvent (ModelOperationType type, PlanElement oldElement, PlanElement newElement) {
+    public ModelEvent (ModelQueryType type, PlanElement oldElement, PlanElement newElement) {
         this.type = type;
         this.oldElement = oldElement;
         this.newElement = newElement;
     }
 
-    public ModelOperationType getType() {
+    public ModelQueryType getType() {
         return type;
     }
 

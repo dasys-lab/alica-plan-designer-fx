@@ -3,8 +3,6 @@ package de.uni_kassel.vs.cn.planDesigner.command;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.*;
 
-import java.util.ArrayList;
-
 /**
  * Parses a given file and adds the resulting object to the corresponding maps of the model manager.
  */
@@ -24,7 +22,7 @@ public class ParseAbstractPlan extends AbstractCommand {
     public void doCommand() {
         // 1. parse file
         // 2. delete already existing object and add new one
-        switch (modelModificationQuery.getModelElementType()) {
+        switch (modelModificationQuery.getElementType()) {
             case Types.PLAN:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
                 modelManager.replaceIncompleteTasks((Plan)newElement);
@@ -33,20 +31,20 @@ public class ParseAbstractPlan extends AbstractCommand {
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
                 break;
             default:
-                System.err.println("ParseAbstractPlan: Parsing model type " + modelModificationQuery.getModelElementType() + " not implemented, yet!");
+                System.err.println("ParseAbstractPlan: Parsing model type " + modelModificationQuery.getElementType() + " not implemented, yet!");
                 return;
         }
-        modelManager.addPlanElement(newElement, modelModificationQuery.getModelElementType(), false);
+        modelManager.addPlanElement(newElement, modelModificationQuery.getElementType(), false);
     }
 
     @Override
     public void undoCommand() {
         if (oldElement != null) {
             // replace new object with former old one
-            modelManager.addPlanElement(oldElement, modelModificationQuery.getModelElementType(), false);
+            modelManager.addPlanElement(oldElement, modelModificationQuery.getElementType(), false);
         } else {
             // remove new object
-            modelManager.removePlanElement(newElement, modelModificationQuery.getModelElementType(), false);
+            modelManager.removePlanElement(newElement, modelModificationQuery.getElementType(), false);
         }
     }
 }

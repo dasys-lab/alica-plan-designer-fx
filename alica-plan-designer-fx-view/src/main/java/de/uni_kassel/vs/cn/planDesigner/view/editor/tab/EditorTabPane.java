@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
@@ -10,12 +11,13 @@ public class EditorTabPane extends TabPane {
 
     private ITabEventHandler tabEventHandler;
     private IShowUsageHandler showUsageHandler;
+    private IGuiModificationHandler guiModificationHandler;
 
     public void openTab(TreeViewModelElement treeViewModelElement) {
         // find tab if it already opened
         Tab openedTab = null;
         for (Tab tab : getTabs()) {
-            if (((AbstractPlanTab) tab).getViewModelElement().equals(treeViewModelElement)) {
+            if (((IEditorTab) tab).getViewModelElement().equals(treeViewModelElement)) {
                 openedTab = tab;
             }
         }
@@ -42,6 +44,7 @@ public class EditorTabPane extends TabPane {
             case Types.TASKREPOSITORY:
                 TaskRepositoryTab taskTab = new TaskRepositoryTab(treeViewModelElement);
                 taskTab.setShowUsageHandler(this.showUsageHandler);
+                taskTab.setGuiModificationHandler(this.guiModificationHandler);
                 tabEventHandler.handleTabOpenedEvent(taskTab);
                 return taskTab;
             case Types.BEHAVIOUR:
@@ -49,7 +52,7 @@ public class EditorTabPane extends TabPane {
                 tabEventHandler.handleTabOpenedEvent(behaviourTab);
                 return behaviourTab;
             default:
-                System.err.println("EditorTabPane: Opening tab of type " + treeViewModelElement.getType() + " not implemented!");
+                System.err.println("EditorTabPane: Opening tab of elementType " + treeViewModelElement.getType() + " not implemented!");
                 return null;
         }
     }
@@ -60,5 +63,9 @@ public class EditorTabPane extends TabPane {
 
     public void setShowUsageHandler(IShowUsageHandler handler) {
         this.showUsageHandler = handler;
+    }
+
+    public void setGuiModificationHandler (IGuiModificationHandler handler) {
+        this.guiModificationHandler = handler;
     }
 }

@@ -4,35 +4,35 @@
     <Properties>
         <Property name="filename">target/test.log</Property>
     </Properties>
-    <Filter modelElementType="ThresholdFilter" level="trace"/>
+    <Filter elementType="ThresholdFilter" level="trace"/>
 
     <Appenders>
-        <Appender modelElementType="Console" name="STDOUT">
-            <Layout modelElementType="PatternLayout" pattern="%m MDC%X%n"/>
+        <Appender elementType="Console" name="STDOUT">
+            <Layout elementType="PatternLayout" pattern="%m MDC%X%n"/>
             <Filters>
-                <Filter modelElementType="MarkerFilter" marker="FLOW" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <Filter modelElementType="MarkerFilter" marker="EXCEPTION" onMatch="DENY" onMismatch="ACCEPT"/>
+                <Filter elementType="MarkerFilter" marker="FLOW" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <Filter elementType="MarkerFilter" marker="EXCEPTION" onMatch="DENY" onMismatch="ACCEPT"/>
             </Filters>
         </Appender>
-        <Appender modelElementType="Console" name="FLOW">
-            <Layout modelElementType="PatternLayout" pattern="%C{1}.%M %m %ex%n"/><!-- class and line number -->
+        <Appender elementType="Console" name="FLOW">
+            <Layout elementType="PatternLayout" pattern="%C{1}.%M %m %ex%n"/><!-- class and line number -->
             <Filters>
-                <Filter modelElementType="MarkerFilter" marker="FLOW" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
-                <Filter modelElementType="MarkerFilter" marker="EXCEPTION" onMatch="ACCEPT" onMismatch="DENY"/>
+                <Filter elementType="MarkerFilter" marker="FLOW" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+                <Filter elementType="MarkerFilter" marker="EXCEPTION" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
         </Appender>
-        <Appender modelElementType="File" name="File" fileName="${filename}">
-            <Layout modelElementType="PatternLayout">
+        <Appender elementType="File" name="File" fileName="${filename}">
+            <Layout elementType="PatternLayout">
                 <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
             </Layout>
         </Appender>
-        <Appender modelElementType="List" name="List">
+        <Appender elementType="List" name="List">
         </Appender>
     </Appenders>
 
     <Loggers>
         <Logger name="org.apache.logging.log4j.test1" level="debug" additivity="false">
-            <Filter modelElementType="ThreadContextMapFilter">
+            <Filter elementType="ThreadContextMapFilter">
                 <KeyValuePair key="test" value="123"/>
             </Filter>
             <AppenderRef ref="STDOUT"/>

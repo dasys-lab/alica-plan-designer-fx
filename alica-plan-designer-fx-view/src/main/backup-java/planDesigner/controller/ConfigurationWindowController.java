@@ -123,7 +123,7 @@ public class ConfigurationWindowController implements Initializable {
 
         saveButton.setOnAction(e -> onSave());
 
-        // TODO handleResourceCreationEvent plugin drop down box
+        // TODO handle plugin drop down box
     }
 
     /**

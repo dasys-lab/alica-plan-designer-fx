@@ -11,7 +11,7 @@ public class CreateBehaviour extends AbstractCommand {
 
     public CreateBehaviour(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        if (mmq.getModelElementType().equals(Types.BEHAVIOUR)) {
+        if (mmq.getElementType().equals(Types.BEHAVIOUR)) {
             this.behaviour = new Behaviour();
             this.behaviour.setName(mmq.getName());
             this.behaviour.setRelativeDirectory(modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), behaviour.getName()+ "." + FileSystemUtil.BEHAVIOUR_ENDING));

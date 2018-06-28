@@ -2,22 +2,20 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
-import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelOperationType;
-import de.uni_kassel.vs.cn.planDesigner.events.ResourceCreationEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
@@ -27,9 +25,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -40,7 +35,7 @@ import java.util.ArrayList;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler, IResourceCreationHandler, IMoveFileHandler, ITabEventHandler {
+public final class Controller implements IModelEventHandler, IShowUsageHandler, IGuiStatusHandler, IGuiModificationHandler, IMoveFileHandler, ITabEventHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -67,7 +62,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
 
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
-        mainWindowController.setResourceCreationHandler(this);
+        mainWindowController.setGuiModificationHandler(this);
         mainWindowController.setShowUsageHandler(this);
         mainWindowController.setMoveFileHandler(this);
 
@@ -143,6 +138,11 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                         type = FileSystemUtil.getTypeString(task);
                         repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), type));
                     }
+                } else if (planElement instanceof Task) {
+                    Task task = (Task) planElement;
+                    ViewModelElement element = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
+                    repoViewModel.addTask(element);
+                    taskViewModel.addTask(element);
                 }
                 break;
             case ELEMENT_DELETED:
@@ -224,8 +224,9 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
      * @param event
      */
     @Override
-    public void handleResourceCreationEvent(ResourceCreationEvent event) {
-        ModelModificationQuery mmq = new ModelModificationQuery(ModelOperationType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getType(), event.getName());
+    public void handle(GuiModificationEvent event) {
+        ModelModificationQuery mmq = new ModelModificationQuery(ModelQueryType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
+        mmq.setParentId(event.getParentId());
         this.modelManager.handleModelModificationQuery(mmq);
     }
 
@@ -239,9 +240,9 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         WatchEvent.Kind kind = event.kind();
         ModelModificationQuery mmq;
         if (kind.equals((StandardWatchEventKinds.ENTRY_MODIFY))) {
-            mmq = new ModelModificationQuery(ModelOperationType.PARSE_ELEMENT, path.toString());
+            mmq = new ModelModificationQuery(ModelQueryType.PARSE_ELEMENT, path.toString());
         } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
-            mmq = new ModelModificationQuery(ModelOperationType.DELETE_ELEMENT, path.toString());
+            mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, path.toString());
         } else if (kind.equals((StandardWatchEventKinds.ENTRY_CREATE))) {
             if (path.toFile().isDirectory()) {
                 mainWindowController.getFileTreeView().updateDirectories(path);
@@ -250,7 +251,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
             }
             return;
         } else {
-            System.err.println("Controller: Unknown filesystem event type received that gets ignored!");
+            System.err.println("Controller: Unknown filesystem event elementType received that gets ignored!");
             return;
         }
         modelManager.handleModelModificationQuery(mmq);

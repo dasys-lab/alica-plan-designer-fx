@@ -139,7 +139,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
 
         //TODO commads for file deletion
 //        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
-//        switch (modelElementType) {
+//        switch (elementType) {
 //            case "plan":
 //                Pair<Plan, Path> planPathPair = RepositoryViewModel.getInstance().getPlans()
 //                        .stream()

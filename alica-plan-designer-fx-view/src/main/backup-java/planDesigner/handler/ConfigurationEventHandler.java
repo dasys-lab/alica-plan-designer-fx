@@ -21,7 +21,7 @@ public class ConfigurationEventHandler<T extends ListView.EditEvent<String>> imp
     }
 
     /**
-     * determine type of event and call corresponding method
+     * determine elementType of event and call corresponding method
      *
      * @param event
      */

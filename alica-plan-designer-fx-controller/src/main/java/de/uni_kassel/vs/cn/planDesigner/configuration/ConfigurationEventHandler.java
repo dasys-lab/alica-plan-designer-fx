@@ -23,7 +23,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     }
 
     /**
-     * determine modelElementType of event and call corresponding method
+     * determine elementType of event and call corresponding method
      *
      * @param event
      */

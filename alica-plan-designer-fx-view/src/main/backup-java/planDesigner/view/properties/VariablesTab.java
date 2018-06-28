@@ -64,8 +64,8 @@ public class VariablesTab extends AbstractPropertyTab {
         TableColumn<Variable, TextField> nameColumn = new TableColumn<>(i18NRepo.getString("label.column.name"));
         nameColumn.setCellValueFactory(new CellColumnCreatorCallback("name"));
         textFieldTableView.getColumns().add(nameColumn);
-        TableColumn<Variable, TextField> typeColumn = new TableColumn<>(i18NRepo.getString("label.column.type"));
-        typeColumn.setCellValueFactory(new CellColumnCreatorCallback("type"));
+        TableColumn<Variable, TextField> typeColumn = new TableColumn<>(i18NRepo.getString("label.column.elementType"));
+        typeColumn.setCellValueFactory(new CellColumnCreatorCallback("elementType"));
         textFieldTableView.getColumns().add(typeColumn);
         TableColumn<Variable, TextField> commentColumn = new TableColumn<>(i18NRepo.getString("label.column.comment"));
         commentColumn.setCellValueFactory(new CellColumnCreatorCallback("comment"));

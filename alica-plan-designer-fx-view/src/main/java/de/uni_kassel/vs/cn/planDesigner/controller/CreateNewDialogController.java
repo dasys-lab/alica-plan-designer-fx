@@ -1,8 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
-import de.uni_kassel.vs.cn.planDesigner.events.ResourceCreationEvent;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import javafx.fxml.FXML;
@@ -48,7 +49,7 @@ public class CreateNewDialogController implements Initializable {
     private File initialDirectoryHint;
     private String type;
     private I18NRepo i18NRepo;
-    private IResourceCreationHandler resourceCreationHandler;
+    private IGuiModificationHandler guiModificationHandler;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,8 +76,8 @@ public class CreateNewDialogController implements Initializable {
         pathTextField.setText(this.initialDirectoryHint.getAbsolutePath());
     }
 
-    public void setResourceCreationHandler (IResourceCreationHandler resourceCreationHandler) {
-        this.resourceCreationHandler = resourceCreationHandler;
+    public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
+        this.guiModificationHandler = guiModificationHandler;
     }
 
     private void openFileChooser(Stage stage) {
@@ -107,7 +108,7 @@ public class CreateNewDialogController implements Initializable {
         }
 
         if (type == null) {
-            ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.create.type"), null);
+            ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.create.elementType"), null);
             return;
         }
 
@@ -123,8 +124,10 @@ public class CreateNewDialogController implements Initializable {
             return;
         }
 
-        // Notification of resourceCreationHandler for plans, plantypes, etc...
-        resourceCreationHandler.handleResourceCreationEvent(new ResourceCreationEvent(pathTextField.getText(), type, name));
+        // Notification of guiModificationHandler for creating plans, plantypes, etc...
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, type, name);
+        event.setAbsoluteDirectory(pathTextField.getText());
+        guiModificationHandler.handle(event);
         ((Stage) pathTextField.getScene().getWindow()).close();
     }
 

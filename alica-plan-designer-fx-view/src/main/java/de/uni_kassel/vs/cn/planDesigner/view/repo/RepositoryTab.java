@@ -36,6 +36,7 @@ public class RepositoryTab extends Tab {
         this.showUsageHandler = showUsageHandler;
     }
 
+
     public void addElement(ViewModelElement viewModelElement) {
         Platform.runLater(new Runnable() {
             @Override

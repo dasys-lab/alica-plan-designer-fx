@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
@@ -84,7 +84,7 @@ public class MainWindowController implements Initializable {
     private ConfigurationWindowController configWindowController;
     private IGuiStatusHandler guiStatusHandler;
     private IShowUsageHandler usageHandler;
-    private IResourceCreationHandler resourceCreationHandler;
+    private IGuiModificationHandler guiModificationHandler;
     private IMoveFileHandler moveFileHandler;
     private Menu fileMenu;
     private Menu codeGenerationMenu;
@@ -111,6 +111,7 @@ public class MainWindowController implements Initializable {
         }
         menuBar.getMenus().addAll(createMenus(configWindowController));
         repositoryTabPane.setShowUsageHandler(usageHandler);
+        editorTabPane.setGuiModificationHandler(guiModificationHandler);
         editorTabPane.setShowUsageHandler(usageHandler);
 //        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
@@ -286,16 +287,16 @@ public class MainWindowController implements Initializable {
         this.guiStatusHandler = guiStatusHandler;
     }
 
-    public void setResourceCreationHandler(IResourceCreationHandler creationHandler) {
-        this.resourceCreationHandler = creationHandler;
+    public void setGuiModificationHandler(IGuiModificationHandler creationHandler) {
+        this.guiModificationHandler = creationHandler;
     }
 
     public void setMoveFileHandler(IMoveFileHandler moveFileHandler) {
         this.moveFileHandler = moveFileHandler;
     }
 
-    public IResourceCreationHandler getResourceCreationHandler() {
-        return resourceCreationHandler;
+    public IGuiModificationHandler getGuiModificationHandler() {
+        return guiModificationHandler;
     }
 
     public IMoveFileHandler getMoveFileHandler() {
