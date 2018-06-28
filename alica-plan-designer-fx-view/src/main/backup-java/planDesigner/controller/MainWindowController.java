@@ -128,7 +128,7 @@ public class MainWindowController implements Initializable {
                 .addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 // TODO: how to determine type of longId, for enabling code generation menu
-//                if (((AbstractEditorTab) newValue).getEditable() instanceof AbstractPlan) {
+//                if (((AbstractPlanTab) newValue).getEditable() instanceof AbstractPlan) {
 //                    generateCurrentFile.setDisable(false);
 //                }
             } else {

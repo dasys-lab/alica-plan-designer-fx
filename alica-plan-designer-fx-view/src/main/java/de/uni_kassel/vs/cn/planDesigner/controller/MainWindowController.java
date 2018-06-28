@@ -6,8 +6,9 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IResourceCreationHandl
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowUsageHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.EditMenu;
@@ -110,6 +111,7 @@ public class MainWindowController implements Initializable {
         }
         menuBar.getMenus().addAll(createMenus(configWindowController));
         repositoryTabPane.setShowUsageHandler(usageHandler);
+        editorTabPane.setShowUsageHandler(usageHandler);
 //        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
         guiStatusHandler.handleGuiInitialized();
@@ -117,11 +119,11 @@ public class MainWindowController implements Initializable {
 
 //    public boolean isSelectedPlanElement(Node node) {
 //        Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
-//        if (selectedItem == null || ((AbstractEditorTab) selectedItem).getSelectedPlanElements() == null) {
+//        if (selectedItem == null || ((AbstractPlanTab) selectedItem).getSelectedPlanElements() == null) {
 //            return false;
 //        }
 //
-//        Pair<Long, AbstractPlanElementContainer> o = ((AbstractEditorTab) selectedItem).getSelectedPlanElements().getValue().get(0);
+//        Pair<Long, AbstractPlanElementContainer> o = ((AbstractPlanTab) selectedItem).getSelectedPlanElements().getValue().get(0);
 //        if (o != null && o.getValue() != null) {
 //            return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
 //        } else {
@@ -140,7 +142,7 @@ public class MainWindowController implements Initializable {
             if (editorTabPane.getSelectionModel().getSelectedItem() == null) {
                 return;
             }
-            ((AbstractEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save();
+            ((AbstractPlanTab) editorTabPane.getSelectionModel().getSelectedItem()).save();
         });
         saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
@@ -154,10 +156,10 @@ public class MainWindowController implements Initializable {
         MenuItem generateItem = new MenuItem(i18NRepo.getString("label.menu.generation.generate"));
         MenuItem generateCurrentFile = new MenuItem(i18NRepo.getString("label.menu.generation.file"));
         generateCurrentFile.setDisable(true);
-        getEditorTabPane().getSelectionModel().selectedItemProperty()
+        editorTabPane.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
-                        String type = ((AbstractEditorTab) newValue).getTreeViewModelElement().getType();
+                        String type = ((IEditorTab) newValue).getViewModelElement().getType();
                         if (type.equals(Types.BEHAVIOUR) ||
                                 type.equals(Types.PLAN) ||
                                 type.equals(Types.MASTERPLAN) ||
@@ -171,8 +173,8 @@ public class MainWindowController implements Initializable {
                 });
 
         generateCurrentFile.setOnAction(e -> {
-            long modelElementId = ((AbstractEditorTab) getEditorTabPane()
-                    .getSelectionModel().getSelectedItem()).getTreeViewModelElement().getId();
+            long modelElementId = ((AbstractPlanTab) editorTabPane
+                    .getSelectionModel().getSelectedItem()).getViewModelElement().getId();
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
 //            	waitOnProgressWindow(() -> new Codegenerator().generate(modelElementId));
@@ -231,10 +233,10 @@ public class MainWindowController implements Initializable {
     }
 
 //	public void closeTabIfOpen (long modelElementId) {
-//        Optional<AbstractEditorTab> tabOptional = editorTabPane
+//        Optional<AbstractPlanTab> tabOptional = editorTabPane
 //                .getTabs()
 //                .stream()
-//                .map(e -> (AbstractEditorTab) e)
+//                .map(e -> (AbstractPlanTab) e)
 //                .filter(e -> e.getEditable().equals(modelElementId))
 //                .findFirst();
 //        tabOptional.ifPresent(abstractEditorTab -> editorTabPane.getTabs().remove(abstractEditorTab));

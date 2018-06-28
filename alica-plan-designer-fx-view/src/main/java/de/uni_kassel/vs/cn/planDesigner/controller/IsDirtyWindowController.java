@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractEditorTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -22,7 +22,7 @@ public class IsDirtyWindowController {
         Creates a modal for a Tab selected as dirty. Allows the user to save the content of the tab, cancel
         the close event, or to close the tab
      */
-    public static void createIsDirtyWindow(AbstractEditorTab tab, Event event) {
+    public static void createIsDirtyWindow(AbstractPlanTab tab, Event event) {
         I18NRepo i18NRepo = I18NRepo.getInstance();
         Stage stage = init();
         Button saveBtn = new Button(i18NRepo.getString("label.error.saveFile"));

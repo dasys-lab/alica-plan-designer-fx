@@ -13,6 +13,17 @@ public class TaskRepositoryViewModel {
 
     public TaskRepositoryViewModel() {
         tasks = FXCollections.observableArrayList(new ArrayList<>());
+        tasks.addListener(new ListChangeListener<ViewModelElement>() {
+            @Override
+            public void onChanged(Change<? extends ViewModelElement> c) {
+                if (taskRepositoryTab == null)
+                {
+                    return;
+                }
+                taskRepositoryTab.clearGuiContent();
+                taskRepositoryTab.addElements(tasks);
+            }
+        });
     }
 
     public void setTaskRepositoryTab (TaskRepositoryTab taskRepositoryTab) {
@@ -27,13 +38,6 @@ public class TaskRepositoryViewModel {
 
         taskRepositoryTab.clearGuiContent();
         taskRepositoryTab.addElements(tasks);
-        tasks.addListener(new ListChangeListener<ViewModelElement>() {
-            @Override
-            public void onChanged(Change<? extends ViewModelElement> c) {
-                taskRepositoryTab.clearGuiContent();
-                taskRepositoryTab.addElements(tasks);
-            }
-        });
     }
 
     public void addTask(ViewModelElement task) {
@@ -46,5 +50,9 @@ public class TaskRepositoryViewModel {
                 tasks.remove(element);
             }
         }
+    }
+
+    public void clearTasks() {
+        tasks.clear();
     }
 }
