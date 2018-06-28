@@ -78,7 +78,7 @@ public class EditMenu extends Menu {
 //        } else if (selectedItem instanceof PlanTypeTab) {
 //            ((PlanTypeTab) selectedItem).refresh();
 //        } else if (selectedItem instanceof TaskRepositoryTab) {
-//            ((TaskRepositoryTab) selectedItem).createContentView();
+//            ((TaskRepositoryTab) selectedItem).initGui();
 //        }
     }
 
@@ -91,7 +91,7 @@ public class EditMenu extends Menu {
 //        } else if (selectedItem instanceof PlanTypeTab) {
 //            ((PlanTypeTab) selectedItem).refresh();
 //        } else if (selectedItem instanceof TaskRepositoryTab) {
-//            ((TaskRepositoryTab) selectedItem).createContentView();
+//            ((TaskRepositoryTab) selectedItem).initGui();
 //        }
     }
 

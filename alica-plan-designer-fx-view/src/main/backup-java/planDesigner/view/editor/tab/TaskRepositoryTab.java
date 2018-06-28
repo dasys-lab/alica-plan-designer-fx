@@ -39,7 +39,7 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
             @Override
             public void notifyChanged(Notification msg) {
                 super.notifyChanged(msg);
-                createContentView();
+                initGui();
             }
         };
         getEditable().eAdapters().add(taskRepoListener);
@@ -47,7 +47,7 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         onClosedProperty().addListener((observable, oldValue, newValue) -> {
             getEditable().eAdapters().remove(taskRepoListener);
         });
-        createContentView();
+        initGui();
     }
 
     public void createContentView() {
@@ -78,7 +78,7 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         createTaskButton.setOnAction(e -> {
             if (taskNameField.getText() != null && !taskNameField.getText().isEmpty()) {
                 getCommandStack().storeAndExecute(new AddTaskToRepository(getEditable(), taskNameField.getText()));
-                createContentView();
+                initGui();
             }
         });
         newTaskContainer.getChildren().addAll(taskNameField, createTaskButton);
