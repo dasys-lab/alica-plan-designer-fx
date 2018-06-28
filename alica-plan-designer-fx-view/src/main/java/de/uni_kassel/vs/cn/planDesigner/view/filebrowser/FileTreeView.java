@@ -47,7 +47,6 @@ public final class FileTreeView extends TreeView<File> {
             originalCursor = getCursor();
             Node node = ((Node) e.getTarget()).getParent();
             if (node instanceof FileTreeCell == false) {
-                System.out.println("event consumed");
                 e.consume();
                 return;
             }
@@ -116,7 +115,9 @@ public final class FileTreeView extends TreeView<File> {
                 parent = treeCell.getTreeItem().getParent().getValue();
             }
 
-            if (startFolder.equals(parent.toString())) {
+            String targetFolder = parent.toString();
+            if (targetFolder.equals(startFolder) || targetFolder.contains(rolesPath) || targetFolder.contains(taskPath)) {
+                startFolder = "";
                 e.consume();
                 return;
             }

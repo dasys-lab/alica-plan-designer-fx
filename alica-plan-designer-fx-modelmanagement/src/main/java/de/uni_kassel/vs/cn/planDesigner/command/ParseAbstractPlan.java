@@ -27,7 +27,7 @@ public class ParseAbstractPlan extends AbstractCommand {
         switch (modelModificationQuery.getModelElementType()) {
             case Types.PLAN:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
-                replaceIncompleteTasks();
+                modelManager.replaceIncompleteTasks((Plan)newElement);
                 break;
             case Types.PLANTYPE:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
@@ -37,20 +37,6 @@ public class ParseAbstractPlan extends AbstractCommand {
                 return;
         }
         modelManager.addPlanElement(newElement, modelModificationQuery.getModelElementType(), false);
-    }
-
-    private void replaceIncompleteTasks() {
-        ArrayList<Task> incompleteTasks = ParsedModelReferences.getInstance().incompleteTasks;
-        for (EntryPoint ep : ((Plan)newElement).getEntryPoints()) {
-            if (incompleteTasks.contains(ep.getTask())) {
-                for (Task task : modelManager.getTaskRepository().getTasks()) {
-                    if (task.getId() == ep.getTask().getId()) {
-                        ep.setTask(task);
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     @Override
