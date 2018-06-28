@@ -45,11 +45,9 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     private ConfigurationManager configurationManager;
     private FileSystemEventHandler fileSystemEventHandler;
     private ConfigurationEventHandler configEventHandler;
-    private I18NRepo i18NRepo;
 
     // Model Objects
     private ModelManager modelManager;
-    private CommandStack commandStack;
 
     // View Objects
     private RepositoryViewModel repoViewModel;
@@ -66,15 +64,11 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
         configurationManager = ConfigurationManager.getInstance();
         configurationManager.setController(this);
 
-        i18NRepo = I18NRepo.getInstance();
-
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
         mainWindowController.setResourceCreationHandler(this);
         mainWindowController.setShowUsageHandler(this);
         mainWindowController.setMoveFileHandler(this);
-
-        commandStack = new CommandStack();
 
         setupConfigGuiStuff();
 
