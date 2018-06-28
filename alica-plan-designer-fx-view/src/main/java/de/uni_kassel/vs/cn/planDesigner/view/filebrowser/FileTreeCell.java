@@ -166,35 +166,35 @@ public class FileTreeCell extends TreeCell<File> {
     @Override
     public void updateItem(File item, boolean empty) {
         super.updateItem(item, empty);
-
         if (empty) {
             setText(null);
             setGraphic(null);
-        } else {
-            if (getItem() != null) {
-                setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        if (event.getClickCount() == 2) {
-                            if (getItem().isDirectory()) {
-                                getTreeItem().setExpanded(!getTreeItem().isExpanded());
-                            } else {
-                                controller.openFile(((FileTreeItem) getTreeItem()).getTreeViewModelElement());
-                            }
+            return;
+        }
+
+        if (getItem() != null) {
+            setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.getClickCount() == 2) {
+                        if (getItem().isDirectory()) {
+                            getTreeItem().setExpanded(!getTreeItem().isExpanded());
+                        } else {
+                            controller.openFile(((FileTreeItem) getTreeItem()).getTreeViewModelElement());
                         }
                     }
-                });
-            }
-            if (isEditing()) {
-                if (textField != null) {
-                    textField.setText(getString());
                 }
-                setText(null);
-                setGraphic(textField);
-            } else {
-                setText(getString());
-                setGraphic(getTreeItem().getGraphic());
+            });
+        }
+        if (isEditing()) {
+            if (textField != null) {
+                textField.setText(getString());
             }
+            setText(null);
+            setGraphic(textField);
+        } else {
+            setText(getString());
+            setGraphic(getTreeItem().getGraphic());
         }
     }
 

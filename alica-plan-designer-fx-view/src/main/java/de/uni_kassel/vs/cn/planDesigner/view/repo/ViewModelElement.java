@@ -26,4 +26,13 @@ public class ViewModelElement {
     public String toString() {
         return type + ": " + name + "(" + id + ")";
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ViewModelElement) {
+            return this.getId() == ((ViewModelElement) other).getId();
+        } else {
+            return false;
+        }
+    }
 }

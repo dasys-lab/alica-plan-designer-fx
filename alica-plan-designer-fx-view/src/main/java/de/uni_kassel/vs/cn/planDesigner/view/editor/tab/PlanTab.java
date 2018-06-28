@@ -57,7 +57,7 @@ public class PlanTab extends AbstractEditorTab {
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, editorToolBar);
-        conditionHBox = new ConditionHBox(getEditableElement(), selectedPlanElements);
+        conditionHBox = new ConditionHBox(getTreeViewModelElement(), selectedPlanElements);
         VBox vBox = new VBox(conditionHBox, hBox);
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
         VBox.setVgrow(hBox,Priority.ALWAYS);
