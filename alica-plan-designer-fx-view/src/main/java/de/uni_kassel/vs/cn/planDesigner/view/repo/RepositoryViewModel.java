@@ -53,38 +53,6 @@ public final class RepositoryViewModel {
         repositoryTabPane.addPlanTypes(planTypes);
         repositoryTabPane.addTasks(tasks);
         repositoryTabPane.addBehaviours(behaviours);
-        initListeners();
-    }
-
-    public void initListeners() {
-        plans.addListener(new ListChangeListener<ViewModelElement>() {
-            @Override
-            public void onChanged(Change<? extends ViewModelElement> c) {
-                repositoryTabPane.clearPlansTab();
-                repositoryTabPane.addPlans(plans);
-            }
-        });
-        planTypes.addListener(new ListChangeListener<ViewModelElement>() {
-            @Override
-            public void onChanged(Change<? extends ViewModelElement> c) {
-                repositoryTabPane.clearPlanTypesTab();
-                repositoryTabPane.addPlanTypes(planTypes);
-            }
-        });
-        behaviours.addListener(new ListChangeListener<ViewModelElement>() {
-            @Override
-            public void onChanged(Change<? extends ViewModelElement> c) {
-                repositoryTabPane.clearBehavioursTab();
-                repositoryTabPane.addBehaviours(behaviours);
-            }
-        });
-        tasks.addListener(new ListChangeListener<ViewModelElement>() {
-            @Override
-            public void onChanged(Change<? extends ViewModelElement> c) {
-                repositoryTabPane.clearTasksTab();
-                repositoryTabPane.addTasks(tasks);
-            }
-        });
     }
 
     public void addPlan(ViewModelElement plan) {

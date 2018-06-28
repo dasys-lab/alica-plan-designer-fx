@@ -281,7 +281,6 @@ public final class FileTreeView extends TreeView<File> {
         if (folders.length == 1 && folders[0].isEmpty()) {
             return treeItem;
         }
-        System.out.println("FileTreeView::findFolder(): " + treeItem.toString());
         for (Object item : treeItem.getChildren()) {
             FileTreeItem newItem = (FileTreeItem) item;
             if (!(newItem.getValue().toString().endsWith(folders[index]))) {

@@ -127,13 +127,13 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
                     addTreeViewElement(plan, type);
                     repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), type));
                 } else if (planElement instanceof PlanType) {
-                    addTreeViewElement((AbstractPlan) planElement, type);
+                    addTreeViewElement((PlanType) planElement, type);
                     repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), type));
                 } else if (planElement instanceof Behaviour) {
-                    addTreeViewElement((AbstractPlan) planElement, type);
+                    addTreeViewElement((Behaviour) planElement, type);
                     repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), type));
                 } else if (planElement instanceof TaskRepository) {
-                    addTreeViewElement((AbstractPlan) planElement, type);
+                    addTreeViewElement((TaskRepository) planElement, type);
                     for (Task task : ((TaskRepository) planElement).getTasks()) {
                         type = FileSystemUtil.getTypeString(task);
                         repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), type));
@@ -260,6 +260,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     /**
      * Called by the FileTreeView when moving files
      */
+    @Override
     public void moveFile(long id, Path originalPath, Path newPath) {
         modelManager.moveFile(id, originalPath, newPath);
     }
@@ -286,4 +287,7 @@ public final class Controller implements IModelEventHandler, IShowUsageHandler, 
     public void handleTabOpenedEvent(BehaviourTab behaviourTab) {
         System.err.println("Controller: Opening Behaviours not implemented, yet!");
     }
+
+    @Override
+    public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {System.err.println("Controller: Opening PlanTypes not implemented, yet!");}
 }

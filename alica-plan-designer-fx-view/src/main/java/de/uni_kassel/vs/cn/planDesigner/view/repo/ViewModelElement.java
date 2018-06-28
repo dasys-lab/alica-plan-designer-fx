@@ -30,7 +30,8 @@ public class ViewModelElement {
     @Override
     public boolean equals(Object other) {
         if (other instanceof ViewModelElement) {
-            return this.getId() == ((ViewModelElement) other).getId();
+            ViewModelElement otherElement = (ViewModelElement) other;
+            return this.getId() == otherElement.getId() && this.getName().equals(otherElement.getName());
         } else {
             return false;
         }
