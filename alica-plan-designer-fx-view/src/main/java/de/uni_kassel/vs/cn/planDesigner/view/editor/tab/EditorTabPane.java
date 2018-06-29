@@ -1,16 +1,35 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
+import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class EditorTabPane extends TabPane {
 
     private ITabEventHandler tabEventHandler;
     private IGuiModificationHandler guiModificationHandler;
+
+    public EditorTabPane() {
+        super();
+    }
 
     public void openTab(TreeViewModelElement treeViewModelElement) {
         // find tab if it already opened
@@ -25,12 +44,12 @@ public class EditorTabPane extends TabPane {
         if (openedTab == null) {
             openedTab = createNewTab(treeViewModelElement);
             getTabs().add(openedTab);
-            // TODO: send event that new task repository tab was opened
         }
 
         // make it the selected tab
         getSelectionModel().select(openedTab);
         this.requestFocus();
+        this.autosize();
     }
 
     private Tab createNewTab(TreeViewModelElement treeViewModelElement) {
@@ -63,7 +82,17 @@ public class EditorTabPane extends TabPane {
         this.tabEventHandler = handler;
     }
 
-    public void setGuiModificationHandler (IGuiModificationHandler handler) {
+    public void setGuiModificationHandler(IGuiModificationHandler handler) {
         this.guiModificationHandler = handler;
     }
+
+    public GuiModificationEvent handleDelete() {
+        Tab selectedTab = getSelectionModel().getSelectedItem();
+        if (selectedTab == null) {
+            return null;
+        }
+
+        return ((IEditorTab) selectedTab).handleDelete();
+    }
+
 }

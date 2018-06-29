@@ -1,9 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.EditorToolBar;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
@@ -61,7 +63,7 @@ public class PlanTab extends AbstractPlanTab {
         conditionHBox = new ConditionHBox((TreeViewModelElement) getViewModelElement(), selectedPlanElements);
         VBox vBox = new VBox(conditionHBox, hBox);
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
-        VBox.setVgrow(hBox,Priority.ALWAYS);
+        VBox.setVgrow(hBox, Priority.ALWAYS);
         HBox.setHgrow(scrollPane, Priority.ALWAYS);
 
         hBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -124,5 +126,11 @@ public class PlanTab extends AbstractPlanTab {
 //                });
 //            }
         });
+    }
+
+    @Override
+    public GuiModificationEvent handleDelete() {
+        System.err.println("PlanTab: Not implemented!");
+        return null;
     }
 }

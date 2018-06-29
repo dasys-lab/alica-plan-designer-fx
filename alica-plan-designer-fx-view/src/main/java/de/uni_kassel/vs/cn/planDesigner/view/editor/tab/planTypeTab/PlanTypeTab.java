@@ -4,6 +4,8 @@ import de.uni_kassel.vs.cn.planDesigner.controller.PlanTypeWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import javafx.application.Platform;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -28,4 +30,9 @@ public class PlanTypeTab extends AbstractPlanTab {
         }
     }
 
+    @Override
+    public GuiModificationEvent handleDelete() {
+        System.err.println("PlanTypeTab: Not implemented!");
+        return null;
+    }
 }

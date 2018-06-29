@@ -41,7 +41,6 @@ public class MainWindowController implements Initializable {
     // SINGLETON
     private static volatile MainWindowController instance;
 
-
     public static MainWindowController getInstance() {
         if (instance == null) {
             synchronized (MainWindowController.class) {
@@ -94,7 +93,6 @@ public class MainWindowController implements Initializable {
     private MainWindowController() {
         super();
         this.i18NRepo = I18NRepo.getInstance();
-
     }
 
     public void setConfigWindowController(ConfigurationWindowController configWindowController) {
@@ -107,11 +105,12 @@ public class MainWindowController implements Initializable {
         if (configWindowController == null) {
             throw new RuntimeException("The member configWindowController need to be set through the public setter, before calling initialize()!");
         }
-        menuBar.getMenus().addAll(createMenus(configWindowController));
+
         repositoryTabPane.setGuiModificationHandler(guiModificationHandler);
         editorTabPane.setGuiModificationHandler(guiModificationHandler);
 //        propertyAndStatusTabPane.init(editorTabPane);
         statusText.setVisible(false);
+        menuBar.getMenus().addAll(createMenus());
         guiStatusHandler.handleGuiInitialized();
     }
 
@@ -129,7 +128,7 @@ public class MainWindowController implements Initializable {
 //        }
 //    }
 
-    private List<Menu> createMenus(ConfigurationWindowController configWindowController) {
+    private List<Menu> createMenus() {
         List<Menu> menus = new ArrayList<>();
 
         fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
@@ -147,7 +146,8 @@ public class MainWindowController implements Initializable {
         fileMenu.setDisable(true);
         menus.add(fileMenu);
 
-        editMenu = new EditMenu(editorTabPane, configWindowController);
+        editMenu = new EditMenu(fileTreeView, editorTabPane, repositoryTabPane, configWindowController);
+        editMenu.setGuiModificationHandler(this.guiModificationHandler);
         menus.add(editMenu);
 
         codeGenerationMenu = new Menu(i18NRepo.getString("label.menu.generation"));

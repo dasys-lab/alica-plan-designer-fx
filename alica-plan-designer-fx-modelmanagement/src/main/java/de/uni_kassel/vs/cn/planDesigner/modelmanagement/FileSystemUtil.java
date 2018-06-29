@@ -24,7 +24,7 @@ public class FileSystemUtil {
             case Types.PLANTYPE:
                 return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLANTYPE_ENDING).toFile();
             default:
-                System.err.println("FileSystemUtil: Unknown type gets ignored!");
+                System.err.println("FileSystemUtil: Unknown eventType gets ignored!");
                 return null;
         }
     }

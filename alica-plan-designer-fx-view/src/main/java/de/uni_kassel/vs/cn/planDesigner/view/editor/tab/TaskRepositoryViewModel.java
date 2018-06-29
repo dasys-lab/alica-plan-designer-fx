@@ -45,11 +45,7 @@ public class TaskRepositoryViewModel {
     }
 
     public void removeTask(ViewModelElement task) {
-        for (ViewModelElement element : tasks) {
-            if (element.getId() == task.getId()) {
-                tasks.remove(element);
-            }
-        }
+        tasks.remove(task);
     }
 
     public void clearTasks() {

@@ -20,6 +20,7 @@ public class DraggableHBox extends HBox {
         text = new Text();
         text.setOnDragDetected(event -> {this.fireEvent(event);});
         text.setOnDragDone(event -> {this.fireEvent(event);});
+        this.setSpacing(5);
         getChildren().addAll(icon, text);
     }
 

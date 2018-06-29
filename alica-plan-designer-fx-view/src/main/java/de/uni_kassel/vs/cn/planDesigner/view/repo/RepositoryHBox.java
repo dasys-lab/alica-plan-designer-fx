@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.DeleteFileMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseButton;
@@ -21,6 +22,7 @@ public class RepositoryHBox extends DraggableHBox {
         setOnContextMenuRequested(e -> {
             ContextMenu contextMenu = new ContextMenu(new ShowUsagesMenuItem(this.viewModelElement, guiModificationHandler));
             contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
+            e.consume();
         });
 
         // double click for open the corresponding file

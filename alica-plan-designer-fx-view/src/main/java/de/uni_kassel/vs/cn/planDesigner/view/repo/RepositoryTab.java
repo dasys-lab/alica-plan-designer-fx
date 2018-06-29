@@ -25,6 +25,7 @@ public class RepositoryTab extends Tab {
         setText(tabTitle);
         this.repoTool = repoTool;
         this.repositoryListView = new ListView();
+        this.repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
         this.setContent(this.repositoryListView);
 
         modelElementComparator = Comparator.comparing(o -> !o.getViewModelType().equals(Types.MASTERPLAN));
@@ -55,6 +56,7 @@ public class RepositoryTab extends Tab {
                     repositoryListView.getItems().remove(removeBeforeAdding[0]);
                 }
                 repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
+                repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
                 sort();
             }
         });
@@ -67,6 +69,7 @@ public class RepositoryTab extends Tab {
                 for (ViewModelElement viewModelElement : viewModelElements) {
                     repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
                 }
+                repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
                 sort();
             }
         });
@@ -77,8 +80,13 @@ public class RepositoryTab extends Tab {
             @Override
             public void run() {
                 repositoryListView.getItems().clear();
+                repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
             }
         });
+    }
+
+    public ViewModelElement getSelectedItem() {
+        return repositoryListView.getSelectionModel().getSelectedItem().getViewModelElement();
     }
 
     protected void sort() {

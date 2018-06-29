@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.*;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteTaskFromRepository;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
@@ -197,7 +198,11 @@ public class ModelManager {
                         replaceIncompleteTasks(plan);
                         planElementMap.put(plan.getId(), plan);
                         planMap.put(plan.getId(), plan);
-                        fireCreationEvent(plan);
+                        if (plan.getMasterPlan()) {
+                            fireCreationEvent(plan, Types.MASTERPLAN);
+                        } else {
+                            fireCreationEvent(plan, Types.PLAN);
+                        }
                     }
                     break;
                 case FileSystemUtil.BEHAVIOUR_ENDING:
@@ -207,7 +212,7 @@ public class ModelManager {
                     } else {
                         planElementMap.put(behaviour.getId(), behaviour);
                         behaviourMap.put(behaviour.getId(), behaviour);
-                        fireCreationEvent(behaviour);
+                        fireCreationEvent(behaviour, Types.BEHAVIOUR);
                     }
                     break;
                 case FileSystemUtil.PLANTYPE_ENDING:
@@ -217,7 +222,7 @@ public class ModelManager {
                     } else {
                         planElementMap.put(planType.getId(), planType);
                         planTypeMap.put(planType.getId(), planType);
-                        fireCreationEvent(planType);
+                        fireCreationEvent(planType, Types.PLANTYPE);
                     }
                     break;
                 case FileSystemUtil.TASKREPOSITORY_ENDING:
@@ -235,7 +240,7 @@ public class ModelManager {
                         }
                         planElementMap.put(taskRepository.getId(), taskRepository);
                         this.taskRepository = taskRepository;
-                        fireCreationEvent(this.taskRepository);
+                        fireCreationEvent(this.taskRepository, Types.TASKREPOSITORY);
                     }
                     break;
 
@@ -258,6 +263,7 @@ public class ModelManager {
 
     /**
      * Replaces all incomplete Tasks attached to the plan's entrypoints by already parsed ones
+     *
      * @param plan
      */
     public void replaceIncompleteTasks(Plan plan) {
@@ -316,20 +322,21 @@ public class ModelManager {
         return planElement;
     }
 
-    private void fireCreationEvent(PlanElement element) {
+    private void fireCreationEvent(PlanElement element, String elementType) {
         for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelQueryType.ELEMENT_CREATED, null, element));
+            eventHandler.handleModelEvent(new ModelEvent(ModelQueryType.ELEMENT_CREATED, null, element, elementType));
         }
     }
 
-    private void fireDeletionEvent(PlanElement element) {
+    private void fireDeletionEvent(PlanElement element, String elementType) {
         for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelQueryType.ELEMENT_DELETED, null, element));
+            eventHandler.handleModelEvent(new ModelEvent(ModelQueryType.ELEMENT_DELETED, element, null, elementType));
         }
     }
 
     /**
      * This methods should only be called through commands.
+     *
      * @param newElement
      * @param type
      * @param serializeToDisk
@@ -338,6 +345,7 @@ public class ModelManager {
     public PlanElement addPlanElement(PlanElement newElement, String type, boolean serializeToDisk) {
         switch (type) {
             case Types.PLAN:
+            case Types.MASTERPLAN:
                 Plan plan = (Plan) newElement;
                 planMap.put(plan.getId(), plan);
                 if (serializeToDisk) {
@@ -362,10 +370,10 @@ public class ModelManager {
         }
         PlanElement oldElement = planElementMap.get(newElement.getId());
         if (oldElement != null) {
-            fireDeletionEvent(oldElement);
+            fireDeletionEvent(oldElement, type);
         }
         planElementMap.put(newElement.getId(), newElement);
-        fireCreationEvent(newElement);
+        fireCreationEvent(newElement, type);
         return oldElement;
     }
 
@@ -387,14 +395,14 @@ public class ModelManager {
                 break;
             case Types.TASK:
                 Task task = (Task) planElement;
-                taskRepository.getTasks().add(task);
-                task.setTaskRepository(taskRepository);
+                taskRepository.getTasks().remove(task);
+                task.setTaskRepository(null);
                 break;
             default:
                 System.err.println("ModelManager: removing " + type + " not implemented, yet!");
         }
         planElementMap.remove(planElement.getId());
-        fireDeletionEvent(planElement);
+        fireDeletionEvent(planElement, type);
     }
 
     public ArrayList<PlanElement> getUsages(long modelElementId) {
@@ -477,7 +485,7 @@ public class ModelManager {
                         cmd = new CreateTask(this, mmq);
                         break;
                     default:
-                        System.err.println("ModelManager: Creation of unknown model element type gets ignored!");
+                        System.err.println("ModelManager: Creation of unknown model element eventType gets ignored!");
                         return;
                 }
 
@@ -493,8 +501,11 @@ public class ModelManager {
                     case Types.PLANTYPE:
                         cmd = null;
                         break;
+                    case Types.TASK:
+                        cmd = new DeleteTaskFromRepository(this, mmq);
+                        break;
                     default:
-                        System.err.println("ModelManager: Creation of unkonwn model element type gets ignored!");
+                        System.err.println("ModelManager: Deletion of unknown model element eventType gets ignored!");
                         return;
                 }
                 break;
@@ -507,6 +518,7 @@ public class ModelManager {
 
     /**
      * Creates a path relative to the plansPath
+     *
      * @param absoluteDirectory
      * @param fileName
      * @return
@@ -525,6 +537,7 @@ public class ModelManager {
 
     /**
      * Creates a move file command and executes it
+     *
      * @param movedFileId
      * @param originalPath
      * @param newPath

@@ -5,6 +5,8 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 
+import java.lang.reflect.Type;
+
 public class DeletePlan extends AbstractCommand {
 
     protected Plan plan;
@@ -36,6 +38,10 @@ public class DeletePlan extends AbstractCommand {
         if (plan == null) {
             return;
         }
-        modelManager.addPlanElement(plan, Types.PLAN, true);
+        if (!plan.getMasterPlan()) {
+            modelManager.addPlanElement(plan, Types.PLAN, true);
+        } else {
+            modelManager.addPlanElement(plan, Types.MASTERPLAN, true);
+        }
     }
 }

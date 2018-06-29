@@ -6,17 +6,21 @@ import java.io.File;
 
 public class ModelModificationQuery {
 
-
     protected ModelQueryType queryType;
     protected String absoluteDirectory;
 
     protected String elementType;
+    protected long elementId;
     protected String name;
 
     protected long parentId;
 
-    public ModelModificationQuery(ModelQueryType queryType, String absolutePath) {
+    public ModelModificationQuery(ModelQueryType queryType) {
         this.queryType = queryType;
+    }
+
+    public ModelModificationQuery(ModelQueryType queryType, String absolutePath) {
+        this(queryType);
         int lastSeparatorIdx = absolutePath.lastIndexOf(File.separator);
         if (lastSeparatorIdx == -1)
             lastSeparatorIdx = 0;
@@ -44,11 +48,13 @@ public class ModelModificationQuery {
     }
 
     public ModelModificationQuery(ModelQueryType queryType, String absoluteDirectory, String elementType, String name) {
-        this.queryType = queryType;
+        this(queryType);
         this.absoluteDirectory = absoluteDirectory;
         this.elementType = elementType;
         this.name = name;
     }
+
+
 
     public String getAbsoluteDirectory() {
         return absoluteDirectory;
@@ -66,11 +72,23 @@ public class ModelModificationQuery {
         return queryType;
     }
 
-    public long getParentId () {
+    public long getParentId() {
         return this.parentId;
     }
 
-    public void setParentId (long parentId) {
+    public void setParentId(long parentId) {
         this.parentId = parentId;
+    }
+
+    public long getElementId() {
+        return this.elementId;
+    }
+
+    public void setElementId(long id) {
+        this.elementId = id;
+    }
+
+    public void setElementType (String elementType) {
+        this.elementType = elementType;
     }
 }
