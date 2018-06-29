@@ -3,19 +3,18 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.PlanTypeWindowController">
+<VBox xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.PlanTypeWindowController">
     <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" spacing="15.0" VBox.vgrow="ALWAYS">
         <ListView fx:id="planListView" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS"/>
         <VBox spacing="20.0" HBox.hgrow="ALWAYS">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
-            <Button fx:id="addPlanButton" mnemonicParsing="false" text="Button" VBox.vgrow="ALWAYS"/>
-            <Button fx:id="removePlanButton" mnemonicParsing="false" text="Button" VBox.vgrow="ALWAYS"/>
-            <Button fx:id="removeAllPlansButton" mnemonicParsing="false" text="Button" VBox.vgrow="ALWAYS"/>
+            <Button fx:id="addPlanButton" mnemonicParsing="false" text="Add" VBox.vgrow="ALWAYS"/>
+            <Button fx:id="removePlanButton" mnemonicParsing="false" text="Remove" VBox.vgrow="ALWAYS"/>
+            <Button fx:id="removeAllPlansButton" mnemonicParsing="false" text="Remove All" VBox.vgrow="ALWAYS"/>
         </VBox>
-        <TableView fx:id="plantypeTableView" HBox.hgrow="ALWAYS">
+        <TableView fx:id="planTypeTableView" HBox.hgrow="ALWAYS">
             <columns>
                 <TableColumn maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="C1"/>
                 <TableColumn maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="C2"/>

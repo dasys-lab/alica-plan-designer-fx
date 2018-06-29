@@ -83,6 +83,10 @@ public class ModelManager {
         return new ArrayList<>(planMap.values());
     }
 
+    public ArrayList<PlanType> getPlanTypes() {
+        return new ArrayList<>(planTypeMap.values());
+    }
+
     public ArrayList<Behaviour> getBehaviours() {
         return new ArrayList<>(behaviourMap.values());
     }

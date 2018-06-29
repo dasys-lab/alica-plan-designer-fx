@@ -18,6 +18,8 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
@@ -47,6 +49,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     // View Objects
     private RepositoryViewModel repoViewModel;
     private TaskRepositoryViewModel taskViewModel;
+    private PlanTypeViewModel planTypeViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
     private RepositoryTabPane repoTabPane;
@@ -68,6 +71,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         repoViewModel = new RepositoryViewModel();
         taskViewModel = new TaskRepositoryViewModel();
+        planTypeViewModel = new PlanTypeViewModel();
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -287,5 +291,24 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     @Override
-    public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {System.err.println("Controller: Opening PlanTypes not implemented, yet!");}
+    public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {
+        planTypeViewModel.clearAllPlans();
+        ArrayList<PlanType> planTypes = modelManager.getPlanTypes();
+        PlanType currentPlantype = null;
+        for(PlanType planType : planTypes) {
+            planTypeViewModel.addPlantypeToAllPlans(new ViewModelElement(planType.getId(), planType.getName(), Types.PLANTYPE));
+            if(planTypeTab.getViewModelElement().getId() == planType.getId()) {
+                currentPlantype = planType;
+            }
+        }
+        if(currentPlantype != null) {
+            planTypeViewModel.clearPlansInPlanType();
+            for(Plan plan : currentPlantype.getPlans()) {
+                planTypeViewModel.addPlantypeToPlansInPlanType(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+            }
+        }
+
+        planTypeViewModel.setPlanTypeTab(planTypeTab);
+
+    }
 }

@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
+
 public interface ITabEventHandler {
     public abstract void handleTabOpenedEvent(TaskRepositoryTab taskRepositoryTab);
     public abstract void handleTabOpenedEvent(PlanTab planTab);
