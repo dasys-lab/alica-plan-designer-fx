@@ -5,14 +5,14 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
-import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
+import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
@@ -116,41 +116,74 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             return;
         }
 
-        PlanElement planElement = event.getNewElement();
-        String type = FileSystemUtil.getTypeString(planElement);
-        switch (event.getType()) {
+        PlanElement planElement;
+        switch (event.getEventType()) {
             case ELEMENT_CREATED:
-                if (planElement instanceof Plan) {
-                    Plan plan = (Plan) planElement;
-                    addTreeViewElement(plan, type);
-                    repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), type));
-                } else if (planElement instanceof PlanType) {
-                    addTreeViewElement((PlanType) planElement, type);
-                    repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), type));
-                } else if (planElement instanceof Behaviour) {
-                    addTreeViewElement((Behaviour) planElement, type);
-                    repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), type));
-                } else if (planElement instanceof TaskRepository) {
-                    addTreeViewElement((TaskRepository) planElement, type);
-                    for (Task task : ((TaskRepository) planElement).getTasks()) {
-                        type = FileSystemUtil.getTypeString(task);
-                        repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), type));
-                    }
-                } else if (planElement instanceof Task) {
-                    Task task = (Task) planElement;
-                    ViewModelElement element = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
-                    repoViewModel.addTask(element);
-                    taskViewModel.addTask(element);
+                planElement = event.getNewElement();
+                switch (event.getElementType()) {
+                    case Types.PLAN:
+                        Plan plan = (Plan) planElement;
+                        addTreeViewElement(plan, Types.PLAN);
+                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+                        break;
+                    case Types.MASTERPLAN:
+                        plan = (Plan) planElement;
+                        addTreeViewElement(plan, Types.MASTERPLAN);
+                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
+                        break;
+                    case Types.PLANTYPE:
+                        addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
+                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE));
+                        break;
+                    case Types.BEHAVIOUR:
+                        addTreeViewElement((Behaviour) planElement, Types.BEHAVIOUR);
+                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR));
+                        break;
+                    case Types.TASKREPOSITORY:
+                        addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
+                        for (Task task : ((TaskRepository) planElement).getTasks()) {
+                            repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), Types.TASK));
+                        }
+                        break;
+                    case Types.TASK:
+                        ViewModelElement element = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
+                        repoViewModel.addTask(element);
+                        taskViewModel.addTask(element);
+                        break;
+                    default:
+                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
+                        break;
                 }
                 break;
             case ELEMENT_DELETED:
-                removeTreeViewElement((AbstractPlan) planElement, type);
-                repoViewModel.removePlanElement(new ViewModelElement(planElement.getId(), planElement.getName(), type));
+                planElement = event.getOldElement();
+                switch (event.getElementType()) {
+                    case Types.PLAN:
+                        removeTreeViewElement((AbstractPlan) planElement, Types.PLAN);
+                        repoViewModel.removePlan(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLAN));
+                        break;
+                    case Types.PLANTYPE:
+                        removeTreeViewElement((AbstractPlan) planElement, Types.PLANTYPE);
+                        repoViewModel.removePlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE));
+                        break;
+                    case Types.BEHAVIOUR:
+                        removeTreeViewElement((AbstractPlan) planElement, Types.BEHAVIOUR);
+                        repoViewModel.removeBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR));
+                        break;
+                    case Types.TASK:
+                        ViewModelElement taskViewElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
+                        repoViewModel.removeTask(taskViewElement);
+                        taskViewModel.removeTask(taskViewElement);
+                        break;
+                    default:
+                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
+                        break;
+                }
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
-                throw new RuntimeException("Not implemented, yet!");
+                throw new RuntimeException("Controller: ELEMENT_ATTRIBUTE_CHANGED not implemented, yet!");
             default:
-                throw new RuntimeException("Unknown model event captured!");
+                throw new RuntimeException("Controller:Unknown model event captured!");
         }
     }
 
@@ -223,8 +256,20 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      */
     @Override
     public void handle(GuiModificationEvent event) {
-        ModelModificationQuery mmq = new ModelModificationQuery(ModelQueryType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
-        mmq.setParentId(event.getParentId());
+        ModelModificationQuery mmq;
+        switch (event.getEventType()) {
+            case CREATE_ELEMENT:
+                mmq = new ModelModificationQuery(ModelQueryType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
+                mmq.setParentId(event.getParentId());
+                break;
+            case DELETE_ELEMENT:
+                mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT);
+                mmq.setElementType(event.getElementType());
+                mmq.setElementId(event.getElementId());
+                break;
+            default:
+                mmq = null;
+        }
         this.modelManager.handleModelModificationQuery(mmq);
     }
 
@@ -287,5 +332,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     @Override
-    public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {System.err.println("Controller: Opening PlanTypes not implemented, yet!");}
+    public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {
+        System.err.println("Controller: Opening PlanTypes not implemented, yet!");
+    }
 }

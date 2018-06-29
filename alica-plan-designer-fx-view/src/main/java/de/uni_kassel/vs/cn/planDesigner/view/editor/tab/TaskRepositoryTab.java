@@ -1,24 +1,37 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
+import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
     private TreeViewModelElement taskRepository;
+    private I18NRepo i18NRepo;
 
     public TaskRepositoryTab(TreeViewModelElement taskRepository) {
         super(I18NRepo.getInstance().getString("label.caption.taskrepository") + " " + taskRepository.getName(), null);
         this.taskRepository = taskRepository;
+        i18NRepo = I18NRepo.getInstance();
         initGui();
     }
 
@@ -55,6 +68,46 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     @Override
     public ViewModelElement getViewModelElement() {
         return taskRepository;
+    }
+
+    @Override
+    public GuiModificationEvent handleDelete() {
+        ViewModelElement elementToDelete = this.getSelectedItem();
+        if (elementToDelete == null) {
+            return null;
+        }
+
+        if (!isTaskUsed(elementToDelete)) {
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.TASK, elementToDelete.getName());
+            event.setElementId(elementToDelete.getId());
+            event.setParentId(taskRepository.getId());
+            return event;
+        } else {
+            return null;
+        }
+    }
+
+    private boolean isTaskUsed(ViewModelElement taskToBeDeleted) {
+        ArrayList<ViewModelElement> usages = guiModificationHandler.getUsages(taskToBeDeleted);
+        if (usages.isEmpty()) {
+            return false;
+        }
+
+        FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
+        try {
+            Parent infoWindow = fxmlLoader.load();
+            UsagesWindowController controller = fxmlLoader.getController();
+            controller.createReferencesList(usages, guiModificationHandler);
+            Stage stage = new Stage();
+            stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
+            stage.setScene(new Scene(infoWindow));
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(PlanDesignerApplication.getPrimaryStage());
+            stage.showAndWait();
+        } catch (IOException ignored) {
+        } finally {
+            return true;
+        }
     }
 
 }

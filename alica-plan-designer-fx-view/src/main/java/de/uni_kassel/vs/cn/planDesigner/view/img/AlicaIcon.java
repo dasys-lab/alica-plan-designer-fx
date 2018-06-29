@@ -5,6 +5,6 @@ import javafx.scene.image.Image;
 public class AlicaIcon extends Image {
     public AlicaIcon(String iconName) {
         super(AlicaIcon.class.getClassLoader().getResourceAsStream("images/" +
-                iconName.replace("Impl", "").toLowerCase() + "16x16.png"));
+                iconName.toLowerCase() + "16x16.png"));
     }
 }

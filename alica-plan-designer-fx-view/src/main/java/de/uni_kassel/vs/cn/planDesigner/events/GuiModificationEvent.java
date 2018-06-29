@@ -10,6 +10,7 @@ public class GuiModificationEvent {
     // optional depending from type of event
     protected String absoluteDirectory;
     protected long parentId;
+    protected long elementId;
 
     public GuiModificationEvent(GuiEventType eventType, String elementType, String name) {
         this.eventType = eventType;
@@ -45,5 +46,12 @@ public class GuiModificationEvent {
         this.parentId = parentId;
     }
 
+    public long getElementId() {
+        return elementId;
+    }
+
+    public void setElementId (long elementId) {
+        this.elementId = elementId;
+    }
 
 }

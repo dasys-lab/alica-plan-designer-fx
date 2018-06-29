@@ -85,6 +85,10 @@ public class RepositoryTab extends Tab {
         });
     }
 
+    public ViewModelElement getSelectedItem() {
+        return repositoryListView.getSelectionModel().getSelectedItem().getViewModelElement();
+    }
+
     protected void sort() {
         repositoryListView.getItems().sort(modelElementComparator);
     }

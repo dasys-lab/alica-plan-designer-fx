@@ -55,7 +55,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
 
                 if (planElement instanceof Task) {
                     // TODO:
-                    // 1. Rename task
+                    // 1. Rename taskToDelete
                     // 2. Fire event for updating gui (Repository, PlanEditor if the taskrepository is currently opened)
                 }
             }

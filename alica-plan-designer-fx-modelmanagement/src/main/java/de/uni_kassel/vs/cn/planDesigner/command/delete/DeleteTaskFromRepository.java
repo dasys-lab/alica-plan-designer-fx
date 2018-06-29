@@ -1,27 +1,38 @@
 package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 
 public class DeleteTaskFromRepository extends AbstractCommand {
-    protected final TaskRepository taskRepository;
-    protected Task task;
 
-    public DeleteTaskFromRepository(ModelManager modelManager, TaskRepository taskRepository, Task task) {
+    ModelModificationQuery mmq;
+    protected Task taskToDelete;
+
+    public DeleteTaskFromRepository(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        this.taskRepository = taskRepository;
-        this.task = task;
+        this.mmq = mmq;
     }
 
     @Override
     public void doCommand() {
-        taskRepository.getTasks().remove(task);
+        for (Task task : modelManager.getTaskRepository().getTasks()) {
+            if (task.getId() == mmq.getElementId()) {
+                taskToDelete = task;
+                break;
+            }
+        }
+
+        // put outside the loop, in order to avoid concurrent modification exception
+        if (taskToDelete != null) {
+            modelManager.removePlanElement(taskToDelete, Types.TASK, false);
+        }
     }
 
     @Override
     public void undoCommand() {
-        taskRepository.getTasks().add(task);
+        modelManager.addPlanElement(taskToDelete, Types.TASK, false);
     }
 }

@@ -3,18 +3,20 @@ package de.uni_kassel.vs.cn.planDesigner.events;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 
 public class ModelEvent {
-    protected ModelQueryType type;
+    protected ModelQueryType eventType;
+    protected String elementType;
     protected PlanElement oldElement;
     protected PlanElement newElement;
 
-    public ModelEvent (ModelQueryType type, PlanElement oldElement, PlanElement newElement) {
-        this.type = type;
+    public ModelEvent (ModelQueryType eventType, PlanElement oldElement, PlanElement newElement, String elementType) {
+        this.eventType = eventType;
         this.oldElement = oldElement;
         this.newElement = newElement;
+        this.elementType = elementType;
     }
 
-    public ModelQueryType getType() {
-        return type;
+    public ModelQueryType getEventType() {
+        return eventType;
     }
 
     public PlanElement getOldElement() {
@@ -23,5 +25,9 @@ public class ModelEvent {
 
     public PlanElement getNewElement() {
         return newElement;
+    }
+
+    public String getElementType() {
+        return elementType;
     }
 }

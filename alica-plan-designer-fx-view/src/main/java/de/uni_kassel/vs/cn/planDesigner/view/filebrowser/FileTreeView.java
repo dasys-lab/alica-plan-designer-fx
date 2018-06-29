@@ -1,7 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.DeleteFileMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.FileTreeViewContextMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -353,5 +355,17 @@ public final class FileTreeView extends TreeView<File> {
     public void setupRolesPath(String rolesPath) {
         this.rolesPath = rolesPath;
         rolesFileTreeItem = virtualDirectoryTreeItem.addTopLevelFolder(rolesPath);
+    }
+
+    public GuiModificationEvent handleDelete() {
+        //TODO: rework
+        return null;
+//        if (focusedProperty().get()) {
+//            DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(getSelectionModel()
+//                    .getSelectedItem()
+//                    .getValue());
+//            deleteFileMenuItem.deleteFile();
+//            return null;
+//        }
     }
 }

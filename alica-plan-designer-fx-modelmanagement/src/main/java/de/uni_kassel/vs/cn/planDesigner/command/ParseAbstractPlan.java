@@ -24,27 +24,41 @@ public class ParseAbstractPlan extends AbstractCommand {
         // 2. delete already existing object and add new one
         switch (modelModificationQuery.getElementType()) {
             case Types.PLAN:
+            case Types.MASTERPLAN:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
-                modelManager.replaceIncompleteTasks((Plan)newElement);
+                modelManager.replaceIncompleteTasks((Plan) newElement);
                 break;
             case Types.PLANTYPE:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
                 break;
             default:
-                System.err.println("ParseAbstractPlan: Parsing model type " + modelModificationQuery.getElementType() + " not implemented, yet!");
+                System.err.println("ParseAbstractPlan: Parsing model eventType " + modelModificationQuery.getElementType() + " not implemented, yet!");
                 return;
         }
-        modelManager.addPlanElement(newElement, modelModificationQuery.getElementType(), false);
+        if (newElement instanceof Plan && ((Plan) newElement).getMasterPlan()) {
+            modelManager.addPlanElement(newElement, Types.MASTERPLAN, false);
+        } else {
+            modelManager.addPlanElement(newElement, modelModificationQuery.getElementType(), false);
+        }
+
     }
 
     @Override
     public void undoCommand() {
         if (oldElement != null) {
             // replace new object with former old one
-            modelManager.addPlanElement(oldElement, modelModificationQuery.getElementType(), false);
+            if (oldElement instanceof Plan && ((Plan) oldElement).getMasterPlan()) {
+                modelManager.addPlanElement(oldElement, Types.MASTERPLAN, false);
+            } else {
+                modelManager.addPlanElement(oldElement, modelModificationQuery.getElementType(), false);
+            }
         } else {
             // remove new object
-            modelManager.removePlanElement(newElement, modelModificationQuery.getElementType(), false);
+            if (newElement instanceof Plan && ((Plan) newElement).getMasterPlan()) {
+                modelManager.removePlanElement(newElement, Types.MASTERPLAN, false);
+            } else {
+                modelManager.removePlanElement(newElement, modelModificationQuery.getElementType(), false);
+            }
         }
     }
 }

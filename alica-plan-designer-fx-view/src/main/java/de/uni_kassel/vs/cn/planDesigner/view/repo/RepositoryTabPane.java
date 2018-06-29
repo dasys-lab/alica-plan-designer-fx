@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
 import javafx.scene.control.TabPane;
@@ -93,5 +94,47 @@ public class RepositoryTabPane extends TabPane {
 
     public void clearTasksTab() {
         tasksTab.clearGuiContent();
+    }
+
+    public GuiModificationEvent handleDelete() {
+        // TODO: rework
+        return null;
+
+        // RepositoryView selected
+//        boolean isRepoFocused = getTabs().stream()
+//                .anyMatch(e -> ((RepositoryTab) e).getRepositoryListView().focusedProperty().get());
+
+//        if (isRepoFocused) {
+//            int selectedTabIndex = getSelectionModel().getSelectedIndex();
+//            PlanElement selectedPlanElement = ((RepositoryTab) repositoryTabPane
+//                    .getSelectionModel()
+//                    .getSelectedItem())
+//                    .getRepositoryListView()
+//                    .getSelectionModel().getSelectedItem().getObject();
+//            editorTabPane.getTabs()
+//                    .stream()
+//                    .filter(e -> ((AbstractPlanTab<PlanElement>) e).getEditable().equals(selectedPlanElement))
+//                    .forEach(e -> editorTabPane.getTabs().remove(e));
+//            if (selectedPlanElement instanceof AbstractPlan) {
+//                checkAbstractPlanUsage(commandStack, (AbstractPlan) selectedPlanElement);
+//            } else if (selectedPlanElement instanceof Task) {
+//                List<Pair<TaskRepository, Path>> taskRepositories = RepositoryViewModel.getInstance().getTaskRepository();
+//                TaskRepository taskRepository = null;
+//                for (Pair<TaskRepository, Path> pair : taskRepositories) {
+//                    if (pair.getKey().getTasks().contains((Task) selectedPlanElement)) {
+//                        taskRepository = pair.getKey();
+//                        break;
+//                    }
+//                }
+//                if (taskRepository != null) {
+//                    isTaskUsed(commandStack, taskRepository, (Task) selectedPlanElement);
+//                }
+//            }
+//            repositoryTabPane.init();
+//            repositoryTabPane.getSelectionModel().select(selectedTabIndex);
+//            return null;
+//        }
+//
+//        return null;
     }
 }

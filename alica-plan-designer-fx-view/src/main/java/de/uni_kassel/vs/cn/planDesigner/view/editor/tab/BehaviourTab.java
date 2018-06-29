@@ -1,7 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -25,5 +27,11 @@ public class BehaviourTab extends AbstractPlanTab {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public GuiModificationEvent handleDelete() {
+        System.err.println("BehaviourTab: Not implemented!");
+        return null;
     }
 }
