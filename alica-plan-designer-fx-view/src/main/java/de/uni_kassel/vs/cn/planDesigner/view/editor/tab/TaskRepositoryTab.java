@@ -2,7 +2,6 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
@@ -18,7 +17,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     private TreeViewModelElement taskRepository;
 
     public TaskRepositoryTab(TreeViewModelElement taskRepository) {
-        super(taskRepository.getName(), null);
+        super(I18NRepo.getInstance().getString("label.caption.taskrepository") + " " + taskRepository.getName(), null);
         this.taskRepository = taskRepository;
         initGui();
     }
@@ -30,6 +29,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     public void initGui() {
         // create list of tasks
         VBox contentContainer = new VBox();
+        contentContainer.setPrefHeight(Double.MAX_VALUE);
 
         // guiModificationHandler for creating new tasks
         HBox createTaskHBox = new HBox();

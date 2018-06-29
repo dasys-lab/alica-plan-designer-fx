@@ -11,6 +11,11 @@ public class EditorTabPane extends TabPane {
     private ITabEventHandler tabEventHandler;
     private IGuiModificationHandler guiModificationHandler;
 
+    public EditorTabPane() {
+        super();
+        this.autosize();
+    }
+
     public void openTab(TreeViewModelElement treeViewModelElement) {
         // find tab if it already opened
         Tab openedTab = null;
@@ -24,12 +29,12 @@ public class EditorTabPane extends TabPane {
         if (openedTab == null) {
             openedTab = createNewTab(treeViewModelElement);
             getTabs().add(openedTab);
-            // TODO: send event that new task repository tab was opened
         }
 
         // make it the selected tab
         getSelectionModel().select(openedTab);
         this.requestFocus();
+        this.autosize();
     }
 
     private Tab createNewTab(TreeViewModelElement treeViewModelElement) {
