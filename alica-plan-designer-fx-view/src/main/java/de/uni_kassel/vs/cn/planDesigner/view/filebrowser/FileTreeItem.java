@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
@@ -11,11 +12,11 @@ import java.util.Comparator;
 
 public class FileTreeItem extends TreeItem<File> {
 
-    private TreeViewModelElement treeViewModelElement;
+    private ViewModelElement viewModelElement;
 
-    public FileTreeItem(File value, Node graphic, TreeViewModelElement treeViewModelElement) {
+    public FileTreeItem(File value, Node graphic, ViewModelElement viewModelElement) {
         super(value, graphic);
-        this.treeViewModelElement = treeViewModelElement;
+        this.viewModelElement = viewModelElement;
         updateDirectories();
     }
 
@@ -51,8 +52,8 @@ public class FileTreeItem extends TreeItem<File> {
         getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
     }
 
-    public TreeViewModelElement getTreeViewModelElement() {
-        return treeViewModelElement;
+    public ViewModelElement getViewModelElement() {
+        return viewModelElement;
     }
 
 //    private Image getImageForFileType(File content) {

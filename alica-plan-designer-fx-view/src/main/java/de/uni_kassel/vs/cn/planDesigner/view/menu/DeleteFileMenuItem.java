@@ -12,7 +12,7 @@ public class DeleteFileMenuItem extends MenuItem {
     private File toDelete;
 
     public DeleteFileMenuItem(File toDelete) {
-        super(I18NRepo.getInstance().getString("label.menu.edit.delete"));
+        super(I18NRepo.getInstance().getString("label.menu.delete"));
         this.toDelete = toDelete;
         setOnAction(e -> deleteFile());
     }

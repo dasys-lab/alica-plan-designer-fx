@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
@@ -16,9 +16,9 @@ import java.util.List;
 public class ConditionHBox extends HBox {
 
     private final SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElement;
-    private final TreeViewModelElement plan;
+    private final ViewModelElement plan;
 
-    public ConditionHBox(TreeViewModelElement abstractPlan, SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElement) {
+    public ConditionHBox(ViewModelElement abstractPlan, SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElement) {
         this.plan = abstractPlan;
         this.selectedPlanElement = selectedPlanElement;
         setupConditionVisualisation();

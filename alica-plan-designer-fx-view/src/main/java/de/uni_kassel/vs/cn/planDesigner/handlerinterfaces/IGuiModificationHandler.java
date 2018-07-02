@@ -1,7 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.handlerinterfaces;
 
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 
 import java.util.ArrayList;
 

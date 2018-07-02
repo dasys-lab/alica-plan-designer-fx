@@ -180,7 +180,7 @@ public class FileTreeCell extends TreeCell<File> {
                         if (getItem().isDirectory()) {
                             getTreeItem().setExpanded(!getTreeItem().isExpanded());
                         } else {
-                            controller.openFile(((FileTreeItem) getTreeItem()).getTreeViewModelElement());
+                            controller.openFile(((FileTreeItem) getTreeItem()).getViewModelElement());
                         }
                     }
                 }

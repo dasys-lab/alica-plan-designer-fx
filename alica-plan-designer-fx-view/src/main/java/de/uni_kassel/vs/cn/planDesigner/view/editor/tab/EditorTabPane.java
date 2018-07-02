@@ -1,26 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
-import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
-import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class EditorTabPane extends TabPane {
 
@@ -31,18 +17,18 @@ public class EditorTabPane extends TabPane {
         super();
     }
 
-    public void openTab(TreeViewModelElement treeViewModelElement) {
+    public void openTab(ViewModelElement viewModelElement) {
         // find tab if it already opened
         Tab openedTab = null;
         for (Tab tab : getTabs()) {
-            if (((IEditorTab) tab).getViewModelElement().equals(treeViewModelElement)) {
+            if (((IEditorTab) tab).getViewModelElement().equals(viewModelElement)) {
                 openedTab = tab;
             }
         }
 
         // create new tab if not already opened
         if (openedTab == null) {
-            openedTab = createNewTab(treeViewModelElement);
+            openedTab = createNewTab(viewModelElement);
             getTabs().add(openedTab);
         }
 
@@ -52,28 +38,28 @@ public class EditorTabPane extends TabPane {
         this.autosize();
     }
 
-    private Tab createNewTab(TreeViewModelElement treeViewModelElement) {
-        switch (treeViewModelElement.getType()) {
+    private Tab createNewTab(ViewModelElement viewModelElement) {
+        switch (viewModelElement.getType()) {
             case Types.MASTERPLAN:
             case Types.PLAN:
-                PlanTab planTab = new PlanTab(treeViewModelElement);
+                PlanTab planTab = new PlanTab(viewModelElement);
                 tabEventHandler.handleTabOpenedEvent(planTab);
                 return planTab;
             case Types.TASKREPOSITORY:
-                TaskRepositoryTab taskTab = new TaskRepositoryTab(treeViewModelElement);
+                TaskRepositoryTab taskTab = new TaskRepositoryTab(viewModelElement);
                 taskTab.setGuiModificationHandler(this.guiModificationHandler);
                 tabEventHandler.handleTabOpenedEvent(taskTab);
                 return taskTab;
             case Types.BEHAVIOUR:
-                BehaviourTab behaviourTab = new BehaviourTab(treeViewModelElement);
+                BehaviourTab behaviourTab = new BehaviourTab(viewModelElement);
                 tabEventHandler.handleTabOpenedEvent(behaviourTab);
                 return behaviourTab;
             case Types.PLANTYPE:
-                PlanTypeTab planTypeTab = new PlanTypeTab(treeViewModelElement);
+                PlanTypeTab planTypeTab = new PlanTypeTab(viewModelElement);
                 tabEventHandler.handleTabOpenedEvent(planTypeTab);
                 return planTypeTab;
             default:
-                System.err.println("EditorTabPane: Opening tab of elementType " + treeViewModelElement.getType() + " not implemented!");
+                System.err.println("EditorTabPane: Opening tab of elementType " + viewModelElement.getType() + " not implemented!");
                 return null;
         }
     }

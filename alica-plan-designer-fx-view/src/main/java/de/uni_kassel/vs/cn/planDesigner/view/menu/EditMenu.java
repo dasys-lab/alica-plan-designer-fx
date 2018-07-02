@@ -2,37 +2,27 @@ package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.ConfigurationWindowController;
-import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
-import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.PlanTab;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.TaskRepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class EditMenu extends Menu {
 
-    private MenuItem deleteElementItem;
+    private DeleteElementMenuItem deleteMenuItem;
     private MenuItem undoItem;
     private MenuItem redoItem;
     private final MenuItem configItem;
@@ -54,9 +44,8 @@ public class EditMenu extends Menu {
 
         i18NRepo = I18NRepo.getInstance();
 
-        deleteElementItem = new MenuItem(i18NRepo.getString("label.menu.edit.delete"));
-        deleteElementItem.setDisable(true);
-        deleteElementItem.setOnAction(event -> delete());
+        deleteMenuItem = new DeleteElementMenuItem(null, guiModificationHandler);
+        deleteMenuItem.setOnAction(event -> delete());
 
         undoItem = new MenuItem(i18NRepo.getString("label.menu.edit.undo"));
         undoItem.setDisable(true);
@@ -69,7 +58,7 @@ public class EditMenu extends Menu {
         configItem = new MenuItem(i18NRepo.getString("label.menu.edit.config"));
         configItem.setOnAction(event -> openConfigMenu());
 
-        getItems().addAll(undoItem, redoItem, deleteElementItem, configItem);
+        getItems().addAll(undoItem, redoItem, deleteMenuItem, configItem);
         defineAccelerator();
     }
 
@@ -85,7 +74,7 @@ public class EditMenu extends Menu {
 
     // TODO: call this methods from the controller - reacting to changes in the commandstack and selected treeviewitem
     public void setDeleteItemDisabled(boolean value) {
-        deleteElementItem.setDisable(value);
+        deleteMenuItem.setDisable(value);
     }
 
     public void setGuiModificationHandler(IGuiModificationHandler handler) {
@@ -139,6 +128,9 @@ public class EditMenu extends Menu {
         configStage.toFront();
     }
 
+    /**
+     * Overwrites the deleteMenuItem's delete method.
+     */
     private void delete() {
         GuiModificationEvent event = null;
 
@@ -203,7 +195,7 @@ public class EditMenu extends Menu {
 //    }
 
     private void defineAccelerator() {
-        this.deleteElementItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
+        this.deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
         this.undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
         this.redoItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
     }

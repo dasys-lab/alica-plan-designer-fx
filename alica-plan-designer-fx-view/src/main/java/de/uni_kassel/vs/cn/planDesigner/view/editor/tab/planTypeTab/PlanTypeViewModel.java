@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab;
 
-import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

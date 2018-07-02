@@ -1,8 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.DeleteFileMenuItem;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.DeleteElementMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseButton;
@@ -20,7 +22,9 @@ public class RepositoryHBox extends DraggableHBox {
 
         // right click for opening context menu with option to show usage of model element
         setOnContextMenuRequested(e -> {
-            ContextMenu contextMenu = new ContextMenu(new ShowUsagesMenuItem(this.viewModelElement, guiModificationHandler));
+            ShowUsagesMenuItem usageMenu = new ShowUsagesMenuItem(this.viewModelElement, guiModificationHandler);
+            DeleteElementMenuItem deleteMenu = new DeleteElementMenuItem(this.viewModelElement, guiModificationHandler);
+            ContextMenu contextMenu = new ContextMenu(usageMenu, deleteMenu);
             contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
             e.consume();
         });
@@ -28,7 +32,7 @@ public class RepositoryHBox extends DraggableHBox {
         // double click for open the corresponding file
         setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
-                //MainWindowController.getInstance().openFile(pathToObject.toFile());
+                MainWindowController.getInstance().openFile(viewModelElement);
                 // TODO: Fire event for opening this element.
                 e.consume();
             }

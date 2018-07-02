@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

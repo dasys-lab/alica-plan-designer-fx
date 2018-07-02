@@ -1,14 +1,20 @@
-package de.uni_kassel.vs.cn.planDesigner.view.repo;
+package de.uni_kassel.vs.cn.planDesigner.common;
 
 public class ViewModelElement {
     protected long id;
     protected String name;
     protected String type;
+    protected String relativeDirectory;
 
     public ViewModelElement(long id, String name, String type) {
         this.id = id;
         this.name = name;
         this.type = type;
+    }
+
+    public ViewModelElement(long id, String name, String type, String relativeDirectory) {
+        this(id, name, type);
+        this.relativeDirectory = relativeDirectory;
     }
 
     public long getId() {
@@ -25,6 +31,10 @@ public class ViewModelElement {
 
     public String toString() {
         return type + ": " + name + "(" + id + ")";
+    }
+
+    public String getRelativeDirectory() {
+        return relativeDirectory;
     }
 
     @Override

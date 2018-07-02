@@ -1,7 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
-import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
 import javafx.collections.ListChangeListener;
@@ -23,13 +23,13 @@ import java.util.ResourceBundle;
 
 public class PlanTypeWindowController implements Initializable {
 
-    private TreeViewModelElement planType;
+    private ViewModelElement planType;
 
-    private Comparator<Pair<TreeViewModelElement, Path>> pairComparator;
+    private Comparator<Pair<ViewModelElement, Path>> pairComparator;
 
     private Comparator<RepositoryHBox> repositoryHBoxComparator;
 
-    private Comparator<TreeViewModelElement> annotatedPlanComparator;
+    private Comparator<ViewModelElement> annotatedPlanComparator;
 
     @FXML
     private PlanTypeTab planTypeTab;
@@ -44,7 +44,7 @@ public class PlanTypeWindowController implements Initializable {
     private Button removeAllPlansButton;
 
     @FXML
-    private TableView<TreeViewModelElement> planTypeTableView;
+    private TableView<ViewModelElement> planTypeTableView;
 
     @FXML
     private ListView<RepositoryHBox> planListView;
@@ -105,7 +105,7 @@ public class PlanTypeWindowController implements Initializable {
         });
 
         removePlanButton.setOnAction(e -> {
-            TreeViewModelElement selectedItem = planTypeTableView.getSelectionModel().getSelectedItem();
+            ViewModelElement selectedItem = planTypeTableView.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 //TODO fire event here
 //                commandStack.storeAndExecute(new RemovePlanFromPlanType(selectedItem, planType));
@@ -132,12 +132,12 @@ public class PlanTypeWindowController implements Initializable {
     }
 
     private void initTableView() {
-        planTypeTableView.getItems().addListener(new ListChangeListener<TreeViewModelElement>() {
+        planTypeTableView.getItems().addListener(new ListChangeListener<ViewModelElement>() {
             @Override
-            public void onChanged(Change<? extends TreeViewModelElement> c) {
+            public void onChanged(Change<? extends ViewModelElement> c) {
                 c.next();
                 if (c.wasAdded()) {
-                    List<? extends TreeViewModelElement> addedSubList = c.getAddedSubList();
+                    List<? extends ViewModelElement> addedSubList = c.getAddedSubList();
                     //TODO get items from event
 //                    addedSubList
 //                            .forEach(e -> {
@@ -149,7 +149,7 @@ public class PlanTypeWindowController implements Initializable {
 //                                toRemove.forEach(rH -> planListView.getItems().remove(rH));
 //                            });
                 } else if (c.wasRemoved()) {
-                    List<? extends TreeViewModelElement> removedSubList = c.getRemoved();
+                    List<? extends ViewModelElement> removedSubList = c.getRemoved();
                     //TODO get items from event
 //                    removedSubList
 //                            .forEach(e -> {
@@ -167,13 +167,13 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<TreeViewModelElement, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
+        TableColumn<ViewModelElement, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
         activeColumn.setResizable(false);
         activeColumn.setCellValueFactory(new PropertyValueFactory<>("activated"));
-        activeColumn.setCellFactory(new Callback<TableColumn<TreeViewModelElement, Boolean>, TableCell<TreeViewModelElement, Boolean>>() {
+        activeColumn.setCellFactory(new Callback<TableColumn<ViewModelElement, Boolean>, TableCell<ViewModelElement, Boolean>>() {
             @Override
-            public TableCell<TreeViewModelElement, Boolean> call(TableColumn<TreeViewModelElement, Boolean> param) {
-                TableCell<TreeViewModelElement, Boolean> annotatedPlanBooleanTableCell = new TableCell<TreeViewModelElement, Boolean>() {
+            public TableCell<ViewModelElement, Boolean> call(TableColumn<ViewModelElement, Boolean> param) {
+                TableCell<ViewModelElement, Boolean> annotatedPlanBooleanTableCell = new TableCell<ViewModelElement, Boolean>() {
                     @Override
                     protected void updateItem(Boolean item, boolean empty) {
                         super.updateItem(item, empty);
@@ -192,14 +192,14 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<TreeViewModelElement, TreeViewModelElement> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
+        TableColumn<ViewModelElement, ViewModelElement> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
         planNameColumn.setCellValueFactory(new PropertyValueFactory<>("plan"));
-        planNameColumn.setCellFactory(new Callback<TableColumn<TreeViewModelElement, TreeViewModelElement>, TableCell<TreeViewModelElement, TreeViewModelElement>>() {
+        planNameColumn.setCellFactory(new Callback<TableColumn<ViewModelElement, ViewModelElement>, TableCell<ViewModelElement, ViewModelElement>>() {
             @Override
-            public TableCell<TreeViewModelElement, TreeViewModelElement> call(TableColumn<TreeViewModelElement, TreeViewModelElement> param) {
-                TableCell<TreeViewModelElement, TreeViewModelElement> planNameTableCell = new TableCell<TreeViewModelElement, TreeViewModelElement>() {
+            public TableCell<ViewModelElement, ViewModelElement> call(TableColumn<ViewModelElement, ViewModelElement> param) {
+                TableCell<ViewModelElement, ViewModelElement> planNameTableCell = new TableCell<ViewModelElement, ViewModelElement>() {
                     @Override
-                    protected void updateItem(TreeViewModelElement item, boolean empty) {
+                    protected void updateItem(ViewModelElement item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty == false) {
                             if (item.getType().equals(Types.MASTERPLAN)) {
@@ -218,7 +218,7 @@ public class PlanTypeWindowController implements Initializable {
         planTypeTableView.getColumns().add(activeColumn);
         planTypeTableView.getColumns().add(planNameColumn);
         planTypeTableView.setRowFactory(tv -> {
-            TableRow<TreeViewModelElement> annotatedPlanTableRow = new TableRow<>();
+            TableRow<ViewModelElement> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
                 if(e.getClickCount() == 2 && annotatedPlanTableRow.getItem() != null) {
                     //TODO fire event
@@ -241,7 +241,7 @@ public class PlanTypeWindowController implements Initializable {
         annotatedPlanComparator = annotatedPlanComparator.thenComparing(annotatedPlan -> annotatedPlan.getName());
     }
 
-    public void setPlanType(TreeViewModelElement planType) {
+    public void setPlanType(ViewModelElement planType) {
         if (planType == null) {
             throw new RuntimeException("Empty PlanType BULLSHIT!");
         }

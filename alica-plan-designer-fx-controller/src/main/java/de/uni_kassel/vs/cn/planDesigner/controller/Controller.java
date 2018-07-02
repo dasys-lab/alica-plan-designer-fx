@@ -9,24 +9,21 @@ import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
-import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
@@ -51,6 +48,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     // View Objects
     private RepositoryViewModel repoViewModel;
     private TaskRepositoryViewModel taskViewModel;
+    private PlanTypeViewModel planTypeViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
     private RepositoryTabPane repoTabPane;
@@ -72,6 +70,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         repoViewModel = new RepositoryViewModel();
         taskViewModel = new TaskRepositoryViewModel();
+        planTypeViewModel = new PlanTypeViewModel();
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -194,7 +193,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private void addTreeViewElement(AbstractPlan planElement, String type) {
         FileTreeView fileTreeView = mainWindowController.getFileTreeView();
         if (fileTreeView != null) {
-            fileTreeView.addTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
+            fileTreeView.addViewModelElement(new ViewModelElement(planElement.getId(),
                     planElement.getName(), type, planElement.getRelativeDirectory()));
         }
     }
@@ -202,7 +201,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private void removeTreeViewElement(AbstractPlan planElement, String type) {
         FileTreeView fileTreeView = mainWindowController.getFileTreeView();
         if (fileTreeView != null) {
-            fileTreeView.removeTreeViewModelElement(new TreeViewModelElement(planElement.getId(),
+            fileTreeView.removeViewModelElement(new ViewModelElement(planElement.getId(),
                     planElement.getName(), type, planElement.getRelativeDirectory()));
         }
     }

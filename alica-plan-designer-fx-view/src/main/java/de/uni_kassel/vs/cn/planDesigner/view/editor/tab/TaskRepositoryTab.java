@@ -6,10 +6,9 @@ import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,10 +24,10 @@ import java.util.ArrayList;
 
 public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
-    private TreeViewModelElement taskRepository;
+    private ViewModelElement taskRepository;
     private I18NRepo i18NRepo;
 
-    public TaskRepositoryTab(TreeViewModelElement taskRepository) {
+    public TaskRepositoryTab(ViewModelElement taskRepository) {
         super(I18NRepo.getInstance().getString("label.caption.taskrepository") + " " + taskRepository.getName(), null);
         this.taskRepository = taskRepository;
         i18NRepo = I18NRepo.getInstance();

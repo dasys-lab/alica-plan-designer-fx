@@ -1,9 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
-import de.uni_kassel.vs.cn.planDesigner.view.menu.DeleteFileMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.FileTreeViewContextMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -56,7 +56,7 @@ public final class FileTreeView extends TreeView<File> {
             draggedItem = (FileTreeItem) ((FileTreeCell) node).getTreeItem();
             startFolder = draggedItem.getValue().getAbsolutePath();
             startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
-            switch (draggedItem.getTreeViewModelElement().getType()) {
+            switch (draggedItem.getViewModelElement().getType()) {
                 case Types.BEHAVIOUR:
                     getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
                             .getResourceAsStream("images/behaviour24x24.png"))));
@@ -79,7 +79,7 @@ public final class FileTreeView extends TreeView<File> {
                             .getResourceAsStream("images/tasks24x24.png"))));
                     break;
                 default:
-                    System.err.println("FileTreeView: " + draggedItem.getTreeViewModelElement().getType() + " not handled!");
+                    System.err.println("FileTreeView: " + draggedItem.getViewModelElement().getType() + " not handled!");
             }
             wasDragged = true;
             e.consume();
@@ -125,7 +125,7 @@ public final class FileTreeView extends TreeView<File> {
             }
 
             //TODO fire file moved event
-            controller.getMoveFileHandler().moveFile(draggedItem.getTreeViewModelElement().getId(),
+            controller.getMoveFileHandler().moveFile(draggedItem.getViewModelElement().getId(),
                     draggedItem.getValue().toPath(),
                     new File(parent, draggedItem.getValue().getName()).toPath());
             e.consume();
@@ -173,25 +173,25 @@ public final class FileTreeView extends TreeView<File> {
     }
 
     /**
-     * Inserts a new {@link TreeViewModelElement} at its corresponding place in the {@link FileTreeView}
+     * Inserts a new {@link viewModelElement} at its corresponding place in the {@link FileTreeView}
      *
-     * @param treeViewModelElement
+     * @param viewModelElement
      */
-    public void addTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
-        FileTreeItem topLevelFolder = findTopLevelFolder(treeViewModelElement);
-        FileTreeItem folder = findFolder(treeViewModelElement, topLevelFolder, 0);
+    public void addViewModelElement(ViewModelElement viewModelElement) {
+        FileTreeItem topLevelFolder = findTopLevelFolder(viewModelElement);
+        FileTreeItem folder = findFolder(viewModelElement, topLevelFolder, 0);
         if (folder != null) {
-            folder.getChildren().add(new FileTreeItem(createFile(treeViewModelElement), new ImageView(getImage(treeViewModelElement.getType
-                    ())), treeViewModelElement));
+            folder.getChildren().add(new FileTreeItem(createFile(viewModelElement), new ImageView(getImage(viewModelElement.getType
+                    ())), viewModelElement));
             folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
         } else {
-            throw new RuntimeException("Destination folder for PlanElement " + treeViewModelElement.getName() + " does not exist!");
+            throw new RuntimeException("Destination folder for PlanElement " + viewModelElement.getName() + " does not exist!");
         }
     }
 
-    public FileTreeItem removeTreeViewModelElement(TreeViewModelElement treeViewModelElement) {
-        FileTreeItem topLevelFolder = findTopLevelFolder(treeViewModelElement);
-        FileTreeItem deletedItem = removeFromFolder(treeViewModelElement, topLevelFolder);
+    public FileTreeItem removeViewModelElement(ViewModelElement viewModelElement) {
+        FileTreeItem topLevelFolder = findTopLevelFolder(viewModelElement);
+        FileTreeItem deletedItem = removeFromFolder(viewModelElement, topLevelFolder);
         return deletedItem;
     }
 
@@ -205,11 +205,11 @@ public final class FileTreeView extends TreeView<File> {
         }
     }
 
-    private FileTreeItem removeFromFolder(TreeViewModelElement modelElement, FileTreeItem treeItem) {
+    private FileTreeItem removeFromFolder(ViewModelElement modelElement, FileTreeItem treeItem) {
         for (TreeItem item : treeItem.getChildren()) {
             FileTreeItem itemToDelete = (FileTreeItem) item;
             if (!itemToDelete.getValue().isDirectory()) {
-                if (((FileTreeItem) item).getTreeViewModelElement().getId() == modelElement.getId()) {
+                if (((FileTreeItem) item).getViewModelElement().getId() == modelElement.getId()) {
                     treeItem.getChildren().remove(item);
                     treeItem.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
                     return itemToDelete;
@@ -223,24 +223,24 @@ public final class FileTreeView extends TreeView<File> {
 
     /**
      * Creates a file by combining to corresponding config path and the information given in a
-     * {@link TreeViewModelElement} (relativeDirectory, name, ending)
+     * {@link ViewModelElement} (relativeDirectory, name, ending)
      *
-     * @param treeViewModelElement
+     * @param viewModelElement
      * @return
      */
-    private File createFile(TreeViewModelElement treeViewModelElement) {
-        switch (treeViewModelElement.getType()) {
+    private File createFile(ViewModelElement viewModelElement) {
+        switch (viewModelElement.getType()) {
             case Types.BEHAVIOUR:
-                return Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".beh").toFile();
+                return Paths.get(plansPath, viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".beh").toFile();
             case Types.PLAN:
             case Types.MASTERPLAN:
-                return Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pml").toFile();
+                return Paths.get(plansPath, viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".pml").toFile();
             case Types.PLANTYPE:
-                return Paths.get(plansPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".pty").toFile();
+                return Paths.get(plansPath, viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".pty").toFile();
             case Types.TASKREPOSITORY:
-                return Paths.get(taskPath, treeViewModelElement.getRelativeDirectory(), treeViewModelElement.getName() + ".tsk").toFile();
+                return Paths.get(taskPath, viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".tsk").toFile();
             default:
-                System.err.println("FileTreeView: " + treeViewModelElement.getType() + " not handled!");
+                System.err.println("FileTreeView: " + viewModelElement.getType() + " not handled!");
                 return null;
         }
     }
@@ -248,11 +248,11 @@ public final class FileTreeView extends TreeView<File> {
     /**
      * Finds the fitting top level folder to insert a {@link FileTreeItem}
      *
-     * @param treeViewModelElement
+     * @param viewModelElement
      * @return
      */
-    private FileTreeItem findTopLevelFolder(TreeViewModelElement treeViewModelElement) {
-        switch (treeViewModelElement.getType()) {
+    private FileTreeItem findTopLevelFolder(ViewModelElement viewModelElement) {
+        switch (viewModelElement.getType()) {
             case Types.BEHAVIOUR:
             case Types.MASTERPLAN:
             case Types.PLAN:
@@ -263,13 +263,13 @@ public final class FileTreeView extends TreeView<File> {
             case Types.ROLE:
                 return rolesFileTreeItem;
             default:
-                System.err.println("FileTreeView: No top level folder for " + treeViewModelElement.getType() + " available!");
+                System.err.println("FileTreeView: No top level folder for " + viewModelElement.getType() + " available!");
                 return null;
         }
     }
 
     /**
-     * Recursively looks for a fitting folder by using the relative path of a {@link TreeViewModelElement}
+     * Recursively looks for a fitting folder by using the relative path of a {@link ViewModelElement}
      * Returns the found {@link FileTreeItem} representing the folder, else null
      *
      * @param modelElement
@@ -277,7 +277,7 @@ public final class FileTreeView extends TreeView<File> {
      * @param index
      * @return
      */
-    private FileTreeItem findFolder(TreeViewModelElement modelElement, FileTreeItem treeItem, int index) {
+    private FileTreeItem findFolder(ViewModelElement modelElement, FileTreeItem treeItem, int index) {
         String relativePath = modelElement.getRelativeDirectory();
         String[] folders = relativePath.split(File.pathSeparator);
         if (folders.length == 1 && folders[0].isEmpty()) {

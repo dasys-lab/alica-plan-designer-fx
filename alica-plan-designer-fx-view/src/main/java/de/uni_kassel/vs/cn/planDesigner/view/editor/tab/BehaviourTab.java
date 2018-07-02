@@ -2,8 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.TreeViewModelElement;
-import de.uni_kassel.vs.cn.planDesigner.view.repo.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -13,7 +12,7 @@ public class BehaviourTab extends AbstractPlanTab {
 
 //    private BehaviourWindowController controller;
 
-    public BehaviourTab(TreeViewModelElement behaviour) {
+    public BehaviourTab(ViewModelElement behaviour) {
         super(behaviour.getId());
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("behaviourWindow.fxml"));
