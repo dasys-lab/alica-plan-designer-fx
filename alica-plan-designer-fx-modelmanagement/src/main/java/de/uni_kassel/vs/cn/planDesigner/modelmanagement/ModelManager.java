@@ -8,6 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.command.*;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteTaskFromRepository;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
 import de.uni_kassel.vs.cn.planDesigner.modelMixIns.*;
 import org.apache.logging.log4j.LogManager;
@@ -207,9 +208,9 @@ public class ModelManager {
                         planElementMap.put(plan.getId(), plan);
                         planMap.put(plan.getId(), plan);
                         if (plan.getMasterPlan()) {
-                            fireCreationEvent(plan, Types.MASTERPLAN);
+                            fireEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN);
                         } else {
-                            fireCreationEvent(plan, Types.PLAN);
+                            fireEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN);
                         }
                     }
                     break;
@@ -220,7 +221,7 @@ public class ModelManager {
                     } else {
                         planElementMap.put(behaviour.getId(), behaviour);
                         behaviourMap.put(behaviour.getId(), behaviour);
-                        fireCreationEvent(behaviour, Types.BEHAVIOUR);
+                        fireEvent(ModelEventType.ELEMENT_PARSED, behaviour, Types.BEHAVIOUR);
                     }
                     break;
                 case FileSystemUtil.PLANTYPE_ENDING:
@@ -230,7 +231,7 @@ public class ModelManager {
                     } else {
                         planElementMap.put(planType.getId(), planType);
                         planTypeMap.put(planType.getId(), planType);
-                        fireCreationEvent(planType, Types.PLANTYPE);
+                        fireEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE);
                     }
                     break;
                 case FileSystemUtil.TASKREPOSITORY_ENDING:
@@ -248,7 +249,7 @@ public class ModelManager {
                         }
                         planElementMap.put(taskRepository.getId(), taskRepository);
                         this.taskRepository = taskRepository;
-                        fireCreationEvent(this.taskRepository, Types.TASKREPOSITORY);
+                        fireEvent(ModelEventType.ELEMENT_PARSED, this.taskRepository, Types.TASKREPOSITORY);
                     }
                     break;
 
@@ -330,15 +331,26 @@ public class ModelManager {
         return planElement;
     }
 
-    private void fireCreationEvent(PlanElement element, String elementType) {
-        for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelQueryType.ELEMENT_CREATED, null, element, elementType));
+    private void fireEvent(ModelEventType eventType, PlanElement element, String elementType) {
+        ModelEvent event = null;
+        switch (eventType) {
+            case ELEMENT_CREATED:
+            event = new ModelEvent(eventType, null, element, elementType);
+                break;
+            case ELEMENT_DELETED:
+                event = new ModelEvent(eventType, element, null, elementType);
+                break;
+            case ELEMENT_PARSED:
+                event = new ModelEvent(eventType, null, element, elementType);
+                break;
+            default:
+                System.err.println("ModelManager: Event Type " + eventType + " not handled!");
         }
-    }
 
-    private void fireDeletionEvent(PlanElement element, String elementType) {
-        for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleModelEvent(new ModelEvent(ModelQueryType.ELEMENT_DELETED, element, null, elementType));
+        if (event != null) {
+            for (IModelEventHandler eventHandler : eventHandlerList) {
+                eventHandler.handleModelEvent(event);
+            }
         }
     }
 
@@ -378,10 +390,10 @@ public class ModelManager {
         }
         PlanElement oldElement = planElementMap.get(newElement.getId());
         if (oldElement != null) {
-            fireDeletionEvent(oldElement, type);
+            fireEvent(ModelEventType.ELEMENT_DELETED, oldElement, type);
         }
         planElementMap.put(newElement.getId(), newElement);
-        fireCreationEvent(newElement, type);
+        fireEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
         return oldElement;
     }
 
@@ -410,7 +422,7 @@ public class ModelManager {
                 System.err.println("ModelManager: removing " + type + " not implemented, yet!");
         }
         planElementMap.remove(planElement.getId());
-        fireDeletionEvent(planElement, type);
+        fireEvent(ModelEventType.ELEMENT_DELETED, planElement, type);
     }
 
     public ArrayList<PlanElement> getUsages(long modelElementId) {
@@ -513,7 +525,17 @@ public class ModelManager {
                         cmd = new DeleteTaskFromRepository(this, mmq);
                         break;
                     default:
-                        System.err.println("ModelManager: Deletion of unknown model element eventType gets ignored!");
+                        System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
+                        return;
+                }
+                break;
+            case SAVE_ELEMENT:
+                switch (mmq.getElementType()) {
+                    case Types.TASKREPOSITORY:
+                        cmd = new SerializePlanElement(this, mmq);
+                        break;
+                    default:
+                        System.err.println("ModelManager: Saving of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
                         return;
                 }
                 break;
@@ -567,21 +589,22 @@ public class ModelManager {
     }
 
     /**
-     * Serializes an AbstractPlan to disk.
+     * Serializes an SerializablePlanElement to disk.
      *
-     * @param abstractPlan
+     * @param planElement
      */
-    public void serializeToDisk(AbstractPlan abstractPlan, String ending) {
+    public void serializeToDisk(SerializablePlanElement planElement, String ending) {
         try {
-            File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + "." + ending).toFile();
+            File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
             if (ending.equals(FileSystemUtil.PLAN_ENDING)) {
-                objectMapper.writeValue(outfile, (Plan) abstractPlan);
+                objectMapper.writeValue(outfile, (Plan) planElement);
             } else if (ending.equals(FileSystemUtil.PLANTYPE_ENDING)) {
-                objectMapper.writeValue(outfile, (PlanType) abstractPlan);
+                objectMapper.writeValue(outfile, (PlanType) planElement);
             } else if (ending.equals(FileSystemUtil.BEHAVIOUR_ENDING)) {
-                objectMapper.writeValue(outfile, (Behaviour) abstractPlan);
+                objectMapper.writeValue(outfile, (Behaviour) planElement);
             } else if (ending.equals(FileSystemUtil.TASKREPOSITORY_ENDING)) {
-                objectMapper.writeValue(outfile, (TaskRepository) abstractPlan);
+                outfile = Paths.get(tasksPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
+                objectMapper.writeValue(outfile, (TaskRepository) planElement);
             } else {
                 throw new RuntimeException("Modelmanager: Trying to serialize a file with unknow ending: " + ending);
             }
@@ -594,10 +617,10 @@ public class ModelManager {
     /**
      * Deletes AbstractPlan from disk.
      *
-     * @param abstractPlan
+     * @param planElement
      */
-    public void removeFromDisk(AbstractPlan abstractPlan, String ending) {
-        File outfile = Paths.get(plansPath, abstractPlan.getRelativeDirectory(), abstractPlan.getName() + "." + ending).toFile();
+    public void removeFromDisk(SerializablePlanElement planElement, String ending) {
+        File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
         outfile.delete();
     }
 

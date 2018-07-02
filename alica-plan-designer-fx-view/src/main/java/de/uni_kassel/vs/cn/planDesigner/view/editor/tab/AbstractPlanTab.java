@@ -4,7 +4,6 @@ import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
-import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -224,13 +223,8 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
 
     // TODO: Review necessary, due to MVC pattern adaption.
     public void save() {
-//        try {
-//            setText(getText().replace("*", ""));
-//            EMFModelUtils.saveAlicaFile(getEditable());
-//            getCommandStack().setSavedForAbstractPlan(viewModelElement.getKey());
-//        } catch (IOException e) {
-//            ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.save"), e);
-//        }
+        System.err.println("AbstractPlanTab: Save() not implemented!");
+        return;
     }
 
     public SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> getSelectedPlanElements() {

@@ -20,12 +20,13 @@ import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 
-import javax.swing.text.View;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -156,6 +157,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         ViewModelElement element = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
                         element.setParentId(task.getTaskRepository().getId());
                         repoViewModel.addTask(element);
+                        taskViewModel.setDirty(true);
                         taskViewModel.addTask(element);
                         break;
                     default:
@@ -181,7 +183,49 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.TASK:
                         ViewModelElement taskViewElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
                         repoViewModel.removeTask(taskViewElement);
+                        taskViewModel.setDirty(true);
                         taskViewModel.removeTask(taskViewElement);
+                        break;
+                    default:
+                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
+                        break;
+                }
+                break;
+            case ELEMENT_PARSED:
+                planElement = event.getNewElement();
+                switch (event.getElementType()) {
+                    case Types.PLAN:
+                        Plan plan = (Plan) planElement;
+                        addTreeViewElement(plan, Types.PLAN);
+                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+                        break;
+                    case Types.MASTERPLAN:
+                        plan = (Plan) planElement;
+                        addTreeViewElement(plan, Types.MASTERPLAN);
+                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
+                        break;
+                    case Types.PLANTYPE:
+                        addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
+                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE));
+                        break;
+                    case Types.BEHAVIOUR:
+                        addTreeViewElement((Behaviour) planElement, Types.BEHAVIOUR);
+                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR));
+                        break;
+                    case Types.TASKREPOSITORY:
+                        addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
+                        for (Task task : ((TaskRepository) planElement).getTasks()) {
+                            ViewModelElement element = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
+                            element.setParentId(task.getTaskRepository().getId());
+                            repoViewModel.addTask(element);
+                        }
+                        break;
+                    case Types.TASK:
+                        Task task = (Task) planElement;
+                        ViewModelElement element = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
+                        element.setParentId(task.getTaskRepository().getId());
+                        repoViewModel.addTask(element);
+                        taskViewModel.addTask(element);
                         break;
                     default:
                         System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
@@ -275,6 +319,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementType(event.getElementType());
                 mmq.setElementId(event.getElementId());
                 break;
+            case SAVE_ELEMENT:
+                mmq = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
+                mmq.setElementId(event.getElementId());
+                break;
             default:
                 mmq = null;
         }
@@ -346,15 +394,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         planTypeViewModel.clearAllPlans();
         ArrayList<PlanType> planTypes = modelManager.getPlanTypes();
         PlanType currentPlantype = null;
-        for(PlanType planType : planTypes) {
+        for (PlanType planType : planTypes) {
             planTypeViewModel.addPlantypeToAllPlans(new ViewModelElement(planType.getId(), planType.getName(), Types.PLANTYPE));
-            if(planTypeTab.getViewModelElement().getId() == planType.getId()) {
+            if (planTypeTab.getViewModelElement().getId() == planType.getId()) {
                 currentPlantype = planType;
             }
         }
-        if(currentPlantype != null) {
+        if (currentPlantype != null) {
             planTypeViewModel.clearPlansInPlanType();
-            for(Plan plan : currentPlantype.getPlans()) {
+            for (Plan plan : currentPlantype.getPlans()) {
                 planTypeViewModel.addPlantypeToPlansInPlanType(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
             }
         }
@@ -369,12 +417,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         if (planElement != null) {
             if (planElement instanceof Task) {
                 return new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
-            }
-            else if (planElement instanceof TaskRepository) {
+            } else if (planElement instanceof TaskRepository) {
                 return new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
-            }
-            else
-            {
+            } else {
                 System.err.println("Controller: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
             }
         }

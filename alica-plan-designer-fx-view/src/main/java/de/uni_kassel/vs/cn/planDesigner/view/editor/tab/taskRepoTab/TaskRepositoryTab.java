@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
+package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
@@ -8,6 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandle
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import javafx.fxml.FXMLLoader;
@@ -100,6 +101,22 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
             return event;
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public void save() {
+        System.out.println("Save called");
+        if (getText().contains("*")) {
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.TASKREPOSITORY, taskRepository.getName());
+            event.setElementId(taskRepository.getId());
+            guiModificationHandler.handle(event);
+        }
+    }
+
+    public void setDirty() {
+        if (!getText().contains("*")) {
+            this.setText(getText() + "*");
         }
     }
 

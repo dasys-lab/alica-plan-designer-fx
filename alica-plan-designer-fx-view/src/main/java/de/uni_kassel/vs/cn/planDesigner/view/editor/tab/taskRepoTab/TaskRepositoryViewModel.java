@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
+package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab;
 
 import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import javafx.collections.FXCollections;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class TaskRepositoryViewModel {
     private ObservableList<ViewModelElement> tasks;
     private TaskRepositoryTab taskRepositoryTab;
+    private boolean isDirty;
 
     public TaskRepositoryViewModel() {
         tasks = FXCollections.observableArrayList(new ArrayList<>());
@@ -22,8 +23,12 @@ public class TaskRepositoryViewModel {
                 }
                 taskRepositoryTab.clearGuiContent();
                 taskRepositoryTab.addElements(tasks);
+                if (isDirty) {
+                    taskRepositoryTab.setDirty();
+                }
             }
         });
+        isDirty = false;
     }
 
     public void setTaskRepositoryTab (TaskRepositoryTab taskRepositoryTab) {
@@ -38,6 +43,13 @@ public class TaskRepositoryViewModel {
 
         taskRepositoryTab.clearGuiContent();
         taskRepositoryTab.addElements(tasks);
+        if (this.isDirty) {
+            this.taskRepositoryTab.setDirty();
+        }
+    }
+
+    public void setDirty(boolean dirty) {
+        this.isDirty = dirty;
     }
 
     public void addTask(ViewModelElement task) {

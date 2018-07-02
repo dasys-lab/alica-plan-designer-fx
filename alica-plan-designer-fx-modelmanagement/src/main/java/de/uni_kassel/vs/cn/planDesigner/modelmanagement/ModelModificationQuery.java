@@ -54,6 +54,12 @@ public class ModelModificationQuery {
         this.name = name;
     }
 
+    public ModelModificationQuery(ModelQueryType queryType, String elementType, String name) {
+        this(queryType);
+        this.elementType = elementType;
+        this.name = name;
+    }
+
 
 
     public String getAbsoluteDirectory() {

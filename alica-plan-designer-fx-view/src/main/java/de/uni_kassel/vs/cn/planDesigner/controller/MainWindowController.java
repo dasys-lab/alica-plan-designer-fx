@@ -139,7 +139,7 @@ public class MainWindowController implements Initializable {
             if (editorTabPane.getSelectionModel().getSelectedItem() == null) {
                 return;
             }
-            ((AbstractPlanTab) editorTabPane.getSelectionModel().getSelectedItem()).save();
+            ((IEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save();
         });
         saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
