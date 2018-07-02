@@ -5,6 +5,7 @@ public class ViewModelElement {
     protected String name;
     protected String type;
     protected String relativeDirectory;
+    protected long parentId;
 
     public ViewModelElement(long id, String name, String type) {
         this.id = id;
@@ -29,13 +30,22 @@ public class ViewModelElement {
         return type;
     }
 
+    public String getRelativeDirectory() {
+        return relativeDirectory;
+    }
+
+    public void setParentId(long id) {
+        this.parentId = id;
+    }
+
+    public long getParentId() {
+        return parentId;
+    }
+
     public String toString() {
         return type + ": " + name + "(" + id + ")";
     }
 
-    public String getRelativeDirectory() {
-        return relativeDirectory;
-    }
 
     @Override
     public boolean equals(Object other) {

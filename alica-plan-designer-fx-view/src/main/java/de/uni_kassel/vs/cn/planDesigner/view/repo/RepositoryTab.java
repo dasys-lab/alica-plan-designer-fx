@@ -53,7 +53,7 @@ public class RepositoryTab extends Tab {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if(removeBeforeAdding[0] != null) {
+                if (removeBeforeAdding[0] != null) {
                     repositoryListView.getItems().remove(removeBeforeAdding[0]);
                 }
                 repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
@@ -87,7 +87,12 @@ public class RepositoryTab extends Tab {
     }
 
     public ViewModelElement getSelectedItem() {
-        return repositoryListView.getSelectionModel().getSelectedItem().getViewModelElement();
+        RepositoryHBox repoHBox = repositoryListView.getSelectionModel().getSelectedItem();
+        if (repoHBox != null) {
+            return repoHBox.getViewModelElement();
+        } else {
+            return null;
+        }
     }
 
     protected void sort() {

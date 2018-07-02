@@ -20,10 +20,12 @@ public class AddTaskToRepository extends AbstractCommand {
     @Override
     public void doCommand() {
         taskRepository.getTasks().add(task);
+        task.setTaskRepository(taskRepository);
     }
 
     @Override
     public void undoCommand() {
         taskRepository.getTasks().remove(task);
+        task.setTaskRepository(null);
     }
 }

@@ -11,6 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -30,6 +32,7 @@ public class DeleteElementMenuItem extends MenuItem {
         setText(i18NRepo.getString("label.menu.delete"));
         setOnAction(e -> delete());
         this.setOnAction(event -> delete());
+        this.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
     }
 
     /**

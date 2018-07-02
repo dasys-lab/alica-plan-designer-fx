@@ -195,7 +195,7 @@ public class EditMenu extends Menu {
 //    }
 
     private void defineAccelerator() {
-        this.deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
+//        this.deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
         this.undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
         this.redoItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
     }

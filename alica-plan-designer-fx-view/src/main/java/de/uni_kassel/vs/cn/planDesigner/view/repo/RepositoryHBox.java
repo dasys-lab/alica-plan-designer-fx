@@ -33,7 +33,6 @@ public class RepositoryHBox extends DraggableHBox {
         setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
                 MainWindowController.getInstance().openFile(viewModelElement);
-                // TODO: Fire event for opening this element.
                 e.consume();
             }
         });

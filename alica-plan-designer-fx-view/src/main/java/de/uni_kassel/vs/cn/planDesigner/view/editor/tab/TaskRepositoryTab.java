@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
@@ -27,9 +28,16 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     private ViewModelElement taskRepository;
     private I18NRepo i18NRepo;
 
-    public TaskRepositoryTab(ViewModelElement taskRepository) {
-        super(I18NRepo.getInstance().getString("label.caption.taskrepository") + " " + taskRepository.getName(), null);
-        this.taskRepository = taskRepository;
+    public TaskRepositoryTab(ViewModelElement taskOrRepository, IGuiModificationHandler handler) {
+        super(I18NRepo.getInstance().getString("label.caption.taskrepository") + " " + taskOrRepository.getName(), null);
+        this.guiModificationHandler = handler;
+        if (taskOrRepository.getType().equals(Types.TASKREPOSITORY)) {
+            this.taskRepository = taskOrRepository;
+        } else if (taskOrRepository.getType().equals(Types.TASK)){
+            this.taskRepository = guiModificationHandler.getViewModelElement(taskOrRepository.getParentId());
+        } else {
+            System.err.println("TaskRepository: Creation of TaskRepositoryTab with ViewModelElement of type " + taskOrRepository.getType() + " not supported!");
+        }
         i18NRepo = I18NRepo.getInstance();
         initGui();
     }
@@ -62,6 +70,15 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
         // override base class guiModificationHandler content
         setContent(contentContainer);
+    }
+
+    @Override
+    public boolean representsViewModelElement(ViewModelElement viewModelElement) {
+        if (viewModelElement.getType().equals(Types.TASK)) {
+            return taskRepository.equals(this.guiModificationHandler.getViewModelElement(viewModelElement.getParentId()));
+        } else {
+            return taskRepository.equals(viewModelElement);
+        }
     }
 
     @Override

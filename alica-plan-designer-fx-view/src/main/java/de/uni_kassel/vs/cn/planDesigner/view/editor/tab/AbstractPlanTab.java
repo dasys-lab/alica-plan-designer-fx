@@ -241,8 +241,12 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         this.viewModelElement = viewModelElement;
     }
 
-    @Override
     public ViewModelElement getViewModelElement() {
         return viewModelElement;
+    }
+
+    @Override
+    public boolean representsViewModelElement(ViewModelElement viewModelElement) {
+        return this.viewModelElement.equals(viewModelElement);
     }
 }

@@ -96,6 +96,14 @@ public class ModelManager {
         return new ArrayList<>(planElementMap.values());
     }
 
+    public PlanElement getPlanElement(long id) {
+        if (planElementMap.containsKey(id)) {
+            return planElementMap.get(id);
+        } else {
+            return null;
+        }
+    }
+
     public ArrayList<Condition> getConditions() {
         ArrayList<Condition> conditions = new ArrayList<>();
         for (Plan plan : planMap.values()) {

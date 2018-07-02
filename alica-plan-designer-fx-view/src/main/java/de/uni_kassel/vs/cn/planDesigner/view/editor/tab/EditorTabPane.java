@@ -21,7 +21,7 @@ public class EditorTabPane extends TabPane {
         // find tab if it already opened
         Tab openedTab = null;
         for (Tab tab : getTabs()) {
-            if (((IEditorTab) tab).getViewModelElement().equals(viewModelElement)) {
+            if (((IEditorTab) tab).representsViewModelElement(viewModelElement)) {
                 openedTab = tab;
             }
         }
@@ -46,8 +46,8 @@ public class EditorTabPane extends TabPane {
                 tabEventHandler.handleTabOpenedEvent(planTab);
                 return planTab;
             case Types.TASKREPOSITORY:
-                TaskRepositoryTab taskTab = new TaskRepositoryTab(viewModelElement);
-                taskTab.setGuiModificationHandler(this.guiModificationHandler);
+            case Types.TASK:
+                TaskRepositoryTab taskTab = new TaskRepositoryTab(viewModelElement, this.guiModificationHandler);
                 tabEventHandler.handleTabOpenedEvent(taskTab);
                 return taskTab;
             case Types.BEHAVIOUR:

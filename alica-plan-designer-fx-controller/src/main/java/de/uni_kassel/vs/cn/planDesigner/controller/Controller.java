@@ -25,6 +25,7 @@ import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 
+import javax.swing.text.View;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -145,11 +146,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.TASKREPOSITORY:
                         addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
                         for (Task task : ((TaskRepository) planElement).getTasks()) {
-                            repoViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), Types.TASK));
+                            ViewModelElement element = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
+                            element.setParentId(task.getTaskRepository().getId());
+                            repoViewModel.addTask(element);
                         }
                         break;
                     case Types.TASK:
+                        Task task = (Task) planElement;
                         ViewModelElement element = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
+                        element.setParentId(task.getTaskRepository().getId());
                         repoViewModel.addTask(element);
                         taskViewModel.addTask(element);
                         break;
@@ -317,7 +322,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         TaskRepository taskRepo = modelManager.getTaskRepository();
         if (taskRepo != null) {
             for (Task task : taskRepo.getTasks()) {
-                taskViewModel.addTask(new ViewModelElement(task.getId(), task.getName(), Types.TASK));
+                ViewModelElement element = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
+                element.setParentId(taskRepo.getId());
+                taskViewModel.addTask(element);
             }
         }
 
@@ -354,5 +361,23 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         planTypeViewModel.setPlanTypeTab(planTypeTab);
 
+    }
+
+    @Override
+    public ViewModelElement getViewModelElement(long id) {
+        PlanElement planElement = modelManager.getPlanElement(id);
+        if (planElement != null) {
+            if (planElement instanceof Task) {
+                return new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
+            }
+            else if (planElement instanceof TaskRepository) {
+                return new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
+            }
+            else
+            {
+                System.err.println("Controller: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
+            }
+        }
+        return null;
     }
 }
