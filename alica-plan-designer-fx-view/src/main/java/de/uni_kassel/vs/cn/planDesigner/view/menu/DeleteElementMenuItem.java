@@ -29,7 +29,6 @@ public class DeleteElementMenuItem extends MenuItem {
         this.i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getString("label.menu.delete"));
         setOnAction(e -> delete());
-        this.setDisable(true);
         this.setOnAction(event -> delete());
     }
 
