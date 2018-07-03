@@ -40,7 +40,6 @@ public class DeleteElementMenuItem extends MenuItem {
      * properties on the event. (DeleteElementMenuItem.setOnAction())
      */
     protected void delete() {
-        System.out.println("DeleteElementMenuItem: delete() called!");
         if (!isElementUsed(elementToDelete)) {
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, elementToDelete.getType(), elementToDelete.getName());
             event.setElementId(elementToDelete.getId());

@@ -343,6 +343,9 @@ public class ModelManager {
             case ELEMENT_PARSED:
                 event = new ModelEvent(eventType, null, element, elementType);
                 break;
+            case ELEMENT_SERIALIZED:
+                event = new ModelEvent(eventType, null, element, elementType);
+                break;
             default:
                 System.err.println("ModelManager: Event Type " + eventType + " not handled!");
         }
@@ -598,17 +601,20 @@ public class ModelManager {
             File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
             if (ending.equals(FileSystemUtil.PLAN_ENDING)) {
                 objectMapper.writeValue(outfile, (Plan) planElement);
+                fireEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLAN);
             } else if (ending.equals(FileSystemUtil.PLANTYPE_ENDING)) {
                 objectMapper.writeValue(outfile, (PlanType) planElement);
+                fireEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLANTYPE);
             } else if (ending.equals(FileSystemUtil.BEHAVIOUR_ENDING)) {
                 objectMapper.writeValue(outfile, (Behaviour) planElement);
+                fireEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.BEHAVIOUR);
             } else if (ending.equals(FileSystemUtil.TASKREPOSITORY_ENDING)) {
                 outfile = Paths.get(tasksPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
                 objectMapper.writeValue(outfile, (TaskRepository) planElement);
+                fireEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.TASKREPOSITORY);
             } else {
                 throw new RuntimeException("Modelmanager: Trying to serialize a file with unknow ending: " + ending);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

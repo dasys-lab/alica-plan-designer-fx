@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab;
 
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
+import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
@@ -30,7 +31,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     private I18NRepo i18NRepo;
 
     public TaskRepositoryTab(ViewModelElement taskOrRepository, IGuiModificationHandler handler) {
-        super(I18NRepo.getInstance().getString("label.caption.taskrepository") + " " + taskOrRepository.getName(), null);
+        super(I18NRepo.getInstance().getString("label.caption.taskrepository"), null);
         this.guiModificationHandler = handler;
         if (taskOrRepository.getType().equals(Types.TASKREPOSITORY)) {
             this.taskRepository = taskOrRepository;
@@ -40,7 +41,14 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
             System.err.println("TaskRepository: Creation of TaskRepositoryTab with ViewModelElement of type " + taskOrRepository.getType() + " not supported!");
         }
         i18NRepo = I18NRepo.getInstance();
+        setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + " " + taskRepository.getName());
         initGui();
+        setOnCloseRequest(e-> {
+            if (getText().contains("*")) {
+                ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.close.task"), null);
+                e.consume();
+            }
+        });
     }
 
     /**
@@ -106,7 +114,6 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
     @Override
     public void save() {
-        System.out.println("Save called");
         if (getText().contains("*")) {
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.TASKREPOSITORY, taskRepository.getName());
             event.setElementId(taskRepository.getId());
@@ -114,9 +121,11 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         }
     }
 
-    public void setDirty() {
-        if (!getText().contains("*")) {
+    public void setDirty(boolean dirty) {
+        if (!getText().contains("*") && dirty) {
             this.setText(getText() + "*");
+        } else if (getText().contains("*") && !dirty) {
+            this.setText(getText().substring(0, getText().length()-1));
         }
     }
 

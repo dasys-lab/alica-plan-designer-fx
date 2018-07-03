@@ -24,7 +24,7 @@ public class TaskRepositoryViewModel {
                 taskRepositoryTab.clearGuiContent();
                 taskRepositoryTab.addElements(tasks);
                 if (isDirty) {
-                    taskRepositoryTab.setDirty();
+                    taskRepositoryTab.setDirty(isDirty);
                 }
             }
         });
@@ -43,13 +43,14 @@ public class TaskRepositoryViewModel {
 
         taskRepositoryTab.clearGuiContent();
         taskRepositoryTab.addElements(tasks);
-        if (this.isDirty) {
-            this.taskRepositoryTab.setDirty();
-        }
+        taskRepositoryTab.setDirty(this.isDirty);
     }
 
     public void setDirty(boolean dirty) {
         this.isDirty = dirty;
+        if (this.taskRepositoryTab != null) {
+            this.taskRepositoryTab.setDirty(isDirty);
+        }
     }
 
     public void addTask(ViewModelElement task) {

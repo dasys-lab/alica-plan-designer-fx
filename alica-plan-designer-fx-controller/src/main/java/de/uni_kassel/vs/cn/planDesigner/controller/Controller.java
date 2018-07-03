@@ -232,6 +232,16 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         break;
                 }
                 break;
+            case ELEMENT_SERIALIZED:
+                switch (event.getElementType()) {
+                    case Types.TASKREPOSITORY:
+                        taskViewModel.setDirty(false);
+                        break;
+                    default:
+                        System.err.println("Controller: Serialization of unknown type " + event.getElementType() + " gets ignored!");
+                        break;
+                }
+                break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 throw new RuntimeException("Controller: ELEMENT_ATTRIBUTE_CHANGED not implemented, yet!");
             default:
