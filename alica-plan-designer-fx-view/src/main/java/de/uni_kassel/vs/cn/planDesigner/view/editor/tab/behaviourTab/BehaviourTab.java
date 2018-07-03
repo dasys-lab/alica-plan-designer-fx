@@ -1,8 +1,9 @@
-package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
+package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab;
 
 
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -19,7 +20,6 @@ public class BehaviourTab extends AbstractPlanTab {
         try {
             Parent window = fxmlLoader.load();
 //            controller = fxmlLoader.getController();
-//            controller.setCommandStack(commandStack);
 //            controller.setBehaviour(behaviourPathPair.getKey());
 //            controller.setBehaviourTab(this);
             setContent(window);

@@ -18,6 +18,8 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
@@ -50,6 +52,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     // View Objects
     private RepositoryViewModel repoViewModel;
     private TaskRepositoryViewModel taskViewModel;
+    private ArrayList<BehaviourViewModel> behaviourViewModels;
     private PlanTypeViewModel planTypeViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
@@ -237,6 +240,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.TASKREPOSITORY:
                         taskViewModel.setDirty(false);
                         break;
+                    case Types.BEHAVIOUR:
+
                     default:
                         System.err.println("Controller: Serialization of unknown type " + event.getElementType() + " gets ignored!");
                         break;
