@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
@@ -7,6 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -31,6 +33,8 @@ public class PlanTypeWindowController implements Initializable {
 
     private Comparator<ViewModelElement> annotatedPlanComparator;
 
+    private ObservableList<ViewModelElement> allPlans;
+
     @FXML
     private PlanTypeTab planTypeTab;
 
@@ -54,14 +58,14 @@ public class PlanTypeWindowController implements Initializable {
 
     private I18NRepo i18NRepo;
 
+    private IGuiModificationHandler guiModificationHandler;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         i18NRepo = I18NRepo.getInstance();
         initComparators();
         initUIText();
-        initPlanListView();
-        initTableView();
         initButtons();
     }
 
@@ -69,20 +73,14 @@ public class PlanTypeWindowController implements Initializable {
         planTypeTableView.refresh();
     }
 
-    private void initPlanListView() {
+    public void initPlanListView(ObservableList<ViewModelElement> allPlans) {
+        this.allPlans = allPlans;
         //TODO get list from modelmanager
-//        List<RepositoryHBox> allPlans = RepositoryViewModel
-//                .getInstance()
-//                .getPlans()
-//                .stream()
-//                .sorted(pairComparator)
-//                .map(e -> {
-//                    RepositoryHBox planRepositoryHBox = new RepositoryHBox(e.getKey(), e.getValue());
-//                    planRepositoryHBox.setOnMouseClicked(null);
-//                    return planRepositoryHBox;
-//                })
-//                .collect(Collectors.toList());
-//        planListView.setItems(FXCollections.observableArrayList(allPlans));
+        for(ViewModelElement plan : allPlans) {
+            RepositoryHBox planRepositoryHBox = new RepositoryHBox(plan, guiModificationHandler);
+            planRepositoryHBox.setOnMouseClicked(null);
+            planListView.getItems().add(planRepositoryHBox);
+        }
     }
 
     private void initButtons() {
@@ -131,7 +129,8 @@ public class PlanTypeWindowController implements Initializable {
         saveButton.setText(i18NRepo.getString("action.save"));
     }
 
-    private void initTableView() {
+    public void initTableView(ObservableList<ViewModelElement> plansInPlanType) {
+        planTypeTableView.getItems().addAll(plansInPlanType);
         planTypeTableView.getItems().addListener(new ListChangeListener<ViewModelElement>() {
             @Override
             public void onChanged(Change<? extends ViewModelElement> c) {
@@ -203,9 +202,9 @@ public class PlanTypeWindowController implements Initializable {
                         super.updateItem(item, empty);
                         if (empty == false) {
                             if (item.getType().equals(Types.MASTERPLAN)) {
-                                setGraphic(new ImageView(new AlicaIcon("masterplan")));
+                                setGraphic(new ImageView(new AlicaIcon(Types.MASTERPLAN)));
                             } else {
-                                setGraphic(new ImageView(new AlicaIcon("plan")));
+                                setGraphic(new ImageView(new AlicaIcon(Types.PLAN)));
                             }
                             setText(item.getName());
                         }
@@ -246,9 +245,11 @@ public class PlanTypeWindowController implements Initializable {
             throw new RuntimeException("Empty PlanType BULLSHIT!");
         }
         this.planType = planType;
-        //TODO get event here
-//        planTypeTableView.getItems().addAll(planType.getPlans());
     }
 
     public void setPlanTypeTab(PlanTypeTab planTypeTab) {this.planTypeTab = planTypeTab; }
+
+    public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
+        this.guiModificationHandler = guiModificationHandler;
+    }
 }

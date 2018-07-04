@@ -27,6 +27,10 @@ public class PlanTypeTab extends AbstractPlanTab {
         }
     }
 
+    public PlanTypeWindowController getController() {
+        return controller;
+    }
+
     @Override
     public GuiModificationEvent handleDelete() {
         System.err.println("PlanTypeTab: Not implemented!");
