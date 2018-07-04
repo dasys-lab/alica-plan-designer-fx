@@ -403,22 +403,30 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     @Override
     public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {
         planTypeViewModel.clearAllPlans();
+        planTypeViewModel.clearPlansInPlanType();
+
         ArrayList<PlanType> planTypes = modelManager.getPlanTypes();
-        PlanType currentPlantype = null;
         for (PlanType planType : planTypes) {
-            planTypeViewModel.addPlantypeToAllPlans(new ViewModelElement(planType.getId(), planType.getName(), Types.PLANTYPE));
             if (planTypeTab.getViewModelElement().getId() == planType.getId()) {
-                currentPlantype = planType;
-            }
-        }
-        if (currentPlantype != null) {
-            planTypeViewModel.clearPlansInPlanType();
-            for (Plan plan : currentPlantype.getPlans()) {
-                planTypeViewModel.addPlantypeToPlansInPlanType(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+                planTypeViewModel.clearPlansInPlanType();
+                for (Plan plan : planType.getPlans()) {
+                    planTypeViewModel.addPlantypeToPlansInPlanType(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+                }
+                break;
             }
         }
 
-        planTypeViewModel.setPlanTypeTab(planTypeTab);
+        ArrayList<Plan> plans = modelManager.getPlans();
+        for (Plan plan : plans) {
+            if (plan.getMasterPlan()) {
+                planTypeViewModel.addPlantypeToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
+            } else {
+                planTypeViewModel.addPlantypeToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+            }
+        }
+
+
+        planTypeViewModel.init(planTypeTab, this);
 
     }
 
