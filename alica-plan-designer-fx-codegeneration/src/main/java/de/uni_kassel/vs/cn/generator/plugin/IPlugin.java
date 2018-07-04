@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
 import javafx.scene.Parent;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -13,7 +14,6 @@ import java.util.Map;
 public interface IPlugin<T> {
 
     /**
-     *
      * @return the custom {@link IConstraintCodeGenerator}.
      * This is the main functionality of the plugin from the perspective of the {@link de.uni_kassel.vs.cn.generator.Codegenerator}
      * or the {@link de.uni_kassel.vs.cn.generator.IGenerator}
@@ -24,7 +24,7 @@ public interface IPlugin<T> {
      * Returns the plugin view that will be embedded into the properties view of the condition
      * @return
      */
-    Parent getPluginUI();
+    Parent getPluginUI() throws IOException;
 
     /**
      * Writes into the attributes of the given condition.
@@ -52,6 +52,8 @@ public interface IPlugin<T> {
      */
     File getPluginFile();
 
+    void setPluginFile(File pluginFile);
+
     /**
      * This method should make a delegate to the
      * {@link IConstraintCodeGenerator} and make the protected regions known for it.
@@ -59,6 +61,4 @@ public interface IPlugin<T> {
      * @param protectedRegions
      */
     void setProtectedRegions(Map<String, String> protectedRegions);
-
-    void setPluginFile(File pluginFile);
 }

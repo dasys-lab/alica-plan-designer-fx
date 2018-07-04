@@ -4,9 +4,6 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State
 import java.util.Map
 
-/**
- * Created by marci on 19.05.17.
- */
 class DefaultTemplate {
 
     private Map<String, String> protectedRegions;
@@ -26,13 +23,13 @@ class DefaultTemplate {
 			* Plans in State: «FOR plan : state.plans»
 			*   - Plan - (Name): «plan.name», (PlanID): «plan.id» «ENDFOR»
 			*
-			* Tasks: «FOR planEntryPoint : state.inPlan.entryPoints»
+			* Tasks: «FOR planEntryPoint : state.parentPlan.entryPoints»
 			*   - «planEntryPoint.task.name» («planEntryPoint.task.id») (Entrypoint: «planEntryPoint.id»)«ENDFOR»
 			*
-			* States:«FOR stateOfInPlan : state.inPlan.states»
+			* States:«FOR stateOfInPlan : state.parentPlan.states»
 			*   - «stateOfInPlan.name» («stateOfInPlan.id»)«ENDFOR»
 			*
-			* Vars:«FOR variable : transition.preCondition.vars»
+			* Vars:«FOR variable : transition.preCondition.variables»
 			*	- «variable.name» («variable.id») «ENDFOR»
 			*/
 			bool PreCondition«transition.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
@@ -55,7 +52,7 @@ class DefaultTemplate {
           //Check of RuntimeCondition - (Name): «plan.runtimeCondition.name», (ConditionString): «plan.runtimeCondition.conditionString», (Comment) : «plan.runtimeCondition.comment»
 
           /*
-          * Available Vars:«FOR variable : plan.runtimeCondition.vars»
+          * Available Vars:«FOR variable : plan.runtimeCondition.variables»
           *	- «variable.name» («variable.id»)«ENDFOR»
           */
          bool RunTimeCondition«plan.runtimeCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
@@ -73,7 +70,7 @@ class DefaultTemplate {
           //Check of PreCondition - (Name): «plan.preCondition.name», (ConditionString): «plan.preCondition.conditionString» , (Comment) : «plan.preCondition.comment»
 
           /*
-          * Available Vars:«FOR variable : plan.preCondition.vars»
+          * Available Vars:«FOR variable : plan.preCondition.variables»
           *	- «variable.name» («variable.id»)«ENDFOR»
           */
          bool PreCondition«plan.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
@@ -94,8 +91,8 @@ class DefaultTemplate {
 /*
 * RuntimeCondition - (Name): «plan.runtimeCondition.name»
 * (ConditionString): «plan.runtimeCondition.conditionString»
-«IF (plan.runtimeCondition.vars !== null)»
-* Static Variables: «FOR variable : plan.runtimeCondition.vars»«variable.name» «ENDFOR»
+«IF (plan.runtimeCondition.variables !== null)»
+* Static Variables: «FOR variable : plan.runtimeCondition.variables»«variable.name» «ENDFOR»
 «ENDIF»
 * Domain Variables:
 «IF (plan.runtimeCondition.quantifiers !== null)»
@@ -116,11 +113,11 @@ void Constraint«plan.runtimeCondition.id»::getConstraint(shared_ptr<ProblemDes
 }
 «ENDIF»
 
-«IF (plan.preCondition !== null && plan.preCondition.pluginName == "DefaultPlugin" && ((plan.preCondition.vars.size > 0) || (plan.preCondition.quantifiers.size > 0)))»
+«IF (plan.preCondition !== null && plan.preCondition.pluginName == "DefaultPlugin" && ((plan.preCondition.variables.size > 0) || (plan.preCondition.quantifiers.size > 0)))»
 /*
 * PreCondition - (Name): «plan.preCondition.name»
 * (ConditionString): «plan.preCondition.conditionString»
-* Static Variables: «FOR variable : plan.preCondition.vars»«variable.name» «ENDFOR»
+* Static Variables: «FOR variable : plan.preCondition.variables»«variable.name» «ENDFOR»
 * Domain Variables:
 «FOR q : plan.preCondition.quantifiers»
     * forall agents in «q.scope.name» let v = «q.sorts»
@@ -143,7 +140,7 @@ void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ProblemDescrip
     def String constraintStateCheckingMethods(State state) '''
 // State: «state.name»
 «FOR transition : state.outTransitions»
-«IF (transition.preCondition.pluginName == "DefaultPlugin" && transition.preCondition.vars.size > 0)»
+«IF (transition.preCondition.pluginName == "DefaultPlugin" && transition.preCondition.variables.size > 0)»
 /*
 * Transition:
 * - Name: «transition.preCondition.name»
@@ -151,7 +148,7 @@ void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ProblemDescrip
 *
 * Plans in State: «FOR plan : state.plans»
 * - Plan - (Name): «plan.name», (PlanID): «plan.id» «ENDFOR»
-* Static Variables: «FOR variable : transition.preCondition.vars»«variable.name» «ENDFOR»
+* Static Variables: «FOR variable : transition.preCondition.variables»«variable.name» «ENDFOR»
 * Domain Variables:
 «IF transition.preCondition.quantifiers !== null && transition.preCondition.quantifiers.size > 0»
 «FOR q : transition.preCondition.quantifiers»

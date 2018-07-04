@@ -3,8 +3,6 @@ package de.uni_kassel.vs.cn.defaultPlugin;
 import de.uni_kassel.vs.cn.generator.IConstraintCodeGenerator;
 import de.uni_kassel.vs.cn.generator.plugin.IPlugin;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Condition;
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -19,6 +17,8 @@ import java.util.Map;
  */
 public class DefaultPlugin implements IPlugin<Void> {
 
+    private static final String name = "DefaultPlugin";
+
     private File pluginJar;
     private DefaultConstraintCodeGenerator defaultConstraintCodeGenerator;
 
@@ -30,14 +30,14 @@ public class DefaultPlugin implements IPlugin<Void> {
         return defaultConstraintCodeGenerator;
     }
 
-    public Parent getPluginUI() {
+    public Parent getPluginUI() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getClassLoader().getResource("ui.fxml"));
-        try {
+//        try {
             return fxmlLoader.load();
-        } catch (IOException e) {
-            ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.plugin.missingui"), e);
-        }
-        return null;
+//        } catch (IOException e) {
+//            ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.plugin.missingui"), e);
+//        }
+//        return null;
     }
 
     public void writePluginValuesToCondition(Condition condition) {
@@ -50,7 +50,7 @@ public class DefaultPlugin implements IPlugin<Void> {
     }
 
     public String getName() {
-        return "DefaultPlugin";
+        return name;
     }
 
     public void setPluginFile(File pluginJar) {

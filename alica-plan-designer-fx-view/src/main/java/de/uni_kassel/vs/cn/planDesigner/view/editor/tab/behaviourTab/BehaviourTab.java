@@ -1,36 +1,43 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab;
 
-
-import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
+import javafx.scene.control.Tab;
 
-import java.io.IOException;
+public class BehaviourTab extends Tab implements IEditorTab {
 
-public class BehaviourTab extends AbstractPlanTab {
-
-//    private BehaviourWindowController controller;
+    ViewModelElement behaviour;
+    ViewModelElement preCondition;
+    ViewModelElement runtimeCondition;
+    ViewModelElement postCondition;
 
     public BehaviourTab(ViewModelElement behaviour) {
-        super(behaviour.getId());
+        this.behaviour = behaviour;
+    }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("behaviourWindow.fxml"));
-        try {
-            Parent window = fxmlLoader.load();
-//            controller = fxmlLoader.getController();
-//            controller.setBehaviour(behaviourPathPair.getKey());
-//            controller.setBehaviourTab(this);
-            setContent(window);
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    public boolean representsViewModelElement(ViewModelElement element) {
+        if (this.behaviour.equals(element) || this.behaviour.getId() == element.getParentId()) {
+            return true;
+        } else {
+            return false;
         }
     }
 
     @Override
+    public ViewModelElement getViewModelElement() {
+        return behaviour;
+    }
+
+    @Override
     public GuiModificationEvent handleDelete() {
-        System.err.println("BehaviourTab: Not implemented!");
+        System.err.println("BehaviourTab: HandleDelete not implemented!");
         return null;
+    }
+
+    @Override
+    public void save() {
+        System.err.println("BehaviourTab: Save not implemented!");
     }
 }

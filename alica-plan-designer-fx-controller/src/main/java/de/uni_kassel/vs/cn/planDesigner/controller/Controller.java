@@ -52,8 +52,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     // View Objects
     private RepositoryViewModel repoViewModel;
     private TaskRepositoryViewModel taskViewModel;
-    private ArrayList<BehaviourViewModel> behaviourViewModels;
     private PlanTypeViewModel planTypeViewModel;
+    private BehaviourViewModel behaviourViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
     private RepositoryTabPane repoTabPane;
@@ -76,6 +76,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         repoViewModel = new RepositoryViewModel();
         taskViewModel = new TaskRepositoryViewModel();
         planTypeViewModel = new PlanTypeViewModel();
+        behaviourViewModel = new BehaviourViewModel();
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -401,7 +402,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void handleTabOpenedEvent(BehaviourTab behaviourTab) {
-        System.err.println("Controller: Opening Behaviours not implemented, yet!");
+        behaviourViewModel.addBehaviourTab(behaviourTab);
     }
 
     @Override
