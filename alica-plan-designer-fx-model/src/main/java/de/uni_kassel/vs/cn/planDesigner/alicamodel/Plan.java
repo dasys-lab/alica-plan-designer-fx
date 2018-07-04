@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 import java.util.ArrayList;
 
-public class Plan extends AbstractPlan implements IInhabitable {
+public class Plan extends AbstractPlan {
 
     protected boolean masterPlan;
     protected boolean activated;

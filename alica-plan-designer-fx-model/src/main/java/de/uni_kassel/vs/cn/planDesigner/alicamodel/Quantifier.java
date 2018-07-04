@@ -5,18 +5,18 @@ import java.util.ArrayList;
 
 public class Quantifier extends PlanElement {
 
-    protected IInhabitable scope;
+    protected PlanElement scope;
     protected ArrayList<String> sorts;
 
     public ArrayList<String> getSorts() {
         return sorts;
     }
 
-    public IInhabitable getScope() {
+    public PlanElement getScope() {
         return scope;
     }
 
-    public void setScope(IInhabitable scope) {
+    public void setScope(PlanElement scope) {
         this.scope = scope;
     }
 }

@@ -3,7 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class State extends PlanElement implements IInhabitable {
+public class State extends PlanElement {
     protected EntryPoint entryPoint;
     protected Plan parentPlan;
     protected ArrayList<AbstractPlan> plans;
