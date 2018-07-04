@@ -1,4 +1,4 @@
-package de.uni_kassel.vs.cn.planDesigner.common;
+package de.uni_kassel.vs.cn.planDesigner.view.model;
 
 public class ViewModelElement {
     protected long id;

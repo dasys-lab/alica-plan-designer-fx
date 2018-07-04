@@ -2,7 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.PlanTypeWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
-import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

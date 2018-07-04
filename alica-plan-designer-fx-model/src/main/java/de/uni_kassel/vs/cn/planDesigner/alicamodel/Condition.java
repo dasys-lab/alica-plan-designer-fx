@@ -7,6 +7,15 @@ public class Condition extends PlanElement {
     protected String pluginName;
     protected ArrayList<Variable> vars;
     protected ArrayList<Quantifier> quantifier;
+    protected boolean enabled;
+
+    boolean getEnabled () {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public String getConditionString() {
         return conditionString;

@@ -1,6 +1,6 @@
-package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab;
+package de.uni_kassel.vs.cn.planDesigner.view.model;
 
-import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

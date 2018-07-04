@@ -95,7 +95,7 @@ public class TaskRepositoryTab extends AbstractEditorTab<TaskRepository> {
         private static AlicaIcon image;
 
         public TaskListCell() {
-            // only create icon once to save resources
+            // only create key once to save resources
             if (image == null) {
                 image = new AlicaIcon(TaskImpl.class.getSimpleName());
             }

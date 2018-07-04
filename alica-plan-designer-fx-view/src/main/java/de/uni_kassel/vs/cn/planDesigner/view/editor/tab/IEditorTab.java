@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 
 public interface IEditorTab {

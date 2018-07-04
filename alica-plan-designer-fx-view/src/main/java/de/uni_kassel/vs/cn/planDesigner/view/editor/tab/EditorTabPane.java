@@ -1,10 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
-import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
+import de.uni_kassel.vs.cn.planDesigner.view.model.BehaviourViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import javafx.scene.control.Tab;
@@ -12,7 +13,6 @@ import javafx.scene.control.TabPane;
 
 public class EditorTabPane extends TabPane {
 
-    private ITabEventHandler tabEventHandler;
     private IGuiModificationHandler guiModificationHandler;
 
     public EditorTabPane() {
@@ -45,29 +45,26 @@ public class EditorTabPane extends TabPane {
             case Types.MASTERPLAN:
             case Types.PLAN:
                 PlanTab planTab = new PlanTab(viewModelElement);
-                tabEventHandler.handleTabOpenedEvent(planTab);
+                guiModificationHandler.handleTabOpenedEvent(planTab);
                 return planTab;
             case Types.TASKREPOSITORY:
             case Types.TASK:
                 TaskRepositoryTab taskTab = new TaskRepositoryTab(viewModelElement, this.guiModificationHandler);
-                tabEventHandler.handleTabOpenedEvent(taskTab);
+                guiModificationHandler.handleTabOpenedEvent(taskTab);
                 return taskTab;
             case Types.BEHAVIOUR:
-                BehaviourTab behaviourTab = new BehaviourTab(viewModelElement);
-                tabEventHandler.handleTabOpenedEvent(behaviourTab);
+                BehaviourViewModel behaviourViewModel = guiModificationHandler.getBehaviourViewModel(viewModelElement.getId());
+                BehaviourTab behaviourTab = new BehaviourTab(behaviourViewModel);
+                guiModificationHandler.handleTabOpenedEvent(behaviourTab);
                 return behaviourTab;
             case Types.PLANTYPE:
                 PlanTypeTab planTypeTab = new PlanTypeTab(viewModelElement);
-                tabEventHandler.handleTabOpenedEvent(planTypeTab);
+                guiModificationHandler.handleTabOpenedEvent(planTypeTab);
                 return planTypeTab;
             default:
                 System.err.println("EditorTabPane: Opening tab of elementType " + viewModelElement.getType() + " not implemented!");
                 return null;
         }
-    }
-
-    public void setTabEventHandler(ITabEventHandler handler) {
-        this.tabEventHandler = handler;
     }
 
     public void setGuiModificationHandler(IGuiModificationHandler handler) {

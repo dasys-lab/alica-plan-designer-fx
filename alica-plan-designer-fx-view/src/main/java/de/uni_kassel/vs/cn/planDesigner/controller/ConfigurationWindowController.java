@@ -225,7 +225,7 @@ public class ConfigurationWindowController implements Initializable {
     }
 
     /**
-     * Sets all label's text of the configuration window, according to the currently configured locale.
+     * Sets all label's value of the configuration window, according to the currently configured locale.
      */
     private void initLabelTexts() {
         // labels

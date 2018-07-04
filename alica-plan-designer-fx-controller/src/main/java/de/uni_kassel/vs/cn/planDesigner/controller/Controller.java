@@ -19,13 +19,10 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
-import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 
@@ -39,7 +36,7 @@ import java.util.ArrayList;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, IMoveFileHandler, ITabEventHandler {
+public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, IMoveFileHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -53,7 +50,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private RepositoryViewModel repoViewModel;
     private TaskRepositoryViewModel taskViewModel;
     private PlanTypeViewModel planTypeViewModel;
-    private BehaviourViewModel behaviourViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
     private RepositoryTabPane repoTabPane;
@@ -76,7 +72,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         repoViewModel = new RepositoryViewModel();
         taskViewModel = new TaskRepositoryViewModel();
         planTypeViewModel = new PlanTypeViewModel();
-        behaviourViewModel = new BehaviourViewModel();
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -314,7 +309,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         repoViewModel.initGuiContent();
 
         editorTabPane = mainWindowController.getEditorTabPane();
-        editorTabPane.setTabEventHandler(this);
+        editorTabPane.setGuiModificationHandler(this);
     }
 
     /**
@@ -402,7 +397,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void handleTabOpenedEvent(BehaviourTab behaviourTab) {
-        behaviourViewModel.addBehaviourTab(behaviourTab);
+        System.err.println("Controller: Opening BehaviourTabs not implemented, yet!");
     }
 
     @Override
@@ -440,5 +435,26 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             }
         }
         return null;
+    }
+
+    @Override
+    public BehaviourViewModel getBehaviourViewModel(long id) {
+        PlanElement planElement = modelManager.getPlanElement(id);
+        if (planElement != null) {
+            Behaviour behaviour = (Behaviour) planElement;
+            BehaviourViewModel behaviourViewModel = new BehaviourViewModel(behaviour.getId(), behaviour.getName(), Types.BEHAVIOUR);
+            behaviourViewModel.setComment(behaviour.getComment());
+            behaviourViewModel.setRelativeDirectory(behaviour.getRelativeDirectory());
+            behaviourViewModel.setFrequency(behaviour.getFrequency());
+            behaviourViewModel.setDelay(behaviour.getDelay());
+            for (Variable variable : behaviour.getVariables()) {
+                VariableViewModel variableViewModel = new VariableViewModel(variable.getId(), variable.getName(), Types.VARIABLE);
+                variableViewModel.setVariableType(variable.getType());
+                behaviourViewModel.addVariable(variableViewModel);
+            }
+            return behaviourViewModel;
+        } else {
+            return null;
+        }
     }
 }

@@ -44,7 +44,7 @@ public class PlanDesignerApplication extends Application {
         fxmlLoader.setController(mainWindowController);
         Parent root = fxmlLoader.load();
 
-        // TODO: does not load the icon.xpm
+        // TODO: does not load the key.xpm
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/icon.png")));
         primaryStage.setTitle("Carpe Noctem Plan Designer");
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

@@ -29,7 +29,7 @@ public class AbstractPlanHBox extends HBox {
         // TODO add constants and make image size a constant across the application.
         // 19px per abstract plan because every line is 16px high and the additional 3px are for spacing between elements
         setLayoutY(StateContainer.STATE_RADIUS +
-                (stateContainer.getModelElementId().getPlans().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with text-box
+                (stateContainer.getModelElementId().getPlans().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with value-box
         setPickOnBounds(false);
         ObservableList<Pair<Long, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();
         selected.add(new Pair<>(abstractPlan, stateContainer));

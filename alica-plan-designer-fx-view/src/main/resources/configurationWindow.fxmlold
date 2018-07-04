@@ -14,76 +14,76 @@
          <children>
             <HBox styleClass="cfgHbox">
                <children>
-                  <Label fx:id="workspaceLabel" styleClass="cfgLabel" text="Label" />
+                  <Label fx:id="workspaceLabel" styleClass="cfgLabel" value="Label" />
                   <ComboBox fx:id="workspaceComboBox" prefHeight="26.0" prefWidth="181.0" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
                <children>
-                  <Label fx:id="plansPathLabel" styleClass="cfgLabel" text="Label" />
+                  <Label fx:id="plansPathLabel" styleClass="cfgLabel" value="Label" />
                   <TextField fx:id="plansPathTextField" prefHeight="58.0" prefWidth="700.0" />
-                  <Button fx:id="plansPathFileButton" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="plansPathFileButton" mnemonicParsing="false" value="Button" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
                <children>
-                  <Label fx:id="rolesPathLabel" styleClass="cfgLabel" text="Label" />
+                  <Label fx:id="rolesPathLabel" styleClass="cfgLabel" value="Label" />
                   <TextField fx:id="rolesPathTextField" prefHeight="54.0" prefWidth="700.0" />
-                  <Button fx:id="rolesPathFileButton" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="rolesPathFileButton" mnemonicParsing="false" value="Button" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
                <children>
-                  <Label fx:id="miscPathLabel" styleClass="cfgLabel" text="Label" />
+                  <Label fx:id="miscPathLabel" styleClass="cfgLabel" value="Label" />
                   <TextField fx:id="miscPathTextField" prefWidth="700.0" />
-                  <Button fx:id="miscPathFileButton" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="miscPathFileButton" mnemonicParsing="false" value="Button" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
                <children>
-                  <Label fx:id="expressionsPathLabel" styleClass="cfgLabel" text="Label" />
+                  <Label fx:id="expressionsPathLabel" styleClass="cfgLabel" value="Label" />
                   <TextField fx:id="expressionsPathTextField" prefWidth="700.0" />
-                  <Button fx:id="expressionsPathFileButton" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="expressionsPathFileButton" mnemonicParsing="false" value="Button" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
                <children>
-                  <Label fx:id="pluginPathLabel" styleClass="cfgLabel" text="Label" />
+                  <Label fx:id="pluginPathLabel" styleClass="cfgLabel" value="Label" />
                   <TextField fx:id="pluginPathTextField" prefWidth="700.0" />
-                  <Button fx:id="pluginPathFileButton" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="pluginPathFileButton" mnemonicParsing="false" value="Button" />
                </children>
             </HBox>
          </children>
       </VBox>
-      <Button id="5" fx:id="saveButton" layoutX="877.0" layoutY="56.0" mnemonicParsing="false" text="Button" />
+      <Button id="5" fx:id="saveButton" layoutX="877.0" layoutY="56.0" mnemonicParsing="false" value="Button" />
       <HBox layoutX="397.0" layoutY="66.0" prefHeight="36.0" prefWidth="382.0" style="-fx-padding: 5px;">
          <children>
-            <Label fx:id="addWorkspaceLabel" prefWidth="50.0" styleClass="cfgLabel" text="Label" />
+            <Label fx:id="addWorkspaceLabel" prefWidth="50.0" styleClass="cfgLabel" value="Label" />
             <TextField fx:id="workspaceNameField" />
-            <Button fx:id="addWorkspaceButton" mnemonicParsing="false" text="Button" />
+            <Button fx:id="addWorkspaceButton" mnemonicParsing="false" value="Button" />
          </children>
       </HBox>
       <VBox layoutX="17.0" layoutY="30.0" prefHeight="75.0" prefWidth="337.0">
          <children>
             <HBox prefHeight="36.0" prefWidth="337.0" styleClass="cfgHbox">
                <children>
-                  <Label fx:id="editorExecutablePathLabel" styleClass="cfgLabel" text="Label" />
+                  <Label fx:id="editorExecutablePathLabel" styleClass="cfgLabel" value="Label" />
                   <TextField fx:id="editorExecutablePathTextField" />
-                  <Button fx:id="editorExecutablePathFileButton" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="editorExecutablePathFileButton" mnemonicParsing="false" value="Button" />
                </children>
             </HBox>
             <HBox prefHeight="36.0" prefWidth="337.0" styleClass="cfgHbox">
                <children>
-                  <Label fx:id="clangFormatPathLabel" styleClass="cfgLabel" text="Label" />
+                  <Label fx:id="clangFormatPathLabel" styleClass="cfgLabel" value="Label" />
                   <TextField fx:id="clangFormatPathTextField" />
-                  <Button fx:id="clangFormatPathFileButton" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="clangFormatPathFileButton" mnemonicParsing="false" value="Button" />
                </children>
             </HBox>
          </children>
       </VBox>
       <HBox layoutX="392.0" layoutY="33.0" prefHeight="36.0" prefWidth="337.0" styleClass="cfgHbox">
          <children>
-            <Label fx:id="activePluginLabel" prefWidth="50.0" styleClass="cfgLabel" text="Label" />
+            <Label fx:id="activePluginLabel" prefWidth="50.0" styleClass="cfgLabel" value="Label" />
             <ComboBox fx:id="activePluginComboBox" prefHeight="26.0" prefWidth="181.0" />
          </children>
       </HBox>

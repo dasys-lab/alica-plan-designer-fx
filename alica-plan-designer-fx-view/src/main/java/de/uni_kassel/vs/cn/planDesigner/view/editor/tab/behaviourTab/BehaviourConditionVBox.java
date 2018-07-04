@@ -1,12 +1,8 @@
 package  de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab;
 
-import de.uni_kassel.vs.cn.planDesigner.common.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import javafx.beans.InvalidationListener;
-import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class BehaviourConditionVBox {
