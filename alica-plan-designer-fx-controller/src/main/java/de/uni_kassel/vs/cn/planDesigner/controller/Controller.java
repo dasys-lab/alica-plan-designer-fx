@@ -410,7 +410,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             if (planTypeTab.getViewModelElement().getId() == planType.getId()) {
                 planTypeViewModel.clearPlansInPlanType();
                 for (Plan plan : planType.getPlans()) {
-                    planTypeViewModel.addPlantypeToPlansInPlanType(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+                    planTypeViewModel.addPlanTypeToPlansInPlanType(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
                 }
                 break;
             }
@@ -419,9 +419,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         ArrayList<Plan> plans = modelManager.getPlans();
         for (Plan plan : plans) {
             if (plan.getMasterPlan()) {
-                planTypeViewModel.addPlantypeToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
+                planTypeViewModel.addPlanTypeToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
             } else {
-                planTypeViewModel.addPlantypeToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+                planTypeViewModel.addPlanTypeToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
             }
         }
 

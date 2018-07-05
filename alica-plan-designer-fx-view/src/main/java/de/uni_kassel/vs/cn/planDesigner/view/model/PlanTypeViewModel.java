@@ -26,11 +26,11 @@ public class PlanTypeViewModel {
     }
 
 
-    public void addPlantypeToAllPlans(ViewModelElement planType) {
+    public void addPlanTypeToAllPlans(ViewModelElement planType) {
         allPlans.add(planType);
     }
 
-    public void addPlantypeToPlansInPlanType(ViewModelElement planType) {
+    public void addPlanTypeToPlansInPlanType(ViewModelElement planType) {
         plansInPlanType.add(planType);
     }
 

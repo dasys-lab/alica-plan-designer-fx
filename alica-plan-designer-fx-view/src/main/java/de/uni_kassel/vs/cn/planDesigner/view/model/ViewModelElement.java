@@ -46,7 +46,6 @@ public class ViewModelElement {
         return type + ": " + name + "(" + id + ")";
     }
 
-
     @Override
     public boolean equals(Object other) {
         if (other instanceof ViewModelElement) {
