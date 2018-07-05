@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class PlanTypeViewModel {
     private ObservableList<ViewModelElement> allPlans;
-    private ObservableList<ViewModelElement> plansInPlanType;
+    private ObservableList<PlanTypeViewModelElement> plansInPlanType;
     private PlanTypeWindowController planTypeWindowController;
 
     public PlanTypeViewModel() {
@@ -30,7 +30,7 @@ public class PlanTypeViewModel {
         allPlans.add(planType);
     }
 
-    public void addPlanTypeToPlansInPlanType(ViewModelElement planType) {
+    public void addPlanTypeToPlansInPlanType(PlanTypeViewModelElement planType) {
         plansInPlanType.add(planType);
     }
 

@@ -541,6 +541,10 @@ public class ModelManager {
                         System.err.println("ModelManager: Saving of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
                         return;
                 }
+            case ADD_ELEMENT:
+                switch (mmq.getElementType()) {
+                    //TODO handle event
+                }
                 break;
             default:
                 System.err.println("ModelManager: Unkown model modification query gets ignored!");

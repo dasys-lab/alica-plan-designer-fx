@@ -1,9 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanTypeViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
@@ -18,7 +21,6 @@ import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.Comparator;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class PlanTypeWindowController implements Initializable {
@@ -44,7 +46,7 @@ public class PlanTypeWindowController implements Initializable {
     private Button removeAllPlansButton;
 
     @FXML
-    private TableView<ViewModelElement> planTypeTableView;
+    private TableView<PlanTypeViewModelElement> planTypeTableView;
 
     @FXML
     private ListView<RepositoryHBox> planListView;
@@ -71,42 +73,64 @@ public class PlanTypeWindowController implements Initializable {
 
     private void initButtons() {
         saveButton.setOnAction(e -> {
-                planTypeTab.setText(planTypeTab.getText().replace("*",""));
-                //TODO
-//                EMFModelUtils.saveAlicaFile(planType);
-//                commandStack.setSavedForAbstractPlan(planType);
+            if (!planTypeTab.getText().contains("*")) {
+                return;
+            }
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, planType.getName());
+            event.setElementId(planType.getId());
+            guiModificationHandler.handle(event);
+            planTypeTab.setText(planTypeTab.getText().replace("*", ""));
+            planTypeTab.setDirty(false);
+
         });
 
         addPlanButton.setOnAction(e -> {
             RepositoryHBox selectedItem = planListView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                //TODO fire event here
-//                TreeViewModelElement command = new AddPlanToPlanType(selectedItem.getObject(), planType);
-//                commandStack.storeAndExecute(command);
-                ViewModelElement element = selectedItem.getViewModelElement();
-                planTypeTableView.getItems().add(element);
-                planTypeTableView.getItems().sort(viewModelElementComparator);
+            if (selectedItem == null) {
+                return;
             }
+            fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), selectedItem.getViewModelId());
+            planTypeTableView.getItems().add(new PlanTypeViewModelElement(selectedItem.getViewModelElement(), true));
+            planTypeTableView.getItems().sort(viewModelElementComparator);
+            setDirty();
         });
 
         removePlanButton.setOnAction(e -> {
             ViewModelElement selectedItem = planTypeTableView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                //TODO fire event here
-//                commandStack.storeAndExecute(new RemovePlanFromPlanType(selectedItem, planType));
-                planTypeTableView.getItems().remove(selectedItem);
-                planTypeTableView.refresh();
-                planListView.getItems().sort(repositoryHBoxComparator);
+            if (selectedItem == null) {
+                return;
             }
+            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, selectedItem.getName(), selectedItem.getId());
+            planTypeTableView.getItems().remove(selectedItem);
+            planTypeTableView.refresh();
+            planListView.getItems().sort(repositoryHBoxComparator);
+            setDirty();
         });
 
         removeAllPlansButton.setOnAction(e -> {
-            //TODO fire event here
-//            commandStack.storeAndExecute(new RemoveAllPlansFromPlanType(planType));
+            for(PlanTypeViewModelElement element : planTypeTableView.getItems()) {
+                fireModificationEvent(GuiEventType.REMOVE_ELEMENT, element.getName(), element.getId());
+            }
             planTypeTableView.getItems().clear();
             planTypeTableView.refresh();
             planListView.getItems().sort(repositoryHBoxComparator);
+            setDirty();
         });
+    }
+
+    private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {
+        GuiModificationEvent event = new GuiModificationEvent(type, Types.PLAN, viewModelName);
+        event.setParentId(planType.getId());
+        event.setElementId(viewModelId);
+        event.setElementId(planType.getId());
+        guiModificationHandler.handle(event);
+    }
+
+    private void setDirty() {
+        if (!planTypeTab.getText().contains("*")) {
+            planTypeTab.setText(planTypeTab.getText() + "*");
+        }
+        planTypeTab.setDirty(true);
     }
 
     private void initUIText() {
@@ -116,22 +140,25 @@ public class PlanTypeWindowController implements Initializable {
         saveButton.setText(i18NRepo.getString("action.save"));
     }
 
-    public void initTableView(ObservableList<ViewModelElement> plansInPlanType) {
+    public void initTableView(ObservableList<PlanTypeViewModelElement> plansInPlanType) {
         planTypeTableView.getItems().addAll(plansInPlanType);
         planTypeTableView.getItems().addListener(new ListChangeListener<ViewModelElement>() {
             @Override
             public void onChanged(Change<? extends ViewModelElement> c) {
                 c.next();
                 if (c.wasAdded()) {
-                    List<? extends ViewModelElement> addedSubList = c.getAddedSubList();
 
-                    for(ViewModelElement element : addedSubList) {
-                        planListView.getItems().remove(element);
+                    for (ViewModelElement element : c.getAddedSubList()) {
+                        for (RepositoryHBox repositoryHBox : planListView.getItems()) {
+                            if (repositoryHBox.getViewModelId() == element.getId()) {
+                                planListView.getItems().remove(repositoryHBox);
+                                break;
+                            }
+                        }
                     }
 
                 } else if (c.wasRemoved()) {
-                    List<? extends ViewModelElement> removedSubList = c.getRemoved();
-                    for (ViewModelElement element : removedSubList) {
+                    for (ViewModelElement element : c.getRemoved()) {
                         RepositoryHBox e1 = new RepositoryHBox(element, guiModificationHandler);
                         e1.setOnMouseClicked(null);
                         planListView.getItems().add(e1);
@@ -140,13 +167,13 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<ViewModelElement, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
+        TableColumn<PlanTypeViewModelElement, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
         activeColumn.setResizable(false);
         activeColumn.setCellValueFactory(new PropertyValueFactory<>(i18NRepo.getString("label.column.activated")));
-        activeColumn.setCellFactory(new Callback<TableColumn<ViewModelElement, Boolean>, TableCell<ViewModelElement, Boolean>>() {
+        activeColumn.setCellFactory(new Callback<TableColumn<PlanTypeViewModelElement, Boolean>, TableCell<PlanTypeViewModelElement, Boolean>>() {
             @Override
-            public TableCell<ViewModelElement, Boolean> call(TableColumn<ViewModelElement, Boolean> param) {
-                TableCell<ViewModelElement, Boolean> annotatedPlanBooleanTableCell = new TableCell<ViewModelElement, Boolean>() {
+            public TableCell<PlanTypeViewModelElement, Boolean> call(TableColumn<PlanTypeViewModelElement, Boolean> param) {
+                TableCell<PlanTypeViewModelElement, Boolean> annotatedPlanBooleanTableCell = new TableCell<PlanTypeViewModelElement, Boolean>() {
                     @Override
                     protected void updateItem(Boolean item, boolean empty) {
                         super.updateItem(item, empty);
@@ -165,22 +192,17 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<ViewModelElement, ViewModelElement> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
-        planNameColumn.setCellValueFactory(new PropertyValueFactory<>(Types.PLAN));
-        planNameColumn.setCellFactory(new Callback<TableColumn<ViewModelElement, ViewModelElement>, TableCell<ViewModelElement, ViewModelElement>>() {
+        TableColumn<PlanTypeViewModelElement, String> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
+        planNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        planNameColumn.setCellFactory(new Callback<TableColumn<PlanTypeViewModelElement, String>, TableCell<PlanTypeViewModelElement, String>>() {
             @Override
-            public TableCell<ViewModelElement, ViewModelElement> call(TableColumn<ViewModelElement, ViewModelElement> param) {
-                TableCell<ViewModelElement, ViewModelElement> planNameTableCell = new TableCell<ViewModelElement, ViewModelElement>() {
+            public TableCell<PlanTypeViewModelElement, String> call(TableColumn<PlanTypeViewModelElement, String> param) {
+                TableCell<PlanTypeViewModelElement, String> planNameTableCell = new TableCell<PlanTypeViewModelElement, String>() {
                     @Override
-                    protected void updateItem(ViewModelElement item, boolean empty) {
+                    protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
-                        if (empty == false ) {
-                            if (item.getType().equals(Types.MASTERPLAN)) {
-                                setGraphic(new ImageView(new AlicaIcon(Types.MASTERPLAN)));
-                            } else {
-                                setGraphic(new ImageView(new AlicaIcon(Types.PLAN)));
-                            }
-                            setText(item.getName());
+                        if (empty == false) {
+                            setText(item);
                         }
                     }
                 };
@@ -191,12 +213,10 @@ public class PlanTypeWindowController implements Initializable {
         planTypeTableView.getColumns().add(activeColumn);
         planTypeTableView.getColumns().add(planNameColumn);
         planTypeTableView.setRowFactory(tv -> {
-            TableRow<ViewModelElement> annotatedPlanTableRow = new TableRow<>();
+            TableRow<PlanTypeViewModelElement> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
-                if(e.getClickCount() == 2 && annotatedPlanTableRow.getItem() != null) {
-                    //TODO fire event
-//                    commandStack.storeAndExecute(new ChangeAttributeValue<>(annotatedPlanTableRow.getItem(),
-//                            "activated", !annotatedPlanTableRow.getItem().isActivated(), planType));
+                if (e.getClickCount() == 2 && annotatedPlanTableRow.getItem() != null) {
+                    annotatedPlanTableRow.getItem().setActivated(!annotatedPlanTableRow.getItem().isActivated());
                     planTypeTableView.refresh();
                 }
             });
@@ -206,7 +226,7 @@ public class PlanTypeWindowController implements Initializable {
 
     public void initPlanListView(ObservableList<ViewModelElement> allPlans) {
         this.allPlans = allPlans;
-        for(ViewModelElement plan : this.allPlans) {
+        for (ViewModelElement plan : this.allPlans) {
             RepositoryHBox planRepositoryHBox = new RepositoryHBox(plan, guiModificationHandler);
             planRepositoryHBox.setOnMouseClicked(null);
             planListView.getItems().add(planRepositoryHBox);
@@ -228,7 +248,9 @@ public class PlanTypeWindowController implements Initializable {
         this.planType = planType;
     }
 
-    public void setPlanTypeTab(PlanTypeTab planTypeTab) {this.planTypeTab = planTypeTab; }
+    public void setPlanTypeTab(PlanTypeTab planTypeTab) {
+        this.planTypeTab = planTypeTab;
+    }
 
     public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
         this.guiModificationHandler = guiModificationHandler;
