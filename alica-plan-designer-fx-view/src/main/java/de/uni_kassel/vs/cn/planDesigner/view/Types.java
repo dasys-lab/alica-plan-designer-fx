@@ -10,4 +10,7 @@ public class Types {
     public static final String ROLE = "role";
     public static final String VARIABLE = "variable";
     public static final String FOLDER = "folder";
+    public static final String STATE = "state";
+    public static final String SUCCESSSTATE = "successstate";
+    public static final String FAILURESTATE = "failurestate";
 }
