@@ -34,7 +34,7 @@ public class BehaviourTab extends Tab implements IEditorTab {
 
         // fill variables tab
         for (VariableViewModel variableViewModel : behaviourViewModel.getVariables()) {
-            variablesTab.addVariable(variableViewModel);
+            variablesTab.addItem(variableViewModel);
         }
 
         // fill key value tab
