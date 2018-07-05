@@ -1,7 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab;
 
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.QuantifierTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.VariablesTab;
+import de.uni_kassel.vs.cn.planDesigner.view.model.QuantifierViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.VariableViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
@@ -20,7 +22,7 @@ public class BehaviourTab extends Tab implements IEditorTab {
     BehaviourViewModel behaviourViewModel;
 
     public BehaviourTab(BehaviourViewModel behaviourViewModel) {
-        super(I18NRepo.getInstance().getString("label.behaviour") + ": " + behaviourViewModel.getName());
+        super(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + behaviourViewModel.getName());
         this.behaviourViewModel = behaviourViewModel;
 
         keyValuePropertiesTab = new KeyValuePropertiesTab();

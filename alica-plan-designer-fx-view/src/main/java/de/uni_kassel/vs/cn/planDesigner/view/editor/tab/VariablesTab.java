@@ -12,7 +12,7 @@ public class VariablesTab extends TableViewTab<VariableViewModel> {
 
     public VariablesTab() {
         super();
-        setText(i18NRepo.getString("label.variables"));
+        setText(i18NRepo.getString("label.caption.variables"));
 
         TableColumn<VariableViewModel, String> nameColumn = makeColumn(i18NRepo.getString("label.column.name"), "nameProperty", new DefaultStringConverter());
         TableColumn<VariableViewModel, Long> idColumn = makeColumn(i18NRepo.getString("label.column.id"), "idProperty", new LongStringConverter());

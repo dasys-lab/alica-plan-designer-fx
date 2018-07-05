@@ -13,7 +13,7 @@ public class KeyValuePropertiesTab extends Tab {
     protected TableView<KeyValuePair> keyValues;
 
     public KeyValuePropertiesTab () {
-        super(I18NRepo.getInstance().getString("label.properties"));
+        super(I18NRepo.getInstance().getString("label.caption.properties"));
         keyValues = new TableView<>();
 
         keyValues.setEditable(true);
