@@ -1,12 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab;
 
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.VariablesTab;
+import de.uni_kassel.vs.cn.planDesigner.view.model.BehaviourViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.VariableViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
-import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
-import de.uni_kassel.vs.cn.planDesigner.view.model.BehaviourViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.properties.KeyValuePropertiesTab;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -20,7 +20,7 @@ public class BehaviourTab extends Tab implements IEditorTab {
     BehaviourViewModel behaviourViewModel;
 
     public BehaviourTab(BehaviourViewModel behaviourViewModel) {
-        super(I18NRepo.getInstance().getString("label.behaviour") + ": " + behaviourViewModel.getName());
+        super(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + behaviourViewModel.getName());
         this.behaviourViewModel = behaviourViewModel;
 
         keyValuePropertiesTab = new KeyValuePropertiesTab();
@@ -34,7 +34,7 @@ public class BehaviourTab extends Tab implements IEditorTab {
 
         // fill variables tab
         for (VariableViewModel variableViewModel : behaviourViewModel.getVariables()) {
-            variablesTab.addVariable(variableViewModel);
+            variablesTab.addItem(variableViewModel);
         }
 
         // fill key value tab

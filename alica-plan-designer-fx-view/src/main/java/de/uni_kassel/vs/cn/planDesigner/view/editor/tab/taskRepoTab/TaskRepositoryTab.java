@@ -41,7 +41,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
             System.err.println("TaskRepository: Creation of TaskRepositoryTab with ViewModelElement of type " + taskOrRepository.getType() + " not supported!");
         }
         i18NRepo = I18NRepo.getInstance();
-        setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + " " + taskRepository.getName());
+        setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + ": " + taskRepository.getName());
         initGui();
         setOnCloseRequest(e-> {
             if (getText().contains("*")) {
