@@ -1,25 +1,31 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
+import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.model.VariableViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.LongStringConverter;
 
-public class VariablesTab extends TableViewTab<VariableViewModel> {
+public class VariablesTab extends Tab {
+
+    PropertiesTable<VariableViewModel> table;
+    I18NRepo i18NRepo;
 
     public VariablesTab() {
         super();
+        i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getString("label.caption.variables"));
 
-        TableColumn<VariableViewModel, String> nameColumn = makeColumn(i18NRepo.getString("label.column.name"), "nameProperty", new DefaultStringConverter());
-        TableColumn<VariableViewModel, Long> idColumn = makeColumn(i18NRepo.getString("label.column.id"), "idProperty", new LongStringConverter());
-        TableColumn<VariableViewModel, String> typeColumn = makeColumn(i18NRepo.getString("label.column.elementType"), "variableTypeProperty", new DefaultStringConverter());
-        TableColumn<VariableViewModel, String> commentColumn = makeColumn(i18NRepo.getString("label.column.comment"), "commentProperty", new DefaultStringConverter());
+        table = new PropertiesTable<>();
+        table.addColumn(i18NRepo.getString("label.column.name"), "nameProperty", new DefaultStringConverter());
+        table.addColumn(i18NRepo.getString("label.column.id"), "idProperty", new LongStringConverter());
+        table.addColumn(i18NRepo.getString("label.column.elementType"), "variableTypeProperty", new DefaultStringConverter());
+        table.addColumn(i18NRepo.getString("label.column.comment"), "commentProperty", new DefaultStringConverter());
 
-        table.getColumns().addAll(nameColumn, idColumn, typeColumn, commentColumn);
         VBox variablesButtonVBox = new VBox();
         HBox addDeleteHBox = new HBox();
         Button addButton = new Button(i18NRepo.getString("action.list.add"));
@@ -37,6 +43,11 @@ public class VariablesTab extends TableViewTab<VariableViewModel> {
         addDeleteHBox.getChildren().addAll(addButton, deleteButton);
         variablesButtonVBox.getChildren().addAll(table, addDeleteHBox);
         setContent(variablesButtonVBox);
+    }
+
+    public void addItem(VariableViewModel viewModel) {
+        this.table.addItem(viewModel);
+        table.setPrefHeight(24*(table.getItems().size()+1)+2);
     }
 
 }

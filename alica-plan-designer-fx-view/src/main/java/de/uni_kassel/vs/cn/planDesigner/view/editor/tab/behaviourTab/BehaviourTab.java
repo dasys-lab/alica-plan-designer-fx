@@ -1,14 +1,12 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab;
 
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.QuantifierTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.VariablesTab;
-import de.uni_kassel.vs.cn.planDesigner.view.model.QuantifierViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.model.BehaviourViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.VariableViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
-import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
-import de.uni_kassel.vs.cn.planDesigner.view.model.BehaviourViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.properties.KeyValuePropertiesTab;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;

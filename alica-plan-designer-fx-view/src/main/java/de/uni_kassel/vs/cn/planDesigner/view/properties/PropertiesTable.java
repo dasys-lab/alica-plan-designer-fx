@@ -1,7 +1,5 @@
-package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
+package de.uni_kassel.vs.cn.planDesigner.view.properties;
 
-import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -10,17 +8,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
-public class TableViewTab<S> extends Tab {
+public class PropertiesTable<S> extends TableView<S> {
 
-    protected I18NRepo i18NRepo;
-    protected TableView<S> table;
-
-    public TableViewTab () {
-        table = new TableView<>();
-        i18NRepo = I18NRepo.getInstance();
-    }
-
-    protected <S,T> TableColumn<S,T> makeColumn(String title, String propertyName, StringConverter<T> converter) {
+    public <T> void addColumn(String title, String propertyName, StringConverter<T> converter) {
         TableColumn<S,T> column = new TableColumn<S, T>(title);
         column.setCellValueFactory(new PropertyValueFactory<S,T>(propertyName));
         Callback<TableColumn<S,T>, TableCell<S, T>> defaultTextFieldCellFactory
@@ -30,11 +20,11 @@ public class TableViewTab<S> extends Tab {
             cell.setEditable(false);
             return cell;
         });
-        return column;
+        getColumns().add(column);
     }
 
     public void addItem(S viewModelItem) {
-        table.getItems().add(viewModelItem);
-        table.setPrefHeight(24 * (table.getItems().size() + 1) + 2);
+        getItems().add(viewModelItem);
+        setPrefHeight(24 * (getItems().size() + 1) + 2);
     }
 }
