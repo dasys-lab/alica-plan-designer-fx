@@ -73,7 +73,7 @@ public class FileTreeCell extends TreeCell<File> {
 //                        getItem(),
 //                        treeItem.getValue()));
 //            }
-//            LOG.warn("User tried to set illegal name: " + newValue.unwrap().getName());
+//            LOG.warn("User tried to set illegal name: " + newValue.unwrap().getKey());
 //            ErrorWindowController.createErrorWindow("This name is not allowed! These characters are forbidden: "
 //                    + AlicaModelUtils.forbiddenCharacters, null);
 //
@@ -88,7 +88,7 @@ public class FileTreeCell extends TreeCell<File> {
 //            Resource resource = AlicaResourceSet.getInstance()
 //                    .getResources()
 //                    .stream()
-//                    .filter(e -> e.getURI().toFileString().contains(unwrappedFile.getName()))
+//                    .filter(e -> e.getURI().toFileString().contains(unwrappedFile.getKey()))
 //                    .filter(e -> e.getURI().toFileString().contains("pmlex") == false)
 //                    .findFirst()
 //                    .get();
@@ -99,21 +99,21 @@ public class FileTreeCell extends TreeCell<File> {
 //                if (checkForCorrectFileEnding(newValue, ".pml")) return;
 //                hasSameName = RepositoryViewModel.getInstance().getPlans()
 //                        .stream()
-//                        .anyMatch(planPathPair -> planPathPair.getKey().getName().equals(name));
+//                        .anyMatch(planPathPair -> planPathPair.getKey().getKey().equals(name));
 //            }
 //
 //            if (objectToChange instanceof Behaviour) {
 //                if (checkForCorrectFileEnding(newValue, ".beh")) return;
 //                hasSameName = RepositoryViewModel.getInstance().getBehaviours()
 //                        .stream()
-//                        .anyMatch(behaviourPathPair -> behaviourPathPair.getKey().getName().equals(name));
+//                        .anyMatch(behaviourPathPair -> behaviourPathPair.getKey().getKey().equals(name));
 //            }
 //
 //            if (objectToChange instanceof PlanType) {
 //                if (checkForCorrectFileEnding(newValue, ".pty")) return;
 //                hasSameName = RepositoryViewModel.getInstance().getPlanTypes()
 //                        .stream()
-//                        .anyMatch(planTypePathPair -> planTypePathPair.getKey().getName().equals(name));
+//                        .anyMatch(planTypePathPair -> planTypePathPair.getKey().getKey().equals(name));
 //            }
 //
 //            if (hasSameName) {

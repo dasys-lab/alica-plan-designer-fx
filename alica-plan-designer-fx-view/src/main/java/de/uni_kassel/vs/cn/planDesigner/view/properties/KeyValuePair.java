@@ -4,12 +4,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class KeyValuePair {
-    private final StringProperty name = new SimpleStringProperty();
+    private final StringProperty key = new SimpleStringProperty();
     private final StringProperty value = new SimpleStringProperty();
     private final boolean editable;
 
-    public KeyValuePair(String name, String value, boolean editable) {
-        setName(name);
+    public KeyValuePair(String key, String value, boolean editable) {
+        setKey(key);
         setValue(value);
         this.editable = editable;
     }
@@ -19,13 +19,13 @@ public class KeyValuePair {
     }
 
     public final StringProperty keyProperty() {
-        return this.name;
+        return this.key;
     }
-    public final String getName() {
+    public final String getKey() {
         return this.keyProperty().get();
     }
-    public final void setName(String name) {
-        this.keyProperty().set(name);
+    public final void setKey(String key) {
+        this.keyProperty().set(key);
     }
 
     public final StringProperty valueProperty() {

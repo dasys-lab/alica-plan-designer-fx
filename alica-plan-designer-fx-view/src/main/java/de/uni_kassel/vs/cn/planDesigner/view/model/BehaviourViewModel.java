@@ -2,12 +2,11 @@ package de.uni_kassel.vs.cn.planDesigner.view.model;
 
 import java.util.ArrayList;
 
-public class BehaviourViewModel extends ViewModelElement {
+public class BehaviourViewModel extends PlanElementViewModel {
 
     protected String relativeDirectory;
     int frequency;
     long delay;
-    String comment;
     ArrayList<VariableViewModel> variables;
 
     public BehaviourViewModel(long id, String name, String type) {
@@ -31,19 +30,15 @@ public class BehaviourViewModel extends ViewModelElement {
         this.frequency = frequency;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
     public int getFrequency() {
         return frequency;
     }
 
     public long getDelay() {
         return delay;
+    }
+
+    public ArrayList<VariableViewModel> getVariables() {
+        return variables;
     }
 }

@@ -62,7 +62,7 @@ public class SaveTest extends ApplicationTest {
 //            MainWindowController.getInstance().getEditorTabPane().openTab(fileWrapperTreeItem.getValue().unwrap().toPath());
 //            PlanTab selectedItem = (PlanTab) MainWindowController.getInstance().getEditorTabPane().getTabs().get(0);
 //            State state = new State();
-//            state.setName("State1");
+//            state.setKey("State1");
 //            AddStateInPlan addStateInPlan = new AddStateInPlan(selectedItem.getPlanModelVisualisationObject(), state);
 //            MainWindowController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
 //            selectedItem.save();
@@ -106,7 +106,7 @@ public class SaveTest extends ApplicationTest {
 //            MainWindowController.getInstance().getEditorTabPane().openTab(fileWrapperTreeItem.getValue().unwrap().toPath());
 //            PlanTab selectedItem = (PlanTab) MainWindowController.getInstance().getEditorTabPane().getTabs().get(0);
 //            State state = new State();
-//            state.setName("State2");
+//            state.setKey("State2");
 //            AddStateInPlan addStateInPlan = new AddStateInPlan(selectedItem.getPlanModelVisualisationObject(), state);
 //            MainWindowController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
 //            selectedItem.save();

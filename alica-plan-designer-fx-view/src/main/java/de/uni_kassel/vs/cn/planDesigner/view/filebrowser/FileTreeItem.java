@@ -58,9 +58,9 @@ public class FileTreeItem extends TreeItem<File> {
 
 //    private Image getImageForFileType(File content) {
 //        Image listItemImage;
-//        if (content.getName().endsWith(".beh")) {
+//        if (content.getKey().endsWith(".beh")) {
 //            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
-//        } else if (content.getName().endsWith(".pml")) {
+//        } else if (content.getKey().endsWith(".pml")) {
 ////            try {
 ////                Plan plan = (Plan)EMFModelUtils.loadAlicaFileFromDisk(content);
 ////                if (plan.isMasterPlan()) {
@@ -72,9 +72,9 @@ public class FileTreeItem extends TreeItem<File> {
 ////                e1.printStackTrace();
 ////                return null;
 ////            }
-//        } else if (content.getName().endsWith(".pty")) {
+//        } else if (content.getKey().endsWith(".pty")) {
 //            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plantype24x24.png")));
-//        } else if (content.getName().endsWith(".tsk")) {
+//        } else if (content.getKey().endsWith(".tsk")) {
 //            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/tasks24x24.png")));
 //        } else if (content.isDirectory()) {
 //            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));

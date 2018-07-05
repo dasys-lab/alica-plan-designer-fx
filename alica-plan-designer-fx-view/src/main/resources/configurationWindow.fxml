@@ -35,7 +35,7 @@
                         </VBox>
                     </content>
                     <font>
-                        <Font name="System Bold" size="13.0"/>
+                        <Font key="System Bold" size="13.0"/>
                     </font>
                 </TitledPane>
                 <TitledPane fx:id="workspaceManagementTitledPane" animated="false" collapsible="false"
@@ -94,7 +94,7 @@
                         </VBox>
                     </content>
                     <font>
-                        <Font name="System Bold" size="13.0"/>
+                        <Font key="System Bold" size="13.0"/>
                     </font>
                 </TitledPane>
                 <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="179.0" text="Save">

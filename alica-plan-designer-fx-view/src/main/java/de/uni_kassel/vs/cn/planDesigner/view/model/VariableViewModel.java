@@ -1,19 +1,24 @@
 package de.uni_kassel.vs.cn.planDesigner.view.model;
 
-public class VariableViewModel extends ViewModelElement {
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
-    String variableType;
+public class VariableViewModel extends PlanElementViewModel {
 
-    public VariableViewModel(long id , String name, String variableType) {
-        super (id, name, variableType);
+    protected final StringProperty variableType = new SimpleStringProperty();
 
+    public VariableViewModel(long id, String name, String elementType) {
+        super(id, name, elementType);
     }
 
-    public void setVariableType(String variableType) {
-        this.variableType = variableType;
-    }
-
-    public String getVariableType() {
+    public final StringProperty variableTypeProperty() {
         return this.variableType;
     }
+    public final String getVariableType() {
+        return this.variableType.get();
+    }
+    public final void setVariableType(String type) {
+        this.variableType.set(type);
+    }
+
 }

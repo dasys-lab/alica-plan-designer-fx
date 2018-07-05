@@ -4,10 +4,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 import java.util.function.Function;
@@ -53,7 +49,6 @@ public class KeyValuePropertiesTab extends Tab {
 
                     }
                 }
-//                cell.pseudoClassStateChanged(editableCssClass, cell.isEditable());
             });
             return cell ;
         });
