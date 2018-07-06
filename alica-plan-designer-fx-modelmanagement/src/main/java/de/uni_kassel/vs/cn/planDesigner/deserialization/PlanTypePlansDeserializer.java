@@ -29,6 +29,7 @@ public class PlanTypePlansDeserializer extends StdDeserializer<ArrayList<Plan>> 
             throws IOException, JsonProcessingException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
         ArrayList<Plan> plans = new ArrayList<>();
+        //TODO spilt by , and add all plan ids
         for(int i = 0; i < tree.size(); i++) {
             String planString = ((ValueNode) tree.get(i)).asText();
             int idIndex = planString.indexOf('#');
