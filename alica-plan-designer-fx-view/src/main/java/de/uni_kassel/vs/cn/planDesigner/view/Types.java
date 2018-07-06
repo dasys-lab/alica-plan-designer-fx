@@ -9,6 +9,10 @@ public class Types {
     public static final String TASK = "task";
     public static final String ROLE = "role";
     public static final String VARIABLE = "variable";
+    public static final String PRECONDITION = "preCondition";
+    public static final String QUANTIFIER = "quantifier";
+    public static final String RUNTIMECONDITION = "runtimeCondition";
+    public static final String POSTCONDITION = "postCondition";
     public static final String FOLDER = "folder";
     public static final String STATE = "state";
     public static final String SUCCESSSTATE = "successstate";

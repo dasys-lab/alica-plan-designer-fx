@@ -15,6 +15,8 @@ public class ConditionViewModel extends PlanElementViewModel {
 
     public ConditionViewModel(long id, String name, String type) {
         super(id, name, type);
+        this.vars = new ArrayList<>();
+        this.quantifier = new ArrayList<>();
     }
 
     public String getConditionString() {
@@ -57,15 +59,7 @@ public class ConditionViewModel extends PlanElementViewModel {
         return vars;
     }
 
-    public void setVars(ArrayList<VariableViewModel> vars) {
-        this.vars = vars;
-    }
-
     public ArrayList<QuantifierViewModel> getQuantifier() {
         return quantifier;
-    }
-
-    public void setQuantifier(ArrayList<QuantifierViewModel> quantifier) {
-        this.quantifier = quantifier;
     }
 }

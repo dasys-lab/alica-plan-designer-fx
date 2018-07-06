@@ -9,7 +9,7 @@ public class Behaviour extends AbstractPlan {
     protected PostCondition postCondition;
     protected ArrayList<Variable> variables;
     protected int frequency;
-    protected long delay;
+    protected long deferring;
 
     public Behaviour() {
         variables = new ArrayList<>();
@@ -51,11 +51,11 @@ public class Behaviour extends AbstractPlan {
         this.frequency = frequency;
     }
 
-    public long getDelay() {
-        return delay;
+    public long getDeferring() {
+        return deferring;
     }
 
-    public void setDelay(long delay) {
-        this.delay = delay;
+    public void setDeferring(long deferring) {
+        this.deferring = deferring;
     }
 }
