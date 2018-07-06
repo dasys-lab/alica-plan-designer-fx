@@ -72,7 +72,7 @@ public class DeleteFileMenuItem extends MenuItem {
 //                deleteFileMenuItem.deleteFile();
 //            }
 //            try {
-//                Files.delete(toDelete.toPath());
+//                Files.onRemoveElement(toDelete.toPath());
 //            } catch (IOException e) {
 //                throw new RuntimeException("");
 //            }

@@ -2,18 +2,23 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab;
 
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionsTitledPane;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.VariablesTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.BehaviourViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.VariableViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.DefaultStringConverter;
+import javafx.util.converter.IntegerStringConverter;
+import javafx.util.converter.LongStringConverter;
 
 public class BehaviourTab extends Tab implements IEditorTab {
 
-    BehaviourPropertiesTab behaviourPropertiesTab;
+    PropertiesTable<BehaviourViewModel> propertiesTable;
     VariablesTab variablesTab;
     VBox contentList;
     BehaviourViewModel behaviourViewModel;
@@ -24,28 +29,33 @@ public class BehaviourTab extends Tab implements IEditorTab {
         i18NRepo = I18NRepo.getInstance();
         this.behaviourViewModel = behaviourViewModel;
 
-        // fill properties
-        behaviourPropertiesTab = new BehaviourPropertiesTab();
-        behaviourPropertiesTab.addItem(behaviourViewModel);
+        // Properties
+        propertiesTable = new PropertiesTable();
+        propertiesTable.setEditable(true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.id"), "id", new LongStringConverter(), false);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.frequency"), "frequency", new IntegerStringConverter(), true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.deferring"), "deferring", new LongStringConverter(), true);
+        propertiesTable.addItem(behaviourViewModel);
 
-        // fill variables tab
+        // Variables
         variablesTab = new VariablesTab();
         for (VariableViewModel variableViewModel : behaviourViewModel.getVariables()) {
             variablesTab.addItem(variableViewModel);
         }
-
-        // Add Properties and Variables into TabPane
-        TabPane tabPane = new TabPane();
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        tabPane.getTabs().addAll(behaviourPropertiesTab, variablesTab);
+        TabPane variablesTabPane = new TabPane();
+        variablesTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        variablesTabPane.getTabs().addAll(variablesTab);
 
         // Behaviours Conditions
-        BehaviourConditionTitledPane preConditionTabPane = new BehaviourConditionTitledPane(behaviourViewModel.getPreCondition(), i18NRepo.getString("label.caption.preCondtion"));
-        BehaviourConditionTitledPane runtimeConditionTabPane = new BehaviourConditionTitledPane(behaviourViewModel.getRuntimeCondition(), i18NRepo.getString("label.caption.runtimeCondtion"));
-        BehaviourConditionTitledPane postConditionTabPane = new BehaviourConditionTitledPane(behaviourViewModel.getPostCondition(), i18NRepo.getString("label.caption.postCondtion"));
+        ConditionsTitledPane preConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.preCondtions"));
+        ConditionsTitledPane runtimeConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.runtimeCondtions"));
+        ConditionsTitledPane postConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.postCondtions"));
 
         contentList = new VBox();
-        contentList.getChildren().addAll(tabPane, preConditionTabPane, runtimeConditionTabPane, postConditionTabPane);
+        contentList.getChildren().addAll(propertiesTable, variablesTabPane, preConditionTabPane, runtimeConditionTabPane, postConditionTabPane);
         setContent(contentList);
     }
 

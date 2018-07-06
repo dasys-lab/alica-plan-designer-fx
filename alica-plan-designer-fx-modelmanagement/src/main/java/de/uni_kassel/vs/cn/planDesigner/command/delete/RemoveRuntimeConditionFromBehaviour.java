@@ -7,21 +7,29 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 public class RemoveRuntimeConditionFromBehaviour extends AbstractCommand {
 
-    protected RuntimeCondition condition;
+    protected RuntimeCondition previousRuntimeCondition;
     protected Behaviour behaviour;
+    protected long conditionId;
 
-    public RemoveRuntimeConditionFromBehaviour(ModelManager modelManager, Behaviour behaviour) {
+    public RemoveRuntimeConditionFromBehaviour(ModelManager modelManager, Behaviour behaviour, long conditionId) {
         super(modelManager);
+        this.behaviour = behaviour;
+        this.conditionId = conditionId;
     }
 
     @Override
     public void doCommand() {
-        condition = behaviour.getRuntimeCondition();
-        behaviour.setRuntimeCondition(null);
+        for (RuntimeCondition cond : behaviour.getRuntimeConditions()) {
+            if (cond.getId() == conditionId) {
+                previousRuntimeCondition = cond;
+                break;
+            }
+        }
+        behaviour.getRuntimeConditions().remove(previousRuntimeCondition);
     }
 
     @Override
     public void undoCommand() {
-        behaviour.setRuntimeCondition(condition);
+        behaviour.getRuntimeConditions().add(previousRuntimeCondition);
     }
 }

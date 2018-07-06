@@ -38,7 +38,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         } else if (taskOrRepository.getType().equals(Types.TASK)){
             this.taskRepository = guiModificationHandler.getViewModelElement(taskOrRepository.getParentId());
         } else {
-            System.err.println("TaskRepository: Creation of TaskRepositoryTab with ViewModelElement of type " + taskOrRepository.getType() + " not supported!");
+            System.err.println("TaskRepository: Creation of TaskRepositoryTab with ViewModelElement of quantifierType " + taskOrRepository.getType() + " not supported!");
         }
         i18NRepo = I18NRepo.getInstance();
         setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + ": " + taskRepository.getName());

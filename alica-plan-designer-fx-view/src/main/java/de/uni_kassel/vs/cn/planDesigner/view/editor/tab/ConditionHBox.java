@@ -30,10 +30,10 @@ public class ConditionHBox extends HBox {
     public void setupConditionVisualisation() {
         getChildren().clear();
 //        if (plan.getPreCondition() != null) {
-//            getChildren().add(new ConditionContainer(plan.getPreCondition(), commandStack));
+//            getChildren().onAddElement(new ConditionContainer(plan.getPreCondition(), commandStack));
 //        }
 //        if (plan.getRuntimeCondition() != null) {
-//            getChildren().add(new ConditionContainer(plan.getRuntimeCondition(), commandStack));
+//            getChildren().onAddElement(new ConditionContainer(plan.getRuntimeCondition(), commandStack));
 //        }
     }
 

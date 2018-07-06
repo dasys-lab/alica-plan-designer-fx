@@ -53,7 +53,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
         }
         if (!event.getNewValue().isEmpty()) {
             if (event.getIndex() == event.getSource().getItems().size() - 1) {
-                // last empty element was edited, so we need to add a new empty last element
+                // last empty element was edited, so we need to onAddElement a new empty last element
                 configManager.addConfiguration(event.getNewValue());
                 event.getSource().getItems().add("");
             } else {

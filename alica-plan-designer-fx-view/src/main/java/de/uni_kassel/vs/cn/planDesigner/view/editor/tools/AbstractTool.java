@@ -145,7 +145,7 @@ public abstract class AbstractTool {
 //                .getSelectedItem();
 //        if (selectedItem != null) {
 //            List<Pair<Long, AbstractPlanElementContainer>> noSelection = new ArrayList<>();
-//            noSelection.add(new Pair<>(null, null));
+//            noSelection.onAddElement(new Pair<>(null, null));
 //            selectedItem
 //                    .getSelectedPlanElements().set(noSelection);
 //        }

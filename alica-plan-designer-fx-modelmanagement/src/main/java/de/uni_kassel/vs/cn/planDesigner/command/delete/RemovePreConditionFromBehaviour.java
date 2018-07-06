@@ -9,20 +9,27 @@ public class RemovePreConditionFromBehaviour extends AbstractCommand {
 
     private PreCondition previousPreCondition;
     private Behaviour behaviour;
+    private long conditionId;
 
-    public RemovePreConditionFromBehaviour(ModelManager manager, Behaviour behaviour) {
+    public RemovePreConditionFromBehaviour(ModelManager manager, Behaviour behaviour, long conditionId) {
         super(manager);
         this.behaviour = behaviour;
+        this.conditionId = conditionId;
     }
 
     @Override
     public void doCommand() {
-        previousPreCondition = behaviour.getPreCondition();
-        behaviour.setPreCondition(null);
+        for (PreCondition cond : behaviour.getPreConditions()) {
+            if (cond.getId() == conditionId) {
+                previousPreCondition = cond;
+                break;
+            }
+        }
+        behaviour.getPreConditions().remove(previousPreCondition);
     }
 
     @Override
     public void undoCommand() {
-        behaviour.setPreCondition(previousPreCondition);
+        behaviour.getPreConditions().add(previousPreCondition);
     }
 }

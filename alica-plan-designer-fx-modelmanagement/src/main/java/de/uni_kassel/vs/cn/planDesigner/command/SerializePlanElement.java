@@ -23,7 +23,7 @@ public class SerializePlanElement extends AbstractCommand {
                 modelManager.serializeToDisk(planElement, FileSystemUtil.TASKREPOSITORY_ENDING);
                 break;
             default:
-                System.err.println("SerializePlanElement: Serialization of type " + mmq.getElementType() + " not implemented, yet!");
+                System.err.println("SerializePlanElement: Serialization of quantifierType " + mmq.getElementType() + " not implemented, yet!");
                 break;
         }
     }

@@ -57,7 +57,7 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
 //                recentlyDoneTool.setRecentlyDone(false);
 //            } else {
 //                ArrayList<Pair<Long, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
-//                selectedElements.add(new Pair<>(modelElementId, this));
+//                selectedElements.onAddElement(new Pair<>(modelElementId, this));
 //                planTab.getSelectedPlanElements().setValue(selectedElements);
 //            }
         };

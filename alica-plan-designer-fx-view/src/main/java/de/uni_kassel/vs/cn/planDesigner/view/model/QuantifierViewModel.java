@@ -1,14 +1,55 @@
 package de.uni_kassel.vs.cn.planDesigner.view.model;
 
-import java.util.ArrayList;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class QuantifierViewModel extends PlanElementViewModel{
 
-    // TODO: make the sorts a property, or arrayList of properties?
-    protected PlanElementViewModel scope;
-    protected ArrayList<String> sorts;
+    protected StringProperty quantifierType = new SimpleStringProperty();
+    protected LongProperty scope = new SimpleLongProperty();
+    protected StringProperty sorts = new SimpleStringProperty();
 
-    public QuantifierViewModel(long id, String name, String type) {
-        super(id, name, type);
+    public QuantifierViewModel(long id, String name, String quantifierType) {
+        super(id, name, quantifierType);
+    }
+
+    public String getQuantifierType() {
+        return quantifierType.get();
+    }
+
+    public void setQuantifierType(String quantifierType) {
+        this.quantifierType.set(quantifierType);
+    }
+
+    public StringProperty quantifierType() {
+        return quantifierType;
+    }
+
+
+    public long getScope() {
+        return scope.get();
+    }
+
+    public void setScope(long scope) {
+        this.scope.set(scope);
+    }
+
+    public LongProperty scope() {
+        return scope;
+    }
+
+
+    public String getSorts() {
+        return sorts.get();
+    }
+
+    public void setSorts(String sorts) {
+        this.sorts.set(sorts);
+    }
+
+    public StringProperty sorts() {
+        return sorts;
     }
 }

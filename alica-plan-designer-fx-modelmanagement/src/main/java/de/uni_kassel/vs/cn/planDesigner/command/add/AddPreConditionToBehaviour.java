@@ -18,11 +18,11 @@ public class AddPreConditionToBehaviour extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        behaviour.setPreCondition(preCondition);
+        behaviour.getPreConditions().add(preCondition);
     }
 
     @Override
     public void undoCommand() {
-        behaviour.setPreCondition(null);
+        behaviour.getPreConditions().remove(preCondition);
     }
 }

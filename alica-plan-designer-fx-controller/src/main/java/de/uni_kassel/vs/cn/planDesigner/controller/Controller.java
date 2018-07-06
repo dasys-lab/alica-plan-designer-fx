@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import com.google.common.base.Preconditions;
 import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
@@ -160,7 +161,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         taskViewModel.addTask(element);
                         break;
                     default:
-                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
+                        System.err.println("Controller: Creation of unknown quantifierType " + event.getElementType() + " gets ignored!");
                         break;
                 }
                 break;
@@ -186,7 +187,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         taskViewModel.removeTask(taskViewElement);
                         break;
                     default:
-                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
+                        System.err.println("Controller: Creation of unknown quantifierType " + event.getElementType() + " gets ignored!");
                         break;
                 }
                 break;
@@ -227,7 +228,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         taskViewModel.addTask(element);
                         break;
                     default:
-                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
+                        System.err.println("Controller: Creation of unknown quantifierType " + event.getElementType() + " gets ignored!");
                         break;
                 }
                 break;
@@ -239,7 +240,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.BEHAVIOUR:
 
                     default:
-                        System.err.println("Controller: Serialization of unknown type " + event.getElementType() + " gets ignored!");
+                        System.err.println("Controller: Serialization of unknown quantifierType " + event.getElementType() + " gets ignored!");
                         break;
                 }
                 break;
@@ -451,7 +452,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             } else if (planElement instanceof TaskRepository) {
                 return new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
             } else {
-                System.err.println("Controller: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
+                System.err.println("Controller: getViewModelElement for quantifierType " + planElement.getClass().toString() + " not implemented!");
             }
         }
         return null;
@@ -472,9 +473,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 variableViewModel.setVariableType(variable.getType());
                 behaviourViewModel.getVariables().add(variableViewModel);
             }
-            behaviourViewModel.setPreCondition(getConditionViewModel(behaviour.getPreCondition(), Types.PRECONDITION, behaviour.getId()));
-            behaviourViewModel.setPreCondition(getConditionViewModel(behaviour.getRuntimeCondition(), Types.RUNTIMECONDITION, behaviour.getId()));
-            behaviourViewModel.setPreCondition(getConditionViewModel(behaviour.getPostCondition(), Types.POSTCONDITION, behaviour.getId()));
+            for (PreCondition preCondition : behaviour.getPreConditions()) {
+                behaviourViewModel.getPreConditions().add(getConditionViewModel(preCondition, Types.PRECONDITION, behaviour.getId()));
+            }
+            for (RuntimeCondition runtimeCondition : behaviour.getRuntimeConditions()) {
+                behaviourViewModel.getRuntimeConditions().add(getConditionViewModel(runtimeCondition, Types.RUNTIMECONDITION, behaviour.getId()));
+            }
+            for (PostCondition postCondition : behaviour.getPostConditions()) {
+                behaviourViewModel.getPostConditions().add(getConditionViewModel(postCondition, Types.POSTCONDITION, behaviour.getId()));
+            }
             return behaviourViewModel;
         } else {
             return null;

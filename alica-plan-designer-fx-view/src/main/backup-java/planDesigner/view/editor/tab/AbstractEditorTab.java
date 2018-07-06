@@ -29,7 +29,7 @@ public abstract class AbstractEditorTab extends Tab {
     private Pair<Long, Path> editablePathPair;
     private ObservableList<Node> visualRepresentations;
 
-    //TODO add to scene
+    //TODO onAddElement to scene
     private final KeyCombination ctrlA = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
 
     public AbstractEditorTab(Long planElementId) {
@@ -45,7 +45,7 @@ public abstract class AbstractEditorTab extends Tab {
         this.editablePathPair = editablePathPair;
         initSelectedPlanElements(editablePathPair);
 
-        // add Ctrl+A handlerinterfaces to scene
+        // onAddElement Ctrl+A handlerinterfaces to scene
         EditorTabPane editorTabPane = MainWindowController.getInstance().getEditorTabPane();
         editorTabPane.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (ctrlA.match(event)) {
@@ -53,7 +53,7 @@ public abstract class AbstractEditorTab extends Tab {
             }
         });
 
-        // add close tab handlerinterfaces
+        // onAddElement close tab handlerinterfaces
         setClosable(true);
         setOnCloseRequest(e -> {
             // popup for trying to close dirty tab

@@ -26,7 +26,7 @@ public class AbstractPlanHBox extends HBox {
         this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         getChildren().addAll(imageView, text);
         setLayoutX(-(text.getLayoutBounds().getWidth()/2));
-        // TODO add constants and make image size a constant across the application.
+        // TODO onAddElement constants and make image size a constant across the application.
         // 19px per abstract plan because every line is 16px high and the additional 3px are for spacing between elements
         setLayoutY(StateContainer.STATE_RADIUS +
                 (stateContainer.getModelElementId().getPlans().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with value-box

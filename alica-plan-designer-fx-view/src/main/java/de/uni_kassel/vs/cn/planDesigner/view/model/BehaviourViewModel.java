@@ -11,9 +11,9 @@ public class BehaviourViewModel extends PlanElementViewModel {
     protected LongProperty deferring = new SimpleLongProperty();
 
     protected ArrayList<VariableViewModel> variables;
-    protected ConditionViewModel preCondition;
-    protected ConditionViewModel runtimeCondition;
-    protected ConditionViewModel postCondition;
+    protected ArrayList<ConditionViewModel> preConditions;
+    protected ArrayList<ConditionViewModel> runtimeConditions;
+    protected ArrayList<ConditionViewModel> postConditions;
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
@@ -58,32 +58,20 @@ public class BehaviourViewModel extends PlanElementViewModel {
         return frequency;
     }
 
-    
+
     public ArrayList<VariableViewModel> getVariables() {
         return variables;
     }
 
-    public ConditionViewModel getPreCondition() {
-        return preCondition;
+    public ArrayList<ConditionViewModel> getPreConditions() {
+        return preConditions;
     }
 
-    public void setPreCondition(ConditionViewModel preCondition) {
-        this.preCondition = preCondition;
+    public ArrayList<ConditionViewModel> getRuntimeConditions() {
+        return runtimeConditions;
     }
 
-    public ConditionViewModel getRuntimeCondition() {
-        return runtimeCondition;
-    }
-
-    public void setRuntimeCondition(ConditionViewModel runtimeCondition) {
-        this.runtimeCondition = runtimeCondition;
-    }
-
-    public ConditionViewModel getPostCondition() {
-        return postCondition;
-    }
-
-    public void setPostCondition(ConditionViewModel postCondition) {
-        this.postCondition = postCondition;
+    public ArrayList<ConditionViewModel> getPostConditions() {
+        return postConditions;
     }
 }

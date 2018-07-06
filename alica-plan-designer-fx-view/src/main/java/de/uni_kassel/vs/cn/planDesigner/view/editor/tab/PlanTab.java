@@ -42,7 +42,7 @@ public class PlanTab extends AbstractPlanTab {
 //            }
 //        };
 //
-//        planModelVisualisationObject.getPlan().eAdapters().add(adapter);
+//        planModelVisualisationObject.getPlan().eAdapters().onAddElement(adapter);
     }
 
     private void draw(ViewModelElement planPathPair) {
@@ -118,7 +118,7 @@ public class PlanTab extends AbstractPlanTab {
 //                newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
 //                    if (event.getTarget() == planContent) {
 //                        List<Pair<PlanElement, AbstractPlanElementContainer>> plan = new ArrayList<>();
-//                        plan.add(new Pair<>(getEditable(), null));
+//                        plan.onAddElement(new Pair<>(getEditable(), null));
 //                        getSelectedPlanElements().set(plan);
 //                    }
 //                });

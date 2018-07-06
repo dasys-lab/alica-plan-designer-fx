@@ -5,8 +5,10 @@ import java.util.ArrayList;
 
 public class Quantifier extends PlanElement {
 
+    protected String quantifierType;
     protected PlanElement scope;
     protected ArrayList<String> sorts;
+
 
     public ArrayList<String> getSorts() {
         return sorts;
@@ -18,5 +20,13 @@ public class Quantifier extends PlanElement {
 
     public void setScope(PlanElement scope) {
         this.scope = scope;
+    }
+
+    public String getQuantifierType() {
+        return quantifierType;
+    }
+
+    public void setQuantifierType(String quantifierType) {
+        this.quantifierType = quantifierType;
     }
 }

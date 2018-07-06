@@ -36,7 +36,7 @@ public class DeleteElementMenuItem extends MenuItem {
     }
 
     /**
-     * Default implementation of delete event firing. Can be overwritten for setting special
+     * Default implementation of onRemoveElement event firing. Can be overwritten for setting special
      * properties on the event. (DeleteElementMenuItem.setOnAction())
      */
     protected void delete() {

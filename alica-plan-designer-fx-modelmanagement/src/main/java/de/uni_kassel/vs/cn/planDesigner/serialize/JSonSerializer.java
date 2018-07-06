@@ -79,7 +79,7 @@ public class JSonSerializer {
 //        behaviour.setName("TestBehaviour");
 //
 //        Variable var = new Variable();
-//        var.setType("Variable Type String");
+//        var.setQuantifierType("Variable Type String");
 //        var.setComment("Variable Comment String");
 //        var.setName("TestVariable");
 //        behaviour.getVariables().add(var);

@@ -7,7 +7,7 @@ public class GuiModificationEvent {
     protected String elementType;
     protected String name;
 
-    // optional depending from type of event
+    // optional depending from quantifierType of event
     protected String absoluteDirectory;
     protected long parentId;
     protected long elementId;

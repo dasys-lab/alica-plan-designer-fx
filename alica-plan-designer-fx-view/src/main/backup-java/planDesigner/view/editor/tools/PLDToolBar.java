@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * {@link PLDToolBar} is the toolbar on the side of the editor to add states, transitions and various other tools
+ * {@link PLDToolBar} is the toolbar on the side of the editor to onAddElement states, transitions and various other tools
  */
 public class PLDToolBar extends ToolBar {
     protected List<AbstractTool> tools;

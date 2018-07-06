@@ -18,11 +18,11 @@ public class AddRuntimeConditionToBehaviour extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        behaviour.setRuntimeCondition(runtimeCondition);
+        behaviour.getRuntimeConditions().add(runtimeCondition);
     }
 
     @Override
     public void undoCommand() {
-        behaviour.setRuntimeCondition(runtimeCondition);
+        behaviour.getRuntimeConditions().remove(runtimeCondition);
     }
 }

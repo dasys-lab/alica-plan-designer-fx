@@ -32,7 +32,7 @@ public class EditMenu extends Menu {
     public EditMenu(EditorTabPane editorTabPane) {
         super(I18NRepo.getInstance().getString("label.menu.edit"));
         i18NRepo = I18NRepo.getInstance();
-        deleteElementItem = new MenuItem(i18NRepo.getString("label.menu.edit.delete"));
+        deleteElementItem = new MenuItem(i18NRepo.getString("label.menu.edit.onRemoveElement"));
         undoItem = new MenuItem(i18NRepo.getString("label.menu.edit.undo"));
         redoItem = new MenuItem(i18NRepo.getString("label.menu.edit.redo"));
         configItem = new MenuItem(i18NRepo.getString("label.menu.edit.config"));

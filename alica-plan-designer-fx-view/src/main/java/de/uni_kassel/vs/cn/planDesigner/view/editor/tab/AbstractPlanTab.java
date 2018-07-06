@@ -29,7 +29,7 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
     private ViewModelElement viewModelElement;
     private ObservableList<Node> visualRepresentations;
 
-    //TODO add to scene
+    //TODO onAddElement to scene
     private final KeyCombination ctrlA = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
 
     public AbstractPlanTab(Long planElementId) {
@@ -45,7 +45,7 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         this.viewModelElement = viewModelElement;
         initSelectedPlanElements(viewModelElement);
 
-        // add Ctrl+A handlerinterfaces to scene
+        // onAddElement Ctrl+A handlerinterfaces to scene
 //        EditorTabPane editorTabPane = MainWindowController.getInstance().getEditorTabPane();
 //        editorTabPane.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
 //            if (ctrlA.match(event)) {
@@ -53,7 +53,7 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
 //            }
 //        });
 
-        // add close tab handlerinterfaces
+        // onAddElement close tab handlerinterfaces
         setClosable(true);
         setOnCloseRequest(e -> {
             // popup for trying to close dirty tab
@@ -82,7 +82,7 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
 //                while (change.next()) {
 //                    change.getAddedSubList().forEach(o -> {
 //                        o.getValue().setEffect(createSelectedEffect());
-//                        visualRepresentations.add(o.getValue().getVisualRepresentation());
+//                        visualRepresentations.onAddElement(o.getValue().getVisualRepresentation());
 //                    });
 //                }
 //            }
@@ -91,19 +91,19 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
 //        PlanTab tab = (PlanTab) selectedTab;
 //        tab.getPlanEditorGroup().getStateContainers().forEach(stateContainer -> {
 //            selectedPlanElements.get()
-//                    .add(new Pair<Long, AbstractPlanElementContainer>(stateContainer.getModelElementId(), stateContainer));
+//                    .onAddElement(new Pair<Long, AbstractPlanElementContainer>(stateContainer.getModelElementId(), stateContainer));
 //        });
 //        tab.getPlanEditorGroup().getEntryPointContainers().forEach(epContainer -> {
 //            selectedPlanElements.get()
-//                    .add(new Pair<Long, AbstractPlanElementContainer>(epContainer.getModelElementId(), epContainer));
+//                    .onAddElement(new Pair<Long, AbstractPlanElementContainer>(epContainer.getModelElementId(), epContainer));
 //        });
 //        tab.getPlanEditorGroup().getTransitionContainers().forEach(transitionContainer -> {
 //            selectedPlanElements.get()
-//                    .add(new Pair<Long, AbstractPlanElementContainer>(transitionContainer.getModelElementId(), transitionContainer));
+//                    .onAddElement(new Pair<Long, AbstractPlanElementContainer>(transitionContainer.getModelElementId(), transitionContainer));
 //        });
 //        tab.getPlanEditorGroup().getSynchronisationContainers().forEach(syncContainer -> {
 //            selectedPlanElements.get()
-//                    .add(new Pair<Long, AbstractPlanElementContainer>(syncContainer.getModelElementId(), syncContainer));
+//                    .onAddElement(new Pair<Long, AbstractPlanElementContainer>(syncContainer.getModelElementId(), syncContainer));
 //        });
 //    }
 
@@ -117,7 +117,7 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
     // TODO: Review necessary, due to MVC pattern adaption.
     protected void initSelectedPlanElements(ViewModelElement editablePathPair) {
 //        selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-//        selectedPlanElements.get().add(new Pair<>(viewModelElement.getKey(), null));
+//        selectedPlanElements.get().onAddElement(new Pair<>(viewModelElement.getKey(), null));
 //        selectedPlanElements.addListener((observable, oldValue, newValue) -> {
 //            if (newValue == null) {
 //                // TODO: cannot return here because this avoid deleting selectedEffect on oldValue
