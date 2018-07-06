@@ -7,43 +7,46 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.VariablesTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.BehaviourViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.VariableViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
-import de.uni_kassel.vs.cn.planDesigner.view.properties.KeyValuePropertiesTab;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 
 public class BehaviourTab extends Tab implements IEditorTab {
 
-    KeyValuePropertiesTab keyValuePropertiesTab;
+    BehaviourPropertiesTab behaviourPropertiesTab;
     VariablesTab variablesTab;
     VBox contentList;
     BehaviourViewModel behaviourViewModel;
+    I18NRepo i18NRepo;
 
     public BehaviourTab(BehaviourViewModel behaviourViewModel) {
         super(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + behaviourViewModel.getName());
+        i18NRepo = I18NRepo.getInstance();
         this.behaviourViewModel = behaviourViewModel;
 
-        keyValuePropertiesTab = new KeyValuePropertiesTab();
-        variablesTab = new VariablesTab();
-
-        TabPane tabPane = new TabPane();
-        tabPane.getTabs().addAll(keyValuePropertiesTab, variablesTab);
-        contentList = new VBox();
-        contentList.getChildren().addAll(tabPane);
-        setContent(contentList);
+        // fill properties
+        behaviourPropertiesTab = new BehaviourPropertiesTab();
+        behaviourPropertiesTab.addItem(behaviourViewModel);
 
         // fill variables tab
+        variablesTab = new VariablesTab();
         for (VariableViewModel variableViewModel : behaviourViewModel.getVariables()) {
             variablesTab.addItem(variableViewModel);
         }
 
-        // fill key value tab
-        keyValuePropertiesTab.addKeyValueProperty("Name", behaviourViewModel.getName(), true);
-        keyValuePropertiesTab.addKeyValueProperty("ID", String.valueOf(behaviourViewModel.getId()), false);
-        keyValuePropertiesTab.addKeyValueProperty("Comment", String.valueOf(behaviourViewModel.getComment()), true);
-        keyValuePropertiesTab.addKeyValueProperty("Relative Directory", String.valueOf(behaviourViewModel.getRelativeDirectory()), false);
-        keyValuePropertiesTab.addKeyValueProperty("Frequency", String.valueOf(behaviourViewModel.getFrequency()), true);
-        keyValuePropertiesTab.addKeyValueProperty("Delay", String.valueOf(behaviourViewModel.getDelay()), true);
+        // Add Properties and Variables into TabPane
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        tabPane.getTabs().addAll(behaviourPropertiesTab, variablesTab);
+
+        // Behaviours Conditions
+        BehaviourConditionTitledPane preConditionTabPane = new BehaviourConditionTitledPane(behaviourViewModel.getPreCondition(), i18NRepo.getString("label.caption.preCondtion"));
+        BehaviourConditionTitledPane runtimeConditionTabPane = new BehaviourConditionTitledPane(behaviourViewModel.getRuntimeCondition(), i18NRepo.getString("label.caption.runtimeCondtion"));
+        BehaviourConditionTitledPane postConditionTabPane = new BehaviourConditionTitledPane(behaviourViewModel.getPostCondition(), i18NRepo.getString("label.caption.postCondtion"));
+
+        contentList = new VBox();
+        contentList.getChildren().addAll(tabPane, preConditionTabPane, runtimeConditionTabPane, postConditionTabPane);
+        setContent(contentList);
     }
 
     @Override

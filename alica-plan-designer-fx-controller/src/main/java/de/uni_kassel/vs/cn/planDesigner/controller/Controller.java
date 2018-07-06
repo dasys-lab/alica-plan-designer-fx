@@ -466,15 +466,38 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             behaviourViewModel.setComment(behaviour.getComment());
             behaviourViewModel.setRelativeDirectory(behaviour.getRelativeDirectory());
             behaviourViewModel.setFrequency(behaviour.getFrequency());
-            behaviourViewModel.setDelay(behaviour.getDelay());
+            behaviourViewModel.setDeferring(behaviour.getDeferring());
             for (Variable variable : behaviour.getVariables()) {
                 VariableViewModel variableViewModel = new VariableViewModel(variable.getId(), variable.getName(), Types.VARIABLE);
                 variableViewModel.setVariableType(variable.getType());
-                behaviourViewModel.addVariable(variableViewModel);
+                behaviourViewModel.getVariables().add(variableViewModel);
             }
+            behaviourViewModel.setPreCondition(getConditionViewModel(behaviour.getPreCondition(), Types.PRECONDITION, behaviour.getId()));
+            behaviourViewModel.setPreCondition(getConditionViewModel(behaviour.getRuntimeCondition(), Types.RUNTIMECONDITION, behaviour.getId()));
+            behaviourViewModel.setPreCondition(getConditionViewModel(behaviour.getPostCondition(), Types.POSTCONDITION, behaviour.getId()));
             return behaviourViewModel;
         } else {
             return null;
         }
+    }
+
+    public ConditionViewModel getConditionViewModel(Condition condition, String type, long parentId) {
+        if (condition == null) {
+            return null;
+        }
+        ConditionViewModel conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), type);
+        conditionViewModel.setConditionString(condition.getConditionString());
+        conditionViewModel.setEnabled(condition.getEnabled());
+        conditionViewModel.setPluginName(condition.getPluginName());
+        conditionViewModel.setComment(condition.getComment());
+        for (Variable var : condition.getVariables()) {
+            conditionViewModel.getVars().add(new VariableViewModel(var.getId(), var.getName(), var.getType()));
+        }
+        for (Quantifier quantifier : condition.getQuantifiers()) {
+            // TODO: Quantifier is not very clean or fully implemented, yet.
+            conditionViewModel.getQuantifier().add(new QuantifierViewModel(quantifier.getId(), quantifier.getName(), Types.QUANTIFIER));
+        }
+        conditionViewModel.setParentId(parentId);
+        return conditionViewModel;
     }
 }

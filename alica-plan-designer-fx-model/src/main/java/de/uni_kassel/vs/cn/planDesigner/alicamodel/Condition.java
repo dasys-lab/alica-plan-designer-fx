@@ -9,7 +9,7 @@ public class Condition extends PlanElement {
     protected ArrayList<Quantifier> quantifier;
     protected boolean enabled;
 
-    boolean getEnabled () {
+    public boolean getEnabled () {
         return enabled;
     }
 
