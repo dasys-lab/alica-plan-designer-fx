@@ -545,6 +545,7 @@ public class ModelManager {
                 switch (mmq.getElementType()) {
                     //TODO handle event
                 }
+                cmd = null;
                 break;
             default:
                 System.err.println("ModelManager: Unkown model modification query gets ignored!");
