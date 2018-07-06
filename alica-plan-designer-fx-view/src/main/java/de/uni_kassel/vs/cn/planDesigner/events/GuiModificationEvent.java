@@ -50,8 +50,7 @@ public class GuiModificationEvent {
         return elementId;
     }
 
-    public void setElementId (long elementId) {
+    public void setElementId(long elementId) {
         this.elementId = elementId;
     }
-
 }

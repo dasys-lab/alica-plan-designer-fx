@@ -16,11 +16,16 @@ public class Plan extends AbstractPlan {
     protected ArrayList<Variable> variables;
 
     public Plan() {
+        super();
         transitions = new ArrayList<>();
         states = new ArrayList<>();
         synchronizations = new ArrayList<>();
         entryPoints = new ArrayList<>();
         variables = new ArrayList<>();
+    }
+
+    public Plan(long id) {
+        this.id = id;
     }
 
     public ArrayList<Transition> getTransitions() {
