@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -24,11 +25,11 @@ public class FileArraySerializer extends StdSerializer<ArrayList<AbstractPlan>> 
         String result = "";
         for (AbstractPlan element : planElements) {
             if(element instanceof Plan) {
-                result +=  Paths.get(element.getRelativeDirectory(), element.getName() + ".pml#" + element.getId()).toString() + ", ";
+                result +=  Paths.get(element.getRelativeDirectory(), element.getName() + "." + FileSystemUtil.PLAN_ENDING + "#" + element.getId()).toString() + ", ";
             } else if(element instanceof Behaviour) {
-                result +=  Paths.get(element.getRelativeDirectory(), element.getName() + ".beh#" + element.getId()).toString() + ", ";
+                result +=  Paths.get(element.getRelativeDirectory(), element.getName() + "." + FileSystemUtil.BEHAVIOUR_ENDING + "#" + element.getId()).toString() + ", ";
             } else if(element instanceof PlanType) {
-                result +=  Paths.get(element.getRelativeDirectory(), element.getName() + ".pty#" + element.getId()).toString() + ", ";
+                result +=  Paths.get(element.getRelativeDirectory(), element.getName() + "." + FileSystemUtil.PLANTYPE_ENDING + "#" + element.getId()).toString() + ", ";
             }
         }
         jsonGenerator.writeString(result);

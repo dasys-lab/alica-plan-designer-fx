@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.modelmanagement;
 
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class ParsedModelReferences {
 
     public ArrayList<Task> incompleteTasks = new ArrayList<>();
 
+    public ArrayList<Plan> incompletePlansInPlantypes = new ArrayList<>();
+
     public void setDefaultTaskId(long defaultTaskId) {
         this.defaultTaskId = defaultTaskId;
     }
@@ -29,6 +32,8 @@ public class ParsedModelReferences {
     public void addIncompleteTask(Task incompleteTask) {
         incompleteTasks.add(incompleteTask);
     }
+
+    public void addIncompletePlanInPlanTypes(Plan incompletePlan) {incompletePlansInPlantypes.add(incompletePlan);}
 
 
 }

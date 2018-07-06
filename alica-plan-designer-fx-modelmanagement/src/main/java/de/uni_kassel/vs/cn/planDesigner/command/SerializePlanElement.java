@@ -22,6 +22,8 @@ public class SerializePlanElement extends AbstractCommand {
             case Types.TASKREPOSITORY:
                 modelManager.serializeToDisk(planElement, FileSystemUtil.TASKREPOSITORY_ENDING);
                 break;
+            case Types.PLANTYPE:
+                modelManager.serializeToDisk(planElement, FileSystemUtil.PLANTYPE_ENDING);
             default:
                 System.err.println("SerializePlanElement: Serialization of type " + mmq.getElementType() + " not implemented, yet!");
                 break;

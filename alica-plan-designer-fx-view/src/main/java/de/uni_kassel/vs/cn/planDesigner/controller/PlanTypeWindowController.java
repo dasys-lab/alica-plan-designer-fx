@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
@@ -108,9 +109,7 @@ public class PlanTypeWindowController implements Initializable {
         });
 
         removeAllPlansButton.setOnAction(e -> {
-            for(PlanTypeViewModelElement element : planTypeTableView.getItems()) {
-                fireModificationEvent(GuiEventType.REMOVE_ELEMENT, element.getName(), element.getId());
-            }
+            fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, planType.getName(), planType.getId());
             planTypeTableView.getItems().clear();
             planTypeTableView.refresh();
             planListView.getItems().sort(repositoryHBoxComparator);
@@ -122,7 +121,6 @@ public class PlanTypeWindowController implements Initializable {
         GuiModificationEvent event = new GuiModificationEvent(type, Types.PLAN, viewModelName);
         event.setParentId(planType.getId());
         event.setElementId(viewModelId);
-        event.setElementId(planType.getId());
         guiModificationHandler.handle(event);
     }
 

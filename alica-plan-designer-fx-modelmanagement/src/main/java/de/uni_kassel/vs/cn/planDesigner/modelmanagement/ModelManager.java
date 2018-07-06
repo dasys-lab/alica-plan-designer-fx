@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.*;
+import de.uni_kassel.vs.cn.planDesigner.command.add.AddPlanToPlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteTaskFromRepository;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.RemoveAllPlansFromPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.RemovePlanFromPlanType;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
@@ -142,6 +145,8 @@ public class ModelManager {
         loadModelFromDisk(tasksPath);
         loadModelFromDisk(plansPath);
         loadModelFromDisk(rolesPath);
+        //TODO fix all incomplete plans
+        replaceIncompletePlansInPlanTypes();
     }
 
     /**
@@ -284,6 +289,23 @@ public class ModelManager {
                         ep.setTask(task);
                         break;
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * Replaces all incomplete Plans in PlanTypes by already parsed ones
+     *
+     */
+    public void replaceIncompletePlansInPlanTypes() {
+        //Size is 0
+        ArrayList<Plan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlantypes;
+        for(PlanType planType : getPlanTypes()) {
+            ArrayList<Plan> plans = planType.getPlans();
+            for(int i = 0; i < plans.size(); i++) {
+                if(incompletePlans.contains(plans.get(i))) {
+                    plans.set(i, planMap.get(plans.get(i).getId()));
                 }
             }
         }
@@ -533,19 +555,38 @@ public class ModelManager {
                 }
                 break;
             case SAVE_ELEMENT:
-                switch (mmq.getElementType()) {
-                    case Types.TASKREPOSITORY:
-                        cmd = new SerializePlanElement(this, mmq);
-                        break;
-                    default:
-                        System.err.println("ModelManager: Saving of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
-                        return;
-                }
+                cmd = new SerializePlanElement(this, mmq);
+                break;
             case ADD_ELEMENT:
                 switch (mmq.getElementType()) {
-                    //TODO handle event
+                    case Types.PLAN:
+                        cmd = handlePlanModelModificationQuery(mmq);
+                        break;
+                    default:
+                        System.err.println("ModelManager: Unkown model modification query gets ignored!");
+                        return;
                 }
-                cmd = null;
+                break;
+            case REMOVE_ELEMENT:
+                switch (mmq.getElementType()) {
+                    case Types.PLAN:
+                        cmd = handlePlanModelModificationQuery(mmq);
+                        break;
+                    default:
+                        System.err.println("ModelManager: Unkown model modification query gets ignored!");
+                        return;
+                }
+                break;
+            case REMOVE_ALL_ELEMENTS:
+                switch (mmq.getElementType()) {
+                    case Types.PLAN:
+                        PlanType planType = planTypeMap.get(mmq.getParentId());
+                        cmd = new RemoveAllPlansFromPlanType(this, planType);
+                        break;
+                    default:
+                        System.err.println("ModelManager: Unkown model modification query gets ignored!");
+                        return;
+                }
                 break;
             default:
                 System.err.println("ModelManager: Unkown model modification query gets ignored!");
@@ -633,6 +674,28 @@ public class ModelManager {
     public void removeFromDisk(SerializablePlanElement planElement, String ending) {
         File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
         outfile.delete();
+    }
+
+    public AbstractCommand handlePlanModelModificationQuery(ModelModificationQuery mmq) {
+        PlanElement parent = planElementMap.get(mmq.getParentId());
+        if(parent == null) {
+            return null;
+        }
+        if(parent instanceof PlanType) {
+            Plan plan = planMap.get(mmq.getElementId());
+            if(plan == null) {
+                return null;
+            }
+            if (mmq.getQueryType() == ModelQueryType.ADD_ELEMENT) {
+                return new AddPlanToPlanType(this, plan, (PlanType) parent);
+            } else if (mmq.getQueryType() == ModelQueryType.REMOVE_ELEMENT) {
+                return new RemovePlanFromPlanType(this, plan, (PlanType) parent);
+            } else {
+                return null;
+            }
+        }  else {
+            return null;
+        }
     }
 
     public TaskRepository getTaskRepository() {
