@@ -338,6 +338,9 @@ public class ModelManager {
                 System.out.println("ModelManager: wait to read file: " + modelFile.toString());
                 Thread.sleep(1000);
             }
+            while (modelFile.length() == 0) {
+                Thread.sleep(1000);
+            }
             planElement = objectMapper.readValue(modelFile, type);
         } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException e) {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);

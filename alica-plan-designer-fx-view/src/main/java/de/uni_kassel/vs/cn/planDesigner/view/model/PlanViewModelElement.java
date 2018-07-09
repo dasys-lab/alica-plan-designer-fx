@@ -3,16 +3,16 @@ package de.uni_kassel.vs.cn.planDesigner.view.model;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class PlanTypeViewModelElement extends ViewModelElement {
+public class PlanViewModelElement extends ViewModelElement {
 
     protected final BooleanProperty activated = new SimpleBooleanProperty();
 
-    public PlanTypeViewModelElement(long id, String name, String type, boolean activated) {
+    public PlanViewModelElement(long id, String name, String type, boolean activated) {
         super(id, name, type);
         this.activated.setValue(activated);
     }
 
-    public PlanTypeViewModelElement(ViewModelElement element, boolean activated) {
+    public PlanViewModelElement(ViewModelElement element, boolean activated) {
         super(element.getId(), element.getName(), element.getType());
         this.activated.setValue(activated);
 

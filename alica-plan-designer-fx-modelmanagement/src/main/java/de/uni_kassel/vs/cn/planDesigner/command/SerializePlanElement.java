@@ -24,8 +24,9 @@ public class SerializePlanElement extends AbstractCommand {
                 break;
             case Types.PLANTYPE:
                 modelManager.serializeToDisk(planElement, FileSystemUtil.PLANTYPE_ENDING);
+                break;
             default:
-                System.err.println("SerializePlanElement: Serialization of quantifierType " + mmq.getElementType() + " not implemented, yet!");
+                System.err.println("SerializePlanElement: Serialization of type " + mmq.getElementType() + " not implemented, yet!");
                 break;
         }
     }

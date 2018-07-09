@@ -1,8 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.model;
 
-import de.uni_kassel.vs.cn.planDesigner.controller.PlanTypeWindowController;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,27 +7,19 @@ import java.util.ArrayList;
 
 public class PlanTypeViewModel {
     private ObservableList<ViewModelElement> allPlans;
-    private ObservableList<PlanTypeViewModelElement> plansInPlanType;
-    private PlanTypeWindowController planTypeWindowController;
+    private ObservableList<PlanViewModelElement> plansInPlanType;
 
     public PlanTypeViewModel() {
         allPlans = FXCollections.observableArrayList(new ArrayList<>());
         plansInPlanType = FXCollections.observableArrayList(new ArrayList<>());
     }
 
-    public void init(PlanTypeTab planTypeTab, IGuiModificationHandler guiModificationHandler) {
-        this.planTypeWindowController = planTypeTab.getController();
-        this.planTypeWindowController.setGuiModificationHandler(guiModificationHandler);
-        this.planTypeWindowController.initPlanLists(allPlans, plansInPlanType);
+    public void addPlanToAllPlans(ViewModelElement plan) {
+        allPlans.add(plan);
     }
 
-
-    public void addPlanTypeToAllPlans(ViewModelElement planType) {
-        allPlans.add(planType);
-    }
-
-    public void addPlanTypeToPlansInPlanType(PlanTypeViewModelElement planType) {
-        plansInPlanType.add(planType);
+    public void addPlanToPlansInPlanType(PlanViewModelElement plan) {
+        plansInPlanType.add(plan);
     }
 
     public void clearAllPlans() {
@@ -39,5 +28,13 @@ public class PlanTypeViewModel {
 
     public void clearPlansInPlanType() {
         plansInPlanType.clear();
+    }
+
+    public ObservableList<ViewModelElement> getAllPlans() {
+        return allPlans;
+    }
+
+    public ObservableList<PlanViewModelElement> getPlansInPlanType() {
+        return plansInPlanType;
     }
 }

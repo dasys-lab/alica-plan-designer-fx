@@ -58,7 +58,7 @@ public class EditorTabPane extends TabPane {
                 guiModificationHandler.handleTabOpenedEvent(behaviourTab);
                 return behaviourTab;
             case Types.PLANTYPE:
-                PlanTypeTab planTypeTab = new PlanTypeTab(viewModelElement);
+                PlanTypeTab planTypeTab = new PlanTypeTab(viewModelElement, this.guiModificationHandler);
                 guiModificationHandler.handleTabOpenedEvent(planTypeTab);
                 return planTypeTab;
             default:

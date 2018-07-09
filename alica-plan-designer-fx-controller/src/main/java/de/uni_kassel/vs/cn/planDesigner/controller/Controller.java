@@ -49,7 +49,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     // View Objects
     private RepositoryViewModel repoViewModel;
     private TaskRepositoryViewModel taskViewModel;
-    private PlanTypeViewModel planTypeViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
     private RepositoryTabPane repoTabPane;
@@ -71,7 +70,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         repoViewModel = new RepositoryViewModel();
         taskViewModel = new TaskRepositoryViewModel();
-        planTypeViewModel = new PlanTypeViewModel();
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -128,12 +126,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.PLAN:
                         Plan plan = (Plan) planElement;
                         addTreeViewElement(plan, Types.PLAN);
-                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+                        ViewModelElement element = new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN);
+                        repoViewModel.addPlan(element);
                         break;
                     case Types.MASTERPLAN:
                         plan = (Plan) planElement;
                         addTreeViewElement(plan, Types.MASTERPLAN);
-                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
+                        element = new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN);
+                        repoViewModel.addPlan(element);
                         break;
                     case Types.PLANTYPE:
                         addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
@@ -146,21 +146,21 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.TASKREPOSITORY:
                         addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
                         for (Task task : ((TaskRepository) planElement).getTasks()) {
-                            ViewModelElement element = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
-                            element.setParentId(task.getTaskRepository().getId());
-                            repoViewModel.addTask(element);
+                            ViewModelElement taskElement = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
+                            taskElement.setParentId(task.getTaskRepository().getId());
+                            repoViewModel.addTask(taskElement);
                         }
                         break;
                     case Types.TASK:
                         Task task = (Task) planElement;
-                        ViewModelElement element = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
-                        element.setParentId(task.getTaskRepository().getId());
-                        repoViewModel.addTask(element);
+                        ViewModelElement tElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
+                        tElement.setParentId(task.getTaskRepository().getId());
+                        repoViewModel.addTask(tElement);
                         taskViewModel.setDirty(true);
-                        taskViewModel.addTask(element);
+                        taskViewModel.addTask(tElement);
                         break;
                     default:
-                        System.err.println("Controller: Creation of unknown quantifierType " + event.getElementType() + " gets ignored!");
+                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
                         break;
                 }
                 break;
@@ -186,7 +186,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         taskViewModel.removeTask(taskViewElement);
                         break;
                     default:
-                        System.err.println("Controller: Creation of unknown quantifierType " + event.getElementType() + " gets ignored!");
+                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
                         break;
                 }
                 break;
@@ -227,7 +227,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         taskViewModel.addTask(element);
                         break;
                     default:
-                        System.err.println("Controller: Creation of unknown quantifierType " + event.getElementType() + " gets ignored!");
+                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
                         break;
                 }
                 break;
@@ -236,10 +236,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.TASKREPOSITORY:
                         taskViewModel.setDirty(false);
                         break;
+                    case Types.PLANTYPE :
+                        //TODO handle dirty
+                        break;
                     case Types.BEHAVIOUR:
 
                     default:
-                        System.err.println("Controller: Serialization of unknown quantifierType " + event.getElementType() + " gets ignored!");
+                        System.err.println("Controller: Serialization of unknown type " + event.getElementType() + " gets ignored!");
                         break;
                 }
                 break;
@@ -419,8 +422,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {
-        planTypeViewModel.clearAllPlans();
-        planTypeViewModel.clearPlansInPlanType();
+        PlanTypeViewModel planTypeViewModel = new PlanTypeViewModel();
 
         ArrayList<PlanType> planTypes = modelManager.getPlanTypes();
         for (PlanType planType : planTypes) {
@@ -428,10 +430,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 planTypeViewModel.clearPlansInPlanType();
                 for (Plan plan : planType.getPlans()) {
                     if (plan.getMasterPlan()) {
-                        planTypeViewModel.addPlanTypeToPlansInPlanType(new PlanTypeViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, plan
+                        planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, plan
                                 .getActivated()));
                     } else {
-                        planTypeViewModel.addPlanTypeToPlansInPlanType(new PlanTypeViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan
+                        planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan
                                 .getActivated()));
                     }
                 }
@@ -442,15 +444,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         ArrayList<Plan> plans = modelManager.getPlans();
         for (Plan plan : plans) {
             if (plan.getMasterPlan()) {
-                planTypeViewModel.addPlanTypeToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
+                planTypeViewModel.addPlanToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
             } else {
-                planTypeViewModel.addPlanTypeToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+                planTypeViewModel.addPlanToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
             }
         }
 
-
-        planTypeViewModel.init(planTypeTab, this);
-
+        planTypeTab.setPlanTypeViewModel(planTypeViewModel);
     }
 
     @Override
@@ -462,7 +462,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             } else if (planElement instanceof TaskRepository) {
                 return new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
             } else {
-                System.err.println("Controller: getViewModelElement for quantifierType " + planElement.getClass().toString() + " not implemented!");
+                System.err.println("Controller: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
             }
         }
         return null;

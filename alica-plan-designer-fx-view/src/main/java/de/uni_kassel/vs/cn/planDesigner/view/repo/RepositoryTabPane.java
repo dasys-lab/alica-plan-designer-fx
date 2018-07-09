@@ -27,7 +27,7 @@ public class RepositoryTabPane extends TabPane {
         RepositoryTool planTypeTool = new RepositoryTool(planEditorTabPane);
         RepositoryTool taskTool = new RepositoryTool(planEditorTabPane);
 
-        plansTab = new RepositoryTab("Plans",  planTool);
+        plansTab = new RepositoryTab("Plans", planTool);
         planTypesTab = new RepositoryTab("PlanTypes", planTypeTool);
         behavioursTab = new RepositoryTab("Behaviours", behaviourTool);
         tasksTab = new RepositoryTab("Tasks", taskTool);
@@ -63,6 +63,9 @@ public class RepositoryTabPane extends TabPane {
     }
 
     public void addPlanTypes(List<ViewModelElement> planTypes) {
+//        for (ViewModelElement planType : planTypes) {
+//            planTypesTab.addElement(planType);
+//        }
         planTypesTab.addElements(planTypes);
     }
 
