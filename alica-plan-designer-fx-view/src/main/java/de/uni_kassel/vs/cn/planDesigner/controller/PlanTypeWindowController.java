@@ -72,13 +72,12 @@ public class PlanTypeWindowController implements Initializable {
 
     private void initButtons() {
         saveButton.setOnAction(e -> {
-            if (!planTypeTab.getText().contains("*")) {
+            if (!planTypeTab.isDirty()) {
                 return;
             }
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, planType.getName());
             event.setElementId(planType.getId());
             guiModificationHandler.handle(event);
-            planTypeTab.setText(planTypeTab.getText().replace("*", ""));
             planTypeTab.setDirty(false);
 
         });
@@ -91,7 +90,7 @@ public class PlanTypeWindowController implements Initializable {
             fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), selectedItem.getViewModelId());
             planTypeTableView.getItems().add(new PlanViewModelElement(selectedItem.getViewModelElement(), true));
             planTypeTableView.getItems().sort(viewModelElementComparator);
-            setDirty();
+            planTypeTab.setDirty(true);
         });
 
         removePlanButton.setOnAction(e -> {
@@ -103,7 +102,7 @@ public class PlanTypeWindowController implements Initializable {
             planTypeTableView.getItems().remove(selectedItem);
             planTypeTableView.refresh();
             planListView.getItems().sort(repositoryHBoxComparator);
-            setDirty();
+            planTypeTab.setDirty(true);
         });
 
         removeAllPlansButton.setOnAction(e -> {
@@ -114,7 +113,7 @@ public class PlanTypeWindowController implements Initializable {
             planTypeTableView.getItems().clear();
             planTypeTableView.refresh();
             planListView.getItems().sort(repositoryHBoxComparator);
-            setDirty();
+            planTypeTab.setDirty(true);
         });
     }
 
@@ -129,13 +128,6 @@ public class PlanTypeWindowController implements Initializable {
         event.setParentId(planType.getId());
         event.setElementId(viewModelId);
         guiModificationHandler.handle(event);
-    }
-
-    private void setDirty() {
-        if (!planTypeTab.getText().contains("*")) {
-            planTypeTab.setText(planTypeTab.getText() + "*");
-        }
-        planTypeTab.setDirty(true);
     }
 
     private void initUIText() {

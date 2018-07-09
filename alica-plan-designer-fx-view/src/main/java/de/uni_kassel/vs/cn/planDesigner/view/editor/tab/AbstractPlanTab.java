@@ -64,6 +64,11 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
     }
 
     public void setDirty(boolean dirty) {
+        if (!getText().contains("*") && dirty) {
+            this.setText(getText() + "*");
+        } else if (getText().contains("*") && !dirty) {
+            this.setText(getText().substring(0, getText().length()-1));
+        }
         this.dirty = dirty;
     }
 
@@ -221,12 +226,6 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         }
     }
 
-    // TODO: Review necessary, due to MVC pattern adaption.
-    public void save() {
-        System.err.println("AbstractPlanTab: Save() not implemented!");
-        return;
-    }
-
     public SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> getSelectedPlanElements() {
         return selectedPlanElements;
     }
@@ -243,4 +242,6 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
     public boolean representsViewModelElement(ViewModelElement viewModelElement) {
         return this.viewModelElement.equals(viewModelElement);
     }
+
+    public boolean isDirty() {return dirty;}
 }

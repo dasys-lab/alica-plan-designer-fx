@@ -52,11 +52,11 @@ public class PlanTypeTab extends AbstractPlanTab {
 
     @Override
     public void save() {
-        if (getText().contains("*")) {
+        if (isDirty()) {
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, planType.getName());
             event.setElementId(planType.getId());
             guiModificationHandler.handle(event);
-            setText(getText().replace("*", ""));
+            this.setDirty(false);
         }
     }
 

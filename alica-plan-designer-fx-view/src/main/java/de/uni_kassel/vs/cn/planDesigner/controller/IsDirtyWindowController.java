@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -10,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -25,7 +27,7 @@ public class IsDirtyWindowController {
     public static void createIsDirtyWindow(AbstractPlanTab tab, Event event) {
         I18NRepo i18NRepo = I18NRepo.getInstance();
         Stage stage = init();
-        Button saveBtn = new Button(i18NRepo.getString("label.error.saveFile"));
+        Button saveBtn = new Button(i18NRepo.getString("action.save"));
         saveBtn.setOnAction(new EventHandler<ActionEvent>(){
 
             @Override
@@ -35,7 +37,7 @@ public class IsDirtyWindowController {
             }
 
         });
-        Button cancelBtn = new Button(i18NRepo.getString("label.error.cancel"));
+        Button cancelBtn = new Button(i18NRepo.getString("action.cancel"));
         cancelBtn.setOnAction(new EventHandler<ActionEvent>(){
 
             @Override
@@ -45,7 +47,7 @@ public class IsDirtyWindowController {
             }
 
         });
-        Button closeBtn = new Button(i18NRepo.getString("label.error.closeModal"));
+        Button closeBtn = new Button(i18NRepo.getString("action.close"));
         closeBtn.setOnAction(new EventHandler<ActionEvent>(){
 
             @Override
@@ -61,13 +63,13 @@ public class IsDirtyWindowController {
         createAndShowModal(stage, new Label(i18NRepo.getString("label.error.closeDirtyTab")), buttons);
     }
 
-    /*
-        Creates a model for closing the PlanDesigner. Allows to close the PlanDesigner or the cancel the event.
-     */
+    /**
+     *  Creates a modal for closing the PlanDesigner. Allows to close the PlanDesigner or the cancel the event.
+     **/
     public static void createMultipleTabsDirtyWindow(Event event) {
         I18NRepo i18NRepo = I18NRepo.getInstance();
         Stage stage = init();
-        Button cancelBtn = new Button(i18NRepo.getString("label.error.cancel"));
+        Button cancelBtn = new Button(i18NRepo.getString("action.cancel"));
         cancelBtn.setOnAction(new EventHandler<ActionEvent>(){
 
             @Override
@@ -77,13 +79,14 @@ public class IsDirtyWindowController {
             }
 
         });
-        Button closeBtn = new Button(i18NRepo.getString("label.error.closeModalAnyways"));
+        Button closeBtn = new Button(i18NRepo.getString("action.closeAnyways"));
         closeBtn.setOnAction(new EventHandler<ActionEvent>(){
 
             @Override
             public void handle(ActionEvent arg0) {
                 stage.close();
                 PlanDesignerApplication.setRunning(false);
+                PlanDesignerApplication.getPrimaryStage().close();
             }
 
         });
@@ -94,12 +97,12 @@ public class IsDirtyWindowController {
     }
 
     public static boolean isAnyTabDirty() {
-//        ObservableList<Tab> openTabs = MainWindowController.getInstance().getEditorTabPane().getTabs();
-//        for(Tab openTab : openTabs) {
-//            if(openTab.getText().contains("*")) {
-//                return true;
-//            }
-//        }
+        ObservableList<Tab> openTabs = MainWindowController.getInstance().getEditorTabPane().getTabs();
+        for(Tab openTab : openTabs) {
+            if(((AbstractPlanTab)openTab).isDirty()) {
+                return true;
+            }
+        }
         return false;
     }
 

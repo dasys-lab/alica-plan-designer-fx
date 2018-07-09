@@ -90,7 +90,6 @@ public class PlanTab extends AbstractPlanTab {
 
     @Override
     public void save() {
-        super.save();
 //        try {
 //            EMFModelUtils.saveAlicaFile(getPmlUiExtensionMap());
 //        } catch (IOException e) {
