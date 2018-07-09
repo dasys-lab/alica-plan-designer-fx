@@ -296,17 +296,28 @@ public class ModelManager {
 
     /**
      * Replaces all incomplete Plans in PlanTypes by already parsed ones
-     *
      */
     public void replaceIncompletePlansInPlanTypes() {
-        //Size is 0
         ArrayList<Plan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlantypes;
-        for(PlanType planType : getPlanTypes()) {
+        for (PlanType planType : getPlanTypes()) {
             ArrayList<Plan> plans = planType.getPlans();
-            for(int i = 0; i < plans.size(); i++) {
-                if(incompletePlans.contains(plans.get(i))) {
+            for (int i = 0; i < plans.size(); i++) {
+                if (incompletePlans.contains(plans.get(i))) {
                     plans.set(i, planMap.get(plans.get(i).getId()));
                 }
+            }
+        }
+    }
+
+    /**
+     * Replaces all incomplete Plans in given PlanType by already parsed ones
+     */
+    public void replaceIncompletePlansInPlanType(PlanType planType) {
+        ArrayList<Plan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlantypes;
+        ArrayList<Plan> plans = planType.getPlans();
+        for (int i = 0; i < plans.size(); i++) {
+            if (incompletePlans.contains(plans.get(i))) {
+                plans.set(i, planMap.get(plans.get(i).getId()));
             }
         }
     }
@@ -360,7 +371,7 @@ public class ModelManager {
         ModelEvent event = null;
         switch (eventType) {
             case ELEMENT_CREATED:
-            event = new ModelEvent(eventType, null, element, elementType);
+                event = new ModelEvent(eventType, null, element, elementType);
                 break;
             case ELEMENT_DELETED:
                 event = new ModelEvent(eventType, element, null, elementType);
@@ -681,12 +692,12 @@ public class ModelManager {
 
     public AbstractCommand handlePlanModelModificationQuery(ModelModificationQuery mmq) {
         PlanElement parent = planElementMap.get(mmq.getParentId());
-        if(parent == null) {
+        if (parent == null) {
             return null;
         }
-        if(parent instanceof PlanType) {
+        if (parent instanceof PlanType) {
             Plan plan = planMap.get(mmq.getElementId());
-            if(plan == null) {
+            if (plan == null) {
                 return null;
             }
             if (mmq.getQueryType() == ModelQueryType.ADD_ELEMENT) {
@@ -696,7 +707,7 @@ public class ModelManager {
             } else {
                 return null;
             }
-        }  else {
+        } else {
             return null;
         }
     }

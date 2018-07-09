@@ -36,8 +36,10 @@ public class ParseAbstractPlan extends AbstractCommand {
                 return;
         }
         if (newElement instanceof Plan && ((Plan) newElement).getMasterPlan()) {
+            replaceIncompleteElements(newElement);
             modelManager.addPlanElement(newElement, Types.MASTERPLAN, false);
         } else {
+            replaceIncompleteElements(newElement);
             modelManager.addPlanElement(newElement, modelModificationQuery.getElementType(), false);
         }
 
@@ -59,6 +61,13 @@ public class ParseAbstractPlan extends AbstractCommand {
             } else {
                 modelManager.removePlanElement(newElement, modelModificationQuery.getElementType(), false);
             }
+        }
+    }
+
+    //TODO complete for other PlanElements
+    private void replaceIncompleteElements(PlanElement newElement) {
+        if(newElement instanceof PlanType) {
+            modelManager.replaceIncompletePlansInPlanType((PlanType) newElement);
         }
     }
 }
