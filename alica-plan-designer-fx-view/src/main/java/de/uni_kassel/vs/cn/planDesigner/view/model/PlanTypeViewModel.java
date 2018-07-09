@@ -21,8 +21,7 @@ public class PlanTypeViewModel {
     public void init(PlanTypeTab planTypeTab, IGuiModificationHandler guiModificationHandler) {
         this.planTypeWindowController = planTypeTab.getController();
         this.planTypeWindowController.setGuiModificationHandler(guiModificationHandler);
-        this.planTypeWindowController.initPlanListView(allPlans);
-        this.planTypeWindowController.initTableView(plansInPlanType);
+        this.planTypeWindowController.initPlanLists(allPlans, plansInPlanType);
     }
 
 

@@ -20,7 +20,6 @@ import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
@@ -33,6 +32,12 @@ public class PlanTypeWindowController implements Initializable {
     private Comparator<ViewModelElement> viewModelElementComparator;
 
     private ObservableList<ViewModelElement> allPlans;
+
+    private ObservableList<PlanTypeViewModelElement> plansInPlanType;
+
+    private I18NRepo i18NRepo;
+
+    private IGuiModificationHandler guiModificationHandler;
 
     @FXML
     private PlanTypeTab planTypeTab;
@@ -54,11 +59,6 @@ public class PlanTypeWindowController implements Initializable {
 
     @FXML
     private Button saveButton;
-
-    private I18NRepo i18NRepo;
-
-    private IGuiModificationHandler guiModificationHandler;
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -117,6 +117,13 @@ public class PlanTypeWindowController implements Initializable {
         });
     }
 
+    public void initPlanLists(ObservableList<ViewModelElement> allPlans, ObservableList<PlanTypeViewModelElement> plansInPlanType) {
+        this.allPlans = allPlans;
+        this.plansInPlanType = plansInPlanType;
+        initTableView(plansInPlanType);
+        initPlanListView(allPlans);
+    }
+
     private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {
         GuiModificationEvent event = new GuiModificationEvent(type, Types.PLAN, viewModelName);
         event.setParentId(planType.getId());
@@ -138,7 +145,7 @@ public class PlanTypeWindowController implements Initializable {
         saveButton.setText(i18NRepo.getString("action.save"));
     }
 
-    public void initTableView(ObservableList<PlanTypeViewModelElement> plansInPlanType) {
+    private void initTableView(ObservableList<PlanTypeViewModelElement> plansInPlanType) {
         planTypeTableView.getItems().addAll(plansInPlanType);
         planTypeTableView.getItems().addListener(new ListChangeListener<ViewModelElement>() {
             @Override
@@ -222,15 +229,25 @@ public class PlanTypeWindowController implements Initializable {
         });
     }
 
-    public void initPlanListView(ObservableList<ViewModelElement> allPlans) {
-        this.allPlans = allPlans;
+    private void initPlanListView(ObservableList<ViewModelElement> allPlans) {
         for (ViewModelElement plan : this.allPlans) {
+            if(isAlreadyInPlanType(plan)) {
+                continue;
+            }
             RepositoryHBox planRepositoryHBox = new RepositoryHBox(plan, guiModificationHandler);
             planRepositoryHBox.setOnMouseClicked(null);
             planListView.getItems().add(planRepositoryHBox);
         }
     }
 
+    private boolean isAlreadyInPlanType(ViewModelElement plan) {
+        for(PlanTypeViewModelElement planTypeViewModelElement : plansInPlanType) {
+            if (plan.getId() == planTypeViewModelElement.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void initComparators() {
         repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getViewModelType().equals(Types.MASTERPLAN));

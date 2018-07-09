@@ -346,6 +346,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementType(event.getElementType());
                 mmq.setParentId(event.getParentId());
                 break;
+            case REMOVE_ALL_ELEMENTS:
+                mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ALL_ELEMENTS);
+                mmq.setElementType(event.getElementType());
+                mmq.setParentId(event.getParentId());
+                break;
             default:
                 mmq = null;
         }
@@ -422,7 +427,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             if (planTypeTab.getViewModelElement().getId() == planType.getId()) {
                 planTypeViewModel.clearPlansInPlanType();
                 for (Plan plan : planType.getPlans()) {
-                    planTypeViewModel.addPlanTypeToPlansInPlanType(new PlanTypeViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan.getActivated()));
+                    if (plan.getMasterPlan()) {
+                        planTypeViewModel.addPlanTypeToPlansInPlanType(new PlanTypeViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, plan
+                                .getActivated()));
+                    } else {
+                        planTypeViewModel.addPlanTypeToPlansInPlanType(new PlanTypeViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan
+                                .getActivated()));
+                    }
                 }
                 break;
             }

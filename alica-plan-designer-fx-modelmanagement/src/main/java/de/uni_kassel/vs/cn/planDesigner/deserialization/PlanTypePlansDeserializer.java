@@ -29,14 +29,20 @@ public class PlanTypePlansDeserializer extends StdDeserializer<ArrayList<Plan>> 
             throws IOException, JsonProcessingException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
         ArrayList<Plan> plans = new ArrayList<>();
-        //TODO spilt by , and add all plan ids
-        for(int i = 0; i < tree.size(); i++) {
-            String planString = ((ValueNode) tree.get(i)).asText();
+        String plansString = ((ValueNode) tree).asText();
+        String[] split = plansString.split(",");
+        for(String planString : split) {
+            if(planString.trim().isEmpty()) {
+                continue;
+            }
             int idIndex = planString.indexOf('#');
             planString = planString.substring(idIndex + 1);
             Plan plan = new Plan(Long.parseLong(planString));
             ParsedModelReferences.getInstance().addIncompletePlanInPlanTypes(plan);
+            plans.add(plan);
         }
+
+
         return plans;
     }
 }
