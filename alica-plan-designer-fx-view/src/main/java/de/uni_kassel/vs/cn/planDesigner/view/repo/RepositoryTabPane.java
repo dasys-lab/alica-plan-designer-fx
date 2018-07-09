@@ -55,7 +55,7 @@ public class RepositoryTabPane extends TabPane {
     }
 
     public void addBehaviours(List<ViewModelElement> behaviours) {
-        plansTab.addElements(behaviours);
+        behavioursTab.addElements(behaviours);
     }
 
     public void addPlanType(ViewModelElement planType) {
