@@ -126,22 +126,22 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.PLAN:
                         Plan plan = (Plan) planElement;
                         addTreeViewElement(plan, Types.PLAN);
-                        ViewModelElement element = new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN);
+                        ViewModelElement element = new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan.getRelativeDirectory());
                         repoViewModel.addPlan(element);
                         break;
                     case Types.MASTERPLAN:
                         plan = (Plan) planElement;
                         addTreeViewElement(plan, Types.MASTERPLAN);
-                        element = new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN);
+                        element = new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, plan.getRelativeDirectory());
                         repoViewModel.addPlan(element);
                         break;
                     case Types.PLANTYPE:
                         addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
-                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE));
+                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType) planElement).getRelativeDirectory()));
                         break;
                     case Types.BEHAVIOUR:
                         addTreeViewElement((Behaviour) planElement, Types.BEHAVIOUR);
-                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR));
+                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour) planElement).getRelativeDirectory()));
                         break;
                     case Types.TASKREPOSITORY:
                         addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
@@ -196,20 +196,20 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.PLAN:
                         Plan plan = (Plan) planElement;
                         addTreeViewElement(plan, Types.PLAN);
-                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
+                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan.getRelativeDirectory()));
                         break;
                     case Types.MASTERPLAN:
                         plan = (Plan) planElement;
                         addTreeViewElement(plan, Types.MASTERPLAN);
-                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
+                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, plan.getRelativeDirectory()));
                         break;
                     case Types.PLANTYPE:
                         addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
-                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE));
+                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType) planElement).getRelativeDirectory()));
                         break;
                     case Types.BEHAVIOUR:
                         addTreeViewElement((Behaviour) planElement, Types.BEHAVIOUR);
-                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR));
+                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour) planElement).getRelativeDirectory()));
                         break;
                     case Types.TASKREPOSITORY:
                         addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
