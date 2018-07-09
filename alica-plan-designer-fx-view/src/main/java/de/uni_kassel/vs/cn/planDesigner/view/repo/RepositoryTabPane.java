@@ -62,10 +62,7 @@ public class RepositoryTabPane extends TabPane {
         planTypesTab.addElement(planType);
     }
 
-    public void addPlanTypes(List<ViewModelElement> planTypes) {
-//        for (ViewModelElement planType : planTypes) {
-//            planTypesTab.addElement(planType);
-//        }
+    public void addPlanTypes(final List<ViewModelElement> planTypes) {
         planTypesTab.addElements(planTypes);
     }
 
