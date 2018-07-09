@@ -602,6 +602,10 @@ public class ModelManager {
                         return;
                 }
                 break;
+            case REVERT_UNSAVED_CHANGES:
+                //TODO continue here revert changes from command stack
+                cmd = null;
+                break;
             default:
                 System.err.println("ModelManager: Unkown model modification query gets ignored!");
                 return;

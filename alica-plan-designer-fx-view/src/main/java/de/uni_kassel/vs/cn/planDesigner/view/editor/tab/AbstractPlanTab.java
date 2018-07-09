@@ -1,5 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
+import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
@@ -244,4 +247,9 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
     }
 
     public boolean isDirty() {return dirty;}
+
+    public void revertChanges() {
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.REVERT_UNSAVED_CHANGES, viewModelElement.getType(), viewModelElement.getName());
+        MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+    }
 }

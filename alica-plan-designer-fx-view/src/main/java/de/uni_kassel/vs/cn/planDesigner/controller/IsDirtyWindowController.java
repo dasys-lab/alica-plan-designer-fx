@@ -52,6 +52,7 @@ public class IsDirtyWindowController {
 
             @Override
             public void handle(ActionEvent arg0) {
+                tab.revertChanges();
                 stage.close();
             }
 
