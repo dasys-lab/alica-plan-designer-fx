@@ -15,21 +15,20 @@ public class RemovePreConditionFromBehaviour extends AbstractCommand {
         super(manager);
         this.behaviour = behaviour;
         this.conditionId = conditionId;
+        this.previousPreCondition = null;
     }
 
     @Override
     public void doCommand() {
-        for (PreCondition cond : behaviour.getPreConditions()) {
-            if (cond.getId() == conditionId) {
-                previousPreCondition = cond;
-                break;
-            }
+        if (behaviour.getPreCondition().getId() == conditionId) {
+            previousPreCondition = behaviour.getPreCondition();
+            behaviour.setPreCondition(null);
         }
-        behaviour.getPreConditions().remove(previousPreCondition);
+
     }
 
     @Override
     public void undoCommand() {
-        behaviour.getPreConditions().add(previousPreCondition);
+        behaviour.setPreCondition(previousPreCondition);
     }
 }

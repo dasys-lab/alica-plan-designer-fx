@@ -15,21 +15,19 @@ public class RemoveRuntimeConditionFromBehaviour extends AbstractCommand {
         super(modelManager);
         this.behaviour = behaviour;
         this.conditionId = conditionId;
+        this.previousRuntimeCondition = null;
     }
 
     @Override
     public void doCommand() {
-        for (RuntimeCondition cond : behaviour.getRuntimeConditions()) {
-            if (cond.getId() == conditionId) {
-                previousRuntimeCondition = cond;
-                break;
-            }
+        if (behaviour.getRuntimeCondition().getId() == conditionId) {
+            previousRuntimeCondition = behaviour.getRuntimeCondition();
         }
-        behaviour.getRuntimeConditions().remove(previousRuntimeCondition);
+        behaviour.setRuntimeCondition(null);
     }
 
     @Override
     public void undoCommand() {
-        behaviour.getRuntimeConditions().add(previousRuntimeCondition);
+        behaviour.setRuntimeCondition(previousRuntimeCondition);
     }
 }

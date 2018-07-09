@@ -7,22 +7,26 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
 public class AddRuntimeConditionToBehaviour extends AbstractCommand {
 
-    protected RuntimeCondition runtimeCondition;
+    protected RuntimeCondition previousRuntimeCondition;
+    protected RuntimeCondition newRuntimeCondition;
     protected Behaviour behaviour;
 
     public AddRuntimeConditionToBehaviour(ModelManager modelManager, RuntimeCondition runtimeCondition, Behaviour behaviour) {
         super(modelManager);
-        this.runtimeCondition = runtimeCondition;
+        this.newRuntimeCondition = runtimeCondition;
         this.behaviour = behaviour;
+        this.previousRuntimeCondition = null;
     }
 
     @Override
     public void doCommand() {
-        behaviour.getRuntimeConditions().add(runtimeCondition);
+        previousRuntimeCondition = behaviour.getRuntimeCondition();
+        behaviour.setRuntimeCondition(newRuntimeCondition);
+
     }
 
     @Override
     public void undoCommand() {
-        behaviour.getRuntimeConditions().remove(runtimeCondition);
+        behaviour.setRuntimeCondition(previousRuntimeCondition);
     }
 }

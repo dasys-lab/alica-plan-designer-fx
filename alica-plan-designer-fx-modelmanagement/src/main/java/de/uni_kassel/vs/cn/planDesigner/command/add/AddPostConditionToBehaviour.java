@@ -4,25 +4,31 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PostCondition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import javafx.geometry.Pos;
 
 public class AddPostConditionToBehaviour extends AbstractCommand {
 
-    protected PostCondition postCondition;
+    protected PostCondition newPostCondition;
+    protected PostCondition previousPostCondition;
     protected Behaviour behaviour;
 
     public AddPostConditionToBehaviour(ModelManager modelManager, PostCondition postCondition, Behaviour behaviour) {
         super(modelManager);
-        this.postCondition = postCondition;
+        this.newPostCondition = postCondition;
         this.behaviour = behaviour;
+        this.previousPostCondition = null;
     }
 
     @Override
     public void doCommand() {
-        behaviour.getPostConditions().add(postCondition);
+        if (behaviour.getPostCondition() != null) {
+            this.previousPostCondition = behaviour.getPostCondition();
+        }
+        behaviour.setPostCondition(newPostCondition);
     }
 
     @Override
     public void undoCommand() {
-        behaviour.getPostConditions().remove(postCondition);
+        behaviour.setPostCondition(previousPostCondition);
     }
 }

@@ -8,21 +8,25 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 public class AddPreConditionToBehaviour extends AbstractCommand {
 
     protected Behaviour behaviour;
-    protected PreCondition preCondition;
+    protected PreCondition newPreCondition;
+    protected PreCondition previousPreCondition;
 
     public AddPreConditionToBehaviour(ModelManager modelManager, PreCondition preCondition, Behaviour behaviour) {
         super(modelManager);
         this.behaviour = behaviour;
-        this.preCondition = preCondition;
+        this.newPreCondition = preCondition;
     }
 
     @Override
     public void doCommand() {
-        behaviour.getPreConditions().add(preCondition);
+        if (behaviour.getPreCondition() != null) {
+            previousPreCondition = behaviour.getPreCondition();
+        }
+        behaviour.setPreCondition(newPreCondition);
     }
 
     @Override
     public void undoCommand() {
-        behaviour.getPreConditions().remove(preCondition);
+        behaviour.setPreCondition(previousPreCondition);
     }
 }

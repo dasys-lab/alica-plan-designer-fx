@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
-import com.google.common.base.Preconditions;
 import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
@@ -473,15 +472,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 variableViewModel.setVariableType(variable.getType());
                 behaviourViewModel.getVariables().add(variableViewModel);
             }
-            for (PreCondition preCondition : behaviour.getPreConditions()) {
-                behaviourViewModel.getPreConditions().add(getConditionViewModel(preCondition, Types.PRECONDITION, behaviour.getId()));
-            }
-            for (RuntimeCondition runtimeCondition : behaviour.getRuntimeConditions()) {
-                behaviourViewModel.getRuntimeConditions().add(getConditionViewModel(runtimeCondition, Types.RUNTIMECONDITION, behaviour.getId()));
-            }
-            for (PostCondition postCondition : behaviour.getPostConditions()) {
-                behaviourViewModel.getPostConditions().add(getConditionViewModel(postCondition, Types.POSTCONDITION, behaviour.getId()));
-            }
+            behaviourViewModel.setPreCondition(getConditionViewModel(behaviour.getPreCondition(), Types.PRECONDITION, behaviour.getId()));
+            behaviourViewModel.setRuntimeCondition(getConditionViewModel(behaviour.getRuntimeCondition(), Types.RUNTIMECONDITION, behaviour.getId()));
+            behaviourViewModel.setPostCondition(getConditionViewModel(behaviour.getPostCondition(), Types.POSTCONDITION, behaviour.getId()));
             return behaviourViewModel;
         } else {
             return null;

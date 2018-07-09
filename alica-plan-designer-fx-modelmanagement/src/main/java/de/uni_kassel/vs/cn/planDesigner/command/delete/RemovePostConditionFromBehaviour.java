@@ -15,21 +15,19 @@ public class RemovePostConditionFromBehaviour extends AbstractCommand {
         super(modelManager);
         this.behaviour = behaviour;
         this.conditionId = conditionId;
+        this.previousPostCondition = null;
     }
 
     @Override
     public void doCommand() {
-        for (PostCondition cond : behaviour.getPostConditions()) {
-            if (cond.getId() == conditionId) {
-                previousPostCondition = cond;
-                break;
-            }
+        if (behaviour.getPostCondition().getId() == conditionId) {
+            previousPostCondition = behaviour.getPostCondition();
+            behaviour.setPostCondition(null);
         }
-        behaviour.getPreConditions().remove(previousPostCondition);
     }
 
     @Override
     public void undoCommand() {
-        (behaviour).getPostConditions().add(previousPostCondition);
+        behaviour.setPostCondition(previousPostCondition);
     }
 }

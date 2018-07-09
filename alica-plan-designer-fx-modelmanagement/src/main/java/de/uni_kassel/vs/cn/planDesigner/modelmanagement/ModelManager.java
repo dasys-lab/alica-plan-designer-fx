@@ -123,9 +123,9 @@ public class ModelManager {
             }
         }
         for (Behaviour behaviour : behaviourMap.values()) {
-            conditions.addAll(behaviour.getPreConditions());
-            conditions.addAll(behaviour.getRuntimeConditions());
-            conditions.addAll(behaviour.getPostConditions());
+            conditions.add(behaviour.getPreCondition());
+            conditions.add(behaviour.getRuntimeCondition());
+            conditions.add(behaviour.getPostCondition());
         }
 
         // remove all null values inserted before
