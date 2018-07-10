@@ -354,8 +354,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementType(event.getElementType());
                 mmq.setParentId(event.getParentId());
                 break;
-            case REVERT_UNSAVED_CHANGES:
-                mmq = new ModelModificationQuery(ModelQueryType.REVERT_UNSAVED_CHANGES);
+            case RELOAD_ELEMENT:
+                mmq = new ModelModificationQuery(ModelQueryType.RELOAD_ELEMENT);
+                mmq.setElementId(event.getElementId());
+                mmq.setElementType(event.getElementType());
                 break;
             default:
                 mmq = null;

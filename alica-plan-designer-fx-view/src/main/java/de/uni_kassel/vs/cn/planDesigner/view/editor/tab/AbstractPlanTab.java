@@ -249,7 +249,8 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
     public boolean isDirty() {return dirty;}
 
     public void revertChanges() {
-        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.REVERT_UNSAVED_CHANGES, viewModelElement.getType(), viewModelElement.getName());
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.RELOAD_ELEMENT, viewModelElement.getType(), viewModelElement.getName());
+        event.setElementId(viewModelElement.getId());
         MainWindowController.getInstance().getGuiModificationHandler().handle(event);
     }
 }

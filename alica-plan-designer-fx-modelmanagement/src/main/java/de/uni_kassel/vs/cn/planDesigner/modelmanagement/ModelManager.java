@@ -602,9 +602,18 @@ public class ModelManager {
                         return;
                 }
                 break;
-            case REVERT_UNSAVED_CHANGES:
-                //TODO continue here revert changes from command stack
-                cmd = null;
+            case RELOAD_ELEMENT:
+                switch (mmq.getElementType()) {
+                    case Types.PLANTYPE:
+                        PlanType planType = planTypeMap.get(mmq.getElementId());
+                        mmq.absoluteDirectory = Paths.get(plansPath, planType.getRelativeDirectory()).toString();
+                        mmq.name = planType.getName();
+                        cmd = new ParseAbstractPlan(this, mmq);
+                        break;
+                    default:
+                        System.err.println("ModelManager: Unkown model modification query gets ignored!");
+                        return;
+                }
                 break;
             default:
                 System.err.println("ModelManager: Unkown model modification query gets ignored!");
