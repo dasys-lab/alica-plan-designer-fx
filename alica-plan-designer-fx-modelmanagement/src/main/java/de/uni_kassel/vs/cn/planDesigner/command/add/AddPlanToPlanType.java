@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.command.add;
 
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.AnnotatedPlan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
@@ -9,9 +10,9 @@ public class AddPlanToPlanType extends AbstractCommand {
 
     private PlanType parentOfElement;
 
-    private Plan plan;
+    private AnnotatedPlan plan;
 
-    public AddPlanToPlanType(ModelManager modelManager, Plan plan, PlanType parentOfElement) {
+    public AddPlanToPlanType(ModelManager modelManager, AnnotatedPlan plan, PlanType parentOfElement) {
         super(modelManager);
         this.plan = plan;
         this.parentOfElement = parentOfElement;

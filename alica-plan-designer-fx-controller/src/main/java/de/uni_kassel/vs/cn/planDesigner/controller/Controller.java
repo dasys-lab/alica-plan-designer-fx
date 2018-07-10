@@ -5,10 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
-import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
+import de.uni_kassel.vs.cn.planDesigner.events.*;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
@@ -359,6 +356,18 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementId(event.getElementId());
                 mmq.setElementType(event.getElementType());
                 break;
+            case CHANGE_ELEMENT:
+                mmq = new ModelModificationQuery(ModelQueryType.CHANGE_ELEMENT);
+                mmq.setElementType(event.getElementType());
+                mmq.setParentId(event.getParentId());
+                mmq.setElementId(event.getElementId());
+                if(event instanceof GuiChangeAttributeEvent) {
+                    GuiChangeAttributeEvent guiChangeAttributeEvent = (GuiChangeAttributeEvent) event;
+                    mmq.setAttributeName(guiChangeAttributeEvent.getAttributeName());
+                    mmq.setAttributeType(guiChangeAttributeEvent.getAttributeType());
+                    mmq.setNewValue(guiChangeAttributeEvent.getNewValue());
+                }
+                break;
             default:
                 mmq = null;
         }
@@ -433,13 +442,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         for (PlanType planType : planTypes) {
             if (planTypeTab.getViewModelElement().getId() == planType.getId()) {
                 planTypeViewModel.clearPlansInPlanType();
-                for (Plan plan : planType.getPlans()) {
+                for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
+                    Plan plan = annotatedPlan.getPlan();
                     if (plan.getMasterPlan()) {
-                        planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, plan
-                                .getActivated()));
+                        planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
+                                .isActivated()));
                     } else {
-                        planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan
-                                .getActivated()));
+                        planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.PLAN, annotatedPlan
+                                .isActivated()));
                     }
                 }
                 break;

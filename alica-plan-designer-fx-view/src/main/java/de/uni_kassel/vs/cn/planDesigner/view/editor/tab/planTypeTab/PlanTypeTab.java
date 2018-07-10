@@ -25,7 +25,7 @@ public class PlanTypeTab extends AbstractPlanTab {
 
     public PlanTypeTab(ViewModelElement planType, IGuiModificationHandler guiModificationHandler) {
         super(planType);
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("plantypeWindow.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("planTypeWindow.fxml"));
         this.planType = planType;
         this.guiModificationHandler = guiModificationHandler;
         try {

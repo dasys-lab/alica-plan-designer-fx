@@ -15,7 +15,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
     private String type;
     private Map<Plan, List<State>> referencedStateListForBackup;
     private Map<PmlUiExtensionMap, List<PmlUiExtension>> referencesInStyleFiles;
-    private Map<PlanType, Plan> referencedAnnotatedPlansForBackup;
+    private Map<PlanType, AnnotatedPlan> referencedAnnotatedPlansForBackup;
     private Map<Parametrisation, Variable> referencedParametrisationForBackup;
     private Path path;
     private AbstractPlan abstractPlan;
@@ -91,9 +91,9 @@ public class DeleteAbstractPlan extends AbstractCommand {
 
             if (element instanceof PlanType) {
                 PlanType planType = (PlanType) element;
-                Optional<Plan> annotatedPlan = planType.getPlans()
+                Optional<AnnotatedPlan> annotatedPlan = planType.getPlans()
                         .stream()
-                        .filter(ap -> ap.equals(abstractPlan))
+                        .filter(ap -> ap.getPlan().equals(abstractPlan))
                         .findFirst();
 
                 if (annotatedPlan.isPresent()) {

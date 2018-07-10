@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.*;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddPlanToPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteTaskFromRepository;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.RemoveAllPlansFromPlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.RemovePlanFromPlanType;
@@ -298,12 +299,12 @@ public class ModelManager {
      * Replaces all incomplete Plans in PlanTypes by already parsed ones
      */
     public void replaceIncompletePlansInPlanTypes() {
-        ArrayList<Plan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlantypes;
+        ArrayList<AnnotatedPlan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlanTypes;
         for (PlanType planType : getPlanTypes()) {
-            ArrayList<Plan> plans = planType.getPlans();
+            ArrayList<AnnotatedPlan> plans = planType.getPlans();
             for (int i = 0; i < plans.size(); i++) {
                 if (incompletePlans.contains(plans.get(i))) {
-                    plans.set(i, planMap.get(plans.get(i).getId()));
+                    plans.get(i).setPlan(planMap.get(plans.get(i).getPlan().getId()));
                 }
             }
         }
@@ -313,11 +314,11 @@ public class ModelManager {
      * Replaces all incomplete Plans in given PlanType by already parsed ones
      */
     public void replaceIncompletePlansInPlanType(PlanType planType) {
-        ArrayList<Plan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlantypes;
-        ArrayList<Plan> plans = planType.getPlans();
+        ArrayList<AnnotatedPlan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlanTypes;
+        ArrayList<AnnotatedPlan> plans = planType.getPlans();
         for (int i = 0; i < plans.size(); i++) {
             if (incompletePlans.contains(plans.get(i))) {
-                plans.set(i, planMap.get(plans.get(i).getId()));
+                plans.get(i).setPlan(planMap.get(plans.get(i).getPlan().getId()));
             }
         }
     }
@@ -503,8 +504,8 @@ public class ModelManager {
     private ArrayList<PlanType> getUsagesInPlanTypes(PlanElement planElement) {
         ArrayList<PlanType> usages = new ArrayList<>();
         for (PlanType parent : planTypeMap.values()) {
-            for (Plan child : parent.getPlans()) {
-                if (child.getId() == planElement.getId()) {
+            for (AnnotatedPlan child : parent.getPlans()) {
+                if (child.getPlan().getId() == planElement.getId()) {
                     usages.add(parent);
                 }
             }
@@ -615,6 +616,21 @@ public class ModelManager {
                         return;
                 }
                 break;
+            case CHANGE_ELEMENT:
+                if (mmq.getAttributeType().equals(Boolean.class.getSimpleName())) {
+                    PlanType planType = planTypeMap.get(mmq.getParentId());
+                    AnnotatedPlan annotatedPlan = null;
+                    for (AnnotatedPlan ap : planType.getPlans()) {
+                        if (ap.getPlan().getId() == mmq.getElementId()) {
+                            annotatedPlan = ap;
+                            break;
+                        }
+                    }
+                    cmd = new ChangeAttributeValue<Boolean>(this, annotatedPlan, mmq.getAttributeName(), Boolean.parseBoolean(mmq.getNewValue()), planType);
+                } else {
+                    cmd = null;
+                }
+                break;
             default:
                 System.err.println("ModelManager: Unkown model modification query gets ignored!");
                 return;
@@ -714,9 +730,12 @@ public class ModelManager {
                 return null;
             }
             if (mmq.getQueryType() == ModelQueryType.ADD_ELEMENT) {
-                return new AddPlanToPlanType(this, plan, (PlanType) parent);
+                AnnotatedPlan annotatedPlan = new AnnotatedPlan(plan);
+                annotatedPlan.setActivated(true);
+                return new AddPlanToPlanType(this, annotatedPlan, (PlanType) parent);
             } else if (mmq.getQueryType() == ModelQueryType.REMOVE_ELEMENT) {
-                return new RemovePlanFromPlanType(this, plan, (PlanType) parent);
+                AnnotatedPlan annotatedPlan = new AnnotatedPlan(plan);
+                return new RemovePlanFromPlanType(this, annotatedPlan, (PlanType) parent);
             } else {
                 return null;
             }

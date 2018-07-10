@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class PlanType extends AbstractPlan {
     ArrayList<Parametrisation> parametrisations;
 
-    ArrayList<Plan> plans;
+    ArrayList<AnnotatedPlan> plans;
 
     public PlanType () {
         parametrisations = new ArrayList<>();
@@ -16,7 +16,7 @@ public class PlanType extends AbstractPlan {
         return parametrisations;
     }
 
-    public ArrayList<Plan> getPlans() {
+    public ArrayList<AnnotatedPlan> getPlans() {
         return plans;
     }
 }

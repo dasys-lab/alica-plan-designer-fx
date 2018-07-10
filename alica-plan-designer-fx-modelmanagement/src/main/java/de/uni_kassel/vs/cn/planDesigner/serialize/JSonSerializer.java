@@ -18,7 +18,6 @@ public class JSonSerializer {
 
         Plan plan = new Plan();
         plan.setName("TestMasterPlan");
-        plan.setActivated(true);
         plan.setMasterPlan(true);
         plan.setComment("Test Comment String");
         plan.setRelativeDirectory("result.json");

@@ -18,7 +18,7 @@ public class PlanTypeTab extends AbstractEditorTab<PlanType> {
 
     public PlanTypeTab(Pair<PlanType, Path> pair, CommandStack commandStack) {
         super(pair, commandStack);
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("plantypeWindow.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("planTypeWindow.fxml"));
         try {
             Parent window = fxmlLoader.load();
             controller = fxmlLoader.getController();

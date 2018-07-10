@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
+import de.uni_kassel.vs.cn.planDesigner.events.GuiChangeAttributeEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -19,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
@@ -213,9 +215,18 @@ public class PlanTypeWindowController implements Initializable {
         planTypeTableView.setRowFactory(tv -> {
             TableRow<PlanViewModelElement> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
-                if (e.getClickCount() == 2 && annotatedPlanTableRow.getItem() != null) {
-                    annotatedPlanTableRow.getItem().setActivated(!annotatedPlanTableRow.getItem().isActivated());
+                PlanViewModelElement item = annotatedPlanTableRow.getItem();
+                if (e.getClickCount() == 2 && item != null) {
+                    item.setActivated(!item.isActivated());
                     planTypeTableView.refresh();
+                    planTypeTab.setDirty(true);
+                    GuiChangeAttributeEvent event = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.ANNOTATEDPLAN, item.getName());
+                    event.setParentId(planType.getId());
+                    event.setElementId(item.getId());
+                    event.setAttributeName("activated");
+                    event.setAttributeType(Boolean.class.getSimpleName());
+                    event.setNewValue(String.valueOf(item.isActivated()));
+                    guiModificationHandler.handle(event);
                 }
             });
             return annotatedPlanTableRow;

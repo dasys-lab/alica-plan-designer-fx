@@ -15,6 +15,10 @@ public class ModelModificationQuery {
 
     protected long parentId;
 
+    protected String attributeName;
+    protected String newValue;
+    protected String attributeType;
+
     public ModelModificationQuery(ModelQueryType queryType) {
         this.queryType = queryType;
     }
@@ -61,7 +65,6 @@ public class ModelModificationQuery {
     }
 
 
-
     public String getAbsoluteDirectory() {
         return absoluteDirectory;
     }
@@ -94,7 +97,31 @@ public class ModelModificationQuery {
         this.elementId = id;
     }
 
-    public void setElementType (String elementType) {
+    public void setElementType(String elementType) {
         this.elementType = elementType;
+    }
+
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
+    }
+
+    public String getNewValue() {
+        return newValue;
+    }
+
+    public void setNewValue(String newValue) {
+        this.newValue = newValue;
+    }
+
+    public String getAttributeType() {
+        return attributeType;
+    }
+
+    public void setAttributeType(String attributeType) {
+        this.attributeType = attributeType;
     }
 }
