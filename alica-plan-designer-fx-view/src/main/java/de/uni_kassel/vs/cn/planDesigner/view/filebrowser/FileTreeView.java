@@ -173,20 +173,39 @@ public final class FileTreeView extends TreeView<File> {
     }
 
     /**
-     * Inserts a new {@link viewModelElement} at its corresponding place in the {@link FileTreeView}
+     * Inserts a new {@link ViewModelElement} at its corresponding place in the {@link FileTreeView}
      *
      * @param viewModelElement
      */
     public void addViewModelElement(ViewModelElement viewModelElement) {
         FileTreeItem topLevelFolder = findTopLevelFolder(viewModelElement);
         FileTreeItem folder = findFolder(viewModelElement, topLevelFolder, 0);
+        boolean deleted = false;
         if (folder != null) {
-            folder.getChildren().add(new FileTreeItem(createFile(viewModelElement), new ImageView(getImage(viewModelElement.getType
-                    ())), viewModelElement));
+            if(folderContainsViewModelElement(viewModelElement, folder)) {
+                removeFromFolder(viewModelElement, folder);
+                deleted = true;
+            }
+            FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(getImage(viewModelElement.getType
+                    ())), viewModelElement);
+            folder.getChildren().add(newItem);
             folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
+            if(deleted) {
+                this.getSelectionModel().select(newItem);
+            }
         } else {
             throw new RuntimeException("Destination folder for PlanElement " + viewModelElement.getName() + " does not exist!");
         }
+    }
+
+    private boolean folderContainsViewModelElement(ViewModelElement viewModelElement, FileTreeItem folder) {
+        for(TreeItem item : folder.getChildren()) {
+            FileTreeItem fileTreeItem = (FileTreeItem) item;
+            if(!fileTreeItem.getValue().isDirectory() && fileTreeItem.getViewModelElement().getId() == viewModelElement.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public FileTreeItem removeViewModelElement(ViewModelElement viewModelElement) {
