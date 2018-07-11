@@ -22,6 +22,8 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskReposito
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Tab;
 
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
@@ -125,6 +127,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         addTreeViewElement(plan, Types.PLAN);
                         ViewModelElement element = new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan.getRelativeDirectory());
                         repoViewModel.addPlan(element);
+                        updatePlansInPlanTypeTabs(plan);
                         break;
                     case Types.MASTERPLAN:
                         plan = (Plan) planElement;
@@ -134,11 +137,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         break;
                     case Types.PLANTYPE:
                         addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
-                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType) planElement).getRelativeDirectory()));
+                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType) planElement)
+                                .getRelativeDirectory()));
                         break;
                     case Types.BEHAVIOUR:
                         addTreeViewElement((Behaviour) planElement, Types.BEHAVIOUR);
-                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour) planElement).getRelativeDirectory()));
+                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour)
+                                planElement).getRelativeDirectory()));
                         break;
                     case Types.TASKREPOSITORY:
                         addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
@@ -202,11 +207,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         break;
                     case Types.PLANTYPE:
                         addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
-                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType) planElement).getRelativeDirectory()));
+                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType) planElement)
+                                .getRelativeDirectory()));
                         break;
                     case Types.BEHAVIOUR:
                         addTreeViewElement((Behaviour) planElement, Types.BEHAVIOUR);
-                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour) planElement).getRelativeDirectory()));
+                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour)
+                                planElement).getRelativeDirectory()));
                         break;
                     case Types.TASKREPOSITORY:
                         addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
@@ -233,7 +240,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.TASKREPOSITORY:
                         taskViewModel.setDirty(false);
                         break;
-                    case Types.PLANTYPE :
+                    case Types.PLANTYPE:
                         //TODO handle dirty
                         break;
                     case Types.BEHAVIOUR:
@@ -361,7 +368,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementType(event.getElementType());
                 mmq.setParentId(event.getParentId());
                 mmq.setElementId(event.getElementId());
-                if(event instanceof GuiChangeAttributeEvent) {
+                if (event instanceof GuiChangeAttributeEvent) {
                     GuiChangeAttributeEvent guiChangeAttributeEvent = (GuiChangeAttributeEvent) event;
                     mmq.setAttributeName(guiChangeAttributeEvent.getAttributeName());
                     mmq.setAttributeType(guiChangeAttributeEvent.getAttributeType());
@@ -525,5 +532,21 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         }
         conditionViewModel.setParentId(parentId);
         return conditionViewModel;
+    }
+
+    public void updatePlansInPlanTypeTabs(Plan plan) {
+        ObservableList<Tab> tabs = editorTabPane.getTabs();
+        for (Tab tab : tabs) {
+            if (tab instanceof PlanTypeTab) {
+                PlanTypeTab planTypeTab = (PlanTypeTab) tab;
+                if (plan.getMasterPlan()) {
+                    planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN,
+                            plan.getRelativeDirectory()));
+                } else {
+                    planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN,
+                            plan.getRelativeDirectory()));
+                }
+            }
+        }
     }
 }

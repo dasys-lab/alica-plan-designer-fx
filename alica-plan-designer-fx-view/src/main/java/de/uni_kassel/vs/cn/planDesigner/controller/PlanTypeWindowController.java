@@ -12,6 +12,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +21,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
@@ -234,6 +234,39 @@ public class PlanTypeWindowController implements Initializable {
     }
 
     private void initPlanListView() {
+        planTypeViewModel.getAllPlans().addListener(new ListChangeListener<ViewModelElement>() {
+            @Override
+            public void onChanged(Change<? extends ViewModelElement> c) {
+                c.next();
+                if (c.wasAdded()) {
+                    for (ViewModelElement element : c.getAddedSubList()) {
+                        if (!isAlreadyInPlanType(element)) {
+                            RepositoryHBox planRepositoryHBox = new RepositoryHBox(element, guiModificationHandler);
+                            planRepositoryHBox.setOnMouseClicked(null);
+                            Platform.runLater(() -> {
+                                planListView.getItems().add(planRepositoryHBox);
+                                planListView.getItems().sort(repositoryHBoxComparator);
+                            });
+                        }
+                    }
+
+                } else if (c.wasRemoved()) {
+                    for (ViewModelElement element : c.getAddedSubList()) {
+                        for (RepositoryHBox plan : planListView.getItems()) {
+                            if (plan.getViewModelId() == element.getId()) {
+                                Platform.runLater(() -> {
+                                    planListView.getItems().remove(plan);
+                                });
+                                break;
+                            }
+                        }
+                        Platform.runLater(() -> {
+                            planListView.getItems().sort(repositoryHBoxComparator);
+                        });
+                    }
+                }
+            }
+        });
         for (ViewModelElement plan : planTypeViewModel.getAllPlans()) {
             if (isAlreadyInPlanType(plan)) {
                 continue;
@@ -242,33 +275,6 @@ public class PlanTypeWindowController implements Initializable {
             planRepositoryHBox.setOnMouseClicked(null);
             planListView.getItems().add(planRepositoryHBox);
             planListView.getItems().sort(repositoryHBoxComparator);
-            planTypeViewModel.getAllPlans().addListener(new ListChangeListener<ViewModelElement>() {
-                @Override
-                public void onChanged(Change<? extends ViewModelElement> c) {
-                    c.next();
-                    if (c.wasAdded()) {
-                        for (ViewModelElement element : c.getAddedSubList()) {
-                            if (!isAlreadyInPlanType(element)) {
-                                RepositoryHBox planRepositoryHBox = new RepositoryHBox(plan, guiModificationHandler);
-                                planRepositoryHBox.setOnMouseClicked(null);
-                                planListView.getItems().add(planRepositoryHBox);
-                                planListView.getItems().sort(repositoryHBoxComparator);
-                            }
-                        }
-
-                    } else if (c.wasRemoved()) {
-                        for (ViewModelElement element : c.getAddedSubList()) {
-                            for(RepositoryHBox plan : planListView.getItems()) {
-                                if(plan.getViewModelId() == element.getId()) {
-                                    planListView.getItems().remove(plan);
-                                    break;
-                                }
-                            }
-                            planListView.getItems().sort(repositoryHBoxComparator);
-                        }
-                    }
-                }
-            });
         }
     }
 
@@ -301,5 +307,9 @@ public class PlanTypeWindowController implements Initializable {
 
     public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
         this.guiModificationHandler = guiModificationHandler;
+    }
+
+    public PlanTypeViewModel getPlanTypeViewModel() {
+        return planTypeViewModel;
     }
 }
