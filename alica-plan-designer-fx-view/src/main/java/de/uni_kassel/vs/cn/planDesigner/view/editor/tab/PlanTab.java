@@ -38,7 +38,7 @@ public class PlanTab extends AbstractPlanTab {
 
 //        EContentAdapter adapter = new EContentAdapter() {
 //            public void notifyChanged(Notification n) {
-//                draw(viewModelElement, commandStack);
+//                draw(presentedViewModelElement, commandStack);
 //            }
 //        };
 //
@@ -46,7 +46,7 @@ public class PlanTab extends AbstractPlanTab {
     }
 
     private void draw(ViewModelElement planPathPair) {
-        planModelVisualisationObject = new PlanModelVisualisationObject(getViewModelElement().getId());
+        planModelVisualisationObject = new PlanModelVisualisationObject(getPresentedViewModelElement().getId());
         planEditorGroup = new Group();
         planContent = new StackPane(planEditorGroup);
         planContent.setPadding(new Insets(50, 50, 50, 50));
@@ -58,7 +58,7 @@ public class PlanTab extends AbstractPlanTab {
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         HBox hBox = new HBox(scrollPane, editorToolBar);
-        conditionHBox = new ConditionHBox((ViewModelElement) getViewModelElement(), selectedPlanElements);
+        conditionHBox = new ConditionHBox((ViewModelElement) getPresentedViewModelElement(), selectedPlanElements);
         VBox vBox = new VBox(conditionHBox, hBox);
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
         VBox.setVgrow(hBox, Priority.ALWAYS);

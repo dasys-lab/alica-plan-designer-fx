@@ -21,7 +21,6 @@ import javafx.util.Pair;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractPlanTab extends Tab implements IEditorTab{
@@ -29,24 +28,19 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
     protected boolean dirty;
     protected SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElements;
 
-    private ViewModelElement viewModelElement;
+    protected ViewModelElement presentedViewModelElement;
     private ObservableList<Node> visualRepresentations;
 
     //TODO onAddElement to scene
     private final KeyCombination ctrlA = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
 
-    public AbstractPlanTab(Long planElementId) {
-        selectedPlanElements = new SimpleObjectProperty<>(new ArrayList<>());
-        selectedPlanElements.get().add(new Pair<>(planElementId, null));
-    }
-
     // TODO: Review necessary, due to MVC pattern adaption.
-    public AbstractPlanTab(ViewModelElement viewModelElement) {
+    public AbstractPlanTab(ViewModelElement presentedViewModelElement) {
         // set Tab Caption to name of file, represented by this Tab
-        super(viewModelElement.getName());
+        super(presentedViewModelElement.getName());
 
-        this.viewModelElement = viewModelElement;
-        initSelectedPlanElements(viewModelElement);
+        this.presentedViewModelElement = presentedViewModelElement;
+        initSelectedPlanElements(presentedViewModelElement);
 
         // onAddElement Ctrl+A handlerinterfaces to scene
 //        EditorTabPane editorTabPane = MainWindowController.getInstance().getEditorTabPane();
@@ -125,7 +119,7 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
     // TODO: Review necessary, due to MVC pattern adaption.
     protected void initSelectedPlanElements(ViewModelElement editablePathPair) {
 //        selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-//        selectedPlanElements.get().onAddElement(new Pair<>(viewModelElement.getKey(), null));
+//        selectedPlanElements.get().onAddElement(new Pair<>(presentedViewModelElement.getKey(), null));
 //        selectedPlanElements.addListener((observable, oldValue, newValue) -> {
 //            if (newValue == null) {
 //                // TODO: cannot return here because this avoid deleting selectedEffect on oldValue
@@ -216,14 +210,14 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
 
     public Path getFilePath() {
         I18NRepo i18NRepo = I18NRepo.getInstance();
-        if (viewModelElement.getType() == i18NRepo.getString("alicatype.plan")) {
-            return Paths.get(viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".pml");
-        } else if (viewModelElement.getType() == i18NRepo.getString("alicatype.plantype")) {
-            return Paths.get(viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".pty");
-        } else if (viewModelElement.getType() == i18NRepo.getString("alicatype.behaviour")) {
-            return Paths.get(viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".beh");
-        } else if (viewModelElement.getType() == i18NRepo.getString("alicatype.taskrepository")) {
-            return Paths.get(viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".tsk");
+        if (presentedViewModelElement.getType() == i18NRepo.getString("alicatype.plan")) {
+            return Paths.get(presentedViewModelElement.getRelativeDirectory(), presentedViewModelElement.getName() + ".pml");
+        } else if (presentedViewModelElement.getType() == i18NRepo.getString("alicatype.plantype")) {
+            return Paths.get(presentedViewModelElement.getRelativeDirectory(), presentedViewModelElement.getName() + ".pty");
+        } else if (presentedViewModelElement.getType() == i18NRepo.getString("alicatype.behaviour")) {
+            return Paths.get(presentedViewModelElement.getRelativeDirectory(), presentedViewModelElement.getName() + ".beh");
+        } else if (presentedViewModelElement.getType() == i18NRepo.getString("alicatype.taskrepository")) {
+            return Paths.get(presentedViewModelElement.getRelativeDirectory(), presentedViewModelElement.getName() + ".tsk");
         } else {
             return null;
         }
@@ -233,24 +227,24 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         return selectedPlanElements;
     }
 
-    private void setViewModelElement(ViewModelElement viewModelElement) {
-        this.viewModelElement = viewModelElement;
+    private void setPresentedViewModelElement(ViewModelElement presentedViewModelElement) {
+        this.presentedViewModelElement = presentedViewModelElement;
     }
 
-    public ViewModelElement getViewModelElement() {
-        return viewModelElement;
+    public ViewModelElement getPresentedViewModelElement() {
+        return presentedViewModelElement;
     }
 
     @Override
     public boolean representsViewModelElement(ViewModelElement viewModelElement) {
-        return this.viewModelElement.equals(viewModelElement);
+        return this.presentedViewModelElement.equals(viewModelElement);
     }
 
     public boolean isDirty() {return dirty;}
 
     public void revertChanges() {
-        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.RELOAD_ELEMENT, viewModelElement.getType(), viewModelElement.getName());
-        event.setElementId(viewModelElement.getId());
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.RELOAD_ELEMENT, presentedViewModelElement.getType(), presentedViewModelElement.getName());
+        event.setElementId(presentedViewModelElement.getId());
         MainWindowController.getInstance().getGuiModificationHandler().handle(event);
     }
 }

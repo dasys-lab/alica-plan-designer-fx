@@ -5,11 +5,12 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class PlanTypeViewModel {
+public class PlanTypeViewModel extends PlanElementViewModel {
     private ObservableList<ViewModelElement> allPlans;
     private ObservableList<PlanViewModelElement> plansInPlanType;
 
-    public PlanTypeViewModel() {
+    public PlanTypeViewModel(long id, String name, String type) {
+        super(id, name, type);
         allPlans = FXCollections.observableArrayList(new ArrayList<>());
         plansInPlanType = FXCollections.observableArrayList(new ArrayList<>());
     }
@@ -37,4 +38,14 @@ public class PlanTypeViewModel {
     public ObservableList<PlanViewModelElement> getPlansInPlanType() {
         return plansInPlanType;
     }
+
+    public void setRelativeDirectory(String relativeDirectory) {
+        this.relativeDirectory.set(relativeDirectory);
+    }
+
+    public String getRelativeDirectory() {
+        return this.relativeDirectory.get();
+    }
+
+
 }

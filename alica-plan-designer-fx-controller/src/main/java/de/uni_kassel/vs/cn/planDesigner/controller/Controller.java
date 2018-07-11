@@ -16,8 +16,8 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
-import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
+import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
@@ -241,7 +241,17 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         taskViewModel.setDirty(false);
                         break;
                     case Types.PLANTYPE:
-                        //TODO handle dirty
+                        ObservableList<Tab> tabs = editorTabPane.getTabs();
+                        for (Tab tab : tabs) {
+                            if (!(tab instanceof PlanTypeTab)) {
+                                continue;
+                            }
+                            PlanTypeTab planTypeTab = (PlanTypeTab) tab;
+                            if (planTypeTab.getPresentedViewModelElement().getId() == event.getNewElement().getId()) {
+                                planTypeTab.setDirty(false);
+                                break;
+                            }
+                        }
                         break;
                     case Types.BEHAVIOUR:
 
@@ -257,7 +267,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         }
     }
 
-    private void addTreeViewElement(AbstractPlan planElement, String type) {
+    private void addTreeViewElement(SerializablePlanElement planElement, String type) {
         FileTreeView fileTreeView = mainWindowController.getFileTreeView();
         if (fileTreeView != null) {
             fileTreeView.addViewModelElement(new ViewModelElement(planElement.getId(),
@@ -265,7 +275,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         }
     }
 
-    private void removeTreeViewElement(AbstractPlan planElement, String type) {
+    private void removeTreeViewElement(SerializablePlanElement planElement, String type) {
         FileTreeView fileTreeView = mainWindowController.getFileTreeView();
         if (fileTreeView != null) {
             fileTreeView.removeViewModelElement(new ViewModelElement(planElement.getId(),
@@ -443,23 +453,27 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {
-        PlanTypeViewModel planTypeViewModel = new PlanTypeViewModel();
+        PlanElement planElement = modelManager.getPlanElement(planTypeTab.getPresentedViewModelElement().getId());
+        if (planElement == null || !(planElement instanceof PlanType)) {
+            System.err.println("Controller: Opening PlanTypeTab for unknown Id or not presented element is not a PlanType!");
+            return;
+        }
 
-        ArrayList<PlanType> planTypes = modelManager.getPlanTypes();
-        for (PlanType planType : planTypes) {
-            if (planTypeTab.getViewModelElement().getId() == planType.getId()) {
-                planTypeViewModel.clearPlansInPlanType();
-                for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
-                    Plan plan = annotatedPlan.getPlan();
-                    if (plan.getMasterPlan()) {
-                        planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
-                                .isActivated()));
-                    } else {
-                        planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.PLAN, annotatedPlan
-                                .isActivated()));
-                    }
-                }
-                break;
+        PlanType planType = (PlanType) planElement;
+        PlanTypeViewModel planTypeViewModel = new PlanTypeViewModel(planType.getId(), planType.getName(),
+                Types.PLANTYPE);
+        planTypeViewModel.setRelativeDirectory(planType.getRelativeDirectory());
+        planTypeViewModel.setComment(planType.getComment());
+
+
+        for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
+            Plan plan = annotatedPlan.getPlan();
+            if (plan.getMasterPlan()) {
+                planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
+                        .isActivated()));
+            } else {
+                planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.PLAN, annotatedPlan
+                        .isActivated()));
             }
         }
 
@@ -482,9 +496,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             if (planElement instanceof Task) {
                 return new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
             } else if (planElement instanceof TaskRepository) {
-                return new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
+                PlanElementViewModel taskRepo = new PlanElementViewModel(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
+                taskRepo.setComment(planElement.getComment());
+                taskRepo.setRelativeDirectory(((TaskRepository) planElement).getRelativeDirectory());
+                return taskRepo;
             } else {
-                System.err.println("Controller: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
+                System.err.println("Controller: getPresentedViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
             }
         }
         return null;

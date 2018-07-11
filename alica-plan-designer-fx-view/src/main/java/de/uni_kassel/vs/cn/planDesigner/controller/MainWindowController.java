@@ -157,7 +157,7 @@ public class MainWindowController implements Initializable {
         editorTabPane.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
-                        String type = ((IEditorTab) newValue).getViewModelElement().getType();
+                        String type = ((IEditorTab) newValue).getPresentedViewModelElement().getType();
                         if (type.equals(Types.BEHAVIOUR) ||
                                 type.equals(Types.PLAN) ||
                                 type.equals(Types.MASTERPLAN) ||
@@ -172,7 +172,7 @@ public class MainWindowController implements Initializable {
 
         generateCurrentFile.setOnAction(e -> {
             long modelElementId = ((AbstractPlanTab) editorTabPane
-                    .getSelectionModel().getSelectedItem()).getViewModelElement().getId();
+                    .getSelectionModel().getSelectedItem()).getPresentedViewModelElement().getId();
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
 //            	waitOnProgressWindow(() -> new Codegenerator().generate(modelElementId));

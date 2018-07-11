@@ -8,19 +8,26 @@ import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanElementViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.model.TaskRepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
+import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.converter.DefaultStringConverter;
+import javafx.util.converter.IntegerStringConverter;
+import javafx.util.converter.LongStringConverter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,19 +36,21 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
     private ViewModelElement taskRepository;
     private I18NRepo i18NRepo;
+    private boolean dirty;
+    private PropertiesTable<ViewModelElement> propertiesTable;
 
-    public TaskRepositoryTab(ViewModelElement taskOrRepository, IGuiModificationHandler handler) {
+    public TaskRepositoryTab(ViewModelElement taskRepository, IGuiModificationHandler handler) {
         super(I18NRepo.getInstance().getString("label.caption.taskrepository"), null);
         this.guiModificationHandler = handler;
-        if (taskOrRepository.getType().equals(Types.TASKREPOSITORY)) {
-            this.taskRepository = taskOrRepository;
-        } else if (taskOrRepository.getType().equals(Types.TASK)){
-            this.taskRepository = guiModificationHandler.getViewModelElement(taskOrRepository.getParentId());
+        if (taskRepository.getType().equals(Types.TASKREPOSITORY)) {
+            this.taskRepository = guiModificationHandler.getViewModelElement(taskRepository.getId());
+        } else if (taskRepository.getType().equals(Types.TASK)){
+            this.taskRepository = guiModificationHandler.getViewModelElement(taskRepository.getParentId());
         } else {
-            System.err.println("TaskRepository: Creation of TaskRepositoryTab with ViewModelElement of quantifierType " + taskOrRepository.getType() + " not supported!");
+            System.err.println("TaskRepository: Creation of TaskRepositoryTab with ViewModelElement of quantifierType " + taskRepository.getType() + " not supported!");
         }
         i18NRepo = I18NRepo.getInstance();
-        setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + ": " + taskRepository.getName());
+        setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + ": " + this.taskRepository.getName());
         initGui();
         setOnCloseRequest(e-> {
             if (getText().contains("*")) {
@@ -56,9 +65,13 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
      * This allows to create new Tasks, too.
      */
     public void initGui() {
-        // create list of tasks
-        VBox contentContainer = new VBox();
-        contentContainer.setPrefHeight(Double.MAX_VALUE);
+        propertiesTable = new PropertiesTable();
+        propertiesTable.setEditable(true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.id"), "id", new LongStringConverter(), false);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
+        propertiesTable.addItem(taskRepository);
 
         // guiModificationHandler for creating new tasks
         HBox createTaskHBox = new HBox();
@@ -74,8 +87,14 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         });
         createTaskHBox.getChildren().addAll(taskNameField, createTaskButton);
 
-        // fill both into global container
-        contentContainer.getChildren().addAll(repositoryListView, createTaskHBox);
+        HBox spacing = new HBox();
+        spacing.setPrefHeight(10);
+        // create list of tasks
+        VBox contentContainer = new VBox();
+        contentContainer.setPrefHeight(Double.MAX_VALUE);
+
+        // fill all into global container
+        contentContainer.getChildren().addAll(propertiesTable, spacing, repositoryListView, createTaskHBox);
 
         // override base class guiModificationHandler content
         setContent(contentContainer);
@@ -91,7 +110,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     }
 
     @Override
-    public ViewModelElement getViewModelElement() {
+    public ViewModelElement getPresentedViewModelElement() {
         return taskRepository;
     }
 
@@ -127,6 +146,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         } else if (getText().contains("*") && !dirty) {
             this.setText(getText().substring(0, getText().length()-1));
         }
+        this.dirty = dirty;
     }
 
     private boolean isTaskUsed(ViewModelElement taskToBeDeleted) {
@@ -151,5 +171,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
             return true;
         }
     }
+
+    public boolean isDirty() {return dirty;}
 
 }

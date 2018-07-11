@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab;
 
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionsTitledPane;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.VariablesTab;
@@ -9,14 +10,13 @@ import de.uni_kassel.vs.cn.planDesigner.view.model.BehaviourViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.VariableViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LongStringConverter;
 
-public class BehaviourTab extends Tab implements IEditorTab {
+public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
 
     PropertiesTable<BehaviourViewModel> propertiesTable;
     VariablesTab variablesTab;
@@ -25,7 +25,8 @@ public class BehaviourTab extends Tab implements IEditorTab {
     I18NRepo i18NRepo;
 
     public BehaviourTab(BehaviourViewModel behaviourViewModel) {
-        super(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + behaviourViewModel.getName());
+        super(behaviourViewModel);
+        setText(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + behaviourViewModel.getName());
         i18NRepo = I18NRepo.getInstance();
         this.behaviourViewModel = behaviourViewModel;
 
@@ -69,7 +70,7 @@ public class BehaviourTab extends Tab implements IEditorTab {
     }
 
     @Override
-    public ViewModelElement getViewModelElement() {
+    public ViewModelElement getPresentedViewModelElement() {
         return behaviourViewModel;
     }
 

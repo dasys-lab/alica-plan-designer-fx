@@ -18,4 +18,5 @@ public class PlanElementViewModel extends ViewModelElement {
     public String getComment() {
         return comment.get();
     }
+
 }

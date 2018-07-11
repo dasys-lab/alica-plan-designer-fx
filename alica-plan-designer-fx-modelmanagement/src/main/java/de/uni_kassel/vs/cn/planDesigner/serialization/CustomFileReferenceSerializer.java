@@ -27,8 +27,10 @@ public class CustomFileReferenceSerializer extends StdSerializer<AbstractPlan> {
             jsonGenerator.writeString(Paths.get(planElement.getRelativeDirectory(), planElement.getName() + ".beh#" + planElement.getId()).toString());
         } else if(planElement instanceof PlanType) {
             jsonGenerator.writeString(Paths.get(planElement.getRelativeDirectory(), planElement.getName() + ".pty#" + planElement.getId()).toString());
-        } else if(planElement instanceof TaskRepository) {
-            jsonGenerator.writeString(Paths.get(planElement.getRelativeDirectory(), planElement.getName() + ".tsk#" + planElement.getId()).toString());
         }
+        //TODO Taskrepository is not an instance of abstract plan anymore
+//        else if(planElement instanceof TaskRepository) {
+//            jsonGenerator.writeString(Paths.get(planElement.getRelativeDirectory(), planElement.getName() + ".tsk#" + planElement.getId()).toString());
+//        }
     }
 }

@@ -11,6 +11,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.model.PlanTypeViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -20,6 +21,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import javafx.util.converter.DefaultStringConverter;
+import javafx.util.converter.LongStringConverter;
 
 import java.net.URL;
 import java.util.Comparator;
@@ -60,16 +63,15 @@ public class PlanTypeWindowController implements Initializable {
     @FXML
     private Button saveButton;
 
+    @FXML
+    private PropertiesTable propertiesTable;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         i18NRepo = I18NRepo.getInstance();
         initComparators();
         initUIText();
         initButtons();
-    }
-
-    public void refresh() {
-        planTypeTableView.refresh();
     }
 
     private void initButtons() {
@@ -80,8 +82,6 @@ public class PlanTypeWindowController implements Initializable {
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, planType.getName());
             event.setElementId(planType.getId());
             guiModificationHandler.handle(event);
-            planTypeTab.setDirty(false);
-
         });
 
         addPlanButton.setOnAction(e -> {
@@ -123,6 +123,12 @@ public class PlanTypeWindowController implements Initializable {
         this.planTypeViewModel = planTypeViewModel;
         initTableView();
         initPlanListView();
+        propertiesTable.setEditable(true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.id"), "id", new LongStringConverter(), false);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
+        propertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
+        propertiesTable.addItem(planTypeViewModel);
     }
 
     private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {

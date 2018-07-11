@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -100,6 +101,12 @@ public class IsDirtyWindowController {
     public static boolean isAnyTabDirty() {
         ObservableList<Tab> openTabs = MainWindowController.getInstance().getEditorTabPane().getTabs();
         for(Tab openTab : openTabs) {
+            if(openTab instanceof TaskRepositoryTab) {
+                if(((TaskRepositoryTab)openTab).isDirty()) {
+                    return true;
+                }
+                continue;
+            }
             if(((AbstractPlanTab)openTab).isDirty()) {
                 return true;
             }
