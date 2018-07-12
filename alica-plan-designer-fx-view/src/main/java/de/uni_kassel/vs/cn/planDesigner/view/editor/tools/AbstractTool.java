@@ -59,6 +59,8 @@ public abstract class AbstractTool {
 
     protected abstract void initHandlerMap();
 
+    public abstract DraggableHBox createToolUI();
+
     protected Node getPlanEditorTabPane() {
         return planEditorTabPane;
     }

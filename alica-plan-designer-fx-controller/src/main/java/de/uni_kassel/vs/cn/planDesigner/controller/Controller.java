@@ -16,6 +16,7 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
@@ -500,8 +501,21 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 taskRepo.setComment(planElement.getComment());
                 taskRepo.setRelativeDirectory(((TaskRepository) planElement).getRelativeDirectory());
                 return taskRepo;
+            } else if (planElement instanceof Plan) {
+                PlanViewModel element = null;
+                Plan plan = (Plan) planElement;
+                if(plan.getMasterPlan()) {
+                    element = new PlanViewModel(plan.getId(), plan.getName(), Types.MASTERPLAN);
+                } else {
+                    element = new PlanViewModel(plan.getId(), plan.getName(), Types.PLAN);
+                }
+                element.setComment(plan.getComment());
+                element.setRelativeDirectory(plan.getRelativeDirectory());
+                element.setUtilityThreshold(plan.getUtilityThreshold());
+                element.setMasterPlan(plan.getMasterPlan());
+                return element;
             } else {
-                System.err.println("Controller: getPresentedViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
+                System.err.println("Controller: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
             }
         }
         return null;

@@ -227,8 +227,9 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         return selectedPlanElements;
     }
 
-    private void setPresentedViewModelElement(ViewModelElement presentedViewModelElement) {
+    protected void setPresentedViewModelElement(ViewModelElement presentedViewModelElement) {
         this.presentedViewModelElement = presentedViewModelElement;
+        initSelectedPlanElements(presentedViewModelElement);
     }
 
     public ViewModelElement getPresentedViewModelElement() {
@@ -247,4 +248,6 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         event.setElementId(presentedViewModelElement.getId());
         MainWindowController.getInstance().getGuiModificationHandler().handle(event);
     }
+
+
 }

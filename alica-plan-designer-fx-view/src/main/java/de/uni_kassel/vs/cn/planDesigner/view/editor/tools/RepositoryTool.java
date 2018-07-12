@@ -63,5 +63,10 @@ public class RepositoryTool extends AbstractTool {
         });
     }
 
+    @Override
+    public DraggableHBox createToolUI() {
+        return null;
+    }
+
 
 }

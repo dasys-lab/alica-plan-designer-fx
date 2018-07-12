@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
@@ -44,7 +45,7 @@ public class EditorTabPane extends TabPane {
         switch (viewModelElement.getType()) {
             case Types.MASTERPLAN:
             case Types.PLAN:
-                PlanTab planTab = new PlanTab(viewModelElement);
+                PlanTab planTab = new PlanTab(viewModelElement, this.guiModificationHandler);
                 guiModificationHandler.handleTabOpenedEvent(planTab);
                 return planTab;
             case Types.TASKREPOSITORY:

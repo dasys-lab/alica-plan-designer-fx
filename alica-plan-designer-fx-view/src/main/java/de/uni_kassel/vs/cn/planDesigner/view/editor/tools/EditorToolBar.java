@@ -1,5 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition.PostConditionTool;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition.PreConditionTool;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition.RuntimeConditionTool;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.state.FailureStateTool;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.state.StateTool;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.state.SuccessStateTool;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition.InitTransitionTool;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition.SyncTransitionTool;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition.TransitionTool;
 import javafx.geometry.Orientation;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
@@ -19,34 +28,34 @@ public class EditorToolBar extends ToolBar {
         setOrientation(Orientation.VERTICAL);
         tools = new ArrayList<>();
 
-//        StateTool stateTool = new StateTool(workbench);
-//        getItems().onAddElement(stateTool.createToolUI());
-//        TransitionTool transitionTool = new TransitionTool(workbench);
-//        getItems().onAddElement(transitionTool.createToolUI());
-//        BehaviourTool behaviourTool = new BehaviourTool(workbench);
-//        getItems().onAddElement(behaviourTool.createToolUI());
-//        EntryPointTool entryPointTool = new EntryPointTool(workbench);
-//        getItems().onAddElement(entryPointTool.createToolUI());
-//        SuccessStateTool successStateTool = new SuccessStateTool(workbench);
-//        getItems().onAddElement(successStateTool.createToolUI());
-//        FailureStateTool failureStateTool = new FailureStateTool(workbench);
-//        getItems().onAddElement(failureStateTool.createToolUI());
-//        RuntimeConditionTool runtimeConditionTool = new RuntimeConditionTool(workbench);
-//        getItems().onAddElement(runtimeConditionTool.createToolUI());
-//        PreConditionTool preConditionTool = new PreConditionTool(workbench);
-//        getItems().onAddElement(preConditionTool.createToolUI());
-//        PostConditionTool postConditionTool = new PostConditionTool(workbench);
-//        getItems().onAddElement(postConditionTool.createToolUI());
-//        InitTransitionTool initTransitionTool = new InitTransitionTool(workbench);
-//        getItems().onAddElement(initTransitionTool.createToolUI());
-//        SynchronisationTool synchronisationTool = new SynchronisationTool(workbench);
-//        getItems().onAddElement(synchronisationTool.createToolUI());
-//        SyncTransitionTool syncTransitionTool = new SyncTransitionTool(workbench);
-//        getItems().onAddElement(syncTransitionTool.createToolUI());
-//
-//        tools.addAll(Arrays.asList(stateTool, transitionTool, behaviourTool, entryPointTool, successStateTool,
-//                failureStateTool, runtimeConditionTool, preConditionTool, postConditionTool, initTransitionTool,
-//                synchronisationTool, syncTransitionTool));
+        StateTool stateTool = new StateTool(workbench);
+        getItems().add(stateTool.createToolUI());
+        TransitionTool transitionTool = new TransitionTool(workbench);
+        getItems().add(transitionTool.createToolUI());
+        BehaviourTool behaviourTool = new BehaviourTool(workbench);
+        getItems().add(behaviourTool.createToolUI());
+        EntryPointTool entryPointTool = new EntryPointTool(workbench);
+        getItems().add(entryPointTool.createToolUI());
+        SuccessStateTool successStateTool = new SuccessStateTool(workbench);
+        getItems().add(successStateTool.createToolUI());
+        FailureStateTool failureStateTool = new FailureStateTool(workbench);
+        getItems().add(failureStateTool.createToolUI());
+        RuntimeConditionTool runtimeConditionTool = new RuntimeConditionTool(workbench);
+        getItems().add(runtimeConditionTool.createToolUI());
+        PreConditionTool preConditionTool = new PreConditionTool(workbench);
+        getItems().add(preConditionTool.createToolUI());
+        PostConditionTool postConditionTool = new PostConditionTool(workbench);
+        getItems().add(postConditionTool.createToolUI());
+        InitTransitionTool initTransitionTool = new InitTransitionTool(workbench);
+        getItems().add(initTransitionTool.createToolUI());
+        SynchronisationTool synchronisationTool = new SynchronisationTool(workbench);
+        getItems().add(synchronisationTool.createToolUI());
+        SyncTransitionTool syncTransitionTool = new SyncTransitionTool(workbench);
+        getItems().add(syncTransitionTool.createToolUI());
+
+        tools.addAll(Arrays.asList(stateTool, transitionTool, behaviourTool, entryPointTool, successStateTool,
+                failureStateTool, runtimeConditionTool, preConditionTool, postConditionTool, initTransitionTool,
+                synchronisationTool, syncTransitionTool));
 
     }
 
