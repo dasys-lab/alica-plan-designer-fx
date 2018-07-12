@@ -8,25 +8,25 @@ import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
-import de.uni_kassel.vs.cn.planDesigner.view.model.PlanElementViewModel;
-import de.uni_kassel.vs.cn.planDesigner.view.model.TaskRepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
-import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LongStringConverter;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + ": " + this.taskRepository.getName());
         initGui();
         setOnCloseRequest(e-> {
-            if (getText().contains("*")) {
+            if (isDirty()) {
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.close.task"), null);
                 e.consume();
             }
@@ -76,7 +76,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         // guiModificationHandler for creating new tasks
         HBox createTaskHBox = new HBox();
         Button createTaskButton = new Button();
-        createTaskButton.setText(I18NRepo.getInstance().getString("action.create.task"));
+        createTaskButton.setText(i18NRepo.getInstance().getString("action.create.task"));
         TextField taskNameField = new TextField();
         createTaskButton.setOnAction(e -> {
             if (taskNameField.getText() != null && !taskNameField.getText().isEmpty()) {
@@ -87,14 +87,21 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         });
         createTaskHBox.getChildren().addAll(taskNameField, createTaskButton);
 
-        HBox spacing = new HBox();
-        spacing.setPrefHeight(10);
+
+        TitledPane taskList = new TitledPane();
+        taskList.setContent(repositoryListView);
+        taskList.setText(i18NRepo.getString("label.caption.tasks"));
+        taskList.setCollapsible(false);
+        taskList.setPadding(new Insets(10,0,0,0));
+        taskList.setStyle("-fx-font-weight: bold;");
+        repositoryListView.setStyle("-fx-font-weight: normal;");
+
         // create list of tasks
         VBox contentContainer = new VBox();
         contentContainer.setPrefHeight(Double.MAX_VALUE);
 
         // fill all into global container
-        contentContainer.getChildren().addAll(propertiesTable, spacing, repositoryListView, createTaskHBox);
+        contentContainer.getChildren().addAll(propertiesTable, taskList, createTaskHBox);
 
         // override base class guiModificationHandler content
         setContent(contentContainer);
