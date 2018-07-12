@@ -7,19 +7,18 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 
 import java.io.IOException;
 
-public class CustomPlanElementSerializer extends StdSerializer<PlanElement> {
+public class InternRefSerializer extends StdSerializer<PlanElement> {
 
-    public CustomPlanElementSerializer() {
+    public InternRefSerializer() {
         this(null);
     }
 
-    public CustomPlanElementSerializer(Class<PlanElement> t) {
+    public InternRefSerializer(Class<PlanElement> t) {
         super(t);
     }
 
     @Override
     public void serialize(PlanElement planElement, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeNumber(planElement.getId());
-
     }
 }

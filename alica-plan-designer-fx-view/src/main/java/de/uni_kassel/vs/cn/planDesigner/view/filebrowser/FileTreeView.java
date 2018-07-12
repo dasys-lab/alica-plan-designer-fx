@@ -53,6 +53,7 @@ public final class FileTreeView extends TreeView<File> {
                 return;
             }
             System.out.println("Source: " + e.getSource() + " Target: " + e.getTarget());
+            // TODO: Fix in case of Folder
             draggedItem = (FileTreeItem) ((FileTreeCell) node).getTreeItem();
             startFolder = draggedItem.getValue().getAbsolutePath();
             startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));

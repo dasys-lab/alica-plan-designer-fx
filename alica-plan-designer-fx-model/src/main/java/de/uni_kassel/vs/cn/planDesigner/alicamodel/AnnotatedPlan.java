@@ -6,16 +6,13 @@ public class AnnotatedPlan extends PlanElement {
 
     private boolean activated;
 
-    public AnnotatedPlan(Plan plan) {
-        this.plan = plan;
-    }
-
     public Plan getPlan() {
         return plan;
     }
 
     public void setPlan(Plan plan) {
         this.plan = plan;
+        this.setName("Annotated" + plan.getName());
     }
 
     public boolean isActivated() {

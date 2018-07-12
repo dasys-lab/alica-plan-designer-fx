@@ -64,7 +64,7 @@ public class ModelManager {
         objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
         objectMapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
         objectMapper.addMixIn(Parametrisation.class, ParametrisationMixIn.class);
-        objectMapper.addMixIn(PlanType.class, PlanTypeMixIn.class);
+        objectMapper.addMixIn(AnnotatedPlan.class, AnnotatedPlanMixIn.class);
         objectMapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
         objectMapper.addMixIn(State.class, StateMixIn.class);
         objectMapper.addMixIn(Synchronization.class, SynchronizationMixIn.class);
@@ -730,11 +730,13 @@ public class ModelManager {
                 return null;
             }
             if (mmq.getQueryType() == ModelQueryType.ADD_ELEMENT) {
-                AnnotatedPlan annotatedPlan = new AnnotatedPlan(plan);
+                AnnotatedPlan annotatedPlan = new AnnotatedPlan();
+                annotatedPlan.setPlan(plan);
                 annotatedPlan.setActivated(true);
                 return new AddPlanToPlanType(this, annotatedPlan, (PlanType) parent);
             } else if (mmq.getQueryType() == ModelQueryType.REMOVE_ELEMENT) {
-                AnnotatedPlan annotatedPlan = new AnnotatedPlan(plan);
+                AnnotatedPlan annotatedPlan = new AnnotatedPlan();
+                annotatedPlan.setPlan(plan);
                 return new RemovePlanFromPlanType(this, annotatedPlan, (PlanType) parent);
             } else {
                 return null;
