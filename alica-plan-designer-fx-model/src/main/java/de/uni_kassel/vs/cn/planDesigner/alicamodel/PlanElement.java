@@ -29,7 +29,7 @@ public class PlanElement {
     }
 
     public String getName() {
-        if (name.isEmpty())
+        if (name == null || name.isEmpty())
         {
             return Long.toString(id);
         }

@@ -3,9 +3,10 @@ package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 import java.util.ArrayList;
 
 public class PlanType extends AbstractPlan {
-    ArrayList<Parametrisation> parametrisations;
 
-    ArrayList<AnnotatedPlan> plans;
+    private ArrayList<Parametrisation> parametrisations;
+
+    private ArrayList<AnnotatedPlan> plans;
 
     public PlanType () {
         parametrisations = new ArrayList<>();

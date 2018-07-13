@@ -299,12 +299,12 @@ public class ModelManager {
      * Replaces all incomplete Plans in PlanTypes by already parsed ones
      */
     public void replaceIncompletePlansInPlanTypes() {
-        ArrayList<AnnotatedPlan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlanTypes;
+        ArrayList<Plan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlanTypes;
         for (PlanType planType : getPlanTypes()) {
-            ArrayList<AnnotatedPlan> plans = planType.getPlans();
-            for (int i = 0; i < plans.size(); i++) {
-                if (incompletePlans.contains(plans.get(i))) {
-                    plans.get(i).setPlan(planMap.get(plans.get(i).getPlan().getId()));
+            ArrayList<AnnotatedPlan> annotatedPlans = planType.getPlans();
+            for (int i = 0; i < annotatedPlans.size(); i++) {
+                if (incompletePlans.contains(annotatedPlans.get(i).getPlan())) {
+                    annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
                 }
             }
         }
@@ -314,11 +314,11 @@ public class ModelManager {
      * Replaces all incomplete Plans in given PlanType by already parsed ones
      */
     public void replaceIncompletePlansInPlanType(PlanType planType) {
-        ArrayList<AnnotatedPlan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlanTypes;
-        ArrayList<AnnotatedPlan> plans = planType.getPlans();
-        for (int i = 0; i < plans.size(); i++) {
-            if (incompletePlans.contains(plans.get(i))) {
-                plans.get(i).setPlan(planMap.get(plans.get(i).getPlan().getId()));
+        ArrayList<Plan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlanTypes;
+        ArrayList<AnnotatedPlan> annotatedPlans = planType.getPlans();
+        for (int i = 0; i < annotatedPlans.size(); i++) {
+            if (incompletePlans.contains(annotatedPlans.get(i).getPlan())) {
+                annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
             }
         }
     }
