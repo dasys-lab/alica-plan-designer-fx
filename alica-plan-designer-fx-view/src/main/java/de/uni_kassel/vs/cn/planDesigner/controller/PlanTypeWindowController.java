@@ -129,6 +129,20 @@ public class PlanTypeWindowController implements Initializable {
         propertiesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
         propertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
         propertiesTable.addItem(planTypeViewModel);
+        planTypeViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
+            this.planTypeTab.setDirty(true);
+            GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, "name");
+            guiChangeAttributeEvent.setNewValue(newValue);
+            guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
+            guiModificationHandler.handle(guiChangeAttributeEvent);
+        });
+        planTypeViewModel.commentProperty().addListener((observable, oldValue, newValue) -> {
+            this.planTypeTab.setDirty(true);
+            GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, "comment");
+            guiChangeAttributeEvent.setNewValue(newValue);
+            guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
+            guiModificationHandler.handle(guiChangeAttributeEvent);
+        });
     }
 
     private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {

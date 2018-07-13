@@ -617,7 +617,7 @@ public class ModelManager {
                 }
                 break;
             case CHANGE_ELEMENT:
-                if (mmq.getAttributeType().equals(Boolean.class.getSimpleName())) {
+                if (mmq.getAttributeType().equals(Boolean.class.getSimpleName()) && mmq.getElementType() == Types.ANNOTATEDPLAN) {
                     PlanType planType = planTypeMap.get(mmq.getParentId());
                     AnnotatedPlan annotatedPlan = null;
                     for (AnnotatedPlan ap : planType.getPlans()) {
