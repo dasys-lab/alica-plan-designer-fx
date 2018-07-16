@@ -23,10 +23,18 @@ public class FileSystemUtil {
                 return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLAN_ENDING).toFile();
             case Types.PLANTYPE:
                 return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLANTYPE_ENDING).toFile();
+            case Types.BEHAVIOUR:
+                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + BEHAVIOUR_ENDING).toFile();
+            case Types.TASKREPOSITORY:
+                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + TASKREPOSITORY_ENDING).toFile();
             default:
                 System.err.println("FileSystemUtil: Unknown eventType gets ignored!");
                 return null;
         }
+    }
+
+    public static File getFile(String absoluteDirectory, String name, String ending) {
+        return Paths.get(absoluteDirectory, name + "." + ending).toFile();
     }
 
     /**

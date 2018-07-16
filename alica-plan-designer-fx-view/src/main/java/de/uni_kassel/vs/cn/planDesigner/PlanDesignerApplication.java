@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -37,6 +39,8 @@ public class PlanDesignerApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         running = true;
+
+        Logger.getRootLogger().setLevel(Level.WARN);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("mainWindow.fxml"));
         // The next two lines replace this attribute in mainWindow.fxml::AnchorPane "fx:controller="de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController"

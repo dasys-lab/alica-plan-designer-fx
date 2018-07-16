@@ -3,11 +3,13 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab;
 import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiChangeAttributeEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanElementViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
@@ -60,6 +62,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         });
     }
 
+
     /**
      * Modifies the content, as it is already set in the RepositoryTab constructor (see base class).
      * This allows to create new Tasks, too.
@@ -72,6 +75,14 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         propertiesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
         propertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
         propertiesTable.addItem(taskRepository);
+        taskRepository.nameProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireGuiChangeAttributeEvent(newValue, "name");
+        });
+        ((PlanElementViewModel)taskRepository).commentProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireGuiChangeAttributeEvent(newValue, "comment");
+        });
 
         // guiModificationHandler for creating new tasks
         HBox createTaskHBox = new HBox();
@@ -107,6 +118,15 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         setContent(contentContainer);
     }
 
+    private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, taskRepository.getName());
+        guiChangeAttributeEvent.setNewValue(newValue);
+        guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
+        guiChangeAttributeEvent.setAttributeName(attribute);
+        guiChangeAttributeEvent.setParentId(taskRepository.getId());
+        guiModificationHandler.handle(guiChangeAttributeEvent);
+    }
+
     @Override
     public boolean representsViewModelElement(ViewModelElement viewModelElement) {
         if (viewModelElement.getType().equals(Types.TASK)) {
@@ -140,7 +160,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
     @Override
     public void save() {
-        if (getText().contains("*")) {
+        if (isDirty()) {
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.TASKREPOSITORY, taskRepository.getName());
             event.setElementId(taskRepository.getId());
             guiModificationHandler.handle(event);

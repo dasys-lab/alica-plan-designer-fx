@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.*;
 
 /**
@@ -30,6 +31,10 @@ public class ParseAbstractPlan extends AbstractCommand {
                 break;
             case Types.PLANTYPE:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
+                modelManager.replaceIncompletePlansInPlanType((PlanType)newElement);
+                break;
+            case Types.BEHAVIOUR:
+                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Behaviour.class);
                 break;
             default:
                 System.err.println("ParseAbstractPlan: Parsing model eventType " + modelModificationQuery.getElementType() + " not implemented, yet!");

@@ -1,7 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab;
 
+import de.uni_kassel.vs.cn.planDesigner.events.GuiChangeAttributeEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionsTitledPane;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
@@ -23,6 +27,7 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
     VBox contentList;
     BehaviourViewModel behaviourViewModel;
     I18NRepo i18NRepo;
+    IGuiModificationHandler guiModificationHandler;
 
     public BehaviourTab(BehaviourViewModel behaviourViewModel) {
         super(behaviourViewModel);
@@ -60,6 +65,36 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         setContent(contentList);
     }
 
+    public void init(IGuiModificationHandler guiModificationHandler) {
+        this.guiModificationHandler = guiModificationHandler;
+        behaviourViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireModificationEvent(newValue, "name", String.class.getSimpleName());
+        });
+        behaviourViewModel.commentProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireModificationEvent(newValue, "comment", String.class.getSimpleName());
+        });
+        behaviourViewModel.frequencyProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireModificationEvent(newValue.toString(), "frequency", Integer.class.getSimpleName());
+        });
+        behaviourViewModel.deferringProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireModificationEvent(newValue.toString(), "deferring", Long.class.getSimpleName());
+        });
+    }
+
+    private void fireModificationEvent(String newValue, String attributeName, String type) {
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.BEHAVIOUR, behaviourViewModel
+                .getName());
+        guiChangeAttributeEvent.setNewValue(newValue);
+        guiChangeAttributeEvent.setAttributeType(type);
+        guiChangeAttributeEvent.setAttributeName(attributeName);
+        guiChangeAttributeEvent.setParentId(behaviourViewModel.getId());
+        guiModificationHandler.handle(guiChangeAttributeEvent);
+    }
+
     @Override
     public boolean representsViewModelElement(ViewModelElement element) {
         if (this.behaviourViewModel.equals(element) || this.behaviourViewModel.getId() == element.getParentId()) {
@@ -82,6 +117,10 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
 
     @Override
     public void save() {
-        System.err.println("BehaviourTab: Save not implemented, yet!");
+        if (isDirty()) {
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.BEHAVIOUR, presentedViewModelElement.getName());
+            event.setElementId(presentedViewModelElement.getId());
+            guiModificationHandler.handle(event);
+        }
     }
 }

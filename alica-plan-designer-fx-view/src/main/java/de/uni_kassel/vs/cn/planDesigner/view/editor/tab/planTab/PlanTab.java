@@ -1,15 +1,21 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiChangeAttributeEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.EditorToolBar;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -29,7 +35,7 @@ public class PlanTab extends AbstractPlanTab {
     private EditorToolBar editorToolBar;
     private StackPane planContent;
     private ScrollPane scrollPane;
-    private ViewModelElement plan;
+    private PlanViewModel plan;
     private IGuiModificationHandler guiModificationHandler;
 
 
@@ -41,7 +47,7 @@ public class PlanTab extends AbstractPlanTab {
         super(viewModelElement);
         this.guiModificationHandler = handler;
         i18NRepo = I18NRepo.getInstance();
-        plan = guiModificationHandler.getViewModelElement(viewModelElement.getId());
+        plan = (PlanViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId());
         setPresentedViewModelElement(plan);
         setText(i18NRepo.getString("label.caption.plan") + ": " + plan.getName());
 
@@ -50,10 +56,10 @@ public class PlanTab extends AbstractPlanTab {
 //        URI relativeURI = EMFModelUtils.createRelativeURI(new File(uiExtensionMapPath));
 //        setPmlUiExtensionMap((PmlUiExtensionMap) AlicaResourceSet.getInstance().getResource(relativeURI, false).getContents().get(0));
 
-        draw(plan);
+        draw();
     }
 
-    private void draw(ViewModelElement plan) {
+    private void draw() {
         planModelVisualisationObject = new PlanModelVisualisationObject(plan.getId());
 //        planEditorGroup = new PlanEditorGroup(planModelVisualisationObject, this);
 //        planContent = new StackPane(planEditorGroup);
@@ -69,12 +75,28 @@ public class PlanTab extends AbstractPlanTab {
         upperPropertiesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
         upperPropertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
         upperPropertiesTable.addItem(plan);
+        plan.nameProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireGuiChangeAttributeEvent(newValue, "name", String.class.getSimpleName());
+        });
+        plan.commentProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireGuiChangeAttributeEvent(newValue, "comment", String.class.getSimpleName());
+        });
 
         lowerPropertiesTable = new PropertiesTable();
         lowerPropertiesTable.setEditable(true);
         lowerPropertiesTable.addColumn(i18NRepo.getString("label.column.utilitythreshold"), "utilityThreshold", new DoubleStringConverter(), true);
         lowerPropertiesTable.addColumn(i18NRepo.getString("label.column.masterplan"), "masterPlan", new BooleanStringConverter(), true);
         lowerPropertiesTable.addItem(plan);
+        plan.utilityThresholdProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireGuiChangeAttributeEvent(newValue.toString(), "utilityThreshold", Double.class.getSimpleName());
+        });
+        plan.masterPlanProperty().addListener((observable, oldValue, newValue) -> {
+            setDirty(true);
+            fireGuiChangeAttributeEvent(newValue.toString(), "masterPlan", BooleanProperty.class.getSimpleName());
+        });
 
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
@@ -93,6 +115,15 @@ public class PlanTab extends AbstractPlanTab {
 //    public PlanEditorGroup getPlanEditorGroup() {
 //        return planEditorGroup;
 //    }
+
+    private void fireGuiChangeAttributeEvent(String newValue, String attribute, String type) {
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLAN, plan.getName());
+        guiChangeAttributeEvent.setNewValue(newValue);
+        guiChangeAttributeEvent.setAttributeType(type);
+        guiChangeAttributeEvent.setAttributeName(attribute);
+        guiChangeAttributeEvent.setParentId(plan.getId());
+        guiModificationHandler.handle(guiChangeAttributeEvent);
+    }
 
     public ConditionHBox getConditionHBox() {
         return conditionHBox;
@@ -117,12 +148,11 @@ public class PlanTab extends AbstractPlanTab {
 
     @Override
     public void save() {
-//        super.save();
-//        try {
-//            EMFModelUtils.saveAlicaFile(getPmlUiExtensionMap());
-//        } catch (IOException e) {
-//            ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.save.pmlex"), e);
-//        }
+        if (isDirty()) {
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLAN, presentedViewModelElement.getName());
+            event.setElementId(presentedViewModelElement.getId());
+            guiModificationHandler.handle(event);
+        }
     }
 
 //    public PmlUiExtensionMap getPmlUiExtensionMap() {

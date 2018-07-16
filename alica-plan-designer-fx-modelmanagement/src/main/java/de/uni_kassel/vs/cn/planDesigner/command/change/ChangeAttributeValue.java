@@ -2,12 +2,15 @@ package de.uni_kassel.vs.cn.planDesigner.command.change;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ChangeAttributeValue<T> extends AbstractCommand {
 
@@ -17,7 +20,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
 
     private T newValue;
 
-    private T oldValue;
+    private String oldValue;
 
     public ChangeAttributeValue(ModelManager modelManager, PlanElement planElement, String attribute, T newValue, PlanElement parentPlanElement) {
         super(modelManager);
@@ -29,15 +32,21 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
 
     @Override
     public void doCommand() {
-//        try {
-//            oldValue = (T) BeanUtils.getProperty(planElement, attribute);
-//            BeanUtils.setProperty(planElement, attribute, newValue);
-            if (attribute.equals("masterPlan")) {
-                // TODO: what has to be done, in case of changing the masterPlan flag?
-            }
+        try {
+            oldValue = BeanUtils.getProperty(planElement, attribute);
             if (attribute.equals("name")) {
                 Path path = null;
                 if(planElement instanceof Plan) {
+                    String absoluteDirectory = modelManager.getAbsoluteDirectory(planElement);
+                    File oldFile = FileSystemUtil.getFile(absoluteDirectory, planElement.getName(), FileSystemUtil.PLAN_ENDING);
+                    File newFile = new File(Paths.get(absoluteDirectory, (String)newValue, FileSystemUtil.PLAN_ENDING).toString());
+                    if(newFile.exists()) {
+                        throw new IOException("ChangeAttributeValue: File " + newFile.toString() + " already exists!");
+                    }
+                    if(!oldFile.renameTo(newFile)) {
+                        throw new IOException("ChangeAttributeValue: Could not rename " + oldFile.toString() + " to " + newFile.toString());
+                    }
+
                     // TODO:
                     // 1. Rename plan, pml-file, and pmlex-file
                     // 2. Fire event for updating gui (Repository, FileTreeView, PlanEditor if the plan is currently opened)
@@ -61,16 +70,15 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
                     // 2. Fire event for updating gui (Repository, PlanEditor if the taskrepository is currently opened)
                 }
             }
-            if(attribute.equals("activated")) {
-                oldValue = (T)(Object)((AnnotatedPlan) planElement).isActivated();
-                ((AnnotatedPlan) planElement).setActivated((Boolean) newValue);
+            if (attribute.equals("masterPlan")) {
+                // TODO: what has to be done, in case of changing the masterPlan flag?
             }
+            BeanUtils.setProperty(planElement, attribute, newValue);
 
-            // TODO: Check all other attributes of all model objects...
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
+            throw new RuntimeException(e);
 
-//        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-//            throw new RuntimeException(e);
-//        }
+        }
     }
 
     private File getNewFilePath(Path path) {
@@ -81,10 +89,10 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-//        try {
-//            BeanUtils.setProperty(planElement, attribute, oldValue);
-//        } catch (IllegalAccessException | InvocationTargetException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            BeanUtils.setProperty(planElement, attribute, oldValue);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

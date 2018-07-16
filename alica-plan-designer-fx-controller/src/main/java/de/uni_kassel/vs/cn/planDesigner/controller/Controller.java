@@ -237,12 +237,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
                 break;
             case ELEMENT_SERIALIZED:
+                ObservableList<Tab> tabs = editorTabPane.getTabs();
                 switch (event.getElementType()) {
                     case Types.TASKREPOSITORY:
                         taskViewModel.setDirty(false);
                         break;
                     case Types.PLANTYPE:
-                        ObservableList<Tab> tabs = editorTabPane.getTabs();
                         for (Tab tab : tabs) {
                             if (!(tab instanceof PlanTypeTab)) {
                                 continue;
@@ -255,7 +255,29 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         }
                         break;
                     case Types.BEHAVIOUR:
-
+                        for (Tab tab : tabs) {
+                            if (!(tab instanceof BehaviourTab)) {
+                                continue;
+                            }
+                            BehaviourTab behaviourTab = (BehaviourTab) tab;
+                            if (behaviourTab.getPresentedViewModelElement().getId() == event.getNewElement().getId()) {
+                                behaviourTab.setDirty(false);
+                                break;
+                            }
+                        }
+                        break;
+                    case Types.PLAN:
+                        for (Tab tab : tabs) {
+                            if (!(tab instanceof PlanTab)) {
+                                continue;
+                            }
+                            PlanTab planTab = (PlanTab) tab;
+                            if (planTab.getPresentedViewModelElement().getId() == event.getNewElement().getId()) {
+                                planTab.setDirty(false);
+                                break;
+                            }
+                        }
+                        break;
                     default:
                         System.err.println("Controller: Serialization of unknown type " + event.getElementType() + " gets ignored!");
                         break;
@@ -513,6 +535,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 element.setRelativeDirectory(plan.getRelativeDirectory());
                 element.setUtilityThreshold(plan.getUtilityThreshold());
                 element.setMasterPlan(plan.getMasterPlan());
+                return element;
+            } else if (planElement instanceof TaskRepository) {
+                PlanElementViewModel element = new PlanViewModel(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
+                TaskRepository taskRepository = (TaskRepository) planElement;
+                element.setComment(taskRepository.getComment());
+                element.setRelativeDirectory(taskRepository.getRelativeDirectory());
                 return element;
             } else {
                 System.err.println("Controller: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");

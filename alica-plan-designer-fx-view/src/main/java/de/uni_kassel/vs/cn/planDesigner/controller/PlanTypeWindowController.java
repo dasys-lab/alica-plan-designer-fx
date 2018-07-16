@@ -131,18 +131,21 @@ public class PlanTypeWindowController implements Initializable {
         propertiesTable.addItem(planTypeViewModel);
         planTypeViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
             this.planTypeTab.setDirty(true);
-            GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, "name");
-            guiChangeAttributeEvent.setNewValue(newValue);
-            guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
-            guiModificationHandler.handle(guiChangeAttributeEvent);
+            fireGuiChangeAttributeEvent(newValue, "name");
         });
         planTypeViewModel.commentProperty().addListener((observable, oldValue, newValue) -> {
             this.planTypeTab.setDirty(true);
-            GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, "comment");
-            guiChangeAttributeEvent.setNewValue(newValue);
-            guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
-            guiModificationHandler.handle(guiChangeAttributeEvent);
+            fireGuiChangeAttributeEvent(newValue, "comment");
         });
+    }
+
+    private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, planType.getName());
+        guiChangeAttributeEvent.setNewValue(newValue);
+        guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
+        guiChangeAttributeEvent.setAttributeName(attribute);
+        guiChangeAttributeEvent.setParentId(planType.getId());
+        guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 
     private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {
