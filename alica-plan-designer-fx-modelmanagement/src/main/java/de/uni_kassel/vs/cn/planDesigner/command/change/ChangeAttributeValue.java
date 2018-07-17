@@ -2,8 +2,11 @@ package de.uni_kassel.vs.cn.planDesigner.command.change;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.File;
@@ -38,7 +41,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
                 BeanUtils.setProperty(planElement, attribute, newValue);
                 if(planElement instanceof Plan) {
                     String absoluteDirectory = modelManager.getAbsoluteDirectory(planElement);
-                    File oldFile = FileSystemUtil.getFile(absoluteDirectory, planElement.getName(), FileSystemUtil.PLAN_ENDING);
+                    File oldFile = FileSystemUtil.getFile(absoluteDirectory, oldValue, FileSystemUtil.PLAN_ENDING);
                     File newFile = new File(Paths.get(absoluteDirectory, (String)newValue + "." + FileSystemUtil.PLAN_ENDING).toString());
                     if(newFile.exists()) {
                         throw new IOException("ChangeAttributeValue: File " + newFile.toString() + " already exists!");
@@ -47,9 +50,22 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
                         throw new IOException("ChangeAttributeValue: Could not rename " + oldFile.toString() + " to " + newFile.toString());
                     }
 
+                    ModelEvent event = null;
+                    if(((Plan) planElement).getMasterPlan()) {
+                       event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.MASTERPLAN);
+                    } else {
+                        event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.PLAN);
+                    }
+                    event.setChangedAttribute(attribute);
+                    fireModelChangedEvent(event);
+
                     // TODO:
-                    // 1. Rename plan, pml-file, and pmlex-file
+                    // 1. pmlex-file
                     // 2. Fire event for updating gui (Repository, FileTreeView, PlanEditor if the plan is currently opened)
+
+                    // DONE:
+                    // Rename plan, pml-file,
+
                 }
 
                 if (planElement instanceof PlanType) {
@@ -75,8 +91,11 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
             throw new RuntimeException(e);
-
         }
+    }
+
+    private void fireModelChangedEvent(ModelEvent event) {
+        modelManager.fireEvent(event);
     }
 
     private File getNewFilePath(Path path) {

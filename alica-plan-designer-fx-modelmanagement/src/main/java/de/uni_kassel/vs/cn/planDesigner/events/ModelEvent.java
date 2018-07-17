@@ -7,6 +7,7 @@ public class ModelEvent {
     protected String elementType;
     protected PlanElement oldElement;
     protected PlanElement newElement;
+    protected String changedAttribute;
 
     public ModelEvent (ModelEventType eventType, PlanElement oldElement, PlanElement newElement, String elementType) {
         this.eventType = eventType;
@@ -29,5 +30,13 @@ public class ModelEvent {
 
     public String getElementType() {
         return elementType;
+    }
+
+    public String getChangedAttribute() {
+        return changedAttribute;
+    }
+
+    public void setChangedAttribute(String changedAttribute) {
+        this.changedAttribute = changedAttribute;
     }
 }

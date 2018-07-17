@@ -388,6 +388,10 @@ public class ModelManager {
                 System.err.println("ModelManager: Event Type " + eventType + " not handled!");
         }
 
+        fireEvent(event);
+    }
+
+    public void fireEvent(ModelEvent event) {
         if (event != null) {
             for (IModelEventHandler eventHandler : eventHandlerList) {
                 eventHandler.handleModelEvent(event);
