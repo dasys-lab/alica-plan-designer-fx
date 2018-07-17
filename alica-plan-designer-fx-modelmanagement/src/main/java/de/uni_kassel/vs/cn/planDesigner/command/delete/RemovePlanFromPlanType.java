@@ -6,6 +6,8 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
+import java.util.ArrayList;
+
 public class RemovePlanFromPlanType extends AbstractCommand {
 
     protected PlanType planType;
@@ -19,7 +21,13 @@ public class RemovePlanFromPlanType extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        planType.getPlans().remove(plan);
+        ArrayList<AnnotatedPlan> plans = planType.getPlans();
+        for(int i = 0; i < plans.size(); i++) {
+            if(plans.get(i).getPlan().getId() == plan.getPlan().getId()) {
+                plans.remove(i);
+                break;
+            }
+        }
     }
 
     @Override

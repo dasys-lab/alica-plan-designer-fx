@@ -149,7 +149,7 @@ public class PlanTypeWindowController implements Initializable {
     }
 
     private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {
-        GuiModificationEvent event = new GuiModificationEvent(type, Types.PLAN, viewModelName);
+        GuiModificationEvent event = new GuiModificationEvent(type, Types.ANNOTATEDPLAN, viewModelName);
         event.setParentId(planType.getId());
         event.setElementId(viewModelId);
         guiModificationHandler.handle(event);

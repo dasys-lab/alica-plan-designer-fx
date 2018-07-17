@@ -575,7 +575,7 @@ public class ModelManager {
                 break;
             case ADD_ELEMENT:
                 switch (mmq.getElementType()) {
-                    case Types.PLAN:
+                    case Types.ANNOTATEDPLAN:
                         cmd = handlePlanModelModificationQuery(mmq);
                         break;
                     default:
@@ -585,7 +585,7 @@ public class ModelManager {
                 break;
             case REMOVE_ELEMENT:
                 switch (mmq.getElementType()) {
-                    case Types.PLAN:
+                    case Types.ANNOTATEDPLAN:
                         cmd = handlePlanModelModificationQuery(mmq);
                         break;
                     default:
@@ -595,7 +595,7 @@ public class ModelManager {
                 break;
             case REMOVE_ALL_ELEMENTS:
                 switch (mmq.getElementType()) {
-                    case Types.PLAN:
+                    case Types.ANNOTATEDPLAN:
                         PlanType planType = planTypeMap.get(mmq.getParentId());
                         cmd = new RemoveAllPlansFromPlanType(this, planType);
                         break;
