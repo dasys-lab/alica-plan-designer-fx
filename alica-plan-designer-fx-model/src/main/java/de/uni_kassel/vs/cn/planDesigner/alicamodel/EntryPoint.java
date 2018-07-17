@@ -1,12 +1,19 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class EntryPoint extends PlanElement {
+
+    protected final SimpleBooleanProperty successRequired = new SimpleBooleanProperty();
+    protected final SimpleIntegerProperty minCardinality = new SimpleIntegerProperty();
+    protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty();
+
     protected Task task;
-    protected boolean successRequired;
     protected State state;
     protected Plan plan;
-    protected int minCardinality;
-    protected int maxCardinality;
 
     public Task getTask() {
         return task;
@@ -17,27 +24,39 @@ public class EntryPoint extends PlanElement {
     }
 
     public boolean getSuccessRequired() {
-        return successRequired;
+        return successRequired.get();
     }
 
     public void setSuccessRequired(boolean successRequired) {
-        this.successRequired = successRequired;
+        this.successRequired.set(successRequired);
+    }
+
+    public SimpleBooleanProperty successRequiredProperty() {
+        return successRequired;
     }
 
     public int getMinCardinality() {
-        return minCardinality;
+        return minCardinality.get();
     }
 
     public void setMinCardinality(int minCardinality) {
-        this.minCardinality = minCardinality;
+        this.minCardinality.set(minCardinality);
+    }
+
+    public SimpleIntegerProperty minCardinalityProperty() {
+        return minCardinality;
     }
 
     public int getMaxCardinality() {
-        return maxCardinality;
+        return maxCardinality.get();
     }
 
     public void setMaxCardinality(int maxCardinality) {
-        this.maxCardinality = maxCardinality;
+        this.maxCardinality.set(maxCardinality);
+    }
+
+    public SimpleIntegerProperty maxCardinalityProperty() {
+        return maxCardinality;
     }
 
     public State getState() {

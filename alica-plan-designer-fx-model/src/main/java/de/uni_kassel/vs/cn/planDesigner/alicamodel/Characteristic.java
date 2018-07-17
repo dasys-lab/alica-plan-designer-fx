@@ -1,27 +1,35 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+
 public class Characteristic extends PlanElement {
 
-    protected double weight;
-    protected Capability capabilty;
+    protected final SimpleDoubleProperty weight = new SimpleDoubleProperty();
+
+    protected Capability capability;
     protected CapValue value;
 
 
     public double getWeight() {
-        return this.weight;
+        return this.weight.get();
     }
 
     public void setWeight(double weight) {
-        this.weight = weight;
+        this.weight.set(weight);
     }
 
-    public Capability getCapabilty() {
-        return this.capabilty;
+    public SimpleDoubleProperty weightProperty() {
+        return weight;
     }
 
-    public void setCapabilty(Capability capabilty) {
-        this.capabilty = capabilty;
+    public Capability getCapability() {
+        return this.capability;
+    }
+
+    public void setCapability(Capability capability) {
+        this.capability = capability;
     }
 
     public CapValue getValue() {

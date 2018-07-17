@@ -1,36 +1,55 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.ArrayList;
 
 public class Condition extends PlanElement {
-    protected String conditionString;
-    protected String pluginName;
+
+    protected final SimpleStringProperty conditionString = new SimpleStringProperty();
+    protected final SimpleStringProperty pluginName = new SimpleStringProperty();
+    protected final SimpleBooleanProperty enabled = new SimpleBooleanProperty();
+
     protected ArrayList<Variable> vars;
     protected ArrayList<Quantifier> quantifier;
-    protected boolean enabled;
 
     public boolean getEnabled () {
-        return enabled;
+        return enabled.get();
     }
 
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        this.enabled.set(enabled);
+    }
+
+    public SimpleBooleanProperty enabledProperty() {
+        return enabled;
     }
 
     public String getConditionString() {
-        return conditionString;
+        return conditionString.get();
     }
 
     public void setConditionString(String conditionString) {
-        this.conditionString = conditionString;
+        this.conditionString.set(conditionString);
+    }
+
+    public SimpleStringProperty conditionStringProperty() {
+        return conditionString;
     }
 
     public String getPluginName() {
-        return pluginName;
+        return pluginName.get();
     }
 
     public void setPluginName(String pluginName) {
-        this.pluginName = pluginName;
+        this.pluginName.set(pluginName);
+    }
+
+    public SimpleStringProperty pluginNameProperty() {
+        return pluginName;
     }
 
     public ArrayList<Variable> getVariables() {

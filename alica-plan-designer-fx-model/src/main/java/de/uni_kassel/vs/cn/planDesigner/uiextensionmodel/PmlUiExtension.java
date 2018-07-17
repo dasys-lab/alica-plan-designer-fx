@@ -1,45 +1,68 @@
 package de.uni_kassel.vs.cn.planDesigner.uiextensionmodel;
 
+import javafx.beans.property.*;
+
 import java.util.ArrayList;
 
 public class PmlUiExtension extends PositionedElement {
 
     // ID of the plan, this pmlUIExtension object helps to layout its elements in the Plan Designer
-    protected long layoutedModelElementId;
-    protected int height;
-    protected int width;
-    protected boolean collapsed;
-    protected boolean visible;
-    protected ArrayList<Bendpoint> bendpoints;
+    protected final SimpleLongProperty layoutedModelElementId = new SimpleLongProperty();
+    protected final SimpleIntegerProperty height = new SimpleIntegerProperty();
+    protected final SimpleIntegerProperty width = new SimpleIntegerProperty();
+    protected final SimpleBooleanProperty collapsed = new SimpleBooleanProperty();
+    protected final SimpleBooleanProperty visible = new SimpleBooleanProperty();
+
+    protected ArrayList<BendPoint> bendPoints;
 
     public PmlUiExtension() {
-        bendpoints = new ArrayList<>();
+        bendPoints = new ArrayList<>();
     }
 
     public long getLayoutedModelElementId() {
-        return layoutedModelElementId;
+        return layoutedModelElementId.get();
     }
 
     public void setLayoutedModelElementId(long layoutedModelElementId) {
-        this.layoutedModelElementId = layoutedModelElementId;
+        this.layoutedModelElementId.set(layoutedModelElementId);
     }
 
-    int getWidth() {return this.width;}
+    public SimpleLongProperty layoutedModelElementIdProperty() {
+        return layoutedModelElementId;
+    }
 
-    void setWidth(int width) {this.width = width;}
+    public int getWidth() {return this.width.get();}
 
-    int getHeight() {return this.height;}
+    public void setWidth(int width) {this.width.set(width);}
 
-    void setHeight(int height) {this.height = height;}
+    public SimpleIntegerProperty widthProperty() {
+        return width;
+    }
 
-    boolean isCollapsed() {return this.collapsed;}
+    public int getHeight() {return this.height.get();}
 
-    void setCollapsed(boolean collapsed) {this.collapsed = collapsed;}
+    public void setHeight(int height) {this.height.set(height);}
 
-    public ArrayList<Bendpoint> getBendpoints() {return this.bendpoints;}
+    public SimpleIntegerProperty heightProperty() {
+        return height;
+    }
 
-    boolean isVisible() {return this.visible;}
+    public boolean isCollapsed() {return this.collapsed.get();}
 
-    void setVisible(boolean visible) {this.visible = visible;}
+    public void setCollapsed(boolean collapsed) {this.collapsed.set(collapsed);}
+
+    public SimpleBooleanProperty collapsedProperty() {
+        return collapsed;
+    }
+
+    public ArrayList<BendPoint> getBendPoints() {return this.bendPoints;}
+
+    public boolean isVisible() {return this.visible.get();}
+
+    public void setVisible(boolean visible) {this.visible.set(visible);}
+
+    public SimpleBooleanProperty visibleProperty() {
+        return visible;
+    }
 
 }

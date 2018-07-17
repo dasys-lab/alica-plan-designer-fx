@@ -1,10 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 public class AnnotatedPlan extends PlanElement {
 
-    private Plan plan;
+    private final SimpleBooleanProperty activated = new SimpleBooleanProperty();
 
-    private boolean activated;
+    private Plan plan;
 
     public Plan getPlan() {
         return plan;
@@ -16,10 +19,14 @@ public class AnnotatedPlan extends PlanElement {
     }
 
     public boolean isActivated() {
-        return activated;
+        return activated.get();
     }
 
     public void setActivated(boolean activated) {
-        this.activated = activated;
+        this.activated.setValue(activated);
+    }
+
+    public SimpleBooleanProperty activatedProperty() {
+        return this.activated;
     }
 }

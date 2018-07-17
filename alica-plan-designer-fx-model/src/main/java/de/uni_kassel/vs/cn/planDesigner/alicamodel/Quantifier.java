@@ -1,11 +1,15 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.ArrayList;
 
 public class Quantifier extends PlanElement {
 
-    protected String quantifierType;
+    protected final SimpleStringProperty quantifierType = new SimpleStringProperty();
+
     protected PlanElement scope;
     protected ArrayList<String> sorts;
 
@@ -23,10 +27,14 @@ public class Quantifier extends PlanElement {
     }
 
     public String getQuantifierType() {
-        return quantifierType;
+        return quantifierType.get();
     }
 
     public void setQuantifierType(String quantifierType) {
-        this.quantifierType = quantifierType;
+        this.quantifierType.set(quantifierType);
+    }
+
+    public SimpleStringProperty quantifierTypeProperty() {
+        return quantifierType;
     }
 }

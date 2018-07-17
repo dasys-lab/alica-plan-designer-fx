@@ -65,6 +65,7 @@ public class ModelManager {
         objectMapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
         objectMapper.addMixIn(Parametrisation.class, ParametrisationMixIn.class);
         objectMapper.addMixIn(AnnotatedPlan.class, AnnotatedPlanMixIn.class);
+        objectMapper.addMixIn(Plan.class, PlanMixIn.class);
         objectMapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
         objectMapper.addMixIn(State.class, StateMixIn.class);
         objectMapper.addMixIn(Synchronization.class, SynchronizationMixIn.class);

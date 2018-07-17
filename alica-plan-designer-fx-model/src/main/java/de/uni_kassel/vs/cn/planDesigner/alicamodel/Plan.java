@@ -1,11 +1,14 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
+import javafx.beans.property.*;
+
 import java.util.ArrayList;
 
 public class Plan extends AbstractPlan {
 
-    protected boolean masterPlan;
-    protected double utilityThreshold;
+    protected final SimpleBooleanProperty masterPlan = new SimpleBooleanProperty();
+    protected final SimpleDoubleProperty utilityThreshold = new SimpleDoubleProperty();
+
     protected PreCondition preCondition;
     protected RuntimeCondition runtimeCondition;
     protected ArrayList<EntryPoint> entryPoints;
@@ -24,7 +27,7 @@ public class Plan extends AbstractPlan {
     }
 
     public Plan(long id) {
-        this.id = id;
+        this.id = id ;
     }
 
     public ArrayList<Transition> getTransitions() {
@@ -64,18 +67,26 @@ public class Plan extends AbstractPlan {
     }
 
     public double getUtilityThreshold() {
-        return utilityThreshold;
+        return utilityThreshold.get();
     }
 
     public void setUtilityThreshold(double utilityThreshold) {
-        this.utilityThreshold = utilityThreshold;
+        this.utilityThreshold.set(utilityThreshold);
+    }
+
+    public SimpleDoubleProperty utilityThreshold() {
+        return utilityThreshold;
     }
 
     public boolean getMasterPlan() {
-        return masterPlan;
+        return masterPlan.get();
     }
 
     public void setMasterPlan(boolean masterPlan) {
-        this.masterPlan = masterPlan;
+        this.masterPlan.set(masterPlan);
+    }
+
+    public SimpleBooleanProperty masterPlanProperty() {
+        return masterPlan;
     }
 }

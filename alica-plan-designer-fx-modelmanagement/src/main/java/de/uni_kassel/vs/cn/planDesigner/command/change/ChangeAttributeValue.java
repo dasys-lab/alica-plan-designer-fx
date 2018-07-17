@@ -35,11 +35,11 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
         try {
             oldValue = BeanUtils.getProperty(planElement, attribute);
             if (attribute.equals("name")) {
-                Path path = null;
+                BeanUtils.setProperty(planElement, attribute, newValue);
                 if(planElement instanceof Plan) {
                     String absoluteDirectory = modelManager.getAbsoluteDirectory(planElement);
                     File oldFile = FileSystemUtil.getFile(absoluteDirectory, planElement.getName(), FileSystemUtil.PLAN_ENDING);
-                    File newFile = new File(Paths.get(absoluteDirectory, (String)newValue, FileSystemUtil.PLAN_ENDING).toString());
+                    File newFile = new File(Paths.get(absoluteDirectory, (String)newValue + "." + FileSystemUtil.PLAN_ENDING).toString());
                     if(newFile.exists()) {
                         throw new IOException("ChangeAttributeValue: File " + newFile.toString() + " already exists!");
                     }
@@ -73,8 +73,6 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
             if (attribute.equals("masterPlan")) {
                 // TODO: what has to be done, in case of changing the masterPlan flag?
             }
-            BeanUtils.setProperty(planElement, attribute, newValue);
-
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
             throw new RuntimeException(e);
 

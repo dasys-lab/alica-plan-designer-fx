@@ -1,15 +1,20 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
+
 import java.util.ArrayList;
 
 public class Behaviour extends AbstractPlan {
+    protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
+    protected final SimpleLongProperty deferring = new SimpleLongProperty();
 
     protected PreCondition preCondition;
     protected RuntimeCondition runtimeCondition;
     protected PostCondition postCondition;
     protected ArrayList<Variable> variables;
-    protected int frequency;
-    protected long deferring;
 
     public Behaviour() {
         variables = new ArrayList<>();
@@ -44,19 +49,27 @@ public class Behaviour extends AbstractPlan {
     }
 
     public int getFrequency() {
-        return frequency;
+        return frequency.get();
     }
 
     public void setFrequency(int frequency) {
-        this.frequency = frequency;
+        this.frequency.set(frequency);
+    }
+
+    public SimpleIntegerProperty frequencyProperty() {
+        return frequency;
     }
 
     public long getDeferring() {
-        return deferring;
+        return deferring.get();
     }
 
     public void setDeferring(long deferring) {
-        this.deferring = deferring;
+        this.deferring.set(deferring);
+    }
+
+    public SimpleLongProperty deferingProperty() {
+        return this.deferring;
     }
 
 

@@ -3,11 +3,11 @@ package de.uni_kassel.vs.cn.planDesigner.command.change;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
-import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.Bendpoint;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.BendPoint;
 
 public class ChangePositionForBendpoint extends AbstractCommand {
 
-    protected Bendpoint bendpoint;
+    protected BendPoint bendPoint;
     protected Plan plan;
 
     protected int newX;
@@ -16,25 +16,25 @@ public class ChangePositionForBendpoint extends AbstractCommand {
     protected int oldX;
     protected int oldY;
 
-    public ChangePositionForBendpoint(ModelManager modelManager, Plan plan, Bendpoint bendpoint, int newX, int newY) {
+    public ChangePositionForBendpoint(ModelManager modelManager, Plan plan, BendPoint bendPoint, int newX, int newY) {
         super(modelManager);
         this.newX = newX;
         this.newY = newY;
 
         // save old position for undo
-        oldX = bendpoint.getXPos();
-        oldY = bendpoint.getYPos();
+        oldX = bendPoint.getXPos();
+        oldY = bendPoint.getYPos();
     }
 
     @Override
     public void doCommand() {
-        bendpoint.setXPos(newX);
-        bendpoint.setYPos(newY);
+        bendPoint.setXPos(newX);
+        bendPoint.setYPos(newY);
     }
 
     @Override
     public void undoCommand() {
-        bendpoint.setXPos(oldX);
-        bendpoint.setYPos(oldY);
+        bendPoint.setXPos(oldX);
+        bendPoint.setYPos(oldY);
     }
 }

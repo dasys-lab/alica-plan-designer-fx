@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import javafx.beans.property.*;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -10,14 +11,16 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 public class PlanElement {
     public static final String forbiddenCharacters = ".*[\\./\\*\\\\$§?\\[\\]!{}\\-äüö#\"%~'ÄÖÜß@,]+.*";
     protected static int PLAN_ELEMENT_COUNTER = 0;
-    protected long id;
-    protected String name;
-    protected String comment;
+    protected  long id;
+    protected  SimpleStringProperty name;
+    protected  SimpleStringProperty comment;
     @JsonIgnore
-    protected boolean dirty;
+    protected SimpleBooleanProperty dirty = new SimpleBooleanProperty();
 
     public PlanElement() {
         this.id = generateId();
+        this.name = new SimpleStringProperty();
+        this.comment = new SimpleStringProperty();
     }
 
     public long getId() {
@@ -29,35 +32,46 @@ public class PlanElement {
     }
 
     public String getName() {
-        if (name == null || name.isEmpty())
+        if (name.get() == null || name.get().isEmpty())
         {
             return Long.toString(id);
         }
-        return name;
+        return name.get();
     }
 
-    public boolean setName(String name) {
+    public void setName(String name) {
         if (name.matches(forbiddenCharacters)) {
-            return false;
+            name.replaceAll(forbiddenCharacters, "");
         } else {
-            this.name = name;
-            return true;
+            this.name.set(name);
         }
     }
 
+    public SimpleStringProperty nameProperty() {
+        return name;
+    }
+
     public String getComment() {
-        return comment;
+        return comment.get();
     }
 
     public void setComment(String comment) {
-        this.comment = comment;
+        this.comment.set(comment);
+    }
+
+    public SimpleStringProperty commentProperty() {
+        return comment;
     }
 
     public void setDirty(boolean dirty) {
-        this.dirty = dirty;
+        this.dirty.set(dirty);
     }
 
     public boolean getDirty() {
+        return dirty.get();
+    }
+
+    public SimpleBooleanProperty dirtyProperty() {
         return dirty;
     }
 }

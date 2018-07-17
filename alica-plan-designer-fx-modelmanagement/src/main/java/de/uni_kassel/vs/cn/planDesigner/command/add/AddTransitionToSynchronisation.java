@@ -21,11 +21,11 @@ public class AddTransitionToSynchronisation extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        synchronization.getSynchedTransitions().add(transitionToAdd);
+        synchronization.getSyncedTransitions().add(transitionToAdd);
     }
 
     @Override
     public void undoCommand() {
-        synchronization.getSynchedTransitions().remove(transitionToAdd);
+        synchronization.getSyncedTransitions().remove(transitionToAdd);
     }
 }

@@ -18,11 +18,11 @@ public class RemoveTransitionFromSynchronisation extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        synchronization.getSynchedTransitions().remove(transition);
+        synchronization.getSyncedTransitions().remove(transition);
     }
 
     @Override
     public void undoCommand() {
-        synchronization.getSynchedTransitions().add(transition);
+        synchronization.getSyncedTransitions().add(transition);
     }
 }
