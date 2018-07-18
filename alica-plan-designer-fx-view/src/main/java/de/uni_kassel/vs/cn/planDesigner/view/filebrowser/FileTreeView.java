@@ -209,10 +209,9 @@ public final class FileTreeView extends TreeView<File> {
         return false;
     }
 
-    public FileTreeItem removeViewModelElement(ViewModelElement viewModelElement) {
+    public void removeViewModelElement(ViewModelElement viewModelElement) {
         FileTreeItem topLevelFolder = findTopLevelFolder(viewModelElement);
-        FileTreeItem deletedItem = removeFromFolder(viewModelElement, topLevelFolder);
-        return deletedItem;
+        removeFromFolder(viewModelElement, topLevelFolder);
     }
 
     public void updateDirectories(Path path) {
@@ -225,20 +224,19 @@ public final class FileTreeView extends TreeView<File> {
         }
     }
 
-    private FileTreeItem removeFromFolder(ViewModelElement modelElement, FileTreeItem treeItem) {
+    private void removeFromFolder(ViewModelElement modelElement, FileTreeItem treeItem) {
         for (TreeItem item : treeItem.getChildren()) {
             FileTreeItem itemToDelete = (FileTreeItem) item;
             if (!itemToDelete.getValue().isDirectory()) {
                 if (((FileTreeItem) item).getViewModelElement().getId() == modelElement.getId()) {
                     treeItem.getChildren().remove(item);
                     treeItem.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
-                    return itemToDelete;
+                    break;
                 }
             } else {
-                return removeFromFolder(modelElement, itemToDelete);
+                removeFromFolder(modelElement, itemToDelete);
             }
         }
-        return null;
     }
 
     /**

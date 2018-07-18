@@ -49,6 +49,9 @@ public class EditorTabPane extends TabPane {
                 guiModificationHandler.handleTabOpenedEvent(planTab);
                 return planTab;
             case Types.TASKREPOSITORY:
+                TaskRepositoryTab taskRepositoryTabTab = new TaskRepositoryTab(guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
+                guiModificationHandler.handleTabOpenedEvent(taskRepositoryTabTab);
+                return taskRepositoryTabTab;
             case Types.TASK:
                 TaskRepositoryTab taskTab = new TaskRepositoryTab(guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
                 guiModificationHandler.handleTabOpenedEvent(taskTab);

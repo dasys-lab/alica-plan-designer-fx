@@ -182,4 +182,9 @@ public class PlanTab extends AbstractPlanTab {
             }
         });
     }
+
+    public void updateText(String newName) {
+        this.setText(i18NRepo.getString("label.caption.plan") + ": " + newName);
+        setDirty(true);
+    }
 }

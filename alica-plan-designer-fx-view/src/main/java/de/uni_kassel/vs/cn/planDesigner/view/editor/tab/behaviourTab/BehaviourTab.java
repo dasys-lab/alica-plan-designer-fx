@@ -123,4 +123,9 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
             guiModificationHandler.handle(event);
         }
     }
+
+    public void updateText(String newName) {
+        this.setText(i18NRepo.getString("label.caption.behaviour") + ": " + newName);
+        setDirty(true);
+    }
 }

@@ -59,4 +59,9 @@ public class PlanTypeTab extends AbstractPlanTab {
     public void setPlanTypeViewModel(PlanTypeViewModel planTypeViewModel) {
         controller.init(planTypeViewModel);
     }
+
+    public void updateText(String newName) {
+        this.setText(I18NRepo.getInstance().getString("label.caption.plantype") + ": " + newName);
+        setDirty(true);
+    }
 }

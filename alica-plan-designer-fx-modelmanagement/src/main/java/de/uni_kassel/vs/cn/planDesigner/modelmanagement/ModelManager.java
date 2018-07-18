@@ -670,6 +670,7 @@ public class ModelManager {
                         System.err.println("ModelManager: Unknown property type for Behaviour: " + mmq.getAttributeType());
                         cmd = null;
                     }
+                    //TODO TASK repo
                 } else {
                     cmd = null;
                 }

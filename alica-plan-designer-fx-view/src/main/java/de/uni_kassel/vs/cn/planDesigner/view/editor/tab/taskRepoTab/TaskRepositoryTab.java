@@ -119,7 +119,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     }
 
     private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, taskRepository.getName());
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.TASKREPOSITORY, taskRepository.getName());
         guiChangeAttributeEvent.setNewValue(newValue);
         guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
         guiChangeAttributeEvent.setAttributeName(attribute);
@@ -200,5 +200,10 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     }
 
     public boolean isDirty() {return dirty;}
+
+    public void updateText(String newName) {
+        this.setText(i18NRepo.getString("label.caption.taskrepository") + ": " + newName);
+        setDirty(true);
+    }
 
 }

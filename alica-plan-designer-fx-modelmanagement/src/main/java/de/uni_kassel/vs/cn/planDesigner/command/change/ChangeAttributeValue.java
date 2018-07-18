@@ -37,60 +37,76 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
     public void doCommand() {
         try {
             oldValue = BeanUtils.getProperty(planElement, attribute);
-            if (attribute.equals("name")) {
-                BeanUtils.setProperty(planElement, attribute, newValue);
-                if(planElement instanceof Plan) {
-                    String absoluteDirectory = modelManager.getAbsoluteDirectory(planElement);
-                    File oldFile = FileSystemUtil.getFile(absoluteDirectory, oldValue, FileSystemUtil.PLAN_ENDING);
-                    File newFile = new File(Paths.get(absoluteDirectory, (String)newValue + "." + FileSystemUtil.PLAN_ENDING).toString());
-                    if(newFile.exists()) {
-                        throw new IOException("ChangeAttributeValue: File " + newFile.toString() + " already exists!");
-                    }
-                    if(!oldFile.renameTo(newFile)) {
-                        throw new IOException("ChangeAttributeValue: Could not rename " + oldFile.toString() + " to " + newFile.toString());
-                    }
-
-                    ModelEvent event = null;
-                    if(((Plan) planElement).getMasterPlan()) {
-                       event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.MASTERPLAN);
-                    } else {
-                        event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.PLAN);
-                    }
-                    event.setChangedAttribute(attribute);
-                    fireModelChangedEvent(event);
-
-                    // TODO:
-                    // 1. pmlex-file
-                    // 2. Fire event for updating gui (Repository, FileTreeView, PlanEditor if the plan is currently opened)
-
-                    // DONE:
-                    // Rename plan, pml-file,
-
-                }
-
-                if (planElement instanceof PlanType) {
-                    // TODO:
-                    // 1. Rename plantype, and pty-file
-                    // 2. Fire event for updating gui (Repository, FileTreeView, PlanEditor if the planType is currently opened)
-                }
-
-                if (planElement instanceof Behaviour) {
-                    // TODO:
-                    // 1. Rename behaviour, and beh-file
-                    // 2. Fire event for updating gui (Repository, FileTreeView, PlanEditor if the behaviour is currently opened)
-                }
-
-                if (planElement instanceof Task) {
-                    // TODO:
-                    // 1. Rename taskToDelete
-                    // 2. Fire event for updating gui (Repository, PlanEditor if the taskrepository is currently opened)
-                }
-            }
-            if (attribute.equals("masterPlan")) {
-                // TODO: what has to be done, in case of changing the masterPlan flag?
-            }
+            BeanUtils.setProperty(planElement, attribute, newValue);
+            changeAttribute();
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void undoCommand() {
+        try {
+            BeanUtils.setProperty(planElement, attribute, oldValue);
+            changeAttribute();
+        } catch (IllegalAccessException | InvocationTargetException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void changeAttribute() throws IOException {
+        String absoluteDirectory = modelManager.getAbsoluteDirectory(planElement);
+        ModelEvent event = null;
+        if (attribute.equals("name")) {
+            if (planElement instanceof Plan) {
+                moveFile(absoluteDirectory, FileSystemUtil.PLAN_ENDING);
+
+                if (((Plan) planElement).getMasterPlan()) {
+                    event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.MASTERPLAN);
+                } else {
+                    event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.PLAN);
+                }
+
+                // TODO:
+                // 1. pmlex-file
+            }
+
+            if (planElement instanceof PlanType) {
+                moveFile(absoluteDirectory, FileSystemUtil.PLANTYPE_ENDING);
+                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.PLANTYPE);
+            }
+
+            if (planElement instanceof Behaviour) {
+                moveFile(absoluteDirectory, FileSystemUtil.BEHAVIOUR_ENDING);
+                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.BEHAVIOUR);
+            }
+
+            if (planElement instanceof TaskRepository) {
+                moveFile(absoluteDirectory, FileSystemUtil.TASKREPOSITORY_ENDING);
+                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.BEHAVIOUR);
+            }
+
+            if (planElement instanceof Task) {
+                // TODO:
+                // 1. Rename taskToDelete
+                // 2. Fire event for updating gui (Repository, PlanEditor if the taskrepository is currently opened)
+            }
+        }
+        if (attribute.equals("masterPlan")) {
+            // TODO: what has to be done, in case of changing the masterPlan flag?
+        }
+        event.setChangedAttribute(attribute);
+        fireModelChangedEvent(event);
+    }
+
+    private void moveFile(String absoluteDirectory, String ending) throws IOException {
+        File oldFile = FileSystemUtil.getFile(absoluteDirectory, oldValue, ending);
+        File newFile = new File(Paths.get(absoluteDirectory, (String) newValue + "." + ending).toString());
+        if (newFile.exists()) {
+            throw new IOException("ChangeAttributeValue: File " + newFile.toString() + " already exists!");
+        }
+        if (!oldFile.renameTo(newFile)) {
+            throw new IOException("ChangeAttributeValue: Could not rename " + oldFile.toString() + " to " + newFile.toString());
         }
     }
 
@@ -100,16 +116,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
 
     private File getNewFilePath(Path path) {
         return new File(path.toFile().getAbsolutePath().replace("/" + (path.getFileName()
-                                .toString().substring(0, path.getFileName().toString().lastIndexOf('.'))) + ".",
+                        .toString().substring(0, path.getFileName().toString().lastIndexOf('.'))) + ".",
                 "/" + ((String) newValue) + "."));
-    }
-
-    @Override
-    public void undoCommand() {
-        try {
-            BeanUtils.setProperty(planElement, attribute, oldValue);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

@@ -25,6 +25,7 @@ public class FileTreeItem extends TreeItem<File> {
             return;
         }
 
+        //Add items for new files
         for (File content : getValue().listFiles()) {
             if (!content.isDirectory()) {
                 continue;
@@ -49,6 +50,13 @@ public class FileTreeItem extends TreeItem<File> {
                         .getResourceAsStream("images/folder24x24.png")))), null));
             }
         }
+
+        //remove items with no file
+//        for(int i = getChildren().size() -1 ; i >= 0; i--) {
+//            if(!getChildren().get(i).getValue().exists()) {
+//                getChildren().remove(i);
+//            }
+//        }
         getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
     }
 

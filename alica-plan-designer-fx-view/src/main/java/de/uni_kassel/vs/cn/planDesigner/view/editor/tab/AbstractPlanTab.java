@@ -249,5 +249,7 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         MainWindowController.getInstance().getGuiModificationHandler().handle(event);
     }
 
+    public abstract void updateText(String newName);
+
 
 }

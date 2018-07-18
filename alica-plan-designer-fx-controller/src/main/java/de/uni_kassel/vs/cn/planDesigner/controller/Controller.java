@@ -122,6 +122,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         switch (event.getEventType()) {
             case ELEMENT_CREATED:
                 planElement = event.getNewElement();
+                ObservableList<Tab> tabs;
                 switch (event.getElementType()) {
                     case Types.PLAN:
                         Plan plan = (Plan) planElement;
@@ -237,7 +238,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
                 break;
             case ELEMENT_SERIALIZED:
-                ObservableList<Tab> tabs = editorTabPane.getTabs();
+                tabs = editorTabPane.getTabs();
                 switch (event.getElementType()) {
                     case Types.TASKREPOSITORY:
                         taskViewModel.setDirty(false);
@@ -284,9 +285,95 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
-                throw new RuntimeException("Controller: ELEMENT_ATTRIBUTE_CHANGED not implemented, yet!");
+                planElement = event.getNewElement();
+                if (event.getChangedAttribute().equals("name")) {
+                    handleChangedName(event, planElement);
+                }
+                break;
             default:
                 throw new RuntimeException("Controller:Unknown model event captured!");
+        }
+    }
+
+    private void handleChangedName(ModelEvent event, PlanElement planElement) {
+        ObservableList<Tab> tabs = editorTabPane.getTabs();
+        for (Tab tab : tabs) {
+            if (tab instanceof AbstractPlanTab) {
+                AbstractPlanTab abstractPlanTab = (AbstractPlanTab) tab;
+                if (abstractPlanTab.getPresentedViewModelElement().getId() != planElement.getId()) {
+                    continue;
+                }
+                abstractPlanTab.updateText(planElement.getName());
+                ViewModelElement viewModelElement = null;
+                if (planElement instanceof Plan) {
+                    repoViewModel.removePlan(planElement.getId());
+                    if (((Plan) planElement).getMasterPlan()) {
+                        viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.MASTERPLAN, ((Plan)
+                                planElement).getRelativeDirectory());
+                        repoViewModel.addPlan(viewModelElement);
+                    } else {
+                        viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLAN, ((Plan)
+                                planElement).getRelativeDirectory());
+                        repoViewModel.addPlan(viewModelElement);
+                    }
+                } else if (planElement instanceof Behaviour) {
+                    viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour)
+                            planElement).getRelativeDirectory());
+                    repoViewModel.removeBehaviour(planElement.getId());
+                    repoViewModel.addBehaviour(viewModelElement);
+                } else if (planElement instanceof PlanType) {
+                    viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType)
+                            planElement).getRelativeDirectory());
+                    repoViewModel.removePlanType(planElement.getId());
+                    repoViewModel.addPlanType(viewModelElement);
+                } else if (planElement instanceof TaskRepository) {
+                    //TODO necessary for taskrepository?
+                } else if (planElement instanceof Task) {
+                    //TODO renaming in taskrepo
+                }
+                mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
+                mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
+                break;
+            }
+        }
+        ArrayList<PlanElement> usages = modelManager.getUsages(event.getNewElement().getId());
+        for (PlanElement element : usages) {
+            if(element instanceof PlanType) {
+                for(AnnotatedPlan annotatedPlan : ((PlanType)element).getPlans()) {
+                    if(annotatedPlan.getPlan().getId() == planElement.getId()) {
+                        annotatedPlan.setPlan((Plan)planElement);
+                        break;
+                    }
+                }
+            }
+            fireSavePlanElementQuery(element);
+        }
+        fireSavePlanElementQuery(planElement);
+    }
+
+    private void fireSavePlanElementQuery(PlanElement planElement) {
+        if (planElement instanceof Plan) {
+            ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.PLAN,
+                    planElement.getName());
+            query.setElementId(planElement.getId());
+            modelManager.handleModelModificationQuery(query);
+        } else if (planElement instanceof PlanType) {
+            ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.PLANTYPE,
+                    planElement.getName());
+            query.setElementId(planElement.getId());
+            modelManager.handleModelModificationQuery(query);
+        } else if (planElement instanceof Behaviour) {
+            ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.BEHAVIOUR,
+                    planElement.getName());
+            query.setElementId(planElement.getId());
+            modelManager.handleModelModificationQuery(query);
+        } else if (planElement instanceof TaskRepository) {
+            ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.TASKREPOSITORY,
+                    planElement.getName());
+            query.setElementId(planElement.getId());
+            modelManager.handleModelModificationQuery(query);
+        } else {
+            throw new RuntimeException("Controller: trying to serialize a PlanElement of unknown type! PlanElement is: " + planElement.toString());
         }
     }
 
@@ -427,6 +514,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             mmq = new ModelModificationQuery(ModelQueryType.PARSE_ELEMENT, path.toString());
         } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
             mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, path.toString());
+            mainWindowController.getFileTreeView().updateDirectories(path);
         } else if (kind.equals((StandardWatchEventKinds.ENTRY_CREATE))) {
             if (path.toFile().isDirectory()) {
                 mainWindowController.getFileTreeView().updateDirectories(path);
@@ -460,7 +548,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 taskViewModel.addTask(element);
             }
         }
-
         taskViewModel.setTaskRepositoryTab(taskRepositoryTab);
     }
 
@@ -517,7 +604,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         PlanElement planElement = modelManager.getPlanElement(id);
         if (planElement != null) {
             if (planElement instanceof Task) {
-                return new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
+                ViewModelElement task = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
+                task.setParentId(modelManager.getTaskRepository().getId());
+                return task;
             } else if (planElement instanceof TaskRepository) {
                 PlanElementViewModel taskRepo = new PlanElementViewModel(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
                 taskRepo.setComment(planElement.getComment());
@@ -526,7 +615,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             } else if (planElement instanceof Plan) {
                 PlanViewModel element = null;
                 Plan plan = (Plan) planElement;
-                if(plan.getMasterPlan()) {
+                if (plan.getMasterPlan()) {
                     element = new PlanViewModel(plan.getId(), plan.getName(), Types.MASTERPLAN);
                 } else {
                     element = new PlanViewModel(plan.getId(), plan.getName(), Types.PLAN);
