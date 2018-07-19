@@ -7,13 +7,13 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 
 import java.io.IOException;
 
-public class InternRefSerializer extends StdSerializer<PlanElement> {
+public class InternalRefSerializer extends StdSerializer<PlanElement> {
 
-    public InternRefSerializer() {
+    public InternalRefSerializer() {
         this(null);
     }
 
-    public InternRefSerializer(Class<PlanElement> t) {
+    public InternalRefSerializer(Class<PlanElement> t) {
         super(t);
     }
 

@@ -488,6 +488,8 @@ public class ModelManager {
             usages.addAll(getUsagesInStates(planElement));
         } else if (planElement instanceof Task) {
             usages.addAll(getUsagesInEntryPoints(planElement));
+        } else if (planElement instanceof TaskRepository) {
+            usages.addAll(getPlans());
         } else {
             throw new RuntimeException("Usages requested for unhandled elementType of element with id  " + modelElementId);
         }
@@ -639,7 +641,7 @@ public class ModelManager {
                     }
 
                 } else if (mmq.getElementType() == Types.PLANTYPE) {
-                    if(mmq.getAttributeType().equals(String.class.getSimpleName())) {
+                    if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
                         PlanType planType = (PlanType) this.planElementMap.get(mmq.getParentId());
                         cmd = new ChangeAttributeValue<String>(this, planType, mmq.getAttributeName(), mmq.getNewValue(), planType);
                     } else {
@@ -666,11 +668,31 @@ public class ModelManager {
                         cmd = new ChangeAttributeValue<Double>(this, plan, mmq.getAttributeName(), Double.parseDouble(mmq.getNewValue()), plan);
                     } else if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
                         cmd = new ChangeAttributeValue<String>(this, plan, mmq.getAttributeName(), mmq.getNewValue(), plan);
-                    }else {
+                    } else {
                         System.err.println("ModelManager: Unknown property type for Behaviour: " + mmq.getAttributeType());
                         cmd = null;
                     }
-                    //TODO TASK repo
+                } else if (mmq.getElementType() == Types.TASKREPOSITORY) {
+                    if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
+                        cmd = new ChangeAttributeValue<String>(this, taskRepository, mmq.getAttributeName(), mmq.getNewValue(), taskRepository);
+                    } else {
+                        System.err.println("ModelManager: Unknown property type for TaskRepository: " + mmq.getAttributeType());
+                        cmd = null;
+                    }
+                } else if (mmq.getElementType() == Types.TASK) {
+                    Task task = null;
+                    for (Task t : taskRepository.getTasks()) {
+                        if(t.getId() == mmq.getElementId()) {
+                            task = t;
+                            break;
+                        }
+                    }
+                    if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
+                        cmd = new ChangeAttributeValue<String>(this, task, mmq.getAttributeName(), mmq.getNewValue(), taskRepository);
+                    } else {
+                        System.err.println("ModelManager: Unknown property type for Task: " + mmq.getAttributeType());
+                        cmd = null;
+                    }
                 } else {
                     cmd = null;
                 }
@@ -795,11 +817,11 @@ public class ModelManager {
     }
 
     public String getAbsoluteDirectory(PlanElement element) {
-        if(element instanceof Plan || element instanceof PlanType || element instanceof Behaviour) {
-            return Paths.get(plansPath, ((SerializablePlanElement)element).getRelativeDirectory()).toString();
+        if (element instanceof Plan || element instanceof PlanType || element instanceof Behaviour) {
+            return Paths.get(plansPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
         }
-        if(element instanceof TaskRepository) {
-            return Paths.get(tasksPath, ((SerializablePlanElement)element).getRelativeDirectory()).toString();
+        if (element instanceof TaskRepository) {
+            return Paths.get(tasksPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
         }
         return null;
     }

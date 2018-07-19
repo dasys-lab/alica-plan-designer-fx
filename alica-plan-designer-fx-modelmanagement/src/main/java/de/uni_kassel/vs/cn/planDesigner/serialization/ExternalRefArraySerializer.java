@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class ExternRefArraySerializer extends StdSerializer<ArrayList<AbstractPlan>> {
+public class ExternalRefArraySerializer extends StdSerializer<ArrayList<AbstractPlan>> {
 
-    public ExternRefArraySerializer() {
+    public ExternalRefArraySerializer() {
         this(null);
     }
 
-    public ExternRefArraySerializer(Class<ArrayList<AbstractPlan>> t) {
+    public ExternalRefArraySerializer(Class<ArrayList<AbstractPlan>> t) {
         super(t);
     }
 
