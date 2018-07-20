@@ -75,8 +75,16 @@ public class FileSystemEventHandler implements Runnable  {
         try {
             watcher = FileSystems.getDefault().newWatchService();
             Configuration conf = ConfigurationManager.getInstance().getActiveConfiguration();
-            if (conf != null && conf.getPlansPath() != null && !conf.getPlansPath().isEmpty()) {
-                registerAll(new File(conf.getPlansPath()).toPath());
+            if (conf != null) {
+                if(conf.getPlansPath() != null && !conf.getPlansPath().isEmpty()) {
+                    registerAll(new File(conf.getPlansPath()).toPath());
+                }
+                if(conf.getRolesPath() != null && !conf.getRolesPath().isEmpty()) {
+                    registerAll(new File(conf.getRolesPath()).toPath());
+                }
+                if(conf.getTasksPath() != null && !conf.getTasksPath().isEmpty()) {
+                    registerAll(new File(conf.getTasksPath()).toPath());
+                }
             }
             this.trace = true;
             while (PlanDesignerApplication.isRunning()) {

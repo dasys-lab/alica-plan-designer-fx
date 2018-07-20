@@ -242,6 +242,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 switch (event.getElementType()) {
                     case Types.TASKREPOSITORY:
                         taskViewModel.setDirty(false);
+
                         break;
                     case Types.PLANTYPE:
                         for (Tab tab : tabs) {
@@ -334,6 +335,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
                 mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
                 break;
+            }
+            if (tab instanceof TaskRepositoryTab) {
+                ((TaskRepositoryTab)tab).updateText(planElement.getName());
             }
         }
         ArrayList<PlanElement> usages = modelManager.getUsages(event.getNewElement().getId());

@@ -17,21 +17,18 @@ public class TaskRepositoryViewModel {
         tasks.addListener(new ListChangeListener<ViewModelElement>() {
             @Override
             public void onChanged(Change<? extends ViewModelElement> c) {
-                if (taskRepositoryTab == null)
-                {
+                if (taskRepositoryTab == null) {
                     return;
                 }
                 taskRepositoryTab.clearGuiContent();
                 taskRepositoryTab.addElements(tasks);
-                if (isDirty) {
-                    taskRepositoryTab.setDirty(isDirty);
-                }
+                taskRepositoryTab.setDirty(isDirty);
             }
         });
         isDirty = false;
     }
 
-    public void setTaskRepositoryTab (TaskRepositoryTab taskRepositoryTab) {
+    public void setTaskRepositoryTab(TaskRepositoryTab taskRepositoryTab) {
         this.taskRepositoryTab = taskRepositoryTab;
         initGuiContent();
     }

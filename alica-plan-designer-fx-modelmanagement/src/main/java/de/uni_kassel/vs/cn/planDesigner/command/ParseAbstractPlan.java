@@ -36,6 +36,9 @@ public class ParseAbstractPlan extends AbstractCommand {
             case Types.BEHAVIOUR:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Behaviour.class);
                 break;
+            case Types.TASKREPOSITORY:
+                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), TaskRepository.class);
+                break;
             default:
                 System.err.println("ParseAbstractPlan: Parsing model eventType " + modelModificationQuery.getElementType() + " not implemented, yet!");
                 return;
