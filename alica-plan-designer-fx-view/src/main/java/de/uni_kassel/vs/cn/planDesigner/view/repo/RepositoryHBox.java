@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
+import de.uni_kassel.vs.cn.planDesigner.view.menu.RenameElementMenuItem;
+import de.uni_kassel.vs.cn.planDesigner.view.menu.RenameFileMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -22,9 +24,10 @@ public class RepositoryHBox extends DraggableHBox {
 
         // right click for opening context menu with option to show usage of model element
         setOnContextMenuRequested(e -> {
+            RenameElementMenuItem renameFileMenuItem = new RenameElementMenuItem(this.viewModelElement, guiModificationHandler);
             ShowUsagesMenuItem usageMenu = new ShowUsagesMenuItem(this.viewModelElement, guiModificationHandler);
             DeleteElementMenuItem deleteMenu = new DeleteElementMenuItem(this.viewModelElement, guiModificationHandler);
-            ContextMenu contextMenu = new ContextMenu(usageMenu, deleteMenu);
+            ContextMenu contextMenu = new ContextMenu(renameFileMenuItem, usageMenu, deleteMenu);
             contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
             e.consume();
         });

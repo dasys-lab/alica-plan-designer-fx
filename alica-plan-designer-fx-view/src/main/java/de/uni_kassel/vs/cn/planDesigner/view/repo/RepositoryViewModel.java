@@ -117,7 +117,7 @@ public final class RepositoryViewModel {
     public void removePlanType(long id) {
         for(ViewModelElement planType : planTypes) {
             if(planType.getId() == id) {
-                removePlan(planType);
+                removePlanType(planType);
                 break;
             }
         }
@@ -129,6 +129,15 @@ public final class RepositoryViewModel {
 
     public void removeTask(ViewModelElement task) {
         this.tasks.remove(task);
+    }
+
+    public void removeTask(long id) {
+        for(ViewModelElement task : tasks) {
+            if(task.getId() == id) {
+                removeTask(task);
+                break;
+            }
+        }
     }
 
     public void setRepositoryTabPane(RepositoryTabPane repositoryTabPane) {

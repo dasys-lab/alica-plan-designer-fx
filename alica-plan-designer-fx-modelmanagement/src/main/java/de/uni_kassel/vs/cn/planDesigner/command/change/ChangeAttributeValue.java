@@ -83,15 +83,11 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
 
             if (planElement instanceof TaskRepository) {
                 moveFile(absoluteDirectory, FileSystemUtil.TASKREPOSITORY_ENDING);
-                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.BEHAVIOUR);
+                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.TASKREPOSITORY);
             }
 
             if (planElement instanceof Task) {
-                // TODO:
-                // 1. Rename taskToDelete
-                // 2. Fire event for updating gui (Repository, PlanEditor if the TaskRepository is currently opened)
-
-                // there is no way to rename a task...
+                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.TASK);
             }
         }
         if (attribute.equals("masterPlan")) {

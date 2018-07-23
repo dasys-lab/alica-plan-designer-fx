@@ -19,6 +19,7 @@ public class SerializePlanElement extends AbstractCommand {
     @Override
     public void doCommand() {
         switch (mmq.getElementType()) {
+            case Types.TASK:
             case Types.TASKREPOSITORY:
                 modelManager.serializeToDisk(planElement, FileSystemUtil.TASKREPOSITORY_ENDING);
                 break;

@@ -429,6 +429,8 @@ public class ModelManager {
                 taskRepository.getTasks().add(task);
                 task.setTaskRepository(taskRepository);
                 break;
+            case Types.TASKREPOSITORY:
+                break;
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
                 return null;
@@ -462,6 +464,8 @@ public class ModelManager {
                 Task task = (Task) planElement;
                 taskRepository.getTasks().remove(task);
                 task.setTaskRepository(null);
+                break;
+            case Types.TASKREPOSITORY:
                 break;
             default:
                 System.err.println("ModelManager: removing " + type + " not implemented, yet!");
