@@ -140,6 +140,10 @@ public final class RepositoryViewModel {
         }
     }
 
+    public void clearTasks() {
+        this.tasks.clear();
+    }
+
     public void setRepositoryTabPane(RepositoryTabPane repositoryTabPane) {
         this.repositoryTabPane = repositoryTabPane;
     }

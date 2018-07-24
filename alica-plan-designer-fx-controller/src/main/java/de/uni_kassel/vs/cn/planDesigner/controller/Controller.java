@@ -149,19 +149,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         break;
                     case Types.TASKREPOSITORY:
                         addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
+                        taskViewModel.clearTasks();
                         for (Task task : ((TaskRepository) planElement).getTasks()) {
                             ViewModelElement taskElement = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
                             taskElement.setParentId(planElement.getId());
+                            repoViewModel.removeTask(task.getId());
                             repoViewModel.addTask(taskElement);
+                            taskViewModel.addTask(taskElement);
                         }
-                        break;
-                    case Types.TASK:
-                        Task task = (Task) planElement;
-                        ViewModelElement tElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
-                        tElement.setParentId(task.getTaskRepository().getId());
-                        repoViewModel.addTask(tElement);
-                        taskViewModel.setDirty(true);
-                        taskViewModel.addTask(tElement);
                         break;
                     default:
                         System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
@@ -187,11 +182,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         removeTreeViewElement((AbstractPlan) planElement, Types.BEHAVIOUR);
                         repoViewModel.removeBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR));
                         break;
-                    case Types.TASK:
-                        ViewModelElement taskViewElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
-                        repoViewModel.removeTask(taskViewElement);
-                        taskViewModel.setDirty(true);
-                        taskViewModel.removeTask(taskViewElement);
+                    case Types.TASKREPOSITORY:
+                        repoViewModel.clearTasks();
+                        taskViewModel.clearTasks();
                         break;
                     default:
                         System.err.println("Controller: Deletion of unknown type " + event.getElementType() + " gets ignored!");
@@ -310,7 +303,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
             }
             if (tab instanceof TaskRepositoryTab) {
-                ((TaskRepositoryTab) tab).updateText(planElement.getName());
+                TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab)tab;
+                if(planElement instanceof Task) {
+                    taskRepositoryTab.updateText(((Task)planElement).getTaskRepository().getName());
+                } else {
+                    taskRepositoryTab.updateText(planElement.getName());
+                }
                 break;
             }
         }
@@ -345,6 +343,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     planElement).getRelativeDirectory());
             replaceFileTreeItem(viewModelElement);
         } else if (planElement instanceof Task) {
+            viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK, ((Task)
+                    planElement).getTaskRepository().getRelativeDirectory());
             repoViewModel.removeTask(planElement.getId());
             repoViewModel.addTask(viewModelElement);
         }
