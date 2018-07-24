@@ -283,6 +283,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 planElement = event.getNewElement();
+                /**
+                 * Special treatment for plan name since it affects other plan elements
+                 */
                 if (event.getChangedAttribute().equals("name")) {
                     handleChangedName(event, planElement);
                 }

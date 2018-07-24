@@ -57,42 +57,49 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
     private void changeAttribute() throws IOException {
         String absoluteDirectory = modelManager.getAbsoluteDirectory(planElement);
         ModelEvent event = null;
-        if (attribute.equals("name")) {
-            if (planElement instanceof Plan) {
+        if (planElement instanceof Plan) {
+            if (attribute.equals("name")) {
                 moveFile(absoluteDirectory, FileSystemUtil.PLAN_ENDING);
-
-                if (((Plan) planElement).getMasterPlan()) {
-                    event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.MASTERPLAN);
-                } else {
-                    event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.PLAN);
-                }
-
-                // TODO:
-                // 1. pmlex-file
             }
 
-            if (planElement instanceof PlanType) {
+            if (((Plan) planElement).getMasterPlan()) {
+                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.MASTERPLAN);
+            } else {
+                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.PLAN);
+            }
+            if (attribute.equals("masterPlan")) {
+                //TODO any special treatment needed?
+            }
+
+            // TODO:
+            // 1. pmlex-file
+        }
+
+        if (planElement instanceof PlanType) {
+            if (attribute.equals("name")) {
                 moveFile(absoluteDirectory, FileSystemUtil.PLANTYPE_ENDING);
-                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.PLANTYPE);
             }
+            event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.PLANTYPE);
+        }
 
-            if (planElement instanceof Behaviour) {
+        if (planElement instanceof Behaviour) {
+            if (attribute.equals("name")) {
                 moveFile(absoluteDirectory, FileSystemUtil.BEHAVIOUR_ENDING);
-                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.BEHAVIOUR);
             }
+            event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.BEHAVIOUR);
+        }
 
-            if (planElement instanceof TaskRepository) {
+        if (planElement instanceof TaskRepository) {
+            if (attribute.equals("name")) {
                 moveFile(absoluteDirectory, FileSystemUtil.TASKREPOSITORY_ENDING);
-                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.TASKREPOSITORY);
             }
+            event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.TASKREPOSITORY);
+        }
 
-            if (planElement instanceof Task) {
-                event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.TASK);
-            }
+        if (planElement instanceof Task) {
+            event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.TASK);
         }
-        if (attribute.equals("masterPlan")) {
-            // TODO: what has to be done, in case of changing the masterPlan flag?
-        }
+
         event.setChangedAttribute(attribute);
         fireModelChangedEvent(event);
     }

@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
@@ -32,13 +33,15 @@ public class FileTreeItem extends TreeItem<File> {
             }
             // Check if child already exists
             boolean childExists = false;
-            for (TreeItem<File> child : getChildren()) {
+            ObservableList<TreeItem<File>> children = getChildren();
+            for (int i = children.size() - 1; i >= 0; i--) {
                 try {
-                    if (child.getValue().getCanonicalPath().equals(content.getCanonicalPath()))
+                    if (children.get(i).getValue().getCanonicalPath().equals(content.getCanonicalPath()))
                     {
                         // child already exists, so just trigger update directories
-                        ((FileTreeItem) child).updateDirectories();
+                        ((FileTreeItem) children.get(i)).updateDirectories();
                         childExists = true;
+                        break;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -64,31 +67,5 @@ public class FileTreeItem extends TreeItem<File> {
         return viewModelElement;
     }
 
-//    private Image getImageForFileType(File content) {
-//        Image listItemImage;
-//        if (content.getKey().endsWith(".beh")) {
-//            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
-//        } else if (content.getKey().endsWith(".pml")) {
-////            try {
-////                Plan plan = (Plan)EMFModelUtils.loadAlicaFileFromDisk(content);
-////                if (plan.isMasterPlan()) {
-////                    listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
-////                } else {
-//            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
-////                }
-////            } catch (IOException e1) {
-////                e1.printStackTrace();
-////                return null;
-////            }
-//        } else if (content.getKey().endsWith(".pty")) {
-//            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/plantype24x24.png")));
-//        } else if (content.getKey().endsWith(".tsk")) {
-//            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/tasks24x24.png")));
-//        } else if (content.isDirectory()) {
-//            listItemImage = new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
-//        } else {
-//            return null;
-//        }
-//        return listItemImage;
-//    }
+
 }

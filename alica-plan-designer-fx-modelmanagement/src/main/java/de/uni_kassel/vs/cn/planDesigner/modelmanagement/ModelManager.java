@@ -673,7 +673,7 @@ public class ModelManager {
                     } else if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
                         cmd = new ChangeAttributeValue<String>(this, plan, mmq.getAttributeName(), mmq.getNewValue(), plan);
                     } else {
-                        System.err.println("ModelManager: Unknown property type for Behaviour: " + mmq.getAttributeType());
+                        System.err.println("ModelManager: Unknown property type for Plan: " + mmq.getAttributeType());
                         cmd = null;
                     }
                 } else if (mmq.getElementType() == Types.TASKREPOSITORY) {

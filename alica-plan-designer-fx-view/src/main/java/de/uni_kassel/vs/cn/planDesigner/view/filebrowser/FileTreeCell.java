@@ -2,7 +2,12 @@ package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.ErrorWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiChangeAttributeEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -43,9 +48,11 @@ public class FileTreeCell extends TreeCell<File> {
 
     @Override
     public void cancelEdit() {
-        super.cancelEdit();
-        setText(getItem().getName());
-        setGraphic(getTreeItem().getGraphic());
+        Platform.runLater(() -> {
+            super.cancelEdit();
+            setText(getItem().getName());
+            setGraphic(getTreeItem().getGraphic());
+        });
     }
 
     @Override
@@ -61,82 +68,17 @@ public class FileTreeCell extends TreeCell<File> {
                     I18NRepo.getInstance().getString("label.error.rename.illegalEnding"), null);
             return;
         }
-        String name = newValue.getName().substring(0, fileEndingPosition);
-//        if (AlicaModelUtils.containsIllegalCharacter(name)) {
-//            final TreeItem<FileWrapper> treeItem = getTreeItem();
-//            final TreeView<FileWrapper> tree = getTreeView();
-//            if (tree != null) {
-//                // Inform the TreeView of the edit being ready to be committed.
-//                tree.fireEvent(new TreeView.EditEvent<>(tree,
-//                        TreeView.<FileWrapper>editCommitEvent(),
-//                        treeItem,
-//                        getItem(),
-//                        treeItem.getValue()));
-//            }
-//            LOG.warn("User tried to set illegal name: " + newValue.unwrap().getKey());
-//            ErrorWindowController.createErrorWindow("This name is not allowed! These characters are forbidden: "
-//                    + AlicaModelUtils.forbiddenCharacters, null);
-//
-//            return;
-//        }
-        boolean isPlanElement = false;
-        File unwrappedFile = getTreeItem().getValue();
-//        AbstractPlan objectToChange = null;
-        if (unwrappedFile.getName().endsWith(".pml") ||
-                unwrappedFile.getName().endsWith(".pty") || unwrappedFile.getName().endsWith("beh")) {
 
-//            Resource resource = AlicaResourceSet.getInstance()
-//                    .getResources()
-//                    .stream()
-//                    .filter(e -> e.getURI().toFileString().contains(unwrappedFile.getKey()))
-//                    .filter(e -> e.getURI().toFileString().contains("pmlex") == false)
-//                    .findFirst()
-//                    .get();
-//            objectToChange = (AbstractPlan) resource.getContents().get(0);
-//
-//            boolean hasSameName = false;
-//            if (objectToChange instanceof Plan) {
-//                if (checkForCorrectFileEnding(newValue, ".pml")) return;
-//                hasSameName = RepositoryViewModel.getInstance().getPlans()
-//                        .stream()
-//                        .anyMatch(planPathPair -> planPathPair.getKey().getKey().equals(name));
-//            }
-//
-//            if (objectToChange instanceof Behaviour) {
-//                if (checkForCorrectFileEnding(newValue, ".beh")) return;
-//                hasSameName = RepositoryViewModel.getInstance().getBehaviours()
-//                        .stream()
-//                        .anyMatch(behaviourPathPair -> behaviourPathPair.getKey().getKey().equals(name));
-//            }
-//
-//            if (objectToChange instanceof PlanType) {
-//                if (checkForCorrectFileEnding(newValue, ".pty")) return;
-//                hasSameName = RepositoryViewModel.getInstance().getPlanTypes()
-//                        .stream()
-//                        .anyMatch(planTypePathPair -> planTypePathPair.getKey().getKey().equals(name));
-//            }
-//
-//            if (hasSameName) {
-//                getTreeView()
-//                        .fireEvent(new TreeView.EditEvent<>(getTreeView(),
-//                                TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));
-//                ErrorWindowController.createErrorWindow(I18NRepo.getInstance().getString("label.error.rename"), null);
-//                return;
-//            }
-//            controller.getCommandStack()
-//                    .storeAndExecute(new ChangeAttributeValue(objectToChange, "name", name, objectToChange));
-            isPlanElement = true;
-        }
+        ViewModelElement element = ((FileTreeItem)getTreeItem()).getViewModelElement();
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, element.getType(), element.getName());
 
-        unwrappedFile.renameTo(newValue);
+        guiChangeAttributeEvent.setElementId(element.getId());
+        guiChangeAttributeEvent.setParentId(element.getId());
+        guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
+        guiChangeAttributeEvent.setAttributeName("name");
+        guiChangeAttributeEvent.setNewValue(newValue.getName().substring(0, fileEndingPosition));
+        controller.getGuiModificationHandler().handle(guiChangeAttributeEvent);
 
-//        if (isPlanElement && objectToChange != null) {
-//            try {
-//                EMFModelUtils.saveAlicaFile(objectToChange);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
 
         final TreeItem<File> treeItem = getTreeItem();
         final TreeView<File> tree = getTreeView();

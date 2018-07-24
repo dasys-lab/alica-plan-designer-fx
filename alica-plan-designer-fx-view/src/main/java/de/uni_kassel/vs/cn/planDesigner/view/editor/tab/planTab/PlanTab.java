@@ -95,7 +95,7 @@ public class PlanTab extends AbstractPlanTab {
         });
         plan.masterPlanProperty().addListener((observable, oldValue, newValue) -> {
             setDirty(true);
-            fireGuiChangeAttributeEvent(newValue.toString(), "masterPlan", BooleanProperty.class.getSimpleName());
+            fireGuiChangeAttributeEvent(newValue.toString(), "masterPlan", Boolean.class.getSimpleName());
         });
 
         scrollPane = new ScrollPane(planContent);
