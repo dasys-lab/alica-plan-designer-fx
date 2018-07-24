@@ -16,7 +16,7 @@ public class FileTreeViewContextMenu extends ContextMenu {
     private TreeCell treeCell;
 
     public FileTreeViewContextMenu() {
-        deleteFileMenuItem = new DeleteFileMenuItem(hintFile);
+        deleteFileMenuItem = new DeleteFileMenuItem();
         renameFileMenuItem = new RenameFileMenuItem();
         newResourceMenu = new NewResourceMenu(hintFile);
         getItems().addAll(newResourceMenu, renameFileMenuItem, deleteFileMenuItem);
@@ -24,12 +24,13 @@ public class FileTreeViewContextMenu extends ContextMenu {
 
     public void setHintFile(File hintFile) {
         this.hintFile = hintFile;
-        deleteFileMenuItem.setToDelete(hintFile);
+//        deleteFileMenuItem.setToDelete(hintFile);
         newResourceMenu.setInitialDirectoryHint(hintFile);
     }
 
     public void setTreeCell(TreeCell treeCell) {
         this.treeCell = treeCell;
         renameFileMenuItem.setTreeCell(treeCell);
+        deleteFileMenuItem.setTreeCell(treeCell);
     }
 }

@@ -566,6 +566,7 @@ public class ModelManager {
                 break;
             case DELETE_ELEMENT:
                 switch (mmq.getElementType()) {
+                    case Types.MASTERPLAN:
                     case Types.PLAN:
                         cmd = new DeletePlan(this, mmq);
                         break;

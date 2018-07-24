@@ -43,6 +43,7 @@ public class DeleteElementMenuItem extends MenuItem {
         if (!isElementUsed(elementToDelete)) {
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, elementToDelete.getType(), elementToDelete.getName());
             event.setElementId(elementToDelete.getId());
+            //TODO create relative directory
             guiModificationHandler.handle(event);
         }
     }

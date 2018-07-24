@@ -1,69 +1,48 @@
 package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
+import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.controller.UsagesWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeItem;
+import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TreeCell;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class DeleteFileMenuItem extends MenuItem {
-    private File toDelete;
+    private TreeCell toDelete;
 
-    public DeleteFileMenuItem(File toDelete) {
+    private IGuiModificationHandler guiModificationHandler;
+    private I18NRepo i18NRepo;
+
+    public DeleteFileMenuItem() {
         super(I18NRepo.getInstance().getString("label.menu.delete"));
-        this.toDelete = toDelete;
+        this.guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
+        this.i18NRepo = I18NRepo.getInstance();
         setOnAction(e -> deleteFile());
     }
 
     public void deleteFile() {
-//        RepositoryViewModel repositoryViewModel = RepositoryViewModel.getInstance();
-        MainWindowController mainWindowController = MainWindowController.getInstance();
-        RepositoryTabPane repositoryTabPane = mainWindowController.getRepositoryTabPane();
-
-        // Plans
-//        Optional<Pair<Plan, Path>> planPathPair = repositoryViewModel.getPlanPathPair(toDelete);
-//        if (planPathPair.isPresent()) {
-//            if(checkAbstractPlanUsage(commandStack, planPathPair.get().getKey())) {
-//                return;
-//            }
-//            repositoryViewModel.getPlans().remove(planPathPair.get());
-//            Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
-//            mainWindowController.closeTabIfOpen(planPathPair.get().getKey());
-//            repositoryTabPane.init();
-//            repositoryTabPane.getSelectionModel().select(repoTab);
-//            return;
-//        }
-//
-//        // PlanTypes
-//        Optional<Pair<PlanType, Path>> planTypePathPair = repositoryViewModel.getPlanTypePathPair(toDelete);
-//        if (planTypePathPair.isPresent()) {
-//            if(checkAbstractPlanUsage(commandStack, planTypePathPair.get().getKey())) {
-//                return;
-//            }
-//            repositoryViewModel.getPlanTypes().remove(planTypePathPair.get());
-//            Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
-//            mainWindowController.closeTabIfOpen(planTypePathPair.get().getKey());
-//            repositoryTabPane.init();
-//            repositoryTabPane.getSelectionModel().select(repoTab);
-//            return;
-//        }
-//
-//        // Behaviours
-//        Optional<Pair<Behaviour, Path>> behaviourPathPair = repositoryViewModel.getBehaviourPathPair(toDelete);
-//        if (behaviourPathPair.isPresent()) {
-//            if(checkAbstractPlanUsage(commandStack, behaviourPathPair.get().getKey())) {
-//                return;
-//            }
-//            repositoryViewModel.getBehaviours().remove(behaviourPathPair.get());
-//            Tab repoTab = repositoryTabPane.getSelectionModel().getSelectedItem();
-//            mainWindowController.closeTabIfOpen(behaviourPathPair.get().getKey());
-//            repositoryTabPane.init();
-//            repositoryTabPane.getSelectionModel().select(repoTab);
-//            return;
-//        }
-//
+        ViewModelElement elementToDelete = ((FileTreeItem)toDelete.getTreeItem()).getViewModelElement();
+        if (!isElementUsed(elementToDelete)) {
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, elementToDelete.getType(), elementToDelete.getName());
+            event.setElementId(elementToDelete.getId());
+            guiModificationHandler.handle(event);
+        }
 //        // Folders
 //        if (toDelete.isDirectory()) {
 //            for (File alsoDelete : toDelete.listFiles()) {
@@ -79,30 +58,30 @@ public class DeleteFileMenuItem extends MenuItem {
 //        }
     }
 
-//    private boolean checkAbstractPlanUsage(CommandStack commandStack, AbstractPlan toBeDeleted) {
-//        List<AbstractPlan> usages = EMFModelUtils.getUsages(toBeDeleted);
-//        if (usages.size() > 0) {
-//            FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
-//            try {
-//                Parent infoWindow = fxmlLoader.load();
-//                UsagesWindowController controller = fxmlLoader.getController();
-//                controller.createReferencesList(usages);
-//                Stage stage = new Stage();
-//                stage.setTitle(I18NRepo.getInstance().getString("label.usage.nodelete"));
-//                stage.setScene(new Scene(infoWindow));
-//                stage.initModality(Modality.WINDOW_MODAL);
-//                stage.initOwner(PlanDesignerApplication.getPrimaryStage());
-//                stage.show();
-//            } catch (IOException ignored) {
-//            }
-//            return true;
-//        } else {
-//            commandStack.storeAndExecute(new DeleteAbstractPlan(toBeDeleted));
-//            return false;
-//        }
-//    }
+    private boolean isElementUsed(ViewModelElement elementToDelete) {
+        ArrayList<ViewModelElement> usages = guiModificationHandler.getUsages(elementToDelete);
+        if (usages.isEmpty()) {
+            return false;
+        }
 
-    public void setToDelete(File toDelete) {
+        FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
+        try {
+            Parent infoWindow = fxmlLoader.load();
+            UsagesWindowController controller = fxmlLoader.getController();
+            controller.createReferencesList(usages, guiModificationHandler);
+            Stage stage = new Stage();
+            stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
+            stage.setScene(new Scene(infoWindow));
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(PlanDesignerApplication.getPrimaryStage());
+            stage.showAndWait();
+        } catch (IOException ignored) {
+        } finally {
+            return true;
+        }
+    }
+
+    public void setTreeCell(TreeCell toDelete) {
         this.toDelete = toDelete;
     }
 }

@@ -67,5 +67,8 @@ public class FileTreeItem extends TreeItem<File> {
         return viewModelElement;
     }
 
+    public String getAbsolutepath() {
+        return getValue().getAbsolutePath();
+    }
 
 }

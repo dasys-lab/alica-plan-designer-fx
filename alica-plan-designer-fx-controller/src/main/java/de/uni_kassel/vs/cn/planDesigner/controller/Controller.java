@@ -165,6 +165,22 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ELEMENT_DELETED:
                 planElement = event.getOldElement();
+                for(Tab tab : editorTabPane.getTabs()) {
+                    if(tab instanceof AbstractPlanTab) {
+                        AbstractPlanTab abstractPlanTab = (AbstractPlanTab)tab;
+                        if(abstractPlanTab.getPresentedViewModelElement().getId() == planElement.getId()) {
+                            editorTabPane.getTabs().remove(tab);
+                            break;
+                        }
+                    }
+                    if(tab instanceof TaskRepositoryTab) {
+                        TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab)tab;
+                        if(taskRepositoryTab.getPresentedViewModelElement().getId() == planElement.getId()) {
+                            editorTabPane.getTabs().remove(tab);
+                            break;
+                        }
+                    }
+                }
                 switch (event.getElementType()) {
                     case Types.PLAN:
                         removeTreeViewElement((AbstractPlan) planElement, Types.PLAN);
@@ -479,8 +495,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setParentId(event.getParentId());
                 break;
             case DELETE_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT);
-                mmq.setElementType(event.getElementType());
+                mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
                 mmq.setElementId(event.getElementId());
                 break;
             case SAVE_ELEMENT:
