@@ -1,6 +1,7 @@
-package de.uni_kassel.vs.cn.planDesigner.command;
+package de.uni_kassel.vs.cn.planDesigner.command.create;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;

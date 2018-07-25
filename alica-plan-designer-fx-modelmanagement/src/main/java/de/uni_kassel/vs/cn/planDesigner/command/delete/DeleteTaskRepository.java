@@ -1,17 +1,16 @@
-package de.uni_kassel.vs.cn.planDesigner.command;
+package de.uni_kassel.vs.cn.planDesigner.command.delete;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.TaskRepository;
+import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 
-import java.lang.reflect.Type;
+public class DeleteTaskRepository extends AbstractCommand {
 
-public class DeletePlan extends AbstractCommand {
+    protected TaskRepository taskRepository;
 
-    protected Plan plan;
-
-    public DeletePlan(ModelManager modelManager, ModelModificationQuery mmq) {
+    public DeleteTaskRepository(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
 //        plan = null;
 //        if (mmq.getAbsoluteDirectory() != null) {
@@ -23,27 +22,23 @@ public class DeletePlan extends AbstractCommand {
 //                }
 //            }
 //        } else {
-        plan = (Plan) modelManager.getPlanElement(mmq.getElementId());
+        taskRepository = (TaskRepository) modelManager.getPlanElement(mmq.getElementId());
 //        }
     }
 
     @Override
     public void doCommand() {
-        if (plan == null) {
+        if (taskRepository == null) {
             return;
         }
-        modelManager.removePlanElement(plan, Types.PLAN, true);
+        modelManager.removePlanElement(taskRepository, Types.PLAN, true);
     }
 
     @Override
     public void undoCommand() {
-        if (plan == null) {
+        if (taskRepository == null) {
             return;
         }
-        if (!plan.getMasterPlan()) {
-            modelManager.addPlanElement(plan, Types.PLAN, true);
-        } else {
-            modelManager.addPlanElement(plan, Types.MASTERPLAN, true);
-        }
+            modelManager.addPlanElement(taskRepository, Types.TASKREPOSITORY, true);
     }
 }

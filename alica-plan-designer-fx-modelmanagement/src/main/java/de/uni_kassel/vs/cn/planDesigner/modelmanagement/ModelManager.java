@@ -7,9 +7,11 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.*;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddPlanToPlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
-import de.uni_kassel.vs.cn.planDesigner.command.delete.DeleteTaskFromRepository;
-import de.uni_kassel.vs.cn.planDesigner.command.delete.RemoveAllPlansFromPlanType;
-import de.uni_kassel.vs.cn.planDesigner.command.delete.RemovePlanFromPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.create.CreateBehaviour;
+import de.uni_kassel.vs.cn.planDesigner.command.create.CreatePlan;
+import de.uni_kassel.vs.cn.planDesigner.command.create.CreatePlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.create.CreateTask;
+import de.uni_kassel.vs.cn.planDesigner.command.delete.*;
 import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
@@ -466,6 +468,17 @@ public class ModelManager {
                 task.setTaskRepository(null);
                 break;
             case Types.TASKREPOSITORY:
+                taskRepository = null;
+                if(removeFromDisk) {
+                    removeFromDisk((TaskRepository)planElement, FileSystemUtil.TASKREPOSITORY_ENDING);
+                }
+                break;
+            case Types.BEHAVIOUR:
+                Behaviour behaviour = (Behaviour) planElement;
+                behaviourMap.remove(behaviour.getId());
+                if (removeFromDisk) {
+                    removeFromDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING);
+                }
                 break;
             default:
                 System.err.println("ModelManager: removing " + type + " not implemented, yet!");
@@ -571,11 +584,16 @@ public class ModelManager {
                         cmd = new DeletePlan(this, mmq);
                         break;
                     case Types.PLANTYPE:
-                        cmd = null;
+                        cmd = new DeletePlanType(this, mmq);
+                        break;
+                    case Types.BEHAVIOUR:
+                        cmd = new DeleteBehaviour(this, mmq);
                         break;
                     case Types.TASK:
                         cmd = new DeleteTaskFromRepository(this, mmq);
                         break;
+                    case Types.TASKREPOSITORY:
+                        cmd = new DeleteTaskRepository(this, mmq);
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
                         return;
