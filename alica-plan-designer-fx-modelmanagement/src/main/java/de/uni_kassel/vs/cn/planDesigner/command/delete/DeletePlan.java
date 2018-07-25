@@ -14,18 +14,7 @@ public class DeletePlan extends AbstractCommand {
 
     public DeletePlan(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-//        plan = null;
-//        if (mmq.getAbsoluteDirectory() != null) {
-//            String relativeDirectory = modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), mmq.getName());
-//            for (Plan currentPlan : modelManager.getPlans()) {
-//                if (currentPlan.getName().equals(mmq.getName()) && currentPlan.getRelativeDirectory().equals(relativeDirectory)) {
-//                    plan = currentPlan;
-//                    break;
-//                }
-//            }
-//        } else {
         plan = (Plan) modelManager.getPlanElement(mmq.getElementId());
-//        }
     }
 
     @Override

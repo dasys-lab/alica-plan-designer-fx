@@ -12,18 +12,7 @@ public class DeleteTaskRepository extends AbstractCommand {
 
     public DeleteTaskRepository(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-//        plan = null;
-//        if (mmq.getAbsoluteDirectory() != null) {
-//            String relativeDirectory = modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), mmq.getName());
-//            for (Plan currentPlan : modelManager.getPlans()) {
-//                if (currentPlan.getName().equals(mmq.getName()) && currentPlan.getRelativeDirectory().equals(relativeDirectory)) {
-//                    plan = currentPlan;
-//                    break;
-//                }
-//            }
-//        } else {
         taskRepository = (TaskRepository) modelManager.getPlanElement(mmq.getElementId());
-//        }
     }
 
     @Override

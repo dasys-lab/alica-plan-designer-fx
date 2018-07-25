@@ -483,6 +483,9 @@ public class ModelManager {
             default:
                 System.err.println("ModelManager: removing " + type + " not implemented, yet!");
         }
+        for (IModelEventHandler eventHandler : eventHandlerList) {
+            eventHandler.handleCloseTab(planElement.getId());
+        }
         planElementMap.remove(planElement.getId());
         fireEvent(ModelEventType.ELEMENT_DELETED, planElement, type);
     }

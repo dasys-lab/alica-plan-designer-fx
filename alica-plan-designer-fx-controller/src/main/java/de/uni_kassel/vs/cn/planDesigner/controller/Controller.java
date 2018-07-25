@@ -23,6 +23,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskReposito
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 
@@ -165,22 +166,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ELEMENT_DELETED:
                 planElement = event.getOldElement();
-                for(Tab tab : editorTabPane.getTabs()) {
-                    if(tab instanceof AbstractPlanTab) {
-                        AbstractPlanTab abstractPlanTab = (AbstractPlanTab)tab;
-                        if(abstractPlanTab.getPresentedViewModelElement().getId() == planElement.getId()) {
-                            editorTabPane.getTabs().remove(tab);
-                            break;
-                        }
-                    }
-                    if(tab instanceof TaskRepositoryTab) {
-                        TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab)tab;
-                        if(taskRepositoryTab.getPresentedViewModelElement().getId() == planElement.getId()) {
-                            editorTabPane.getTabs().remove(tab);
-                            break;
-                        }
-                    }
-                }
                 switch (event.getElementType()) {
                     case Types.PLAN:
                         removeTreeViewElement((AbstractPlan) planElement, Types.PLAN);
@@ -322,9 +307,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
             }
             if (tab instanceof TaskRepositoryTab) {
-                TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab)tab;
-                if(planElement instanceof Task) {
-                    taskRepositoryTab.updateText(((Task)planElement).getTaskRepository().getName());
+                TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab) tab;
+                if (planElement instanceof Task) {
+                    taskRepositoryTab.updateText(((Task) planElement).getTaskRepository().getName());
                 } else {
                     taskRepositoryTab.updateText(planElement.getName());
                 }
@@ -412,7 +397,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         } else if (planElement instanceof Task) {
             ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.TASK,
                     planElement.getName());
-            query.setElementId(((Task)planElement).getTaskRepository().getId());
+            query.setElementId(((Task) planElement).getTaskRepository().getId());
             modelManager.handleModelModificationQuery(query);
         } else {
             throw new RuntimeException("Controller: trying to serialize a PlanElement of unknown type! PlanElement is: " + planElement.toString());
@@ -734,6 +719,36 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 } else {
                     planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN,
                             plan.getRelativeDirectory()));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void handleCloseTab(long planElementId) {
+        for (Tab tab : editorTabPane.getTabs()) {
+            if (tab instanceof AbstractPlanTab) {
+                AbstractPlanTab abstractPlanTab = (AbstractPlanTab) tab;
+                if (abstractPlanTab.getPresentedViewModelElement().getId() == planElementId) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            editorTabPane.getTabs().remove(tab);
+                        }
+                    });
+                    break;
+                }
+            }
+            if (tab instanceof TaskRepositoryTab) {
+                TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab) tab;
+                if (taskRepositoryTab.getPresentedViewModelElement().getId() == planElementId) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            editorTabPane.getTabs().remove(tab);
+                        }
+                    });
+                    break;
                 }
             }
         }
