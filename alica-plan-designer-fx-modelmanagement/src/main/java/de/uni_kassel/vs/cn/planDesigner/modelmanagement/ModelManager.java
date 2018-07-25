@@ -690,7 +690,7 @@ public class ModelManager {
                     Plan plan = planMap.get(mmq.getParentId());
                     if (mmq.getAttributeType().equals(Boolean.class.getSimpleName())) {
                         cmd = new ChangeAttributeValue<Boolean>(this, plan, mmq.getAttributeName(), Boolean.parseBoolean(mmq.getNewValue()), plan);
-                    } else if (mmq.getAttributeType().equals(Long.class.getSimpleName())) {
+                    } else if (mmq.getAttributeType().equals(Double.class.getSimpleName())) {
                         cmd = new ChangeAttributeValue<Double>(this, plan, mmq.getAttributeName(), Double.parseDouble(mmq.getNewValue()), plan);
                     } else if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
                         cmd = new ChangeAttributeValue<String>(this, plan, mmq.getAttributeName(), mmq.getNewValue(), plan);
