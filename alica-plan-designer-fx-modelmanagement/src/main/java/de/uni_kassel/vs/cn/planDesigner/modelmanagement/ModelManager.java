@@ -432,7 +432,17 @@ public class ModelManager {
                 task.setTaskRepository(taskRepository);
                 break;
             case Types.TASKREPOSITORY:
+                taskRepository = (TaskRepository) newElement;
+                if (serializeToDisk) {
+                    serializeToDisk(taskRepository, FileSystemUtil.TASKREPOSITORY_ENDING);
+                }
                 break;
+            case Types.BEHAVIOUR:
+                Behaviour behaviour = (Behaviour)newElement;
+                behaviourMap.put(behaviour.getId(), behaviour);
+                if(serializeToDisk) {
+                    serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING);
+                }
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
                 return null;
