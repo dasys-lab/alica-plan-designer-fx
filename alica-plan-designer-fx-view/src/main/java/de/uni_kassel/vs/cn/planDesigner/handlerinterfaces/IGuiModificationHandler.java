@@ -19,4 +19,6 @@ public interface IGuiModificationHandler {
     public abstract void handleTabOpenedEvent(PlanTab planTab);
     public abstract void handleTabOpenedEvent(BehaviourTab behaviourTab);
     public abstract void handleTabOpenedEvent(PlanTypeTab planTypeTab);
+    public abstract void handleUndo();
+    public abstract void handleRedo();
 }

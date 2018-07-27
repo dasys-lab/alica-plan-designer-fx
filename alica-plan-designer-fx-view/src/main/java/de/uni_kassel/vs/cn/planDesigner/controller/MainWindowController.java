@@ -317,4 +317,12 @@ public class MainWindowController implements Initializable {
     public String getRolesPath() {
         return rolesPath;
     }
+
+    public void disableRedo(boolean disable) {
+        this.editMenu.setRedoItemDisabled(disable);
+    }
+
+    public void disableUndo(boolean disable) {
+        this.editMenu.setUndoDisabled(disable);
+    }
 }

@@ -3,7 +3,9 @@ package de.uni_kassel.vs.cn.planDesigner.command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Stack;
 
 /**
@@ -16,6 +18,7 @@ public class CommandStack extends Observable {
     private static final Logger LOG = LogManager.getLogger(CommandStack.class);
     private Stack<AbstractCommand> undoStack = new Stack<>();
     private Stack<AbstractCommand> redoStack = new Stack<>();
+    private ArrayList<Observer> observers = new ArrayList<>();
 
     /**
      * Executes a command, puts it on the undo stack and clears the redo stack.
@@ -54,6 +57,29 @@ public class CommandStack extends Observable {
     private void notifyObserversCompound() {
         this.setChanged();
         notifyObservers();
+    }
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(this, null);
+        }
+    }
+
+    public boolean isUndoPossible() {
+        return undoStack.size() > 0 ;
+    }
+
+    public boolean isRedoPossible() {
+        return redoStack.size() > 0;
     }
 
 

@@ -82,6 +82,7 @@ public class EditMenu extends Menu {
     }
 
     private void undo() {
+        guiModificationHandler.handleUndo();
 //        commandStack.undo();
 //        Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
 //        if (selectedItem instanceof PlanTab) {
@@ -95,6 +96,7 @@ public class EditMenu extends Menu {
     }
 
     private void redo() {
+        guiModificationHandler.handleRedo();
 //        commandStack.redo();
 //        Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
 //        if (selectedItem instanceof PlanTab) {

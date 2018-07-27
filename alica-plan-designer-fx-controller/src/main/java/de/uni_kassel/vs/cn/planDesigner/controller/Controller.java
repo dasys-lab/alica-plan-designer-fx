@@ -97,6 +97,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             modelManager.setTasksPath(activeConfiguration.getTasksPath());
             modelManager.setRolesPath(activeConfiguration.getRolesPath());
         }
+
     }
 
     protected void setupConfigGuiStuff() {
@@ -752,5 +753,25 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
             }
         }
+    }
+
+    @Override
+    public void disableUndo(boolean disable) {
+        mainWindowController.disableUndo(disable);
+    }
+
+    @Override
+    public void disableRedo(boolean disable) {
+        mainWindowController.disableRedo(disable);
+    }
+
+    @Override
+    public void handleUndo() {
+        modelManager.undo();
+    }
+
+    @Override
+    public void handleRedo() {
+        modelManager.redo();
     }
 }

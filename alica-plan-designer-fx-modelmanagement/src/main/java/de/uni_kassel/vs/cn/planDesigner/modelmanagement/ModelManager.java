@@ -23,12 +23,9 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-public class ModelManager {
+public class ModelManager implements Observer {
 
     private static final Logger LOG = LogManager.getLogger(ModelManager.class);
 
@@ -55,7 +52,7 @@ public class ModelManager {
         taskRepository = new TaskRepository();
         eventHandlerList = new ArrayList<IModelEventHandler>();
         commandStack = new CommandStack();
-
+        commandStack.addObserver(this);
         setupObjectMapper();
     }
 
@@ -860,5 +857,24 @@ public class ModelManager {
             return Paths.get(tasksPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
         }
         return null;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if(o instanceof CommandStack) {
+           CommandStack cmd = (CommandStack)o;
+           for(IModelEventHandler modelEventHandler : eventHandlerList) {
+               modelEventHandler.disableRedo(!cmd.isRedoPossible());
+               modelEventHandler.disableUndo(!cmd.isUndoPossible());
+           }
+        }
+    }
+
+    public void undo() {
+        commandStack.undo();
+    }
+
+    public void redo() {
+        commandStack.redo();
     }
 }
