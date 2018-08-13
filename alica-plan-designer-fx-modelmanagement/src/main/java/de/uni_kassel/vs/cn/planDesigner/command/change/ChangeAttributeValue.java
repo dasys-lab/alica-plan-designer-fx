@@ -101,7 +101,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
         }
 
         event.setChangedAttribute(attribute);
-        fireModelChangedEvent(event);
+        modelManager.fireEvent(event);
     }
 
     private void moveFile(String absoluteDirectory, String ending) throws IOException {
@@ -115,9 +115,6 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
         }
     }
 
-    private void fireModelChangedEvent(ModelEvent event) {
-        modelManager.fireEvent(event);
-    }
 
     private File getNewFilePath(Path path) {
         return new File(path.toFile().getAbsolutePath().replace("/" + (path.getFileName()
