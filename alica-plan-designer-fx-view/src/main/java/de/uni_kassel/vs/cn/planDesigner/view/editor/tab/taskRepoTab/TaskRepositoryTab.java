@@ -76,11 +76,9 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         propertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
         propertiesTable.addItem(taskRepository);
         taskRepository.nameProperty().addListener((observable, oldValue, newValue) -> {
-            setDirty(true);
             fireGuiChangeAttributeEvent(newValue, "name");
         });
         ((PlanElementViewModel)taskRepository).commentProperty().addListener((observable, oldValue, newValue) -> {
-            setDirty(true);
             fireGuiChangeAttributeEvent(newValue, "comment");
         });
 
@@ -176,6 +174,8 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         this.dirty = dirty;
     }
 
+    public boolean isDirty() {return dirty;}
+
     private boolean isTaskUsed(ViewModelElement taskToBeDeleted) {
         ArrayList<ViewModelElement> usages = guiModificationHandler.getUsages(taskToBeDeleted);
         if (usages.isEmpty()) {
@@ -199,7 +199,6 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         }
     }
 
-    public boolean isDirty() {return dirty;}
 
     public void updateText(String newName) {
         this.setText(i18NRepo.getString("label.caption.taskrepository") + ": " + newName);

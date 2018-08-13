@@ -7,8 +7,6 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 
-import java.lang.reflect.Type;
-
 public class CreateTask extends AbstractCommand {
     Task task;
     ModelModificationQuery mmq;
@@ -29,9 +27,7 @@ public class CreateTask extends AbstractCommand {
         TaskRepository taskRepository = modelManager.getTaskRepository();
         if (taskRepository.getId() == mmq.getParentId()) {
             modelManager.addPlanElement(task, Types.TASK, false);
-        }
-        else
-        {
+        } else {
             System.err.println("CreateTask: TaskRepository ID in ModelManager does not match the TaskRepository ID of the ModelModificationQuery!");
         }
     }

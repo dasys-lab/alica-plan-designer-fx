@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.model;
 
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -22,7 +23,13 @@ public class TaskRepositoryViewModel {
                 }
                 taskRepositoryTab.clearGuiContent();
                 taskRepositoryTab.addElements(tasks);
-                taskRepositoryTab.setDirty(isDirty);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        setDirty(true);
+                    }
+                });
+
             }
         });
         isDirty = false;
@@ -30,17 +37,12 @@ public class TaskRepositoryViewModel {
 
     public void setTaskRepositoryTab(TaskRepositoryTab taskRepositoryTab) {
         this.taskRepositoryTab = taskRepositoryTab;
-        initGuiContent();
-    }
-
-    public void initGuiContent() {
         if (taskRepositoryTab == null) {
             return;
         }
 
         taskRepositoryTab.clearGuiContent();
         taskRepositoryTab.addElements(tasks);
-        taskRepositoryTab.setDirty(this.isDirty);
     }
 
     public void setDirty(boolean dirty) {
