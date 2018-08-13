@@ -502,7 +502,7 @@ public class ModelManager implements Observer {
 
         PlanElement planElement = planElementMap.get(modelElementId);
         if (planElement == null) {
-            System.err.println("ModelManager: Usages for unkown plan element (ID: " + modelElementId + ") requested!");
+            System.err.println("ModelManager: Usages for unknown plan element (ID: " + modelElementId + ") requested!");
             return null;
         }
 
