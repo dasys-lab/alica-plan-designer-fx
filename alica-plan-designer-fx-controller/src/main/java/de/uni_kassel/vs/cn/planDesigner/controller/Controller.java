@@ -159,6 +159,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                             repoViewModel.addTask(taskElement);
                             taskViewModel.addTask(taskElement);
                         }
+                        taskViewModel.setDirty(true);
                         break;
                     case Types.TASK:
                         Task task = (Task) planElement;
@@ -166,6 +167,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         element.setParentId(task.getTaskRepository().getId());
                         repoViewModel.addTask(element);
                         taskViewModel.addTask(element);
+                        taskViewModel.setDirty(true);
                         break;
                     default:
                         System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
@@ -194,6 +196,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.TASKREPOSITORY:
                         repoViewModel.clearTasks();
                         taskViewModel.clearTasks();
+                        break;
+                    case Types.TASK:
+                        repoViewModel.removeTask(planElement.getId());
+                        taskViewModel.removeTask(new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK));
+                        taskViewModel.setDirty(true);
                         break;
                     default:
                         System.err.println("Controller: Deletion of unknown type " + event.getElementType() + " gets ignored!");

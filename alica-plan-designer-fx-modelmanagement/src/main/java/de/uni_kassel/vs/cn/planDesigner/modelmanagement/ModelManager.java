@@ -657,6 +657,7 @@ public class ModelManager implements Observer {
                 }
                 break;
             case CHANGE_ELEMENT:
+                // TODO: Make this a switch case command, like everywhere else in this method, too!
                 if (mmq.getElementType() == Types.ANNOTATEDPLAN) {
                     if (mmq.getAttributeType().equals(Boolean.class.getSimpleName())) {
                         PlanType planType = planTypeMap.get(mmq.getParentId());
