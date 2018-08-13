@@ -160,6 +160,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                             taskViewModel.addTask(taskElement);
                         }
                         break;
+                    case Types.TASK:
+                        Task task = (Task) planElement;
+                        element = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
+                        element.setParentId(task.getTaskRepository().getId());
+                        repoViewModel.addTask(element);
+                        taskViewModel.addTask(element);
+                        break;
                     default:
                         System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
                         break;
