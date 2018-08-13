@@ -232,7 +232,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         taskViewModel.addTask(element);
                         break;
                     default:
-                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
+                        System.err.println("Controller: Parsing of unknown type " + event.getElementType() + " gets ignored!");
                         break;
                 }
                 break;
