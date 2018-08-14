@@ -447,7 +447,9 @@ public class ModelManager implements Observer {
      * @return
      */
     public PlanElement addPlanElement(PlanElement newElement, String type, boolean serializeToDisk) {
-        // this is for ignoring file sytem modified events that come twice after saving a file
+        /* this is for ignoring file system modified events that come twice after saving a file
+         * and once after moving or creating a file
+         */
         if (elementsSavedMap.containsKey(newElement.getId())) {
             int counter = elementsSavedMap.get(newElement.getId()) - 1;
             if (counter == 0) {
@@ -767,15 +769,9 @@ public class ModelManager implements Observer {
                         cmd = null;
                     }
                 } else if (mmq.getElementType() == Types.TASK) {
-                    Task task = null;
-                    for (Task t : taskRepository.getTasks()) {
-                        if (t.getId() == mmq.getElementId()) {
-                            task = t;
-                            break;
-                        }
-                    }
+                    PlanElement element = this.planElementMap.get(mmq.getElementId());
                     if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
-                        cmd = new ChangeAttributeValue<String>(this, task, mmq.getAttributeName(), mmq.getNewValue(), taskRepository);
+                        cmd = new ChangeAttributeValue<String>(this, element, mmq.getAttributeName(), mmq.getNewValue(), taskRepository);
                     } else {
                         System.err.println("ModelManager: Unknown property type for Task: " + mmq.getAttributeType());
                         cmd = null;
