@@ -42,6 +42,13 @@ public class ModelManager implements Observer {
     private List<IModelEventHandler> eventHandlerList;
     private CommandStack commandStack;
 
+    /**
+     * This list remembers elements that should be saved, in order
+     * to ignore filesystem-modification-events created by the
+     * save command. Entries gets deleted through the events.
+     */
+    private HashMap<Long, Integer> elementsSavedMap;
+
     private ObjectMapper objectMapper;
 
     public ModelManager() {
@@ -53,6 +60,7 @@ public class ModelManager implements Observer {
         eventHandlerList = new ArrayList<IModelEventHandler>();
         commandStack = new CommandStack();
         commandStack.addObserver(this);
+        elementsSavedMap = new HashMap<>();
         setupObjectMapper();
     }
 
@@ -407,6 +415,15 @@ public class ModelManager implements Observer {
      * @return
      */
     public PlanElement addPlanElement(PlanElement newElement, String type, boolean serializeToDisk) {
+        if (elementsSavedMap.containsKey(newElement.getId())) {
+            int counter = elementsSavedMap.get(newElement.getId()) - 1;
+            if (counter == 0) {
+                elementsSavedMap.remove(newElement.getId());
+            } else {
+                elementsSavedMap.put(newElement.getId(), counter);
+            }
+            return null;
+        }
         switch (type) {
             case Types.PLAN:
             case Types.MASTERPLAN:
@@ -435,9 +452,9 @@ public class ModelManager implements Observer {
                 }
                 break;
             case Types.BEHAVIOUR:
-                Behaviour behaviour = (Behaviour)newElement;
+                Behaviour behaviour = (Behaviour) newElement;
                 behaviourMap.put(behaviour.getId(), behaviour);
-                if(serializeToDisk) {
+                if (serializeToDisk) {
                     serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING);
                 }
             default:
@@ -476,8 +493,8 @@ public class ModelManager implements Observer {
                 break;
             case Types.TASKREPOSITORY:
                 taskRepository = null;
-                if(removeFromDisk) {
-                    removeFromDisk((TaskRepository)planElement, FileSystemUtil.TASKREPOSITORY_ENDING);
+                if (removeFromDisk) {
+                    removeFromDisk((TaskRepository) planElement, FileSystemUtil.TASKREPOSITORY_ENDING);
                 }
                 break;
             case Types.BEHAVIOUR:
@@ -716,7 +733,7 @@ public class ModelManager implements Observer {
                 } else if (mmq.getElementType() == Types.TASK) {
                     Task task = null;
                     for (Task t : taskRepository.getTasks()) {
-                        if(t.getId() == mmq.getElementId()) {
+                        if (t.getId() == mmq.getElementId()) {
                             task = t;
                             break;
                         }
@@ -807,6 +824,7 @@ public class ModelManager implements Observer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        elementsSavedMap.put(planElement.getId(), 2);
     }
 
     /**
@@ -862,12 +880,12 @@ public class ModelManager implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if(o instanceof CommandStack) {
-           CommandStack cmd = (CommandStack)o;
-           for(IModelEventHandler modelEventHandler : eventHandlerList) {
-               modelEventHandler.disableRedo(!cmd.isRedoPossible());
-               modelEventHandler.disableUndo(!cmd.isUndoPossible());
-           }
+        if (o instanceof CommandStack) {
+            CommandStack cmd = (CommandStack) o;
+            for (IModelEventHandler modelEventHandler : eventHandlerList) {
+                modelEventHandler.disableRedo(!cmd.isRedoPossible());
+                modelEventHandler.disableUndo(!cmd.isUndoPossible());
+            }
         }
     }
 

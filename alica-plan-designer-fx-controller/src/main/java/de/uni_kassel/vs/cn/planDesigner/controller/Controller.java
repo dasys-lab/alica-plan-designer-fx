@@ -14,13 +14,14 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
-import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
+import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
@@ -159,7 +160,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                             repoViewModel.addTask(taskElement);
                             taskViewModel.addTask(taskElement);
                         }
-                        taskViewModel.setDirty(true);
                         break;
                     case Types.TASK:
                         Task task = (Task) planElement;
@@ -167,7 +167,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         element.setParentId(task.getTaskRepository().getId());
                         repoViewModel.addTask(element);
                         taskViewModel.addTask(element);
-                        taskViewModel.setDirty(true);
                         break;
                     default:
                         System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
@@ -200,7 +199,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.TASK:
                         repoViewModel.removeTask(planElement.getId());
                         taskViewModel.removeTask(new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK));
-                        taskViewModel.setDirty(true);
                         break;
                     default:
                         System.err.println("Controller: Deletion of unknown type " + event.getElementType() + " gets ignored!");

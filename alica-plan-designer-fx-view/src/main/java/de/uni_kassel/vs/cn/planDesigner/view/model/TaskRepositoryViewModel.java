@@ -16,6 +16,10 @@ public class TaskRepositoryViewModel {
     public TaskRepositoryViewModel() {
         tasks = FXCollections.observableArrayList(new ArrayList<>());
         tasks.addListener(new ListChangeListener<ViewModelElement>() {
+            /**
+             * Refills the GUI and sets the dirty flag, accordingly.
+             * @param c
+             */
             @Override
             public void onChanged(Change<? extends ViewModelElement> c) {
                 if (taskRepositoryTab == null) {
@@ -45,6 +49,11 @@ public class TaskRepositoryViewModel {
         taskRepositoryTab.addElements(tasks);
     }
 
+    /**
+     * Should only be called with "false", when the task repo was
+     * serialized.
+     * @param dirty
+     */
     public void setDirty(boolean dirty) {
         this.isDirty = dirty;
         if (this.taskRepositoryTab != null) {
