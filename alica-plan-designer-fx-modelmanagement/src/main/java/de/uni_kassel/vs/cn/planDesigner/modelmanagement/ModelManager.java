@@ -415,11 +415,14 @@ public class ModelManager implements Observer {
      * @return
      */
     public PlanElement addPlanElement(PlanElement newElement, String type, boolean serializeToDisk) {
+        // this is for ignoring file sytem modified events that come twice after saving a file
         if (elementsSavedMap.containsKey(newElement.getId())) {
             int counter = elementsSavedMap.get(newElement.getId()) - 1;
             if (counter == 0) {
+                // second event arrived, so remove the entry
                 elementsSavedMap.remove(newElement.getId());
             } else {
+                // first event arrived, so set the reduced counter
                 elementsSavedMap.put(newElement.getId(), counter);
             }
             return null;
@@ -824,6 +827,7 @@ public class ModelManager implements Observer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // the counter is set to 2 because, saving an element always creates two filesystem modified events
         elementsSavedMap.put(planElement.getId(), 2);
     }
 
