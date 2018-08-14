@@ -589,6 +589,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             }
         }
         taskViewModel.setTaskRepositoryTab(taskRepositoryTab);
+        taskViewModel.setDirty(false);
     }
 
     @Override
