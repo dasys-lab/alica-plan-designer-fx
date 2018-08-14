@@ -21,7 +21,7 @@ public class ExternalRefSerializer extends StdSerializer<PlanElement> {
     @Override
     public void serialize(PlanElement planElement, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         if (planElement instanceof Plan) {
-            jsonGenerator.writeString(Paths.get(((SerializablePlanElement)planElement).getRelativeDirectory(), planElement.getName() + ".pml#" + planElement.getId()).toString());
+            jsonGenerator.writeString(Paths.get(((SerializablePlanElement) planElement).getRelativeDirectory(), planElement.getName() + ".pml#" + planElement.getId()).toString());
         } else if (planElement instanceof Behaviour) {
             jsonGenerator.writeString(Paths.get(((SerializablePlanElement)planElement).getRelativeDirectory(), planElement.getName() + ".beh#" + planElement.getId()).toString());
         } else if (planElement instanceof PlanType) {

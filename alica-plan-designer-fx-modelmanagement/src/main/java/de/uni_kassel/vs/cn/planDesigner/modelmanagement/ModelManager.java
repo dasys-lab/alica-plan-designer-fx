@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class ModelManager implements Observer {
@@ -115,6 +116,37 @@ public class ModelManager implements Observer {
         } else {
             return null;
         }
+    }
+
+    public PlanElement getPlanElement(String absolutePath) {
+        String name = absolutePath.substring(absolutePath.lastIndexOf(File.separator) + 1);
+        String[] split = name.split("\\.");
+        if(split[1].equals(FileSystemUtil.BEHAVIOUR_ENDING)) {
+            for(Behaviour beh : behaviourMap.values()) {
+                if(beh.getName().equals(split[0])) {
+                    return beh;
+                }
+            }
+        } else if (split[1].equals(FileSystemUtil.PLAN_ENDING)) {
+            for(Plan plan : planMap.values()) {
+                if(plan.getName().equals(split[0])) {
+                    return plan;
+                }
+            }
+        } else if (split[1].equals(FileSystemUtil.PLANTYPE_ENDING)) {
+            for(PlanType pt : planTypeMap.values()) {
+                if(pt.getName().equals(split[0])) {
+                    return pt;
+                }
+            }
+        } else if (split[1].equals(FileSystemUtil.TASKREPOSITORY_ENDING)) {
+            if(taskRepository.getName().equals(split[0])) {
+                return taskRepository;
+            }
+        } else {
+            System.out.println("ModelManager: trying to get PlanElement for unsupported ending: " + split[1]);
+        }
+        return null;
     }
 
     public ArrayList<Condition> getConditions() {
@@ -433,14 +465,14 @@ public class ModelManager implements Observer {
                 Plan plan = (Plan) newElement;
                 planMap.put(plan.getId(), plan);
                 if (serializeToDisk) {
-                    serializeToDisk(plan, FileSystemUtil.PLAN_ENDING);
+                    serializeToDisk(plan, FileSystemUtil.PLAN_ENDING, true);
                 }
                 break;
             case Types.PLANTYPE:
                 PlanType planType = (PlanType) newElement;
                 planTypeMap.put(planType.getId(), planType);
                 if (serializeToDisk) {
-                    serializeToDisk(planType, FileSystemUtil.PLANTYPE_ENDING);
+                    serializeToDisk(planType, FileSystemUtil.PLANTYPE_ENDING, true);
                 }
                 break;
             case Types.TASK:
@@ -451,14 +483,14 @@ public class ModelManager implements Observer {
             case Types.TASKREPOSITORY:
                 taskRepository = (TaskRepository) newElement;
                 if (serializeToDisk) {
-                    serializeToDisk(taskRepository, FileSystemUtil.TASKREPOSITORY_ENDING);
+                    serializeToDisk(taskRepository, FileSystemUtil.TASKREPOSITORY_ENDING, true);
                 }
                 break;
             case Types.BEHAVIOUR:
                 Behaviour behaviour = (Behaviour) newElement;
                 behaviourMap.put(behaviour.getId(), behaviour);
                 if (serializeToDisk) {
-                    serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING);
+                    serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
                 }
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
@@ -624,6 +656,7 @@ public class ModelManager implements Observer {
                         break;
                     case Types.TASKREPOSITORY:
                         cmd = new DeleteTaskRepository(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
                         return;
@@ -805,7 +838,7 @@ public class ModelManager implements Observer {
      *
      * @param planElement
      */
-    public void serializeToDisk(SerializablePlanElement planElement, String ending) {
+    public void serializeToDisk(SerializablePlanElement planElement, String ending, boolean moved) {
         try {
             File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
             if (ending.equals(FileSystemUtil.PLAN_ENDING)) {
@@ -827,8 +860,13 @@ public class ModelManager implements Observer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // the counter is set to 2 because, saving an element always creates two filesystem modified events
-        elementsSavedMap.put(planElement.getId(), 2);
+        if (moved) {
+            // the counter is set to 1 because, moving an element always creates 1 filesystem created and 1 filesystem modified events
+            elementsSavedMap.put(planElement.getId(), 1);
+        } else {
+            // the counter is set to 2 because, saving an element always creates two filesystem modified events
+            elementsSavedMap.put(planElement.getId(), 2);
+        }
     }
 
     /**

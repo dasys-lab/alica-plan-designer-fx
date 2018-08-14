@@ -42,7 +42,7 @@ public class MoveFile extends AbstractCommand {
             newRelativeDirectory = modelManager.makeRelativePlansDirectory(newPath.toString(), elementToMove.getName() + "." + FileSystemUtil.PLAN_ENDING);
             elementToMove.setRelativeDirectory(newRelativeDirectory);
 
-            modelManager.serializeToDisk(elementToMove, ending);
+            modelManager.serializeToDisk(elementToMove, ending, true);
         } catch (IOException e1) {
             throw new RuntimeException(e1);
         }
@@ -60,7 +60,7 @@ public class MoveFile extends AbstractCommand {
 
             elementToMove.setRelativeDirectory(originalRelativeDirectory);
 
-            modelManager.serializeToDisk(elementToMove, ending);
+            modelManager.serializeToDisk(elementToMove, ending, true);
         } catch (IOException e1) {
             throw new RuntimeException(e1);
         }

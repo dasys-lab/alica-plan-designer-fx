@@ -25,7 +25,7 @@ public class CreateBehaviour extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING);
+        modelManager.serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
     }
 
     @Override

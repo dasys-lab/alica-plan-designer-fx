@@ -59,7 +59,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
         ModelEvent event = null;
         if (planElement instanceof Plan) {
             if (attribute.equals("name")) {
-                moveFile(absoluteDirectory, FileSystemUtil.PLAN_ENDING);
+                renameFile(absoluteDirectory, FileSystemUtil.PLAN_ENDING);
             }
 
             if (((Plan) planElement).getMasterPlan()) {
@@ -77,21 +77,21 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
 
         if (planElement instanceof PlanType) {
             if (attribute.equals("name")) {
-                moveFile(absoluteDirectory, FileSystemUtil.PLANTYPE_ENDING);
+                renameFile(absoluteDirectory, FileSystemUtil.PLANTYPE_ENDING);
             }
             event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.PLANTYPE);
         }
 
         if (planElement instanceof Behaviour) {
             if (attribute.equals("name")) {
-                moveFile(absoluteDirectory, FileSystemUtil.BEHAVIOUR_ENDING);
+                renameFile(absoluteDirectory, FileSystemUtil.BEHAVIOUR_ENDING);
             }
             event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.BEHAVIOUR);
         }
 
         if (planElement instanceof TaskRepository) {
             if (attribute.equals("name")) {
-                moveFile(absoluteDirectory, FileSystemUtil.TASKREPOSITORY_ENDING);
+                renameFile(absoluteDirectory, FileSystemUtil.TASKREPOSITORY_ENDING);
             }
             event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, null, planElement, Types.TASKREPOSITORY);
         }
@@ -104,7 +104,7 @@ public class ChangeAttributeValue<T> extends AbstractCommand {
         modelManager.fireEvent(event);
     }
 
-    private void moveFile(String absoluteDirectory, String ending) throws IOException {
+    private void renameFile(String absoluteDirectory, String ending) throws IOException {
         File oldFile = FileSystemUtil.getFile(absoluteDirectory, oldValue, ending);
         File newFile = new File(Paths.get(absoluteDirectory, (String) newValue + "." + ending).toString());
         if (newFile.exists()) {

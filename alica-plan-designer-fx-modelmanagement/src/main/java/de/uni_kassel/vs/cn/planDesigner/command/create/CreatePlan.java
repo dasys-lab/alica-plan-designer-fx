@@ -26,7 +26,7 @@ public class CreatePlan extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.serializeToDisk(plan, FileSystemUtil.PLAN_ENDING);
+        modelManager.serializeToDisk(plan, FileSystemUtil.PLAN_ENDING,true);
     }
 
     @Override

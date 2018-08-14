@@ -554,6 +554,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             mmq = new ModelModificationQuery(ModelQueryType.PARSE_ELEMENT, path.toString());
         } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
             mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, path.toString());
+//            mmq.setElementId(modelManager.getPlanElement(path.toString()).getId());
             mainWindowController.getFileTreeView().updateDirectories(path);
         } else if (kind.equals((StandardWatchEventKinds.ENTRY_CREATE))) {
             if (path.toFile().isDirectory()) {
