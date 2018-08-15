@@ -65,4 +65,24 @@ public class FileSystemUtil {
             return null;
         }
     }
+
+    /**
+     * Determines the file ending string corresponding to the given SerializablePlanElement.
+     *
+     * @param planElement whose file ending is to be determined
+     * @return file ending of the plan element
+     */
+    public static String getFileEnding(SerializablePlanElement planElement) {
+        if (planElement instanceof Plan) {
+            return PLAN_ENDING;
+        } else if (planElement instanceof Behaviour) {
+            return BEHAVIOUR_ENDING;
+        } else if (planElement instanceof PlanType) {
+            return PLANTYPE_ENDING;
+        } else if (planElement instanceof TaskRepository) {
+            return TASKREPOSITORY_ENDING;
+        } else {
+            return null;
+        }
+    }
 }
