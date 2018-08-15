@@ -23,7 +23,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class ModelManager implements Observer {
@@ -834,7 +833,7 @@ public class ModelManager implements Observer {
      *
      * @param planElement
      */
-    public void serializeToDisk(SerializablePlanElement planElement, String ending, boolean moved) {
+    public void serializeToDisk(SerializablePlanElement planElement, String ending, boolean movedOrCreated) {
         try {
             File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
             if (ending.equals(FileSystemUtil.PLAN_ENDING)) {
@@ -856,10 +855,7 @@ public class ModelManager implements Observer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (moved) {
-            // the counter is set to 1 because, moving an element always creates 1 filesystem created and 1 filesystem modified events
-            elementsSavedMap.put(planElement.getId(), 1);
-        } else {
+        if (!movedOrCreated) {
             // the counter is set to 2 because, saving an element always creates two filesystem modified events
             elementsSavedMap.put(planElement.getId(), 2);
         }
