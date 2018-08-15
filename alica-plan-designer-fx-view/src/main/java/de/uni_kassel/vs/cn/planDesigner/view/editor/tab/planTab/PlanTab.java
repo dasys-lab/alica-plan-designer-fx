@@ -121,7 +121,7 @@ public class PlanTab extends AbstractPlanTab {
         guiChangeAttributeEvent.setNewValue(newValue);
         guiChangeAttributeEvent.setAttributeType(type);
         guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setParentId(plan.getId());
+        guiChangeAttributeEvent.setElementId(plan.getId());
         guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 

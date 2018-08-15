@@ -713,72 +713,7 @@ public class ModelManager implements Observer {
                 break;
             case CHANGE_ELEMENT:
                 // TODO: Make this a switch case command, like everywhere else in this method, too!
-                if (mmq.getElementType() == Types.ANNOTATEDPLAN) {
-                    if (mmq.getAttributeType().equals(Boolean.class.getSimpleName())) {
-                        PlanType planType = planTypeMap.get(mmq.getParentId());
-                        AnnotatedPlan annotatedPlan = null;
-                        for (AnnotatedPlan ap : planType.getPlans()) {
-                            if (ap.getPlan().getId() == mmq.getElementId()) {
-                                annotatedPlan = ap;
-                                break;
-                            }
-                        }
-                        cmd = new ChangeAttributeValue<Boolean>(this, annotatedPlan, mmq.getAttributeName(), Boolean.parseBoolean(mmq.getNewValue()), planType);
-                    } else {
-                        System.err.println("ModelManager: Unknown property type for AnnotatedPlan: " + mmq.getAttributeType());
-                        cmd = null;
-                    }
-
-                } else if (mmq.getElementType() == Types.PLANTYPE) {
-                    if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
-                        PlanType planType = (PlanType) this.planElementMap.get(mmq.getParentId());
-                        cmd = new ChangeAttributeValue<String>(this, planType, mmq.getAttributeName(), mmq.getNewValue(), planType);
-                    } else {
-                        System.err.println("ModelManager: Unknown property type for PlanType: " + mmq.getAttributeType());
-                        cmd = null;
-                    }
-                } else if (mmq.getElementType() == Types.BEHAVIOUR) {
-                    Behaviour behaviour = behaviourMap.get(mmq.getParentId());
-                    if (mmq.getAttributeType().equals(Integer.class.getSimpleName())) {
-                        cmd = new ChangeAttributeValue<Integer>(this, behaviour, mmq.getAttributeName(), Integer.parseInt(mmq.getNewValue()), behaviour);
-                    } else if (mmq.getAttributeType().equals(Long.class.getSimpleName())) {
-                        cmd = new ChangeAttributeValue<Long>(this, behaviour, mmq.getAttributeName(), Long.parseLong(mmq.getNewValue()), behaviour);
-                    } else if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
-                        cmd = new ChangeAttributeValue<String>(this, behaviour, mmq.getAttributeName(), mmq.getNewValue(), behaviour);
-                    } else {
-                        System.err.println("ModelManager: Unknown property type for Behaviour: " + mmq.getAttributeType());
-                        cmd = null;
-                    }
-                } else if (mmq.getElementType() == Types.PLAN) {
-                    Plan plan = planMap.get(mmq.getParentId());
-                    if (mmq.getAttributeType().equals(Boolean.class.getSimpleName())) {
-                        cmd = new ChangeAttributeValue<Boolean>(this, plan, mmq.getAttributeName(), Boolean.parseBoolean(mmq.getNewValue()), plan);
-                    } else if (mmq.getAttributeType().equals(Double.class.getSimpleName())) {
-                        cmd = new ChangeAttributeValue<Double>(this, plan, mmq.getAttributeName(), Double.parseDouble(mmq.getNewValue()), plan);
-                    } else if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
-                        cmd = new ChangeAttributeValue<String>(this, plan, mmq.getAttributeName(), mmq.getNewValue(), plan);
-                    } else {
-                        System.err.println("ModelManager: Unknown property type for Plan: " + mmq.getAttributeType());
-                        cmd = null;
-                    }
-                } else if (mmq.getElementType() == Types.TASKREPOSITORY) {
-                    if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
-                        cmd = new ChangeAttributeValue<String>(this, taskRepository, mmq.getAttributeName(), mmq.getNewValue(), taskRepository);
-                    } else {
-                        System.err.println("ModelManager: Unknown property type for TaskRepository: " + mmq.getAttributeType());
-                        cmd = null;
-                    }
-                } else if (mmq.getElementType() == Types.TASK) {
-                    PlanElement element = this.planElementMap.get(mmq.getElementId());
-                    if (mmq.getAttributeType().equals(String.class.getSimpleName())) {
-                        cmd = new ChangeAttributeValue<String>(this, element, mmq.getAttributeName(), mmq.getNewValue(), taskRepository);
-                    } else {
-                        System.err.println("ModelManager: Unknown property type for Task: " + mmq.getAttributeType());
-                        cmd = null;
-                    }
-                } else {
-                    cmd = null;
-                }
+                cmd = new ChangeAttributeValue(this, mmq);
                 break;
             default:
                 System.err.println("ModelManager: Unknown model modification query gets ignored!");
