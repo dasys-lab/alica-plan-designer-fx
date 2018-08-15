@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.command;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.SerializablePlanElement;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class MoveFile extends AbstractCommand {
 
@@ -41,6 +43,7 @@ public class MoveFile extends AbstractCommand {
 
             newRelativeDirectory = modelManager.makeRelativePlansDirectory(newPath.toString(), elementToMove.getName() + "." + FileSystemUtil.PLAN_ENDING);
             elementToMove.setRelativeDirectory(newRelativeDirectory);
+            serializeEffectedPlanElements();
 
             modelManager.serializeToDisk(elementToMove, ending, true);
         } catch (IOException e1) {
@@ -59,10 +62,21 @@ public class MoveFile extends AbstractCommand {
             Files.delete(newPath);
 
             elementToMove.setRelativeDirectory(originalRelativeDirectory);
+            serializeEffectedPlanElements();
 
             modelManager.serializeToDisk(elementToMove, ending, true);
         } catch (IOException e1) {
             throw new RuntimeException(e1);
+        }
+    }
+
+    private void serializeEffectedPlanElements() {
+        ArrayList<PlanElement> usages = modelManager.getUsages(elementToMove.getId());
+        for (PlanElement planElement : usages) {
+            if (planElement instanceof SerializablePlanElement) {
+                SerializablePlanElement serializablePlanElement = (SerializablePlanElement) planElement;
+                modelManager.serializeToDisk(serializablePlanElement, FileSystemUtil.getFileEnding(serializablePlanElement), true);
+            }
         }
     }
 }
