@@ -8,7 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanTypeViewModel;
-import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.model.AnnotatedPlanView;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
@@ -55,7 +55,7 @@ public class PlanTypeWindowController implements Initializable {
     private Button removeAllPlansButton;
 
     @FXML
-    private TableView<PlanViewModelElement> planTypeTableView;
+    private TableView<AnnotatedPlanView> planTypeTableView;
 
     @FXML
     private ListView<RepositoryHBox> planListView;
@@ -90,7 +90,7 @@ public class PlanTypeWindowController implements Initializable {
                 return;
             }
             fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), selectedItem.getViewModelId());
-            planTypeTableView.getItems().add(new PlanViewModelElement(selectedItem.getViewModelElement(), true));
+            planTypeTableView.getItems().add(new AnnotatedPlanView(selectedItem.getViewModelElement(), true));
             planTypeTableView.getItems().sort(viewModelElementComparator);
             planTypeTab.setDirty(true);
         });
@@ -190,13 +190,13 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<PlanViewModelElement, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
+        TableColumn<AnnotatedPlanView, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
         activeColumn.setResizable(false);
         activeColumn.setCellValueFactory(new PropertyValueFactory<>(i18NRepo.getString("label.column.activated")));
-        activeColumn.setCellFactory(new Callback<TableColumn<PlanViewModelElement, Boolean>, TableCell<PlanViewModelElement, Boolean>>() {
+        activeColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlanView, Boolean>, TableCell<AnnotatedPlanView, Boolean>>() {
             @Override
-            public TableCell<PlanViewModelElement, Boolean> call(TableColumn<PlanViewModelElement, Boolean> param) {
-                TableCell<PlanViewModelElement, Boolean> annotatedPlanBooleanTableCell = new TableCell<PlanViewModelElement, Boolean>() {
+            public TableCell<AnnotatedPlanView, Boolean> call(TableColumn<AnnotatedPlanView, Boolean> param) {
+                TableCell<AnnotatedPlanView, Boolean> annotatedPlanBooleanTableCell = new TableCell<AnnotatedPlanView, Boolean>() {
                     @Override
                     protected void updateItem(Boolean item, boolean empty) {
                         super.updateItem(item, empty);
@@ -215,12 +215,12 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<PlanViewModelElement, String> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
+        TableColumn<AnnotatedPlanView, String> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
         planNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        planNameColumn.setCellFactory(new Callback<TableColumn<PlanViewModelElement, String>, TableCell<PlanViewModelElement, String>>() {
+        planNameColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlanView, String>, TableCell<AnnotatedPlanView, String>>() {
             @Override
-            public TableCell<PlanViewModelElement, String> call(TableColumn<PlanViewModelElement, String> param) {
-                TableCell<PlanViewModelElement, String> planNameTableCell = new TableCell<PlanViewModelElement, String>() {
+            public TableCell<AnnotatedPlanView, String> call(TableColumn<AnnotatedPlanView, String> param) {
+                TableCell<AnnotatedPlanView, String> planNameTableCell = new TableCell<AnnotatedPlanView, String>() {
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -236,9 +236,9 @@ public class PlanTypeWindowController implements Initializable {
         planTypeTableView.getColumns().add(activeColumn);
         planTypeTableView.getColumns().add(planNameColumn);
         planTypeTableView.setRowFactory(tv -> {
-            TableRow<PlanViewModelElement> annotatedPlanTableRow = new TableRow<>();
+            TableRow<AnnotatedPlanView> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
-                PlanViewModelElement item = annotatedPlanTableRow.getItem();
+                AnnotatedPlanView item = annotatedPlanTableRow.getItem();
                 if (e.getClickCount() == 2 && item != null) {
                     item.setActivated(!item.isActivated());
                     planTypeTableView.refresh();
@@ -302,8 +302,8 @@ public class PlanTypeWindowController implements Initializable {
     }
 
     private boolean isAlreadyInPlanType(ViewModelElement plan) {
-        for (PlanViewModelElement planViewModelElement : planTypeViewModel.getPlansInPlanType()) {
-            if (plan.getId() == planViewModelElement.getId()) {
+        for (AnnotatedPlanView annotatedPlanView : planTypeViewModel.getPlansInPlanType()) {
+            if (plan.getId() == annotatedPlanView.getId()) {
                 return true;
             }
         }

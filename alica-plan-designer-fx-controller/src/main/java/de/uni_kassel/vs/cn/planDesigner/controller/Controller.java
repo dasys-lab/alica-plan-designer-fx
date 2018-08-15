@@ -621,10 +621,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
             Plan plan = annotatedPlan.getPlan();
             if (plan.getMasterPlan()) {
-                planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
+                planTypeViewModel.addPlanToPlansInPlanType(new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
                         .isActivated()));
             } else {
-                planTypeViewModel.addPlanToPlansInPlanType(new PlanViewModelElement(plan.getId(), plan.getName(), Types.PLAN, annotatedPlan
+                planTypeViewModel.addPlanToPlansInPlanType(new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.PLAN, annotatedPlan
                         .isActivated()));
             }
         }
