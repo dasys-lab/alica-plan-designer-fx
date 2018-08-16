@@ -233,7 +233,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         break;
                     case Types.TASK:
                         Task task = (Task) planElement;
-                        ViewModelElement element = viewModelFactory.createViewModelElement(task, Types.TASK, taskRepository.getId());
+                        ViewModelElement element = viewModelFactory.createViewModelElement(task, Types.TASK, task.getTaskRepository().getId());
                         repoViewModel.addTask(element);
                         taskRepositoryViewModel.addTask(element);
                         break;
