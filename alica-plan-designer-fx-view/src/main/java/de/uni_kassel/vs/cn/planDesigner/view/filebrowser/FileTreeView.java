@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
@@ -125,10 +126,11 @@ public final class FileTreeView extends TreeView<File> {
                 return;
             }
 
-            //TODO fire file moved event
-            controller.getMoveFileHandler().moveFile(draggedItem.getViewModelElement().getId(),
-                    draggedItem.getValue().toPath(),
-                    new File(parent, draggedItem.getValue().getName()).toPath());
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.MOVE_ELEMENT, draggedItem.getViewModelElement().getType(),
+                    draggedItem.getViewModelElement().getName());
+            event.setElementId(draggedItem.getViewModelElement().getId());
+            event.setAbsoluteDirectory(parent.toString());
+            controller.getGuiModificationHandler().handle(event);
             e.consume();
         });
 
@@ -183,7 +185,7 @@ public final class FileTreeView extends TreeView<File> {
         FileTreeItem folder = findFolder(viewModelElement, topLevelFolder, 0);
         boolean deleted = false;
         if (folder != null) {
-            if(folderContainsViewModelElement(viewModelElement, folder)) {
+            if (folderContainsViewModelElement(viewModelElement, folder)) {
                 removeFromFolder(viewModelElement, folder);
                 deleted = true;
             }
@@ -191,7 +193,7 @@ public final class FileTreeView extends TreeView<File> {
                     ())), viewModelElement);
             folder.getChildren().add(newItem);
             folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
-            if(deleted) {
+            if (deleted) {
                 this.getSelectionModel().select(newItem);
             }
         } else {
@@ -200,9 +202,9 @@ public final class FileTreeView extends TreeView<File> {
     }
 
     private boolean folderContainsViewModelElement(ViewModelElement viewModelElement, FileTreeItem folder) {
-        for(TreeItem item : folder.getChildren()) {
+        for (TreeItem item : folder.getChildren()) {
             FileTreeItem fileTreeItem = (FileTreeItem) item;
-            if(!fileTreeItem.getValue().isDirectory() && fileTreeItem.getViewModelElement().getId() == viewModelElement.getId()) {
+            if (!fileTreeItem.getValue().isDirectory() && fileTreeItem.getViewModelElement().getId() == viewModelElement.getId()) {
                 return true;
             }
         }

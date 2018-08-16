@@ -9,6 +9,7 @@ public class GuiModificationEvent {
 
     // optional depending from quantifierType of event
     protected String absoluteDirectory;
+    protected String newAbsoluteDirectory;
     protected long parentId;
     protected long elementId;
 
@@ -52,5 +53,13 @@ public class GuiModificationEvent {
 
     public void setElementId(long elementId) {
         this.elementId = elementId;
+    }
+
+    public String getNewAbsoluteDirectory() {
+        return newAbsoluteDirectory;
+    }
+
+    public void setNewAbsoluteDirectory(String newAbsoluteDirectory) {
+        this.newAbsoluteDirectory = newAbsoluteDirectory;
     }
 }

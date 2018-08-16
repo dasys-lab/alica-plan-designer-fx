@@ -124,4 +124,5 @@ public class ModelModificationQuery {
     public void setAttributeType(String attributeType) {
         this.attributeType = attributeType;
     }
+
 }

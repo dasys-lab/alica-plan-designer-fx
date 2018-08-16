@@ -1,73 +1,65 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.SerializablePlanElement;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class MoveFile extends AbstractCommand {
 
-    private Path originalPath;
-    private Path newPath;
-    private AbstractPlan elementToMove;
+    private SerializablePlanElement elementToMove;
+    private String newAbsoluteDirectory;
     private String originalRelativeDirectory;
-    private String newRelativeDirectory;
     private String ending;
 
 
-    public MoveFile(ModelManager modelManager, PlanElement elementToMove, Path originalPath, Path newPath) {
+    public MoveFile(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        this.originalPath = originalPath;
-        this.newPath = newPath;
-        this.elementToMove = (AbstractPlan) elementToMove;
+        this.elementToMove = (SerializablePlanElement) modelManager.getPlanElement(mmq.getElementId());
+        this.ending = FileSystemUtil.getFileEnding(this.elementToMove);
+        this.newAbsoluteDirectory = mmq.getAbsoluteDirectory();
         this.originalRelativeDirectory = this.elementToMove.getRelativeDirectory();
-        this.ending = originalPath.toString().substring(originalPath.toString().lastIndexOf(".") + 1);
     }
 
     @Override
     public void doCommand() {
-        try {
-            if (originalPath.endsWith("pml")) {
-                //TODO implement once pmlex is supported
-//                    Files.move(new File(originalPath + "ex").toPath(),
-//                            new File(newPath + "ex").toPath());
-            }
-            Files.delete(originalPath);
+        // 1. Delete file from file system
+        modelManager.removeFromDisk(elementToMove, ending, true);
 
-            newRelativeDirectory = modelManager.makeRelativePlansDirectory(newPath.toString(), elementToMove.getName() + "." + FileSystemUtil.PLAN_ENDING);
-            elementToMove.setRelativeDirectory(newRelativeDirectory);
-            serializeEffectedPlanElements();
+        // 2. Change relative directory property
+        elementToMove.setRelativeDirectory(modelManager.makeRelativeDirectory(newAbsoluteDirectory, elementToMove.getName() + "." + ending));
 
-            modelManager.serializeToDisk(elementToMove, ending, true);
-        } catch (IOException e1) {
-            throw new RuntimeException(e1);
-        }
+        // 3. Serialize file to file system
+        modelManager.serializeToDisk(elementToMove, ending, true);
+
+        // 4. Do the 1-3 for the pmlex file in case of pml files
+        //TODO implement once pmlex is supported
+
+        // 5. Update external references to file
+        serializeEffectedPlanElements();
     }
 
     @Override
     public void undoCommand() {
-        try {
-            if (originalPath.endsWith("pml")) {
-                //TODO implement once pmlex is supported
-//                    Files.move(new File(originalPath + "ex").toPath(),
-//                            new File(newPath + "ex").toPath());
-            }
-            Files.delete(newPath);
+        // 1. Delete file from file system
+        modelManager.removeFromDisk(elementToMove, ending, true);
 
-            elementToMove.setRelativeDirectory(originalRelativeDirectory);
-            serializeEffectedPlanElements();
+        // 2. Change relative directory property
+        elementToMove.setRelativeDirectory(modelManager.makeRelativeDirectory(originalRelativeDirectory, elementToMove.getName() + "." + ending));
 
-            modelManager.serializeToDisk(elementToMove, ending, true);
-        } catch (IOException e1) {
-            throw new RuntimeException(e1);
-        }
+        // 3. Serialize file to file system
+        modelManager.serializeToDisk(elementToMove, ending, true);
+
+        // 4. Do the same for the pmlex file in case of pml files
+        //TODO implement once pmlex is supported
+
+        // 5. Update external references to file
+        serializeEffectedPlanElements();
     }
 
     private void serializeEffectedPlanElements() {

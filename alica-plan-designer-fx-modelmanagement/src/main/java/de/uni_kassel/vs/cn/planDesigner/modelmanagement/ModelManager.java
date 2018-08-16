@@ -49,6 +49,8 @@ public class ModelManager implements Observer {
      */
     private HashMap<Long, Integer> elementsSavedMap;
 
+    private HashMap<Long, Integer> elementDeletedMap;
+
     private ObjectMapper objectMapper;
 
     public ModelManager() {
@@ -61,6 +63,8 @@ public class ModelManager implements Observer {
         commandStack = new CommandStack();
         commandStack.addObserver(this);
         elementsSavedMap = new HashMap<>();
+        elementDeletedMap = new HashMap<>();
+
         setupObjectMapper();
     }
 
@@ -276,6 +280,9 @@ public class ModelManager implements Observer {
                     } else {
                         planElementMap.put(planType.getId(), planType);
                         planTypeMap.put(planType.getId(), planType);
+                        for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
+                            planElementMap.put(annotatedPlan.getId(), annotatedPlan);
+                        }
                         fireEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE);
                     }
                     break;
@@ -512,14 +519,14 @@ public class ModelManager implements Observer {
                 Plan plan = (Plan) planElement;
                 planMap.remove(plan.getId());
                 if (removeFromDisk) {
-                    removeFromDisk(plan, FileSystemUtil.PLAN_ENDING);
+                    removeFromDisk(plan, FileSystemUtil.PLAN_ENDING, true);
                 }
                 break;
             case Types.PLANTYPE:
                 PlanType planType = (PlanType) planElement;
                 planTypeMap.remove(planType.getId());
                 if (removeFromDisk) {
-                    removeFromDisk(planType, FileSystemUtil.PLANTYPE_ENDING);
+                    removeFromDisk(planType, FileSystemUtil.PLANTYPE_ENDING, true);
                 }
                 break;
             case Types.TASK:
@@ -530,14 +537,14 @@ public class ModelManager implements Observer {
             case Types.TASKREPOSITORY:
                 taskRepository = null;
                 if (removeFromDisk) {
-                    removeFromDisk((TaskRepository) planElement, FileSystemUtil.TASKREPOSITORY_ENDING);
+                    removeFromDisk((TaskRepository) planElement, FileSystemUtil.TASKREPOSITORY_ENDING, true);
                 }
                 break;
             case Types.BEHAVIOUR:
                 Behaviour behaviour = (Behaviour) planElement;
                 behaviourMap.remove(behaviour.getId());
                 if (removeFromDisk) {
-                    removeFromDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING);
+                    removeFromDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
                 }
                 break;
             default:
@@ -641,6 +648,11 @@ public class ModelManager implements Observer {
                 cmd = new ParseAbstractPlan(this, mmq);
                 break;
             case DELETE_ELEMENT:
+                if (elementDeletedMap.containsKey(mmq.getElementId())) {
+                    // TODO change map to list, cause counter is only 1
+                    elementDeletedMap.remove(mmq.getElementId());
+                    return;
+                }
                 switch (mmq.getElementType()) {
                     case Types.MASTERPLAN:
                     case Types.PLAN:
@@ -714,6 +726,9 @@ public class ModelManager implements Observer {
                 // TODO: Make this a switch case command, like everywhere else in this method, too!
                 cmd = new ChangeAttributeValue(this, mmq);
                 break;
+            case MOVE_ELEMENT:
+                cmd = new MoveFile(this, mmq);
+                break;
             default:
                 System.err.println("ModelManager: Unknown model modification query gets ignored!");
                 return;
@@ -728,8 +743,10 @@ public class ModelManager implements Observer {
      * @param fileName
      * @return
      */
-    public String makeRelativePlansDirectory(String absoluteDirectory, String fileName) {
+    public String makeRelativeDirectory(String absoluteDirectory, String fileName) {
         String relativeDirectory = absoluteDirectory.replace(plansPath, "");
+        relativeDirectory = relativeDirectory.replace(tasksPath, "");
+        relativeDirectory = relativeDirectory.replace(rolesPath, "");
         relativeDirectory = relativeDirectory.replace(fileName, "");
         if (relativeDirectory.startsWith(File.separator)) {
             relativeDirectory = relativeDirectory.substring(1);
@@ -738,29 +755,6 @@ public class ModelManager implements Observer {
             relativeDirectory = relativeDirectory.substring(0, relativeDirectory.length() - 1);
         }
         return relativeDirectory;
-    }
-
-    /**
-     * Creates a move file command and executes it
-     *
-     * @param movedFileId
-     * @param originalPath
-     * @param newPath
-     */
-    public void moveFile(long movedFileId, Path originalPath, Path newPath) {
-        PlanElement elementToMove = null;
-        for (long elementId : planElementMap.keySet()) {
-            if (elementId == movedFileId) {
-                elementToMove = planElementMap.get(elementId);
-                break;
-            }
-        }
-        if (elementToMove == null) {
-            System.out.println("ModelManager: PlanElement " + movedFileId + " to move is not found!");
-            return;
-        }
-        MoveFile moveFileCommand = new MoveFile(this, elementToMove, originalPath, newPath);
-        commandStack.storeAndExecute(moveFileCommand);
     }
 
     /**
@@ -801,7 +795,10 @@ public class ModelManager implements Observer {
      *
      * @param planElement
      */
-    public void removeFromDisk(SerializablePlanElement planElement, String ending) {
+    public void removeFromDisk(SerializablePlanElement planElement, String ending, boolean doneByGUI) {
+        if (doneByGUI) {
+            elementDeletedMap.put(planElement.getId(), 1);
+        }
         File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
         outfile.delete();
     }

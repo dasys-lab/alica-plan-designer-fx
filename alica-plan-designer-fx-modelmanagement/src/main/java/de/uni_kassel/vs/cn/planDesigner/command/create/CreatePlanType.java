@@ -15,7 +15,7 @@ public class CreatePlanType extends AbstractCommand {
         if (mmq.getElementType().equals(Types.PLANTYPE)) {
             this.planType = new PlanType();
             this.planType.setName(mmq.getName());
-            this.planType.setRelativeDirectory(modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), planType.getName()+ "." + FileSystemUtil.PLANTYPE_ENDING));
+            this.planType.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), planType.getName()+ "." + FileSystemUtil.PLANTYPE_ENDING));
         }
         else
         {
@@ -30,6 +30,6 @@ public class CreatePlanType extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        modelManager.removeFromDisk(planType, FileSystemUtil.PLANTYPE_ENDING);
+        modelManager.removeFromDisk(planType, FileSystemUtil.PLANTYPE_ENDING, true);
     }
 }

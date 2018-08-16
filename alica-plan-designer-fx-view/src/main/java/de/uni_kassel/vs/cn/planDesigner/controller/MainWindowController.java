@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
@@ -82,7 +81,6 @@ public class MainWindowController implements Initializable {
     private ConfigurationWindowController configWindowController;
     private IGuiStatusHandler guiStatusHandler;
     private IGuiModificationHandler guiModificationHandler;
-    private IMoveFileHandler moveFileHandler;
     private Menu fileMenu;
     private Menu codeGenerationMenu;
     private EditMenu editMenu;
@@ -284,16 +282,8 @@ public class MainWindowController implements Initializable {
         this.guiModificationHandler = creationHandler;
     }
 
-    public void setMoveFileHandler(IMoveFileHandler moveFileHandler) {
-        this.moveFileHandler = moveFileHandler;
-    }
-
     public IGuiModificationHandler getGuiModificationHandler() {
         return guiModificationHandler;
-    }
-
-    public IMoveFileHandler getMoveFileHandler() {
-        return moveFileHandler;
     }
 
     public void setUpFileTreeView(String plansPath, String rolesPath, String tasksPath) {

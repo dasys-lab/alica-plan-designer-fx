@@ -15,7 +15,7 @@ public class CreateBehaviour extends AbstractCommand {
         if (mmq.getElementType().equals(Types.BEHAVIOUR)) {
             this.behaviour = new Behaviour();
             this.behaviour.setName(mmq.getName());
-            this.behaviour.setRelativeDirectory(modelManager.makeRelativePlansDirectory(mmq.getAbsoluteDirectory(), behaviour.getName()+ "." + FileSystemUtil.BEHAVIOUR_ENDING));
+            this.behaviour.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), behaviour.getName()+ "." + FileSystemUtil.BEHAVIOUR_ENDING));
         }
         else
         {
@@ -30,6 +30,6 @@ public class CreateBehaviour extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        modelManager.removeFromDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING);
+        modelManager.removeFromDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
     }
 }

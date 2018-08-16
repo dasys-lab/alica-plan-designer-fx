@@ -10,7 +10,6 @@ import de.uni_kassel.vs.cn.planDesigner.events.*;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
-import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IMoveFileHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
@@ -39,7 +38,7 @@ import java.util.ArrayList;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, IMoveFileHandler {
+public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -68,7 +67,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
         mainWindowController.setGuiModificationHandler(this);
-        mainWindowController.setMoveFileHandler(this);
 
         setupConfigGuiStuff();
 
@@ -521,6 +519,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     mmq.setNewValue(guiChangeAttributeEvent.getNewValue());
                 }
                 break;
+            case MOVE_ELEMENT:
+                mmq = new ModelModificationQuery(ModelQueryType.MOVE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
+                mmq.setElementId(event.getElementId());
+                break;
             default:
                 mmq = null;
         }
@@ -539,8 +541,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         if (kind.equals((StandardWatchEventKinds.ENTRY_MODIFY))) {
             mmq = new ModelModificationQuery(ModelQueryType.PARSE_ELEMENT, path.toString());
         } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
+            PlanElement element = modelManager.getPlanElement(path.toString());
+            if( element == null) {
+                return;
+            }
             mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, path.toString());
-//            mmq.setElementId(modelManager.getPlanElement(path.toString()).getId());
+            mmq.setElementId(element.getId());
             mainWindowController.getFileTreeView().updateDirectories(path);
         } else if (kind.equals((StandardWatchEventKinds.ENTRY_CREATE))) {
             if (path.toFile().isDirectory()) {
@@ -554,14 +560,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             return;
         }
         modelManager.handleModelModificationQuery(mmq);
-    }
-
-    /**
-     * Called by the FileTreeView when moving files
-     */
-    @Override
-    public void moveFile(long id, Path originalPath, Path newPath) {
-        modelManager.moveFile(id, originalPath, newPath);
     }
 
     @Override
