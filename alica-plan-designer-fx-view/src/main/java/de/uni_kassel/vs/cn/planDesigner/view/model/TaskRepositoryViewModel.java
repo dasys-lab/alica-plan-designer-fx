@@ -65,8 +65,13 @@ public class TaskRepositoryViewModel {
         this.tasks.add(task);
     }
 
-    public void removeTask(ViewModelElement task) {
-        tasks.remove(task);
+    public void removeTask(long id) {
+        for(ViewModelElement task : tasks) {
+            if(task.getId() == id) {
+                this.tasks.remove(task);
+                break;
+            }
+        }
     }
 
     public void clearTasks() {

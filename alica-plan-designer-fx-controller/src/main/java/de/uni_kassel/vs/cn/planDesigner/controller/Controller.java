@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
+import de.uni_kassel.vs.cn.planDesigner.ViewModelFactory.ViewModelFactory;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
@@ -50,14 +51,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     // View Objects
     private RepositoryViewModel repoViewModel;
-    private TaskRepositoryViewModel taskViewModel;
+    private TaskRepositoryViewModel taskRepositoryViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
     private RepositoryTabPane repoTabPane;
     private EditorTabPane editorTabPane;
+    private ViewModelFactory viewModelFactory;
 
     // Code Generation Objects
-    GeneratedSourcesManager generatedSourcesManager;
+    private GeneratedSourcesManager generatedSourcesManager;
 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
@@ -70,8 +72,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         setupConfigGuiStuff();
 
-        repoViewModel = new RepositoryViewModel();
-        taskViewModel = new TaskRepositoryViewModel();
+        viewModelFactory = new ViewModelFactory();
+
+        //TODO create mothods in factory?
+        repoViewModel = viewModelFactory.createRepositoryViewModel();
+        taskRepositoryViewModel = viewModelFactory.createTaskRepositoryViewModel();
+
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -130,43 +136,37 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.PLAN:
                         Plan plan = (Plan) planElement;
                         addTreeViewElement(plan, Types.PLAN);
-                        ViewModelElement element = new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan.getRelativeDirectory());
-                        repoViewModel.addPlan(element);
                         updatePlansInPlanTypeTabs(plan);
+                        repoViewModel.addPlan(viewModelFactory.createViewModelElement(planElement, Types.PLAN));
                         break;
                     case Types.MASTERPLAN:
-                        plan = (Plan) planElement;
-                        addTreeViewElement(plan, Types.MASTERPLAN);
-                        element = new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, plan.getRelativeDirectory());
-                        repoViewModel.addPlan(element);
+                        Plan masterPlan = (Plan) planElement;
+                        addTreeViewElement(masterPlan, Types.MASTERPLAN);
+                        updatePlansInPlanTypeTabs(masterPlan);
+                        repoViewModel.addPlan(viewModelFactory.createViewModelElement(planElement, Types.MASTERPLAN));
                         break;
                     case Types.PLANTYPE:
                         addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
-                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType) planElement)
-                                .getRelativeDirectory()));
+                        repoViewModel.addPlanType(viewModelFactory.createViewModelElement(planElement, Types.PLANTYPE));
                         break;
                     case Types.BEHAVIOUR:
                         addTreeViewElement((Behaviour) planElement, Types.BEHAVIOUR);
-                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour)
-                                planElement).getRelativeDirectory()));
+                        repoViewModel.addBehaviour(viewModelFactory.createViewModelElement(planElement, Types.BEHAVIOUR));
                         break;
                     case Types.TASKREPOSITORY:
                         addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
-                        taskViewModel.clearTasks();
+                        taskRepositoryViewModel.clearTasks();
                         for (Task task : ((TaskRepository) planElement).getTasks()) {
-                            ViewModelElement taskElement = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
-                            taskElement.setParentId(planElement.getId());
+                            ViewModelElement taskElement = viewModelFactory.createViewModelElement(planElement, Types.TASK, planElement.getId());
                             repoViewModel.removeTask(task.getId());
                             repoViewModel.addTask(taskElement);
-                            taskViewModel.addTask(taskElement);
+                            taskRepositoryViewModel.addTask(taskElement);
                         }
                         break;
                     case Types.TASK:
-                        Task task = (Task) planElement;
-                        element = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
-                        element.setParentId(task.getTaskRepository().getId());
+                        ViewModelElement element = viewModelFactory.createViewModelElement(planElement, Types.TASK, planElement.getId());
                         repoViewModel.addTask(element);
-                        taskViewModel.addTask(element);
+                        taskRepositoryViewModel.addTask(element);
                         break;
                     default:
                         System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
@@ -177,28 +177,28 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 planElement = event.getOldElement();
                 switch (event.getElementType()) {
                     case Types.PLAN:
-                        removeTreeViewElement((AbstractPlan) planElement, Types.PLAN);
-                        repoViewModel.removePlan(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLAN));
+                        removeTreeViewElement((SerializablePlanElement) planElement, Types.PLAN);
+                        repoViewModel.removePlan(planElement.getId());
                         break;
                     case Types.MASTERPLAN:
-                        removeTreeViewElement((AbstractPlan) planElement, Types.MASTERPLAN);
-                        repoViewModel.removePlan(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLAN));
+                        removeTreeViewElement((SerializablePlanElement) planElement, Types.MASTERPLAN);
+                        repoViewModel.removePlan(planElement.getId());
                         break;
                     case Types.PLANTYPE:
-                        removeTreeViewElement((AbstractPlan) planElement, Types.PLANTYPE);
-                        repoViewModel.removePlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE));
+                        removeTreeViewElement((SerializablePlanElement) planElement, Types.PLANTYPE);
+                        repoViewModel.removePlanType(planElement.getId());
                         break;
                     case Types.BEHAVIOUR:
-                        removeTreeViewElement((AbstractPlan) planElement, Types.BEHAVIOUR);
-                        repoViewModel.removeBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR));
+                        removeTreeViewElement((SerializablePlanElement) planElement, Types.BEHAVIOUR);
+                        repoViewModel.removeBehaviour(planElement.getId());
                         break;
                     case Types.TASKREPOSITORY:
                         repoViewModel.clearTasks();
-                        taskViewModel.clearTasks();
+                        taskRepositoryViewModel.clearTasks();
                         break;
                     case Types.TASK:
                         repoViewModel.removeTask(planElement.getId());
-                        taskViewModel.removeTask(new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK));
+                        taskRepositoryViewModel.removeTask(planElement.getId());
                         break;
                     default:
                         System.err.println("Controller: Deletion of unknown type " + event.getElementType() + " gets ignored!");
@@ -209,39 +209,33 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 planElement = event.getNewElement();
                 switch (event.getElementType()) {
                     case Types.PLAN:
-                        Plan plan = (Plan) planElement;
-                        addTreeViewElement(plan, Types.PLAN);
-                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN, plan.getRelativeDirectory()));
+                        addTreeViewElement((SerializablePlanElement) planElement, Types.PLAN);
+                        repoViewModel.addPlan(viewModelFactory.createViewModelElement(planElement, Types.PLAN));
                         break;
                     case Types.MASTERPLAN:
-                        plan = (Plan) planElement;
-                        addTreeViewElement(plan, Types.MASTERPLAN);
-                        repoViewModel.addPlan(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN, plan.getRelativeDirectory()));
+                        addTreeViewElement((SerializablePlanElement) planElement, Types.MASTERPLAN);
+                        repoViewModel.addPlan(viewModelFactory.createViewModelElement(planElement, Types.MASTERPLAN));
                         break;
                     case Types.PLANTYPE:
-                        addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
-                        repoViewModel.addPlanType(new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType) planElement)
-                                .getRelativeDirectory()));
+                        addTreeViewElement((SerializablePlanElement) planElement, Types.PLANTYPE);
+                        repoViewModel.addPlanType(viewModelFactory.createViewModelElement(planElement, Types.PLANTYPE));
                         break;
                     case Types.BEHAVIOUR:
-                        addTreeViewElement((Behaviour) planElement, Types.BEHAVIOUR);
-                        repoViewModel.addBehaviour(new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour)
-                                planElement).getRelativeDirectory()));
+                        addTreeViewElement((SerializablePlanElement) planElement, Types.BEHAVIOUR);
+                        repoViewModel.addBehaviour(viewModelFactory.createViewModelElement(planElement, Types.BEHAVIOUR));
                         break;
                     case Types.TASKREPOSITORY:
-                        addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
-                        for (Task task : ((TaskRepository) planElement).getTasks()) {
-                            ViewModelElement element = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
-                            element.setParentId(task.getTaskRepository().getId());
-                            repoViewModel.addTask(element);
+                        TaskRepository taskRepository = (TaskRepository) planElement;
+                        addTreeViewElement(taskRepository, Types.TASKREPOSITORY);
+                        for (Task task : taskRepository.getTasks()) {
+                            repoViewModel.addTask(viewModelFactory.createViewModelElement(task, Types.TASK, taskRepository.getId()));
                         }
                         break;
                     case Types.TASK:
                         Task task = (Task) planElement;
-                        ViewModelElement element = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
-                        element.setParentId(task.getTaskRepository().getId());
+                        ViewModelElement element = viewModelFactory.createViewModelElement(task, Types.TASK, taskRepository.getId());
                         repoViewModel.addTask(element);
-                        taskViewModel.addTask(element);
+                        taskRepositoryViewModel.addTask(element);
                         break;
                     default:
                         System.err.println("Controller: Parsing of unknown type " + event.getElementType() + " gets ignored!");
@@ -252,7 +246,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 tabs = editorTabPane.getTabs();
                 switch (event.getElementType()) {
                     case Types.TASKREPOSITORY:
-                        taskViewModel.setDirty(false);
+                        taskRepositoryViewModel.setDirty(false);
                         break;
                     case Types.PLANTYPE:
                         for (Tab tab : tabs) {
@@ -335,34 +329,28 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         if (planElement instanceof Plan) {
             repoViewModel.removePlan(planElement.getId());
             if (((Plan) planElement).getMasterPlan()) {
-                viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.MASTERPLAN, ((Plan)
-                        planElement).getRelativeDirectory());
+                viewModelElement = viewModelFactory.createViewModelElement(planElement, Types.MASTERPLAN);
                 repoViewModel.addPlan(viewModelElement);
             } else {
-                viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLAN, ((Plan)
-                        planElement).getRelativeDirectory());
+                viewModelElement = viewModelFactory.createViewModelElement(planElement, Types.PLAN);
                 repoViewModel.addPlan(viewModelElement);
             }
             replaceFileTreeItem(viewModelElement);
         } else if (planElement instanceof Behaviour) {
-            viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.BEHAVIOUR, ((Behaviour)
-                    planElement).getRelativeDirectory());
+            viewModelElement = viewModelFactory.createViewModelElement(planElement, Types.BEHAVIOUR);
             repoViewModel.removeBehaviour(planElement.getId());
             repoViewModel.addBehaviour(viewModelElement);
             replaceFileTreeItem(viewModelElement);
         } else if (planElement instanceof PlanType) {
-            viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.PLANTYPE, ((PlanType)
-                    planElement).getRelativeDirectory());
+            viewModelElement = viewModelFactory.createViewModelElement(planElement, Types.PLANTYPE);
             repoViewModel.removePlanType(planElement.getId());
             repoViewModel.addPlanType(viewModelElement);
             replaceFileTreeItem(viewModelElement);
         } else if (planElement instanceof TaskRepository) {
-            viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY, ((TaskRepository)
-                    planElement).getRelativeDirectory());
+            viewModelElement = viewModelFactory.createViewModelElement(planElement, Types.TASKREPOSITORY);
             replaceFileTreeItem(viewModelElement);
         } else if (planElement instanceof Task) {
-            viewModelElement = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK, ((Task)
-                    planElement).getTaskRepository().getRelativeDirectory());
+            viewModelElement = viewModelFactory.createViewModelElement(planElement, Types.TASK, ((Task) planElement).getTaskRepository().getId());
             repoViewModel.removeTask(planElement.getId());
             repoViewModel.addTask(viewModelElement);
         }
@@ -421,16 +409,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private void addTreeViewElement(SerializablePlanElement planElement, String type) {
         FileTreeView fileTreeView = mainWindowController.getFileTreeView();
         if (fileTreeView != null) {
-            fileTreeView.addViewModelElement(new ViewModelElement(planElement.getId(),
-                    planElement.getName(), type, planElement.getRelativeDirectory()));
+            fileTreeView.addViewModelElement(viewModelFactory.createViewModelElement(planElement, type));
         }
     }
 
     private void removeTreeViewElement(SerializablePlanElement planElement, String type) {
         FileTreeView fileTreeView = mainWindowController.getFileTreeView();
         if (fileTreeView != null) {
-            fileTreeView.removeViewModelElement(new ViewModelElement(planElement.getId(),
-                    planElement.getName(), type, planElement.getRelativeDirectory()));
+            fileTreeView.removeViewModelElement(viewModelFactory.createViewModelElement(planElement, type));
         }
     }
 
@@ -446,7 +432,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         ArrayList<PlanElement> usagePlanElements = this.modelManager.getUsages(viewModelElement.getId());
         if (usagePlanElements != null) {
             for (PlanElement planElement : usagePlanElements) {
-                usageViewModelElements.add(new ViewModelElement(planElement.getId(), planElement.getName(), FileSystemUtil.getTypeString(planElement)));
+                usageViewModelElements.add(viewModelFactory.createViewModelElement(planElement, FileSystemUtil.getTypeString(planElement)));
             }
         }
         return usageViewModelElements;
@@ -580,17 +566,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void handleTabOpenedEvent(TaskRepositoryTab taskRepositoryTab) {
-        taskViewModel.clearTasks();
+        taskRepositoryViewModel.clearTasks();
         TaskRepository taskRepo = modelManager.getTaskRepository();
         if (taskRepo != null) {
             for (Task task : taskRepo.getTasks()) {
-                ViewModelElement element = new ViewModelElement(task.getId(), task.getName(), Types.TASK);
-                element.setParentId(taskRepo.getId());
-                taskViewModel.addTask(element);
+                taskRepositoryViewModel.addTask(viewModelFactory.createViewModelElement(task, Types.TASK, task.getTaskRepository().getId()));
             }
         }
-        taskViewModel.setTaskRepositoryTab(taskRepositoryTab);
-        taskViewModel.setDirty(false);
+        taskRepositoryViewModel.setTaskRepositoryTab(taskRepositoryTab);
+        taskRepositoryViewModel.setDirty(false);
     }
 
     @Override
@@ -605,123 +589,18 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {
-        PlanElement planElement = modelManager.getPlanElement(planTypeTab.getPresentedViewModelElement().getId());
-        if (planElement == null || !(planElement instanceof PlanType)) {
-            System.err.println("Controller: Opening PlanTypeTab for unknown Id or not presented element is not a PlanType!");
-            return;
-        }
-
-        PlanType planType = (PlanType) planElement;
-        PlanTypeViewModel planTypeViewModel = new PlanTypeViewModel(planType.getId(), planType.getName(),
-                Types.PLANTYPE);
-        planTypeViewModel.setRelativeDirectory(planType.getRelativeDirectory());
-        planTypeViewModel.setComment(planType.getComment());
-
-
-        for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
-            Plan plan = annotatedPlan.getPlan();
-            if (plan.getMasterPlan()) {
-                planTypeViewModel.addPlanToPlansInPlanType(new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
-                        .isActivated()));
-            } else {
-                planTypeViewModel.addPlanToPlansInPlanType(new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.PLAN, annotatedPlan
-                        .isActivated()));
-            }
-        }
-
-        ArrayList<Plan> plans = modelManager.getPlans();
-        for (Plan plan : plans) {
-            if (plan.getMasterPlan()) {
-                planTypeViewModel.addPlanToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN));
-            } else {
-                planTypeViewModel.addPlanToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN));
-            }
-        }
-
-        planTypeTab.setPlanTypeViewModel(planTypeViewModel);
+        planTypeTab.setPlanTypeViewModel(viewModelFactory.createPlanTypeViewModel(modelManager.getPlanElement(planTypeTab.getPresentedViewModelElement().getId()),
+                modelManager.getPlans()));
     }
 
     @Override
     public ViewModelElement getViewModelElement(long id) {
-        PlanElement planElement = modelManager.getPlanElement(id);
-        if (planElement != null) {
-            if (planElement instanceof Task) {
-                ViewModelElement task = new ViewModelElement(planElement.getId(), planElement.getName(), Types.TASK);
-                task.setParentId(modelManager.getTaskRepository().getId());
-                return task;
-            } else if (planElement instanceof TaskRepository) {
-                PlanElementViewModel taskRepo = new PlanElementViewModel(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
-                taskRepo.setComment(planElement.getComment());
-                taskRepo.setRelativeDirectory(((TaskRepository) planElement).getRelativeDirectory());
-                return taskRepo;
-            } else if (planElement instanceof Plan) {
-                PlanViewModel element = null;
-                Plan plan = (Plan) planElement;
-                if (plan.getMasterPlan()) {
-                    element = new PlanViewModel(plan.getId(), plan.getName(), Types.MASTERPLAN);
-                } else {
-                    element = new PlanViewModel(plan.getId(), plan.getName(), Types.PLAN);
-                }
-                element.setComment(plan.getComment());
-                element.setRelativeDirectory(plan.getRelativeDirectory());
-                element.setUtilityThreshold(plan.getUtilityThreshold());
-                element.setMasterPlan(plan.getMasterPlan());
-                return element;
-            } else if (planElement instanceof TaskRepository) {
-                PlanElementViewModel element = new PlanViewModel(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
-                TaskRepository taskRepository = (TaskRepository) planElement;
-                element.setComment(taskRepository.getComment());
-                element.setRelativeDirectory(taskRepository.getRelativeDirectory());
-                return element;
-            } else {
-                System.err.println("Controller: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
-            }
-        }
-        return null;
+        return viewModelFactory.getViewModelElement(modelManager.getPlanElement(id));
     }
 
     @Override
     public BehaviourViewModel getBehaviourViewModel(long id) {
-        PlanElement planElement = modelManager.getPlanElement(id);
-        if (planElement != null) {
-            Behaviour behaviour = (Behaviour) planElement;
-            BehaviourViewModel behaviourViewModel = new BehaviourViewModel(behaviour.getId(), behaviour.getName(), Types.BEHAVIOUR);
-            behaviourViewModel.setComment(behaviour.getComment());
-            behaviourViewModel.setRelativeDirectory(behaviour.getRelativeDirectory());
-            behaviourViewModel.setFrequency(behaviour.getFrequency());
-            behaviourViewModel.setDeferring(behaviour.getDeferring());
-            for (Variable variable : behaviour.getVariables()) {
-                VariableViewModel variableViewModel = new VariableViewModel(variable.getId(), variable.getName(), Types.VARIABLE);
-                variableViewModel.setVariableType(variable.getType());
-                behaviourViewModel.getVariables().add(variableViewModel);
-            }
-            behaviourViewModel.setPreCondition(getConditionViewModel(behaviour.getPreCondition(), Types.PRECONDITION, behaviour.getId()));
-            behaviourViewModel.setRuntimeCondition(getConditionViewModel(behaviour.getRuntimeCondition(), Types.RUNTIMECONDITION, behaviour.getId()));
-            behaviourViewModel.setPostCondition(getConditionViewModel(behaviour.getPostCondition(), Types.POSTCONDITION, behaviour.getId()));
-            return behaviourViewModel;
-        } else {
-            return null;
-        }
-    }
-
-    public ConditionViewModel getConditionViewModel(Condition condition, String type, long parentId) {
-        if (condition == null) {
-            return null;
-        }
-        ConditionViewModel conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), type);
-        conditionViewModel.setConditionString(condition.getConditionString());
-        conditionViewModel.setEnabled(condition.getEnabled());
-        conditionViewModel.setPluginName(condition.getPluginName());
-        conditionViewModel.setComment(condition.getComment());
-        for (Variable var : condition.getVariables()) {
-            conditionViewModel.getVars().add(new VariableViewModel(var.getId(), var.getName(), var.getType()));
-        }
-        for (Quantifier quantifier : condition.getQuantifiers()) {
-            // TODO: Quantifier is not very clean or fully implemented, yet.
-            conditionViewModel.getQuantifier().add(new QuantifierViewModel(quantifier.getId(), quantifier.getName(), Types.QUANTIFIER));
-        }
-        conditionViewModel.setParentId(parentId);
-        return conditionViewModel;
+        return viewModelFactory.createBehaviourViewModel(modelManager.getPlanElement(id));
     }
 
     public void updatePlansInPlanTypeTabs(Plan plan) {
@@ -730,11 +609,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             if (tab instanceof PlanTypeTab) {
                 PlanTypeTab planTypeTab = (PlanTypeTab) tab;
                 if (plan.getMasterPlan()) {
-                    planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.MASTERPLAN,
-                            plan.getRelativeDirectory()));
+                    planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(viewModelFactory.createViewModelElement(plan, Types.MASTERPLAN));
                 } else {
-                    planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(new ViewModelElement(plan.getId(), plan.getName(), Types.PLAN,
-                            plan.getRelativeDirectory()));
+                    planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(viewModelFactory.createViewModelElement(plan, Types.PLAN));
                 }
             }
         }

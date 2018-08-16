@@ -76,14 +76,10 @@ public final class RepositoryViewModel {
         this.plans.add(plan);
     }
 
-    public void removePlan(ViewModelElement plan) {
-        this.plans.remove(plan);
-    }
-
     public void removePlan(long id) {
         for(ViewModelElement plan : plans) {
             if(plan.getId() == id) {
-                removePlan(plan);
+                this.plans.remove(plan);
                 break;
             }
         }
@@ -93,14 +89,10 @@ public final class RepositoryViewModel {
         this.behaviours.add(behaviour);
     }
 
-    public void removeBehaviour(ViewModelElement behaviour) {
-        this.behaviours.remove(behaviour);
-    }
-
     public void removeBehaviour(long id) {
         for(ViewModelElement behaviour : behaviours) {
             if(behaviour.getId() == id) {
-                removePlan(behaviour);
+                this.behaviours.remove(behaviour);
                 break;
             }
         }
@@ -110,14 +102,10 @@ public final class RepositoryViewModel {
         this.planTypes.add(planType);
     }
 
-    public void removePlanType(ViewModelElement planType) {
-        this.planTypes.remove(planType);
-    }
-
     public void removePlanType(long id) {
         for(ViewModelElement planType : planTypes) {
             if(planType.getId() == id) {
-                removePlanType(planType);
+                this.planTypes.remove(planType);
                 break;
             }
         }
@@ -127,14 +115,10 @@ public final class RepositoryViewModel {
         this.tasks.add(task);
     }
 
-    public void removeTask(ViewModelElement task) {
-        this.tasks.remove(task);
-    }
-
     public void removeTask(long id) {
         for(ViewModelElement task : tasks) {
             if(task.getId() == id) {
-                removeTask(task);
+                this.tasks.remove(task);
                 break;
             }
         }
