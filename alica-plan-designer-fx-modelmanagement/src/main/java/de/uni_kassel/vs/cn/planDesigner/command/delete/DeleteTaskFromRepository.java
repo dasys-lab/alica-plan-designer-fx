@@ -33,6 +33,6 @@ public class DeleteTaskFromRepository extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        modelManager.addPlanElement(taskToDelete, Types.TASK, false);
+        modelManager.addPlanElement(Types.TASK, taskToDelete, null, false);
     }
 }

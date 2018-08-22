@@ -16,7 +16,31 @@ public class PlanTypeViewModel extends PlanElementViewModel {
     }
 
     public void addPlanToAllPlans(ViewModelElement plan) {
-        allPlans.add(plan);
+        for (ViewModelElement element : allPlans) {
+            if (element.getId() == plan.getId()) {
+                allPlans.remove(element);
+                break;
+            }
+        }
+        boolean alreadyInPlanType = false;
+        for (AnnotatedPlanView element : plansInPlanType) {
+            if (element.getPlanId() == plan.getId()) {
+                alreadyInPlanType = true;
+                break;
+            }
+        }
+        if (!alreadyInPlanType) {
+            allPlans.add(plan);
+        }
+    }
+
+    public void removePlanFromAllPlans(long id) {
+        for (ViewModelElement element : allPlans) {
+            if (element.getId() == id) {
+                allPlans.remove(element);
+                break;
+            }
+        }
     }
 
     public void addPlanToPlansInPlanType(AnnotatedPlanView plan) {

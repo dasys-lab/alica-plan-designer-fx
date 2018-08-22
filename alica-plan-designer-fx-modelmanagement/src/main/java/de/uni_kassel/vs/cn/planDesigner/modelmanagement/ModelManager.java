@@ -37,6 +37,7 @@ public class ModelManager implements Observer {
     private HashMap<Long, Plan> planMap;
     private HashMap<Long, Behaviour> behaviourMap;
     private HashMap<Long, PlanType> planTypeMap;
+    private HashMap<Long, AnnotatedPlan> annotatedPlanMap;
     private TaskRepository taskRepository;
 
     private List<IModelEventHandler> eventHandlerList;
@@ -58,6 +59,7 @@ public class ModelManager implements Observer {
         planMap = new HashMap<>();
         behaviourMap = new HashMap<>();
         planTypeMap = new HashMap<>();
+        annotatedPlanMap = new HashMap<>();
         taskRepository = new TaskRepository();
         eventHandlerList = new ArrayList<IModelEventHandler>();
         commandStack = new CommandStack();
@@ -447,12 +449,13 @@ public class ModelManager implements Observer {
     /**
      * This methods should only be called through commands.
      *
-     * @param newElement
      * @param type
+     * @param newElement
+     * @param parentElement
      * @param serializeToDisk
      * @return
      */
-    public PlanElement addPlanElement(PlanElement newElement, String type, boolean serializeToDisk) {
+    public PlanElement addPlanElement(String type, PlanElement newElement, PlanElement parentElement, boolean serializeToDisk) {
         /* this is for ignoring file system modified events that come twice after saving a file
          * and once after moving or creating a file
          */
@@ -475,6 +478,10 @@ public class ModelManager implements Observer {
                 if (serializeToDisk) {
                     serializeToDisk(plan, FileSystemUtil.PLAN_ENDING, true);
                 }
+                break;
+            case Types.ANNOTATEDPLAN:
+                AnnotatedPlan annotatedPlan = (AnnotatedPlan) newElement;
+                annotatedPlanMap.put(annotatedPlan.getId(), annotatedPlan);
                 break;
             case Types.PLANTYPE:
                 PlanType planType = (PlanType) newElement;
@@ -509,7 +516,13 @@ public class ModelManager implements Observer {
             fireEvent(ModelEventType.ELEMENT_DELETED, oldElement, type);
         }
         planElementMap.put(newElement.getId(), newElement);
-        fireEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+        if(parentElement != null) {
+            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, null, newElement, type);
+            event.setParentId(parentElement.getId());
+            fireEvent(event);
+        } else {
+            fireEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+        }
         return oldElement;
     }
 
@@ -814,14 +827,9 @@ public class ModelManager implements Observer {
                 return null;
             }
             if (mmq.getQueryType() == ModelQueryType.ADD_ELEMENT) {
-                AnnotatedPlan annotatedPlan = new AnnotatedPlan();
-                annotatedPlan.setPlan(plan);
-                annotatedPlan.setActivated(true);
-                return new AddPlanToPlanType(this, annotatedPlan, (PlanType) parent);
+                return new AddPlanToPlanType(this, plan, (PlanType) parent);
             } else if (mmq.getQueryType() == ModelQueryType.REMOVE_ELEMENT) {
-                AnnotatedPlan annotatedPlan = new AnnotatedPlan();
-                annotatedPlan.setPlan(plan);
-                return new RemovePlanFromPlanType(this, annotatedPlan, (PlanType) parent);
+                return new RemovePlanFromPlanType(this, plan, (PlanType) parent);
             } else {
                 return null;
             }

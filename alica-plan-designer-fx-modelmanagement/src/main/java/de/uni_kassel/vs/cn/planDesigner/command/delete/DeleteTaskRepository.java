@@ -28,6 +28,6 @@ public class DeleteTaskRepository extends AbstractCommand {
         if (taskRepository == null) {
             return;
         }
-            modelManager.addPlanElement(taskRepository, Types.TASKREPOSITORY, true);
+            modelManager.addPlanElement(Types.TASKREPOSITORY, taskRepository, null, true);
     }
 }

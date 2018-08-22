@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 public class AnnotatedPlan extends PlanElement {

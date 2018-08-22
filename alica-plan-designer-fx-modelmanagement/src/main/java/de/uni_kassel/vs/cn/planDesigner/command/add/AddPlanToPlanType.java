@@ -5,26 +5,33 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 
 public class AddPlanToPlanType extends AbstractCommand {
 
     private PlanType parentOfElement;
 
-    private AnnotatedPlan plan;
+    private Plan plan;
+    private AnnotatedPlan annotatedPlan;
 
-    public AddPlanToPlanType(ModelManager modelManager, AnnotatedPlan plan, PlanType parentOfElement) {
+    public AddPlanToPlanType(ModelManager modelManager, Plan plan, PlanType parentOfElement) {
         super(modelManager);
         this.plan = plan;
         this.parentOfElement = parentOfElement;
+        this.annotatedPlan = new AnnotatedPlan();
+        annotatedPlan.setPlan(plan);
+        annotatedPlan.setActivated(true);
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.getPlans().add(plan);
+        modelManager.addPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, null, false);
+        parentOfElement.getPlans().add(annotatedPlan);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlans().remove(plan);
+        modelManager.removePlanElement(annotatedPlan, Types.ANNOTATEDPLAN, false);
+        parentOfElement.getPlans().remove(annotatedPlan);
     }
 }

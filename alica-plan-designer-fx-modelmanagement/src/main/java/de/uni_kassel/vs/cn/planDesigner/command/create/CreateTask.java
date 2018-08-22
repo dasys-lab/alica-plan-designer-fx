@@ -26,7 +26,7 @@ public class CreateTask extends AbstractCommand {
     public void doCommand() {
         TaskRepository taskRepository = modelManager.getTaskRepository();
         if (taskRepository.getId() == mmq.getParentId()) {
-            modelManager.addPlanElement(task, Types.TASK, false);
+            modelManager.addPlanElement(Types.TASK, task, null, false);
         } else {
             System.err.println("CreateTask: TaskRepository ID in ModelManager does not match the TaskRepository ID of the ModelModificationQuery!");
         }

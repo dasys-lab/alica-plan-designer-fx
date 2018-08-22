@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.ViewModelFactory;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
@@ -8,6 +9,12 @@ import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import java.util.ArrayList;
 
 public class ViewModelFactory {
+
+    protected ModelManager modelManager;
+
+    public ViewModelFactory(ModelManager modelManager) {
+        this.modelManager = modelManager;
+    }
 
     public ViewModelElement createViewModelElement(PlanElement planElement, String type) {
         if (planElement instanceof SerializablePlanElement) {
@@ -120,17 +127,6 @@ public class ViewModelFactory {
         planTypeViewModel.setRelativeDirectory(planType.getRelativeDirectory());
         planTypeViewModel.setComment(planType.getComment());
 
-        for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
-            Plan plan = annotatedPlan.getPlan();
-            if (plan.getMasterPlan()) {
-                planTypeViewModel.addPlanToPlansInPlanType(new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
-                        .isActivated()));
-            } else {
-                planTypeViewModel.addPlanToPlansInPlanType(new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.PLAN, annotatedPlan
-                        .isActivated()));
-            }
-        }
-
         for (Plan plan : plans) {
             if (plan.getMasterPlan()) {
                 planTypeViewModel.addPlanToAllPlans(createViewModelElement(plan, Types.MASTERPLAN));
@@ -138,6 +134,23 @@ public class ViewModelFactory {
                 planTypeViewModel.addPlanToAllPlans(createViewModelElement(plan, Types.PLAN));
             }
         }
+
+        for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
+            Plan plan = annotatedPlan.getPlan();
+            planTypeViewModel.removePlanFromAllPlans(plan.getId());
+            planTypeViewModel.addPlanToPlansInPlanType(createAnnotatedPlanView(annotatedPlan));
+        }
         return planTypeViewModel;
+    }
+
+    public AnnotatedPlanView createAnnotatedPlanView(AnnotatedPlan annotatedPlan) {
+        Plan plan = annotatedPlan.getPlan();
+        if (plan.getMasterPlan()) {
+            return new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
+                    .isActivated(), plan.getId());
+        } else {
+            return new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.PLAN, annotatedPlan
+                    .isActivated(), plan.getId());
+        }
     }
 }

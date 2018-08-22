@@ -70,18 +70,16 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         setupConfigGuiStuff();
 
-        viewModelFactory = new ViewModelFactory();
-
-        //TODO create mothods in factory?
-        repoViewModel = viewModelFactory.createRepositoryViewModel();
-        taskRepositoryViewModel = viewModelFactory.createTaskRepositoryViewModel();
-
-
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
 
         setupModelManager();
         setupGeneratedSourcesManager();
+
+        viewModelFactory = new ViewModelFactory(modelManager);
+
+        repoViewModel = viewModelFactory.createRepositoryViewModel();
+        taskRepositoryViewModel = viewModelFactory.createTaskRepositoryViewModel();
     }
 
     protected void setupGeneratedSourcesManager() {
@@ -142,6 +140,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         addTreeViewElement(masterPlan, Types.MASTERPLAN);
                         updatePlansInPlanTypeTabs(masterPlan);
                         repoViewModel.addPlan(viewModelFactory.createViewModelElement(planElement, Types.MASTERPLAN));
+                        break;
+                    case Types.ANNOTATEDPLAN:
+                        updateAnnotatedPlansInPlanTypeTabs(event.getParentId(), (AnnotatedPlan) planElement);
                         break;
                     case Types.PLANTYPE:
                         addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
@@ -542,7 +543,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             mmq = new ModelModificationQuery(ModelQueryType.PARSE_ELEMENT, path.toString());
         } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
             PlanElement element = modelManager.getPlanElement(path.toString());
-            if( element == null) {
+            if (element == null) {
                 return;
             }
             mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, path.toString());
@@ -601,7 +602,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         return viewModelFactory.createBehaviourViewModel(modelManager.getPlanElement(id));
     }
 
-    public void updatePlansInPlanTypeTabs(Plan plan) {
+    protected void updatePlansInPlanTypeTabs(Plan plan) {
         ObservableList<Tab> tabs = editorTabPane.getTabs();
         for (Tab tab : tabs) {
             if (tab instanceof PlanTypeTab) {
@@ -612,6 +613,20 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(viewModelFactory.createViewModelElement(plan, Types.PLAN));
                 }
             }
+        }
+    }
+
+    protected void updateAnnotatedPlansInPlanTypeTabs(long planTypeID, AnnotatedPlan annotatedPlan) {
+        ObservableList<Tab> tabs = editorTabPane.getTabs();
+        for (Tab tab : tabs) {
+            if (!(tab instanceof PlanTypeTab)) {
+                continue;
+            }
+            if (((PlanTypeTab) tab).getPresentedViewModelElement().getId() != planTypeID) {
+                continue;
+            }
+            PlanTypeTab planTypeTab = (PlanTypeTab) tab;
+            planTypeTab.getController().getPlanTypeViewModel().addPlanToPlansInPlanType(viewModelFactory.createAnnotatedPlanView(annotatedPlan));
         }
     }
 

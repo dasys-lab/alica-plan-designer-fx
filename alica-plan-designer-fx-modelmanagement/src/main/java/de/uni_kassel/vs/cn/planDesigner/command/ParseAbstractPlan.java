@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.command;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.*;
 
 /**
@@ -45,10 +44,10 @@ public class ParseAbstractPlan extends AbstractCommand {
         }
         if (newElement instanceof Plan && ((Plan) newElement).getMasterPlan()) {
             replaceIncompleteElements(newElement);
-            modelManager.addPlanElement(newElement, Types.MASTERPLAN, false);
+            modelManager.addPlanElement(Types.MASTERPLAN, newElement, null, false);
         } else {
             replaceIncompleteElements(newElement);
-            modelManager.addPlanElement(newElement, modelModificationQuery.getElementType(), false);
+            modelManager.addPlanElement(modelModificationQuery.getElementType(), newElement, null, false);
         }
 
     }
@@ -58,9 +57,9 @@ public class ParseAbstractPlan extends AbstractCommand {
         if (oldElement != null) {
             // replace new object with former old one
             if (oldElement instanceof Plan && ((Plan) oldElement).getMasterPlan()) {
-                modelManager.addPlanElement(oldElement, Types.MASTERPLAN, false);
+                modelManager.addPlanElement(Types.MASTERPLAN, oldElement, null, false);
             } else {
-                modelManager.addPlanElement(oldElement, modelModificationQuery.getElementType(), false);
+                modelManager.addPlanElement(modelModificationQuery.getElementType(), oldElement, null, false);
             }
         } else {
             // remove new object

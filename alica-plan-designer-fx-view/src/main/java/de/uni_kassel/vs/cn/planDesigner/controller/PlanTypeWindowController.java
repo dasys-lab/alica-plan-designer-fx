@@ -90,8 +90,6 @@ public class PlanTypeWindowController implements Initializable {
                 return;
             }
             fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), selectedItem.getViewModelId());
-            planTypeTableView.getItems().add(new AnnotatedPlanView(selectedItem.getViewModelElement(), true));
-            planTypeTableView.getItems().sort(viewModelElementComparator);
             planTypeTab.setDirty(true);
         });
 
@@ -100,10 +98,7 @@ public class PlanTypeWindowController implements Initializable {
             if (selectedItem == null) {
                 return;
             }
-            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, selectedItem.getName(), selectedItem.getId());
-            planTypeTableView.getItems().remove(selectedItem);
-            planTypeTableView.refresh();
-            planListView.getItems().sort(repositoryHBoxComparator);
+            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, selectedItem.getName(), ((AnnotatedPlanView)selectedItem).getPlanId());
             planTypeTab.setDirty(true);
         });
 
@@ -112,9 +107,6 @@ public class PlanTypeWindowController implements Initializable {
                 return;
             }
             fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, planType.getName(), planType.getId());
-            planTypeTableView.getItems().clear();
-            planTypeTableView.refresh();
-            planListView.getItems().sort(repositoryHBoxComparator);
             planTypeTab.setDirty(true);
         });
     }
@@ -187,6 +179,7 @@ public class PlanTypeWindowController implements Initializable {
                         planListView.getItems().add(e1);
                     }
                 }
+                planTypeTableView.refresh();
             }
         });
 
@@ -274,7 +267,7 @@ public class PlanTypeWindowController implements Initializable {
                     }
 
                 } else if (c.wasRemoved()) {
-                    for (ViewModelElement element : c.getAddedSubList()) {
+                    for (ViewModelElement element : c.getRemoved()) {
                         for (RepositoryHBox plan : planListView.getItems()) {
                             if (plan.getViewModelId() == element.getId()) {
                                 Platform.runLater(() -> {
