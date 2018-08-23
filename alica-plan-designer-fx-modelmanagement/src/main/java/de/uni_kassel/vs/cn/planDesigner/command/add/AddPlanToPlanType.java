@@ -10,7 +10,6 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 public class AddPlanToPlanType extends AbstractCommand {
 
     private PlanType parentOfElement;
-
     private Plan plan;
     private AnnotatedPlan annotatedPlan;
 
@@ -25,13 +24,13 @@ public class AddPlanToPlanType extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.addPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, null, false);
+        modelManager.addPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, parentOfElement, false);
         parentOfElement.getPlans().add(annotatedPlan);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.removePlanElement(annotatedPlan, Types.ANNOTATEDPLAN, false);
+        modelManager.removePlanElement(Types.ANNOTATEDPLAN, annotatedPlan, parentOfElement, false);
         parentOfElement.getPlans().remove(annotatedPlan);
     }
 }

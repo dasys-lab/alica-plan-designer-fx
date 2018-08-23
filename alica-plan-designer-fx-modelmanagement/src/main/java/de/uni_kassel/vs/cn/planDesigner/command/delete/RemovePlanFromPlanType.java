@@ -32,12 +32,12 @@ public class RemovePlanFromPlanType extends AbstractCommand {
                 break;
             }
         }
-        modelManager.removePlanElement(annotatedPlan, Types.ANNOTATEDPLAN, false);
+        modelManager.removePlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
     }
 
     @Override
     public void undoCommand() {
         planType.getPlans().add(annotatedPlan);
-        modelManager.addPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, null, false);
+        modelManager.addPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
     }
 }

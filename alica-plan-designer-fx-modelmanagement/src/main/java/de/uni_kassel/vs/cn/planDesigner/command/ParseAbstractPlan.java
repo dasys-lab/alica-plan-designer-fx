@@ -64,9 +64,9 @@ public class ParseAbstractPlan extends AbstractCommand {
         } else {
             // remove new object
             if (newElement instanceof Plan && ((Plan) newElement).getMasterPlan()) {
-                modelManager.removePlanElement(newElement, Types.MASTERPLAN, false);
+                modelManager.removePlanElement(Types.MASTERPLAN, newElement, null, false);
             } else {
-                modelManager.removePlanElement(newElement, modelModificationQuery.getElementType(), false);
+                modelManager.removePlanElement(modelModificationQuery.getElementType(), newElement, null, false);
             }
         }
     }

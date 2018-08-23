@@ -526,14 +526,19 @@ public class ModelManager implements Observer {
         return oldElement;
     }
 
-    public void removePlanElement(PlanElement planElement, String type, boolean removeFromDisk) {
+    public void removePlanElement(String type, PlanElement planElement, PlanElement parentElement, boolean removeFromDisk) {
         switch (type) {
             case Types.PLAN:
+            case Types.MASTERPLAN:
                 Plan plan = (Plan) planElement;
                 planMap.remove(plan.getId());
                 if (removeFromDisk) {
                     removeFromDisk(plan, FileSystemUtil.PLAN_ENDING, true);
                 }
+                break;
+            case Types.ANNOTATEDPLAN:
+                AnnotatedPlan annotatedPlan = (AnnotatedPlan) planElement;
+                annotatedPlanMap.put(annotatedPlan.getId(), annotatedPlan);
                 break;
             case Types.PLANTYPE:
                 PlanType planType = (PlanType) planElement;
@@ -566,8 +571,14 @@ public class ModelManager implements Observer {
         for (IModelEventHandler eventHandler : eventHandlerList) {
             eventHandler.handleCloseTab(planElement.getId());
         }
+        if(parentElement != null) {
+            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, null, type);
+            event.setParentId(parentElement.getId());
+            fireEvent(event);
+        } else {
+            fireEvent(ModelEventType.ELEMENT_DELETED, planElement, type);
+        }
         planElementMap.remove(planElement.getId());
-        fireEvent(ModelEventType.ELEMENT_DELETED, planElement, type);
     }
 
     public ArrayList<PlanElement> getUsages(long modelElementId) {

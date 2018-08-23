@@ -142,7 +142,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         repoViewModel.addPlan(viewModelFactory.createViewModelElement(planElement, Types.MASTERPLAN));
                         break;
                     case Types.ANNOTATEDPLAN:
-                        updateAnnotatedPlansInPlanTypeTabs(event.getParentId(), (AnnotatedPlan) planElement);
+                        updateAnnotatedPlansInPlanTypeTabs(event.getParentId(), (AnnotatedPlan) planElement, true);
                         break;
                     case Types.PLANTYPE:
                         addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
@@ -182,6 +182,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.MASTERPLAN:
                         removeTreeViewElement((SerializablePlanElement) planElement, Types.MASTERPLAN);
                         repoViewModel.removePlan(planElement.getId());
+                        break;
+                    case Types.ANNOTATEDPLAN:
+                        updateAnnotatedPlansInPlanTypeTabs(event.getParentId(), (AnnotatedPlan) planElement, false);
                         break;
                     case Types.PLANTYPE:
                         removeTreeViewElement((SerializablePlanElement) planElement, Types.PLANTYPE);
@@ -616,7 +619,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         }
     }
 
-    protected void updateAnnotatedPlansInPlanTypeTabs(long planTypeID, AnnotatedPlan annotatedPlan) {
+    protected void updateAnnotatedPlansInPlanTypeTabs(long planTypeID, AnnotatedPlan annotatedPlan, boolean add) {
         ObservableList<Tab> tabs = editorTabPane.getTabs();
         for (Tab tab : tabs) {
             if (!(tab instanceof PlanTypeTab)) {
@@ -626,7 +629,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 continue;
             }
             PlanTypeTab planTypeTab = (PlanTypeTab) tab;
-            planTypeTab.getController().getPlanTypeViewModel().addPlanToPlansInPlanType(viewModelFactory.createAnnotatedPlanView(annotatedPlan));
+            if (add) {
+                planTypeTab.getController().getPlanTypeViewModel().addPlanToPlansInPlanType(viewModelFactory.createAnnotatedPlanView(annotatedPlan));
+            } else {
+                planTypeTab.getController().getPlanTypeViewModel().removePlanFromPlansInPlanType(annotatedPlan.getPlan().getId());
+            }
+
         }
     }
 

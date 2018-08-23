@@ -47,6 +47,15 @@ public class PlanTypeViewModel extends PlanElementViewModel {
         plansInPlanType.add(plan);
     }
 
+    public void removePlanFromPlansInPlanType(long planId) {
+        for(AnnotatedPlanView annotatedPlan : plansInPlanType) {
+            if(annotatedPlan.getPlanId() == planId) {
+                plansInPlanType.remove(annotatedPlan);
+                break;
+            }
+        }
+    }
+
     public void clearAllPlans() {
         allPlans.clear();
     }

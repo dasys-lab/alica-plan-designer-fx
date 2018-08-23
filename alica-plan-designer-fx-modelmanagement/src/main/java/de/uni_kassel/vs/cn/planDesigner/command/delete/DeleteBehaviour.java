@@ -20,7 +20,7 @@ public class DeleteBehaviour extends AbstractCommand {
         if (behaviour == null) {
             return;
         }
-        modelManager.removePlanElement(behaviour, Types.BEHAVIOUR, true);
+        modelManager.removePlanElement(Types.BEHAVIOUR, behaviour, null, true);
     }
 
     @Override

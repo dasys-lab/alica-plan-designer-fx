@@ -20,7 +20,7 @@ public class DeletePlanType extends AbstractCommand {
         if (planType == null) {
             return;
         }
-        modelManager.removePlanElement(planType, Types.PLANTYPE, true);
+        modelManager.removePlanElement(Types.PLANTYPE, planType, null, true);
     }
 
     @Override

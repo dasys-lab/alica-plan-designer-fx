@@ -135,7 +135,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
             }
         });
 
-        modelManager.removePlanElement(abstractPlan, Types.PLAN, false);
+        modelManager.removePlanElement(Types.PLAN, abstractPlan, null, false);
 
         //TODO commads for file deletion
 //        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();

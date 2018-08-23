@@ -34,6 +34,6 @@ public class CreateTask extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        modelManager.removePlanElement(task, Types.TASK, false);
+        modelManager.removePlanElement(Types.TASK, task, null, false);
     }
 }

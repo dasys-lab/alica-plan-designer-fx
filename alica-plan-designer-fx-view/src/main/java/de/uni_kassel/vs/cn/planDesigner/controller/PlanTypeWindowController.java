@@ -157,26 +157,26 @@ public class PlanTypeWindowController implements Initializable {
     private void initTableView() {
         planTypeTableView.getItems().addAll(planTypeViewModel.getPlansInPlanType());
         planTypeTableView.getItems().sort(viewModelElementComparator);
-        planTypeTableView.getItems().addListener(new ListChangeListener<ViewModelElement>() {
+        planTypeViewModel.getPlansInPlanType().addListener(new ListChangeListener<ViewModelElement>() {
             @Override
             public void onChanged(Change<? extends ViewModelElement> c) {
                 c.next();
                 if (c.wasAdded()) {
 
                     for (ViewModelElement element : c.getAddedSubList()) {
-                        for (RepositoryHBox repositoryHBox : planListView.getItems()) {
-                            if (repositoryHBox.getViewModelId() == element.getId()) {
-                                planListView.getItems().remove(repositoryHBox);
-                                break;
-                            }
-                        }
+                        planTypeViewModel.getAllPlans().remove(element);
+                        planTypeTableView.getItems().add((AnnotatedPlanView) element);
                     }
 
                 } else if (c.wasRemoved()) {
                     for (ViewModelElement element : c.getRemoved()) {
-                        RepositoryHBox e1 = new RepositoryHBox(element, guiModificationHandler);
-                        e1.setOnMouseClicked(null);
-                        planListView.getItems().add(e1);
+                        planTypeViewModel.getAllPlans().add(element);
+                        for(AnnotatedPlanView view : planTypeTableView.getItems()) {
+                            if(view.getId() == element.getId()) {
+                                planTypeTableView.getItems().remove(view);
+                                break;
+                            }
+                        }
                     }
                 }
                 planTypeTableView.refresh();
