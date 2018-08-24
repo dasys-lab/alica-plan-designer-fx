@@ -74,6 +74,20 @@ public class PlanTypeWindowController implements Initializable {
         initButtons();
     }
 
+    private void initComparators() {
+        repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getViewModelType().equals(Types.MASTERPLAN));
+        repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryHBox -> planRepositoryHBox.getViewModelName());
+        viewModelElementComparator = Comparator.comparing(annotatedPlan -> !annotatedPlan.getType().equals(Types.MASTERPLAN));
+        viewModelElementComparator = viewModelElementComparator.thenComparing(annotatedPlan -> annotatedPlan.getName());
+    }
+
+    private void initUIText() {
+        removePlanButton.setText(i18NRepo.getString("label.plantype.removePlan"));
+        removeAllPlansButton.setText(i18NRepo.getString("label.plantype.removeAllPlans"));
+        addPlanButton.setText(i18NRepo.getString("label.plantype.addPlan"));
+        saveButton.setText(i18NRepo.getString("action.save"));
+    }
+
     private void initButtons() {
         saveButton.setOnAction(e -> {
             if (!planTypeTab.isDirty()) {
@@ -89,7 +103,7 @@ public class PlanTypeWindowController implements Initializable {
             if (selectedItem == null) {
                 return;
             }
-            fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), selectedItem.getViewModelId());
+            fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), ((AnnotatedPlanView)selectedItem.getViewModelElement()).getPlanId());
             planTypeTab.setDirty(true);
         });
 
@@ -113,8 +127,8 @@ public class PlanTypeWindowController implements Initializable {
 
     public void init(PlanTypeViewModel planTypeViewModel) {
         this.planTypeViewModel = planTypeViewModel;
-        initTableView();
-        initPlanListView();
+        initPlansInPlanTypeTable();
+        initAllPlansListView();
         propertiesTable.setEditable(true);
         propertiesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
         propertiesTable.addColumn(i18NRepo.getString("label.column.id"), "id", new LongStringConverter(), false);
@@ -131,30 +145,7 @@ public class PlanTypeWindowController implements Initializable {
         });
     }
 
-    private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, planType.getName());
-        guiChangeAttributeEvent.setNewValue(newValue);
-        guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
-        guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setParentId(planType.getId());
-        guiModificationHandler.handle(guiChangeAttributeEvent);
-    }
-
-    private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {
-        GuiModificationEvent event = new GuiModificationEvent(type, Types.ANNOTATEDPLAN, viewModelName);
-        event.setParentId(planType.getId());
-        event.setElementId(viewModelId);
-        guiModificationHandler.handle(event);
-    }
-
-    private void initUIText() {
-        removePlanButton.setText(i18NRepo.getString("label.plantype.removePlan"));
-        removeAllPlansButton.setText(i18NRepo.getString("label.plantype.removeAllPlans"));
-        addPlanButton.setText(i18NRepo.getString("label.plantype.addPlan"));
-        saveButton.setText(i18NRepo.getString("action.save"));
-    }
-
-    private void initTableView() {
+    private void initPlansInPlanTypeTable() {
         planTypeTableView.getItems().addAll(planTypeViewModel.getPlansInPlanType());
         planTypeTableView.getItems().sort(viewModelElementComparator);
         planTypeViewModel.getPlansInPlanType().addListener(new ListChangeListener<ViewModelElement>() {
@@ -183,51 +174,9 @@ public class PlanTypeWindowController implements Initializable {
             }
         });
 
-        TableColumn<AnnotatedPlanView, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
-        activeColumn.setResizable(false);
-        activeColumn.setCellValueFactory(new PropertyValueFactory<>(i18NRepo.getString("label.column.activated")));
-        activeColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlanView, Boolean>, TableCell<AnnotatedPlanView, Boolean>>() {
-            @Override
-            public TableCell<AnnotatedPlanView, Boolean> call(TableColumn<AnnotatedPlanView, Boolean> param) {
-                TableCell<AnnotatedPlanView, Boolean> annotatedPlanBooleanTableCell = new TableCell<AnnotatedPlanView, Boolean>() {
-                    @Override
-                    protected void updateItem(Boolean item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty == false) {
-                            if (Boolean.TRUE.equals(item)) {
-                                setGraphic(new ImageView(new AlicaIcon(Types.SUCCESSSTATE)));
-                            } else {
-                                setGraphic(new ImageView(new AlicaIcon(Types.FAILURESTATE)));
-                            }
-                            setText("");
-                        }
-                    }
-                };
-                annotatedPlanBooleanTableCell.setStyle("-fx-alignment: CENTER;");
-                return annotatedPlanBooleanTableCell;
-            }
-        });
 
-        TableColumn<AnnotatedPlanView, String> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
-        planNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        planNameColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlanView, String>, TableCell<AnnotatedPlanView, String>>() {
-            @Override
-            public TableCell<AnnotatedPlanView, String> call(TableColumn<AnnotatedPlanView, String> param) {
-                TableCell<AnnotatedPlanView, String> planNameTableCell = new TableCell<AnnotatedPlanView, String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty == false) {
-                            setText(item);
-                        }
-                    }
-                };
-                return planNameTableCell;
-            }
-        });
-
-        planTypeTableView.getColumns().add(activeColumn);
-        planTypeTableView.getColumns().add(planNameColumn);
+        planTypeTableView.getColumns().add(createActiveColumn());
+        planTypeTableView.getColumns().add(createNameColumn());
         planTypeTableView.setRowFactory(tv -> {
             TableRow<AnnotatedPlanView> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
@@ -249,7 +198,16 @@ public class PlanTypeWindowController implements Initializable {
         });
     }
 
-    private void initPlanListView() {
+    private void initAllPlansListView() {
+        for (ViewModelElement plan : planTypeViewModel.getAllPlans()) {
+            if (isAlreadyInPlanType(plan)) {
+                continue;
+            }
+            RepositoryHBox planRepositoryHBox = new RepositoryHBox(plan, guiModificationHandler);
+            planRepositoryHBox.setOnMouseClicked(null);
+            planListView.getItems().add(planRepositoryHBox);
+            planListView.getItems().sort(repositoryHBoxComparator);
+        }
         planTypeViewModel.getAllPlans().addListener(new ListChangeListener<ViewModelElement>() {
             @Override
             public void onChanged(Change<? extends ViewModelElement> c) {
@@ -283,16 +241,74 @@ public class PlanTypeWindowController implements Initializable {
                 }
             }
         });
-        for (ViewModelElement plan : planTypeViewModel.getAllPlans()) {
-            if (isAlreadyInPlanType(plan)) {
-                continue;
-            }
-            RepositoryHBox planRepositoryHBox = new RepositoryHBox(plan, guiModificationHandler);
-            planRepositoryHBox.setOnMouseClicked(null);
-            planListView.getItems().add(planRepositoryHBox);
-            planListView.getItems().sort(repositoryHBoxComparator);
-        }
     }
+
+    private TableColumn<AnnotatedPlanView, String> createNameColumn() {
+        TableColumn<AnnotatedPlanView, String> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
+        planNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        planNameColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlanView, String>, TableCell<AnnotatedPlanView, String>>() {
+            @Override
+            public TableCell<AnnotatedPlanView, String> call(TableColumn<AnnotatedPlanView, String> param) {
+                TableCell<AnnotatedPlanView, String> planNameTableCell = new TableCell<AnnotatedPlanView, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty == false) {
+                            setText(item);
+                        }
+                    }
+                };
+                return planNameTableCell;
+            }
+        });
+        return planNameColumn;
+    }
+
+    private TableColumn<AnnotatedPlanView, Boolean> createActiveColumn() {
+        TableColumn<AnnotatedPlanView, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
+        activeColumn.setResizable(false);
+        activeColumn.setCellValueFactory(new PropertyValueFactory<>(i18NRepo.getString("label.column.activated")));
+        activeColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlanView, Boolean>, TableCell<AnnotatedPlanView, Boolean>>() {
+            @Override
+            public TableCell<AnnotatedPlanView, Boolean> call(TableColumn<AnnotatedPlanView, Boolean> param) {
+                TableCell<AnnotatedPlanView, Boolean> annotatedPlanBooleanTableCell = new TableCell<AnnotatedPlanView, Boolean>() {
+                    @Override
+                    protected void updateItem(Boolean item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty == false) {
+                            if (Boolean.TRUE.equals(item)) {
+                                setGraphic(new ImageView(new AlicaIcon(Types.SUCCESSSTATE)));
+                            } else {
+                                setGraphic(new ImageView(new AlicaIcon(Types.FAILURESTATE)));
+                            }
+                            setText("");
+                        }
+                    }
+                };
+                annotatedPlanBooleanTableCell.setStyle("-fx-alignment: CENTER;");
+                return annotatedPlanBooleanTableCell;
+            }
+        });
+        return activeColumn;
+    }
+
+    private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, planType.getName());
+        guiChangeAttributeEvent.setNewValue(newValue);
+        guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
+        guiChangeAttributeEvent.setAttributeName(attribute);
+        guiChangeAttributeEvent.setParentId(planType.getId());
+        guiModificationHandler.handle(guiChangeAttributeEvent);
+    }
+
+    private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {
+        GuiModificationEvent event = new GuiModificationEvent(type, Types.ANNOTATEDPLAN, viewModelName);
+        event.setParentId(planType.getId());
+        event.setElementId(viewModelId);
+        guiModificationHandler.handle(event);
+    }
+
+
 
     private boolean isAlreadyInPlanType(ViewModelElement plan) {
         for (AnnotatedPlanView annotatedPlanView : planTypeViewModel.getPlansInPlanType()) {
@@ -301,13 +317,6 @@ public class PlanTypeWindowController implements Initializable {
             }
         }
         return false;
-    }
-
-    private void initComparators() {
-        repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getViewModelType().equals(Types.MASTERPLAN));
-        repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryHBox -> planRepositoryHBox.getViewModelName());
-        viewModelElementComparator = Comparator.comparing(annotatedPlan -> !annotatedPlan.getType().equals(Types.MASTERPLAN));
-        viewModelElementComparator = viewModelElementComparator.thenComparing(annotatedPlan -> annotatedPlan.getName());
     }
 
     public void setPlanType(ViewModelElement planType) {
