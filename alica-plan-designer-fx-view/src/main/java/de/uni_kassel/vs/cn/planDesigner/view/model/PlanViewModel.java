@@ -4,14 +4,26 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
 
 public class PlanViewModel extends PlanElementViewModel {
 
     protected final BooleanProperty masterPlan = new SimpleBooleanProperty();
     protected final DoubleProperty utilityThreshold = new SimpleDoubleProperty();
+    protected ObservableList<EntryPointViewModel> entryPoints;
+    protected ObservableList<StateViewModel> states;
+    protected ObservableList<TransitionViewModel> transitions;
+    protected ObservableList<ConditionViewModel> conditions;
 
     public PlanViewModel(long id, String name, String type) {
         super(id, name, type);
+        this.entryPoints = FXCollections.observableArrayList(new ArrayList<>());
+        this.states =  FXCollections.observableArrayList(new ArrayList<>());
+        this.transitions =  FXCollections.observableArrayList(new ArrayList<>());
+        this.conditions = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public final BooleanProperty masterPlanProperty() {return masterPlan; }
@@ -28,5 +40,33 @@ public class PlanViewModel extends PlanElementViewModel {
     }
     public double getUtilityThreshold() {
         return utilityThreshold.get();
+    }
+
+    public boolean isMasterPlan() {
+        return masterPlan.get();
+    }
+
+    public ObservableList<EntryPointViewModel> getEntryPoints() {
+        return entryPoints;
+    }
+
+    public void setEntryPoints(ObservableList<EntryPointViewModel> entryPoints) {
+        this.entryPoints = entryPoints;
+    }
+
+    public ObservableList<StateViewModel> getStates() {
+        return states;
+    }
+
+    public void setStates(ObservableList<StateViewModel> states) {
+        this.states = states;
+    }
+
+    public ObservableList<TransitionViewModel> getTransitions() {
+        return transitions;
+    }
+
+    public void setTransitions(ObservableList<TransitionViewModel> transitions) {
+        this.transitions = transitions;
     }
 }
