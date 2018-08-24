@@ -115,7 +115,8 @@ public class ViewModelFactory {
         return conditionViewModel;
     }
 
-    public PlanTypeViewModel createPlanTypeViewModel(PlanElement planElement, ArrayList<Plan> plans) {
+    public PlanTypeViewModel createPlanTypeViewModel(ViewModelElement viewModelElement, ArrayList<Plan> plans) {
+        PlanElement planElement = modelManager.getPlanElement(viewModelElement.getId());
         if (planElement == null || !(planElement instanceof PlanType)) {
             System.err.println("ViewModelFactory: Opening PlanTypeTab for unknown Id or not presented element is not a PlanType!");
             return null;
@@ -124,6 +125,7 @@ public class ViewModelFactory {
         PlanType planType = (PlanType) planElement;
         PlanTypeViewModel planTypeViewModel = new PlanTypeViewModel(planType.getId(), planType.getName(),
                 Types.PLANTYPE);
+        planTypeViewModel.setPlanType(viewModelElement);
         planTypeViewModel.setRelativeDirectory(planType.getRelativeDirectory());
         planTypeViewModel.setComment(planType.getComment());
 

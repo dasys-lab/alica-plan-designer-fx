@@ -28,7 +28,6 @@ public class PlanTypeTab extends AbstractPlanTab {
         try {
             Parent window = fxmlLoader.load();
             controller = fxmlLoader.getController();
-            controller.setPlanType(planType);
             controller.setPlanTypeTab(this);
             controller.setGuiModificationHandler(guiModificationHandler);
             setContent(window);

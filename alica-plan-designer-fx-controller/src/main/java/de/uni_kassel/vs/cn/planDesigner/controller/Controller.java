@@ -591,7 +591,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {
-        planTypeTab.setPlanTypeViewModel(viewModelFactory.createPlanTypeViewModel(modelManager.getPlanElement(planTypeTab.getPresentedViewModelElement().getId()),
+        planTypeTab.setPlanTypeViewModel(viewModelFactory.createPlanTypeViewModel(planTypeTab.getPresentedViewModelElement(),
                 modelManager.getPlans()));
     }
 

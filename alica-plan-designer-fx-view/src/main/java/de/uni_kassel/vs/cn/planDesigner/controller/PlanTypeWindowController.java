@@ -127,6 +127,7 @@ public class PlanTypeWindowController implements Initializable {
 
     public void init(PlanTypeViewModel planTypeViewModel) {
         this.planTypeViewModel = planTypeViewModel;
+        this.planType = planTypeViewModel.getPlanType();
         initPlansInPlanTypeTable();
         initAllPlansListView();
         propertiesTable.setEditable(true);
@@ -317,13 +318,6 @@ public class PlanTypeWindowController implements Initializable {
             }
         }
         return false;
-    }
-
-    public void setPlanType(ViewModelElement planType) {
-        if (planType == null) {
-            throw new RuntimeException("PlanTypeWindowController: Empty PlanType was set!");
-        }
-        this.planType = planType;
     }
 
     public void setPlanTypeTab(PlanTypeTab planTypeTab) {
