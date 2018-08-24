@@ -30,8 +30,6 @@ import java.util.ResourceBundle;
 
 public class PlanTypeWindowController implements Initializable {
 
-    private ViewModelElement planType;
-
     private Comparator<RepositoryHBox> repositoryHBoxComparator;
 
     private Comparator<ViewModelElement> viewModelElementComparator;
@@ -93,8 +91,8 @@ public class PlanTypeWindowController implements Initializable {
             if (!planTypeTab.isDirty()) {
                 return;
             }
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, planType.getName());
-            event.setElementId(planType.getId());
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, planTypeViewModel.getName());
+            event.setElementId(planTypeViewModel.getId());
             guiModificationHandler.handle(event);
         });
 
@@ -120,14 +118,13 @@ public class PlanTypeWindowController implements Initializable {
             if (planTypeViewModel.getPlansInPlanType().size() == 0) {
                 return;
             }
-            fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, planType.getName(), planType.getId());
+            fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, planTypeViewModel.getName(), planTypeViewModel.getId());
             planTypeTab.setDirty(true);
         });
     }
 
     public void init(PlanTypeViewModel planTypeViewModel) {
         this.planTypeViewModel = planTypeViewModel;
-        this.planType = planTypeViewModel.getPlanType();
         initPlansInPlanTypeTable();
         initAllPlansListView();
         propertiesTable.setEditable(true);
@@ -187,7 +184,7 @@ public class PlanTypeWindowController implements Initializable {
                     planTypeTableView.refresh();
                     planTypeTab.setDirty(true);
                     GuiChangeAttributeEvent event = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.ANNOTATEDPLAN, item.getName());
-                    event.setParentId(planType.getId());
+                    event.setParentId(planTypeViewModel.getId());
                     event.setElementId(item.getId());
                     event.setAttributeName("activated");
                     event.setAttributeType(Boolean.class.getSimpleName());
@@ -294,17 +291,17 @@ public class PlanTypeWindowController implements Initializable {
     }
 
     private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, planType.getName());
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, planTypeViewModel.getName());
         guiChangeAttributeEvent.setNewValue(newValue);
         guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
         guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setParentId(planType.getId());
+        guiChangeAttributeEvent.setParentId(planTypeViewModel.getId());
         guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 
     private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {
         GuiModificationEvent event = new GuiModificationEvent(type, Types.ANNOTATEDPLAN, viewModelName);
-        event.setParentId(planType.getId());
+        event.setParentId(planTypeViewModel.getId());
         event.setElementId(viewModelId);
         guiModificationHandler.handle(event);
     }

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 public class PlanTypeViewModel extends PlanElementViewModel {
 
-    private ViewModelElement planType;
-
     private ObservableList<ViewModelElement> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
 
@@ -81,13 +79,5 @@ public class PlanTypeViewModel extends PlanElementViewModel {
 
     public String getRelativeDirectory() {
         return this.relativeDirectory.get();
-    }
-
-    public ViewModelElement getPlanType() {
-        return planType;
-    }
-
-    public void setPlanType(ViewModelElement planType) {
-        this.planType = planType;
     }
 }

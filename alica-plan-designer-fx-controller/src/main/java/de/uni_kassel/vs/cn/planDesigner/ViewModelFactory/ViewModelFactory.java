@@ -125,7 +125,6 @@ public class ViewModelFactory {
         PlanType planType = (PlanType) planElement;
         PlanTypeViewModel planTypeViewModel = new PlanTypeViewModel(planType.getId(), planType.getName(),
                 Types.PLANTYPE);
-        planTypeViewModel.setPlanType(viewModelElement);
         planTypeViewModel.setRelativeDirectory(planType.getRelativeDirectory());
         planTypeViewModel.setComment(planType.getComment());
 
