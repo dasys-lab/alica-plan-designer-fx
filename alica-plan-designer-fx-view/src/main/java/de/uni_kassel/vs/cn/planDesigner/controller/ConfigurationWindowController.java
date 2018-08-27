@@ -1,7 +1,10 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IConfigurationEventHandler;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,7 +16,6 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -100,9 +102,14 @@ public class ConfigurationWindowController implements Initializable {
     private Button saveButton;
 
     private IConfigurationEventHandler configEventHandler;
+    private IPluginEventHandler pluginEventHandler;
 
     public void setHandler(IConfigurationEventHandler configEventHandler) {
         this.configEventHandler = configEventHandler;
+    }
+
+    public void setPluginEventHandler (IPluginEventHandler pluginEventHandler) {
+        this.pluginEventHandler = pluginEventHandler;
     }
 
     @Override
@@ -121,9 +128,10 @@ public class ConfigurationWindowController implements Initializable {
         // show available configurations in the list
         setupAvailableConfigurationsListView();
 
-        saveButton.setOnAction(e -> onSave());
+        // show available plugins in the combo box
+        setupAvailablePluginsComboBox();
 
-        // TODO handle plugin drop down box
+        saveButton.setOnAction(e -> onSave());
     }
 
     /**
@@ -185,16 +193,8 @@ public class ConfigurationWindowController implements Initializable {
         pluginsFolderTextField.setText(pluginsFolder);
     }
 
-    public void setPlugins(ObservableList<String> pluginNames) {
-        defaultPluginComboBox.setItems(pluginNames);
-    }
-
     public String getDefaultPluginName () {
         return defaultPluginComboBox.getSelectionModel().getSelectedItem();
-    }
-
-    public void selectDefaultPluginName(String defaultPlugin) {
-        defaultPluginComboBox.getSelectionModel().select(defaultPlugin);
     }
 
     public void setClangFormat(String clangFormatPath) {
@@ -222,6 +222,24 @@ public class ConfigurationWindowController implements Initializable {
         availableWorkspacesListView.setOnMouseClicked(configEventHandler);
         availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configEventHandler);
         configEventHandler.updateAvailableConfigurations();
+    }
+
+    public void setAvailablePlugins(List<String> pluginNames) {
+        defaultPluginComboBox.getItems().clear();
+        for  (String pluginName : pluginNames) {
+            defaultPluginComboBox.getItems().add(pluginName);
+        }
+    }
+
+    public void updateAvailablePlugins() {
+        pluginEventHandler.updateAvailablePlugins();
+    }
+
+    private void setupAvailablePluginsComboBox() {
+        defaultPluginComboBox.setItems(FXCollections.observableArrayList());
+        defaultPluginComboBox.getSelectionModel().selectedItemProperty().addListener(pluginEventHandler);
+        defaultPluginComboBox.valueProperty().addListener(pluginEventHandler);
+        updateAvailablePlugins();
     }
 
     /**

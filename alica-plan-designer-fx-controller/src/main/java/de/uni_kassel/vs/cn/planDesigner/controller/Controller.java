@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
+import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.ViewModelFactory.ViewModelFactory;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
@@ -13,6 +14,7 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
+import de.uni_kassel.vs.cn.planDesigner.plugin.PluginEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
@@ -44,6 +46,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private ConfigurationManager configurationManager;
     private FileSystemEventHandler fileSystemEventHandler;
     private ConfigurationEventHandler configEventHandler;
+    private PluginManager pluginManager;
+    private PluginEventHandler pluginEventHandler;
 
     // Model Objects
     private ModelManager modelManager;
@@ -63,6 +67,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
         configurationManager.setController(this);
+
+        pluginManager = PluginManager.getInstance();
+        //pluginManager.updateAvailablePlugins(configurationManager.getActiveConfiguration().getPluginsPath());
 
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
@@ -105,8 +112,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     protected void setupConfigGuiStuff() {
         configWindowController = new ConfigurationWindowController();
+
         configEventHandler = new ConfigurationEventHandler(configWindowController, configurationManager);
         configWindowController.setHandler(configEventHandler);
+
+        pluginEventHandler = new PluginEventHandler(configWindowController, pluginManager);
+        configWindowController.setPluginEventHandler(pluginEventHandler);
+
         mainWindowController.setConfigWindowController(configWindowController);
     }
 
