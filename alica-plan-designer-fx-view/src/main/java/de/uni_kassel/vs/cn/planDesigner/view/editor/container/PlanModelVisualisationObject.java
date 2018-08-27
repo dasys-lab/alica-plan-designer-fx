@@ -1,16 +1,18 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
+
 public class PlanModelVisualisationObject {
-    private final Long planId;
+    private final PlanViewModel plan;
 //    private final PmlUiExtensionMap pmlUiExtensionMap;
 
-    public PlanModelVisualisationObject(long planId) {
-        this.planId = planId;
+    public PlanModelVisualisationObject(PlanViewModel plan) {
+        this.plan = plan;
 //        this.pmlUiExtensionMap = pmlUiExtensionMap;
     }
 
-    public Long getPlanId() {
-        return planId;
+    public PlanViewModel getPlanId() {
+        return plan;
     }
 
 //    public PmlUiExtensionMap getPmlUiExtensionMap() {

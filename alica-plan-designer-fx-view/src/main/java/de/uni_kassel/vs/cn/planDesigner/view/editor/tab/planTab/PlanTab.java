@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
@@ -28,7 +29,7 @@ import javafx.util.converter.LongStringConverter;
 
 public class PlanTab extends AbstractPlanTab {
 
-//    private PlanEditorGroup planEditorGroup;
+    private PlanEditorGroup planEditorGroup;
     private ConditionHBox conditionHBox;
     private PlanModelVisualisationObject planModelVisualisationObject;
 //    private PmlUiExtensionMap pmlUiExtensionMap;
@@ -47,26 +48,17 @@ public class PlanTab extends AbstractPlanTab {
         super(viewModelElement);
         this.guiModificationHandler = handler;
         i18NRepo = I18NRepo.getInstance();
-        plan = (PlanViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId());
-        setPresentedViewModelElement(plan);
-        setText(i18NRepo.getString("label.caption.plan") + ": " + plan.getName());
-
-//        String absolutePath = planPathPair.getValue().toFile().toString();
-//        String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
-//        URI relativeURI = EMFModelUtils.createRelativeURI(new File(uiExtensionMapPath));
-//        setPmlUiExtensionMap((PmlUiExtensionMap) AlicaResourceSet.getInstance().getResource(relativeURI, false).getContents().get(0));
-
-        draw();
+        setText(i18NRepo.getString("label.caption.plan") + ": " + viewModelElement.getName());
     }
 
     private void draw() {
-        planModelVisualisationObject = new PlanModelVisualisationObject(plan.getId());
-//        planEditorGroup = new PlanEditorGroup(planModelVisualisationObject, this);
-//        planContent = new StackPane(planEditorGroup);
-//        planContent.setPadding(new Insets(50, 50, 50, 50));
-//        planContent.setManaged(true);
+        planModelVisualisationObject = new PlanModelVisualisationObject(plan);
+        planEditorGroup = new PlanEditorGroup(planModelVisualisationObject, this);
+        planContent = new StackPane(planEditorGroup);
+        planContent.setPadding(new Insets(50, 50, 50, 50));
+        planContent.setManaged(true);
 
-//        planEditorGroup.setManaged(true);
+        planEditorGroup.setManaged(true);
 
         upperPropertiesTable = new PropertiesTable();
         upperPropertiesTable.setEditable(true);
@@ -186,5 +178,15 @@ public class PlanTab extends AbstractPlanTab {
     public void updateText(String newName) {
         this.setText(i18NRepo.getString("label.caption.plan") + ": " + newName);
         setDirty(true);
+    }
+
+    public void setPlanViewModel(PlanViewModel plan) {
+        this.plan = plan;
+        setPresentedViewModelElement(this.plan);
+        draw();
+//        String absolutePath = planPathPair.getValue().toFile().toString();
+//        String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
+//        URI relativeURI = EMFModelUtils.createRelativeURI(new File(uiExtensionMapPath));
+//        setPmlUiExtensionMap((PmlUiExtensionMap) AlicaResourceSet.getInstance().getResource(relativeURI, false).getContents().get(0));
     }
 }

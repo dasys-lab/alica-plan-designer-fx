@@ -581,7 +581,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void handleTabOpenedEvent(PlanTab planTab) {
-        System.err.println("Controller: Opening Plans not implemented, yet!");
+        planTab.setPlanViewModel(viewModelFactory.createPlanViewModel((Plan) modelManager.getPlanElement(planTab.getPresentedViewModelElement().getId())));
+
     }
 
     @Override

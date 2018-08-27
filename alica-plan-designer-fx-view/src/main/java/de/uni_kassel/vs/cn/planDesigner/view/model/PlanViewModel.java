@@ -69,4 +69,12 @@ public class PlanViewModel extends PlanElementViewModel {
     public void setTransitions(ObservableList<TransitionViewModel> transitions) {
         this.transitions = transitions;
     }
+
+    public ObservableList<ConditionViewModel> getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(ObservableList<ConditionViewModel> conditions) {
+        this.conditions = conditions;
+    }
 }

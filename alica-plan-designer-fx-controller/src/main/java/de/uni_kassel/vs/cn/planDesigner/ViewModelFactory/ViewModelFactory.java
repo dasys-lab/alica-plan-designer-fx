@@ -39,7 +39,7 @@ public class ViewModelFactory {
     }
 
     public ViewModelElement getViewModelElement(PlanElement planElement) {
-        if(planElement == null) {
+        if (planElement == null) {
             return null;
         }
         if (planElement instanceof Task) {
@@ -153,5 +153,67 @@ public class ViewModelFactory {
             return new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.PLAN, annotatedPlan
                     .isActivated(), plan.getId());
         }
+    }
+
+    public PlanViewModel createPlanViewModel(Plan plan) {
+        PlanViewModel planViewModel;
+        if (plan.getMasterPlan()) {
+            planViewModel = new PlanViewModel(plan.getId(), plan.getName(), Types.MASTERPLAN);
+            planViewModel.setMasterPlan(true);
+        } else {
+            planViewModel = new PlanViewModel(plan.getId(), plan.getName(), Types.PLAN);
+            planViewModel.setMasterPlan(false);
+        }
+        planViewModel.setUtilityThreshold(plan.getUtilityThreshold());
+        planViewModel.setComment(plan.getComment());
+        planViewModel.setRelativeDirectory(plan.getRelativeDirectory());
+        for (State state : plan.getStates()) {
+            planViewModel.getStates().add(new StateViewModel(state.getId(), state.getName(), Types.STATE));
+        }
+        for (EntryPoint ep : plan.getEntryPoints()) {
+            EntryPointViewModel entryPointViewModel = new EntryPointViewModel(ep.getId(), ep.getName(), Types.ENTRYPOINT);
+            for (StateViewModel stateViewModel : planViewModel.getStates()) {
+                if (stateViewModel.getId() == ep.getState().getId()) {
+                    entryPointViewModel.setState(stateViewModel);
+                    stateViewModel.setEntryPoint(entryPointViewModel);
+                    break;
+                }
+            }
+            entryPointViewModel.setTask(new PlanElementViewModel(ep.getTask().getId(), ep.getTask().getName(), Types.TASK));
+            planViewModel.getEntryPoints().add(entryPointViewModel);
+        }
+        for (Transition transition : plan.getTransitions()) {
+            TransitionViewModel transitionViewModel = new TransitionViewModel(transition.getId(), transition.getName(), Types.TRANSITION);
+            boolean inStateFound = false;
+            boolean outStateFound = false;
+            for (StateViewModel stateViewModel : planViewModel.getStates()) {
+                if (stateViewModel.getId() == transition.getInState().getId()) {
+                    transitionViewModel.setInState(stateViewModel);
+                    stateViewModel.getInTransitions().add(transitionViewModel);
+                    inStateFound = true;
+                }
+                if (stateViewModel.getId() == transition.getOutState().getId()) {
+                    transitionViewModel.setOutState(stateViewModel);
+                    stateViewModel.getOutTransitions().add(transitionViewModel);
+                    outStateFound = true;
+                }
+                if (inStateFound && outStateFound) {
+                    break;
+                }
+            }
+            ConditionViewModel conditionViewModel = new ConditionViewModel(transition.getPreCondition().getId(), transition.getPreCondition().getName(),
+                    Types.PRECONDITION);
+            transitionViewModel.setPreCondition(conditionViewModel);
+            planViewModel.getConditions().add(conditionViewModel);
+        }
+        if (plan.getPreCondition() != null) {
+            planViewModel.getConditions().add(new ConditionViewModel(plan.getPreCondition().getId(), plan.getPreCondition().getName(),
+                    Types.PRECONDITION));
+        }
+        if (plan.getRuntimeCondition() != null) {
+            planViewModel.getConditions().add(new ConditionViewModel(plan.getRuntimeCondition().getId(), plan.getRuntimeCondition().getName(),
+                    Types.RUNTIMECONDITION));
+        }
+        return planViewModel;
     }
 }
