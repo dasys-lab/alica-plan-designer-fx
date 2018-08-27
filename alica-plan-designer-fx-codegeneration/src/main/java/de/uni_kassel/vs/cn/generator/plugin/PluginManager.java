@@ -43,7 +43,7 @@ public class PluginManager {
 
     private static Logger LOG = LogManager.getLogger(PluginManager.class);
     private List<IPlugin<?>> availablePlugins;
-    private IPlugin<?> activePlugin;
+    private IPlugin<?> defaultPlugin;
 
     /**
      * The PluginManager initializes its plugin list at construction.
@@ -52,72 +52,86 @@ public class PluginManager {
      */
     private PluginManager() {
         availablePlugins = new ArrayList<>();
-
-        updateAvailablePlugins("");
-
-        if (availablePlugins.size() == 1) {
-            setDefaultPlugin(availablePlugins.get(0));
-        }
     }
 
     /**
-     * Updates the list of available plugins
+     * Updates the list of available plugins. Must be
+     * called from outside at least once for making the PluginManager work.
      */
     public void updateAvailablePlugins(String pluginsFolder) {
-        if (pluginsFolder == null || !pluginsFolder.isEmpty())
-        {
+        if (pluginsFolder == null || pluginsFolder.isEmpty()) {
+            System.out.println("PluginManager: Setting empty plugin folder ignored.");
             return;
         }
 
-        //HACK This is some nasty code to loadFromDisk the plugins
-        try {
-            Files.list(Paths.get(pluginsFolder))
-                    .map(Path::toFile)
-                    .filter(e -> !e.isDirectory() && e.getName().endsWith(".jar"))
-                    .forEach(f -> {
-                        // Source https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
-                        JarFile jarFile;
-                        try {
-                            jarFile = new JarFile(f);
-                        } catch (IOException e) {
-                            LOG.error("Couldn't loadFromDisk jar file", e);
-                            throw new RuntimeException(e);
-                        }
-                        Enumeration<JarEntry> e = jarFile.entries();
 
-                        while (e.hasMoreElements()) {
-                            JarEntry je = e.nextElement();
-                            if (je.isDirectory() || !je.getName().endsWith(".class")) {
-                                continue;
-                            }
-                            String className = je.getName().substring(0, je.getName().length() - String.valueOf(".class").length());
-                            className = className.replace(File.separatorChar, '.');
-                            try {
-                                URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-                                Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-                                method.setAccessible(true);
-                                method.invoke(classLoader, f.toURI().toURL());
-                                Class c = classLoader.loadClass(className);
-                                Object o = c.newInstance();
-                                if (o instanceof IPlugin) {
-                                    ((IPlugin) o).setPluginFile(f);
-                                    availablePlugins.add((IPlugin<?>) o);
-                                }
-                            } catch (ClassNotFoundException | InstantiationException ignored) {
-                            } catch (IllegalAccessException | NoSuchMethodException | MalformedURLException | InvocationTargetException e1) {
-                                e1.printStackTrace();
-                            }
+        File folder = new File(pluginsFolder);
+        List<File> jars = collectJarsRecursively(folder);
 
-                        }
-                    });
-        } catch (IOException e) {
-            LOG.error("Couldn't initialize PluginManager", e);
-            throw new RuntimeException(e);
+        for (File currentFile : jars) {
+            System.out.println("PluginManager: " + currentFile.getName());
+
+            // Source https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
+            Enumeration<JarEntry> e = null;
+            try {
+                e = new JarFile(currentFile).entries();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+            while (e.hasMoreElements()) {
+                JarEntry je = e.nextElement();
+                if (je.isDirectory() || !je.getName().endsWith(".class")) {
+                    continue;
+                }
+                String className = je.getName().substring(0, je.getName().length() - String.valueOf(".class").length());
+                className = className.replace(File.separatorChar, '.');
+                try {
+                    URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+                    Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+                    method.setAccessible(true);
+                    System.out.println(currentFile.toString());
+                    method.invoke(classLoader, currentFile.toURI().toURL());
+                    Class c = classLoader.loadClass(className);
+                    Object o = c.newInstance();
+                    if (o instanceof IPlugin) {
+                        ((IPlugin) o).setPluginFile(currentFile);
+                        availablePlugins.add((IPlugin<?>) o);
+                    }
+                } catch (ClassNotFoundException | InstantiationException ignored) {
+                } catch (IllegalAccessException | NoSuchMethodException | MalformedURLException | InvocationTargetException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
         }
 
-        if (!availablePlugins.contains(activePlugin)) {
+        if (!availablePlugins.contains(defaultPlugin)) {
             setDefaultPlugin(null);
         }
+    }
+
+    private List<File> collectJarsRecursively(File folder) {
+        List<File> jars = new ArrayList<>();
+
+        for (String fileName : folder.list()) {
+            File currentFile = Paths.get(folder.getAbsolutePath(),fileName).toFile();
+            if (currentFile.isDirectory()) {
+                jars.addAll(collectJarsRecursively(currentFile));
+            } else if (currentFile.isFile() && fileName.endsWith(".jar")) {
+                jars.add(currentFile);
+            }
+        }
+
+        return jars;
+    }
+
+    public ObservableList<String> getAvailablePluginNames() {
+        ObservableList<String> pluginNamesList = FXCollections.observableArrayList();
+        for (IPlugin plugin : availablePlugins) {
+            pluginNamesList.add(plugin.getName());
+        }
+        return pluginNamesList;
     }
 
     /**
@@ -136,29 +150,26 @@ public class PluginManager {
         return null;
     }
 
-    public ObservableList<String> getAvailablePluginNames() {
-        ObservableList<String> pluginNamesList = FXCollections.observableArrayList();
-        for (IPlugin plugin : availablePlugins) {
-            pluginNamesList.add(plugin.getName());
-        }
-        return pluginNamesList;
-    }
-
     /**
-     * Sets the active Plugin.
+     * Sets the defaultplugin.
      *
-     * @param activePlugin the plugin that should be active now
+     * @param defaultPluginName the plugin that should be active now
      */
-    private void setDefaultPlugin(IPlugin<?> activePlugin) {
-        this.activePlugin = activePlugin;
+    public void setDefaultPlugin(String defaultPluginName) {
+        for (IPlugin<?> plugin : availablePlugins) {
+            if (plugin.getName().equals(defaultPluginName)) {
+                this.defaultPlugin = plugin;
+                return;
+            }
+        }
     }
 
     /**
-     * Getter for the active plugin.
+     * Getter for the default plugin.
      *
-     * @return The currently activated plugin
+     * @return The default plugin
      */
     public IPlugin<?> getDefaultPlugin() {
-        return activePlugin;
+        return defaultPlugin;
     }
 }

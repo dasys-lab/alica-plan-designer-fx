@@ -41,7 +41,6 @@ class DefaultTemplate {
                     return implement_me_«transition.id»;
                 «ENDIF»
 				/*PROTECTED REGION END*/
-
 			}
 «ENDIF»
 «ENDFOR»

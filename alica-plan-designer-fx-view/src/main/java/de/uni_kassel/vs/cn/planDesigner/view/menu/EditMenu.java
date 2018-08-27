@@ -83,30 +83,10 @@ public class EditMenu extends Menu {
 
     private void undo() {
         guiModificationHandler.handleUndo();
-//        commandStack.undo();
-//        Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
-//        if (selectedItem instanceof PlanTab) {
-//            ((PlanTab) selectedItem).getPlanEditorGroup().setupPlanVisualisation();
-//            ((PlanTab) selectedItem).getConditionHBox().setupConditionVisualisation();
-//        } else if (selectedItem instanceof PlanTypeTab) {
-//            ((PlanTypeTab) selectedItem).refresh();
-//        } else if (selectedItem instanceof TaskRepositoryTab) {
-//            ((TaskRepositoryTab) selectedItem).initGui();
-//        }
     }
 
     private void redo() {
         guiModificationHandler.handleRedo();
-//        commandStack.redo();
-//        Tab selectedItem = editorTabPane.getSelectionModel().getSelectedItem();
-//        if (selectedItem instanceof PlanTab) {
-//            ((PlanTab) selectedItem).getPlanEditorGroup().setupPlanVisualisation();
-//            ((PlanTab) selectedItem).getConditionHBox().setupConditionVisualisation();
-//        } else if (selectedItem instanceof PlanTypeTab) {
-//            ((PlanTypeTab) selectedItem).refresh();
-//        } else if (selectedItem instanceof TaskRepositoryTab) {
-//            ((TaskRepositoryTab) selectedItem).initGui();
-//        }
     }
 
     private void openConfigMenu() {
@@ -151,52 +131,8 @@ public class EditMenu extends Menu {
         }
     }
 
-//    private void checkAbstractPlanUsage(AbstractPlan toBeDeleted) {
-//        List<AbstractPlan> usages = EMFModelUtils.getUsages(toBeDeleted);
-//        if (usages.size() > 0) {
-//            FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
-//            try {
-//                Parent infoWindow = fxmlLoader.load();
-//                UsagesWindowController controller = fxmlLoader.getController();
-//                controller.createReferencesList(usages);
-//                Stage stage = new Stage();
-//                stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
-//                stage.setScene(new Scene(infoWindow));
-//                stage.initModality(Modality.WINDOW_MODAL);
-//                stage.initOwner(PlanDesigner.getPrimaryStage());
-//                stage.showAndWait();
-//            } catch (IOException ignored) {
-//            }
-//        } else {
-//            commandStack.storeAndExecute(new DeleteAbstractPlan(toBeDeleted));
-//        }
-//    }
-
-//    private void deletePlanElement(PlanTab planTab, PlanElement selectedPlanElement) {
-//        if (selectedPlanElement instanceof StateImpl) {
-//            commandStack.storeAndExecute(new DeleteStateInPlan((State) selectedPlanElement,
-//                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
-//        } else if (selectedPlanElement instanceof TransitionImpl) {
-//            commandStack.storeAndExecute(new DeleteTransitionInPlan((Transition) selectedPlanElement,
-//                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
-//        } else if (selectedPlanElement instanceof EntryPointImpl) {
-//            commandStack.storeAndExecute(new DeleteEntryPointInPlan((EntryPoint) selectedPlanElement,
-//                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject())); // TODO ask single * 3
-//        } else if (selectedPlanElement instanceof AbstractPlan && planTab.getSelectedPlanElements().get().get(0).getValue() != null) {
-//            State state = (State) planTab.getSelectedPlanElements().getValue().get(0).getValue().getModelElementId();
-//            commandStack.storeAndExecute(new DeleteAbstractPlansFromState((AbstractPlan) selectedPlanElement, state));
-//        } else if (selectedPlanElement instanceof SynchronisationImpl) {
-//            commandStack.storeAndExecute(new DeleteSynchronisationFromPlan((Synchronisation) selectedPlanElement,
-//                    planTab.getPlanEditorGroup().getPlanModelVisualisationObject()));
-//        } else if (selectedPlanElement instanceof Condition) {
-//            Condition condition = (Condition) planTab.getSelectedPlanElements().getValue().get(0).getKey();
-//            commandStack.storeAndExecute(new DeleteConditionFromPlan(planTab.getPlanEditorGroup().getPlanModelVisualisationObject().getPlan(), condition));
-//        }
-//        planTab.getPlanEditorGroup().setupPlanVisualisation();
-//        planTab.getConditionHBox().setupConditionVisualisation();
-//    }
-
     private void defineAccelerator() {
+        // TODO: Delete Short Cut should be made working again
 //        this.deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
         this.undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
         this.redoItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
