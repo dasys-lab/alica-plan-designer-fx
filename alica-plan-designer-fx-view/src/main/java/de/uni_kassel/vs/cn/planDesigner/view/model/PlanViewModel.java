@@ -17,6 +17,7 @@ public class PlanViewModel extends PlanElementViewModel {
     protected ObservableList<StateViewModel> states;
     protected ObservableList<TransitionViewModel> transitions;
     protected ObservableList<ConditionViewModel> conditions;
+    protected ObservableList<SynchronisationViewModel> synchronisations;
 
     public PlanViewModel(long id, String name, String type) {
         super(id, name, type);
@@ -24,6 +25,7 @@ public class PlanViewModel extends PlanElementViewModel {
         this.states =  FXCollections.observableArrayList(new ArrayList<>());
         this.transitions =  FXCollections.observableArrayList(new ArrayList<>());
         this.conditions = FXCollections.observableArrayList(new ArrayList<>());
+        this.synchronisations = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public final BooleanProperty masterPlanProperty() {return masterPlan; }
@@ -76,5 +78,13 @@ public class PlanViewModel extends PlanElementViewModel {
 
     public void setConditions(ObservableList<ConditionViewModel> conditions) {
         this.conditions = conditions;
+    }
+
+    public ObservableList<SynchronisationViewModel> getSynchronisations() {
+        return synchronisations;
+    }
+
+    public void setSynchronisations(ObservableList<SynchronisationViewModel> synchronisations) {
+        this.synchronisations = synchronisations;
     }
 }

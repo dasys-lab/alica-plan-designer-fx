@@ -11,7 +11,7 @@ public class PlanModelVisualisationObject {
 //        this.pmlUiExtensionMap = pmlUiExtensionMap;
     }
 
-    public PlanViewModel getPlanId() {
+    public PlanViewModel getPlan() {
         return plan;
     }
 

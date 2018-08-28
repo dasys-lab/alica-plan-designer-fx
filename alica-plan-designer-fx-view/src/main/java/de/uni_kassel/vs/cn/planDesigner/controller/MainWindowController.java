@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
@@ -17,9 +18,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
+import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -27,6 +30,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -112,19 +116,19 @@ public class MainWindowController implements Initializable {
         guiStatusHandler.handleGuiInitialized();
     }
 
-//    public boolean isSelectedPlanElement(Node node) {
-//        Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
-//        if (selectedItem == null || ((AbstractPlanTab) selectedItem).getSelectedPlanElements() == null) {
-//            return false;
-//        }
-//
-//        Pair<Long, AbstractPlanElementContainer> o = ((AbstractPlanTab) selectedItem).getSelectedPlanElements().getValue().get(0);
-//        if (o != null && o.getValue() != null) {
-//            return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
-//        } else {
-//            return false;
-//        }
-//    }
+    public boolean isSelectedPlanElement(Node node) {
+        Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
+        if (selectedItem == null || ((AbstractPlanTab) selectedItem).getSelectedPlanElements() == null) {
+            return false;
+        }
+
+        Pair<Long, AbstractPlanElementContainer> o = ((AbstractPlanTab) selectedItem).getSelectedPlanElements().getValue().get(0);
+        if (o != null && o.getValue() != null) {
+            return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
+        } else {
+            return false;
+        }
+    }
 
     private List<Menu> createMenus() {
         List<Menu> menus = new ArrayList<>();

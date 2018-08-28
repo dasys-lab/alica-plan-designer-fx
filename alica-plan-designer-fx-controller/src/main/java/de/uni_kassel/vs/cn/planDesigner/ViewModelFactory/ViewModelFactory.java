@@ -156,6 +156,8 @@ public class ViewModelFactory {
     }
 
     public PlanViewModel createPlanViewModel(Plan plan) {
+
+        //TODO add synchronisations
         PlanViewModel planViewModel;
         if (plan.getMasterPlan()) {
             planViewModel = new PlanViewModel(plan.getId(), plan.getName(), Types.MASTERPLAN);
