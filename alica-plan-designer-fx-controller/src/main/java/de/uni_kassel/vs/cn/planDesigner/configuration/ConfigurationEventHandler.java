@@ -120,6 +120,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
         configWindowController.setPluginsFolder(conf.getPluginsPath());
         configWindowController.setSourceFolder(conf.getGenSrcPath());
         configWindowController.updateAvailablePlugins();
+        configWindowController.setDefaultPlugin(conf.getDefaultPluginName());
     }
 
     public void updateAvailableConfigurations() {

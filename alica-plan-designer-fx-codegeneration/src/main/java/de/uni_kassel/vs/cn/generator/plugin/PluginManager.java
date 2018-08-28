@@ -12,8 +12,6 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -64,14 +62,12 @@ public class PluginManager {
             return;
         }
 
-
         File folder = new File(pluginsFolder);
         List<File> jars = collectJarsRecursively(folder);
 
         for (File currentFile : jars) {
             System.out.println("PluginManager: " + currentFile.getName());
 
-            // Source https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
             Enumeration<JarEntry> e = null;
             try {
                 e = new JarFile(currentFile).entries();
@@ -79,6 +75,7 @@ public class PluginManager {
                 e1.printStackTrace();
             }
 
+            // Partially copied from: https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
             while (e.hasMoreElements()) {
                 JarEntry je = e.nextElement();
                 if (je.isDirectory() || !je.getName().endsWith(".class")) {
@@ -88,21 +85,34 @@ public class PluginManager {
                 className = className.replace(File.separatorChar, '.');
                 try {
                     URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+
+                    /**
+                     * Adding the jar as source for the Class Loader:
+                     * The addURL method is protected, thus we call it through reflection anyway!
+                     *
+                     * If you know a way to avoid using reflection, go for it.
+                     */
                     Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
                     method.setAccessible(true);
-                    System.out.println(currentFile.toString());
                     method.invoke(classLoader, currentFile.toURI().toURL());
+
+                    // Load the class through the class loader.
                     Class c = classLoader.loadClass(className);
                     Object o = c.newInstance();
+
+                    // Only add the class, if it an instance of IPlugin.
                     if (o instanceof IPlugin) {
                         ((IPlugin) o).setPluginFile(currentFile);
                         availablePlugins.add((IPlugin<?>) o);
                     }
-                } catch (ClassNotFoundException | InstantiationException ignored) {
-                } catch (IllegalAccessException | NoSuchMethodException | MalformedURLException | InvocationTargetException e1) {
-                    e1.printStackTrace();
+                } catch (NoSuchMethodException |
+                        MalformedURLException |
+                        InvocationTargetException |
+                        ClassNotFoundException |
+                        IllegalAccessException |
+                        InstantiationException exception) {
+                    exception.printStackTrace();
                 }
-
             }
         }
 

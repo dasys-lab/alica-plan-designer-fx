@@ -224,6 +224,14 @@ public class ConfigurationWindowController implements Initializable {
         configEventHandler.updateAvailableConfigurations();
     }
 
+    public void setDefaultPlugin(String defaultPluginName) {
+        for (String pluginName : defaultPluginComboBox.getItems()) {
+            if (pluginName.equals(defaultPluginName)) {
+                defaultPluginComboBox.setValue(defaultPluginName);
+            }
+        }
+    }
+
     public void setAvailablePlugins(List<String> pluginNames) {
         defaultPluginComboBox.getItems().clear();
         for  (String pluginName : pluginNames) {
@@ -298,4 +306,6 @@ public class ConfigurationWindowController implements Initializable {
             textField.setText(file.getAbsolutePath());
         }
     }
+
+
 }

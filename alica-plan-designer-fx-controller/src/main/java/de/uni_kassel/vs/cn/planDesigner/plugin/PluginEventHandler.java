@@ -17,13 +17,11 @@ public class PluginEventHandler implements IPluginEventHandler {
 
     @Override
     public void updateAvailablePlugins() {
-        System.out.println("PluginEventHandler: updateAvailablePlugins called!");
         configWindowController.setAvailablePlugins(pluginManager.getAvailablePluginNames());
     }
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        System.out.println("PluginEventHandler: changed oldValue: '" + oldValue + "' newValue: '" + newValue);
         pluginManager.setDefaultPlugin(newValue);
     }
 }

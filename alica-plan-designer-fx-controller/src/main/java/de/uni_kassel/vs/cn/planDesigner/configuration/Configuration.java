@@ -100,7 +100,7 @@ public class Configuration {
     }
 
     public String getDefaultPluginName() {
-        return properties.getProperty("defaultPluginName");
+        return properties.getProperty("defaultPlugin");
     }
 
     public void setDefaultPluginName(String pluginName) {
