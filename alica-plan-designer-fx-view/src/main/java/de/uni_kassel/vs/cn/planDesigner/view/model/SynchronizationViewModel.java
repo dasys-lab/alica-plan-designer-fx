@@ -5,11 +5,11 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class SynchronisationViewModel extends ViewModelElement {
+public class SynchronizationViewModel extends ViewModelElement {
 
     protected ObservableList<TransitionViewModel> transitions;
 
-    public SynchronisationViewModel(long id, String name, String type) {
+    public SynchronizationViewModel(long id, String name, String type) {
         super(id, name, type);
         this.transitions = FXCollections.observableArrayList(new ArrayList<>());
     }

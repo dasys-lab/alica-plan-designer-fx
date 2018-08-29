@@ -17,7 +17,7 @@ public class PlanViewModel extends PlanElementViewModel {
     protected ObservableList<StateViewModel> states;
     protected ObservableList<TransitionViewModel> transitions;
     protected ObservableList<ConditionViewModel> conditions;
-    protected ObservableList<SynchronisationViewModel> synchronisations;
+    protected ObservableList<SynchronizationViewModel> synchronisations;
 
     public PlanViewModel(long id, String name, String type) {
         super(id, name, type);
@@ -80,11 +80,11 @@ public class PlanViewModel extends PlanElementViewModel {
         this.conditions = conditions;
     }
 
-    public ObservableList<SynchronisationViewModel> getSynchronisations() {
+    public ObservableList<SynchronizationViewModel> getSynchronisations() {
         return synchronisations;
     }
 
-    public void setSynchronisations(ObservableList<SynchronisationViewModel> synchronisations) {
+    public void setSynchronisations(ObservableList<SynchronizationViewModel> synchronisations) {
         this.synchronisations = synchronisations;
     }
 }

@@ -61,7 +61,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
         visualRepresentation = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
         setEffectToStandard();
         ((Circle)visualRepresentation).setFill(new ImagePattern(new Image(getClass().getClassLoader()
-                .getResourceAsStream("images/synchronisation36x24.png"))));
+                .getResourceAsStream("images/synchronization36x24.png"))));
         Text e = new Text(getModelElementId().getName());
         getChildren().add(e);
         e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth()/2);

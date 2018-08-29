@@ -156,8 +156,6 @@ public class ViewModelFactory {
     }
 
     public PlanViewModel createPlanViewModel(Plan plan) {
-
-        //TODO add synchronisations
         PlanViewModel planViewModel;
         if (plan.getMasterPlan()) {
             planViewModel = new PlanViewModel(plan.getId(), plan.getName(), Types.MASTERPLAN);
@@ -171,6 +169,11 @@ public class ViewModelFactory {
         planViewModel.setRelativeDirectory(plan.getRelativeDirectory());
         for (State state : plan.getStates()) {
             planViewModel.getStates().add(new StateViewModel(state.getId(), state.getName(), Types.STATE));
+            System.out.println("ViewModelFactory: abstract plans :");
+            for(AbstractPlan abstractPlan : state.getPlans()) {
+                //TODO add
+                System.out.println("ViewModelFactory: abstract plan :" + abstractPlan.getName());
+            }
         }
         for (EntryPoint ep : plan.getEntryPoints()) {
             EntryPointViewModel entryPointViewModel = new EntryPointViewModel(ep.getId(), ep.getName(), Types.ENTRYPOINT);
@@ -203,10 +206,26 @@ public class ViewModelFactory {
                     break;
                 }
             }
-            ConditionViewModel conditionViewModel = new ConditionViewModel(transition.getPreCondition().getId(), transition.getPreCondition().getName(),
-                    Types.PRECONDITION);
-            transitionViewModel.setPreCondition(conditionViewModel);
-            planViewModel.getConditions().add(conditionViewModel);
+            if (transition.getPreCondition() != null) {
+                ConditionViewModel conditionViewModel = new ConditionViewModel(transition.getPreCondition().getId(), transition.getPreCondition().getName(),
+                        Types.PRECONDITION);
+                transitionViewModel.setPreCondition(conditionViewModel);
+                planViewModel.getConditions().add(conditionViewModel);
+            }
+        }
+        for (Synchronization synchronization : plan.getSynchronizations()) {
+            SynchronizationViewModel synchronizationViewModel = new SynchronizationViewModel(synchronization.getId(), synchronization.getName(),
+                    Types.SYNCHRONIZATION);
+            for (Transition transition : synchronization.getSyncedTransitions()) {
+                for (TransitionViewModel trans : planViewModel.getTransitions()) {
+                    if (trans.getId() == transition.getId()) {
+                        synchronizationViewModel.getTransitions().add(trans);
+                        break;
+                    }
+                }
+            }
+
+            planViewModel.getSynchronisations().add(synchronizationViewModel);
         }
         if (plan.getPreCondition() != null) {
             planViewModel.getConditions().add(new ConditionViewModel(plan.getPreCondition().getId(), plan.getPreCondition().getName(),

@@ -7,7 +7,6 @@ import javafx.scene.Group;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,7 +21,7 @@ public class PlanEditorGroup extends Group {
     private Map<Long, StateContainer> stateContainers;
     private Map<Long, TransitionContainer> transitionContainers;
     private Map<Long, EntryPointContainer> entryPointContainers;
-    private Map<Long, SynchronisationContainer> synchronisationContainers;
+    private Map<Long, SynchronizationContainer> synchronisationContainers;
 
     public PlanEditorGroup(PlanModelVisualisationObject planModelVisualisationObject, AbstractPlanTab planEditorTab) {
         super();
@@ -65,7 +64,7 @@ public class PlanEditorGroup extends Group {
         return entryPointContainers;
     }
 
-    public Map<Long, SynchronisationContainer> getSynchronisationContainers() {
+    public Map<Long, SynchronizationContainer> getSynchronisationContainers() {
         return synchronisationContainers;
     }
 
@@ -106,14 +105,14 @@ public class PlanEditorGroup extends Group {
         return states;
     }
 
-    private Map<Long, SynchronisationContainer> createSynchronisationContainers() {
-        Map<Long, SynchronisationContainer> synchros = new HashMap<>();
-        for (SynchronisationViewModel synchronisation : plan.getSynchronisations()) {
+    private Map<Long, SynchronizationContainer> createSynchronisationContainers() {
+        Map<Long, SynchronizationContainer> synchros = new HashMap<>();
+        for (SynchronizationViewModel synchronisation : plan.getSynchronisations()) {
             ArrayList<TransitionContainer> synchedTransitions = new ArrayList<>();
             for(TransitionViewModel model : synchronisation.getTransitions()) {
                 synchedTransitions.add(transitionContainers.get(model.getId()));
             }
-            synchros.put(synchronisation.getId(), new SynchronisationContainer(synchronisation, synchedTransitions));
+            synchros.put(synchronisation.getId(), new SynchronizationContainer(synchronisation, synchedTransitions));
         }
         return synchros;
     }

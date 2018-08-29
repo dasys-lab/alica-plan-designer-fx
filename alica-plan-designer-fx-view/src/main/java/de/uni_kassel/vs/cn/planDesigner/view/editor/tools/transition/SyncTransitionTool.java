@@ -17,7 +17,7 @@ public class SyncTransitionTool extends AbstractTool {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private boolean initial = true;
-//    private SynchronisationContainer start;
+//    private SynchronizationContainer start;
 //    private TransitionContainer finish;
 
     public SyncTransitionTool(TabPane workbench) {
@@ -47,9 +47,9 @@ public class SyncTransitionTool extends AbstractTool {
     protected Map<EventType, EventHandler> getCustomHandlerMap() {
         if (eventHandlerMap.isEmpty()) {
             eventHandlerMap.put(MouseEvent.MOUSE_CLICKED, event -> {
-//                if(((Node)event.getTarget()).getParent() instanceof SynchronisationContainer) {
+//                if(((Node)event.getTarget()).getParent() instanceof SynchronizationContainer) {
 //                    if (initial) {
-//                        start = (SynchronisationContainer) ((Node)event.getTarget()).getParent();
+//                        start = (SynchronizationContainer) ((Node)event.getTarget()).getParent();
 //                        initial = false;
 //                    } else {
 //                        initial = true;
@@ -83,7 +83,7 @@ public class SyncTransitionTool extends AbstractTool {
                 Node target = (Node) event.getTarget();
 
 //                if (initial) {
-//                    if (target.getParent() instanceof SynchronisationContainer == false) {
+//                    if (target.getParent() instanceof SynchronizationContainer == false) {
 //                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
 //                            previousCursor = target.getScene().getCursor();
 //                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
