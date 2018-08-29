@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+import de.uni_kassel.vs.cn.planDesigner.modelMixIns.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,12 +16,28 @@ public class JSonSerializer {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
+        mapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
+        mapper.addMixIn(Parametrisation.class, ParametrisationMixIn.class);
+        mapper.addMixIn(AnnotatedPlan.class, AnnotatedPlanMixIn.class);
+        mapper.addMixIn(Plan.class, PlanMixIn.class);
+        mapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
+        mapper.addMixIn(State.class, StateMixIn.class);
+        mapper.addMixIn(Synchronization.class, SynchronizationMixIn.class);
+        mapper.addMixIn(Task.class, TaskMixIn.class);
+        mapper.addMixIn(TaskRepository.class, TaskRepositoryMixIn.class);
+        mapper.addMixIn(Transition.class, TransitionMixIn.class);
 
         Plan plan = new Plan();
-        plan.setName("TestMasterPlan");
+        plan.setName("TestMasterPlan2");
         plan.setMasterPlan(true);
         plan.setComment("Test Comment String");
-        plan.setRelativeDirectory("result.json");
+        plan.setRelativeDirectory("");
+
+        Plan plan2 = new Plan();
+        plan2.setName("abc");
+        plan2.setMasterPlan(true);
+        plan2.setComment("Test Comment String");
+        plan2.setRelativeDirectory("");
 
         State state = new State();
         state.setName("Stop");
@@ -48,6 +65,8 @@ public class JSonSerializer {
         state2.setComment("Stops the robot too");
         state2.setParentPlan(plan);
 
+        state2.getPlans().add(plan2);
+
         plan.getStates().add(state2);
 
         EntryPoint entryPoint = new EntryPoint();
@@ -71,6 +90,13 @@ public class JSonSerializer {
         task.setTaskRepository(taskRepository);
         taskRepository.getTasks().add(task);
         taskRepository.setDefaultTask(task);
+
+        Transition transition = new Transition();
+        transition.setInState(state2);
+        transition.setOutState(state);
+        state.getOutTransitions().add(transition);
+        state2.getInTransitions().add(transition);
+        plan.getTransitions().add(transition);
 
 //        Behaviour behaviour = new Behaviour();
 //        behaviour.setFrequency(30);
@@ -120,7 +146,7 @@ public class JSonSerializer {
 
         try {
 
-        File outfile = new File(plan.getRelativeDirectory());
+        File outfile = new File(plan.getName() + ".pml");
         //TODO adds list brackets to serialized json causing Cannot deserialize instance of `de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan` out of START_ARRAY tokenk
             mapper.writeValue(outfile, plan);
         } catch (IOException e) {

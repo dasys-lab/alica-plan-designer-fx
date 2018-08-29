@@ -48,14 +48,14 @@ public class EditorToolBar extends ToolBar {
         getItems().add(postConditionTool.createToolUI());
         InitTransitionTool initTransitionTool = new InitTransitionTool(workbench);
         getItems().add(initTransitionTool.createToolUI());
-        SynchronisationTool synchronisationTool = new SynchronisationTool(workbench);
-        getItems().add(synchronisationTool.createToolUI());
+        SynchronizationTool synchronizationTool = new SynchronizationTool(workbench);
+        getItems().add(synchronizationTool.createToolUI());
         SyncTransitionTool syncTransitionTool = new SyncTransitionTool(workbench);
         getItems().add(syncTransitionTool.createToolUI());
 
         tools.addAll(Arrays.asList(stateTool, transitionTool, behaviourTool, entryPointTool, successStateTool,
                 failureStateTool, runtimeConditionTool, preConditionTool, postConditionTool, initTransitionTool,
-                synchronisationTool, syncTransitionTool));
+                synchronizationTool, syncTransitionTool));
 
     }
 

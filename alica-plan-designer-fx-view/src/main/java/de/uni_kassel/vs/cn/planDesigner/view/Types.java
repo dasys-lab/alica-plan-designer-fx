@@ -21,6 +21,6 @@ public class Types {
     public static final String INITSTATECONNECTION = "initstateconnection";
     public static final String TRANSITION = "transition";
     public static final String ENTRYPOINT = "entrypoint";
-    public static final String SYNCHRONISATION = "synchronisation";
+    public static final String SYNCHRONIZATION = "synchronization";
     public static final String SYNCTRANSITION = "synctransition";
 }

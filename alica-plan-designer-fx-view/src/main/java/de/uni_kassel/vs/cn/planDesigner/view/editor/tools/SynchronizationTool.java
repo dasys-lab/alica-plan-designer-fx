@@ -12,13 +12,13 @@ import javafx.scene.layout.StackPane;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SynchronisationTool extends AbstractTool{
+public class SynchronizationTool extends AbstractTool{
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private Node visualRepresentation;
     private boolean initial = true;
 
-    public SynchronisationTool(TabPane workbench) {
+    public SynchronizationTool(TabPane workbench) {
         super(workbench);
     }
 
@@ -30,7 +30,7 @@ public class SynchronisationTool extends AbstractTool{
     @Override
     public DraggableHBox createToolUI() {
         DraggableHBox draggableHBox = new DraggableHBox();
-        draggableHBox.setIcon(Types.SYNCHRONISATION);
+        draggableHBox.setIcon(Types.SYNCHRONIZATION);
         return draggableHBox;
     }
 

@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.view.model.SynchronisationViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.model.SynchronizationViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.geometry.Point2D;
@@ -20,17 +20,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SynchronisationContainer extends AbstractPlanElementContainer implements Observable {
+public class SynchronizationContainer extends AbstractPlanElementContainer implements Observable {
     private boolean dragged;
     private List<InvalidationListener> invalidationListeners;
     private List<TransitionContainer> transitionContainers;
     private Map<TransitionContainer, Shape> transitionToLineMap;
-    private SynchronisationViewModel synchronisation;
+    private SynchronizationViewModel synchronisation;
 
     /**
      * @param containedElement
      */
-    public SynchronisationContainer(SynchronisationViewModel containedElement, List<TransitionContainer> transitionContainers/*, PmlUiExtension pmlUiExtension*/) {
+    public SynchronizationContainer(SynchronizationViewModel containedElement, List<TransitionContainer> transitionContainers/*, PmlUiExtension pmlUiExtension*/) {
         super(containedElement.getId(), null);
         invalidationListeners = new ArrayList<>();
         transitionToLineMap = new HashMap<>();
@@ -52,7 +52,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer imple
         visualRepresentation = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
         setEffectToStandard();
         ((Circle) visualRepresentation).setFill(new ImagePattern(new Image(getClass().getClassLoader()
-                .getResourceAsStream("images/synchronisation36x24.png"))));
+                .getResourceAsStream("images/synchronization36x24.png"))));
         Text e = new Text(synchronisation.getName());
         getChildren().add(e);
         e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth() / 2);
