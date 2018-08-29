@@ -7,16 +7,52 @@ import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ViewModelFactory {
 
     protected ModelManager modelManager;
+    protected Map<Long, ViewModelElement> viewModelElements;
 
     public ViewModelFactory(ModelManager modelManager) {
         this.modelManager = modelManager;
+        this.viewModelElements = new HashMap<>();
     }
 
-    public ViewModelElement createViewModelElement(PlanElement planElement, String type) {
+    public RepositoryViewModel createRepositoryViewModel() {
+        return new RepositoryViewModel();
+    }
+
+    public ViewModelElement getViewModelElement(PlanElement planElement) {
+        if (planElement == null) {
+            System.err.println("ViewModelFactory: Cannot create ViewModelElement from 'null'.");
+            return null;
+        }
+
+        ViewModelElement element = this.viewModelElements.get(planElement.getId());
+        if (element != null) {
+            return element;
+        }
+
+        if (planElement instanceof Behaviour) {
+            element = createBehaviourViewModel(planElement);
+        } else if (planElement instanceof Task) {
+            element =  createTaskViewModel(planElement);
+        } else if (planElement instanceof TaskRepository) {
+            element =  createTaskRepositoryViewModel(planElement);
+        } else if (planElement instanceof Plan) {
+            element =  createPlanViewModel(planElement);
+        } else {
+            System.err.println("ViewModelFactory: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
+        }
+
+        viewModelElements.put(planElement.getId(), element);
+        return element;
+    }
+
+
+    private ViewModelElement createViewModelElement(PlanElement planElement, String type) {
         if (planElement instanceof SerializablePlanElement) {
             return new ViewModelElement(planElement.getId(), planElement.getName(), type, ((SerializablePlanElement) planElement).getRelativeDirectory());
         } else {
@@ -24,57 +60,28 @@ public class ViewModelFactory {
         }
     }
 
-    public ViewModelElement createViewModelElement(PlanElement planElement, String type, long parentId) {
+    private ViewModelElement createViewModelElement(PlanElement planElement, String type, long parentId) {
         ViewModelElement element = createViewModelElement(planElement, type);
         element.setParentId(parentId);
         return element;
     }
 
-    public RepositoryViewModel createRepositoryViewModel() {
-        return new RepositoryViewModel();
-    }
-
-    public TaskRepositoryViewModel createTaskRepositoryViewModel() {
-        return new TaskRepositoryViewModel();
-    }
-
-    public ViewModelElement getViewModelElement(PlanElement planElement) {
-        if (planElement == null) {
-            return null;
+    private TaskRepositoryViewModel createTaskRepositoryViewModel(PlanElement planElement) {
+        TaskRepositoryViewModel taskRepo = new TaskRepositoryViewModel(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
+        taskRepo.setComment(planElement.getComment());
+        taskRepo.setRelativeDirectory(((TaskRepository) planElement).getRelativeDirectory());
+        for (Task task : ((TaskRepository) planElement).getTasks()) {
+            ViewModelElement taskElement = getViewModelElement(task);
+            taskRepo.addTask(taskElement);
         }
-        if (planElement instanceof Task) {
-            return createViewModelElement(planElement, Types.TASK, ((Task) planElement).getTaskRepository().getId());
-        } else if (planElement instanceof TaskRepository) {
-            PlanElementViewModel taskRepo = new PlanElementViewModel(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
-            taskRepo.setComment(planElement.getComment());
-            taskRepo.setRelativeDirectory(((TaskRepository) planElement).getRelativeDirectory());
-            return taskRepo;
-        } else if (planElement instanceof Plan) {
-            PlanViewModel element = null;
-            Plan plan = (Plan) planElement;
-            if (plan.getMasterPlan()) {
-                element = new PlanViewModel(plan.getId(), plan.getName(), Types.MASTERPLAN);
-            } else {
-                element = new PlanViewModel(plan.getId(), plan.getName(), Types.PLAN);
-            }
-            element.setComment(plan.getComment());
-            element.setRelativeDirectory(plan.getRelativeDirectory());
-            element.setUtilityThreshold(plan.getUtilityThreshold());
-            element.setMasterPlan(plan.getMasterPlan());
-            return element;
-        } else if (planElement instanceof TaskRepository) {
-            PlanElementViewModel element = new PlanViewModel(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
-            TaskRepository taskRepository = (TaskRepository) planElement;
-            element.setComment(taskRepository.getComment());
-            element.setRelativeDirectory(taskRepository.getRelativeDirectory());
-            return element;
-        } else {
-            System.err.println("ViewModelFactory: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
-        }
-        return null;
+        return taskRepo;
     }
 
-    public BehaviourViewModel createBehaviourViewModel(PlanElement planElement) {
+    private ViewModelElement createTaskViewModel(PlanElement planElement) {
+        return createViewModelElement(planElement, Types.TASK, ((Task) planElement).getTaskRepository().getId());
+    }
+
+    private BehaviourViewModel createBehaviourViewModel(PlanElement planElement) {
         if (planElement == null) {
             return null;
         }
@@ -95,7 +102,7 @@ public class ViewModelFactory {
         return behaviourViewModel;
     }
 
-    public ConditionViewModel getConditionViewModel(Condition condition, String type, long parentId) {
+    private ConditionViewModel getConditionViewModel(Condition condition, String type, long parentId) {
         if (condition == null) {
             return null;
         }
@@ -115,7 +122,7 @@ public class ViewModelFactory {
         return conditionViewModel;
     }
 
-    public PlanTypeViewModel createPlanTypeViewModel(ViewModelElement viewModelElement, ArrayList<Plan> plans) {
+    private PlanTypeViewModel createPlanTypeViewModel(ViewModelElement viewModelElement, ArrayList<Plan> plans) {
         PlanElement planElement = modelManager.getPlanElement(viewModelElement.getId());
         if (planElement == null || !(planElement instanceof PlanType)) {
             System.err.println("ViewModelFactory: Opening PlanTypeTab for unknown Id or not presented element is not a PlanType!");
@@ -144,7 +151,7 @@ public class ViewModelFactory {
         return planTypeViewModel;
     }
 
-    public AnnotatedPlanView createAnnotatedPlanView(AnnotatedPlan annotatedPlan) {
+    private AnnotatedPlanView createAnnotatedPlanView(AnnotatedPlan annotatedPlan) {
         Plan plan = annotatedPlan.getPlan();
         if (plan.getMasterPlan()) {
             return new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
@@ -155,17 +162,16 @@ public class ViewModelFactory {
         }
     }
 
-    public PlanViewModel createPlanViewModel(Plan plan) {
-
+    private PlanViewModel createPlanViewModel(PlanElement planElement) {
         //TODO add synchronisations
+        Plan plan = (Plan) planElement;
         PlanViewModel planViewModel;
         if (plan.getMasterPlan()) {
             planViewModel = new PlanViewModel(plan.getId(), plan.getName(), Types.MASTERPLAN);
-            planViewModel.setMasterPlan(true);
         } else {
             planViewModel = new PlanViewModel(plan.getId(), plan.getName(), Types.PLAN);
-            planViewModel.setMasterPlan(false);
         }
+        planViewModel.setMasterPlan(plan.getMasterPlan());
         planViewModel.setUtilityThreshold(plan.getUtilityThreshold());
         planViewModel.setComment(plan.getComment());
         planViewModel.setRelativeDirectory(plan.getRelativeDirectory());

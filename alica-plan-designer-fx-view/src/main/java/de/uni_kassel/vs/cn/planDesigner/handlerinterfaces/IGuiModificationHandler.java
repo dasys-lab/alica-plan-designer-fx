@@ -14,7 +14,6 @@ public interface IGuiModificationHandler {
     public void handle(GuiModificationEvent event);
     public ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement);
     public ViewModelElement getViewModelElement(long id);
-    public BehaviourViewModel getBehaviourViewModel(long id);
     public abstract void handleTabOpenedEvent(TaskRepositoryTab taskRepositoryTab);
     public abstract void handleTabOpenedEvent(PlanTab planTab);
     public abstract void handleTabOpenedEvent(BehaviourTab behaviourTab);

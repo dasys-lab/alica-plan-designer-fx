@@ -57,7 +57,7 @@ public class EditorTabPane extends TabPane {
                 guiModificationHandler.handleTabOpenedEvent(taskTab);
                 return taskTab;
             case Types.BEHAVIOUR:
-                BehaviourViewModel behaviourViewModel = guiModificationHandler.getBehaviourViewModel(viewModelElement.getId());
+                BehaviourViewModel behaviourViewModel = (BehaviourViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId());
                 BehaviourTab behaviourTab = new BehaviourTab(behaviourViewModel);
                 behaviourTab.init(guiModificationHandler);
                 guiModificationHandler.handleTabOpenedEvent(behaviourTab);

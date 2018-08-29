@@ -19,11 +19,13 @@ public class ConditionsTitledPane extends TitledPane {
     private ObservableList<String> pluginNames;
     protected I18NRepo i18NRepo;
     PropertiesTable<ConditionViewModel> conditionPropertiesTable;
+    ConditionViewModel conditionViewModel;
 
-    public ConditionsTitledPane(String type) {
+    public ConditionsTitledPane(String type, ConditionViewModel conditionViewModel) {
         super();
         setText(type);
         i18NRepo = I18NRepo.getInstance();
+        this.conditionViewModel = conditionViewModel;
         this.pluginNames = FXCollections.observableArrayList();
 
         conditionPropertiesTable = new PropertiesTable<ConditionViewModel>();
@@ -34,7 +36,7 @@ public class ConditionsTitledPane extends TitledPane {
         conditionPropertiesTable.addColumn(i18NRepo.getString("label.column.enabled"), "enabled", new BooleanStringConverter(), true);
 
         // Variables & Quantifier Tabs
-        VariablesTab variablesTab = new VariablesTab();
+        VariablesTab variablesTab = new VariablesTab(conditionViewModel);
         QuantifiersTab quantifiersTab = new QuantifiersTab();
 
         TabPane tabPane = new TabPane();

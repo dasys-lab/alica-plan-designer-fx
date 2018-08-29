@@ -47,7 +47,7 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         propertiesTable.addItem(behaviourViewModel);
 
         // Variables
-        variablesTab = new VariablesTab();
+        variablesTab = new VariablesTab(behaviourViewModel);
         for (VariableViewModel variableViewModel : behaviourViewModel.getVariables()) {
             variablesTab.addItem(variableViewModel);
         }
@@ -55,13 +55,23 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         variablesTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         variablesTabPane.getTabs().addAll(variablesTab);
 
-        // Behaviours Conditions
-        ConditionsTitledPane preConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.preCondtions"));
-        ConditionsTitledPane runtimeConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.runtimeCondtions"));
-        ConditionsTitledPane postConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.postCondtions"));
-
         contentList = new VBox();
-        contentList.getChildren().addAll(propertiesTable, variablesTabPane, preConditionTabPane, runtimeConditionTabPane, postConditionTabPane);
+        contentList.getChildren().addAll(propertiesTable, variablesTabPane);
+
+        // Behaviours Conditions
+        if (behaviourViewModel.getPreCondition() != null) {
+            ConditionsTitledPane preConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.preCondtions"), behaviourViewModel.getPreCondition());
+            contentList.getChildren().addAll(preConditionTabPane);
+        }
+        if (behaviourViewModel.getRuntimeCondition() != null) {
+            ConditionsTitledPane runtimeConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.runtimeCondtions"), behaviourViewModel.getRuntimeCondition());
+            contentList.getChildren().addAll(runtimeConditionTabPane);
+        }
+        if (behaviourViewModel.getPostCondition() != null) {
+            ConditionsTitledPane postConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.postCondtions"), behaviourViewModel.getPostCondition());
+            contentList.getChildren().addAll(postConditionTabPane);
+        }
+
         setContent(contentList);
     }
 
@@ -83,6 +93,7 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
             setDirty(true);
             fireModificationEvent(newValue.toString(), "deferring", Long.class.getSimpleName());
         });
+
     }
 
     private void fireModificationEvent(String newValue, String attributeName, String type) {

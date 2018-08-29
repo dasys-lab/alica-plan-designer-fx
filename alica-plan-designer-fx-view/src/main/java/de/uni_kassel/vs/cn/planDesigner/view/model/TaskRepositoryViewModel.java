@@ -8,12 +8,13 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class TaskRepositoryViewModel {
+public class TaskRepositoryViewModel extends PlanElementViewModel {
     private ObservableList<ViewModelElement> tasks;
     private TaskRepositoryTab taskRepositoryTab;
     private boolean isDirty;
 
-    public TaskRepositoryViewModel() {
+    public TaskRepositoryViewModel(long id, String name, String type) {
+        super(id, name, type);
         tasks = FXCollections.observableArrayList(new ArrayList<>());
         tasks.addListener(new ListChangeListener<ViewModelElement>() {
             /**
@@ -76,5 +77,9 @@ public class TaskRepositoryViewModel {
 
     public void clearTasks() {
         tasks.clear();
+    }
+
+    public ObservableList<ViewModelElement> getTaskViewModels() {
+        return tasks;
     }
 }

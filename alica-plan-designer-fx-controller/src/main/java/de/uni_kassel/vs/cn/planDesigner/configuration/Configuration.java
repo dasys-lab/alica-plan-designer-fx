@@ -29,6 +29,9 @@ public class Configuration {
     }
 
     private String replaceBashConstants(String pathWithConstants) {
+        if (pathWithConstants == null) {
+            return "";
+        }
         try {
             String bashConstant = pathWithConstants
                     .substring(pathWithConstants.indexOf("$"), pathWithConstants.indexOf(File.separator));
@@ -44,11 +47,7 @@ public class Configuration {
     }
 
     public void setRolesPath(String rolesPath) {
-        if (rolesPath == null) {
-            properties.setProperty("rolesPath", "");
-        } else {
-            properties.setProperty("rolesPath", replaceBashConstants(rolesPath));
-        }
+        properties.setProperty("rolesPath", replaceBashConstants(rolesPath));
     }
 
     public String getPlansPath() {
@@ -56,11 +55,7 @@ public class Configuration {
     }
 
     public void setPlansPath(String plansPath) {
-        if (plansPath == null) {
-            properties.setProperty("plansPath", "");
-        } else {
-            properties.setProperty("plansPath", replaceBashConstants(plansPath));
-        }
+        properties.setProperty("plansPath", replaceBashConstants(plansPath));
     }
 
     public String getGenSrcPath() {
@@ -68,11 +63,7 @@ public class Configuration {
     }
 
     public void setGenSrcPath(String genSrcPath) {
-        if (genSrcPath == null) {
-            properties.setProperty("genSrcPath", "");
-        } else {
-            properties.setProperty("genSrcPath", replaceBashConstants(genSrcPath));
-        }
+        properties.setProperty("genSrcPath", replaceBashConstants(genSrcPath));
     }
 
     public String getTasksPath() {
@@ -80,11 +71,7 @@ public class Configuration {
     }
 
     public void setTasksPath(String tasksPath) {
-        if (tasksPath == null) {
-            properties.setProperty("tasksPath", "");
-        } else {
-            properties.setProperty("tasksPath", replaceBashConstants(tasksPath));
-        }
+        properties.setProperty("tasksPath", replaceBashConstants(tasksPath));
     }
 
     public String getPluginsPath() {
@@ -92,11 +79,7 @@ public class Configuration {
     }
 
     public void setPluginsPath(String pluginsPath) {
-        if (pluginsPath == null) {
-            properties.setProperty("pluginsPath", "");
-        } else {
-            properties.setProperty("pluginsPath", replaceBashConstants(pluginsPath));
-        }
+        properties.setProperty("pluginsPath", replaceBashConstants(pluginsPath));
     }
 
     public String getDefaultPluginName() {

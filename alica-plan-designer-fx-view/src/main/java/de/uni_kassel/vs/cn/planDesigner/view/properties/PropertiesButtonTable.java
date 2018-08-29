@@ -18,7 +18,7 @@ public abstract class PropertiesButtonTable<S extends ViewModelElement> extends 
         i18NRepo = I18NRepo.getInstance();
         table = new PropertiesTable<>();
 
-        // Add & Remove Condition Buttons
+        // Add & Remove Buttons
         Button addButton = new Button(i18NRepo.getString("action.list.addShort"));
         addButton.setOnAction(e -> {
             onAddElement();
@@ -45,6 +45,10 @@ public abstract class PropertiesButtonTable<S extends ViewModelElement> extends 
     public void addItem(S viewModel) {
         table.addItem(viewModel);
         table.setMaxHeight(24*(table.getItems().size()+1)+2);
+    }
+
+    public S getSelectedItem() {
+        return table.getSelectionModel().getSelectedItem();
     }
 
     protected abstract void onAddElement();
