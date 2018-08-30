@@ -82,16 +82,17 @@ public class ChangeAttributeValue extends AbstractCommand {
                     usages = modelManager.getUsages(planElement.getId());
                     break;
             }
-
-            for (PlanElement element : usages) {
-                if (element instanceof Plan) {
-                    modelManager.serializeToDisk((SerializablePlanElement) element, FileSystemUtil.PLAN_ENDING, false);
-                } else if (element instanceof PlanType) {
-                    modelManager.serializeToDisk((SerializablePlanElement) element, FileSystemUtil.PLANTYPE_ENDING, false);
-                } else if (element instanceof Behaviour) {
-                    modelManager.serializeToDisk((SerializablePlanElement) element, FileSystemUtil.BEHAVIOUR_ENDING, false);
-                } else if (element instanceof TaskRepository) {
-                    modelManager.serializeToDisk((SerializablePlanElement) element, FileSystemUtil.TASKREPOSITORY_ENDING, false);
+            if (usages != null) {
+                for (PlanElement element : usages) {
+                    if (element instanceof Plan) {
+                        modelManager.serializeToDisk((SerializablePlanElement) element, FileSystemUtil.PLAN_ENDING, false);
+                    } else if (element instanceof PlanType) {
+                        modelManager.serializeToDisk((SerializablePlanElement) element, FileSystemUtil.PLANTYPE_ENDING, false);
+                    } else if (element instanceof Behaviour) {
+                        modelManager.serializeToDisk((SerializablePlanElement) element, FileSystemUtil.BEHAVIOUR_ENDING, false);
+                    } else if (element instanceof TaskRepository) {
+                        modelManager.serializeToDisk((SerializablePlanElement) element, FileSystemUtil.TASKREPOSITORY_ENDING, false);
+                    }
                 }
             }
         }

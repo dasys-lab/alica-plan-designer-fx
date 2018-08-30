@@ -27,7 +27,10 @@ import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
+import org.apache.commons.beanutils.BeanUtils;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -141,7 +144,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
         }
 
-        updateViewModel(event.getEventType(), viewModelElement);
+        updateViewModel(event, viewModelElement, modelElement);
     }
 
     /**
@@ -178,10 +181,19 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         }
     }
 
-    private void updateViewModel(ModelEventType eventType, ViewModelElement viewModelElement) {
-        switch(eventType) {
+    private void updateViewModel(ModelEvent event, ViewModelElement viewModelElement, PlanElement planElement) {
+        switch(event.getEventType()) {
             case ELEMENT_DELETED:
                 viewModelFactory.removeElement(viewModelElement);
+                break;
+            case ELEMENT_ATTRIBUTE_CHANGED:
+                try {
+                    // TODO: this works only for string properties...
+//                    BeanUtils.setProperty((ViewModelElement) viewModelElement, event.getChangedAttribute(), BeanUtils.getProperty(planElement, event.getChangedAttribute()));
+                    BeanUtils.setProperty((ViewModelElement) viewModelElement, "name", "Testasdf");
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
         }
     }

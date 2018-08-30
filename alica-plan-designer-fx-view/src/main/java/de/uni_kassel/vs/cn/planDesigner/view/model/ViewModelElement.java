@@ -6,13 +6,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class ViewModelElement {
-    protected final LongProperty id = new SimpleLongProperty();
-    protected final StringProperty name = new SimpleStringProperty();
-    protected final StringProperty type = new SimpleStringProperty();
-    protected final StringProperty relativeDirectory = new SimpleStringProperty();
-    protected final LongProperty parentId = new SimpleLongProperty();
+    protected SimpleLongProperty id;
+    protected SimpleStringProperty name;
+    protected SimpleStringProperty type;
+    protected SimpleStringProperty relativeDirectory;
+    protected SimpleLongProperty parentId;
 
     public ViewModelElement(long id, String name, String type) {
+        this.id = new SimpleLongProperty();
+        this.name = new SimpleStringProperty();
+        this.type = new SimpleStringProperty();
+        this.relativeDirectory = new SimpleStringProperty();
+        this.parentId = new SimpleLongProperty();
+
         this.id.setValue(id);
         this.name.setValue(name);
         this.type.setValue(type);
@@ -35,6 +41,9 @@ public class ViewModelElement {
     }
     public String getName() {
         return name.get();
+    }
+    public void setName(String name) {
+        this.name.set(name);
     }
 
     public String getType() {
