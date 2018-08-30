@@ -42,7 +42,9 @@ public class ViewModelFactory {
         } else if (planElement instanceof TaskRepository) {
             element =  createTaskRepositoryViewModel(planElement);
         } else if (planElement instanceof Plan) {
-            element =  createPlanViewModel(planElement);
+            element =  createPlanViewModel((Plan)planElement);
+        } else if (planElement instanceof  PlanType) {
+            element = createPlanTypeViewModel((PlanType) planElement);
         } else {
             System.err.println("ViewModelFactory: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
         }
@@ -122,20 +124,18 @@ public class ViewModelFactory {
         return conditionViewModel;
     }
 
-    private PlanTypeViewModel createPlanTypeViewModel(ViewModelElement viewModelElement, ArrayList<Plan> plans) {
-        PlanElement planElement = modelManager.getPlanElement(viewModelElement.getId());
-        if (planElement == null || !(planElement instanceof PlanType)) {
+    private PlanTypeViewModel createPlanTypeViewModel(PlanType planType) {
+        if (planType == null) {
             System.err.println("ViewModelFactory: Opening PlanTypeTab for unknown Id or not presented element is not a PlanType!");
             return null;
         }
 
-        PlanType planType = (PlanType) planElement;
         PlanTypeViewModel planTypeViewModel = new PlanTypeViewModel(planType.getId(), planType.getName(),
                 Types.PLANTYPE);
         planTypeViewModel.setRelativeDirectory(planType.getRelativeDirectory());
         planTypeViewModel.setComment(planType.getComment());
 
-        for (Plan plan : plans) {
+        for (Plan plan : modelManager.getPlans()) {
             if (plan.getMasterPlan()) {
                 planTypeViewModel.addPlanToAllPlans(createViewModelElement(plan, Types.MASTERPLAN));
             } else {

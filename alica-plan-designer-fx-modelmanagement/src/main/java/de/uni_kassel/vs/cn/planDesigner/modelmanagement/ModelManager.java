@@ -193,6 +193,11 @@ public class ModelManager implements Observer {
         loadModelFromDisk(rolesPath);
         //TODO fix all incomplete plans
         replaceIncompletePlansInPlanTypes();
+        for(Plan plan : planMap.values()) {
+            for(State state : plan.getStates()) {
+                System.out.println(state.toString());
+            }
+        }
     }
 
     /**
