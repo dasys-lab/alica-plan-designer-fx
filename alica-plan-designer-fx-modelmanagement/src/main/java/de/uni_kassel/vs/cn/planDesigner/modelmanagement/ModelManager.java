@@ -424,16 +424,16 @@ public class ModelManager implements Observer {
         ModelEvent event = null;
         switch (eventType) {
             case ELEMENT_CREATED:
-                event = new ModelEvent(eventType, null, element, elementType);
+                event = new ModelEvent(eventType, element, elementType);
                 break;
             case ELEMENT_DELETED:
-                event = new ModelEvent(eventType, element, null, elementType);
+                event = new ModelEvent(eventType, element, elementType);
                 break;
             case ELEMENT_PARSED:
-                event = new ModelEvent(eventType, null, element, elementType);
+                event = new ModelEvent(eventType, element, elementType);
                 break;
             case ELEMENT_SERIALIZED:
-                event = new ModelEvent(eventType, null, element, elementType);
+                event = new ModelEvent(eventType, element, elementType);
                 break;
             default:
                 System.err.println("ModelManager: Event Type " + eventType + " not handled!");
@@ -520,8 +520,8 @@ public class ModelManager implements Observer {
             fireEvent(ModelEventType.ELEMENT_DELETED, oldElement, type);
         }
         planElementMap.put(newElement.getId(), newElement);
-        if (parentElement != null) {
-            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, null, newElement, type);
+        if(parentElement != null) {
+            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
             event.setParentId(parentElement.getId());
             fireEvent(event);
         } else {
@@ -575,8 +575,8 @@ public class ModelManager implements Observer {
         for (IModelEventHandler eventHandler : eventHandlerList) {
             eventHandler.handleCloseTab(planElement.getId());
         }
-        if (parentElement != null) {
-            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, null, type);
+        if(parentElement != null) {
+            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, type);
             event.setParentId(parentElement.getId());
             fireEvent(event);
         } else {
@@ -604,6 +604,7 @@ public class ModelManager implements Observer {
         } else if (planElement instanceof Task) {
             usages.addAll(getUsagesInEntryPoints(planElement));
         } else if (planElement instanceof TaskRepository) {
+            // TODO: Why do all plans use the task repository? Actually, they use tasks out of the task repo...
             usages.addAll(getPlans());
         } else {
             throw new RuntimeException("Usages requested for unhandled elementType of element with id  " + modelElementId);

@@ -10,12 +10,16 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandle
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanElementViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.model.TaskRepositoryViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.model.TaskViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowUsagesMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
+import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -36,21 +40,16 @@ import java.util.ArrayList;
 
 public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
-    private ViewModelElement taskRepository;
+    private TaskRepositoryViewModel taskRepository;
     private I18NRepo i18NRepo;
     private boolean dirty;
     private PropertiesTable<ViewModelElement> propertiesTable;
 
-    public TaskRepositoryTab(ViewModelElement taskRepository, IGuiModificationHandler handler) {
+    public TaskRepositoryTab(TaskRepositoryViewModel taskRepository, IGuiModificationHandler handler) {
         super(I18NRepo.getInstance().getString("label.caption.taskrepository"), null);
         this.guiModificationHandler = handler;
-        if (taskRepository.getType().equals(Types.TASKREPOSITORY)) {
-            this.taskRepository = guiModificationHandler.getViewModelElement(taskRepository.getId());
-        } else if (taskRepository.getType().equals(Types.TASK)){
-            this.taskRepository = guiModificationHandler.getViewModelElement(taskRepository.getParentId());
-        } else {
-            System.err.println("TaskRepository: Creation of TaskRepositoryTab with ViewModelElement of quantifierType " + taskRepository.getType() + " not supported!");
-        }
+        this.taskRepository = taskRepository;
+
         i18NRepo = I18NRepo.getInstance();
         setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + ": " + this.taskRepository.getName());
         initGui();
@@ -81,6 +80,24 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         ((PlanElementViewModel)taskRepository).commentProperty().addListener((observable, oldValue, newValue) -> {
             fireGuiChangeAttributeEvent(newValue, "comment");
         });
+        taskRepository.getTaskViewModels().addListener(new ListChangeListener<TaskViewModel>() {
+            @Override
+            public void onChanged(Change<? extends TaskViewModel> c) {
+                while(c.next()) {
+                    if (c.wasAdded()) {
+                        for (TaskViewModel task : c.getAddedSubList()) {
+                            addElement(task);
+                        }
+                    }
+
+                    if (c.wasRemoved()) {
+                        for (TaskViewModel task : c.getRemoved()) {
+                            removeElement(task);
+                        }
+                    }
+                }
+            }
+        });
 
         // guiModificationHandler for creating new tasks
         HBox createTaskHBox = new HBox();
@@ -98,6 +115,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
 
         TitledPane taskList = new TitledPane();
+        addElements(taskRepository.getTaskViewModels());
         taskList.setContent(repositoryListView);
         taskList.setText(i18NRepo.getString("label.caption.tasks"));
         taskList.setCollapsible(false);
@@ -121,7 +139,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         guiChangeAttributeEvent.setNewValue(newValue);
         guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
         guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setParentId(taskRepository.getId());
+        guiChangeAttributeEvent.setElementId(taskRepository.getId());
         guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 
@@ -198,7 +216,6 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
             return true;
         }
     }
-
 
     public void updateText(String newName) {
         this.setText(i18NRepo.getString("label.caption.taskrepository") + ": " + newName);

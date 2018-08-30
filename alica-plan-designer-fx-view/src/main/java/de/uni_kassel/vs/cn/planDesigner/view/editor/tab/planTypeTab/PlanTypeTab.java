@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class PlanTypeTab extends AbstractPlanTab {
 
-    private PlanTypeWindowController controller;
+    private PlanTypeWindowController planTypeWindowController;
 
     private IGuiModificationHandler guiModificationHandler;
 
@@ -27,17 +27,17 @@ public class PlanTypeTab extends AbstractPlanTab {
         this.guiModificationHandler = guiModificationHandler;
         try {
             Parent window = fxmlLoader.load();
-            controller = fxmlLoader.getController();
-            controller.setPlanTypeTab(this);
-            controller.setGuiModificationHandler(guiModificationHandler);
+            planTypeWindowController = fxmlLoader.getController();
+            planTypeWindowController.setPlanTypeTab(this);
+            planTypeWindowController.setGuiModificationHandler(guiModificationHandler);
             setContent(window);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public PlanTypeWindowController getController() {
-        return controller;
+    public PlanTypeWindowController getPlanTypeWindowController() {
+        return planTypeWindowController;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class PlanTypeTab extends AbstractPlanTab {
     }
 
     public void setPlanTypeViewModel(PlanTypeViewModel planTypeViewModel) {
-        controller.init(planTypeViewModel);
+        planTypeWindowController.init(planTypeViewModel);
     }
 
     public void updateText(String newName) {

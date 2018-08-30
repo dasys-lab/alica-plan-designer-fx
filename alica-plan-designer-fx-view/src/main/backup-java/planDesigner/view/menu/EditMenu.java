@@ -96,7 +96,7 @@ public class EditMenu extends Menu {
 
         try {
             Parent window = fxmlLoader.load();
-            //ConfigurationWindowController controller = fxmlLoader.getController();
+            //ConfigurationWindowController controller = fxmlLoader.getPlanTypeWindowController();
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setTitle(i18NRepo.getString("label.config.title"));

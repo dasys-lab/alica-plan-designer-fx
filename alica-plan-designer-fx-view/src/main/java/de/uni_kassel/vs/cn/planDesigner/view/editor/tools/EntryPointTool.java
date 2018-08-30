@@ -110,7 +110,7 @@ public class EntryPointTool extends AbstractTool {
 //                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("entryPointCreatorDialog.fxml"));
 //                    try {
 //                        Parent rootOfDialog = fxmlLoader.load();
-//                        EntryPointCreatorDialogController controller = fxmlLoader.getController();
+//                        EntryPointCreatorDialogController controller = fxmlLoader.getPlanTypeWindowController();
 //                        controller.setX((int) localCoord.getX());
 //                        controller.setY((int) localCoord.getY());
 //                        Stage stage = new Stage();

@@ -24,6 +24,12 @@ public class ViewModelFactory {
         return new RepositoryViewModel();
     }
 
+    /**
+     * Just returns an existing view model object, if it already exists.
+     * Otherwise, it will create one according to the given planElement object.
+     * @param planElement The model object that corresponds to the wanted view model object.
+     * @return the view model object
+     */
     public ViewModelElement getViewModelElement(PlanElement planElement) {
         if (planElement == null) {
             System.err.println("ViewModelFactory: Cannot create ViewModelElement from 'null'.");
@@ -53,7 +59,6 @@ public class ViewModelFactory {
         return element;
     }
 
-
     private ViewModelElement createViewModelElement(PlanElement planElement, String type) {
         if (planElement instanceof SerializablePlanElement) {
             return new ViewModelElement(planElement.getId(), planElement.getName(), type, ((SerializablePlanElement) planElement).getRelativeDirectory());
@@ -62,25 +67,26 @@ public class ViewModelFactory {
         }
     }
 
-    private ViewModelElement createViewModelElement(PlanElement planElement, String type, long parentId) {
-        ViewModelElement element = createViewModelElement(planElement, type);
-        element.setParentId(parentId);
-        return element;
-    }
-
     private TaskRepositoryViewModel createTaskRepositoryViewModel(PlanElement planElement) {
         TaskRepositoryViewModel taskRepo = new TaskRepositoryViewModel(planElement.getId(), planElement.getName(), Types.TASKREPOSITORY);
         taskRepo.setComment(planElement.getComment());
         taskRepo.setRelativeDirectory(((TaskRepository) planElement).getRelativeDirectory());
+        // we need to add the repo before creating tasks, in order to avoid circles (Task <-> Repo)
+        this.viewModelElements.put(taskRepo.getId(), taskRepo);
         for (Task task : ((TaskRepository) planElement).getTasks()) {
-            ViewModelElement taskElement = getViewModelElement(task);
+            TaskViewModel taskElement = (TaskViewModel) getViewModelElement(task);
             taskRepo.addTask(taskElement);
         }
         return taskRepo;
     }
 
     private ViewModelElement createTaskViewModel(PlanElement planElement) {
-        return createViewModelElement(planElement, Types.TASK, ((Task) planElement).getTaskRepository().getId());
+        Task task = (Task) planElement;
+        TaskViewModel taskViewModel = new TaskViewModel(task.getId(), task.getName(), Types.TASK);
+        taskViewModel.setTaskRepositoryViewModel((TaskRepositoryViewModel) getViewModelElement(task.getTaskRepository()));
+        taskViewModel.getTaskRepositoryViewModel().addTask(taskViewModel);
+        taskViewModel.setParentId(task.getTaskRepository().getId());
+        return taskViewModel;
     }
 
     private BehaviourViewModel createBehaviourViewModel(PlanElement planElement) {
@@ -242,5 +248,15 @@ public class ViewModelFactory {
                     Types.RUNTIMECONDITION));
         }
         return planViewModel;
+    }
+
+    public void removeElement(ViewModelElement viewModelElement) {
+        switch (viewModelElement.getType()) {
+            case Types.TASK:
+                ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
+                break;
+        }
+
+        viewModelElements.remove(viewModelElement.getId());
     }
 }

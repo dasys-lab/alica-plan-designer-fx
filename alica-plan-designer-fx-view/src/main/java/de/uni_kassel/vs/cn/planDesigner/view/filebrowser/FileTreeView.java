@@ -182,20 +182,25 @@ public final class FileTreeView extends TreeView<File> {
      */
     public void addViewModelElement(ViewModelElement viewModelElement) {
         FileTreeItem topLevelFolder = findTopLevelFolder(viewModelElement);
+        if (topLevelFolder == null) {
+            return;
+        }
+
         FileTreeItem folder = findFolder(viewModelElement, topLevelFolder, 0);
-        boolean deleted = false;
+//        boolean deleted = false;
         if (folder != null) {
-            if (folderContainsViewModelElement(viewModelElement, folder)) {
-                removeFromFolder(viewModelElement, folder);
-                deleted = true;
-            }
+            // TODO: maybe unnecessary if complete view model elements are used.
+//            if (folderContainsViewModelElement(viewModelElement, folder)) {
+//                removeFromFolder(viewModelElement, folder);
+//                deleted = true;
+//            }
             FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(getImage(viewModelElement.getType
                     ())), viewModelElement);
             folder.getChildren().add(newItem);
             folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
-            if (deleted) {
-                this.getSelectionModel().select(newItem);
-            }
+//            if (deleted) {
+//                this.getSelectionModel().select(newItem);
+//            }
         } else {
             throw new RuntimeException("Destination folder for PlanElement " + viewModelElement.getName() + " does not exist!");
         }
@@ -213,6 +218,9 @@ public final class FileTreeView extends TreeView<File> {
 
     public void removeViewModelElement(ViewModelElement viewModelElement) {
         FileTreeItem topLevelFolder = findTopLevelFolder(viewModelElement);
+        if (topLevelFolder == null) {
+            return;
+        }
         removeFromFolder(viewModelElement, topLevelFolder);
     }
 

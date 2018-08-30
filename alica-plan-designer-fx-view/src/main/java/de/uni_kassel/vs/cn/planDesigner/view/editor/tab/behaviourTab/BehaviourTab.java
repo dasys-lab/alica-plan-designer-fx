@@ -102,7 +102,7 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         guiChangeAttributeEvent.setNewValue(newValue);
         guiChangeAttributeEvent.setAttributeType(type);
         guiChangeAttributeEvent.setAttributeName(attributeName);
-        guiChangeAttributeEvent.setParentId(behaviourViewModel.getId());
+        guiChangeAttributeEvent.setElementId(behaviourViewModel.getId());
         guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 

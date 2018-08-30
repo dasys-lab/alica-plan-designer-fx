@@ -296,7 +296,7 @@ public class PlanTypeWindowController implements Initializable {
         guiChangeAttributeEvent.setNewValue(newValue);
         guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
         guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setParentId(planTypeViewModel.getId());
+        guiChangeAttributeEvent.setElementId(planTypeViewModel.getId());
         guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 

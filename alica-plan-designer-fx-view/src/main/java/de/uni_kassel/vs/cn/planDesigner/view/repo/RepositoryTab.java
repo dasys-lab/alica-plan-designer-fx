@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
+import de.uni_kassel.vs.cn.planDesigner.view.model.TaskViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
@@ -9,6 +10,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,24 +40,23 @@ public class RepositoryTab extends Tab {
         this.guiModificationHandler = guiModificationHandler;
     }
 
+    public void removeElement(ViewModelElement viewModel) {
+        Iterator<RepositoryHBox> iter = repositoryListView.getItems().iterator();
+        while(iter.hasNext()) {
+            RepositoryHBox repositoryHBox = iter.next();
+            if (repositoryHBox.getViewModelId() == viewModel.getId()) {
+                iter.remove();
+            }
+        }
+        repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
+        sort();
+    }
+
 
     public void addElement(ViewModelElement viewModelElement) {
-//        RepositoryHBox[] removeBeforeAdding = new RepositoryHBox[1];
-//        removeBeforeAdding[0] = null;
-//        for (RepositoryHBox item : repositoryListView.getItems()) {
-//            if (item.getPresentedViewModelElement().equals(presentedViewModelElement)) {
-//                return;
-//            } else if (item.getViewModelId() == presentedViewModelElement.getId() && !item.getViewModelName().equals(presentedViewModelElement.getName())) {
-//                removeBeforeAdding[0] = item;
-//                break;
-//            }
-//        }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-//                if (removeBeforeAdding[0] != null) {
-//                    repositoryListView.getItems().remove(removeBeforeAdding[0]);
-//                }
                 repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
                 repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
                 sort();
@@ -63,7 +64,7 @@ public class RepositoryTab extends Tab {
         });
     }
 
-    public void addElements(List<ViewModelElement> viewModelElements) {
+    public void addElements(List<? extends ViewModelElement> viewModelElements) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

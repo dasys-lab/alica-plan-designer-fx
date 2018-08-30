@@ -14,7 +14,11 @@ public class AnnotatedPlan extends PlanElement {
 
     public void setPlan(Plan plan) {
         this.plan = plan;
-        this.setName("Annotated" + plan.getName());
+    }
+
+    @Override
+    public String getName() {
+        return "Annotated" + plan.getName();
     }
 
     public boolean isActivated() {
