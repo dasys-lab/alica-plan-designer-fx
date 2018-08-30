@@ -9,20 +9,20 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 
 public class TaskRepositoryViewModel extends PlanElementViewModel {
-    private ObservableList<ViewModelElement> tasks;
+    private ObservableList<TaskViewModel> tasks;
     private TaskRepositoryTab taskRepositoryTab;
     private boolean isDirty;
 
     public TaskRepositoryViewModel(long id, String name, String type) {
         super(id, name, type);
         tasks = FXCollections.observableArrayList(new ArrayList<>());
-        tasks.addListener(new ListChangeListener<ViewModelElement>() {
+        tasks.addListener(new ListChangeListener<TaskViewModel>() {
             /**
              * Refills the GUI and sets the dirty flag, accordingly.
              * @param c
              */
             @Override
-            public void onChanged(Change<? extends ViewModelElement> c) {
+            public void onChanged(Change<? extends TaskViewModel> c) {
                 if (taskRepositoryTab == null) {
                     return;
                 }
@@ -62,8 +62,10 @@ public class TaskRepositoryViewModel extends PlanElementViewModel {
         }
     }
 
-    public void addTask(ViewModelElement task) {
-        this.tasks.add(task);
+    public void addTask(TaskViewModel task) {
+        if (!this.tasks.contains(task)) {
+            this.tasks.add(task);
+        }
     }
 
     public void removeTask(long id) {
@@ -79,7 +81,7 @@ public class TaskRepositoryViewModel extends PlanElementViewModel {
         tasks.clear();
     }
 
-    public ObservableList<ViewModelElement> getTaskViewModels() {
+    public ObservableList<TaskViewModel> getTaskViewModels() {
         return tasks;
     }
 }

@@ -5,15 +5,13 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 public class ModelEvent {
     protected ModelEventType eventType;
     protected String elementType;
-    protected PlanElement oldElement;
-    protected PlanElement newElement;
+    protected PlanElement element;
     protected String changedAttribute;
     protected long parentId;
 
-    public ModelEvent (ModelEventType eventType, PlanElement oldElement, PlanElement newElement, String elementType) {
+    public ModelEvent(ModelEventType eventType, PlanElement element, String elementType) {
         this.eventType = eventType;
-        this.oldElement = oldElement;
-        this.newElement = newElement;
+        this.element = element;
         this.elementType = elementType;
     }
 
@@ -21,12 +19,8 @@ public class ModelEvent {
         return eventType;
     }
 
-    public PlanElement getOldElement() {
-        return oldElement;
-    }
-
-    public PlanElement getNewElement() {
-        return newElement;
+    public PlanElement getElement() {
+        return element;
     }
 
     public String getElementType() {

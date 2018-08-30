@@ -1,5 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.model.TaskRepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -72,10 +75,6 @@ public final class RepositoryViewModel {
         });
     }
 
-    public void addPlan(ViewModelElement plan) {
-        this.plans.add(plan);
-    }
-
     public void removePlan(long id) {
         for(ViewModelElement plan : plans) {
             if(plan.getId() == id) {
@@ -83,10 +82,6 @@ public final class RepositoryViewModel {
                 break;
             }
         }
-    }
-
-    public void addBehaviour(ViewModelElement behaviour) {
-        this.behaviours.add(behaviour);
     }
 
     public void removeBehaviour(long id) {
@@ -98,10 +93,6 @@ public final class RepositoryViewModel {
         }
     }
 
-    public void addPlanType(ViewModelElement planType) {
-        this.planTypes.add(planType);
-    }
-
     public void removePlanType(long id) {
         for(ViewModelElement planType : planTypes) {
             if(planType.getId() == id) {
@@ -109,10 +100,6 @@ public final class RepositoryViewModel {
                 break;
             }
         }
-    }
-
-    public void addTask(ViewModelElement task) {
-        this.tasks.add(task);
     }
 
     public void removeTask(long id) {
@@ -124,15 +111,54 @@ public final class RepositoryViewModel {
         }
     }
 
-    public void clearTasks() {
-        this.tasks.clear();
-    }
-
     public void setRepositoryTabPane(RepositoryTabPane repositoryTabPane) {
         this.repositoryTabPane = repositoryTabPane;
     }
 
     public ObservableList<ViewModelElement> getPlans() {
         return plans;
+    }
+
+    public void addElement(ViewModelElement viewModelElement) {
+        switch (viewModelElement.getType()) {
+            case Types.PLAN:
+                this.plans.add(viewModelElement);
+                break;
+            case Types.BEHAVIOUR:
+                this.behaviours.add(viewModelElement);
+                break;
+            case Types.PLANTYPE:
+                this.planTypes.add(viewModelElement);
+                break;
+            case Types.TASK:
+                this.tasks.add(viewModelElement);
+                break;
+            case Types.TASKREPOSITORY:
+                this.tasks.clear();
+                for (ViewModelElement task : ((TaskRepositoryViewModel) viewModelElement).getTaskViewModels()) {
+                    this.tasks.add(task);
+                }
+                break;
+        }
+    }
+
+    public void removeElement(ViewModelElement viewModelElement) {
+        switch (viewModelElement.getType()) {
+            case Types.PLAN:
+                this.plans.remove(viewModelElement);
+                break;
+            case Types.BEHAVIOUR:
+                this.behaviours.remove(viewModelElement);
+                break;
+            case Types.PLANTYPE:
+                this.planTypes.remove(viewModelElement);
+                break;
+            case Types.TASK:
+                this.tasks.remove(viewModelElement);
+                break;
+            case Types.TASKREPOSITORY:
+                this.tasks.clear();
+                break;
+        }
     }
 }

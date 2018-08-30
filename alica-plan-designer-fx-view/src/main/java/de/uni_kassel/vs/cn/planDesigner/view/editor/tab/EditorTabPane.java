@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
+import de.uni_kassel.vs.cn.planDesigner.view.model.TaskRepositoryViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -49,16 +50,13 @@ public class EditorTabPane extends TabPane {
                 guiModificationHandler.handleTabOpenedEvent(planTab);
                 return planTab;
             case Types.TASKREPOSITORY:
-                TaskRepositoryTab taskRepositoryTabTab = new TaskRepositoryTab(guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
-                guiModificationHandler.handleTabOpenedEvent(taskRepositoryTabTab);
-                return taskRepositoryTabTab;
+                TaskRepositoryTab taskRepositoryTab = new TaskRepositoryTab((TaskRepositoryViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
+                return taskRepositoryTab;
             case Types.TASK:
-                TaskRepositoryTab taskTab = new TaskRepositoryTab(guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
-                guiModificationHandler.handleTabOpenedEvent(taskTab);
-                return taskTab;
+                taskRepositoryTab = new TaskRepositoryTab((TaskRepositoryViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getParentId()), this.guiModificationHandler);
+                return taskRepositoryTab;
             case Types.BEHAVIOUR:
-                BehaviourViewModel behaviourViewModel = (BehaviourViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId());
-                BehaviourTab behaviourTab = new BehaviourTab(behaviourViewModel);
+                BehaviourTab behaviourTab = new BehaviourTab((BehaviourViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()));
                 behaviourTab.init(guiModificationHandler);
                 guiModificationHandler.handleTabOpenedEvent(behaviourTab);
                 return behaviourTab;
@@ -84,5 +82,4 @@ public class EditorTabPane extends TabPane {
 
         return ((IEditorTab) selectedTab).handleDelete();
     }
-
 }

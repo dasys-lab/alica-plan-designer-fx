@@ -11,7 +11,6 @@ import de.uni_kassel.vs.cn.planDesigner.events.*;
 import de.uni_kassel.vs.cn.planDesigner.filebrowser.FileSystemEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
-import de.uni_kassel.vs.cn.planDesigner.modelmanagement.FileSystemUtil;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.plugin.PluginEventHandler;
@@ -22,7 +21,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTa
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
 import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
@@ -69,7 +67,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         configurationManager.setController(this);
 
         pluginManager = PluginManager.getInstance();
-        //pluginManager.updateAvailablePlugins(configurationManager.getActiveConfiguration().getPluginsPath());
 
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
@@ -86,7 +83,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         viewModelFactory = new ViewModelFactory(modelManager);
 
         repoViewModel = viewModelFactory.createRepositoryViewModel();
-        //taskRepositoryViewModel = viewModelFactory.createTaskRepositoryViewModel();
     }
 
     protected void setupGeneratedSourcesManager() {
@@ -107,7 +103,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             modelManager.setTasksPath(activeConfiguration.getTasksPath());
             modelManager.setRolesPath(activeConfiguration.getRolesPath());
         }
-
     }
 
     protected void setupConfigGuiStuff() {
@@ -122,314 +117,72 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         mainWindowController.setConfigWindowController(configWindowController);
     }
 
-    // Handler Event Methods
-
+    // HANDLER EVENT METHODS
 
     /**
      * Handles events fired by the model manager, when the model has changed.
-     *
      * @param event Object that describes the purpose/context of the fired event.
      */
     public void handleModelEvent(ModelEvent event) {
-        if (repoViewModel == null) {
-            return;
+        PlanElement modelElement = event.getElement();
+        ViewModelElement viewModelElement = viewModelFactory.getViewModelElement(modelElement);
+
+        switch(event.getElementType()) {
+            case Types.MASTERPLAN:
+            case Types.PLAN:
+            case Types.PLANTYPE:
+            case Types.BEHAVIOUR:
+            case Types.TASKREPOSITORY:
+                updateRepos(event.getEventType(), viewModelElement);
+                updateFileTreeView(event.getEventType(), viewModelElement);
+                break;
+            case Types.TASK:
+                updateRepos(event.getEventType(), viewModelElement);
+                break;
         }
 
-        PlanElement planElement;
-        switch (event.getEventType()) {
+        updateViewModel(event.getEventType(), viewModelElement);
+    }
+
+    /**
+     * Handles the model event for the repository view.
+     * @param eventType
+     * @param viewModelElement
+     */
+    private void updateRepos(ModelEventType eventType, ViewModelElement viewModelElement) {
+        switch(eventType) {
+            case ELEMENT_PARSED:
             case ELEMENT_CREATED:
-                planElement = event.getNewElement();
-                ObservableList<Tab> tabs;
-                switch (event.getElementType()) {
-                    case Types.PLAN:
-                        Plan plan = (Plan) planElement;
-                        addTreeViewElement(plan, Types.PLAN);
-                        updatePlansInPlanTypeTabs(plan);
-                        repoViewModel.addPlan(viewModelFactory.getViewModelElement(planElement));
-                        break;
-                    case Types.MASTERPLAN:
-                        Plan masterPlan = (Plan) planElement;
-                        addTreeViewElement(masterPlan, Types.MASTERPLAN);
-                        updatePlansInPlanTypeTabs(masterPlan);
-                        repoViewModel.addPlan(viewModelFactory.getViewModelElement(planElement));
-                        break;
-                    case Types.ANNOTATEDPLAN:
-                        updateAnnotatedPlansInPlanTypeTabs(event.getParentId(), (AnnotatedPlan) planElement, true);
-                        break;
-                    case Types.PLANTYPE:
-                        addTreeViewElement((PlanType) planElement, Types.PLANTYPE);
-                        repoViewModel.addPlanType(viewModelFactory.getViewModelElement(planElement));
-                        break;
-                    case Types.BEHAVIOUR:
-                        addTreeViewElement((Behaviour) planElement, Types.BEHAVIOUR);
-                        repoViewModel.addBehaviour(viewModelFactory.getViewModelElement(planElement));
-                        break;
-                    case Types.TASKREPOSITORY:
-                        addTreeViewElement((TaskRepository) planElement, Types.TASKREPOSITORY);
-                        taskRepositoryViewModel = (TaskRepositoryViewModel) viewModelFactory.getViewModelElement(planElement);
-                        repoViewModel.clearTasks();
-                        for (ViewModelElement task : taskRepositoryViewModel.getTaskViewModels()) {
-                            repoViewModel.addTask(task);
-                        }
-                        break;
-                    case Types.TASK:
-                        ViewModelElement element = viewModelFactory.getViewModelElement(planElement);
-                        repoViewModel.addTask(element);
-                        taskRepositoryViewModel.addTask(element);
-                        break;
-                    default:
-                        System.err.println("Controller: Creation of unknown type " + event.getElementType() + " gets ignored!");
-                        break;
-                }
+                repoViewModel.addElement(viewModelElement);
                 break;
             case ELEMENT_DELETED:
-                planElement = event.getOldElement();
-                switch (event.getElementType()) {
-                    case Types.PLAN:
-                        removeTreeViewElement((SerializablePlanElement) planElement, Types.PLAN);
-                        repoViewModel.removePlan(planElement.getId());
-                        break;
-                    case Types.MASTERPLAN:
-                        removeTreeViewElement((SerializablePlanElement) planElement, Types.MASTERPLAN);
-                        repoViewModel.removePlan(planElement.getId());
-                        break;
-                    case Types.ANNOTATEDPLAN:
-                        updateAnnotatedPlansInPlanTypeTabs(event.getParentId(), (AnnotatedPlan) planElement, false);
-                        break;
-                    case Types.PLANTYPE:
-                        removeTreeViewElement((SerializablePlanElement) planElement, Types.PLANTYPE);
-                        repoViewModel.removePlanType(planElement.getId());
-                        break;
-                    case Types.BEHAVIOUR:
-                        removeTreeViewElement((SerializablePlanElement) planElement, Types.BEHAVIOUR);
-                        repoViewModel.removeBehaviour(planElement.getId());
-                        break;
-                    case Types.TASKREPOSITORY:
-                        repoViewModel.clearTasks();
-                        taskRepositoryViewModel.clearTasks();
-                        break;
-                    case Types.TASK:
-                        repoViewModel.removeTask(planElement.getId());
-                        taskRepositoryViewModel.removeTask(planElement.getId());
-                        break;
-                    default:
-                        System.err.println("Controller: Deletion of unknown type " + event.getElementType() + " gets ignored!");
-                        break;
-                }
+                repoViewModel.removeElement(viewModelElement);
                 break;
+        }
+    }
+
+    /**
+     * Handles the model event for the file tree view.
+     * @param eventType
+     * @param viewModelElement
+     */
+    private void updateFileTreeView(ModelEventType eventType, ViewModelElement viewModelElement) {
+        switch(eventType) {
             case ELEMENT_PARSED:
-                planElement = event.getNewElement();
-                switch (event.getElementType()) {
-                    case Types.PLAN:
-                        addTreeViewElement((SerializablePlanElement) planElement, Types.PLAN);
-                        repoViewModel.addPlan(viewModelFactory.getViewModelElement(planElement));
-                        break;
-                    case Types.MASTERPLAN:
-                        addTreeViewElement((SerializablePlanElement) planElement, Types.MASTERPLAN);
-                        repoViewModel.addPlan(viewModelFactory.getViewModelElement(planElement));
-                        break;
-                    case Types.PLANTYPE:
-                        addTreeViewElement((SerializablePlanElement) planElement, Types.PLANTYPE);
-                        repoViewModel.addPlanType(viewModelFactory.getViewModelElement(planElement));
-                        break;
-                    case Types.BEHAVIOUR:
-                        addTreeViewElement((SerializablePlanElement) planElement, Types.BEHAVIOUR);
-                        repoViewModel.addBehaviour(viewModelFactory.getViewModelElement(planElement));
-                        break;
-                    case Types.TASKREPOSITORY:
-                        TaskRepository taskRepository = (TaskRepository) planElement;
-                        addTreeViewElement(taskRepository, Types.TASKREPOSITORY);
-                        taskRepositoryViewModel = (TaskRepositoryViewModel) viewModelFactory.getViewModelElement(taskRepository);
-                        for (Task task : taskRepository.getTasks()) {
-                            repoViewModel.addTask(viewModelFactory.getViewModelElement(task));
-                        }
-                        break;
-                    case Types.TASK:
-                        Task task = (Task) planElement;
-                        ViewModelElement element = viewModelFactory.getViewModelElement(task);
-                        repoViewModel.addTask(element);
-                        taskRepositoryViewModel.addTask(element);
-                        break;
-                    default:
-                        System.err.println("Controller: Parsing of unknown type " + event.getElementType() + " gets ignored!");
-                        break;
-                }
+            case ELEMENT_CREATED:
+                mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
                 break;
-            case ELEMENT_SERIALIZED:
-                tabs = editorTabPane.getTabs();
-                switch (event.getElementType()) {
-                    case Types.TASKREPOSITORY:
-                        taskRepositoryViewModel.setDirty(false);
-                        break;
-                    case Types.PLANTYPE:
-                        for (Tab tab : tabs) {
-                            if (!(tab instanceof PlanTypeTab)) {
-                                continue;
-                            }
-                            PlanTypeTab planTypeTab = (PlanTypeTab) tab;
-                            if (planTypeTab.getPresentedViewModelElement().getId() == event.getNewElement().getId()) {
-                                planTypeTab.setDirty(false);
-                                break;
-                            }
-                        }
-                        break;
-                    case Types.BEHAVIOUR:
-                        for (Tab tab : tabs) {
-                            if (!(tab instanceof BehaviourTab)) {
-                                continue;
-                            }
-                            BehaviourTab behaviourTab = (BehaviourTab) tab;
-                            if (behaviourTab.getPresentedViewModelElement().getId() == event.getNewElement().getId()) {
-                                behaviourTab.setDirty(false);
-                                break;
-                            }
-                        }
-                        break;
-                    case Types.PLAN:
-                        for (Tab tab : tabs) {
-                            if (!(tab instanceof PlanTab)) {
-                                continue;
-                            }
-                            PlanTab planTab = (PlanTab) tab;
-                            if (planTab.getPresentedViewModelElement().getId() == event.getNewElement().getId()) {
-                                planTab.setDirty(false);
-                                break;
-                            }
-                        }
-                        break;
-                    default:
-                        System.err.println("Controller: Serialization of unknown type " + event.getElementType() + " gets ignored!");
-                        break;
-                }
+            case ELEMENT_DELETED:
+                mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
                 break;
-            case ELEMENT_ATTRIBUTE_CHANGED:
-                /**
-                 * Special treatment for plan name since it affects other plan elements
-                 */
-                if (event.getChangedAttribute().equals("name")) {
-                    handleChangedName(event);
-                }
+        }
+    }
+
+    private void updateViewModel(ModelEventType eventType, ViewModelElement viewModelElement) {
+        switch(eventType) {
+            case ELEMENT_DELETED:
+                viewModelFactory.removeElement(viewModelElement);
                 break;
-            default:
-                throw new RuntimeException("Controller:Unknown model event captured!");
-        }
-    }
-
-    private void handleChangedName(ModelEvent event) {
-        PlanElement planElement = event.getNewElement();
-
-        ObservableList<Tab> tabs = editorTabPane.getTabs();
-        for (Tab tab : tabs) {
-            if (tab instanceof AbstractPlanTab) {
-                AbstractPlanTab abstractPlanTab = (AbstractPlanTab) tab;
-                if (abstractPlanTab.getPresentedViewModelElement().getId() == planElement.getId()) {
-                    abstractPlanTab.updateText(planElement.getName());
-                    break;
-                }
-            }
-            if (tab instanceof TaskRepositoryTab) {
-                TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab) tab;
-                if (planElement instanceof Task) {
-                    taskRepositoryTab.updateText(((Task) planElement).getTaskRepository().getName());
-                } else {
-                    taskRepositoryTab.updateText(planElement.getName());
-                }
-                break;
-            }
-        }
-
-        ViewModelElement viewModelElement = null;
-        if (planElement instanceof Plan) {
-            repoViewModel.removePlan(planElement.getId());
-            if (((Plan) planElement).getMasterPlan()) {
-                viewModelElement = viewModelFactory.getViewModelElement(planElement);
-                repoViewModel.addPlan(viewModelElement);
-            } else {
-                viewModelElement = viewModelFactory.getViewModelElement(planElement);
-                repoViewModel.addPlan(viewModelElement);
-            }
-            replaceFileTreeItem(viewModelElement);
-        } else if (planElement instanceof Behaviour) {
-            viewModelElement = viewModelFactory.getViewModelElement(planElement);
-            repoViewModel.removeBehaviour(planElement.getId());
-            repoViewModel.addBehaviour(viewModelElement);
-            replaceFileTreeItem(viewModelElement);
-        } else if (planElement instanceof PlanType) {
-            viewModelElement = viewModelFactory.getViewModelElement(planElement);
-            repoViewModel.removePlanType(planElement.getId());
-            repoViewModel.addPlanType(viewModelElement);
-            replaceFileTreeItem(viewModelElement);
-        } else if (planElement instanceof TaskRepository) {
-            viewModelElement = viewModelFactory.getViewModelElement(planElement);
-            replaceFileTreeItem(viewModelElement);
-        } else if (planElement instanceof Task) {
-            viewModelElement = viewModelFactory.getViewModelElement(planElement);
-            repoViewModel.removeTask(planElement.getId());
-            repoViewModel.addTask(viewModelElement);
-        }
-
-        ArrayList<PlanElement> usages = modelManager.getUsages(event.getNewElement().getId());
-        for (PlanElement element : usages) {
-            if (element instanceof PlanType) {
-                for (AnnotatedPlan annotatedPlan : ((PlanType) element).getPlans()) {
-                    if (annotatedPlan.getPlan().getId() == planElement.getId()) {
-                        annotatedPlan.setPlan((Plan) planElement);
-                        break;
-                    }
-                }
-            }
-            fireSavePlanElementQuery(element);
-        }
-        fireSavePlanElementQuery(planElement);
-    }
-
-    private void replaceFileTreeItem(ViewModelElement viewModelElement) {
-        mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
-        mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
-    }
-
-    private void fireSavePlanElementQuery(PlanElement planElement) {
-        if (planElement instanceof Plan) {
-            ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.PLAN,
-                    planElement.getName());
-            query.setElementId(planElement.getId());
-            modelManager.handleModelModificationQuery(query);
-        } else if (planElement instanceof PlanType) {
-            ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.PLANTYPE,
-                    planElement.getName());
-            query.setElementId(planElement.getId());
-            modelManager.handleModelModificationQuery(query);
-        } else if (planElement instanceof Behaviour) {
-            ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.BEHAVIOUR,
-                    planElement.getName());
-            query.setElementId(planElement.getId());
-            modelManager.handleModelModificationQuery(query);
-        } else if (planElement instanceof TaskRepository) {
-            ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.TASKREPOSITORY,
-                    planElement.getName());
-            query.setElementId(planElement.getId());
-            modelManager.handleModelModificationQuery(query);
-        } else if (planElement instanceof Task) {
-            ModelModificationQuery query = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, Types.TASK,
-                    planElement.getName());
-            query.setElementId(((Task) planElement).getTaskRepository().getId());
-            modelManager.handleModelModificationQuery(query);
-        } else {
-            throw new RuntimeException("Controller: trying to serialize a PlanElement of unknown type! PlanElement is: " + planElement.toString());
-        }
-    }
-
-    private void addTreeViewElement(SerializablePlanElement planElement, String type) {
-        FileTreeView fileTreeView = mainWindowController.getFileTreeView();
-        if (fileTreeView != null) {
-            fileTreeView.addViewModelElement(viewModelFactory.getViewModelElement(planElement));
-        }
-    }
-
-    private void removeTreeViewElement(SerializablePlanElement planElement, String type) {
-        FileTreeView fileTreeView = mainWindowController.getFileTreeView();
-        if (fileTreeView != null) {
-            fileTreeView.removeViewModelElement(viewModelFactory.getViewModelElement(planElement));
         }
     }
 
@@ -495,6 +248,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case DELETE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
                 mmq.setElementId(event.getElementId());
+                mmq.setParentId(event.getParentId());
                 break;
             case SAVE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
@@ -578,19 +332,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     @Override
-    public void handleTabOpenedEvent(TaskRepositoryTab taskRepositoryTab) {
-        taskRepositoryViewModel.clearTasks();
-        TaskRepository taskRepo = modelManager.getTaskRepository();
-        if (taskRepo != null) {
-            for (Task task : taskRepo.getTasks()) {
-                taskRepositoryViewModel.addTask(viewModelFactory.getViewModelElement(task));
-            }
-        }
-        taskRepositoryViewModel.setTaskRepositoryTab(taskRepositoryTab);
-        taskRepositoryViewModel.setDirty(false);
-    }
-
-    @Override
     public void handleTabOpenedEvent(PlanTab planTab) {
         planTab.setPlanViewModel((PlanViewModel) viewModelFactory.getViewModelElement((Plan) modelManager.getPlanElement(planTab.getPresentedViewModelElement().getId())));
 
@@ -611,16 +352,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         return viewModelFactory.getViewModelElement(modelManager.getPlanElement(id));
     }
 
-    protected void updatePlansInPlanTypeTabs(Plan plan) {
+    protected void updatePlansInPlanTypeTabs(PlanViewModel planViewModel) {
         ObservableList<Tab> tabs = editorTabPane.getTabs();
         for (Tab tab : tabs) {
             if (tab instanceof PlanTypeTab) {
                 PlanTypeTab planTypeTab = (PlanTypeTab) tab;
-                if (plan.getMasterPlan()) {
-                    planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(viewModelFactory.getViewModelElement(plan));
-                } else {
-                    planTypeTab.getController().getPlanTypeViewModel().addPlanToAllPlans(viewModelFactory.getViewModelElement(plan));
-                }
+                planTypeTab.getPlanTypeWindowController().getPlanTypeViewModel().addPlanToAllPlans(planViewModel);
             }
         }
     }
@@ -636,9 +373,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             }
             PlanTypeTab planTypeTab = (PlanTypeTab) tab;
             if (add) {
-                planTypeTab.getController().getPlanTypeViewModel().addPlanToPlansInPlanType((AnnotatedPlanView) viewModelFactory.getViewModelElement(annotatedPlan));
+                planTypeTab.getPlanTypeWindowController().getPlanTypeViewModel().addPlanToPlansInPlanType((AnnotatedPlanView) viewModelFactory.getViewModelElement(annotatedPlan));
             } else {
-                planTypeTab.getController().getPlanTypeViewModel().removePlanFromPlansInPlanType(annotatedPlan.getPlan().getId());
+                planTypeTab.getPlanTypeWindowController().getPlanTypeViewModel().removePlanFromPlansInPlanType(annotatedPlan.getPlan().getId());
             }
 
         }
