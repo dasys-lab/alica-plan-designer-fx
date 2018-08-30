@@ -253,6 +253,7 @@ public class PlanTypeWindowController implements Initializable {
                         super.updateItem(item, empty);
                         if (empty == false) {
                             setText(item);
+                            System.out.println("PTWC:" + item);
                         }
                     }
                 };

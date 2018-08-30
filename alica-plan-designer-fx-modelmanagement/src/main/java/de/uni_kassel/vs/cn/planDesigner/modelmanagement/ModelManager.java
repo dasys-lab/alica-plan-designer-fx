@@ -126,26 +126,26 @@ public class ModelManager implements Observer {
     public PlanElement getPlanElement(String absolutePath) {
         String name = absolutePath.substring(absolutePath.lastIndexOf(File.separator) + 1);
         String[] split = name.split("\\.");
-        if(split[1].equals(FileSystemUtil.BEHAVIOUR_ENDING)) {
-            for(Behaviour beh : behaviourMap.values()) {
-                if(beh.getName().equals(split[0])) {
+        if (split[1].equals(FileSystemUtil.BEHAVIOUR_ENDING)) {
+            for (Behaviour beh : behaviourMap.values()) {
+                if (beh.getName().equals(split[0])) {
                     return beh;
                 }
             }
         } else if (split[1].equals(FileSystemUtil.PLAN_ENDING)) {
-            for(Plan plan : planMap.values()) {
-                if(plan.getName().equals(split[0])) {
+            for (Plan plan : planMap.values()) {
+                if (plan.getName().equals(split[0])) {
                     return plan;
                 }
             }
         } else if (split[1].equals(FileSystemUtil.PLANTYPE_ENDING)) {
-            for(PlanType pt : planTypeMap.values()) {
-                if(pt.getName().equals(split[0])) {
+            for (PlanType pt : planTypeMap.values()) {
+                if (pt.getName().equals(split[0])) {
                     return pt;
                 }
             }
         } else if (split[1].equals(FileSystemUtil.TASKREPOSITORY_ENDING)) {
-            if(taskRepository.getName().equals(split[0])) {
+            if (taskRepository.getName().equals(split[0])) {
                 return taskRepository;
             }
         } else {
@@ -191,13 +191,15 @@ public class ModelManager implements Observer {
         loadModelFromDisk(tasksPath);
         loadModelFromDisk(plansPath);
         loadModelFromDisk(rolesPath);
-        //TODO fix all incomplete plans
-        replaceIncompletePlansInPlanTypes();
-        for(Plan plan : planMap.values()) {
-            for(State state : plan.getStates()) {
-                System.out.println(state.toString());
-            }
+        replaceIncompleteReferences();
+    }
+
+    private void replaceIncompleteReferences() {
+        for (Plan plan : planMap.values()) {
+            replaceIncompleteTasksInEntryPoints(plan);
+            replaceIncompleteAbstractPlansInStates(plan);
         }
+        replaceIncompletePlansInPlanTypes();
     }
 
     /**
@@ -260,7 +262,6 @@ public class ModelManager implements Observer {
                     if (planElementMap.containsKey(plan.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
                     } else {
-                        replaceIncompleteTasks(plan);
                         planElementMap.put(plan.getId(), plan);
                         planMap.put(plan.getId(), plan);
                         if (plan.getMasterPlan()) {
@@ -334,16 +335,21 @@ public class ModelManager implements Observer {
      *
      * @param plan
      */
-    public void replaceIncompleteTasks(Plan plan) {
-        ArrayList<Task> incompleteTasks = ParsedModelReferences.getInstance().incompleteTasks;
+    public void replaceIncompleteTasksInEntryPoints(Plan plan) {
         for (EntryPoint ep : plan.getEntryPoints()) {
-            if (incompleteTasks.contains(ep.getTask())) {
-                for (Task task : taskRepository.getTasks()) {
-                    if (task.getId() == ep.getTask().getId()) {
-                        ep.setTask(task);
-                        break;
-                    }
+            for (Task task : taskRepository.getTasks()) {
+                if (task.getId() == ep.getTask().getId()) {
+                    ep.setTask(task);
+                    break;
                 }
+            }
+        }
+    }
+
+    private void replaceIncompleteAbstractPlansInStates(Plan plan) {
+        for(State state : plan.getStates()) {
+            for(int i = 0; i < state.getPlans().size(); i++) {
+                state.getPlans().set(i, (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
             }
         }
     }
@@ -351,15 +357,9 @@ public class ModelManager implements Observer {
     /**
      * Replaces all incomplete Plans in PlanTypes by already parsed ones
      */
-    public void replaceIncompletePlansInPlanTypes() {
-        ArrayList<Plan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlanTypes;
+    private void replaceIncompletePlansInPlanTypes() {
         for (PlanType planType : getPlanTypes()) {
-            ArrayList<AnnotatedPlan> annotatedPlans = planType.getPlans();
-            for (int i = 0; i < annotatedPlans.size(); i++) {
-                if (incompletePlans.contains(annotatedPlans.get(i).getPlan())) {
-                    annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
-                }
-            }
+            replaceIncompletePlansInPlanType(planType);
         }
     }
 
@@ -367,10 +367,9 @@ public class ModelManager implements Observer {
      * Replaces all incomplete Plans in given PlanType by already parsed ones
      */
     public void replaceIncompletePlansInPlanType(PlanType planType) {
-        ArrayList<Plan> incompletePlans = ParsedModelReferences.getInstance().incompletePlansInPlanTypes;
         ArrayList<AnnotatedPlan> annotatedPlans = planType.getPlans();
         for (int i = 0; i < annotatedPlans.size(); i++) {
-            if (incompletePlans.contains(annotatedPlans.get(i).getPlan())) {
+            if (ParsedModelReferences.getInstance().incompletePlansInPlanTypes.contains(annotatedPlans.get(i).getPlan().getId())) {
                 annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
             }
         }
@@ -521,7 +520,7 @@ public class ModelManager implements Observer {
             fireEvent(ModelEventType.ELEMENT_DELETED, oldElement, type);
         }
         planElementMap.put(newElement.getId(), newElement);
-        if(parentElement != null) {
+        if (parentElement != null) {
             ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, null, newElement, type);
             event.setParentId(parentElement.getId());
             fireEvent(event);
@@ -576,7 +575,7 @@ public class ModelManager implements Observer {
         for (IModelEventHandler eventHandler : eventHandlerList) {
             eventHandler.handleCloseTab(planElement.getId());
         }
-        if(parentElement != null) {
+        if (parentElement != null) {
             ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, null, type);
             event.setParentId(parentElement.getId());
             fireEvent(event);

@@ -1,15 +1,18 @@
 package de.uni_kassel.vs.cn.planDesigner.deserialization;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ValueNode;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ParsedModelReferences;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class EntryPointTaskDeserializer extends StdDeserializer<Task> {
 
@@ -31,7 +34,7 @@ public class EntryPointTaskDeserializer extends StdDeserializer<Task> {
         int idIndex = taskString.indexOf('#');
         taskString = taskString.substring(idIndex + 1);
         Task task = new Task(Long.parseLong(taskString));
-        ParsedModelReferences.getInstance().addIncompleteTask(task);
+        ParsedModelReferences.getInstance().addIncompleteTaskIdOfEntryPoint(task.getId());
         return task;
     }
 }

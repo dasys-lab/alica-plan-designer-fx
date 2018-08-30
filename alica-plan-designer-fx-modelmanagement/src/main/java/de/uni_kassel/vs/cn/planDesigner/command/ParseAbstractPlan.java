@@ -26,7 +26,7 @@ public class ParseAbstractPlan extends AbstractCommand {
             case Types.PLAN:
             case Types.MASTERPLAN:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
-                modelManager.replaceIncompleteTasks((Plan) newElement);
+                modelManager.replaceIncompleteTasksInEntryPoints((Plan) newElement);
                 break;
             case Types.PLANTYPE:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
@@ -43,10 +43,10 @@ public class ParseAbstractPlan extends AbstractCommand {
                 return;
         }
         if (newElement instanceof Plan && ((Plan) newElement).getMasterPlan()) {
-            replaceIncompleteElements(newElement);
+//            replaceIncompleteElements(newElement);
             modelManager.addPlanElement(Types.MASTERPLAN, newElement, null, false);
         } else {
-            replaceIncompleteElements(newElement);
+//            replaceIncompleteElements(newElement);
             modelManager.addPlanElement(modelModificationQuery.getElementType(), newElement, null, false);
         }
 
@@ -71,10 +71,10 @@ public class ParseAbstractPlan extends AbstractCommand {
         }
     }
 
-    //TODO complete for other PlanElements
-    private void replaceIncompleteElements(PlanElement newElement) {
-        if(newElement instanceof PlanType) {
-            modelManager.replaceIncompletePlansInPlanType((PlanType) newElement);
-        }
-    }
+//    //TODO complete for other PlanElements
+//    private void replaceIncompleteElements(PlanElement newElement) {
+//        if(newElement instanceof PlanType) {
+//            modelManager.replaceIncompletePlansInPlanType((PlanType) newElement);
+//        }
+//    }
 }

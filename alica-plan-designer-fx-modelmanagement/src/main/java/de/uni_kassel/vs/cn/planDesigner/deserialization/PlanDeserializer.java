@@ -31,7 +31,7 @@ public class PlanDeserializer extends StdDeserializer<Plan> {
         int idIndex = planString.indexOf('#');
         planString = planString.substring(idIndex + 1);
         Plan plan = new Plan(Long.parseLong(planString));
-        ParsedModelReferences.getInstance().addIncompletePlan(plan);
+        ParsedModelReferences.getInstance().addIncompletePlanInPlantype(plan.getId());
         return plan;
     }
 }

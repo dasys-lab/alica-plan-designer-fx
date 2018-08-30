@@ -13,6 +13,10 @@ public class Synchronization extends PlanElement{
     protected final SimpleIntegerProperty syncTimeout = new SimpleIntegerProperty();
     protected final SimpleBooleanProperty failOnSyncTimeout = new SimpleBooleanProperty();
 
+    public Synchronization(long id) {
+        this.id = id;
+    }
+
     protected ArrayList<Transition> syncedTransitions;
 
     public int getTalkTimeout() {

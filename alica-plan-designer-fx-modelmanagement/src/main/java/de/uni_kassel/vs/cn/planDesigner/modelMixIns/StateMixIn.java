@@ -3,7 +3,6 @@ package de.uni_kassel.vs.cn.planDesigner.modelMixIns;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
-import de.uni_kassel.vs.cn.planDesigner.deserialization.ArrayDeserializer;
 import de.uni_kassel.vs.cn.planDesigner.deserialization.FileArrayDeserializer;
 import de.uni_kassel.vs.cn.planDesigner.deserialization.PlanDeserializer;
 import de.uni_kassel.vs.cn.planDesigner.serialization.InternalRefArraySerializer;
@@ -22,12 +21,9 @@ public abstract class StateMixIn {
     @JsonDeserialize(using = FileArrayDeserializer.class)
     protected ArrayList<AbstractPlan> plans;
     @JsonSerialize(using = InternalRefArraySerializer.class)
-    @JsonDeserialize(using = ArrayDeserializer.class)
     protected ArrayList<Parametrisation> parametrisations;
     @JsonSerialize(using = InternalRefArraySerializer.class)
-    @JsonDeserialize(using = ArrayDeserializer.class)
     protected ArrayList<Transition> inTransitions;
     @JsonSerialize(using = InternalRefArraySerializer.class)
-    @JsonDeserialize(using = ArrayDeserializer.class)
     protected ArrayList<Transition> outTransitions;
 }

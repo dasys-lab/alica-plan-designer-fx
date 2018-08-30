@@ -19,6 +19,10 @@ public class State extends PlanElement {
         outTransitions = new ArrayList<>();
     }
 
+    public State(long id) {
+        this.id = id;
+    }
+
     public EntryPoint getEntryPoint() {
         return entryPoint;
     }

@@ -23,6 +23,12 @@ public class PlanElement {
         this.comment = new SimpleStringProperty();
     }
 
+    public PlanElement(long id) {
+        this.id = id;
+        this.name = new SimpleStringProperty();
+        this.comment = new SimpleStringProperty();
+    }
+
     public long getId() {
         return id;
     }
