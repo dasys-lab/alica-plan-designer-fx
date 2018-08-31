@@ -121,6 +121,7 @@ public final class RepositoryViewModel {
 
     public void addElement(ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {
+            case Types.MASTERPLAN:
             case Types.PLAN:
                 this.plans.add(viewModelElement);
                 break;
@@ -144,6 +145,7 @@ public final class RepositoryViewModel {
 
     public void removeElement(ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {
+            case Types.MASTERPLAN:
             case Types.PLAN:
                 this.plans.remove(viewModelElement);
                 break;
