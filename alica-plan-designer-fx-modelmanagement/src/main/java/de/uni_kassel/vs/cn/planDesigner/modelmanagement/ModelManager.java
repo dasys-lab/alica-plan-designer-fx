@@ -185,10 +185,6 @@ public class ModelManager implements Observer {
         eventHandlerList.add(eventHandler);
     }
 
-    public void removeListener(IModelEventHandler eventHandler) {
-        eventHandlerList.remove(eventHandler);
-    }
-
     public void loadModelFromDisk() {
         loadModelFromDisk(tasksPath);
         loadModelFromDisk(plansPath);
@@ -824,6 +820,7 @@ public class ModelManager implements Observer {
             } else {
                 throw new RuntimeException("Modelmanager: Trying to serialize a file with unknow ending: " + ending);
             }
+            planElement.setDirty(false);
         } catch (IOException e) {
             e.printStackTrace();
         }

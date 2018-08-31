@@ -48,7 +48,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         super(I18NRepo.getInstance().getString("label.caption.taskrepository"), null);
         this.guiModificationHandler = handler;
         this.taskRepository = taskRepository;
-        this.taskRepository.setTaskRepositoryTab(this);
+        this.addElements(taskRepository.getTaskViewModels());
 
         i18NRepo = I18NRepo.getInstance();
         setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + ": " + this.taskRepository.getName());
@@ -74,10 +74,44 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         propertiesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
         propertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
         propertiesTable.addItem(taskRepository);
+
+        // guiModificationHandler for creating new tasks
+        HBox createTaskHBox = new HBox();
+        Button createTaskButton = new Button();
+        createTaskButton.setText(i18NRepo.getInstance().getString("action.create.task"));
+        TextField taskNameField = new TextField();
+        createTaskButton.setOnAction(e -> {
+            if (taskNameField.getText() != null && !taskNameField.getText().isEmpty()) {
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.TASK, taskNameField.getText());
+                event.setParentId(this.taskRepository.getId());
+                guiModificationHandler.handle(event);
+            }
+        });
+        createTaskHBox.getChildren().addAll(taskNameField, createTaskButton);
+
+        TitledPane taskList = new TitledPane();
+        taskList.setContent(repositoryListView);
+        taskList.setText(i18NRepo.getString("label.caption.tasks"));
+        taskList.setCollapsible(false);
+        taskList.setPadding(new Insets(10,0,0,0));
+        taskList.setStyle("-fx-font-weight: bold;");
+        repositoryListView.setStyle("-fx-font-weight: normal;");
+
+        // create list of tasks
+        VBox contentContainer = new VBox();
+        contentContainer.setPrefHeight(Double.MAX_VALUE);
+
+        // fill all into global container
+        contentContainer.getChildren().addAll(propertiesTable, taskList, createTaskHBox);
+
+        // override base class guiModificationHandler content
+        setContent(contentContainer);
+
+        // register listener on view model
         taskRepository.nameProperty().addListener((observable, oldValue, newValue) -> {
             fireGuiChangeAttributeEvent(newValue, "name");
         });
-        ((PlanElementViewModel)taskRepository).commentProperty().addListener((observable, oldValue, newValue) -> {
+        taskRepository.commentProperty().addListener((observable, oldValue, newValue) -> {
             fireGuiChangeAttributeEvent(newValue, "comment");
         });
         taskRepository.getTaskViewModels().addListener(new ListChangeListener<TaskViewModel>() {
@@ -98,39 +132,9 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
                 }
             }
         });
-
-        // guiModificationHandler for creating new tasks
-        HBox createTaskHBox = new HBox();
-        Button createTaskButton = new Button();
-        createTaskButton.setText(i18NRepo.getInstance().getString("action.create.task"));
-        TextField taskNameField = new TextField();
-        createTaskButton.setOnAction(e -> {
-            if (taskNameField.getText() != null && !taskNameField.getText().isEmpty()) {
-                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.TASK, taskNameField.getText());
-                event.setParentId(this.taskRepository.getId());
-                guiModificationHandler.handle(event);
-            }
+        taskRepository.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(newValue);
         });
-        createTaskHBox.getChildren().addAll(taskNameField, createTaskButton);
-
-
-        TitledPane taskList = new TitledPane();
-        taskList.setContent(repositoryListView);
-        taskList.setText(i18NRepo.getString("label.caption.tasks"));
-        taskList.setCollapsible(false);
-        taskList.setPadding(new Insets(10,0,0,0));
-        taskList.setStyle("-fx-font-weight: bold;");
-        repositoryListView.setStyle("-fx-font-weight: normal;");
-
-        // create list of tasks
-        VBox contentContainer = new VBox();
-        contentContainer.setPrefHeight(Double.MAX_VALUE);
-
-        // fill all into global container
-        contentContainer.getChildren().addAll(propertiesTable, taskList, createTaskHBox);
-
-        // override base class guiModificationHandler content
-        setContent(contentContainer);
     }
 
     private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
@@ -210,9 +214,4 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
             return true;
         }
     }
-
-    public void updateText(String newName) {
-        this.setText(i18NRepo.getString("label.caption.taskrepository") + ": " + newName);
-    }
-
 }
