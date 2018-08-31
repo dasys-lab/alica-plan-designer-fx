@@ -326,6 +326,14 @@ public class ModelManager implements Observer {
                             }
                         }
                     });
+                    for (Task task : taskRepository.getTasks()) {
+                        task.nameProperty().addListener((observable, oldValue, newValue) -> {
+                            taskRepository.setDirty(true);
+                        });
+                        task.commentProperty().addListener((observable, oldValue, newValue) -> {
+                            taskRepository.setDirty(true);
+                        });
+                    }
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
@@ -506,6 +514,12 @@ public class ModelManager implements Observer {
             case Types.TASK:
                 Task task = (Task) newElement;
                 taskRepository.getTasks().add(task);
+                task.nameProperty().addListener((observable, oldValue, newValue) -> {
+                    taskRepository.setDirty(true);
+                });
+                task.commentProperty().addListener((observable, oldValue, newValue) -> {
+                    taskRepository.setDirty(true);
+                });
                 task.setTaskRepository(taskRepository);
                 break;
             case Types.TASKREPOSITORY:
