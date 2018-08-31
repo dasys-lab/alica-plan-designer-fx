@@ -54,10 +54,6 @@ public class TaskRepositoryViewModel extends SerializableViewModel {
         }
     }
 
-    public void clearTasks() {
-        tasks.clear();
-    }
-
     public ObservableList<TaskViewModel> getTaskViewModels() {
         return tasks;
     }

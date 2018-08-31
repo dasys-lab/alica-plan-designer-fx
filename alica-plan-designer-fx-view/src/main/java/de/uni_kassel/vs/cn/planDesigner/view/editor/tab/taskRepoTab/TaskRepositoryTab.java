@@ -66,7 +66,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
      * Modifies the content, as it is already set in the RepositoryTab constructor (see base class).
      * This allows to create new Tasks, too.
      */
-    public void initGui() {
+    private void initGui() {
         propertiesTable = new PropertiesTable();
         propertiesTable.setEditable(true);
         propertiesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
@@ -115,7 +115,6 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
 
         TitledPane taskList = new TitledPane();
-        addElements(taskRepository.getTaskViewModels());
         taskList.setContent(repositoryListView);
         taskList.setText(i18NRepo.getString("label.caption.tasks"));
         taskList.setCollapsible(false);
