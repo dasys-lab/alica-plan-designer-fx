@@ -398,7 +398,7 @@ public class ModelManager implements Observer {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Replaces all incomplete Tasks attached to the plan's entrypoints by already parsed ones
      *
