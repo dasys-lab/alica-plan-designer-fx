@@ -110,6 +110,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         // register listener on view model
         taskRepository.nameProperty().addListener((observable, oldValue, newValue) -> {
             fireGuiChangeAttributeEvent(newValue, "name");
+            setText(i18NRepo.getString("label.caption.taskrepository") + ": " + newValue);
         });
         taskRepository.commentProperty().addListener((observable, oldValue, newValue) -> {
             fireGuiChangeAttributeEvent(newValue, "comment");
