@@ -6,7 +6,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +26,7 @@ public class ViewModelFactory {
     /**
      * Just returns an existing view model object, if it already exists.
      * Otherwise, it will create one according to the given planElement object.
+     *
      * @param planElement The model object that corresponds to the wanted view model object.
      * @return the view model object
      */
@@ -44,27 +44,37 @@ public class ViewModelFactory {
         if (planElement instanceof Behaviour) {
             element = createBehaviourViewModel(planElement);
         } else if (planElement instanceof Task) {
-            element =  createTaskViewModel(planElement);
+            element = createTaskViewModel(planElement);
         } else if (planElement instanceof TaskRepository) {
-            element =  createTaskRepositoryViewModel(planElement);
+            element = createTaskRepositoryViewModel(planElement);
         } else if (planElement instanceof Plan) {
-            element =  createPlanViewModel((Plan)planElement);
-        } else if (planElement instanceof  PlanType) {
+            element = createPlanViewModel((Plan) planElement);
+        } else if (planElement instanceof PlanType) {
             element = createPlanTypeViewModel((PlanType) planElement);
+        } else if (planElement instanceof State) {
+            element = createStateViewModel((State) planElement);
+        } else if (planElement instanceof AnnotatedPlan) {
+            element = createAnnotatedPlanViewModel((AnnotatedPlan) planElement);
+        } else if (planElement instanceof EntryPoint) {
+            element = createEntryPointViewModel((EntryPoint) planElement);
+        } else if (planElement instanceof Task) {
+            element = createTaskViewModel((Task) planElement);
+        } else if (planElement instanceof Variable) {
+            element = createVariableViewModel((Variable) planElement);
+        } else if (planElement instanceof Transition) {
+            element = createTransitionViewModel((Transition) planElement);
+        } else if (planElement instanceof Synchronization) {
+            element = createSynchronizationViewModel((Synchronization) planElement);
+        } else if (planElement instanceof Quantifier) {
+            element = createQuantifierViewModel((Quantifier) planElement);
+        } else if (planElement instanceof Condition) {
+            element = createConditionViewModel((Condition) planElement);
         } else {
             System.err.println("ViewModelFactory: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
         }
 
         viewModelElements.put(planElement.getId(), element);
         return element;
-    }
-
-    private ViewModelElement createViewModelElement(PlanElement planElement, String type) {
-        if (planElement instanceof SerializablePlanElement) {
-            return new ViewModelElement(planElement.getId(), planElement.getName(), type, ((SerializablePlanElement) planElement).getRelativeDirectory());
-        } else {
-            return new ViewModelElement(planElement.getId(), planElement.getName(), type);
-        }
     }
 
     private TaskRepositoryViewModel createTaskRepositoryViewModel(PlanElement planElement) {
@@ -80,7 +90,7 @@ public class ViewModelFactory {
         return taskRepo;
     }
 
-    private ViewModelElement createTaskViewModel(PlanElement planElement) {
+    private TaskViewModel createTaskViewModel(PlanElement planElement) {
         Task task = (Task) planElement;
         TaskViewModel taskViewModel = new TaskViewModel(task.getId(), task.getName(), Types.TASK);
         taskViewModel.setTaskRepositoryViewModel((TaskRepositoryViewModel) getViewModelElement(task.getTaskRepository()));
@@ -99,35 +109,66 @@ public class ViewModelFactory {
         behaviourViewModel.setRelativeDirectory(behaviour.getRelativeDirectory());
         behaviourViewModel.setFrequency(behaviour.getFrequency());
         behaviourViewModel.setDeferring(behaviour.getDeferring());
+
         for (Variable variable : behaviour.getVariables()) {
-            VariableViewModel variableViewModel = new VariableViewModel(variable.getId(), variable.getName(), Types.VARIABLE);
-            variableViewModel.setVariableType(variable.getType());
-            behaviourViewModel.getVariables().add(variableViewModel);
+            behaviourViewModel.getVariables().add((VariableViewModel) getViewModelElement(variable));
         }
-        behaviourViewModel.setPreCondition(getConditionViewModel(behaviour.getPreCondition(), Types.PRECONDITION, behaviour.getId()));
-        behaviourViewModel.setRuntimeCondition(getConditionViewModel(behaviour.getRuntimeCondition(), Types.RUNTIMECONDITION, behaviour.getId()));
-        behaviourViewModel.setPostCondition(getConditionViewModel(behaviour.getPostCondition(), Types.POSTCONDITION, behaviour.getId()));
+
+        if(behaviour.getPreCondition() != null) {
+            ConditionViewModel preConditionViewModel = (ConditionViewModel) getViewModelElement(behaviour.getPreCondition());
+            preConditionViewModel.setParentId(behaviour.getId());
+            behaviourViewModel.setPreCondition(preConditionViewModel);
+        }
+
+        if(behaviour.getRuntimeCondition() != null) {
+            ConditionViewModel runtimeConditionViewModel = (ConditionViewModel) getViewModelElement(behaviour.getRuntimeCondition());
+            runtimeConditionViewModel.setParentId(behaviour.getId());
+            behaviourViewModel.setRuntimeCondition(runtimeConditionViewModel);
+        }
+
+        if(behaviour.getPostCondition() != null) {
+            ConditionViewModel postConditionViewModel = (ConditionViewModel) getViewModelElement(behaviour.getPostCondition());
+            postConditionViewModel.setParentId(behaviour.getId());
+            behaviourViewModel.setPostCondition(postConditionViewModel);
+        }
+
         return behaviourViewModel;
     }
 
-    private ConditionViewModel getConditionViewModel(Condition condition, String type, long parentId) {
+    private VariableViewModel createVariableViewModel(Variable var) {
+        VariableViewModel variableViewModel = new VariableViewModel(var.getId(), var.getName(), Types.VARIABLE);
+        variableViewModel.setVariableType(var.getType());
+        return variableViewModel;
+    }
+
+    private ConditionViewModel createConditionViewModel(Condition condition) {
         if (condition == null) {
             return null;
         }
-        ConditionViewModel conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), type);
+        ConditionViewModel conditionViewModel = null;
+        if(condition instanceof PreCondition) {
+            conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), Types.PRECONDITION);
+        } else if(condition instanceof RuntimeCondition) {
+            conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), Types.RUNTIMECONDITION);
+        } else if(condition instanceof PostCondition) {
+            conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), Types.POSTCONDITION);
+        }
         conditionViewModel.setConditionString(condition.getConditionString());
         conditionViewModel.setEnabled(condition.getEnabled());
         conditionViewModel.setPluginName(condition.getPluginName());
         conditionViewModel.setComment(condition.getComment());
         for (Variable var : condition.getVariables()) {
-            conditionViewModel.getVars().add(new VariableViewModel(var.getId(), var.getName(), var.getType()));
+            conditionViewModel.getVars().add((VariableViewModel) getViewModelElement(var));
         }
         for (Quantifier quantifier : condition.getQuantifiers()) {
             // TODO: Quantifier is not very clean or fully implemented, yet.
-            conditionViewModel.getQuantifier().add(new QuantifierViewModel(quantifier.getId(), quantifier.getName(), Types.QUANTIFIER));
+            conditionViewModel.getQuantifier().add((QuantifierViewModel) getViewModelElement(quantifier));
         }
-        conditionViewModel.setParentId(parentId);
         return conditionViewModel;
+    }
+
+    private QuantifierViewModel createQuantifierViewModel (Quantifier quantifier) {
+        return new QuantifierViewModel(quantifier.getId(), quantifier.getName(), Types.QUANTIFIER);
     }
 
     private PlanTypeViewModel createPlanTypeViewModel(PlanType planType) {
@@ -142,22 +183,18 @@ public class ViewModelFactory {
         planTypeViewModel.setComment(planType.getComment());
 
         for (Plan plan : modelManager.getPlans()) {
-            if (plan.getMasterPlan()) {
-                planTypeViewModel.addPlanToAllPlans(createViewModelElement(plan, Types.MASTERPLAN));
-            } else {
-                planTypeViewModel.addPlanToAllPlans(createViewModelElement(plan, Types.PLAN));
-            }
+            planTypeViewModel.addPlanToAllPlans(getViewModelElement(plan));
         }
 
         for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
             Plan plan = annotatedPlan.getPlan();
             planTypeViewModel.removePlanFromAllPlans(plan.getId());
-            planTypeViewModel.addPlanToPlansInPlanType(createAnnotatedPlanView(annotatedPlan));
+            planTypeViewModel.addPlanToPlansInPlanType((AnnotatedPlanView) getViewModelElement(annotatedPlan));
         }
         return planTypeViewModel;
     }
 
-    private AnnotatedPlanView createAnnotatedPlanView(AnnotatedPlan annotatedPlan) {
+    private AnnotatedPlanView createAnnotatedPlanViewModel(AnnotatedPlan annotatedPlan) {
         Plan plan = annotatedPlan.getPlan();
         if (plan.getMasterPlan()) {
             return new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
@@ -168,7 +205,49 @@ public class ViewModelFactory {
         }
     }
 
-    public PlanViewModel createPlanViewModel(Plan plan) {
+    private StateViewModel createStateViewModel(State state) {
+        StateViewModel stateViewModel = new StateViewModel(state.getId(), state.getName(), Types.STATE);
+        for (AbstractPlan abstractPlan : state.getPlans()) {
+            stateViewModel.getPlanElements().add((PlanElementViewModel) getViewModelElement(modelManager.getPlanElement(abstractPlan.getId())));
+        }
+        if (state.getEntryPoint() != null) {
+            stateViewModel.setEntryPoint((EntryPointViewModel) getViewModelElement(modelManager.getPlanElement(state.getEntryPoint().getId())));
+        }
+        return stateViewModel;
+    }
+
+    private EntryPointViewModel createEntryPointViewModel(EntryPoint ep) {
+        EntryPointViewModel entryPointViewModel = new EntryPointViewModel(ep.getId(), ep.getName(), Types.ENTRYPOINT);
+        entryPointViewModel.setTask(new PlanElementViewModel(ep.getTask().getId(), ep.getTask().getName(), Types.TASK));
+        // we need to add the ep before creating the state, in order to avoid circles (EntryPoint <-> State)
+        this.viewModelElements.put(entryPointViewModel.getId(), entryPointViewModel);
+        entryPointViewModel.setState((StateViewModel) getViewModelElement(modelManager.getPlanElement(ep.getState().getId())));
+        return entryPointViewModel;
+    }
+
+    private TransitionViewModel createTransitionViewModel(Transition transition) {
+        TransitionViewModel transitionViewModel = new TransitionViewModel(transition.getId(), transition.getName(), Types.TRANSITION);
+        transitionViewModel.setInState((StateViewModel) getViewModelElement(transition.getInState()));
+        transitionViewModel.setOutState((StateViewModel) getViewModelElement(transition.getOutState()));
+        if (transition.getPreCondition() != null) {
+            ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(transition.getPreCondition());
+            conditionViewModel.setParentId(transition.getId());
+            transitionViewModel.setPreCondition(conditionViewModel);
+        }
+        return transitionViewModel;
+    }
+
+    private SynchronizationViewModel createSynchronizationViewModel(Synchronization synchronization) {
+        SynchronizationViewModel synchronizationViewModel = new SynchronizationViewModel(synchronization.getId(), synchronization.getName(),
+                Types.SYNCHRONIZATION);
+        for (Transition transition : synchronization.getSyncedTransitions()) {
+            synchronizationViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
+        }
+        return synchronizationViewModel;
+    }
+
+
+    private PlanViewModel createPlanViewModel(Plan plan) {
         PlanViewModel planViewModel;
         if (plan.getMasterPlan()) {
             planViewModel = new PlanViewModel(plan.getId(), plan.getName(), Types.MASTERPLAN);
@@ -180,72 +259,27 @@ public class ViewModelFactory {
         planViewModel.setComment(plan.getComment());
         planViewModel.setRelativeDirectory(plan.getRelativeDirectory());
         for (State state : plan.getStates()) {
-            planViewModel.getStates().add(new StateViewModel(state.getId(), state.getName(), Types.STATE));
-            System.out.println("ViewModelFactory: abstract plans :");
-            for(AbstractPlan abstractPlan : state.getPlans()) {
-                //TODO add
-                System.out.println("ViewModelFactory: abstract plan :" + abstractPlan.getName());
-            }
+            planViewModel.getStates().add(
+                    (StateViewModel) getViewModelElement(state));
         }
         for (EntryPoint ep : plan.getEntryPoints()) {
-            EntryPointViewModel entryPointViewModel = new EntryPointViewModel(ep.getId(), ep.getName(), Types.ENTRYPOINT);
-            for (StateViewModel stateViewModel : planViewModel.getStates()) {
-                if (stateViewModel.getId() == ep.getState().getId()) {
-                    entryPointViewModel.setState(stateViewModel);
-                    stateViewModel.setEntryPoint(entryPointViewModel);
-                    break;
-                }
-            }
-            entryPointViewModel.setTask(new PlanElementViewModel(ep.getTask().getId(), ep.getTask().getName(), Types.TASK));
-            planViewModel.getEntryPoints().add(entryPointViewModel);
+            planViewModel.getEntryPoints().add((EntryPointViewModel) getViewModelElement(ep));
         }
         for (Transition transition : plan.getTransitions()) {
-            TransitionViewModel transitionViewModel = new TransitionViewModel(transition.getId(), transition.getName(), Types.TRANSITION);
-            boolean inStateFound = false;
-            boolean outStateFound = false;
-            for (StateViewModel stateViewModel : planViewModel.getStates()) {
-                if (stateViewModel.getId() == transition.getInState().getId()) {
-                    transitionViewModel.setInState(stateViewModel);
-                    stateViewModel.getInTransitions().add(transitionViewModel);
-                    inStateFound = true;
-                }
-                if (stateViewModel.getId() == transition.getOutState().getId()) {
-                    transitionViewModel.setOutState(stateViewModel);
-                    stateViewModel.getOutTransitions().add(transitionViewModel);
-                    outStateFound = true;
-                }
-                if (inStateFound && outStateFound) {
-                    break;
-                }
-            }
-            if (transition.getPreCondition() != null) {
-                ConditionViewModel conditionViewModel = new ConditionViewModel(transition.getPreCondition().getId(), transition.getPreCondition().getName(),
-                        Types.PRECONDITION);
-                transitionViewModel.setPreCondition(conditionViewModel);
-                planViewModel.getConditions().add(conditionViewModel);
-            }
+            planViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
         }
         for (Synchronization synchronization : plan.getSynchronizations()) {
-            SynchronizationViewModel synchronizationViewModel = new SynchronizationViewModel(synchronization.getId(), synchronization.getName(),
-                    Types.SYNCHRONIZATION);
-            for (Transition transition : synchronization.getSyncedTransitions()) {
-                for (TransitionViewModel trans : planViewModel.getTransitions()) {
-                    if (trans.getId() == transition.getId()) {
-                        synchronizationViewModel.getTransitions().add(trans);
-                        break;
-                    }
-                }
-            }
-
-            planViewModel.getSynchronisations().add(synchronizationViewModel);
+            planViewModel.getSynchronisations().add((SynchronizationViewModel) getViewModelElement(synchronization));
         }
         if (plan.getPreCondition() != null) {
-            planViewModel.getConditions().add(new ConditionViewModel(plan.getPreCondition().getId(), plan.getPreCondition().getName(),
-                    Types.PRECONDITION));
+            ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(plan.getPreCondition());
+            conditionViewModel.setParentId(plan.getId());
+            planViewModel.getConditions().add(conditionViewModel);
         }
         if (plan.getRuntimeCondition() != null) {
-            planViewModel.getConditions().add(new ConditionViewModel(plan.getRuntimeCondition().getId(), plan.getRuntimeCondition().getName(),
-                    Types.RUNTIMECONDITION));
+            ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(plan.getRuntimeCondition());
+            conditionViewModel.setParentId(plan.getId());
+            planViewModel.getConditions().add(conditionViewModel);
         }
         return planViewModel;
     }
