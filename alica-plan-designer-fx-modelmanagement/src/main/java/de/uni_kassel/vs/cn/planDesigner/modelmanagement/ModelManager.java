@@ -17,8 +17,6 @@ import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
 import de.uni_kassel.vs.cn.planDesigner.modelMixIns.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -196,8 +194,17 @@ public class ModelManager implements Observer {
         for (Plan plan : planMap.values()) {
             replaceIncompleteTasksInEntryPoints(plan);
             replaceIncompleteAbstractPlansInStates(plan);
+            replaceIncompleteStatesAndSynchronizationsInTransitions(plan);
+            if (plan.getMasterPlan()) {
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
+            } else {
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
+            }
         }
-        replaceIncompletePlansInPlanTypes();
+        for (PlanType planType : getPlanTypes()) {
+            replaceIncompletePlansInPlanType(planType);
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE));
+        }
     }
 
     /**
@@ -258,20 +265,41 @@ public class ModelManager implements Observer {
                 case FileSystemUtil.PLAN_ENDING:
                     Plan plan = objectMapper.readValue(modelFile, Plan.class);
                     plan.dirtyProperty().addListener((observable, oldValue, newValue) -> {
-                    ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, taskRepository, Types.TASKREPOSITORY);
-                    event.setChangedAttribute("dirty");
-                    event.setNewValue(newValue);
-                    this.fireEvent(event);
-                });
+                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, taskRepository, Types.TASKREPOSITORY);
+                        event.setChangedAttribute("dirty");
+                        event.setNewValue(newValue);
+                        this.fireEvent(event);
+                    });
                     if (planElementMap.containsKey(plan.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
                     } else {
                         planElementMap.put(plan.getId(), plan);
                         planMap.put(plan.getId(), plan);
-                        if (plan.getMasterPlan()) {
-                            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
-                        } else {
-                            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
+                        for (State state : plan.getStates()) {
+                            planElementMap.put(state.getId(), state);
+                        }
+                        for (Transition transition : plan.getTransitions()) {
+                            planElementMap.put(transition.getId(), transition);
+                        }
+                        for (EntryPoint ep : plan.getEntryPoints()) {
+                            planElementMap.put(ep.getId(), ep);
+                        }
+                        for (Synchronization sync : plan.getSynchronizations()) {
+                            planElementMap.put(sync.getId(), sync);
+                        }
+                        for (Variable variable : plan.getVariables()) {
+                            planElementMap.put(variable.getId(), variable);
+                        }
+                        if (plan.getPreCondition() != null) {
+                            planElementMap.put(plan.getPreCondition().getId(), plan.getPreCondition());
+                        }
+                        if (plan.getRuntimeCondition() != null) {
+                            planElementMap.put(plan.getRuntimeCondition().getId(), plan.getRuntimeCondition());
+                            if (plan.getMasterPlan()) {
+                                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
+                            } else {
+                                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
+                            }
                         }
                     }
                     break;
@@ -288,6 +316,18 @@ public class ModelManager implements Observer {
                     } else {
                         planElementMap.put(behaviour.getId(), behaviour);
                         behaviourMap.put(behaviour.getId(), behaviour);
+                        for (Variable variable : behaviour.getVariables()) {
+                            planElementMap.put(variable.getId(), variable);
+                        }
+                        if (behaviour.getPreCondition() != null) {
+                            planElementMap.put(behaviour.getPreCondition().getId(), behaviour.getPreCondition());
+                        }
+                        if (behaviour.getRuntimeCondition() != null) {
+                            planElementMap.put(behaviour.getRuntimeCondition().getId(), behaviour.getRuntimeCondition());
+                        }
+                        if (behaviour.getPostCondition() != null) {
+                            planElementMap.put(behaviour.getPostCondition().getId(), behaviour.getPostCondition());
+                        }
                         fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, behaviour, Types.BEHAVIOUR));
                     }
                     break;
@@ -307,7 +347,6 @@ public class ModelManager implements Observer {
                         for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
                             planElementMap.put(annotatedPlan.getId(), annotatedPlan);
                         }
-                        fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE));
                     }
                     break;
                 case FileSystemUtil.TASKREPOSITORY_ENDING:
@@ -367,7 +406,7 @@ public class ModelManager implements Observer {
             e.printStackTrace();
         }
     }
-
+    
     /**
      * Replaces all incomplete Tasks attached to the plan's entrypoints by already parsed ones
      *
@@ -385,21 +424,31 @@ public class ModelManager implements Observer {
     }
 
     private void replaceIncompleteAbstractPlansInStates(Plan plan) {
-        for(State state : plan.getStates()) {
-            for(int i = 0; i < state.getPlans().size(); i++) {
-                state.getPlans().set(i, (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+        ParsedModelReferences refs = ParsedModelReferences.getInstance();
+        for (State state : plan.getStates()) {
+            for (int i = 0; i < state.getPlans().size(); i++) {
+                if (refs.incompleteAbstractPlansInStates.contains(state.getPlans().get(i).getId())) {
+                    state.getPlans().set(i, (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+                }
             }
         }
     }
 
-    /**
-     * Replaces all incomplete Plans in PlanTypes by already parsed ones
-     */
-    private void replaceIncompletePlansInPlanTypes() {
-        for (PlanType planType : getPlanTypes()) {
-            replaceIncompletePlansInPlanType(planType);
+    private void replaceIncompleteStatesAndSynchronizationsInTransitions(Plan plan) {
+        ParsedModelReferences refs = ParsedModelReferences.getInstance();
+        for (Transition transition : plan.getTransitions()) {
+            if (refs.incompleteAbstractPlansInStates.contains(transition.getInState().getId())) {
+                transition.setInState((State) planElementMap.get(transition.getInState().getId()));
+            }
+            if (refs.incompleteAbstractPlansInStates.contains(transition.getOutState().getId())) {
+                transition.setOutState((State) planElementMap.get(transition.getOutState().getId()));
+            }
+            if (transition.getSynchronization() != null && refs.incompleteSynchronizationsInTransitions.contains(transition.getSynchronization().getId())) {
+                transition.setSynchronization((Synchronization) planElementMap.get(transition.getSynchronization().getId()));
+            }
         }
     }
+
 
     /**
      * Replaces all incomplete Plans in given PlanType by already parsed ones
@@ -543,7 +592,7 @@ public class ModelManager implements Observer {
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, oldElement, type));
         }
         planElementMap.put(newElement.getId(), newElement);
-        if(parentElement != null) {
+        if (parentElement != null) {
             ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
             event.setParentId(parentElement.getId());
             fireEvent(event);
@@ -598,9 +647,9 @@ public class ModelManager implements Observer {
         for (IModelEventHandler eventHandler : eventHandlerList) {
             eventHandler.handleCloseTab(planElement.getId());
         }
-        planElementMap.remove(planElement.getId());
+        if (parentElement != null) {
+            planElementMap.remove(planElement.getId());
 
-        if(parentElement != null) {
             ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, type);
             event.setParentId(parentElement.getId());
             fireEvent(event);

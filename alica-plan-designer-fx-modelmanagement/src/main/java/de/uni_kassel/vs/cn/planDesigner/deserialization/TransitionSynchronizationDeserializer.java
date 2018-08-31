@@ -27,7 +27,7 @@ public Synchronization deserialize(
         throws IOException, JsonProcessingException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
         Synchronization synchronization = new Synchronization(((LongNode)tree).longValue());
-        ParsedModelReferences.getInstance().addIncompleteSynchronizationsInTransitions(synchronization.getId());
+        ParsedModelReferences.getInstance().addIncompleteSynchronizationInTransition(synchronization.getId());
         return synchronization;
         }
 }

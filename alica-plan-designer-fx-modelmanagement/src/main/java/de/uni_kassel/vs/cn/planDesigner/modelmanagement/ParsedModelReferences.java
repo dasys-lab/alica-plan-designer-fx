@@ -18,15 +18,15 @@ public class ParsedModelReferences {
 
     public long defaultTaskId;
 
-    public ArrayList<Long> incompleteTasksInEntryPoints = new ArrayList<>();
+    public ArrayList<Long> incompleteTasksInEntryPoints = new ArrayList<>(); //done
 
-    public ArrayList<Long> incompletePlansInPlanTypes = new ArrayList<>();
+    public ArrayList<Long> incompletePlansInPlanTypes = new ArrayList<>(); //done
 
-    public ArrayList<Long> incompletePlanElementsInStates = new ArrayList<>();
+    public ArrayList<Long> incompleteAbstractPlansInStates = new ArrayList<>(); // done
 
-    public ArrayList<Long> incompleteStatesInTransitions = new ArrayList<>();
+    public ArrayList<Long> incompleteStatesInTransitions = new ArrayList<>(); // done
 
-    public ArrayList<Long> incompleteSyncronizationsInTransitions = new ArrayList<>();
+    public ArrayList<Long> incompleteSynchronizationsInTransitions = new ArrayList<>(); // done
 
     public void setDefaultTaskId(long defaultTaskId) {
         this.defaultTaskId = defaultTaskId;
@@ -38,15 +38,15 @@ public class ParsedModelReferences {
         }
     }
 
-    public void addIncompletePlanInPlantype(long incompletePlanId) {
+    public void addIncompletePlanInPlanType(long incompletePlanId) {
         if (!incompletePlansInPlanTypes.contains(incompletePlanId)) {
             incompletePlansInPlanTypes.add(incompletePlanId);
         }
     }
 
-    public void addIncompletePlanElementInState(long incompletePlanId) {
-        if (!incompletePlanElementsInStates.contains(incompletePlanId)) {
-            incompletePlanElementsInStates.add(incompletePlanId);
+    public void addIncompleteAbstractPlanInState(long incompletePlanId) {
+        if (!incompleteAbstractPlansInStates.contains(incompletePlanId)) {
+            incompleteAbstractPlansInStates.add(incompletePlanId);
         }
     }
 
@@ -56,9 +56,9 @@ public class ParsedModelReferences {
         }
     }
 
-    public void addIncompleteSynchronizationsInTransitions(long incompleteSynchronizationId) {
-        if (!incompleteSyncronizationsInTransitions.contains(incompleteSynchronizationId)) {
-            incompleteSyncronizationsInTransitions.add(incompleteSynchronizationId);
+    public void addIncompleteSynchronizationInTransition(long incompleteSynchronizationId) {
+        if (!incompleteSynchronizationsInTransitions.contains(incompleteSynchronizationId)) {
+            incompleteSynchronizationsInTransitions.add(incompleteSynchronizationId);
         }
     }
 }
