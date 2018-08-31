@@ -181,6 +181,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         }
     }
 
+    /**
+     * Handles the model event for the the view model elements.
+     * @param event
+     * @param viewModelElement
+     * @param planElement
+     */
     private void updateViewModel(ModelEvent event, ViewModelElement viewModelElement, PlanElement planElement) {
         switch(event.getEventType()) {
             case ELEMENT_DELETED:

@@ -4,7 +4,7 @@ import javafx.beans.property.*;
 
 import java.util.ArrayList;
 
-public class BehaviourViewModel extends PlanElementViewModel {
+public class BehaviourViewModel extends SerializableViewModel {
 
     protected StringProperty relativeDirectory = new SimpleStringProperty();
     protected IntegerProperty frequency = new SimpleIntegerProperty();

@@ -99,6 +99,7 @@ public class ChangeAttributeValue extends AbstractCommand {
 
         ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, elementType);
         event.setChangedAttribute(attribute);
+        event.setNewValue(newValue);
         modelManager.fireEvent(event);
     }
 

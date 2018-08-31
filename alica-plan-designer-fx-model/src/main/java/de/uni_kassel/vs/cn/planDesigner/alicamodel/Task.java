@@ -6,6 +6,18 @@ public class Task extends PlanElement{
 
     public Task() {
         super();
+        this.comment.addListener((observable, oldValue, newValue) -> {
+            // catches the construction of a new task
+            if (taskRepository != null) {
+                taskRepository.setDirty(true);
+            }
+        });
+        this.name.addListener((observable, oldValue, newValue) -> {
+            // catches the construction of a new task
+            if (taskRepository != null) {
+                taskRepository.setDirty(true);
+            }
+        });
     }
 
     public Task (long id) {

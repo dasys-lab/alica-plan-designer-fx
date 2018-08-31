@@ -5,15 +5,15 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class PlanTypeViewModel extends PlanElementViewModel {
+public class PlanTypeViewModel extends SerializableViewModel {
 
     private ObservableList<ViewModelElement> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
 
     public PlanTypeViewModel(long id, String name, String type) {
         super(id, name, type);
-        allPlans = FXCollections.observableArrayList(new ArrayList<>());
-        plansInPlanType = FXCollections.observableArrayList(new ArrayList<>());
+        allPlans = FXCollections.observableArrayList();
+        plansInPlanType = FXCollections.observableArrayList();
     }
 
     public void addPlanToAllPlans(ViewModelElement plan) {

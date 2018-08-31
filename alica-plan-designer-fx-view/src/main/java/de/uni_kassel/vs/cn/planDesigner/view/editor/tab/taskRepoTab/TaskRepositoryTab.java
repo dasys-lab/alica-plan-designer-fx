@@ -42,19 +42,19 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
     private TaskRepositoryViewModel taskRepository;
     private I18NRepo i18NRepo;
-    private boolean dirty;
     private PropertiesTable<ViewModelElement> propertiesTable;
 
     public TaskRepositoryTab(TaskRepositoryViewModel taskRepository, IGuiModificationHandler handler) {
         super(I18NRepo.getInstance().getString("label.caption.taskrepository"), null);
         this.guiModificationHandler = handler;
         this.taskRepository = taskRepository;
+        this.taskRepository.setTaskRepositoryTab(this);
 
         i18NRepo = I18NRepo.getInstance();
         setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + ": " + this.taskRepository.getName());
         initGui();
         setOnCloseRequest(e-> {
-            if (isDirty()) {
+            if (taskRepository.getDirty()) {
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.close.task"), null);
                 e.consume();
             }
@@ -176,11 +176,9 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
     @Override
     public void save() {
-        if (isDirty()) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.TASKREPOSITORY, taskRepository.getName());
-            event.setElementId(taskRepository.getId());
-            guiModificationHandler.handle(event);
-        }
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.TASKREPOSITORY, taskRepository.getName());
+        event.setElementId(taskRepository.getId());
+        guiModificationHandler.handle(event);
     }
 
     public void setDirty(boolean dirty) {
@@ -189,10 +187,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         } else if (getText().contains("*") && !dirty) {
             this.setText(getText().substring(0, getText().length()-1));
         }
-        this.dirty = dirty;
     }
-
-    public boolean isDirty() {return dirty;}
 
     private boolean isTaskUsed(ViewModelElement taskToBeDeleted) {
         ArrayList<ViewModelElement> usages = guiModificationHandler.getUsages(taskToBeDeleted);
@@ -219,7 +214,6 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
 
     public void updateText(String newName) {
         this.setText(i18NRepo.getString("label.caption.taskrepository") + ": " + newName);
-        setDirty(true);
     }
 
 }

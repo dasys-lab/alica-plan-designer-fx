@@ -50,7 +50,7 @@ public class PlanDesignerApplication extends Application {
 
         // TODO: does not load the key.xpm
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/icon.png")));
-        primaryStage.setTitle("Carpe Noctem Plan Designer");
+        primaryStage.setTitle("ALICA - Plan Designer");
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
