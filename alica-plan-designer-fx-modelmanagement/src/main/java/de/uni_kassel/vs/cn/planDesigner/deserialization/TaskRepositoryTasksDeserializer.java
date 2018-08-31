@@ -8,12 +8,12 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Task;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
-public class TaskRepositoryTasksDeserializer extends StdDeserializer<ArrayList<Task>> {
+public class TaskRepositoryTasksDeserializer extends StdDeserializer<ObservableList<Task>> {
 
     public TaskRepositoryTasksDeserializer() {
         this(null);
@@ -24,12 +24,12 @@ public class TaskRepositoryTasksDeserializer extends StdDeserializer<ArrayList<T
     }
 
     @Override
-    public ArrayList<Task> deserialize(
+    public ObservableList<Task> deserialize(
             JsonParser jsonparser,
             DeserializationContext context)
             throws IOException, JsonProcessingException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
-        ArrayList<Task> tasks = new ArrayList<>();
+        ObservableList<Task> tasks = FXCollections.observableArrayList();
         for(int i = 0; i < tree.size(); i++) {
             TreeNode currentTreeNode = tree.get(i);
             Task task = new Task(((LongNode)currentTreeNode.get("id")).longValue());

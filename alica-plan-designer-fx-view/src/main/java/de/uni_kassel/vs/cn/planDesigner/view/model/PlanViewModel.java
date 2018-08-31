@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class PlanViewModel extends PlanElementViewModel {
+public class PlanViewModel extends SerializableViewModel {
 
     protected final BooleanProperty masterPlan = new SimpleBooleanProperty();
     protected final DoubleProperty utilityThreshold = new SimpleDoubleProperty();

@@ -1,7 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 

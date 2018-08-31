@@ -17,6 +17,7 @@ import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
 import de.uni_kassel.vs.cn.planDesigner.modelMixIns.*;
+import javafx.collections.ListChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +61,6 @@ public class ModelManager implements Observer {
         behaviourMap = new HashMap<>();
         planTypeMap = new HashMap<>();
         annotatedPlanMap = new HashMap<>();
-        taskRepository = new TaskRepository();
         eventHandlerList = new ArrayList<IModelEventHandler>();
         commandStack = new CommandStack();
         commandStack.addObserver(this);
@@ -183,10 +183,6 @@ public class ModelManager implements Observer {
         eventHandlerList.add(eventHandler);
     }
 
-    public void removeListener(IModelEventHandler eventHandler) {
-        eventHandlerList.remove(eventHandler);
-    }
-
     public void loadModelFromDisk() {
         loadModelFromDisk(tasksPath);
         loadModelFromDisk(plansPath);
@@ -200,14 +196,14 @@ public class ModelManager implements Observer {
             replaceIncompleteAbstractPlansInStates(plan);
             replaceIncompleteStatesAndSynchronizationsInTransitions(plan);
             if (plan.getMasterPlan()) {
-                fireEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN);
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
             } else {
-                fireEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN);
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
             }
         }
         for (PlanType planType : getPlanTypes()) {
             replaceIncompletePlansInPlanType(planType);
-            fireEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE);
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE));
         }
     }
 
@@ -268,58 +264,81 @@ public class ModelManager implements Observer {
             switch (ending) {
                 case FileSystemUtil.PLAN_ENDING:
                     Plan plan = objectMapper.readValue(modelFile, Plan.class);
+                    plan.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, taskRepository, Types.TASKREPOSITORY);
+                        event.setChangedAttribute("dirty");
+                        event.setNewValue(newValue);
+                        this.fireEvent(event);
+                    });
                     if (planElementMap.containsKey(plan.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
                     } else {
                         planElementMap.put(plan.getId(), plan);
                         planMap.put(plan.getId(), plan);
-                        for(State state : plan.getStates()) {
+                        for (State state : plan.getStates()) {
                             planElementMap.put(state.getId(), state);
                         }
-                        for(Transition transition : plan.getTransitions()) {
+                        for (Transition transition : plan.getTransitions()) {
                             planElementMap.put(transition.getId(), transition);
                         }
-                        for(EntryPoint ep : plan.getEntryPoints()) {
+                        for (EntryPoint ep : plan.getEntryPoints()) {
                             planElementMap.put(ep.getId(), ep);
                         }
-                        for(Synchronization sync: plan.getSynchronizations()) {
+                        for (Synchronization sync : plan.getSynchronizations()) {
                             planElementMap.put(sync.getId(), sync);
                         }
-                        for(Variable variable : plan.getVariables()) {
+                        for (Variable variable : plan.getVariables()) {
                             planElementMap.put(variable.getId(), variable);
                         }
-                        if(plan.getPreCondition() != null) {
+                        if (plan.getPreCondition() != null) {
                             planElementMap.put(plan.getPreCondition().getId(), plan.getPreCondition());
                         }
-                        if(plan.getRuntimeCondition() != null) {
+                        if (plan.getRuntimeCondition() != null) {
                             planElementMap.put(plan.getRuntimeCondition().getId(), plan.getRuntimeCondition());
+                            if (plan.getMasterPlan()) {
+                                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
+                            } else {
+                                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
+                            }
                         }
                     }
                     break;
                 case FileSystemUtil.BEHAVIOUR_ENDING:
                     Behaviour behaviour = objectMapper.readValue(modelFile, Behaviour.class);
+                    behaviour.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, taskRepository, Types.TASKREPOSITORY);
+                        event.setChangedAttribute("dirty");
+                        event.setNewValue(newValue);
+                        this.fireEvent(event);
+                    });
                     if (planElementMap.containsKey(behaviour.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + behaviour.getId());
                     } else {
                         planElementMap.put(behaviour.getId(), behaviour);
                         behaviourMap.put(behaviour.getId(), behaviour);
-                        for(Variable variable : behaviour.getVariables()) {
+                        for (Variable variable : behaviour.getVariables()) {
                             planElementMap.put(variable.getId(), variable);
                         }
-                        if(behaviour.getPreCondition() != null) {
+                        if (behaviour.getPreCondition() != null) {
                             planElementMap.put(behaviour.getPreCondition().getId(), behaviour.getPreCondition());
                         }
-                        if(behaviour.getRuntimeCondition() != null) {
+                        if (behaviour.getRuntimeCondition() != null) {
                             planElementMap.put(behaviour.getRuntimeCondition().getId(), behaviour.getRuntimeCondition());
                         }
-                        if(behaviour.getPostCondition() != null) {
+                        if (behaviour.getPostCondition() != null) {
                             planElementMap.put(behaviour.getPostCondition().getId(), behaviour.getPostCondition());
                         }
-                        fireEvent(ModelEventType.ELEMENT_PARSED, behaviour, Types.BEHAVIOUR);
+                        fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, behaviour, Types.BEHAVIOUR));
                     }
                     break;
                 case FileSystemUtil.PLANTYPE_ENDING:
                     PlanType planType = objectMapper.readValue(modelFile, PlanType.class);
+                    planType.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, taskRepository, Types.TASKREPOSITORY);
+                        event.setChangedAttribute("dirty");
+                        event.setNewValue(newValue);
+                        this.fireEvent(event);
+                    });
                     if (planElementMap.containsKey(planType.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + planType.getId());
                     } else {
@@ -332,6 +351,20 @@ public class ModelManager implements Observer {
                     break;
                 case FileSystemUtil.TASKREPOSITORY_ENDING:
                     TaskRepository taskRepository = objectMapper.readValue(modelFile, TaskRepository.class);
+                    taskRepository.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, taskRepository, Types.TASKREPOSITORY);
+                        event.setChangedAttribute("dirty");
+                        event.setNewValue(newValue);
+                        this.fireEvent(event);
+                    });
+                    taskRepository.getTasks().addListener(new ListChangeListener<Task>() {
+                        @Override
+                        public void onChanged(Change<? extends Task> change) {
+                            while (change.next()) {
+                                taskRepository.setDirty(true);
+                            }
+                        }
+                    });
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
@@ -345,7 +378,7 @@ public class ModelManager implements Observer {
                         }
                         planElementMap.put(taskRepository.getId(), taskRepository);
                         this.taskRepository = taskRepository;
-                        fireEvent(ModelEventType.ELEMENT_PARSED, this.taskRepository, Types.TASKREPOSITORY);
+                        fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, this.taskRepository, Types.TASKREPOSITORY));
                     }
                     break;
 
@@ -365,7 +398,7 @@ public class ModelManager implements Observer {
             e.printStackTrace();
         }
     }
-
+    
     /**
      * Replaces all incomplete Tasks attached to the plan's entrypoints by already parsed ones
      *
@@ -402,7 +435,7 @@ public class ModelManager implements Observer {
             if (refs.incompleteAbstractPlansInStates.contains(transition.getOutState().getId())) {
                 transition.setOutState((State) planElementMap.get(transition.getOutState().getId()));
             }
-            if (transition.getSynchronization() != null && refs.incompleteSynchronizationsInTransitions.contains(transition.getSynchronization().getId())){
+            if (transition.getSynchronization() != null && refs.incompleteSynchronizationsInTransitions.contains(transition.getSynchronization().getId())) {
                 transition.setSynchronization((Synchronization) planElementMap.get(transition.getSynchronization().getId()));
             }
         }
@@ -466,28 +499,6 @@ public class ModelManager implements Observer {
         return planElement;
     }
 
-    private void fireEvent(ModelEventType eventType, PlanElement element, String elementType) {
-        ModelEvent event = null;
-        switch (eventType) {
-            case ELEMENT_CREATED:
-                event = new ModelEvent(eventType, element, elementType);
-                break;
-            case ELEMENT_DELETED:
-                event = new ModelEvent(eventType, element, elementType);
-                break;
-            case ELEMENT_PARSED:
-                event = new ModelEvent(eventType, element, elementType);
-                break;
-            case ELEMENT_SERIALIZED:
-                event = new ModelEvent(eventType, element, elementType);
-                break;
-            default:
-                System.err.println("ModelManager: Event Type " + eventType + " not handled!");
-        }
-
-        fireEvent(event);
-    }
-
     public void fireEvent(ModelEvent event) {
         if (event != null) {
             for (IModelEventHandler eventHandler : eventHandlerList) {
@@ -506,7 +517,8 @@ public class ModelManager implements Observer {
      * @return
      */
     public PlanElement addPlanElement(String type, PlanElement newElement, PlanElement parentElement, boolean serializeToDisk) {
-        /* this is for ignoring file system modified events that come twice after saving a file
+        /**
+         * This is for ignoring file system modified events that come twice after saving a file
          * and once after moving or creating a file
          */
         if (elementsSavedMap.containsKey(newElement.getId())) {
@@ -563,7 +575,7 @@ public class ModelManager implements Observer {
         }
         PlanElement oldElement = planElementMap.get(newElement.getId());
         if (oldElement != null) {
-            fireEvent(ModelEventType.ELEMENT_DELETED, oldElement, type);
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, oldElement, type));
         }
         planElementMap.put(newElement.getId(), newElement);
         if (parentElement != null) {
@@ -571,7 +583,7 @@ public class ModelManager implements Observer {
             event.setParentId(parentElement.getId());
             fireEvent(event);
         } else {
-            fireEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type));
         }
         return oldElement;
     }
@@ -622,13 +634,14 @@ public class ModelManager implements Observer {
             eventHandler.handleCloseTab(planElement.getId());
         }
         if (parentElement != null) {
+            planElementMap.remove(planElement.getId());
+
             ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, type);
             event.setParentId(parentElement.getId());
             fireEvent(event);
         } else {
-            fireEvent(ModelEventType.ELEMENT_DELETED, planElement, type);
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, type));
         }
-        planElementMap.remove(planElement.getId());
     }
 
     public ArrayList<PlanElement> getUsages(long modelElementId) {
@@ -842,20 +855,21 @@ public class ModelManager implements Observer {
             File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
             if (ending.equals(FileSystemUtil.PLAN_ENDING)) {
                 objectMapper.writeValue(outfile, (Plan) planElement);
-                fireEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLAN);
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLAN));
             } else if (ending.equals(FileSystemUtil.PLANTYPE_ENDING)) {
                 objectMapper.writeValue(outfile, (PlanType) planElement);
-                fireEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLANTYPE);
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLANTYPE));
             } else if (ending.equals(FileSystemUtil.BEHAVIOUR_ENDING)) {
                 objectMapper.writeValue(outfile, (Behaviour) planElement);
-                fireEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.BEHAVIOUR);
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.BEHAVIOUR));
             } else if (ending.equals(FileSystemUtil.TASKREPOSITORY_ENDING)) {
                 outfile = Paths.get(tasksPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
                 objectMapper.writeValue(outfile, (TaskRepository) planElement);
-                fireEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.TASKREPOSITORY);
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.TASKREPOSITORY));
             } else {
                 throw new RuntimeException("Modelmanager: Trying to serialize a file with unknow ending: " + ending);
             }
+            planElement.setDirty(false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -932,4 +946,5 @@ public class ModelManager implements Observer {
     public void redo() {
         commandStack.redo();
     }
+
 }

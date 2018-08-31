@@ -14,8 +14,6 @@ public class PlanElement {
     protected  long id;
     protected  SimpleStringProperty name;
     protected  SimpleStringProperty comment;
-    @JsonIgnore
-    protected SimpleBooleanProperty dirty = new SimpleBooleanProperty();
 
     public PlanElement() {
         this.id = generateId();
@@ -67,17 +65,5 @@ public class PlanElement {
 
     public SimpleStringProperty commentProperty() {
         return comment;
-    }
-
-    public void setDirty(boolean dirty) {
-        this.dirty.set(dirty);
-    }
-
-    public boolean getDirty() {
-        return dirty.get();
-    }
-
-    public SimpleBooleanProperty dirtyProperty() {
-        return dirty;
     }
 }

@@ -1,10 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.repo;
 
-import de.uni_kassel.vs.cn.planDesigner.view.model.TaskViewModel;
-import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.RepositoryTool;
+import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import javafx.application.Platform;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;

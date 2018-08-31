@@ -1,17 +1,20 @@
 package de.uni_kassel.vs.cn.planDesigner.alicamodel;
 
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
 public class TaskRepository extends SerializablePlanElement {
 
-    protected ArrayList<Task> tasks;
+    protected ObservableList<Task> tasks;
     protected Task defaultTask;
 
     public TaskRepository() {
-        tasks = new ArrayList<>();
+        tasks = FXCollections.observableArrayList();
+
     }
 
-    public ArrayList<Task> getTasks() {
+    public ObservableList<Task> getTasks() {
         return tasks;
     }
 

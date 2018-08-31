@@ -6,8 +6,10 @@ public class ModelEvent {
     protected ModelEventType eventType;
     protected String elementType;
     protected PlanElement element;
-    protected String changedAttribute;
     protected long parentId;
+
+    protected String changedAttribute;
+    protected Object newValue;
 
     public ModelEvent(ModelEventType eventType, PlanElement element, String elementType) {
         this.eventType = eventType;
@@ -41,5 +43,13 @@ public class ModelEvent {
 
     public void setParentId(long parentId) {
         this.parentId = parentId;
+    }
+
+    public void setNewValue(Object newValue) {
+        this.newValue = newValue;
+    }
+
+    public Object getNewValue() {
+        return this.newValue;
     }
 }
