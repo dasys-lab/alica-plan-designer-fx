@@ -29,14 +29,14 @@ public class ViewModelElement {
         this.relativeDirectory.setValue(relativeDirectory);
     }
 
-    public final LongProperty idProperty() {
+    public final SimpleLongProperty idProperty() {
         return this.id;
     }
     public long getId() {
         return this.id.get();
     }
 
-    public final StringProperty nameProperty() {
+    public final SimpleStringProperty nameProperty() {
         return this.name;
     }
     public String getName() {
@@ -46,6 +46,7 @@ public class ViewModelElement {
         this.name.set(name);
     }
 
+    public final SimpleStringProperty typeProperty() { return this.type; }
     public String getType() {
         return type.get();
     }

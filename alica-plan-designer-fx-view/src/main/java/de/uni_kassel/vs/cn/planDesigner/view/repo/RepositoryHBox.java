@@ -22,6 +22,14 @@ public class RepositoryHBox extends DraggableHBox {
         setIcon(this.viewModelElement.getType());
         setText(this.viewModelElement.getName());
 
+        this.viewModelElement.nameProperty().addListener((observable, oldValue, newValue) -> {
+            setText(newValue);
+        });
+
+        this.viewModelElement.typeProperty().addListener((observable, oldValue, newValue) -> {
+            setIcon(newValue);
+        });
+
         // right click for opening context menu with option to show usage of model element
         setOnContextMenuRequested(e -> {
             RenameElementMenuItem renameFileMenuItem = new RenameElementMenuItem(this.viewModelElement, guiModificationHandler);

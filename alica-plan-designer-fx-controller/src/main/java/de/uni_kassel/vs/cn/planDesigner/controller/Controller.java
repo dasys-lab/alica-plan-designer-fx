@@ -188,10 +188,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 try {
-                    // TODO: this works only for string properties...
-//                    BeanUtils.setProperty((ViewModelElement) viewModelElement, event.getChangedAttribute(), BeanUtils.getProperty(planElement, event.getChangedAttribute()));
-                    BeanUtils.setProperty((ViewModelElement) viewModelElement, "name", "Testasdf");
-                } catch (IllegalAccessException | InvocationTargetException e) {
+                    BeanUtils.setProperty((ViewModelElement) viewModelElement, event.getChangedAttribute(), BeanUtils.getProperty(planElement, event.getChangedAttribute()));
+                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                     throw new RuntimeException(e);
                 }
                 break;
