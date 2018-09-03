@@ -34,7 +34,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
      * This constructor is for dummy containers. NEVER use in real UI
      */
     public EntryPointContainer() {
-        super(-1, null);
+        super(null, null);
 
     }
 
@@ -44,7 +44,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
      */
     public EntryPointContainer(EntryPointViewModel containedElement, /*PmlUiExtension pmlUiExtension,*/
                                StateContainer stateContainer) {
-        super(containedElement.getId(), null);
+        super(containedElement, null);
         if (stateContainer != null) {
             setStateContainer(stateContainer);
         }
@@ -102,8 +102,8 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
     }
 
     protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPointViewModel containedElement) {
-        ArrayList<Pair<Long, AbstractPlanElementContainer>> selected = new ArrayList<>();
-        selected.add(new Pair<>(containedElement.getId(), this));
+        ArrayList<Pair<ViewModelElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
+        selected.add(new Pair<>(containedElement, this));
         return event -> ((PlanEditorGroup) getParent()).getPlanEditorTab().getSelectedPlanElements().setValue(selected);
     }
 

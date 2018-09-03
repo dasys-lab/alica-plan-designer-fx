@@ -122,7 +122,7 @@ public class MainWindowController implements Initializable {
             return false;
         }
 
-        Pair<Long, AbstractPlanElementContainer> o = ((AbstractPlanTab) selectedItem).getSelectedPlanElements().getValue().get(0);
+        Pair<ViewModelElement, AbstractPlanElementContainer> o = ((AbstractPlanTab) selectedItem).getSelectedPlanElements().getValue().get(0);
         if (o != null && o.getValue() != null) {
             return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
         } else {

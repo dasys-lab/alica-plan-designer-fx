@@ -22,7 +22,7 @@ public class AbstractPlanHBox extends HBox {
     public AbstractPlanHBox(ViewModelElement p, StateContainer stateContainer) {
         super();
         this.abstractPlan = p;
-        ImageView imageView = new ImageView(new AlicaIcon(p.getClass().getSimpleName()));
+        ImageView imageView = new ImageView(new AlicaIcon(p.getType()));
         Text text = new Text(p.getName());
         this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         getChildren().addAll(imageView, text);
@@ -32,9 +32,9 @@ public class AbstractPlanHBox extends HBox {
         setLayoutY(StateContainer.STATE_RADIUS +
                 (stateContainer.getState().getPlanElements().indexOf(abstractPlan)) * 19 + 3); // 3px offset to not touch state circle with value-box
         setPickOnBounds(false);
-        ObservableList<Pair<Long, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();
-        selected.add(new Pair<>(abstractPlan.getId(), stateContainer));
-        addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorGroup) getParent().getParent())
+        ObservableList<Pair<ViewModelElement, AbstractPlanElementContainer>> selected = FXCollections.observableArrayList();
+        selected.add(new Pair<>(abstractPlan, stateContainer));
+        addEventFilter(MouseEvent.MOUSE_CLICKED, event -> ((PlanEditorGroup) stateContainer.getParent())
                 .getPlanEditorTab().getSelectedPlanElements().setValue(selected));
     }
 

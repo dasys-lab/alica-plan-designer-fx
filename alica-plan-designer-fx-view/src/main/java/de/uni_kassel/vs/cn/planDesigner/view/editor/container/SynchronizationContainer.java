@@ -31,7 +31,7 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
      * @param containedElement
      */
     public SynchronizationContainer(SynchronizationViewModel containedElement, List<TransitionContainer> transitionContainers/*, PmlUiExtension pmlUiExtension*/) {
-        super(containedElement.getId(), null);
+        super(containedElement, null);
         invalidationListeners = new ArrayList<>();
         transitionToLineMap = new HashMap<>();
         this.synchronisation = containedElement;

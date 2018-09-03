@@ -24,7 +24,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
 
     public TransitionContainer(TransitionViewModel transition/*, PmlUiExtension pmlUiExtension*/,
                                StateContainer fromState, StateContainer toState) {
-        super(transition.getId(), null);
+        super(transition, null);
         this.fromState = fromState;
         this.toState = toState;
         InvalidationListener invalidationListener = observable -> setupContainer();
@@ -61,10 +61,10 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         double triangleSpanVecY = -vecX;
         double triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
 //        if (getPmlUiExtension().getBendpoints().size() == 0) {
-//            visualRepresentation = new Line(_fromX,
-//                    _fromY,
-//                    _toX,
-//                    _toY);
+            visualRepresentation = new Line(_fromX,
+                    _fromY,
+                    _toX,
+                    _toY);
 //            Bendpoint bendpoint = createBendpointInMiddle(_toX, _toY, _fromX, _fromY);
 //            potentialDraggableNodes.add(makePotentialBendpoint(bendpoint));
 //            polygon = new Polygon(
@@ -117,11 +117,11 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
 //            potentialDraggableNodes.add(makePotentialBendpoint(bendpointInMiddle));
 //
 //            visualRepresentation = new Polyline(points);
-//            ((Shape)visualRepresentation).setFill(null);
-//            polygon = new Polygon(
-//                    _toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
-//                    _toX, _toY,
-//                    _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
+            ((Shape)visualRepresentation).setFill(null);
+            polygon = new Polygon(
+                    _toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
+                    _toX, _toY,
+                    _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
 //        }
 
         polygon.setFill(getVisualisationColor());
@@ -154,7 +154,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
 
     @Override
     public Color getVisualisationColor() {
-        return Color.RED;
+        return Color.GREEN;
     }
 
     public void setBendpointContainerVisibility(boolean isVisible) {

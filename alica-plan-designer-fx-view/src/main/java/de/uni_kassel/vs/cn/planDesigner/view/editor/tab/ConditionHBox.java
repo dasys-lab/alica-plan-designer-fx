@@ -15,10 +15,10 @@ import java.util.List;
 
 public class ConditionHBox extends HBox {
 
-    private final SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElement;
+    private final SimpleObjectProperty<List<Pair<ViewModelElement, AbstractPlanElementContainer>>> selectedPlanElement;
     private final ViewModelElement plan;
 
-    public ConditionHBox(ViewModelElement abstractPlan, SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElement) {
+    public ConditionHBox(ViewModelElement abstractPlan, SimpleObjectProperty<List<Pair<ViewModelElement, AbstractPlanElementContainer>>> selectedPlanElement) {
         this.plan = abstractPlan;
         this.selectedPlanElement = selectedPlanElement;
         setupConditionVisualisation();
@@ -37,11 +37,11 @@ public class ConditionHBox extends HBox {
 //        }
     }
 
-    public Pair<Long, AbstractPlanElementContainer> getSelectedPlanElement() {
+    public Pair<ViewModelElement, AbstractPlanElementContainer> getSelectedPlanElement() {
         return selectedPlanElement.get().get(0);
     }
 
-    public SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElementProperty() {
+    public SimpleObjectProperty<List<Pair<ViewModelElement, AbstractPlanElementContainer>>> selectedPlanElementProperty() {
         return selectedPlanElement;
     }
 }

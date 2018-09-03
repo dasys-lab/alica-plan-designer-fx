@@ -1,10 +1,15 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.model.StateViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.geometry.Insets;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -25,15 +30,15 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
      * This constructor is for dummy containers. NEVER use in real UI
      */
     public StateContainer() {
-        super(-1, null);
+        super(null, null);
     }
 
     public StateContainer(/*PmlUiExtension pmlUiExtension,*/ StateViewModel state) {
-        super(state.getId(), /*pmlUiExtension,*/null);
+        super(state, /*pmlUiExtension,*/null);
         this.state = state;
         invalidationListeners = new ArrayList<>();
         makeDraggable(this);
-        //setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
+        setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
         setupContainer();
     }
 
@@ -76,7 +81,7 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
 
     @Override
     public void redrawElement() {
-        //((PlanEditorGroup) getParent()).setupPlanVisualisation();
+//        ((PlanEditorGroup) getParent()).setupPlanVisualisation();
         setupContainer();
         invalidationListeners.forEach(listener -> listener.invalidated(this));
     }

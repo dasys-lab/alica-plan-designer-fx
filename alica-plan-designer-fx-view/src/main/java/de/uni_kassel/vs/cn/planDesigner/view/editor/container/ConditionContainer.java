@@ -17,7 +17,7 @@ public class ConditionContainer extends AbstractPlanElementContainer {
      * @param containedElement
      */
     public ConditionContainer(ViewModelElement containedElement) {
-        super(containedElement.getId(), null);
+        super(containedElement, null);
         setupContainer();
     }
 
