@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import javafx.event.EventHandler;
@@ -16,8 +17,8 @@ public class ConditionContainer extends AbstractPlanElementContainer {
     /**
      * @param containedElement
      */
-    public ConditionContainer(ViewModelElement containedElement) {
-        super(containedElement, null);
+    public ConditionContainer(ViewModelElement containedElement, PlanTab planTab) {
+        super(containedElement, null, planTab);
         setupContainer();
     }
 

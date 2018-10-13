@@ -7,6 +7,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.*;
 import de.uni_kassel.vs.cn.planDesigner.command.add.AddPlanToPlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
+import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.command.create.CreateBehaviour;
 import de.uni_kassel.vs.cn.planDesigner.command.create.CreatePlan;
 import de.uni_kassel.vs.cn.planDesigner.command.create.CreatePlanType;
@@ -17,6 +18,9 @@ import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
 import de.uni_kassel.vs.cn.planDesigner.modelMixIns.*;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtensionMap;
 import javafx.collections.ListChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,6 +57,13 @@ public class ModelManager implements Observer {
 
     private HashMap<Long, Integer> elementDeletedMap;
 
+    /**
+     * In this map all necessary information about the visualization
+     * of a {@link Plan} is saved and can be accessed by the id of the
+     * corresponding Plan
+     */
+    private HashMap<Long, PlanModelVisualisationObject> planModelVisualisationObjectHashMap;
+
     private ObjectMapper objectMapper;
 
     public ModelManager() {
@@ -66,6 +77,7 @@ public class ModelManager implements Observer {
         commandStack.addObserver(this);
         elementsSavedMap = new HashMap<>();
         elementDeletedMap = new HashMap<>();
+        planModelVisualisationObjectHashMap = new HashMap<>();
 
         setupObjectMapper();
     }
@@ -959,6 +971,48 @@ public class ModelManager implements Observer {
 
     public void redo() {
         commandStack.redo();
+    }
+
+    /**
+     * Method to handle changes concerning the UiExtensionModel.
+     *
+     * Similarly to the handleModelModificationQuery-method this Method receives a query containing the information
+     * about the changes to the model, which is in this case the UiExtensionModel, and creates an {@link AbstractCommand}
+     * to execute these changes. Because this method is only called, when an object was moved (chnaged its position) in
+     * the ui, it will always create a {@link ChangePosition}-command.
+     *
+     * @param uimmq  query containing information about a change in the UiExtensionModel
+     */
+    public void handleUiExtensionModelModificationQuery(UiExtensionModelModificationQuery uimmq) {
+        PlanElement planElement = getPlanElement(uimmq.getElementId());
+        PlanModelVisualisationObject planModelVisualisationObject = getCorrespondingPlanModelVisualisationObject(uimmq.getParentId());
+        PmlUiExtension uiExtension = planModelVisualisationObject.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(planElement);
+
+        AbstractCommand cmd = new ChangePosition(this, uiExtension, planElement, uimmq.getNewX(), uimmq.getNewY());
+        commandStack.storeAndExecute(cmd);
+    }
+
+    /**
+     * Finding a {@link PlanModelVisualisationObject} by the id of its {@link Plan}.
+     *
+     * If no such {@link PlanModelVisualisationObject} exits, a new one is created and stored.
+     *
+     * @param id  the id of the {@link Plan} a {@link PlanModelVisualisationObject} is required for
+     * @return  the {@link PlanModelVisualisationObject} corresponding to the given id
+     */
+    private PlanModelVisualisationObject getCorrespondingPlanModelVisualisationObject(long id){
+        PlanModelVisualisationObject pmvo = planModelVisualisationObjectHashMap.get(id);
+        if(pmvo == null){
+            Plan plan = planMap.get(id);
+            if(plan == null){
+                LOG.error("Cannot create PlanModelVisualisationObject, because no plan with id " + id + "exists");
+                return null;
+            }
+            PmlUiExtensionMap pmlUiExtensionMap = new PmlUiExtensionMap();
+            pmvo = new PlanModelVisualisationObject(plan, pmlUiExtensionMap);
+            planModelVisualisationObjectHashMap.put(id, pmvo);
+        }
+        return  pmvo;
     }
 
 }

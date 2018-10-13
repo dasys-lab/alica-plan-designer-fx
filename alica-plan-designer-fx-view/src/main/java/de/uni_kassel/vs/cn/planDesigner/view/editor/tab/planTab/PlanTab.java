@@ -2,11 +2,13 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiChangeAttributeEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiChangePositionEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
@@ -57,7 +59,7 @@ public class PlanTab extends AbstractPlanTab {
 
         planEditorGroup.setManaged(true);
 
-        upperPropertiesTable = new PropertiesTable();
+        upperPropertiesTable = new PropertiesTable<>();
         upperPropertiesTable.setEditable(true);
         upperPropertiesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
         upperPropertiesTable.addColumn(i18NRepo.getString("label.column.id"), "id", new LongStringConverter(), false);
@@ -73,7 +75,7 @@ public class PlanTab extends AbstractPlanTab {
             fireGuiChangeAttributeEvent(newValue, "comment", String.class.getSimpleName());
         });
 
-        lowerPropertiesTable = new PropertiesTable();
+        lowerPropertiesTable = new PropertiesTable<>();
         lowerPropertiesTable.setEditable(true);
         lowerPropertiesTable.addColumn(i18NRepo.getString("label.column.utilitythreshold"), "utilityThreshold", new DoubleStringConverter(), true);
         lowerPropertiesTable.addColumn(i18NRepo.getString("label.column.masterplan"), "masterPlan", new BooleanStringConverter(), true);
@@ -112,6 +114,24 @@ public class PlanTab extends AbstractPlanTab {
         guiChangeAttributeEvent.setAttributeName(attribute);
         guiChangeAttributeEvent.setElementId(plan.getId());
         guiModificationHandler.handle(guiChangeAttributeEvent);
+    }
+
+    /**
+     * Fire an event, notifying the {@link IGuiModificationHandler}, that an object has changed its position.
+     *
+     * @param planElementContainer  the container of the object, that changed its position
+     * @param type  the type of object, that changed its position
+     * @param newX  the new x-coordinate
+     * @param newY  the new y-coordinate
+     */
+    public void fireChangePositionEvent(AbstractPlanElementContainer planElementContainer, String type, double newX, double newY) {
+        GuiChangePositionEvent event = new GuiChangePositionEvent(GuiEventType.CHANGE_ELEMENT, type, planElementContainer.getModelElement().getName());
+        event.setElementId(planElementContainer.getModelElement().getId());
+        event.setParentId(plan.getId());
+        event.setNewX((int) newX);
+        event.setNewY((int) newY);
+
+        guiModificationHandler.handleGuiChangePositionEvent(event);
     }
 
     public ConditionHBox getConditionHBox() {
@@ -162,11 +182,11 @@ public class PlanTab extends AbstractPlanTab {
         contentProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-                    if (event.getTarget() == planContent) {
+//                    if (event.getTarget() == planContent) {
 //                        List<Pair<PlanElement, AbstractPlanElementContainer>> plan = new ArrayList<>();
 //                        plan.add(new Pair<>(getEditable(), null));
 //                        getSelectedPlanElements().set(plan);
-                    }
+//                    }
                 });
             }
         });
@@ -186,4 +206,5 @@ public class PlanTab extends AbstractPlanTab {
 //        URI relativeURI = EMFModelUtils.createRelativeURI(new File(uiExtensionMapPath));
 //        setPmlUiExtensionMap((PmlUiExtensionMap) AlicaResourceSet.getInstance().getResource(relativeURI, false).getContents().get(0));
     }
+
 }

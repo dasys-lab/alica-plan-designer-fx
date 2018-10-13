@@ -57,8 +57,8 @@ public class ViewModelFactory {
             element = createAnnotatedPlanViewModel((AnnotatedPlan) planElement);
         } else if (planElement instanceof EntryPoint) {
             element = createEntryPointViewModel((EntryPoint) planElement);
-        } else if (planElement instanceof Task) {
-            element = createTaskViewModel((Task) planElement);
+//        } else if (planElement instanceof Task) {
+//            element = createTaskViewModel((Task) planElement);
         } else if (planElement instanceof Variable) {
             element = createVariableViewModel((Variable) planElement);
         } else if (planElement instanceof Transition) {

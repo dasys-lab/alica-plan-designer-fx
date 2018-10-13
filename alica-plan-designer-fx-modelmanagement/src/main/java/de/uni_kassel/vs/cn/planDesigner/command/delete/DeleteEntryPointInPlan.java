@@ -26,7 +26,7 @@ public class DeleteEntryPointInPlan extends AbstractCommand {
     @Override
     public void doCommand() {
         parentOfElement.getPlan().getEntryPoints().remove(entryPoint);
-        parentOfElement.getPmlUiExtensionMap().getExtension().remove(pmlUiExtension);
+        parentOfElement.getPmlUiExtensionMap().getExtension().remove(entryPoint);
         if (associatedState != null) {
             associatedState.setEntryPoint(null);
         }

@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.handlerinterfaces;
 
+import de.uni_kassel.vs.cn.planDesigner.events.GuiChangePositionEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
@@ -19,4 +20,6 @@ public interface IGuiModificationHandler {
     public abstract void handleTabOpenedEvent(PlanTypeTab planTypeTab);
     public abstract void handleUndo();
     public abstract void handleRedo();
+
+    void handleGuiChangePositionEvent(GuiChangePositionEvent event);
 }

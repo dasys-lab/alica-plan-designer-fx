@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.SynchronizationViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -30,8 +31,9 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
     /**
      * @param containedElement
      */
-    public SynchronizationContainer(SynchronizationViewModel containedElement, List<TransitionContainer> transitionContainers/*, PmlUiExtension pmlUiExtension*/) {
-        super(containedElement, null);
+    public SynchronizationContainer(SynchronizationViewModel containedElement, List<TransitionContainer> transitionContainers
+            /*, PmlUiExtension pmlUiExtension*/, PlanTab planTab) {
+        super(containedElement, null, planTab);
         invalidationListeners = new ArrayList<>();
         transitionToLineMap = new HashMap<>();
         this.synchronisation = containedElement;

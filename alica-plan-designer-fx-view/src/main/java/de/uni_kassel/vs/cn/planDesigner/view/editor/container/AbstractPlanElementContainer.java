@@ -28,13 +28,16 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
     private IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler;
     protected Node visualRepresentation;
     protected Node wrapper;
+    private PlanTab planTab;
 
     /**
      * @param modelElement
+     * @param planTab
      */
-    public AbstractPlanElementContainer(ViewModelElement modelElement, IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler) {
+    public AbstractPlanElementContainer(ViewModelElement modelElement, IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler, PlanTab planTab) {
         this.modelElement = modelElement;
         this.showGeneratedSourcesEventHandler = showGeneratedSourcesEventHandler;
+        this.planTab = planTab;
         setBackground(Background.EMPTY);
         setPickOnBounds(false);
         addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(modelElement));
@@ -129,8 +132,8 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
                 node.setTranslateY(0);
                 node.setLayoutX(dragContext.initialLayoutX + mouseEvent.getSceneX() - dragContext.mouseAnchorX);
                 node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getSceneY() - dragContext.mouseAnchorY);
-
-                // TODO: fire move event, inorder to create move command in the Model Manager
+                
+                planTab.fireChangePositionEvent(this, modelElement.getType(), node.getLayoutX(), node.getLayoutY());
                 //getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
                 mouseEvent.consume();
                 redrawElement();

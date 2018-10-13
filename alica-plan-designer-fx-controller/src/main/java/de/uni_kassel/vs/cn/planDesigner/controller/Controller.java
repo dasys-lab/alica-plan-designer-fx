@@ -13,6 +13,7 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandle
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.UiExtensionModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.plugin.PluginEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
@@ -29,7 +30,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 import org.apache.commons.beanutils.BeanUtils;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
@@ -312,6 +312,25 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq = null;
         }
         this.modelManager.handleModelModificationQuery(mmq);
+    }
+
+
+    /**
+     * Called, when an object was moved in the gui.
+     *
+     * Method is separate from the handle-method, because this event is about a change to the UiExtensionModel, which is
+     * separate from the model.
+     *
+     * @param event  contains information about which object was moved and to which position it was moved
+     */
+    @Override
+    public void handleGuiChangePositionEvent(GuiChangePositionEvent event) {
+        UiExtensionModelModificationQuery uimmq =
+                new UiExtensionModelModificationQuery(event.getElementType(), event.getElementId(), event.getParentId());
+        uimmq.setNewX(event.getNewX());
+        uimmq.setNewY(event.getNewY());
+
+        this.modelManager.handleUiExtensionModelModificationQuery(uimmq);
     }
 
     /**

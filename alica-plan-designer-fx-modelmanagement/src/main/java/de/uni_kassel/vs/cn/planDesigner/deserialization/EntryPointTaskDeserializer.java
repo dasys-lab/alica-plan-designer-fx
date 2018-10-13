@@ -25,10 +25,7 @@ public class EntryPointTaskDeserializer extends StdDeserializer<Task> {
     }
 
     @Override
-    public Task deserialize(
-            JsonParser jsonparser,
-            DeserializationContext context)
-            throws IOException, JsonProcessingException {
+    public Task deserialize(JsonParser jsonparser, DeserializationContext context) throws IOException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
         String taskString = ((ValueNode) tree).asText();
         int idIndex = taskString.indexOf('#');

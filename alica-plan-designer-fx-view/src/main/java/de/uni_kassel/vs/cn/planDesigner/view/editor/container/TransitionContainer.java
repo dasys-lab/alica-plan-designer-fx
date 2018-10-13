@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.TransitionViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -8,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
     private List<InvalidationListener> invalidationListeners = new ArrayList<>();
 
     public TransitionContainer(TransitionViewModel transition/*, PmlUiExtension pmlUiExtension*/,
-                               StateContainer fromState, StateContainer toState) {
-        super(transition, null);
+                               StateContainer fromState, StateContainer toState, PlanTab planTab) {
+        super(transition, null, planTab);
         this.fromState = fromState;
         this.toState = toState;
         InvalidationListener invalidationListener = observable -> setupContainer();

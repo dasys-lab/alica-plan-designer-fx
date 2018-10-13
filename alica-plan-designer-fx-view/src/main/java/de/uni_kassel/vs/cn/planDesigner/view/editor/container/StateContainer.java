@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.StateViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -30,11 +31,11 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
      * This constructor is for dummy containers. NEVER use in real UI
      */
     public StateContainer() {
-        super(null, null);
+        super(null, null, null);
     }
 
-    public StateContainer(/*PmlUiExtension pmlUiExtension,*/ StateViewModel state) {
-        super(state, /*pmlUiExtension,*/null);
+    public StateContainer(/*PmlUiExtension pmlUiExtension,*/ StateViewModel state, PlanTab planTab) {
+        super(state, /*pmlUiExtension,*/null, planTab);
         this.state = state;
         invalidationListeners = new ArrayList<>();
         makeDraggable(this);

@@ -15,7 +15,7 @@ import java.util.Map;
  * The visualisation of certain elements is realised through {@link AbstractPlanElementContainer}.
  */
 public class PlanEditorGroup extends Group {
-    private AbstractPlanTab planEditorTab;
+    private PlanTab planEditorTab;
     private PlanModelVisualisationObject planModelVisualisationObject;
     private PlanViewModel plan;
     private Map<Long, StateContainer> stateContainers;
@@ -23,7 +23,7 @@ public class PlanEditorGroup extends Group {
     private Map<Long, EntryPointContainer> entryPointContainers;
     private Map<Long, SynchronizationContainer> synchronisationContainers;
 
-    public PlanEditorGroup(PlanModelVisualisationObject planModelVisualisationObject, AbstractPlanTab planEditorTab) {
+    public PlanEditorGroup(PlanModelVisualisationObject planModelVisualisationObject, PlanTab planEditorTab) {
         super();
         this.planModelVisualisationObject = planModelVisualisationObject;
         this.planEditorTab = planEditorTab;
@@ -75,7 +75,7 @@ public class PlanEditorGroup extends Group {
     private Map<Long, EntryPointContainer> createEntryPointContainers() {
         Map<Long, EntryPointContainer> entryPoints = new HashMap<>();
         for (EntryPointViewModel ep : plan.getEntryPoints()) {
-            entryPoints.put(ep.getId(), new EntryPointContainer(ep, stateContainers.get(ep.getState().getId())));
+            entryPoints.put(ep.getId(), new EntryPointContainer(ep, stateContainers.get(ep.getState().getId()), planEditorTab));
         }
         return entryPoints;
     }
@@ -92,7 +92,7 @@ public class PlanEditorGroup extends Group {
         Map<Long, TransitionContainer> transitions = new HashMap<>();
         for (TransitionViewModel trans : plan.getTransitions()) {
             transitions.put(trans.getId(), new TransitionContainer(trans, stateContainers.get(trans.getOutState().getId()),
-                    stateContainers.get(trans.getInState().getId())));
+                    stateContainers.get(trans.getInState().getId()), planEditorTab));
         }
         return transitions;
     }
@@ -100,7 +100,7 @@ public class PlanEditorGroup extends Group {
     private Map<Long, StateContainer> createStateContainers() {
         Map<Long, StateContainer> states = new HashMap<>();
         for (StateViewModel state : plan.getStates()) {
-            states.put(state.getId(), new StateContainer(state));
+            states.put(state.getId(), new StateContainer(state, planEditorTab));
         }
         return states;
     }
@@ -112,7 +112,7 @@ public class PlanEditorGroup extends Group {
             for(TransitionViewModel model : synchronisation.getTransitions()) {
                 synchedTransitions.add(transitionContainers.get(model.getId()));
             }
-            synchros.put(synchronisation.getId(), new SynchronizationContainer(synchronisation, synchedTransitions));
+            synchros.put(synchronisation.getId(), new SynchronizationContainer(synchronisation, synchedTransitions, planEditorTab));
         }
         return synchros;
     }

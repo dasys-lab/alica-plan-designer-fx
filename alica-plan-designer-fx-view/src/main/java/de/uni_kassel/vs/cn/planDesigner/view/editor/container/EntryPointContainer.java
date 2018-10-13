@@ -1,6 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.model.EntryPointViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
@@ -34,7 +36,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
      * This constructor is for dummy containers. NEVER use in real UI
      */
     public EntryPointContainer() {
-        super(null, null);
+        super(null, null, null);
 
     }
 
@@ -43,8 +45,8 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
      * @param stateContainer
      */
     public EntryPointContainer(EntryPointViewModel containedElement, /*PmlUiExtension pmlUiExtension,*/
-                               StateContainer stateContainer) {
-        super(containedElement, null);
+                               StateContainer stateContainer, PlanTab planTab) {
+        super(containedElement, null, planTab);
         if (stateContainer != null) {
             setStateContainer(stateContainer);
         }
