@@ -4,6 +4,9 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IConfigurationEventHan
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -299,10 +302,13 @@ public class ConfigurationWindowController implements Initializable {
         plansFolderFileButton.setOnAction(e -> makeDirectoryChooserField(plansFolderTextField));
         rolesFolderFileButton.setOnAction(e -> makeDirectoryChooserField(rolesFolderTextField));
         tasksFolderFileButton.setOnAction(e -> makeDirectoryChooserField(tasksFolderTextField));
-        pluginsFolderFileButton.setOnAction(e -> makeDirectoryChooserField(pluginsFolderTextField));
         genSourceFolderFileButton.setOnAction(e -> makeDirectoryChooserField(genSourceFolderTextField));
         sourceCodeEditorFileButton.setOnAction(e -> makeFileChooserField(sourceCodeEditorTextField));
         clangFormatFileButton.setOnAction(e -> makeFileChooserField(clangFormatTextField));
+        pluginsFolderFileButton.setOnAction(e -> {
+            makeDirectoryChooserField(pluginsFolderTextField);
+            updateAvailablePlugins();
+        });
     }
 
     private void makeDirectoryChooserField(TextField textField) {

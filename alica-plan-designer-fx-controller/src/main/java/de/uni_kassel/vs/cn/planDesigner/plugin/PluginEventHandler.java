@@ -17,6 +17,7 @@ public class PluginEventHandler implements IPluginEventHandler {
 
     @Override
     public void updateAvailablePlugins() {
+        pluginManager.updateAvailablePlugins(configWindowController.getPluginsFolder());
         configWindowController.setAvailablePlugins(pluginManager.getAvailablePluginNames());
     }
 
