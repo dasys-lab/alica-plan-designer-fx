@@ -22,6 +22,7 @@ hs_err_pid*
 
 /out/
 /log/
+log/
 
 #Files created on a debug run should not be added to the repo
 RemoteSystemsTempFiles/
@@ -36,3 +37,5 @@ alica-plan-designer-fx-meta-model/bin/
 *.orig
 
 .DS_STORE
+
+
