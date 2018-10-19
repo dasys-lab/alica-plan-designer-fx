@@ -34,3 +34,5 @@ de.uni-kassel.vs.cn.planDesigner.alica/
 alica-plan-designer-fx-meta-model/bin/ 
 *._trace
 *.orig
+
+.DS_STORE
