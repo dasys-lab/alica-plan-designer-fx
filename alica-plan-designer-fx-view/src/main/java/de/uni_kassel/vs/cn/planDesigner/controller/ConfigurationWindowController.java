@@ -3,10 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.controller;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -199,6 +196,23 @@ public class ConfigurationWindowController implements Initializable {
 
     public void setClangFormat(String clangFormatPath) {
         clangFormatTextField.setText(clangFormatPath);
+    }
+
+    public void disableConfigInput(boolean disable) {
+        plansFolderTextField.setDisable(disable);
+        rolesFolderTextField.setDisable(disable);
+        tasksFolderTextField.setDisable(disable);
+        plansFolderTextField.setDisable(disable);
+        genSourceFolderTextField.setDisable(disable);
+        pluginsFolderTextField.setDisable(disable);
+        defaultPluginComboBox.setDisable(disable);
+
+        plansFolderFileButton.setDisable(disable);
+        rolesFolderFileButton.setDisable(disable);
+        tasksFolderFileButton.setDisable(disable);
+        plansFolderFileButton.setDisable(disable);
+        genSourceFolderFileButton.setDisable(disable);
+        pluginsFolderFileButton.setDisable(disable);
     }
 
     public void setSourceCodeEditor(String sourceCodeEditorPath) {

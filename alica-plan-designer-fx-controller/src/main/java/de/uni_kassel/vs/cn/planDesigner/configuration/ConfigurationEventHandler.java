@@ -105,14 +105,18 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     public void showSelectedConfiguration() {
         String selectedConfName = configWindowController.getSelectedConfName();
         if (selectedConfName == null || selectedConfName.isEmpty()) {
+            configWindowController.disableConfigInput(true);
             return;
         }
 
         configManager.setActiveConfiguration(selectedConfName);
         Configuration conf = configManager.getConfiguration(selectedConfName);
         if (conf == null) {
+            configWindowController.disableConfigInput(true);
             return;
         }
+
+        configWindowController.disableConfigInput(false);
 
         configWindowController.setPlansFolder(conf.getPlansPath());
         configWindowController.setRolesFolder(conf.getRolesPath());
