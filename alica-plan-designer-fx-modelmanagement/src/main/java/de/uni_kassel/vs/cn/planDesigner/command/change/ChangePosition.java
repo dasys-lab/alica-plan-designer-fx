@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.command.change;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.events.UiExtensionModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
@@ -31,11 +32,29 @@ public class ChangePosition extends AbstractCommand {
     public void doCommand() {
         uiElement.setXPos(newX);
         uiElement.setYPos(newY);
+
+        UiExtensionModelEvent event = createUiExtensiomModelEvent(newX, newY);
+        fireUiExtensionModelEvent(event);
     }
 
     @Override
     public void undoCommand() {
         uiElement.setXPos(oldX);
         uiElement.setYPos(oldY);
+
+        UiExtensionModelEvent event = createUiExtensiomModelEvent(oldX, oldY);
+        fireUiExtensionModelEvent(event);
+    }
+
+    private void fireUiExtensionModelEvent(UiExtensionModelEvent event){
+        modelManager.fireUiExtensionModelEvent(event);
+    }
+
+    private UiExtensionModelEvent createUiExtensiomModelEvent(int x, int y){
+        UiExtensionModelEvent event = new UiExtensionModelEvent(planElement);
+        event.setNewX(x);
+        event.setNewY(y);
+
+        return event;
     }
 }

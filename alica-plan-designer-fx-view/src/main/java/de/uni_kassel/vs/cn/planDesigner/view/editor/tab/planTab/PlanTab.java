@@ -9,6 +9,7 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandle
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.container.DraggableEditorElement;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
@@ -124,7 +125,7 @@ public class PlanTab extends AbstractPlanTab {
      * @param newX  the new x-coordinate
      * @param newY  the new y-coordinate
      */
-    public void fireChangePositionEvent(AbstractPlanElementContainer planElementContainer, String type, double newX, double newY) {
+    public void fireChangePositionEvent(DraggableEditorElement planElementContainer, String type, double newX, double newY) {
         GuiChangePositionEvent event = new GuiChangePositionEvent(GuiEventType.CHANGE_ELEMENT, type, planElementContainer.getModelElement().getName());
         event.setElementId(planElementContainer.getModelElement().getId());
         event.setParentId(plan.getId());

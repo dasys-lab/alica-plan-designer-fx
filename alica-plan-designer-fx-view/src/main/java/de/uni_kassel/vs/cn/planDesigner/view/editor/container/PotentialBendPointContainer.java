@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import javafx.event.EventHandler;
@@ -10,9 +11,9 @@ public class PotentialBendPointContainer extends BendpointContainer {
 
     private TransitionContainer transitionContainer;
 
-    public PotentialBendPointContainer(ViewModelElement containedElement,/* PmlUiExtension pmlUiExtension,*/ PlanViewModel parent,
+    public PotentialBendPointContainer(ViewModelElement containedElement, PlanViewModel parent, PlanTab planTab,
                                        TransitionContainer transitionContainer) {
-        super(containedElement, parent);
+        super(containedElement, parent, planTab);
         this.transitionContainer = transitionContainer;
     }
 

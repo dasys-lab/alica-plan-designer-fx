@@ -148,6 +148,21 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     /**
+     * Handles events fired by the {@link ModelManager}, when the UiExtensionModel has changed.
+     *
+     * @param event  contains all information about the changes in the UiExtensionModel
+     */
+    @Override
+    public void handleUiExtensionModelEvent(UiExtensionModelEvent event) {
+        PlanElement modelElement = event.getElement();
+        ViewModelElement viewModelElement = viewModelFactory.getViewModelElement(modelElement);
+        PlanElementViewModel planElementViewModel = (PlanElementViewModel) viewModelElement;
+
+        planElementViewModel.setXPosition(event.getNewX());
+        planElementViewModel.setYPosition(event.getNewY());
+    }
+
+    /**
      * Handles the model event for the repository view.
      * @param eventType
      * @param viewModelElement

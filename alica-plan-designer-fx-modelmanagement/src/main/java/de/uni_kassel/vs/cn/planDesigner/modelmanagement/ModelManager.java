@@ -13,10 +13,7 @@ import de.uni_kassel.vs.cn.planDesigner.command.create.CreatePlan;
 import de.uni_kassel.vs.cn.planDesigner.command.create.CreatePlanType;
 import de.uni_kassel.vs.cn.planDesigner.command.create.CreateTask;
 import de.uni_kassel.vs.cn.planDesigner.command.delete.*;
-import de.uni_kassel.vs.cn.planDesigner.events.IModelEventHandler;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
-import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
+import de.uni_kassel.vs.cn.planDesigner.events.*;
 import de.uni_kassel.vs.cn.planDesigner.modelMixIns.*;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
@@ -527,6 +524,19 @@ public class ModelManager implements Observer {
         }
     }
 
+
+    /**
+     * Fire an {@link UiExtensionModelEvent} to the {@link IModelEventHandler}.
+     *
+     * @param event  the {@link UiExtensionModelEvent} to fire
+     */
+    public void fireUiExtensionModelEvent(UiExtensionModelEvent event){
+        if (event != null) {
+            for (IModelEventHandler eventHandler : eventHandlerList) {
+                eventHandler.handleUiExtensionModelEvent(event);
+            }
+        }
+    }
     /**
      * This methods should only be called through commands.
      *

@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import javafx.scene.Node;
 
 /**
@@ -12,6 +13,8 @@ public interface DraggableEditorElement {
     void setDragged(boolean dragged);
     boolean wasDragged();
     void makeDraggable(Node node);
+
+    ViewModelElement getModelElement();
 
     final class DragContext {
         public double mouseAnchorX;

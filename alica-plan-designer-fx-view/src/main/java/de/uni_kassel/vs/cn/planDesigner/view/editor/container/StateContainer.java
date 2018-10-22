@@ -39,6 +39,7 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         this.state = state;
         invalidationListeners = new ArrayList<>();
         makeDraggable(this);
+        createPositionListeners(this, state);
         setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
         setupContainer();
     }

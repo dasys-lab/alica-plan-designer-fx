@@ -6,7 +6,10 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IShowGeneratedSourcesE
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanElementViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -78,6 +81,7 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
         return visualRepresentation;
     }
 
+    @Override
     public ViewModelElement getModelElement() {
         return modelElement;
     }
@@ -138,6 +142,18 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
                 mouseEvent.consume();
                 redrawElement();
             }
+        });
+    }
+
+    public void createPositionListeners(Node node, PlanElementViewModel planElementViewModel){
+        planElementViewModel.xPositionProperty().addListener((observable, oldValue, newValue) -> {
+           node.setLayoutX(newValue.doubleValue());
+           redrawElement();
+        });
+
+        planElementViewModel.yPositionProperty().addListener((observable, oldValue, newValue) -> {
+            node.setLayoutY(newValue.doubleValue());
+            redrawElement();
         });
     }
 

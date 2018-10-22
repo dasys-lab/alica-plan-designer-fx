@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.TransitionViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import javafx.scene.Node;
@@ -14,16 +15,15 @@ import javafx.scene.shape.Rectangle;
  */
 public class BendpointContainer extends Rectangle implements DraggableEditorElement {
     protected ViewModelElement containedElement;
-//    protected PmlUiExtension pmlUiExtension;
-//    protected CommandStack commandStack;
     protected boolean dragged;
     protected ViewModelElement parent;
+    private PlanTab planTab;
 
-    public BendpointContainer(ViewModelElement containedElement/*, PmlUiExtension pmlUiExtension*/, ViewModelElement parent) {
+    public BendpointContainer(ViewModelElement containedElement, ViewModelElement parent, PlanTab planTab) {
         super(0, 0, 10, 10);
         this.containedElement = containedElement;
-//        this.pmlUiExtension = pmlUiExtension;
         this.parent = parent;
+        this.planTab = planTab;
         init();
     }
 
@@ -86,21 +86,21 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
                 System.out.println("AFTER DRAG X: " + (mouseEvent.getX() - dragContext.mouseAnchorX) + " Y:" +
                         (mouseEvent.getY() - dragContext.mouseAnchorY));
                 System.out.println("LAYOUT X: " + node.getLayoutX() + " Y:" + node.getLayoutY());
-//                getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
+                //TODO: Send event to Controller
                 mouseEvent.consume();
                 redrawElement();
             }
         });
     }
 
-    public ViewModelElement getContainedElement() {
+    @Override
+    public ViewModelElement getModelElement() {
         return containedElement;
     }
 
-//    public PmlUiExtension getPmlUiExtension() {
-//        return pmlUiExtension;
-//    }
-
+    public ViewModelElement getContainedElement() {
+        return containedElement;
+    }
 
     @Override
     public void redrawElement() {
