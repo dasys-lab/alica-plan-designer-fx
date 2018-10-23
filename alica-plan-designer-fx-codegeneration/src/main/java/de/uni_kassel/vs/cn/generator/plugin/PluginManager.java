@@ -13,9 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -40,7 +38,7 @@ public class PluginManager {
     }
 
     private static Logger LOG = LogManager.getLogger(PluginManager.class);
-    private List<IPlugin<?>> availablePlugins;
+    private Map<String,IPlugin<?>> availablePlugins;
     private IPlugin<?> defaultPlugin;
 
     /**
@@ -49,7 +47,7 @@ public class PluginManager {
      * The plugin directory is not monitored for changes. That means there is no hot plug functionality here.
      */
     private PluginManager() {
-        availablePlugins = new ArrayList<>();
+        availablePlugins = new HashMap<>();
     }
 
     /**
@@ -103,7 +101,7 @@ public class PluginManager {
                     // Only add the class, if it an instance of IPlugin.
                     if (o instanceof IPlugin) {
                         ((IPlugin) o).setPluginFile(currentFile);
-                        availablePlugins.add((IPlugin<?>) o);
+                        availablePlugins.put(className, (IPlugin<?>) o);
                     }
                 } catch (NoSuchMethodException |
                         MalformedURLException |
@@ -116,7 +114,7 @@ public class PluginManager {
             }
         }
 
-        if (!availablePlugins.contains(defaultPlugin)) {
+        if (!availablePlugins.containsValue(defaultPlugin)) {
             setDefaultPlugin(null);
         }
     }
@@ -138,7 +136,7 @@ public class PluginManager {
 
     public ObservableList<String> getAvailablePluginNames() {
         ObservableList<String> pluginNamesList = FXCollections.observableArrayList();
-        for (IPlugin plugin : availablePlugins) {
+        for (IPlugin plugin : availablePlugins.values()) {
             pluginNamesList.add(plugin.getName());
         }
         return pluginNamesList;
@@ -151,7 +149,7 @@ public class PluginManager {
      * @return plugin with matching name otherwise null
      */
     public IPlugin getPlugin(String name) {
-        for (IPlugin plugin : availablePlugins) {
+        for (IPlugin plugin : availablePlugins.values()) {
             if (plugin.getName().equals(name)) {
                 return plugin;
             }
@@ -166,7 +164,7 @@ public class PluginManager {
      * @param defaultPluginName the plugin that should be active now
      */
     public void setDefaultPlugin(String defaultPluginName) {
-        for (IPlugin<?> plugin : availablePlugins) {
+        for (IPlugin<?> plugin : availablePlugins.values()) {
             if (plugin.getName().equals(defaultPluginName)) {
                 this.defaultPlugin = plugin;
                 return;
