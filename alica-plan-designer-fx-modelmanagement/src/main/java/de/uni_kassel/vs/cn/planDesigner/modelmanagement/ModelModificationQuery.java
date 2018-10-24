@@ -26,8 +26,9 @@ public class ModelModificationQuery {
     public ModelModificationQuery(ModelQueryType queryType, String absolutePath) {
         this(queryType);
         int lastSeparatorIdx = absolutePath.lastIndexOf(File.separator);
-        if (lastSeparatorIdx == -1)
+        if (lastSeparatorIdx == -1) {
             lastSeparatorIdx = 0;
+        }
         this.absoluteDirectory = absolutePath.substring(0, lastSeparatorIdx);
         int lastDotIdx = absolutePath.lastIndexOf('.');
         this.name = absolutePath.substring(lastSeparatorIdx + 1, lastDotIdx);
@@ -44,6 +45,9 @@ public class ModelModificationQuery {
                 break;
             case FileSystemUtil.TASKREPOSITORY_ENDING:
                 elementType = Types.TASKREPOSITORY;
+                break;
+            case FileSystemUtil.PLAN_EXTENSION_ENDING:
+                elementType = Types.PLAN; //TODO: Handle plan-extension-ending - Files
                 break;
             default:
                 System.err.println("ModelModificationQuery: Unknown ending of file " + absolutePath);

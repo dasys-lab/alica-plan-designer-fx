@@ -162,6 +162,7 @@ public class PlanTab extends AbstractPlanTab {
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLAN, presentedViewModelElement.getName());
             event.setElementId(presentedViewModelElement.getId());
             guiModificationHandler.handle(event);
+            setDirty(false);
         }
     }
 

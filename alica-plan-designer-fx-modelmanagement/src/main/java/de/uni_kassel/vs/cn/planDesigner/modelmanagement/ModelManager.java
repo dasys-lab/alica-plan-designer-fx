@@ -55,7 +55,7 @@ public class ModelManager implements Observer {
     private HashMap<Long, Integer> elementDeletedMap;
 
     /**
-     * In this map all necessary information about the visualization
+     * In this map all necessary information about the visualisation
      * of a {@link Plan} is saved and can be accessed by the id of the
      * corresponding Plan
      */
@@ -94,6 +94,8 @@ public class ModelManager implements Observer {
         objectMapper.addMixIn(Task.class, TaskMixIn.class);
         objectMapper.addMixIn(TaskRepository.class, TaskRepositoryMixIn.class);
         objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
+        objectMapper.addMixIn(PlanModelVisualisationObject.class, PlanModelVisualizationObjectMixIn.class);
+        objectMapper.addMixIn(PmlUiExtensionMap.class, PmlUiExtensionMapMixIn.class);
     }
 
     public void setPlansPath(String plansPath) {
@@ -213,6 +215,9 @@ public class ModelManager implements Observer {
         for (PlanType planType : getPlanTypes()) {
             replaceIncompletePlansInPlanType(planType);
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE));
+        }
+        for(PlanModelVisualisationObject planModelVisualisationObject : planModelVisualisationObjectHashMap.values()) {
+            replaceIncompletePlanElementsInPlanModelVisualisationObject(planModelVisualisationObject);
         }
     }
 
@@ -405,6 +410,11 @@ public class ModelManager implements Observer {
                 case FileSystemUtil.ROLES_DEFINITION_ENDING:
                     LOG.error("Parsing roles not implemented, yet!");
                     break;
+                case FileSystemUtil.PLAN_EXTENSION_ENDING:
+                    PlanModelVisualisationObject planModelVisualisationObject = objectMapper.readValue(modelFile, PlanModelVisualisationObject.class);
+                    long id = planModelVisualisationObject.getPlan().getId();
+                    planModelVisualisationObjectHashMap.put(id, planModelVisualisationObject);
+                    break;
                 default:
                     LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
             }
@@ -469,6 +479,42 @@ public class ModelManager implements Observer {
                 annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
             }
         }
+    }
+
+    /**
+     * Replace all incomplete PlanElements i given {@link PlanModelVisualisationObject} with already parsed ones.
+     *
+     * These contain the {@link Plan} and the {@link PlanElement}s, that are used as keys in the {@link PmlUiExtensionMap}
+     *
+     * @param planModelVisualisationObject the {@link PlanModelVisualisationObject} with incomplete references
+     */
+    private void replaceIncompletePlanElementsInPlanModelVisualisationObject(PlanModelVisualisationObject planModelVisualisationObject){
+        //Set the correct Plan
+        Plan completePlan = planMap.get(planModelVisualisationObject.getPlan().getId());
+        if(completePlan != null){
+            planModelVisualisationObject.setPlan(completePlan);
+        }
+
+        //Set the correct PlanElements the PmlUiExtensionMap
+        HashMap<PlanElement, PmlUiExtension> oldMap = planModelVisualisationObject.getPmlUiExtensionMap().getExtension();
+        HashMap<PlanElement, PmlUiExtension> newMap = new HashMap<>();
+
+        for(PlanElement incomplete : oldMap.keySet()){
+            long id = incomplete.getId();
+            PmlUiExtension value = oldMap.get(incomplete);
+            PlanElement complete = getPlanElement(id);
+
+            if(complete != null) {
+                newMap.put(complete, value);
+
+                UiExtensionModelEvent event = new UiExtensionModelEvent(complete);
+                event.setNewX(value.getXPos());
+                event.setNewY(value.getYPos());
+                fireUiExtensionModelEvent(event);
+            }
+        }
+
+        planModelVisualisationObject.getPmlUiExtensionMap().setExtensionHashMap(newMap);
     }
 
     private boolean correctTopLevelFolder(String path) {
@@ -892,6 +938,15 @@ public class ModelManager implements Observer {
             if (ending.equals(FileSystemUtil.PLAN_ENDING)) {
                 objectMapper.writeValue(outfile, (Plan) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLAN));
+
+                //Save the corresponding PlanModelVisualisationObject
+                PlanModelVisualisationObject planModelVisualisationObject = planModelVisualisationObjectHashMap.get(planElement.getId());
+                if(planModelVisualisationObject != null){
+                    File visualisationFile = Paths.get(plansPath, planElement.getRelativeDirectory()
+                            , planElement.getName() + "." + FileSystemUtil.PLAN_EXTENSION_ENDING).toFile();
+                    objectMapper.writeValue(visualisationFile, planModelVisualisationObject);
+                }
+
             } else if (ending.equals(FileSystemUtil.PLANTYPE_ENDING)) {
                 objectMapper.writeValue(outfile, (PlanType) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLANTYPE));

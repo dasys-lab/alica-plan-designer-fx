@@ -8,8 +8,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanElementViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -145,14 +143,32 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
         });
     }
 
+    /**
+     * Making the {@link AbstractPlanElementContainer} update its position, whenever the {@link PlanElementViewModel}
+     * changes its coordinates.
+     *
+     * Method also sets the current position according to the {@link PlanElementViewModel} on call.
+     *
+     * @param node  the Node to change the position of
+     * @param planElementViewModel  the element, that contains the coordinates to listen to
+     */
     public void createPositionListeners(Node node, PlanElementViewModel planElementViewModel){
+        //Set to initial Position
+        node.setLayoutX(planElementViewModel.getXPosition());
+        node.setLayoutY(planElementViewModel.getYPosition());
+
+        //Create Listeners
         planElementViewModel.xPositionProperty().addListener((observable, oldValue, newValue) -> {
            node.setLayoutX(newValue.doubleValue());
+           planTab.setDirty(true);
+
            redrawElement();
         });
 
         planElementViewModel.yPositionProperty().addListener((observable, oldValue, newValue) -> {
             node.setLayoutY(newValue.doubleValue());
+            planTab.setDirty(true);
+
             redrawElement();
         });
     }

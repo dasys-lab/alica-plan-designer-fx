@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 public class FileSystemUtil {
 
     public static final String PLAN_ENDING = "pml";
+    public static final String PLAN_EXTENSION_ENDING = "pmlex";
     public static final String TASKREPOSITORY_ENDING = "tsk";
     public static final String BEHAVIOUR_ENDING = "beh";
     public static final String PLANTYPE_ENDING = "pty";

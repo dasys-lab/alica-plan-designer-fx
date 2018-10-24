@@ -7,11 +7,16 @@ import java.util.HashMap;
 public class PmlUiExtensionMap {
     protected HashMap<PlanElement, PmlUiExtension> extensionHashMap = null;
 
+
     public HashMap<PlanElement, PmlUiExtension> getExtension() {
         if(extensionHashMap == null) {
             extensionHashMap = new HashMap<PlanElement, PmlUiExtension>();
         }
         return extensionHashMap;
+    }
+
+    public void setExtensionHashMap( HashMap<PlanElement, PmlUiExtension> newExtension){
+        this.extensionHashMap = newExtension;
     }
 
     /**
