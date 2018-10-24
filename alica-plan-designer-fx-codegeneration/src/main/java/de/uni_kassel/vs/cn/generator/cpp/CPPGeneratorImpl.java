@@ -48,7 +48,7 @@ public class CPPGeneratorImpl implements IGenerator {
     }
 
     @Override
-    public void createBehaviourCreator(List<Behaviour> behaviours) {
+    public void createBehaviourCreator(List<de.uni_kassel.vs.cn.planDesigner.alicamodel.Behaviour> behaviours) {
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "BehaviourCreator.h").toString();
         String fileContentHeader = xtendTemplates.behaviourCreatorHeader();
         writeSourceFile(headerPath, fileContentHeader);
