@@ -69,7 +69,7 @@ public class ModelManager implements Observer {
         behaviourMap = new HashMap<>();
         planTypeMap = new HashMap<>();
         annotatedPlanMap = new HashMap<>();
-        eventHandlerList = new ArrayList<IModelEventHandler>();
+        eventHandlerList = new ArrayList<>();
         commandStack = new CommandStack();
         commandStack.addObserver(this);
         elementsSavedMap = new HashMap<>();
@@ -188,6 +188,10 @@ public class ModelManager implements Observer {
         // remove all null values inserted before
         conditions.removeIf(Objects::isNull);
         return conditions;
+    }
+
+    public HashMap<Long, PlanModelVisualisationObject> getPlanModelVisualisationObjectHashMap(){
+        return planModelVisualisationObjectHashMap;
     }
 
     public void addListener(IModelEventHandler eventHandler) {
@@ -482,13 +486,13 @@ public class ModelManager implements Observer {
     }
 
     /**
-     * Replace all incomplete PlanElements i given {@link PlanModelVisualisationObject} with already parsed ones.
+     * Replace all incomplete {@link PlanElement}s in given {@link PlanModelVisualisationObject} with already parsed ones.
      *
      * These contain the {@link Plan} and the {@link PlanElement}s, that are used as keys in the {@link PmlUiExtensionMap}
      *
      * @param planModelVisualisationObject the {@link PlanModelVisualisationObject} with incomplete references
      */
-    private void replaceIncompletePlanElementsInPlanModelVisualisationObject(PlanModelVisualisationObject planModelVisualisationObject){
+    public void replaceIncompletePlanElementsInPlanModelVisualisationObject(PlanModelVisualisationObject planModelVisualisationObject){
         //Set the correct Plan
         Plan completePlan = planMap.get(planModelVisualisationObject.getPlan().getId());
         if(completePlan != null){
@@ -583,6 +587,26 @@ public class ModelManager implements Observer {
             }
         }
     }
+
+    /**
+     * Update every element that is part of the given {@link PlanModelVisualisationObject}.
+     *
+     * This method iterates over all {@link PlanElement}s in the given {@link PlanModelVisualisationObject} and calls
+     * the fireUiExtensionModelEvent method for every one of them with the coordinates found in their {@link PmlUiExtension}.
+     * This is necessary to update the view model when the {@link PlanModelVisualisationObject} has been reloaded.
+     *
+     * @param planModelVisualisationObject  the {@link PlanModelVisualisationObject} to update
+     */
+    public void updatePlanModelVisualisationObject(PlanModelVisualisationObject planModelVisualisationObject){
+        for(PlanElement planElement : planModelVisualisationObject.getPmlUiExtensionMap().getExtension().keySet()){
+            PmlUiExtension uiExtension = planModelVisualisationObject.getPmlUiExtensionMap().getExtension().get(planElement);
+            UiExtensionModelEvent event = new UiExtensionModelEvent(planElement);
+            event.setNewX(uiExtension.getXPos());
+            event.setNewY(uiExtension.getYPos());
+            fireUiExtensionModelEvent(event);
+        }
+    }
+
     /**
      * This methods should only be called through commands.
      *
@@ -854,7 +878,7 @@ public class ModelManager implements Observer {
                         cmd = handlePlanModelModificationQuery(mmq);
                         break;
                     default:
-                        System.err.println("ModelManager: Unkown model modification query gets ignored!");
+                        System.err.println("ModelManager: Unknown model modification query gets ignored!");
                         return;
                 }
                 break;
@@ -864,7 +888,7 @@ public class ModelManager implements Observer {
                         cmd = handlePlanModelModificationQuery(mmq);
                         break;
                     default:
-                        System.err.println("ModelManager: Unkown model modification query gets ignored!");
+                        System.err.println("ModelManager: Unknown model modification query gets ignored!");
                         return;
                 }
                 break;
@@ -875,7 +899,7 @@ public class ModelManager implements Observer {
                         cmd = new RemoveAllPlansFromPlanType(this, planType);
                         break;
                     default:
-                        System.err.println("ModelManager: Unkown model modification query gets ignored!");
+                        System.err.println("ModelManager: Unknown model modification query gets ignored!");
                         return;
                 }
                 break;
@@ -887,8 +911,15 @@ public class ModelManager implements Observer {
                         mmq.name = planType.getName();
                         cmd = new ParseAbstractPlan(this, mmq);
                         break;
+                    case Types.PLAN:
+                    case Types.MASTERPLAN:
+                        Plan plan = planMap.get(mmq.getElementId());
+                        mmq.absoluteDirectory = Paths.get(plansPath, plan.getRelativeDirectory()).toString();
+                        mmq.name = plan.getName();
+                        cmd = new ParseAbstractPlan(this, mmq);
+                        break;
                     default:
-                        System.err.println("ModelManager: Unkown model modification query gets ignored!");
+                        System.err.println("ModelManager: Unknown model modification query gets ignored!");
                         return;
                 }
                 break;

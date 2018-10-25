@@ -21,6 +21,7 @@ public class FileSystemUtil {
     public static File getFile(ModelModificationQuery mmq) {
         switch (mmq.getElementType()) {
             case Types.PLAN:
+            case Types.MASTERPLAN:
                 return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLAN_ENDING).toFile();
             case Types.PLANTYPE:
                 return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLANTYPE_ENDING).toFile();
