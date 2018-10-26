@@ -30,9 +30,6 @@ public class ParseAbstractPlan extends AbstractCommand {
             case Types.MASTERPLAN:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
                 modelManager.replaceIncompleteTasksInEntryPoints((Plan) newElement);
-
-
-                //TODO: also parse uiextension
                 break;
             case Types.PLANTYPE:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
@@ -48,6 +45,10 @@ public class ParseAbstractPlan extends AbstractCommand {
                 System.err.println("ParseAbstractPlan: Parsing model eventType " + modelModificationQuery.getElementType() + " not implemented, yet!");
                 return;
         }
+
+        //Searching for an existing element with the same id, because that will be replaced and needs to be stored for undo
+        oldElement = modelManager.getPlanElement(newElement.getId());
+
         if (newElement instanceof Plan ) {
 //            replaceIncompleteElements(newElement);
 
@@ -67,6 +68,8 @@ public class ParseAbstractPlan extends AbstractCommand {
 
             if(newPlan.getMasterPlan()) {
                 modelManager.addPlanElement(Types.MASTERPLAN, newElement, null, false);
+            } else {
+                modelManager.addPlanElement(Types.PLAN, newElement, null, false);
             }
         } else {
 //            replaceIncompleteElements(newElement);
