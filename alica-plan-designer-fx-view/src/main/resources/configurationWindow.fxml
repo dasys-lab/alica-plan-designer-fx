@@ -91,11 +91,23 @@
                         <Font name="System Bold" size="13.0" />
                     </font>
                 </TitledPane>
-                <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="179.0" text="Save">
-                    <VBox.margin>
-                        <Insets top="8.0" />
-                    </VBox.margin>
-                </Button>
+            <HBox alignment="CENTER">
+               <children>
+                      <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="179.0" text="Save">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                      </Button>
+                      <Button fx:id="saveAndExitButton" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="179.0" text="Save &amp;  Exit">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                      </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
             </children>
         </VBox>
     </children>

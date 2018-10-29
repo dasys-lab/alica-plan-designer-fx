@@ -106,6 +106,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
         String selectedConfName = configWindowController.getSelectedConfName();
         if (selectedConfName == null || selectedConfName.isEmpty()) {
             configWindowController.disableConfigInput(true);
+            configWindowController.selectActiveConfig(configManager.getActiveConfiguration().getName());
             return;
         }
 

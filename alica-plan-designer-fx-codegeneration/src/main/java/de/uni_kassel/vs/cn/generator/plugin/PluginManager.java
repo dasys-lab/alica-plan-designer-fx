@@ -55,6 +55,7 @@ public class PluginManager {
      * called from outside at least once for making the PluginManager work.
      */
     public void updateAvailablePlugins(String pluginsFolder) {
+        availablePlugins.clear();
         if (pluginsFolder == null || pluginsFolder.isEmpty()) {
             System.out.println("PluginManager: Setting empty plugin folder ignored.");
             return;

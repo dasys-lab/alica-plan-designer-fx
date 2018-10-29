@@ -4,15 +4,13 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IConfigurationEventHan
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
@@ -100,6 +98,8 @@ public class ConfigurationWindowController implements Initializable {
 
     @FXML
     private Button saveButton;
+    @FXML
+    private Button saveAndExitButton;
 
     private IConfigurationEventHandler configEventHandler;
     private IPluginEventHandler pluginEventHandler;
@@ -131,14 +131,20 @@ public class ConfigurationWindowController implements Initializable {
         // show available plugins in the combo box
         setupAvailablePluginsComboBox();
 
-        saveButton.setOnAction(e -> onSave());
+        saveButton.setOnAction(e -> onSave(false));
+        saveAndExitButton.setOnAction(e -> onSave(true));
     }
+
 
     /**
      * Writes everything possible to disk.
      */
-    public void onSave() {
+    public void onSave(boolean exit) {
         configEventHandler.save(availableWorkspacesListView.getSelectionModel().getSelectedItem());
+        if (exit) {
+            Stage stage = (Stage) saveButton.getScene().getWindow();
+            stage.close();
+        }
     }
 
     public void setExternalToolValue(TextField tf) {
@@ -194,7 +200,11 @@ public class ConfigurationWindowController implements Initializable {
     }
 
     public String getDefaultPluginName () {
-        return defaultPluginComboBox.getSelectionModel().getSelectedItem();
+        String defaultPluginName = defaultPluginComboBox.getSelectionModel().getSelectedItem();
+        if (defaultPluginName == null || defaultPluginName.isEmpty()) {
+            defaultPluginName = defaultPluginComboBox.getPromptText();
+        }
+        return defaultPluginName;
     }
 
     public void setClangFormat(String clangFormatPath) {
@@ -238,13 +248,18 @@ public class ConfigurationWindowController implements Initializable {
         availableWorkspacesListView.setOnEditCommit(configEventHandler);
         availableWorkspacesListView.setOnMouseClicked(configEventHandler);
         availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configEventHandler);
+
         configEventHandler.updateAvailableConfigurations();
+        configEventHandler.showSelectedConfiguration();
+        availableWorkspacesListView.requestFocus();
     }
 
     public void setDefaultPlugin(String defaultPluginName) {
+        defaultPluginComboBox.setPromptText("");
         for (String pluginName : defaultPluginComboBox.getItems()) {
             if (pluginName.equals(defaultPluginName)) {
                 defaultPluginComboBox.setValue(defaultPluginName);
+                defaultPluginComboBox.setPromptText(defaultPluginName);
             }
         }
     }
@@ -327,5 +342,10 @@ public class ConfigurationWindowController implements Initializable {
         }
     }
 
-
+    /**
+     * Selects active config by name on list
+     **/
+    public void selectActiveConfig(String selectedConfName) {
+        availableWorkspacesListView.getSelectionModel().select(selectedConfName);
+    }
 }
