@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
@@ -14,8 +15,8 @@ import java.util.Map;
 
 public class PostConditionTool extends AbstractConditionTool {
 
-    public PostConditionTool(TabPane workbench) {
-        super(workbench);
+    public PostConditionTool(TabPane workbench, PlanViewModel plan) {
+        super(workbench, plan);
     }
 
     @Override
@@ -27,6 +28,7 @@ public class PostConditionTool extends AbstractConditionTool {
     public DraggableHBox createToolUI() {
         DraggableHBox draggableHBox = new DraggableHBox();
         draggableHBox.setIcon(Types.POSTCONDITION);
+        setDraggableHBox(draggableHBox);
         return draggableHBox;
     }
 

@@ -1,6 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -9,29 +9,29 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * The {@link AbstractTool} interface provides methods for the tools in the {@link EditorToolBar}.
  * It helps to generalize the usage of these tools for the following workflow:
- * tool is selected (start of the phase) -> Event handlerinterfaces for special actions on the {@link PlanEditorGroup}
+ * tool is selected (start of the phase) -> Event handlerinterfaces for special actions on the PlanEditorGroup
  * are registered -> The actions are performed. A new alicamodel object is created.
  * Or the actions are aborted. -> The phase ends. The event handlers will be removed. and the editor is usable as before.
  */
 public abstract class AbstractTool {
     protected TabPane planEditorTabPane;
+    private PlanViewModel plan;
     // Contains Icon and Text and triggers the drag events (start and stop).
-    protected DraggableHBox draggableHBox;
+    private DraggableHBox draggableHBox;
     // Shadow Effect set on draggableHBox when dragged
-    protected static final DropShadow dropShadowEffect = new DropShadow(10, Color.GREY);
-    protected HashMap<EventType, EventHandler> defaultHandlerMap;
+    private static final DropShadow dropShadowEffect = new DropShadow(10, Color.GREY);
+    private HashMap<EventType, EventHandler> defaultHandlerMap;
     protected HashMap<EventType, EventHandler> customHandlerMap;
     protected Cursor previousCursor;
 
@@ -43,18 +43,10 @@ public abstract class AbstractTool {
     private double vmax;
     private double hmax;
 
-    public AbstractTool(TabPane planEditorTabPane) {
+    public AbstractTool(TabPane planEditorTabPane, PlanViewModel plan) {
         this.planEditorTabPane = planEditorTabPane;
-        this.dropShadowEffect.setSpread(0.5);
-
-        // should be done in the derived classes
-        this.draggableHBox = new DraggableHBox();
-        this.draggableHBox.setOnDragDetected(event -> {
-            this.draggableHBox.startFullDrag();
-            this.startPhase();
-            event.consume();
-        });
-        this.draggableHBox.setOnDragDone(Event::consume);
+        this.plan = plan;
+        dropShadowEffect.setSpread(0.5);
     }
 
     protected abstract void initHandlerMap();
@@ -77,6 +69,9 @@ public abstract class AbstractTool {
                     endPhase();
                 }
             });
+
+            //Listener, that ends a phase, when the mouse is released
+            defaultHandlerMap.put(MouseDragEvent.MOUSE_RELEASED, (event) -> endPhase());
         }
         return defaultHandlerMap;
     }
@@ -160,5 +155,23 @@ public abstract class AbstractTool {
 
     public void setRecentlyDone(boolean recentlyDone) {
         this.recentlyDone = recentlyDone;
+    }
+
+    public void setDraggableHBox(DraggableHBox draggableHBox){
+        draggableHBox.setOnDragDetected(event -> {
+            draggableHBox.startFullDrag();
+            this.startPhase();
+            event.consume();
+        });
+
+        this.draggableHBox = draggableHBox;
+        this.draggableHBox.setOnDragDone(Event::consume);
+    }
+    public DraggableHBox getDraggableHBox() {
+        return draggableHBox;
+    }
+
+    public PlanViewModel getPlan() {
+        return plan;
     }
 }

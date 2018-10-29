@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -20,8 +21,8 @@ public class InitTransitionTool extends AbstractTool {
 //    private EntryPointContainer start;
 //    private StateContainer finish;
 
-    public InitTransitionTool(TabPane workbench) {
-        super(workbench);
+    public InitTransitionTool(TabPane workbench, PlanViewModel plan) {
+        super(workbench, plan);
     }
 
     @Override
@@ -96,7 +97,8 @@ public class InitTransitionTool extends AbstractTool {
 
     @Override
     public DraggableHBox createToolUI() {
-        draggableHBox = new InitStateConnectionHBox();
+        DraggableHBox draggableHBox = new InitStateConnectionHBox();
+        setDraggableHBox(draggableHBox);
         return draggableHBox;
     }
 

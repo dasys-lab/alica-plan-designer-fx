@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
@@ -20,8 +21,8 @@ public class SyncTransitionTool extends AbstractTool {
 //    private SynchronizationContainer start;
 //    private TransitionContainer finish;
 
-    public SyncTransitionTool(TabPane workbench) {
-        super(workbench);
+    public SyncTransitionTool(TabPane workbench, PlanViewModel plan) {
+        super(workbench, plan);
     }
 
     @Override

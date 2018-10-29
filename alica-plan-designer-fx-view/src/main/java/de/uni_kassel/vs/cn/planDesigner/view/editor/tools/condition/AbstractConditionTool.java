@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
@@ -21,8 +22,8 @@ public abstract class AbstractConditionTool extends AbstractTool {
     protected Map<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     protected Node visualRepresentation;
 
-    public AbstractConditionTool(TabPane workbench) {
-        super(workbench);
+    public AbstractConditionTool(TabPane workbench, PlanViewModel plan) {
+        super(workbench, plan);
     }
 
     public void draw() {
