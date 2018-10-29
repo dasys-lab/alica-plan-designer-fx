@@ -3,8 +3,20 @@ package de.uni_kassel.vs.cn.planDesigner.view.img;
 import javafx.scene.image.Image;
 
 public class AlicaIcon extends Image {
-    public AlicaIcon(String iconName) {
+
+    public enum Size {
+        SMALL("16x16"),
+        BIG("24x24"),
+        SYNC("36x24");
+
+        String size;
+        Size(String size) {
+            this.size = size;
+        }
+    }
+
+    public AlicaIcon(String iconName, Size size) {
         super(AlicaIcon.class.getClassLoader().getResourceAsStream("images/" +
-                iconName.toLowerCase() + "16x16.png"));
+                iconName.toLowerCase() + size.size + ".png"));
     }
 }

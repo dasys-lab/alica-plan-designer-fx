@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
@@ -42,7 +43,7 @@ public abstract class AbstractConditionTool extends AbstractTool {
                 public void handle(MouseDragEvent event) {
                     if (event.getTarget() instanceof ConditionHBox && visualRepresentation == null) {
                         //TODO change later to fitting type
-                        visualRepresentation = new ImageView(new AlicaIcon(Types.PRECONDITION));
+                        visualRepresentation = new ImageView(new AlicaIcon(Types.PRECONDITION, Size.SMALL));
                         ((ConditionHBox)event.getTarget()).getChildren().add(visualRepresentation);
                     }
                     event.consume();

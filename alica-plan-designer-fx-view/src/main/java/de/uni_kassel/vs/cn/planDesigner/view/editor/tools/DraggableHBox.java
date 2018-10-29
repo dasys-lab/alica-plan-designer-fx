@@ -1,6 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -14,18 +17,26 @@ public class DraggableHBox extends HBox {
     protected Text text;
 
     public DraggableHBox() {
+        EventHandler<Event> eventHandler = new EventHandler<Event>() {
+
+            @Override
+            public void handle(Event event) {
+                fireEvent(event);
+            }
+        };
+
         icon = new ImageView();
-        icon.setOnDragDetected(event -> {this.fireEvent(event);});
-        icon.setOnDragDone(event -> {this.fireEvent(event);});
+        icon.setOnDragDetected(eventHandler);
+        icon.setOnDragDone(eventHandler);
         text = new Text();
-        text.setOnDragDetected(event -> {this.fireEvent(event);});
-        text.setOnDragDone(event -> {this.fireEvent(event);});
+        text.setOnDragDetected(eventHandler);
+        text.setOnDragDone(eventHandler);
         this.setSpacing(5);
         getChildren().addAll(icon, text);
     }
 
     public void setIcon(String iconName) {
-        this.icon.setImage(new AlicaIcon(iconName));
+        this.icon.setImage(new AlicaIcon(iconName, Size.SMALL));
     }
 
     public void setText(String text) {

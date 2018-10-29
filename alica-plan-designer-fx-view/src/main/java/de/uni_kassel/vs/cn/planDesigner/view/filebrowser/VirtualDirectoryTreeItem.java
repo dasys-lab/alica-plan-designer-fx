@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,8 +16,9 @@ class VirtualDirectoryTreeItem extends TreeItem<File> {
 
     public FileTreeItem addTopLevelFolder(String path) {
         if (path != null && !path.isEmpty()) {
-            FileTreeItem treeItem = new FileTreeItem(new File(path),
-                    new ImageView(new Image(getClass().getClassLoader().getResourceAsStream("images/folder24x24.png"))), null);
+            File file = new File(path);
+            Image folderImage = new AlicaIcon("folder", Size.BIG);
+            FileTreeItem treeItem = new FileTreeItem(file, new ImageView(folderImage), null);
             this.getChildren().add(treeItem);
             return treeItem;
         }

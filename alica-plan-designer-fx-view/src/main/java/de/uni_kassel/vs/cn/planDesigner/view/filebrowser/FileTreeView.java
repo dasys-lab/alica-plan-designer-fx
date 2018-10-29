@@ -1,6 +1,8 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
@@ -49,7 +51,7 @@ public final class FileTreeView extends TreeView<File> {
         addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
             originalCursor = getCursor();
             Node node = ((Node) e.getTarget()).getParent();
-            if (node instanceof FileTreeCell == false) {
+            if (!(node instanceof FileTreeCell)) {
                 e.consume();
                 return;
             }
@@ -60,25 +62,20 @@ public final class FileTreeView extends TreeView<File> {
             startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
             switch (draggedItem.getViewModelElement().getType()) {
                 case Types.BEHAVIOUR:
-                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                            .getResourceAsStream("images/behaviour24x24.png"))));
+                    getScene().setCursor(new ImageCursor(new AlicaIcon("behaviour", Size.BIG)));
                     break;
                 case Types.PLAN:
-                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                            .getResourceAsStream("images/plan24x24.png"))));
+                    getScene().setCursor(new ImageCursor(new AlicaIcon("plan", Size.BIG)));
                     break;
                 case Types.MASTERPLAN:
 
-                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                            .getResourceAsStream("images/masterplan24x24.png"))));
+                    getScene().setCursor(new ImageCursor(new AlicaIcon("masterplan", Size.BIG)));
                     break;
                 case Types.PLANTYPE:
-                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                            .getResourceAsStream("images/plantype24x24.png"))));
+                    getScene().setCursor(new ImageCursor(new AlicaIcon("plantype", Size.BIG)));
                     break;
                 case Types.TASKREPOSITORY:
-                    getScene().setCursor(new ImageCursor(new Image(FileTreeView.class.getClassLoader()
-                            .getResourceAsStream("images/tasks24x24.png"))));
+                    getScene().setCursor(new ImageCursor(new AlicaIcon("tasks", Size.BIG)));
                     break;
                 default:
                     System.err.println("FileTreeView: " + draggedItem.getViewModelElement().getType() + " not handled!");
@@ -115,7 +112,7 @@ public final class FileTreeView extends TreeView<File> {
 
             File parent = treeCell.getTreeItem().getValue();
 
-            if (parent.isDirectory() == false) {
+            if (!parent.isDirectory()) {
                 parent = treeCell.getTreeItem().getParent().getValue();
             }
 
@@ -334,17 +331,17 @@ public final class FileTreeView extends TreeView<File> {
     private Image getImage(String type) {
         switch (type) {
             case Types.BEHAVIOUR:
-                return new Image((getClass().getClassLoader().getResourceAsStream("images/behaviour24x24.png")));
+                return new AlicaIcon("behaviour", Size.BIG);
             case Types.MASTERPLAN:
-                return new Image((getClass().getClassLoader().getResourceAsStream("images/masterplan24x24.png")));
+                return new AlicaIcon("masterplan", Size.BIG);
             case Types.PLAN:
-                return new Image((getClass().getClassLoader().getResourceAsStream("images/plan24x24.png")));
+                return new AlicaIcon("plan", Size.BIG);
             case Types.PLANTYPE:
-                return new Image((getClass().getClassLoader().getResourceAsStream("images/plantype24x24.png")));
+                return new AlicaIcon("plantype", Size.BIG);
             case Types.TASKREPOSITORY:
-                return new Image((getClass().getClassLoader().getResourceAsStream("images/tasks24x24.png")));
+                return new AlicaIcon("tasks", Size.BIG);
             case Types.FOLDER:
-                return new Image((getClass().getClassLoader().getResourceAsStream("images/folder24x24.png")));
+                return new AlicaIcon("folder", Size.BIG);
             default:
                 System.err.println("FileTreeView: No image available for " + type + "!");
                 return null;

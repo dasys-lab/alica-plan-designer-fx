@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -12,9 +11,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,10 +46,13 @@ public abstract class AbstractTool {
 
         // should be done in the derived classes
         this.draggableHBox = new DraggableHBox();
-        this.draggableHBox.setOnDragDetected(event -> {
-            this.draggableHBox.startFullDrag();
-            this.startPhase();
-            event.consume();
+        this.draggableHBox.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                draggableHBox.startFullDrag();
+                startPhase();
+                event.consume();
+            }
         });
         this.draggableHBox.setOnDragDone(Event::consume);
     }
@@ -69,12 +69,15 @@ public abstract class AbstractTool {
         if (defaultHandlerMap == null) {
             defaultHandlerMap = new HashMap<>();
             // The tool phase is ended, when the courser leaves the scene.
-            defaultHandlerMap.put(MouseEvent.MOUSE_DRAGGED, (event) -> {
-                MouseEvent e = (MouseEvent) event;
-                if (e.getSceneX() + 5 > getPlanEditorTabPane().getScene().getWidth()
+            defaultHandlerMap.put(MouseEvent.MOUSE_DRAGGED, new EventHandler() {
+                @Override
+                public void handle(Event event) {
+                    MouseEvent e = (MouseEvent) event;
+                    if (e.getSceneX() + 5 > getPlanEditorTabPane().getScene().getWidth()
                         || e.getSceneY() + 5 > getPlanEditorTabPane().getScene().getHeight()
                         || e.getSceneX() - 5 < 0 || e.getSceneY() - 5 < 0) {
-                    endPhase();
+                     endPhase();
+                    }
                 }
             });
         }

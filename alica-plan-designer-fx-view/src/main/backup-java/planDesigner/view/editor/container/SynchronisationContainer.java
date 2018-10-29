@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Synchronisation;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
@@ -60,8 +62,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
         setLayoutY(getPmlUiExtension().getYPos());
         visualRepresentation = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
         setEffectToStandard();
-        ((Circle)visualRepresentation).setFill(new ImagePattern(new Image(getClass().getClassLoader()
-                .getResourceAsStream("images/synchronization36x24.png"))));
+        ((Circle)visualRepresentation).setFill(new ImagePattern(new AlicaIcon("synchronization", Size.SYNC))));
         Text e = new Text(getModelElementId().getName());
         getChildren().add(e);
         e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth()/2);

@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +23,7 @@ public class AbstractPlanHBox extends HBox {
     public AbstractPlanHBox(ViewModelElement p, StateContainer stateContainer) {
         super();
         this.abstractPlan = p;
-        ImageView imageView = new ImageView(new AlicaIcon(p.getType()));
+        ImageView imageView = new ImageView(new AlicaIcon(p.getType(), Size.SMALL));
         Text text = new Text(p.getName());
         this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         getChildren().addAll(imageView, text);

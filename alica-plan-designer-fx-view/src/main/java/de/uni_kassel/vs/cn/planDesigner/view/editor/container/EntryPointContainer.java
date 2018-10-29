@@ -1,9 +1,9 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 
-import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import de.uni_kassel.vs.cn.planDesigner.view.model.EntryPointViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import javafx.concurrent.Task;
@@ -51,7 +51,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
             setStateContainer(stateContainer);
         }
         this.containedElement = containedElement;
-        taskIcon = new ImageView(new AlicaIcon(Task.class.getSimpleName()));
+        taskIcon = new ImageView(new AlicaIcon(Task.class.getSimpleName(), Size.SMALL));
 
         makeDraggable(this);
         createPositionListeners(this, containedElement);

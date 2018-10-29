@@ -94,7 +94,7 @@ public class FileTreeCell extends TreeCell<File> {
     }
 
     private boolean checkForCorrectFileEnding(File newValue, String ending) {
-        if (newValue.getName().endsWith(ending) == false) {
+        if (!newValue.getName().endsWith(ending)) {
             getTreeView()
                     .fireEvent(new TreeView.EditEvent<>(getTreeView(),
                             TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));

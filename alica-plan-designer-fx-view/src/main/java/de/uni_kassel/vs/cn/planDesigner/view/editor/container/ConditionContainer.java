@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.container;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
@@ -31,7 +32,7 @@ public class ConditionContainer extends AbstractPlanElementContainer {
     @Override
     public void setupContainer() {
         getChildren().clear();
-        getChildren().add(new ImageView(new AlicaIcon("precondition")));
+        getChildren().add(new ImageView(new AlicaIcon("precondition", Size.SMALL)));
     }
 
     @Override

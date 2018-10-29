@@ -11,6 +11,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.model.PlanTypeViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.AnnotatedPlanView;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import de.uni_kassel.vs.cn.planDesigner.view.properties.PropertiesTable;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryHBox;
 import javafx.application.Platform;
@@ -101,7 +102,7 @@ public class PlanTypeWindowController implements Initializable {
             if (selectedItem == null) {
                 return;
             }
-            fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), ((AnnotatedPlanView)selectedItem.getViewModelElement()).getPlanId());
+            fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), ((AnnotatedPlanView) selectedItem.getViewModelElement()).getPlanId());
             planTypeTab.setDirty(true);
         });
 
@@ -110,7 +111,7 @@ public class PlanTypeWindowController implements Initializable {
             if (selectedItem == null) {
                 return;
             }
-            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, selectedItem.getName(), ((AnnotatedPlanView)selectedItem).getPlanId());
+            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, selectedItem.getName(), ((AnnotatedPlanView) selectedItem).getPlanId());
             planTypeTab.setDirty(true);
         });
 
@@ -160,8 +161,8 @@ public class PlanTypeWindowController implements Initializable {
                 } else if (c.wasRemoved()) {
                     for (ViewModelElement element : c.getRemoved()) {
                         planTypeViewModel.getAllPlans().add(element);
-                        for(AnnotatedPlanView view : planTypeTableView.getItems()) {
-                            if(view.getId() == element.getId()) {
+                        for (AnnotatedPlanView view : planTypeTableView.getItems()) {
+                            if (view.getId() == element.getId()) {
                                 planTypeTableView.getItems().remove(view);
                                 break;
                             }
@@ -276,9 +277,9 @@ public class PlanTypeWindowController implements Initializable {
                         super.updateItem(item, empty);
                         if (empty == false) {
                             if (Boolean.TRUE.equals(item)) {
-                                setGraphic(new ImageView(new AlicaIcon(Types.SUCCESSSTATE)));
+                                setGraphic(new ImageView(new AlicaIcon(Types.SUCCESSSTATE, Size.SMALL)));
                             } else {
-                                setGraphic(new ImageView(new AlicaIcon(Types.FAILURESTATE)));
+                                setGraphic(new ImageView(new AlicaIcon(Types.FAILURESTATE, Size.SMALL)));
                             }
                             setText("");
                         }
@@ -306,7 +307,6 @@ public class PlanTypeWindowController implements Initializable {
         event.setElementId(viewModelId);
         guiModificationHandler.handle(event);
     }
-
 
 
     private boolean isAlreadyInPlanType(ViewModelElement plan) {

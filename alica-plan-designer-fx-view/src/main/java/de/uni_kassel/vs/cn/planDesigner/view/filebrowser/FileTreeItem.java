@@ -1,10 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.view.filebrowser;
 
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
@@ -49,8 +50,7 @@ public class FileTreeItem extends TreeItem<File> {
             }
 
             if (!childExists) {
-                getChildren().add(new FileTreeItem(content, new ImageView(new Image((getClass().getClassLoader()
-                        .getResourceAsStream("images/folder24x24.png")))), null));
+                getChildren().add(new FileTreeItem(content, new ImageView(new AlicaIcon("folder", Size.BIG)), null));
             }
         }
 
