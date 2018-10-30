@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -14,8 +15,8 @@ import javafx.scene.input.MouseDragEvent;
  */
 public class RepositoryTool extends AbstractTool {
 
-    public RepositoryTool(TabPane parentTabPane) {
-        super(parentTabPane);
+    public RepositoryTool(TabPane workbench) {
+        super(workbench, null);
     }
 
     @Override

@@ -22,14 +22,14 @@ public class SaveTest extends ApplicationTest {
 
     private ModelManager modelManager;
 
-    @Before
+    //@Before
     public void init() {
         ConfigurationManager.getInstance();
         modelManager = new ModelManager();
         PlanDesignerApplication.setRunning(true);
     }
 
-    @Test
+    //@Test
     public void testSaveBug() {
         // lege Plan mit einem State an
         Plan plan = new Plan();
@@ -73,7 +73,7 @@ public class SaveTest extends ApplicationTest {
     }
 
 
-    @Test
+    //@Test
     public void testSaveBug2() {
         // lege Plan mit einem State an
         Plan plan = new Plan();

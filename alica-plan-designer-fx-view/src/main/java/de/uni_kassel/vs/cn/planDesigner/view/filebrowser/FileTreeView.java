@@ -10,6 +10,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.FileTreeViewContextMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.ImageCursor;
@@ -21,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -48,114 +50,36 @@ public final class FileTreeView extends TreeView<File> {
         virtualDirectoryTreeItem = (VirtualDirectoryTreeItem) getRoot();
 
         // Setup Drag support
-        addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
-            originalCursor = getCursor();
-            Node node = ((Node) e.getTarget()).getParent();
-            if (!(node instanceof FileTreeCell)) {
-                e.consume();
-                return;
-            }
-            System.out.println("Source: " + e.getSource() + " Target: " + e.getTarget());
-            // TODO: Fix in case of Folder
-            draggedItem = (FileTreeItem) ((FileTreeCell) node).getTreeItem();
-            startFolder = draggedItem.getValue().getAbsolutePath();
-            startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
-            switch (draggedItem.getViewModelElement().getType()) {
-                case Types.BEHAVIOUR:
-                    getScene().setCursor(new ImageCursor(new AlicaIcon("behaviour", Size.BIG)));
-                    break;
-                case Types.PLAN:
-                    getScene().setCursor(new ImageCursor(new AlicaIcon("plan", Size.BIG)));
-                    break;
-                case Types.MASTERPLAN:
-
-                    getScene().setCursor(new ImageCursor(new AlicaIcon("masterplan", Size.BIG)));
-                    break;
-                case Types.PLANTYPE:
-                    getScene().setCursor(new ImageCursor(new AlicaIcon("plantype", Size.BIG)));
-                    break;
-                case Types.TASKREPOSITORY:
-                    getScene().setCursor(new ImageCursor(new AlicaIcon("tasks", Size.BIG)));
-                    break;
-                default:
-                    System.err.println("FileTreeView: " + draggedItem.getViewModelElement().getType() + " not handled!");
-            }
-            wasDragged = true;
-            e.consume();
-        });
-
-        addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
-            getScene().setCursor(originalCursor);
-            if (!wasDragged) {
-                e.consume();
-                return;
-            }
-
-            wasDragged = false;
-
-            if (e.getPickResult() == null) {
-                e.consume();
-                return;
-            }
-
-            FileTreeCell treeCell = null;
-            if (e.getPickResult().getIntersectedNode().getParent() instanceof Group) {
-                for (Node child : e.getPickResult().getIntersectedNode().getParent().getChildrenUnmodifiable()) {
-                    if (child.getBoundsInParent().contains(e.getX(), e.getY(), e.getZ())) {
-                        treeCell = (FileTreeCell) child;
-                        break;
-                    }
-                }
-            } else {
-                treeCell = (FileTreeCell) e.getPickResult().getIntersectedNode().getParent();
-            }
-
-            File parent = treeCell.getTreeItem().getValue();
-
-            if (!parent.isDirectory()) {
-                parent = treeCell.getTreeItem().getParent().getValue();
-            }
-
-            String targetFolder = parent.toString();
-            if (targetFolder.equals(startFolder) || targetFolder.contains(rolesPath) || targetFolder.contains(taskPath)) {
-                startFolder = "";
-                e.consume();
-                return;
-            }
-
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.MOVE_ELEMENT, draggedItem.getViewModelElement().getType(),
-                    draggedItem.getViewModelElement().getName());
-            event.setElementId(draggedItem.getViewModelElement().getId());
-            event.setAbsoluteDirectory(parent.toString());
-            controller.getGuiModificationHandler().handle(event);
-            e.consume();
-        });
-
+        addEventHandler(MouseDragEvent.DRAG_DETECTED, new MouseDraggedEventHandler());
+        addEventFilter(MouseEvent.MOUSE_RELEASED, new MouseReleasedEventHandler());
 
         this.setShowRoot(false);
         this.setContextMenu(new FileTreeViewContextMenu());
         this.setEditable(true);
 
-        setCellFactory(param -> {
-            TreeCell<File> fileWrapperTreeCell = new FileTreeCell(controller);
-            fileWrapperTreeCell.setContextMenu(new FileTreeViewContextMenu());
-            fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    if (newValue) {
-                        ((FileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
-                                .setHintFile(fileWrapperTreeCell.getTreeItem().getValue());
-                        ((FileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
-                                .setTreeCell(fileWrapperTreeCell);
+        setCellFactory(new Callback<TreeView<File>, TreeCell<File>>() {
+            @Override
+            public TreeCell<File> call(TreeView<File> param) {
+                TreeCell<File> fileWrapperTreeCell = new FileTreeCell(controller);
+                fileWrapperTreeCell.setContextMenu(new FileTreeViewContextMenu());
+                fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        if (newValue) {
+                            ((FileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
+                                    .setHintFile(fileWrapperTreeCell.getTreeItem().getValue());
+                            ((FileTreeViewContextMenu) fileWrapperTreeCell.getContextMenu())
+                                    .setTreeCell(fileWrapperTreeCell);
+                        }
                     }
-                }
-            });
+                });
 
-            if (param.getEditingItem() != null) {
-                fileWrapperTreeCell.setText(param.getEditingItem().getValue().getName());
-                fileWrapperTreeCell.setGraphic(param.getEditingItem().getGraphic());
+                if (param.getEditingItem() != null) {
+                    fileWrapperTreeCell.setText(param.getEditingItem().getValue().getName());
+                    fileWrapperTreeCell.setGraphic(param.getEditingItem().getGraphic());
+                }
+                return fileWrapperTreeCell;
             }
-            return fileWrapperTreeCell;
         });
 
         this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -392,5 +316,94 @@ public final class FileTreeView extends TreeView<File> {
 //            deleteFileMenuItem.deleteFile();
 //            return null;
 //        }
+    }
+
+    public class MouseDraggedEventHandler implements EventHandler<MouseEvent> {
+            @Override
+            public void handle(MouseEvent event) {
+                originalCursor = FileTreeView.this.getCursor();
+                Node node = ((Node) event.getTarget()).getParent();
+                if (!(node instanceof FileTreeCell)) {
+                    event.consume();
+                    return;
+                }
+                System.out.println("Source: " + event.getSource() + " Target: " + event.getTarget());
+                // TODO: Fix in case of Folder
+                draggedItem = (FileTreeItem) ((FileTreeCell) node).getTreeItem();
+                startFolder = draggedItem.getValue().getAbsolutePath();
+                startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
+                switch (draggedItem.getViewModelElement().getType()) {
+                    case Types.BEHAVIOUR:
+                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("behaviour", Size.BIG)));
+                        break;
+                    case Types.PLAN:
+                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("plan", Size.BIG)));
+                        break;
+                    case Types.MASTERPLAN:
+
+                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("masterplan", Size.BIG)));
+                        break;
+                    case Types.PLANTYPE:
+                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("plantype", Size.BIG)));
+                        break;
+                    case Types.TASKREPOSITORY:
+                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("tasks", Size.BIG)));
+                        break;
+                    default:
+                        System.err.println("FileTreeView: " + draggedItem.getViewModelElement().getType() + " not handled!");
+                }
+                wasDragged = true;
+                event.consume();
+            }
+    }
+
+    private class MouseReleasedEventHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent e) {
+            FileTreeView.this.getScene().setCursor(originalCursor);
+            if (!wasDragged) {
+                e.consume();
+                return;
+            }
+
+            wasDragged = false;
+
+            if (e.getPickResult() == null) {
+                e.consume();
+                return;
+            }
+
+            FileTreeCell treeCell = null;
+            if (e.getPickResult().getIntersectedNode().getParent() instanceof Group) {
+                for (Node child : e.getPickResult().getIntersectedNode().getParent().getChildrenUnmodifiable()) {
+                    if (child.getBoundsInParent().contains(e.getX(), e.getY(), e.getZ())) {
+                        treeCell = (FileTreeCell) child;
+                        break;
+                    }
+                }
+            } else {
+                treeCell = (FileTreeCell) e.getPickResult().getIntersectedNode().getParent();
+            }
+
+            File parent = treeCell.getTreeItem().getValue();
+
+            if (!parent.isDirectory()) {
+                parent = treeCell.getTreeItem().getParent().getValue();
+            }
+
+            String targetFolder = parent.toString();
+            if (targetFolder.equals(startFolder) || targetFolder.contains(rolesPath) || targetFolder.contains(taskPath)) {
+                startFolder = "";
+                e.consume();
+                return;
+            }
+
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.MOVE_ELEMENT, draggedItem.getViewModelElement().getType(),
+                    draggedItem.getViewModelElement().getName());
+            event.setElementId(draggedItem.getViewModelElement().getId());
+            event.setAbsoluteDirectory(parent.toString());
+            controller.getGuiModificationHandler().handle(event);
+            e.consume();
+        }
     }
 }

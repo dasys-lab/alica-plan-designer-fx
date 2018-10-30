@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.*;
-import de.uni_kassel.vs.cn.planDesigner.command.add.AddPlanToPlanType;
+import de.uni_kassel.vs.cn.planDesigner.command.add.*;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangeAttributeValue;
 import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.command.create.CreateBehaviour;
@@ -59,7 +59,7 @@ public class ModelManager implements Observer {
      * of a {@link Plan} is saved and can be accessed by the id of the
      * corresponding Plan
      */
-    private HashMap<Long, PlanModelVisualisationObject> planModelVisualisationObjectHashMap;
+    private HashMap<Long, PlanModelVisualisationObject> planModelVisualisationObjectMap;
 
     private ObjectMapper objectMapper;
 
@@ -74,7 +74,7 @@ public class ModelManager implements Observer {
         commandStack.addObserver(this);
         elementsSavedMap = new HashMap<>();
         elementDeletedMap = new HashMap<>();
-        planModelVisualisationObjectHashMap = new HashMap<>();
+        planModelVisualisationObjectMap = new HashMap<>();
 
         setupObjectMapper();
     }
@@ -190,8 +190,8 @@ public class ModelManager implements Observer {
         return conditions;
     }
 
-    public HashMap<Long, PlanModelVisualisationObject> getPlanModelVisualisationObjectHashMap(){
-        return planModelVisualisationObjectHashMap;
+    public HashMap<Long, PlanModelVisualisationObject> getPlanModelVisualisationObjectMap(){
+        return planModelVisualisationObjectMap;
     }
 
     public void addListener(IModelEventHandler eventHandler) {
@@ -220,7 +220,7 @@ public class ModelManager implements Observer {
             replaceIncompletePlansInPlanType(planType);
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE));
         }
-        for(PlanModelVisualisationObject planModelVisualisationObject : planModelVisualisationObjectHashMap.values()) {
+        for(PlanModelVisualisationObject planModelVisualisationObject : planModelVisualisationObjectMap.values()) {
             replaceIncompletePlanElementsInPlanModelVisualisationObject(planModelVisualisationObject);
         }
     }
@@ -417,7 +417,7 @@ public class ModelManager implements Observer {
                 case FileSystemUtil.PLAN_EXTENSION_ENDING:
                     PlanModelVisualisationObject planModelVisualisationObject = objectMapper.readValue(modelFile, PlanModelVisualisationObject.class);
                     long id = planModelVisualisationObject.getPlan().getId();
-                    planModelVisualisationObjectHashMap.put(id, planModelVisualisationObject);
+                    planModelVisualisationObjectMap.put(id, planModelVisualisationObject);
                     break;
                 default:
                     LOG.error("Received file with unknown file ending, for parsing. File is: '" + path + "'");
@@ -877,6 +877,17 @@ public class ModelManager implements Observer {
                     case Types.ANNOTATEDPLAN:
                         cmd = handlePlanModelModificationQuery(mmq);
                         break;
+                    case Types.STATE:
+                    case Types.SUCCESSSTATE:
+                    case Types.FAILURESTATE:
+                    case Types.ENTRYPOINT:
+                    case Types.PRECONDITION:
+                    case Types.RUNTIMECONDITION:
+                    case Types.POSTCONDITION:
+                    case Types.SYNCHRONISATION:
+                    case Types.SYNCTRANSITION:
+                        cmd = handleNewElementInPlanQuery(mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");
                         return;
@@ -971,7 +982,7 @@ public class ModelManager implements Observer {
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLAN));
 
                 //Save the corresponding PlanModelVisualisationObject
-                PlanModelVisualisationObject planModelVisualisationObject = planModelVisualisationObjectHashMap.get(planElement.getId());
+                PlanModelVisualisationObject planModelVisualisationObject = planModelVisualisationObjectMap.get(planElement.getId());
                 if(planModelVisualisationObject != null){
                     File visualisationFile = Paths.get(plansPath, planElement.getRelativeDirectory()
                             , planElement.getName() + "." + FileSystemUtil.PLAN_EXTENSION_ENDING).toFile();
@@ -1036,6 +1047,33 @@ public class ModelManager implements Observer {
         }
     }
 
+    private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq){
+        PlanModelVisualisationObject parenOfElement = planModelVisualisationObjectMap.get(mmq.getParentId());
+        AbstractCommand cmd;
+
+        switch (mmq.elementType){
+            case Types.STATE:
+                State state = new State();
+                state.setParentPlan(parenOfElement.getPlan());
+                cmd = new AddStateInPlan(this, parenOfElement, state, new PmlUiExtension());
+                break;
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+            case Types.ENTRYPOINT:
+            case Types.PRECONDITION:
+            case Types.RUNTIMECONDITION:
+            case Types.POSTCONDITION:
+            case Types.SYNCHRONISATION:
+            case Types.SYNCTRANSITION:
+                //TODO: Create commands for the other types
+            default:
+                System.err.println("ModelManger: Unknown type to add to plan gets ignored! Type was: " + mmq.elementType);
+                return null;
+        }
+
+        return cmd;
+    }
+
     public TaskRepository getTaskRepository() {
         return taskRepository;
     }
@@ -1097,7 +1135,7 @@ public class ModelManager implements Observer {
      * @return  the {@link PlanModelVisualisationObject} corresponding to the given id
      */
     private PlanModelVisualisationObject getCorrespondingPlanModelVisualisationObject(long id){
-        PlanModelVisualisationObject pmvo = planModelVisualisationObjectHashMap.get(id);
+        PlanModelVisualisationObject pmvo = planModelVisualisationObjectMap.get(id);
         if(pmvo == null){
             Plan plan = planMap.get(id);
             if(plan == null){
@@ -1106,7 +1144,7 @@ public class ModelManager implements Observer {
             }
             PmlUiExtensionMap pmlUiExtensionMap = new PmlUiExtensionMap();
             pmvo = new PlanModelVisualisationObject(plan, pmlUiExtensionMap);
-            planModelVisualisationObjectHashMap.put(id, pmvo);
+            planModelVisualisationObjectMap.put(id, pmvo);
         }
         return  pmvo;
     }

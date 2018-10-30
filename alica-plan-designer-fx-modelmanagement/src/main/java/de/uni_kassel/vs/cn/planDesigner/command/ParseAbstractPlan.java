@@ -62,7 +62,7 @@ public class ParseAbstractPlan extends AbstractCommand {
 
                 //If a visualisation was loaded, replace the old one and update the view
                 modelManager.replaceIncompletePlanElementsInPlanModelVisualisationObject(newPlanModelVisualisationObject);
-                modelManager.getPlanModelVisualisationObjectHashMap().put(modelModificationQuery.getElementId(), newPlanModelVisualisationObject);
+                modelManager.getPlanModelVisualisationObjectMap().put(modelModificationQuery.getElementId(), newPlanModelVisualisationObject);
                 modelManager.updatePlanModelVisualisationObject(newPlanModelVisualisationObject);
             }
 
