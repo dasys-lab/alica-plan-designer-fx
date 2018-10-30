@@ -2,13 +2,14 @@ package de.uni_kassel.vs.cn.planDesigner;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.IsDirtyWindowController;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -49,7 +50,7 @@ public class PlanDesignerApplication extends Application {
         Parent root = fxmlLoader.load();
 
         // TODO: does not load the key.xpm
-        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/icon.png")));
+        primaryStage.getIcons().add(new AlicaIcon("icon", Size.NONE));
         primaryStage.setTitle("ALICA - Plan Designer");
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

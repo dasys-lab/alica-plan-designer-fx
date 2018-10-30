@@ -7,7 +7,8 @@ public class AlicaIcon extends Image {
     public enum Size {
         SMALL("16x16"),
         BIG("24x24"),
-        SYNC("36x24");
+        SYNC("36x24"),
+        NONE("");
 
         String size;
         Size(String size) {

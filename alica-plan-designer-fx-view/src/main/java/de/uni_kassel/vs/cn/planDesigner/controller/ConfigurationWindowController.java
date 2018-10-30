@@ -311,6 +311,7 @@ public class ConfigurationWindowController implements Initializable {
         sourceCodeEditorFileButton.setText(i18NRepo.getString("label.config.fileButton"));
         clangFormatFileButton.setText(i18NRepo.getString("label.config.fileButton"));
         saveButton.setText(i18NRepo.getString("action.save"));
+        saveAndExitButton.setText(i18NRepo.getString("action.saveExit"));
     }
 
     private void initFileChooserButtons() {
