@@ -12,4 +12,5 @@ public interface IConfigurationEventHandler<T extends ListView.EditEvent<String>
     public void showSelectedConfiguration();
     public void updateAvailableConfigurations();
     public void updateExternalTools();
+    public void selectConfiguration(String confName);
 }

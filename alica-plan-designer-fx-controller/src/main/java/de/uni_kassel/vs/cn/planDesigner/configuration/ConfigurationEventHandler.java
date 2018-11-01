@@ -46,8 +46,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
      * @param event
      */
     public void handleEditCommit(ListView.EditEvent<String> event) {
-        if (event.getNewValue().matches(PlanElement.forbiddenCharacters))
-        {
+        if (event.getNewValue().matches(PlanElement.forbiddenCharacters)) {
             LOG.info("Configuration name is not valid! Value is '" + event.getNewValue() + "'");
             return;
         }
@@ -55,6 +54,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
             if (event.getIndex() == event.getSource().getItems().size() - 1) {
                 // last empty element was edited, so we need to onAddElement a new empty last element
                 configManager.addConfiguration(event.getNewValue());
+                configWindowController.disableConfigInput(false);
                 event.getSource().getItems().add("");
             } else {
                 // another element than the last element was edited, rename
@@ -106,11 +106,9 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
         String selectedConfName = configWindowController.getSelectedConfName();
         if (selectedConfName == null || selectedConfName.isEmpty()) {
             configWindowController.disableConfigInput(true);
-            configWindowController.selectActiveConfig(configManager.getActiveConfiguration().getName());
             return;
         }
 
-        configManager.setActiveConfiguration(selectedConfName);
         Configuration conf = configManager.getConfiguration(selectedConfName);
         if (conf == null) {
             configWindowController.disableConfigInput(true);
@@ -136,6 +134,16 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     public void updateExternalTools() {
         configWindowController.setClangFormat(configManager.getClangFormatPath());
         configWindowController.setSourceCodeEditor(configManager.getEditorExecutablePath());
+    }
+
+    @Override
+    public void selectConfiguration(String confName) {
+        if (confName != null && !confName.isEmpty()) {
+            configManager.setActiveConfiguration(confName);
+            configWindowController.selectActiveConfig(confName);
+        } else if (configManager.getActiveConfiguration() != null){
+            configWindowController.selectActiveConfig(configManager.getActiveConfiguration().getName());
+        }
     }
 
     @Override

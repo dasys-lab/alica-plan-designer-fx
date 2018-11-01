@@ -41,6 +41,12 @@
                     <content>
                         <VBox prefHeight="359.0" prefWidth="892.0">
                             <children>
+                        <HBox>
+                           <children>
+                              <Label fx:id="activeWorkspaceLabel" layoutX="20.0" layoutY="20.0" styleClass="cfgLabel" text="Active Cofiguration:" />
+                              <Label fx:id="activeConfLabel" layoutX="20.0" layoutY="331.0" styleClass="cfgLabel" />
+                           </children>
+                        </HBox>
                                 <Label fx:id="availableWorkspacesLabel" styleClass="cfgLabel" text="Available Configurations:" />
                                 <ListView fx:id="availableWorkspacesListView" editable="true" prefHeight="97.0" prefWidth="890.0" />
                                 <HBox prefHeight="29.0" prefWidth="237.0" styleClass="cfgHbox">
@@ -93,9 +99,14 @@
                 </TitledPane>
             <HBox alignment="CENTER">
                <children>
-                      <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="179.0" text="Save">
+                  <Button fx:id="activeButton" alignment="CENTER" layoutX="283.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="179.0" text="Set Active">
                      <HBox.margin>
                         <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                      <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="179.0" text="Save">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
                      </HBox.margin>
                       </Button>
                       <Button fx:id="saveAndExitButton" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="179.0" text="Save &amp;  Exit">
