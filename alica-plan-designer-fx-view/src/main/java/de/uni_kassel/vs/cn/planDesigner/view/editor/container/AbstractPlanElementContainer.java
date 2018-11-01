@@ -8,6 +8,7 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanElementViewModel;
 import de.uni_kassel.vs.cn.planDesigner.view.model.ViewModelElement;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -162,14 +163,14 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
            node.setLayoutX(newValue.doubleValue());
            planTab.setDirty(true);
 
-           redrawElement();
+           Platform.runLater(this::redrawElement);
         });
 
         planElementViewModel.yPositionProperty().addListener((observable, oldValue, newValue) -> {
             node.setLayoutY(newValue.doubleValue());
             planTab.setDirty(true);
 
-            redrawElement();
+            Platform.runLater(this::redrawElement);
         });
     }
 

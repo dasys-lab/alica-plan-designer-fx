@@ -2,6 +2,8 @@ package de.uni_kassel.vs.cn.planDesigner.ViewModelFactory;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
@@ -32,8 +34,7 @@ public class ViewModelFactory {
      */
     public ViewModelElement getViewModelElement(PlanElement planElement) {
         if (planElement == null) {
-            System.err.println("ViewModelFactory: Cannot create ViewModelElement from 'null'.");
-            return null;
+            throw new NullPointerException("planElement was null");
         }
 
         ViewModelElement element = this.viewModelElements.get(planElement.getId());
@@ -207,6 +208,15 @@ public class ViewModelFactory {
 
     private StateViewModel createStateViewModel(State state) {
         StateViewModel stateViewModel = new StateViewModel(state.getId(), state.getName(), Types.STATE);
+        stateViewModel.setParentId(state.getParentPlan().getId());
+
+//        PlanModelVisualisationObject planModelVisualisationObject = modelManager.getPlanModelVisualisationObjectMap().get(state.getParentPlan().getId());
+//        if(planModelVisualisationObject != null) {
+//            PmlUiExtension extension = planModelVisualisationObject.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(state);
+//            stateViewModel.setXPosition(extension.getXPos());
+//            stateViewModel.setYPosition(extension.getYPos());
+//        }
+
         for (AbstractPlan abstractPlan : state.getPlans()) {
             stateViewModel.getPlanElements().add((PlanElementViewModel) getViewModelElement(modelManager.getPlanElement(abstractPlan.getId())));
         }
@@ -289,6 +299,13 @@ public class ViewModelFactory {
             case Types.TASK:
                 ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
                 break;
+            case Types.STATE:
+                StateViewModel stateViewModel = (StateViewModel) viewModelElement;
+                PlanViewModel planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
+
+                planViewModel.getStates().remove(stateViewModel);
+                break;
+            //TODO: handle other types
         }
 
         viewModelElements.remove(viewModelElement.getId());

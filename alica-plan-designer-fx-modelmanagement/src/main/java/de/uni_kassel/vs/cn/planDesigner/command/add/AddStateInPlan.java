@@ -2,7 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.command.add;
 
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
+import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
@@ -30,6 +33,9 @@ public class AddStateInPlan extends AbstractCommand {
                 .getPmlUiExtensionMap()
                 .getExtension()
                 .put(newState, newlyCreatedPmlUiExtension);
+        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, newState, Types.STATE);
+        event.setParentId(parentOfElement.getPlan().getId());
+        modelManager.fireEvent(event);
     }
 
     @Override
@@ -39,6 +45,9 @@ public class AddStateInPlan extends AbstractCommand {
                 .getPmlUiExtensionMap()
                 .getExtension()
                 .remove(newState);
+        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, newState, Types.STATE);
+        event.setParentId(parentOfElement.getPlan().getId());
+        modelManager.fireEvent(event);
     }
 
     public PmlUiExtension getNewlyCreatedPmlUiExtension() {

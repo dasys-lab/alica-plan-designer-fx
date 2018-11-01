@@ -15,6 +15,7 @@ import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.UiExtensionModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.plugin.PluginEventHandler;
+import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
@@ -212,6 +213,24 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     BeanUtils.setProperty((ViewModelElement) viewModelElement, event.getChangedAttribute(), BeanUtils.getProperty(planElement, event.getChangedAttribute()));
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                     throw new RuntimeException(e);
+                }
+                break;
+            case ELEMENT_CREATED:
+                switch(event.getElementType()) {
+                    case Types.STATE:
+                        PlanElement plan = modelManager.getPlanElement(event.getParentId());
+                        PlanViewModel planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
+                        planViewModel.getStates().add((StateViewModel) viewModelElement);
+                        break;
+                    case Types.SUCCESSSTATE:
+                    case Types.FAILURESTATE:
+                    case Types.ENTRYPOINT:
+                    case Types.PRECONDITION:
+                    case Types.RUNTIMECONDITION:
+                    case Types.POSTCONDITION:
+                    case Types.SYNCHRONIZATION:
+                    case Types.SYNCTRANSITION:
+                        //TODO: Handle these cases
                 }
                 break;
         }

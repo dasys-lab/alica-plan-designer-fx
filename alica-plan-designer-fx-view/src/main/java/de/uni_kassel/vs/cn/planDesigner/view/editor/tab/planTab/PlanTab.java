@@ -8,7 +8,6 @@ import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.DraggableEditorElement;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;

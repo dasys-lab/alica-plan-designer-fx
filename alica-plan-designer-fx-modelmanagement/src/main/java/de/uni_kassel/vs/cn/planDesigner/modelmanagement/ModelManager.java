@@ -1048,14 +1048,23 @@ public class ModelManager implements Observer {
     }
 
     private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq){
-        PlanModelVisualisationObject parenOfElement = planModelVisualisationObjectMap.get(mmq.getParentId());
+        PlanModelVisualisationObject parenOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
         AbstractCommand cmd;
+
 
         switch (mmq.elementType){
             case Types.STATE:
+                //Creating a new State and setting all necessary fields
                 State state = new State();
                 state.setParentPlan(parenOfElement.getPlan());
-                cmd = new AddStateInPlan(this, parenOfElement, state, new PmlUiExtension());
+                //Putting the created state in the planElementMap so that it can be found there later
+                planElementMap.put(state.getId(), state);
+                //Creating an extension with coordinates
+                PmlUiExtension extension = new PmlUiExtension();
+                extension.setXPos(0);
+                extension.setYPos(0);
+                //create an command, that inserts the created State in the Plan
+                cmd = new AddStateInPlan(this, parenOfElement, state, extension);
                 break;
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
@@ -1134,7 +1143,7 @@ public class ModelManager implements Observer {
      * @param id  the id of the {@link Plan} a {@link PlanModelVisualisationObject} is required for
      * @return  the {@link PlanModelVisualisationObject} corresponding to the given id
      */
-    private PlanModelVisualisationObject getCorrespondingPlanModelVisualisationObject(long id){
+    public PlanModelVisualisationObject getCorrespondingPlanModelVisualisationObject(long id){
         PlanModelVisualisationObject pmvo = planModelVisualisationObjectMap.get(id);
         if(pmvo == null){
             Plan plan = planMap.get(id);
