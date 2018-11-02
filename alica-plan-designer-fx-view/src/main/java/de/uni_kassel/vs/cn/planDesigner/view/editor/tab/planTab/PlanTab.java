@@ -30,8 +30,6 @@ public class PlanTab extends AbstractPlanTab {
 
     private PlanEditorGroup planEditorGroup;
     private ConditionHBox conditionHBox;
-    private PlanModelVisualisationObject planModelVisualisationObject;
-//    private PmlUiExtensionMap pmlUiExtensionMap;
     private EditorToolBar editorToolBar;
     private StackPane planContent;
     private ScrollPane scrollPane;
@@ -51,8 +49,7 @@ public class PlanTab extends AbstractPlanTab {
     }
 
     private void draw() {
-        planModelVisualisationObject = new PlanModelVisualisationObject(plan);
-        planEditorGroup = new PlanEditorGroup(planModelVisualisationObject, this);
+        planEditorGroup = new PlanEditorGroup(plan, this);
         planContent = new StackPane(planEditorGroup);
         planContent.setPadding(new Insets(50, 50, 50, 50));
         planContent.setManaged(true);
@@ -173,10 +170,6 @@ public class PlanTab extends AbstractPlanTab {
 //        this.pmlUiExtensionMap = pmlUiExtensionMap;
 //        planModelVisualisationObject = new PlanModelVisualisationObject(getEditable(), pmlUiExtensionMap);
 //    }
-
-    public PlanModelVisualisationObject getPlanModelVisualisationObject() {
-        return planModelVisualisationObject;
-    }
 
     protected void initSelectedPlanElement(ViewModelElement viewModelElement) {
         super.initSelectedPlanElements(viewModelElement);

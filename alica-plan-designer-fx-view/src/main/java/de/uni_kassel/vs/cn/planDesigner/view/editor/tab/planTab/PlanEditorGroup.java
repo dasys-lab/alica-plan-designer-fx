@@ -17,18 +17,16 @@ import java.util.Map;
  */
 public class PlanEditorGroup extends Group {
     private PlanTab planEditorTab;
-    private PlanModelVisualisationObject planModelVisualisationObject;
     private PlanViewModel plan;
     private Map<Long, StateContainer> stateContainers;
     private Map<Long, TransitionContainer> transitionContainers;
     private Map<Long, EntryPointContainer> entryPointContainers;
     private Map<Long, SynchronizationContainer> synchronisationContainers;
 
-    public PlanEditorGroup(PlanModelVisualisationObject planModelVisualisationObject, PlanTab planEditorTab) {
+    public PlanEditorGroup(PlanViewModel plan, PlanTab planEditorTab) {
         super();
-        this.planModelVisualisationObject = planModelVisualisationObject;
         this.planEditorTab = planEditorTab;
-        this.plan = planModelVisualisationObject.getPlan();
+        this.plan = plan;
         setMouseTransparent(false);
         setupPlanVisualisation();
     }
@@ -50,10 +48,6 @@ public class PlanEditorGroup extends Group {
 
         //TODO add class later
 //        this.setOnMouseClicked(new MouseClickHandler(transitionContainers));
-    }
-
-    public PlanModelVisualisationObject getPlanModelVisualisationObject() {
-        return planModelVisualisationObject;
     }
 
     public Map<Long, StateContainer> getStateContainers() {
