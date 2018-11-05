@@ -3,6 +3,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.*;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Group;
 
 import java.util.ArrayList;
@@ -16,18 +17,16 @@ import java.util.Map;
  */
 public class PlanEditorGroup extends Group {
     private PlanTab planEditorTab;
-    private PlanModelVisualisationObject planModelVisualisationObject;
     private PlanViewModel plan;
     private Map<Long, StateContainer> stateContainers;
     private Map<Long, TransitionContainer> transitionContainers;
     private Map<Long, EntryPointContainer> entryPointContainers;
     private Map<Long, SynchronizationContainer> synchronisationContainers;
 
-    public PlanEditorGroup(PlanModelVisualisationObject planModelVisualisationObject, PlanTab planEditorTab) {
+    public PlanEditorGroup(PlanViewModel plan, PlanTab planEditorTab) {
         super();
-        this.planModelVisualisationObject = planModelVisualisationObject;
         this.planEditorTab = planEditorTab;
-        this.plan = planModelVisualisationObject.getPlan();
+        this.plan = plan;
         setMouseTransparent(false);
         setupPlanVisualisation();
     }
@@ -44,12 +43,11 @@ public class PlanEditorGroup extends Group {
         getChildren().addAll(entryPointContainers.values());
         getChildren().addAll(synchronisationContainers.values());
 
+        createStateListeners();
+        //TODO: create Listeners for other types
+
         //TODO add class later
 //        this.setOnMouseClicked(new MouseClickHandler(transitionContainers));
-    }
-
-    public PlanModelVisualisationObject getPlanModelVisualisationObject() {
-        return planModelVisualisationObject;
     }
 
     public Map<Long, StateContainer> getStateContainers() {
@@ -115,5 +113,24 @@ public class PlanEditorGroup extends Group {
             synchros.put(synchronisation.getId(), new SynchronizationContainer(synchronisation, synchedTransitions, planEditorTab));
         }
         return synchros;
+    }
+
+    private void createStateListeners() {
+        plan.getStates().addListener((ListChangeListener<StateViewModel>) c -> {
+            while(c.next()){
+                if(c.wasAdded()) {
+                    for(StateViewModel state : c.getAddedSubList()){
+                        StateContainer stateContainer = new StateContainer(state, planEditorTab);
+                        stateContainers.put(state.getId(), stateContainer);
+                        getChildren().add(stateContainer);
+                    }
+                }else if(c.wasRemoved()){
+                    for(StateViewModel state : c.getRemoved()){
+                        StateContainer stateContainer = stateContainers.remove(state.getId());
+                        getChildren().remove(stateContainer);
+                    }
+                }
+            }
+        });
     }
 }

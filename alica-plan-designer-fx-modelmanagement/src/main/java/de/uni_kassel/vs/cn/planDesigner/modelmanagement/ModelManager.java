@@ -617,19 +617,8 @@ public class ModelManager implements Observer {
      * @return
      */
     public PlanElement addPlanElement(String type, PlanElement newElement, PlanElement parentElement, boolean serializeToDisk) {
-        /**
-         * This is for ignoring file system modified events that come twice after saving a file
-         * and once after moving or creating a file
-         */
-        if (elementsSavedMap.containsKey(newElement.getId())) {
-            int counter = elementsSavedMap.get(newElement.getId()) - 1;
-            if (counter == 0) {
-                // second event arrived, so remove the entry
-                elementsSavedMap.remove(newElement.getId());
-            } else {
-                // first event arrived, so set the reduced counter
-                elementsSavedMap.put(newElement.getId(), counter);
-            }
+
+        if (ignoreModifiedEvent(newElement)) {
             return null;
         }
         switch (type) {
@@ -839,6 +828,10 @@ public class ModelManager implements Observer {
 
                 break;
             case PARSE_ELEMENT:
+                File f = FileSystemUtil.getFile(mmq);
+                if(f != null && ignoreModifiedEvent(getPlanElement(f.toString()))){
+                    return;
+                }
                 cmd = new ParseAbstractPlan(this, mmq);
                 break;
             case DELETE_ELEMENT:
@@ -976,6 +969,18 @@ public class ModelManager implements Observer {
      */
     public void serializeToDisk(SerializablePlanElement planElement, String ending, boolean movedOrCreated) {
         try {
+
+            // Setting the values in the elementsSaved map at the beginning,
+            // because otherwise listeners may react before values are updated
+            if (!movedOrCreated) {
+                // the counter is set to 2 because, saving an element always creates two filesystem modified events
+                int counter = 2;
+                // when a plan is saved it needs to be 4 however, because the extension is saved as well
+                if(ending.equals(FileSystemUtil.PLAN_ENDING)) {
+                    counter = 4;
+                }
+                elementsSavedMap.put(planElement.getId(), counter);
+            }
             File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + ending).toFile();
             if (ending.equals(FileSystemUtil.PLAN_ENDING)) {
                 objectMapper.writeValue(outfile, (Plan) planElement);
@@ -1005,10 +1010,6 @@ public class ModelManager implements Observer {
             planElement.setDirty(false);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        if (!movedOrCreated) {
-            // the counter is set to 2 because, saving an element always creates two filesystem modified events
-            elementsSavedMap.put(planElement.getId(), 2);
         }
     }
 
@@ -1048,14 +1049,23 @@ public class ModelManager implements Observer {
     }
 
     private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq){
-        PlanModelVisualisationObject parenOfElement = planModelVisualisationObjectMap.get(mmq.getParentId());
+        PlanModelVisualisationObject parenOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
         AbstractCommand cmd;
+
 
         switch (mmq.elementType){
             case Types.STATE:
+                //Creating a new State and setting all necessary fields
                 State state = new State();
                 state.setParentPlan(parenOfElement.getPlan());
-                cmd = new AddStateInPlan(this, parenOfElement, state, new PmlUiExtension());
+                //Putting the created state in the planElementMap so that it can be found there later
+                planElementMap.put(state.getId(), state);
+                //Creating an extension with coordinates
+                PmlUiExtension extension = new PmlUiExtension();
+                extension.setXPos(0);
+                extension.setYPos(0);
+                //create an command, that inserts the created State in the Plan
+                cmd = new AddStateInPlan(this, parenOfElement, state, extension);
                 break;
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
@@ -1134,7 +1144,7 @@ public class ModelManager implements Observer {
      * @param id  the id of the {@link Plan} a {@link PlanModelVisualisationObject} is required for
      * @return  the {@link PlanModelVisualisationObject} corresponding to the given id
      */
-    private PlanModelVisualisationObject getCorrespondingPlanModelVisualisationObject(long id){
+    public PlanModelVisualisationObject getCorrespondingPlanModelVisualisationObject(long id){
         PlanModelVisualisationObject pmvo = planModelVisualisationObjectMap.get(id);
         if(pmvo == null){
             Plan plan = planMap.get(id);
@@ -1147,6 +1157,25 @@ public class ModelManager implements Observer {
             planModelVisualisationObjectMap.put(id, pmvo);
         }
         return  pmvo;
+    }
+
+    /** Check, whether to ignore the modification of the given {@link PlanElement}
+     * @param newElement  the {@link PlanElement} to check
+     * @return  true, if should be ignored
+     */
+    private boolean ignoreModifiedEvent(PlanElement newElement){
+        if(elementsSavedMap.containsKey(newElement.getId())){
+            int counter = elementsSavedMap.get(newElement.getId()) - 1;
+            if (counter == 0) {
+                // second event arrived, so remove the entry
+                elementsSavedMap.remove(newElement.getId());
+            } else {
+                // first event arrived, so set the reduced counter
+                elementsSavedMap.put(newElement.getId(), counter);
+            }
+            return true;
+        }
+        return false;
     }
 
 }
