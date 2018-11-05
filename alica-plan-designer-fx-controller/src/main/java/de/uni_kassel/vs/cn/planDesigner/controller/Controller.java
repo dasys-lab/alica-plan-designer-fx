@@ -18,6 +18,7 @@ import de.uni_kassel.vs.cn.planDesigner.plugin.PluginEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.EditorTabPane;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.IEditorTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
@@ -27,6 +28,8 @@ import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -55,7 +58,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     // View Objects
     private RepositoryViewModel repoViewModel;
-    private TaskRepositoryViewModel taskRepositoryViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
     private RepositoryTabPane repoTabPane;
@@ -239,6 +241,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * Called by the configuration manager, if the active configuration has changed.
      */
     public void handleConfigurationChanged() {
+        // save everything not saved
+        EditorTabPane editorTabPane = mainWindowController.getEditorTabPane();
+        for (Tab tab : editorTabPane.getTabs()) {
+            EventHandler<Event> handler = tab.getOnCloseRequest();
+            if (handler != null) {
+                handler.handle(null);
+            }
+        }
+
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
     }

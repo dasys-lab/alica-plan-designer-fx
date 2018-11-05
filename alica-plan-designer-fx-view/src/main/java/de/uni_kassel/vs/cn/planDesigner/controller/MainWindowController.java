@@ -157,15 +157,15 @@ public class MainWindowController implements Initializable {
 //--------------------------------------------------------------------------------------------
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        fileTreeView.setController(this);
+
         if (configWindowController == null) {
             throw new RuntimeException("The member configWindowController need to be set through the public setter, before calling initialize()!");
         }
 
         // clear
-        repositoryTabPane.getTabs().clear();
         editorTabPane.getTabs().clear();
 
-        fileTreeView.setController(this);
         repositoryTabPane.setGuiModificationHandler(guiModificationHandler);
         editorTabPane.setGuiModificationHandler(guiModificationHandler);
 

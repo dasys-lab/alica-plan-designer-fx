@@ -66,7 +66,7 @@ public class Behaviour extends AbstractPlan {
         this.deferring.set(deferring);
     }
 
-    public SimpleLongProperty deferingProperty() {
+    public SimpleLongProperty deferringProperty() {
         return this.deferring;
     }
 
