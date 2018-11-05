@@ -87,6 +87,7 @@ public class PlanTab extends AbstractPlanTab {
 
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
         editorToolBar = new EditorToolBar(MainWindowController.getInstance().getEditorTabPane(), this);
         HBox hBox = new HBox(scrollPane, editorToolBar);
         conditionHBox = new ConditionHBox(plan, selectedPlanElements);

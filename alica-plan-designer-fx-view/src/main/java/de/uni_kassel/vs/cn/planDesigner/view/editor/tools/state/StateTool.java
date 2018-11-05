@@ -54,14 +54,20 @@ public class StateTool extends AbstractTool {
     protected Map<EventType, EventHandler> getCustomHandlerMap() {
         if (eventHandlerMap.isEmpty()) {
             eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, (EventHandler<MouseDragEvent>) event -> {
+
+                // Calculate the relative coordinates of the event
                 Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
+                // If the event is not valid (because it happened outside of the editor) don't do anything
                 if(eventTargetCoordinates == null){
                     event.consume();
                     return;
                 }
 
+                // Get the handler
                 IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
+                // Create an event. In this case use a GuiChangePositionEvent, because it can also hold the coordinates
+                // of the event
                 GuiChangePositionEvent guiEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.STATE, null);
                 guiEvent.setNewX((int) eventTargetCoordinates.getX());
                 guiEvent.setNewY((int) eventTargetCoordinates.getY());
