@@ -23,8 +23,8 @@ public class TransitionTool extends AbstractTool {
 //    private StateContainer start;
 //    private StateContainer finish;
 
-    public TransitionTool(TabPane workbench, PlanViewModel plan) {
-        super(workbench, plan);
+    public TransitionTool(TabPane workbench, PlanTab planTab) {
+        super(workbench, planTab);
     }
 
     @Override

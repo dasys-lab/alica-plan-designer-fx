@@ -1,10 +1,11 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
-import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
@@ -13,10 +14,13 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The {@link AbstractTool} interface provides methods for the tools in the {@link EditorToolBar}.
@@ -27,7 +31,7 @@ import java.util.Map;
  */
 public abstract class AbstractTool {
     protected TabPane planEditorTabPane;
-    private PlanViewModel plan;
+    private PlanTab planTab;
     // Contains Icon and Text and triggers the drag events (start and stop).
     private DraggableHBox draggableHBox;
     // Shadow Effect set on draggableHBox when dragged
@@ -44,9 +48,9 @@ public abstract class AbstractTool {
     private double vmax;
     private double hmax;
 
-    public AbstractTool(TabPane planEditorTabPane, PlanViewModel plan) {
+    public AbstractTool(TabPane planEditorTabPane, PlanTab planTab) {
         this.planEditorTabPane = planEditorTabPane;
-        this.plan = plan;
+        this.planTab = planTab;
         dropShadowEffect.setSpread(0.5);
     }
 
@@ -175,7 +179,32 @@ public abstract class AbstractTool {
         return draggableHBox;
     }
 
-    public PlanViewModel getPlan() {
-        return plan;
+    public PlanTab getPlanTab() {
+        return planTab;
+    }
+
+    /**
+     * Transform the coordinates contained in a {@link MouseDragEvent} into coordinates relative to the {@link StackPane}
+     * that represents the editor.
+     *
+     * @param event  the {@link MouseDragEvent} containing the base coordinates
+     * @return  the relative coordinates or null, if the drag was released outside of the editor
+     */
+    protected Point2D getLocalCoordinatesFromEvent(MouseDragEvent event){
+        //If the events target is the editor, calculate the local coordinates
+        if(event.getTarget() != null && isMouseDragEventOnValidTarget(event)){
+            return planTab.getPlanEditorGroup().sceneToLocal(event.getX(), event.getY());
+        }
+        //Otherwise just return null
+        return null;
+    }
+
+    private boolean isMouseDragEventOnValidTarget(MouseDragEvent event){
+        //The target may be the StackPane itself
+        return event.getTarget() == planTab.getPlanContent()
+                //Or one of the children of its children
+                || planTab.getPlanEditorGroup().getChildren()
+                .stream().flatMap(container -> ((Pane) container).getChildren().stream())
+                .anyMatch(x -> x == event.getTarget());
     }
 }

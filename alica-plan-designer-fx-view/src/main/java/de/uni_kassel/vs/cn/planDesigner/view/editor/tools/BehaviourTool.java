@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -16,8 +17,8 @@ public class BehaviourTool extends AbstractTool {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
 
-    public BehaviourTool(TabPane workbench, PlanViewModel plan) {
-        super(workbench, plan);
+    public BehaviourTool(TabPane workbench, PlanTab planTab) {
+        super(workbench, planTab);
     }
 
     @Override

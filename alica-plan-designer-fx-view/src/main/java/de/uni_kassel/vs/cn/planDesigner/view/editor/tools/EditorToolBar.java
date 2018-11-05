@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition.PostConditionTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition.PreConditionTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition.RuntimeConditionTool;
@@ -24,7 +25,7 @@ import java.util.List;
 public class EditorToolBar extends ToolBar {
     protected List<AbstractTool> tools;
 
-    public EditorToolBar(TabPane workbench, PlanViewModel plan) {
+    public EditorToolBar(TabPane workbench, PlanTab plan) {
         super();
         setOrientation(Orientation.VERTICAL);
         tools = new ArrayList<>();

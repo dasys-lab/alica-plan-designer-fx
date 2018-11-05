@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.ModelEventType;
+import de.uni_kassel.vs.cn.planDesigner.events.UiExtensionModelEvent;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
@@ -33,8 +34,10 @@ public class AddStateInPlan extends AbstractCommand {
                 .getPmlUiExtensionMap()
                 .getExtension()
                 .put(newState, newlyCreatedPmlUiExtension);
-        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, newState, Types.STATE);
+        UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newState, Types.STATE);
         event.setParentId(parentOfElement.getPlan().getId());
+        event.setNewX(newlyCreatedPmlUiExtension.getXPos());
+        event.setNewY(newlyCreatedPmlUiExtension.getYPos());
         modelManager.fireEvent(event);
     }
 

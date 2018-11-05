@@ -21,8 +21,8 @@ public class SyncTransitionTool extends AbstractTool {
 //    private SynchronizationContainer start;
 //    private TransitionContainer finish;
 
-    public SyncTransitionTool(TabPane workbench, PlanViewModel plan) {
-        super(workbench, plan);
+    public SyncTransitionTool(TabPane workbench, PlanTab planTab) {
+        super(workbench, planTab);
     }
 
     @Override

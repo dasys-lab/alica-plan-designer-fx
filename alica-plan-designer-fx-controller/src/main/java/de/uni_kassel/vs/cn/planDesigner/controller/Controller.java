@@ -4,6 +4,7 @@ import de.uni_kassel.vs.cn.generator.GeneratedSourcesManager;
 import de.uni_kassel.vs.cn.generator.plugin.PluginManager;
 import de.uni_kassel.vs.cn.planDesigner.ViewModelFactory.ViewModelFactory;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+import de.uni_kassel.vs.cn.planDesigner.command.change.ChangePosition;
 import de.uni_kassel.vs.cn.planDesigner.configuration.Configuration;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
@@ -216,10 +217,18 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
                 break;
             case ELEMENT_CREATED:
+                int x = 0;
+                int y = 0;
+                if(event instanceof UiExtensionModelEvent){
+                    x = ((UiExtensionModelEvent) event).getNewX();
+                    y = ((UiExtensionModelEvent) event).getNewY();
+                }
                 switch(event.getElementType()) {
                     case Types.STATE:
                         PlanElement plan = modelManager.getPlanElement(event.getParentId());
                         PlanViewModel planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
+                        ((StateViewModel) viewModelElement).setXPosition(x);
+                        ((StateViewModel) viewModelElement).setYPosition(y);
                         planViewModel.getStates().add((StateViewModel) viewModelElement);
                         break;
                     case Types.SUCCESSSTATE:
@@ -305,10 +314,18 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementId(event.getElementId());
                 break;
             case ADD_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
-                mmq.setElementId(event.getElementId());
-                mmq.setElementType(event.getElementType());
-                mmq.setParentId(event.getParentId());
+                if(event instanceof GuiChangePositionEvent){
+                    UiExtensionModelModificationQuery uimmq = new UiExtensionModelModificationQuery(ModelQueryType.ADD_ELEMENT
+                            , event.getElementType(), event.getElementId(), event.getParentId());
+                    uimmq.setNewX(((GuiChangePositionEvent) event).getNewX());
+                    uimmq.setNewY(((GuiChangePositionEvent) event).getNewY());
+                    mmq = uimmq;
+                }else {
+                    mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
+                    mmq.setElementId(event.getElementId());
+                    mmq.setElementType(event.getElementType());
+                    mmq.setParentId(event.getParentId());
+                }
                 break;
             case REMOVE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ELEMENT);

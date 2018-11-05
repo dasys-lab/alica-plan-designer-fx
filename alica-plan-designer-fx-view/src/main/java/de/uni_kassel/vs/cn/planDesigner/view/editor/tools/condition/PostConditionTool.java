@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.condition;
 
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.EventHandler;
@@ -15,8 +16,8 @@ import java.util.Map;
 
 public class PostConditionTool extends AbstractConditionTool {
 
-    public PostConditionTool(TabPane workbench, PlanViewModel plan) {
-        super(workbench, plan);
+    public PostConditionTool(TabPane workbench, PlanTab planTab) {
+        super(workbench, planTab);
     }
 
     @Override

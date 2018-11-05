@@ -2,6 +2,7 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tools;
 
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.AbstractPlanElementContainer;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -19,8 +20,8 @@ public class SynchronizationTool extends AbstractTool{
     private Node visualRepresentation;
     private boolean initial = true;
 
-    public SynchronizationTool(TabPane workbench, PlanViewModel plan) {
-        super(workbench, plan);
+    public SynchronizationTool(TabPane workbench, PlanTab planTab) {
+        super(workbench, planTab);
     }
 
     @Override

@@ -5,14 +5,13 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.PlanElement;
 /**
  * An Event, that holds information about a change in the UiExtensionModel
  */
-public class UiExtensionModelEvent {
-    private PlanElement element;
+public class UiExtensionModelEvent extends ModelEvent{
 
     private int newX;
     private int newY;
 
-    public UiExtensionModelEvent(PlanElement element) {
-        this.element = element;
+    public UiExtensionModelEvent(ModelEventType modelEventType, PlanElement element, String elementType) {
+        super(modelEventType, element, elementType);
     }
 
     public PlanElement getElement() {

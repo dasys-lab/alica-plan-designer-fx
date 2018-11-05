@@ -1,31 +1,23 @@
 package de.uni_kassel.vs.cn.planDesigner.modelmanagement;
 
-public class UiExtensionModelModificationQuery {
+import de.uni_kassel.vs.cn.planDesigner.events.ModelQueryType;
 
-    private String elementType;
-    private long elementId;
-    private long parentId;
+public class UiExtensionModelModificationQuery extends ModelModificationQuery{
 
     private int newX;
     private int newY;
 
-    public UiExtensionModelModificationQuery(String elementType, long elementId, long parentId){
+    public UiExtensionModelModificationQuery(String elementType, long elementId, long parentId) {
+        this(ModelQueryType.CHANGE_ELEMENT, elementType, elementId, parentId);
+    }
+
+    public UiExtensionModelModificationQuery(ModelQueryType modelQueryType, String elementType, long elementId, long parentId){
+        super(modelQueryType);
         this.elementType = elementType;
         this.elementId = elementId;
         this.parentId = parentId;
     }
 
-    public String getElementType() {
-        return elementType;
-    }
-
-    public long getElementId() {
-        return elementId;
-    }
-
-    public long getParentId() {
-        return parentId;
-    }
 
     public int getNewX() {
         return newX;

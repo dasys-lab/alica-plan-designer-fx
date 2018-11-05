@@ -1,6 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition;
 
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
@@ -21,8 +22,8 @@ public class InitTransitionTool extends AbstractTool {
 //    private EntryPointContainer start;
 //    private StateContainer finish;
 
-    public InitTransitionTool(TabPane workbench, PlanViewModel plan) {
-        super(workbench, plan);
+    public InitTransitionTool(TabPane workbench, PlanTab planTab) {
+        super(workbench, planTab);
     }
 
     @Override

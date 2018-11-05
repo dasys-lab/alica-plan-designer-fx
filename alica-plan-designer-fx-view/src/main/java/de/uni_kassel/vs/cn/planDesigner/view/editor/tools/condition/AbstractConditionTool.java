@@ -23,8 +23,8 @@ public abstract class AbstractConditionTool extends AbstractTool {
     protected Map<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     protected Node visualRepresentation;
 
-    public AbstractConditionTool(TabPane workbench, PlanViewModel plan) {
-        super(workbench, plan);
+    public AbstractConditionTool(TabPane workbench, PlanTab planTab) {
+        super(workbench, planTab);
     }
 
     public void draw() {

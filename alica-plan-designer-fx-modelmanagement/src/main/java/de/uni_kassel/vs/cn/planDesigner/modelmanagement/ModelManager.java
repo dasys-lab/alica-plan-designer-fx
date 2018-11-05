@@ -511,7 +511,7 @@ public class ModelManager implements Observer {
             if(complete != null) {
                 newMap.put(complete, value);
 
-                UiExtensionModelEvent event = new UiExtensionModelEvent(complete);
+                UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_PARSED, complete, null);
                 event.setNewX(value.getXPos());
                 event.setNewY(value.getYPos());
                 fireUiExtensionModelEvent(event);
@@ -600,7 +600,7 @@ public class ModelManager implements Observer {
     public void updatePlanModelVisualisationObject(PlanModelVisualisationObject planModelVisualisationObject){
         for(PlanElement planElement : planModelVisualisationObject.getPmlUiExtensionMap().getExtension().keySet()){
             PmlUiExtension uiExtension = planModelVisualisationObject.getPmlUiExtensionMap().getExtension().get(planElement);
-            UiExtensionModelEvent event = new UiExtensionModelEvent(planElement);
+            UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, null);
             event.setNewX(uiExtension.getXPos());
             event.setNewY(uiExtension.getYPos());
             fireUiExtensionModelEvent(event);
@@ -879,7 +879,7 @@ public class ModelManager implements Observer {
                     case Types.POSTCONDITION:
                     case Types.SYNCHRONISATION:
                     case Types.SYNCTRANSITION:
-                        cmd = handleNewElementInPlanQuery(mmq);
+                        cmd = handleNewElementInPlanQuery( mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");
@@ -1051,7 +1051,12 @@ public class ModelManager implements Observer {
     private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq){
         PlanModelVisualisationObject parenOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
         AbstractCommand cmd;
-
+        int x = 0;
+        int y = 0;
+        if(mmq instanceof UiExtensionModelModificationQuery){
+            x = ((UiExtensionModelModificationQuery) mmq).getNewX();
+            y = ((UiExtensionModelModificationQuery) mmq).getNewY();
+        }
 
         switch (mmq.elementType){
             case Types.STATE:
@@ -1062,8 +1067,8 @@ public class ModelManager implements Observer {
                 planElementMap.put(state.getId(), state);
                 //Creating an extension with coordinates
                 PmlUiExtension extension = new PmlUiExtension();
-                extension.setXPos(0);
-                extension.setYPos(0);
+                extension.setXPos(x);
+                extension.setYPos(y);
                 //create an command, that inserts the created State in the Plan
                 cmd = new AddStateInPlan(this, parenOfElement, state, extension);
                 break;

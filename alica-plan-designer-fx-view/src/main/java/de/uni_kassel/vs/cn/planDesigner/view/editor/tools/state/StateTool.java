@@ -6,12 +6,14 @@ import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.geometry.Point2D;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
 
@@ -26,8 +28,8 @@ public class StateTool extends AbstractTool {
 
     private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
 
-    public StateTool(TabPane workbench, PlanViewModel plan) {
-        super(workbench, plan);
+    public StateTool(TabPane workbench, PlanTab planTab) {
+        super(workbench, planTab);
     }
 
     @Override
@@ -44,27 +46,27 @@ public class StateTool extends AbstractTool {
     }
 
     /**
-     * Creating a handler, that creates an event to request the creation of a new {@link de.uni_kassel.vs.cn.planDesigner.alicamodel.State}.
+     * Creating a handler, that creates an event to request the creation of a new State.
      *
      * @return  a map containing the handler
      */
     @Override
     protected Map<EventType, EventHandler> getCustomHandlerMap() {
         if (eventHandlerMap.isEmpty()) {
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
-                @Override
-                public void handle(MouseDragEvent event) {
-                    IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, (EventHandler<MouseDragEvent>) event -> {
+                Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
+                if(eventTargetCoordinates == null){
+                    event.consume();
+                    return;
+                }
 
-                    //Name can be null, because it is ignored by the command anyway
-                    GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.STATE, null);
-                    guiEvent.setParentId(getPlan().getId());
-                    handler.handle(guiEvent);
+                IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
-
-
-
-
+                GuiChangePositionEvent guiEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.STATE, null);
+                guiEvent.setNewX((int) eventTargetCoordinates.getX());
+                guiEvent.setNewY((int) eventTargetCoordinates.getY());
+                guiEvent.setParentId(getPlanTab().getPlan().getId());
+                handler.handle(guiEvent);
 
 //                    updateLocalCoords(event);
 //                    if (((Node) event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
@@ -85,7 +87,6 @@ public class StateTool extends AbstractTool {
 //                                    (int) (localCoord.getX()),
 //                                    (int) (localCoord.getY()), planModelVisualisationObject.getPlan()));
 //                    endPhase();
-                }
             });
         }
         return eventHandlerMap;

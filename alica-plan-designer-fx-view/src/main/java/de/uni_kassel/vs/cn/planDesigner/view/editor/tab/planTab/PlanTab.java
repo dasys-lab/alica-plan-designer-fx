@@ -9,7 +9,6 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandle
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.DraggableEditorElement;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.container.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.EditorToolBar;
@@ -88,7 +87,7 @@ public class PlanTab extends AbstractPlanTab {
 
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
-        editorToolBar = new EditorToolBar(MainWindowController.getInstance().getEditorTabPane(), plan);
+        editorToolBar = new EditorToolBar(MainWindowController.getInstance().getEditorTabPane(), this);
         HBox hBox = new HBox(scrollPane, editorToolBar);
         conditionHBox = new ConditionHBox(plan, selectedPlanElements);
         VBox vBox = new VBox(upperPropertiesTable, lowerPropertiesTable, conditionHBox, hBox);
@@ -199,6 +198,16 @@ public class PlanTab extends AbstractPlanTab {
 //        String uiExtensionMapPath = absolutePath.substring(0, absolutePath.lastIndexOf(".")) + ".pmlex";
 //        URI relativeURI = EMFModelUtils.createRelativeURI(new File(uiExtensionMapPath));
 //        setPmlUiExtensionMap((PmlUiExtensionMap) AlicaResourceSet.getInstance().getResource(relativeURI, false).getContents().get(0));
+    }
+
+    public PlanViewModel getPlan(){
+        return plan;
+    }
+    public StackPane getPlanContent() {
+        return planContent;
+    }
+    public PlanEditorGroup getPlanEditorGroup() {
+        return planEditorGroup;
     }
 
 }
