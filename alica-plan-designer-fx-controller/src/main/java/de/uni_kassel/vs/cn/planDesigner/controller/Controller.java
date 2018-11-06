@@ -279,7 +279,20 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         }
 
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
+
+        // clear GUI
+        editorTabPane.getTabs().clear();
+        repoTabPane.clearGuiContent();
+        repoViewModel.clear();
         mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
+
+        // load model from path
+        modelManager.setPlansPath(activeConfiguration.getPlansPath());
+        modelManager.setRolesPath(activeConfiguration.getRolesPath());
+        modelManager.setTasksPath(activeConfiguration.getTasksPath());
+
+        modelManager.loadModelFromDisk();
+        repoViewModel.initGuiContent();
     }
 
     /**

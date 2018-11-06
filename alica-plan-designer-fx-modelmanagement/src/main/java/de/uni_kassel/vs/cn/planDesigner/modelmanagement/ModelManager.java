@@ -199,10 +199,24 @@ public class ModelManager implements Observer {
     }
 
     public void loadModelFromDisk() {
+        unloadModel();
         loadModelFromDisk(tasksPath);
         loadModelFromDisk(plansPath);
         loadModelFromDisk(rolesPath);
         replaceIncompleteReferences();
+    }
+
+    private void unloadModel() {
+        planElementMap.clear();
+        planMap.clear();
+        behaviourMap.clear();
+        planTypeMap.clear();
+        annotatedPlanMap.clear();
+        commandStack.getRedoStack().clear();
+        commandStack.getUndoStack().clear();
+        elementsSavedMap.clear();
+        elementDeletedMap.clear();
+        planModelVisualisationObjectMap.clear();
     }
 
     private void replaceIncompleteReferences() {
@@ -556,10 +570,7 @@ public class ModelManager implements Observer {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
             System.err.println(e.getMessage());
             return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return null;
         }

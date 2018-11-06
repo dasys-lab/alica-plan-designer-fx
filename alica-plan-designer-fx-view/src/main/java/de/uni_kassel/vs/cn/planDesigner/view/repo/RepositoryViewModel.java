@@ -44,6 +44,13 @@ public final class RepositoryViewModel {
         initListeners();
     }
 
+    public void clear() {
+        plans.clear();
+        planTypes.clear();
+        behaviours.clear();
+        tasks.clear();
+    }
+
     public void initListeners() {
         plans.addListener(new ListChangeListener<ViewModelElement>() {
             @Override
