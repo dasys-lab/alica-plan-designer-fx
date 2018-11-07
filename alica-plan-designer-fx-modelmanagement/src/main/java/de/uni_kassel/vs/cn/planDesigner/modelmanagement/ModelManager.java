@@ -637,6 +637,14 @@ public class ModelManager implements Observer {
             case Types.MASTERPLAN:
                 Plan plan = (Plan) newElement;
                 planMap.put(plan.getId(), plan);
+
+                //If an PlanModelVisualisationObject exists for a plan with the same id, the plan inside the
+                //PlanModelVisualisationObject has to be replaced with the new plan
+                PlanModelVisualisationObject visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
+                if(visualisation != null){
+                    visualisation.setPlan(plan);
+                }
+                
                 if (serializeToDisk) {
                     serializeToDisk(plan, FileSystemUtil.PLAN_ENDING, true);
                 }
