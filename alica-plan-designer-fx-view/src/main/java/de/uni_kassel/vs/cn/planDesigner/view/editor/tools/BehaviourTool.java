@@ -15,15 +15,8 @@ import java.util.Map;
 
 public class BehaviourTool extends AbstractTool {
 
-    private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
-
     public BehaviourTool(TabPane workbench, PlanTab planTab) {
         super(workbench, planTab);
-    }
-
-    @Override
-    protected void initHandlerMap() {
-
     }
 
     @Override
@@ -45,9 +38,9 @@ public class BehaviourTool extends AbstractTool {
 //    }
 
     @Override
-    protected Map<EventType, EventHandler> getCustomHandlerMap() {
-        if (eventHandlerMap.isEmpty()) {
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, event -> {
+    protected void initHandlerMap() {
+        if (customHandlerMap.isEmpty()) {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, event -> {
                 if (event.getTarget() instanceof Node == false) {
                     event.consume();
                     return;
@@ -65,7 +58,7 @@ public class BehaviourTool extends AbstractTool {
 //                }
             });
 
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, event -> {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, event -> {
 //                if(((Node)event.getTarget()).getParent() instanceof StateContainer &&
 //                        ((Node)event.getTarget()).getParent() instanceof TerminalStateContainer == false) {
 //                    StateContainer stateContainer = (StateContainer) ((Node)event.getTarget()).getParent();
@@ -90,6 +83,5 @@ public class BehaviourTool extends AbstractTool {
                 endPhase();
             });
         }
-        return eventHandlerMap;
     }
 }

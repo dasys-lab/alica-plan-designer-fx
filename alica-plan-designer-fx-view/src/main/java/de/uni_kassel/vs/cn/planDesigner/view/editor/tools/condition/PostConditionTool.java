@@ -4,7 +4,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.ConditionHBox;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
-import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
@@ -21,11 +20,6 @@ public class PostConditionTool extends AbstractConditionTool {
     }
 
     @Override
-    protected void initHandlerMap() {
-
-    }
-
-    @Override
     public DraggableHBox createToolUI() {
         DraggableHBox draggableHBox = new DraggableHBox();
         draggableHBox.setIcon(Types.POSTCONDITION);
@@ -39,9 +33,9 @@ public class PostConditionTool extends AbstractConditionTool {
 //    }
 
     @Override
-    protected Map<EventType, EventHandler> getCustomHandlerMap() {
-        if (eventHandlerMap.isEmpty()) {
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
+    protected void initHandlerMap(){
+        if (customHandlerMap.isEmpty()) {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (event.getTarget() instanceof Node == false) {
@@ -63,7 +57,7 @@ public class PostConditionTool extends AbstractConditionTool {
                 }
             });
 
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (event.getTarget() instanceof Node == false) {
@@ -81,7 +75,7 @@ public class PostConditionTool extends AbstractConditionTool {
             });
 
 
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (event.getSource() instanceof ConditionHBox) {
@@ -100,13 +94,12 @@ public class PostConditionTool extends AbstractConditionTool {
                 }
             });
 
-            eventHandlerMap.put(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+            customHandlerMap.put(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     endPhase();
                 }
             });
         }
-        return eventHandlerMap;
     }
 }

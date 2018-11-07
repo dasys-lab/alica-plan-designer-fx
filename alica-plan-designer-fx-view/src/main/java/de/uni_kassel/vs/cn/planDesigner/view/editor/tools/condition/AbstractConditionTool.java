@@ -6,7 +6,6 @@ import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
 import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
-import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
@@ -20,7 +19,6 @@ import java.util.Map;
 
 public abstract class AbstractConditionTool extends AbstractTool {
 
-    protected Map<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     protected Node visualRepresentation;
 
     public AbstractConditionTool(TabPane workbench, PlanTab planTab) {
@@ -37,9 +35,9 @@ public abstract class AbstractConditionTool extends AbstractTool {
     }
 
     @Override
-    protected Map<EventType, EventHandler> getCustomHandlerMap() {
-        if (eventHandlerMap.isEmpty()) {
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
+    protected void initHandlerMap() {
+        if (customHandlerMap.isEmpty()) {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (event.getTarget() instanceof ConditionHBox && visualRepresentation == null) {
@@ -51,7 +49,7 @@ public abstract class AbstractConditionTool extends AbstractTool {
                 }
             });
 
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (visualRepresentation != null) {
@@ -62,7 +60,7 @@ public abstract class AbstractConditionTool extends AbstractTool {
             });
 
 
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (event.getTarget() instanceof ConditionHBox) {
@@ -81,6 +79,5 @@ public abstract class AbstractConditionTool extends AbstractTool {
                 }
             });
         }
-        return eventHandlerMap;
     }
 }
