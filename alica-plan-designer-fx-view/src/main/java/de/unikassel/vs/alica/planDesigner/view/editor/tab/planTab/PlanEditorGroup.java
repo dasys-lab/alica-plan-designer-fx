@@ -1,13 +1,12 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab;
 
-import de.uni_kassel.vs.cn.planDesigner.view.Types;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.container.*;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
-import de.uni_kassel.vs.cn.planDesigner.view.model.*;
+import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.*;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Group;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
