@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.planDesigner.modelMixIns;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
@@ -10,6 +12,14 @@ import de.uni_kassel.vs.cn.planDesigner.serialization.InternalRefSerializer;
 import de.uni_kassel.vs.cn.planDesigner.serialization.ExternalRefArraySerializer;
 
 import java.util.ArrayList;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+                include = JsonTypeInfo.As.PROPERTY,
+                property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = State.class),
+        @JsonSubTypes.Type(value = TerminalState.class),
+})
 
 public abstract class StateMixIn {
     @JsonSerialize(using = InternalRefSerializer.class)

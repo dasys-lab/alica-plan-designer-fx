@@ -644,7 +644,7 @@ public class ModelManager implements Observer {
                 if(visualisation != null){
                     visualisation.setPlan(plan);
                 }
-                
+
                 if (serializeToDisk) {
                     serializeToDisk(plan, FileSystemUtil.PLAN_ENDING, true);
                 }
@@ -1126,9 +1126,6 @@ public class ModelManager implements Observer {
 
         switch (mmq.elementType){
             case Types.STATE:
-                //TODO: How do Success and FailureStates differ from normal States in the model?
-            case Types.SUCCESSSTATE:
-            case Types.FAILURESTATE:
                 //Creating a new State and setting all necessary fields
                 State state = new State();
                 state.setParentPlan(parenOfElement.getPlan());
@@ -1139,7 +1136,16 @@ public class ModelManager implements Observer {
                 extension.setXPos(x);
                 extension.setYPos(y);
                 //create an command, that inserts the created State in the Plan
-                cmd = new AddStateInPlan(this, parenOfElement, state, extension);
+                cmd = new AddStateInPlan(this, parenOfElement, state, extension, Types.STATE);
+                break;
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                TerminalState successState = new TerminalState(mmq.elementType == Types.SUCCESSSTATE, null);
+                successState.setParentPlan(parenOfElement.getPlan());
+                PmlUiExtension successExtension = new PmlUiExtension();
+                successExtension.setXPos(x);
+                successExtension.setYPos(y);
+                cmd = new AddStateInPlan(this, parenOfElement, successState, successExtension, Types.SUCCESSSTATE);
                 break;
             case Types.ENTRYPOINT:
                 EntryPoint entryPoint = new EntryPoint();

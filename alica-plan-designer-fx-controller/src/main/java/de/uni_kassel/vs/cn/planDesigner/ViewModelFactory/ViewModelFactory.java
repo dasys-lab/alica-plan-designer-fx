@@ -207,7 +207,13 @@ public class ViewModelFactory {
     }
 
     private StateViewModel createStateViewModel(State state) {
-        StateViewModel stateViewModel = new StateViewModel(state.getId(), state.getName(), Types.STATE);
+        String type;
+        if(state instanceof TerminalState) {
+            type = ((TerminalState)state).isSuccess() ? Types.SUCCESSSTATE : Types.FAILURESTATE;
+        } else {
+            type = Types.STATE;
+        }
+        StateViewModel stateViewModel = new StateViewModel(state.getId(), state.getName(), type);
         stateViewModel.setParentId(state.getParentPlan().getId());
 
 //        PlanModelVisualisationObject planModelVisualisationObject = modelManager.getPlanModelVisualisationObjectMap().get(state.getParentPlan().getId());
@@ -300,6 +306,8 @@ public class ViewModelFactory {
                 ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
                 break;
             case Types.STATE:
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
                 StateViewModel stateViewModel = (StateViewModel) viewModelElement;
                 PlanViewModel planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
 

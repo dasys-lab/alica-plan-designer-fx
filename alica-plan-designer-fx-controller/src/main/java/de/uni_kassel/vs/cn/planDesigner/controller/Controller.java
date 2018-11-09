@@ -227,14 +227,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
                 switch(event.getElementType()) {
                     case Types.STATE:
+                    case Types.SUCCESSSTATE:
+                    case Types.FAILURESTATE:
                         PlanElement plan = modelManager.getPlanElement(event.getParentId());
                         PlanViewModel planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
                         ((StateViewModel) viewModelElement).setXPosition(x);
                         ((StateViewModel) viewModelElement).setYPosition(y);
                         planViewModel.getStates().add((StateViewModel) viewModelElement);
                         break;
-                    case Types.SUCCESSSTATE:
-                    case Types.FAILURESTATE:
                     case Types.ENTRYPOINT:
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:

@@ -58,26 +58,6 @@ public class StateTool extends AbstractTool {
                 guiEvent.setNewY((int) eventTargetCoordinates.getY());
                 guiEvent.setParentId(getPlanTab().getPlan().getId());
                 handler.handle(guiEvent);
-
-//                    updateLocalCoords(event);
-//                    if (((Node) event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
-//                            event.getTarget() instanceof StackPane == false) {
-//                        event.consume();
-//                        endPhase();
-//                        return;
-//                    }
-//                    AddStateInPlan command = new AddStateInPlan(planModelVisualisationObject,
-//                            createNewObject());
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(command);
-//
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
-//                                    (int) (localCoord.getX()),
-//                                    (int) (localCoord.getY()), planModelVisualisationObject.getPlan()));
-//                    endPhase();
             });
         }
     }

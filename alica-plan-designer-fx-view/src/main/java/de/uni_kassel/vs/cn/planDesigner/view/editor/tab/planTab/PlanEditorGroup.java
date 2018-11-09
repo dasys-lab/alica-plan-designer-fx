@@ -1,11 +1,13 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab;
 
+import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.container.*;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.model.*;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Group;
 
+import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -98,7 +100,7 @@ public class PlanEditorGroup extends Group {
     private Map<Long, StateContainer> createStateContainers() {
         Map<Long, StateContainer> states = new HashMap<>();
         for (StateViewModel state : plan.getStates()) {
-            states.put(state.getId(), new StateContainer(state, planEditorTab));
+            states.put(state.getId(), createStateContainer(state, planEditorTab));
         }
         return states;
     }
@@ -120,7 +122,7 @@ public class PlanEditorGroup extends Group {
             while(c.next()){
                 if(c.wasAdded()) {
                     for(StateViewModel state : c.getAddedSubList()){
-                        StateContainer stateContainer = new StateContainer(state, planEditorTab);
+                        StateContainer stateContainer = createStateContainer(state, planEditorTab);
                         stateContainers.put(state.getId(), stateContainer);
                         getChildren().add(stateContainer);
                         int x = state.getXPosition();
@@ -140,5 +142,18 @@ public class PlanEditorGroup extends Group {
                 }
             }
         });
+    }
+
+    private StateContainer createStateContainer(StateViewModel state, PlanTab planTab) {
+        switch(state.getType()){
+            case Types.STATE:
+                return new StateContainer(state, planTab);
+            case Types.SUCCESSSTATE:
+                return new SuccessStateContainer(state, planTab);
+            case Types.FAILURESTATE:
+                return new FailureStateContainer(state, planTab);
+            default:
+                throw new IllegalStateException("State has a non-state type!");
+        }
     }
 }

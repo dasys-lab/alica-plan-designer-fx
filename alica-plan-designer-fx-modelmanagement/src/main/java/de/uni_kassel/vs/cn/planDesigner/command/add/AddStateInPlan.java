@@ -18,10 +18,12 @@ public class AddStateInPlan extends AbstractCommand {
     private PlanModelVisualisationObject parentOfElement;
     private PmlUiExtension newlyCreatedPmlUiExtension;
     private State newState;
+    private final String type;
 
-    public AddStateInPlan(ModelManager manager, PlanModelVisualisationObject parentOfElement, State newState, PmlUiExtension pmlUiExtension) {
+    public AddStateInPlan(ModelManager manager, PlanModelVisualisationObject parentOfElement, State newState, PmlUiExtension pmlUiExtension, String type) {
         super(manager);
         this.newState = newState;
+        this.type = type;
         newState.setName(DEFAULT_STATE_NAME);
         this.parentOfElement = parentOfElement;
         this.newlyCreatedPmlUiExtension = pmlUiExtension;
@@ -29,30 +31,12 @@ public class AddStateInPlan extends AbstractCommand {
 
     @Override
     public void doCommand() {
-//        parentOfElement.getPlan().getStates().add(newState);
-//        parentOfElement
-//                .getPmlUiExtensionMap()
-//                .getExtension()
-//                .put(newState, newlyCreatedPmlUiExtension);
-//        UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newState, Types.STATE);
-//        event.setParentId(parentOfElement.getPlan().getId());
-//        event.setNewX(newlyCreatedPmlUiExtension.getXPos());
-//        event.setNewY(newlyCreatedPmlUiExtension.getYPos());
-//        modelManager.fireEvent(event);
-        modelManager.addPlanElementAtPosition(Types.STATE, newState, newlyCreatedPmlUiExtension, parentOfElement);
+        modelManager.addPlanElementAtPosition(type, newState, newlyCreatedPmlUiExtension, parentOfElement);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.removePlanElement(Types.STATE, newState ,parentOfElement.getPlan(), false);
-//        parentOfElement.getPlan().getStates().remove(newState);
-//        parentOfElement
-//                .getPmlUiExtensionMap()
-//                .getExtension()
-//                .remove(newState);
-//        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, newState, Types.STATE);
-//        event.setParentId(parentOfElement.getPlan().getId());
-//        modelManager.fireEvent(event);
+        modelManager.removePlanElement(type, newState ,parentOfElement.getPlan(), false);
     }
 
     public PmlUiExtension getNewlyCreatedPmlUiExtension() {
