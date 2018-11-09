@@ -637,6 +637,14 @@ public class ModelManager implements Observer {
             case Types.MASTERPLAN:
                 Plan plan = (Plan) newElement;
                 planMap.put(plan.getId(), plan);
+
+                //If an PlanModelVisualisationObject exists for a plan with the same id, the plan inside the
+                //PlanModelVisualisationObject has to be replaced with the new plan
+                PlanModelVisualisationObject visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
+                if(visualisation != null){
+                    visualisation.setPlan(plan);
+                }
+                
                 if (serializeToDisk) {
                     serializeToDisk(plan, FileSystemUtil.PLAN_ENDING, true);
                 }
@@ -694,6 +702,38 @@ public class ModelManager implements Observer {
         return oldElement;
     }
 
+    public PlanElement addPlanElementAtPosition(String type, PlanElement newElement, PmlUiExtension extension, PlanModelVisualisationObject parentElement){
+        switch(type){
+            case Types.STATE:
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                parentElement.getPlan().getStates().add((State) newElement);
+                break;
+            case Types.ENTRYPOINT:
+                parentElement.getPlan().getEntryPoints().add((EntryPoint) newElement);
+                break;
+            case Types.PRECONDITION:
+            case Types.RUNTIMECONDITION:
+            case Types.POSTCONDITION:
+            case Types.SYNCHRONISATION:
+            case Types.SYNCTRANSITION:
+            default:
+                //TODO: Handle the other cases
+                System.out.println("ModelManager: adding type " + type + " at position not implemented yet!");
+        }
+        parentElement.getPmlUiExtensionMap().getExtension().put(newElement, extension);
+
+        PlanElement oldElement = planElementMap.put(newElement.getId(), newElement);
+
+        UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+        event.setParentId(parentElement.getPlan().getId());
+        event.setNewX(extension.getXPos());
+        event.setNewY(extension.getYPos());
+        fireEvent(event);
+
+        return oldElement;
+    }
+
     public void removePlanElement(String type, PlanElement planElement, PlanElement parentElement, boolean removeFromDisk) {
         switch (type) {
             case Types.PLAN:
@@ -733,6 +773,20 @@ public class ModelManager implements Observer {
                     removeFromDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
                 }
                 break;
+            case Types.STATE:
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                //These types only exist inside of plans
+                ((Plan) parentElement).getStates().remove(planElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
+                break;
+            case Types.ENTRYPOINT:
+            case Types.PRECONDITION:
+            case Types.RUNTIMECONDITION:
+            case Types.POSTCONDITION:
+            case Types.SYNCHRONISATION:
+            case Types.SYNCTRANSITION:
+                //TODO: Handle these cases
             default:
                 System.err.println("ModelManager: removing " + type + " not implemented, yet!");
         }
@@ -746,6 +800,7 @@ public class ModelManager implements Observer {
             event.setParentId(parentElement.getId());
             fireEvent(event);
         } else {
+            System.out.println("Parent is null");
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, type));
         }
     }
@@ -1071,11 +1126,14 @@ public class ModelManager implements Observer {
 
         switch (mmq.elementType){
             case Types.STATE:
+                //TODO: How do Success and FailureStates differ from normal States in the model?
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
                 //Creating a new State and setting all necessary fields
                 State state = new State();
                 state.setParentPlan(parenOfElement.getPlan());
-                //Putting the created state in the planElementMap so that it can be found there later
-                planElementMap.put(state.getId(), state);
+//                //Putting the created state in the planElementMap so that it can be found there later
+//                planElementMap.put(state.getId(), state);
                 //Creating an extension with coordinates
                 PmlUiExtension extension = new PmlUiExtension();
                 extension.setXPos(x);
@@ -1083,9 +1141,9 @@ public class ModelManager implements Observer {
                 //create an command, that inserts the created State in the Plan
                 cmd = new AddStateInPlan(this, parenOfElement, state, extension);
                 break;
-            case Types.SUCCESSSTATE:
-            case Types.FAILURESTATE:
             case Types.ENTRYPOINT:
+                EntryPoint entryPoint = new EntryPoint();
+                entryPoint.setPlan(parenOfElement.getPlan());
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:

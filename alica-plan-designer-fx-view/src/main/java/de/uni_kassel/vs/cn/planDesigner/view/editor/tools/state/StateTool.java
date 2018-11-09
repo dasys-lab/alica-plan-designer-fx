@@ -26,34 +26,19 @@ import java.util.Map;
  */
 public class StateTool extends AbstractTool {
 
-    private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
-
     public StateTool(TabPane workbench, PlanTab planTab) {
         super(workbench, planTab);
     }
 
-    @Override
-    protected void initHandlerMap() {
 
-    }
-
-    @Override
-    public DraggableHBox createToolUI() {
-        DraggableHBox draggableHBox = new DraggableHBox();
-        draggableHBox.setIcon(Types.STATE);
-        setDraggableHBox(draggableHBox);
-        return draggableHBox;
-    }
 
     /**
      * Creating a handler, that creates an event to request the creation of a new State.
-     *
-     * @return  a map containing the handler
      */
     @Override
-    protected Map<EventType, EventHandler> getCustomHandlerMap() {
-        if (eventHandlerMap.isEmpty()) {
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, (EventHandler<MouseDragEvent>) event -> {
+    protected void initHandlerMap() {
+        if (customHandlerMap.isEmpty()) {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, (EventHandler<MouseDragEvent>) event -> {
 
                 // Calculate the relative coordinates of the event
                 Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
@@ -68,7 +53,7 @@ public class StateTool extends AbstractTool {
 
                 // Create an event. In this case use a GuiChangePositionEvent, because it can also hold the coordinates
                 // of the event
-                GuiChangePositionEvent guiEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.STATE, null);
+                GuiChangePositionEvent guiEvent = createEvent();
                 guiEvent.setNewX((int) eventTargetCoordinates.getX());
                 guiEvent.setNewY((int) eventTargetCoordinates.getY());
                 guiEvent.setParentId(getPlanTab().getPlan().getId());
@@ -95,7 +80,24 @@ public class StateTool extends AbstractTool {
 //                    endPhase();
             });
         }
-        return eventHandlerMap;
+    }
+
+    @Override
+    public DraggableHBox createToolUI() {
+        DraggableHBox draggableHBox = new DraggableHBox();
+        draggableHBox.setIcon(Types.STATE);
+        setDraggableHBox(draggableHBox);
+        return draggableHBox;
+    }
+
+    /**
+     * Create an event. In this case use a GuiChangePositionEvent, because it can also hold the coordinates
+     * of the event
+     *
+     * @return  the created event
+     */
+    protected GuiChangePositionEvent createEvent(){
+        return new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.STATE, null);
     }
 
 }

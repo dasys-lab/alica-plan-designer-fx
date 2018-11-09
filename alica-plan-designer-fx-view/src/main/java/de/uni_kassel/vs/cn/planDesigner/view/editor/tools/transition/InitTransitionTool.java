@@ -17,18 +17,12 @@ import java.util.Map;
 
 public class InitTransitionTool extends AbstractTool {
 
-    private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private boolean initial = true;
 //    private EntryPointContainer start;
 //    private StateContainer finish;
 
     public InitTransitionTool(TabPane workbench, PlanTab planTab) {
         super(workbench, planTab);
-    }
-
-    @Override
-    protected void initHandlerMap() {
-
     }
 
 //    public InitStateConnection createNewObject() {
@@ -40,9 +34,9 @@ public class InitTransitionTool extends AbstractTool {
     }
 
     @Override
-    protected Map<EventType, EventHandler> getCustomHandlerMap() {
-        if (eventHandlerMap.isEmpty()) {
-            eventHandlerMap.put(MouseEvent.MOUSE_CLICKED, event -> {
+    protected void initHandlerMap() {
+        if (customHandlerMap.isEmpty()) {
+            customHandlerMap.put(MouseEvent.MOUSE_CLICKED, event -> {
 //                if(((Node)event.getTarget()).getParent() instanceof EntryPointContainer) {
 //                    if (initial) {
 //                        start = (EntryPointContainer) ((Node)event.getTarget()).getParent();
@@ -64,7 +58,7 @@ public class InitTransitionTool extends AbstractTool {
                 event.consume();
             });
 
-            eventHandlerMap.put(MouseEvent.MOUSE_MOVED, event -> {
+            customHandlerMap.put(MouseEvent.MOUSE_MOVED, event -> {
                 if (event.getTarget() instanceof Node == false) {
                     event.consume();
                     return;
@@ -93,7 +87,6 @@ public class InitTransitionTool extends AbstractTool {
                 event.consume();
             });
         }
-        return eventHandlerMap;
     }
 
     @Override

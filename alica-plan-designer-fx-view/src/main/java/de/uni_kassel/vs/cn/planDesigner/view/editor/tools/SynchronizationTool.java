@@ -16,17 +16,11 @@ import java.util.Map;
 
 public class SynchronizationTool extends AbstractTool{
 
-    private HashMap<EventType, EventHandler> eventHandlerMap = new HashMap<>();
     private Node visualRepresentation;
     private boolean initial = true;
 
     public SynchronizationTool(TabPane workbench, PlanTab planTab) {
         super(workbench, planTab);
-    }
-
-    @Override
-    protected void initHandlerMap() {
-
     }
 
     @Override
@@ -48,9 +42,9 @@ public class SynchronizationTool extends AbstractTool{
 //    }
 
     @Override
-    protected Map<EventType, EventHandler> getCustomHandlerMap() {
-        if (eventHandlerMap.isEmpty()) {
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
+    protected void initHandlerMap(){
+        if (customHandlerMap.isEmpty()) {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
 //                    localCoord = null;
@@ -75,7 +69,7 @@ public class SynchronizationTool extends AbstractTool{
 //                    event.consume();
                 }
             });
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
 //                    updateLocalCoords(event);
@@ -87,7 +81,7 @@ public class SynchronizationTool extends AbstractTool{
                 }
             });
 
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
 //                    ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
@@ -96,7 +90,7 @@ public class SynchronizationTool extends AbstractTool{
             });
 
 
-            eventHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
                 @Override
                 public void handle(MouseDragEvent event) {
                     if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
@@ -122,6 +116,5 @@ public class SynchronizationTool extends AbstractTool{
                 }
             });
         }
-        return eventHandlerMap;
     }
 }

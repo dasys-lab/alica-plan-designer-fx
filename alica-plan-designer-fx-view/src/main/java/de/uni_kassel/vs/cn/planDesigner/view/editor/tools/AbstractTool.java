@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * The {@link AbstractTool} interface provides methods for the tools in the {@link EditorToolBar}.
@@ -84,7 +83,10 @@ public abstract class AbstractTool {
         return defaultHandlerMap;
     }
 
-    protected Map<EventType, EventHandler> getCustomHandlerMap() {
+    protected final  Map<EventType, EventHandler> getCustomHandlerMap() {
+        if(customHandlerMap == null){
+            customHandlerMap = new HashMap<>();
+        }
         if (customHandlerMap.isEmpty()) {
             this.initHandlerMap();
         }
