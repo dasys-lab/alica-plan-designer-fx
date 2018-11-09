@@ -1,0 +1,18 @@
+package de.unikassel.vs.alica.planDesigner.view.editor.container;
+
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
+import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
+import javafx.scene.paint.Color;
+
+public class SuccessStateContainer extends TerminalStateContainer {
+
+    public SuccessStateContainer(/*PmlUiExtension pmlUiExtension,*/ StateViewModel state, PlanTab planTab) {
+        super(state, planTab);
+    }
+
+    @Override
+    public Color getVisualisationColor() {
+        return Color.GREEN;
+    }
+
+}

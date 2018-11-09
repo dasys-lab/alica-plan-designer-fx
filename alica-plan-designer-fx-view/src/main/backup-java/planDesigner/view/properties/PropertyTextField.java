@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.properties;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;

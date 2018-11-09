@@ -1,6 +1,5 @@
 package de.uni_kassel.vs.cn.planDesigner.view.properties;
 
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ObservableValueBase;
 import javafx.collections.FXCollections;

@@ -1,0 +1,58 @@
+package de.unikassel.vs.alica.planDesigner.command.add;
+
+import de.unikassel.vs.alica.planDesigner.alicamodel.State;
+import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+
+
+public class AddStateInPlan extends AbstractCommand {
+
+    public static final String DEFAULT_STATE_NAME = "MISSING NAME";
+
+    private PlanModelVisualisationObject parentOfElement;
+    private PmlUiExtension newlyCreatedPmlUiExtension;
+    private State newState;
+
+    public AddStateInPlan(ModelManager manager, PlanModelVisualisationObject parentOfElement, State newState, PmlUiExtension pmlUiExtension) {
+        super(manager);
+        this.newState = newState;
+        newState.setName(DEFAULT_STATE_NAME);
+        this.parentOfElement = parentOfElement;
+        this.newlyCreatedPmlUiExtension = pmlUiExtension;
+    }
+
+    @Override
+    public void doCommand() {
+//        parentOfElement.getPlan().getStates().add(newState);
+//        parentOfElement
+//                .getPmlUiExtensionMap()
+//                .getExtension()
+//                .put(newState, newlyCreatedPmlUiExtension);
+//        UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newState, Types.STATE);
+//        event.setParentId(parentOfElement.getPlan().getId());
+//        event.setNewX(newlyCreatedPmlUiExtension.getXPos());
+//        event.setNewY(newlyCreatedPmlUiExtension.getYPos());
+//        modelManager.fireEvent(event);
+        modelManager.addPlanElementAtPosition(Types.STATE, newState, newlyCreatedPmlUiExtension, parentOfElement);
+    }
+
+    @Override
+    public void undoCommand() {
+        modelManager.removePlanElement(Types.STATE, newState ,parentOfElement.getPlan(), false);
+//        parentOfElement.getPlan().getStates().remove(newState);
+//        parentOfElement
+//                .getPmlUiExtensionMap()
+//                .getExtension()
+//                .remove(newState);
+//        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, newState, Types.STATE);
+//        event.setParentId(parentOfElement.getPlan().getId());
+//        modelManager.fireEvent(event);
+    }
+
+    public PmlUiExtension getNewlyCreatedPmlUiExtension() {
+        return newlyCreatedPmlUiExtension;
+    }
+}
