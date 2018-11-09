@@ -13,8 +13,8 @@ import de.unikassel.vs.alica.planDesigner.serialization.InternalRefSerializer;
 
 import java.util.ArrayList;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
-                include = JsonTypeInfo.As.PROPERTY,
+@JsonTypeInfo(  use = JsonTypeInfo.Id.NAME,
+                defaultImpl = State.class,
                 property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = State.class),
