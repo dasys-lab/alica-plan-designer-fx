@@ -2,7 +2,6 @@ package de.uni_kassel.vs.cn.planDesigner.view.menu;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
-import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.*;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTab;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryTabPane;
 import de.uni_kassel.vs.cn.planDesigner.view.repo.RepositoryViewModel;

@@ -1,7 +1,6 @@
 package de.uni_kassel.vs.cn.planDesigner.controller;
 
 import de.uni_kassel.vs.cn.generator.AlicaModelUtils;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.CreateAbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.view.I18NRepo;
 import javafx.fxml.FXML;
