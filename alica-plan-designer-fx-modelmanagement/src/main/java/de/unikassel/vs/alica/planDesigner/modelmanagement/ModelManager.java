@@ -3,11 +3,13 @@ package de.unikassel.vs.alica.planDesigner.modelmanagement;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.UiTransitionModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.AddEntryPointInPlan;
 import de.unikassel.vs.alica.planDesigner.command.add.AddPlanToPlanType;
 import de.unikassel.vs.alica.planDesigner.command.add.AddStateInPlan;
+import de.unikassel.vs.alica.planDesigner.command.add.AddTransitionInPlan;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
 import de.unikassel.vs.alica.planDesigner.command.create.CreateBehaviour;
@@ -685,6 +687,10 @@ public class ModelManager implements Observer {
                 if (serializeToDisk) {
                     serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
                 }
+                break;
+            case Types.TRANSITION:
+                // TODO something with UiExtension?
+                break;
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
                 return null;
@@ -960,6 +966,7 @@ public class ModelManager implements Observer {
                     case Types.POSTCONDITION:
                     case Types.SYNCHRONISATION:
                     case Types.SYNCTRANSITION:
+                    case Types.TRANSITION:
                         cmd = handleNewElementInPlanQuery( mmq);
                         break;
                     default:
@@ -1161,6 +1168,15 @@ public class ModelManager implements Observer {
                 terminalExtension.setXPos(x);
                 terminalExtension.setYPos(y);
                 cmd = new AddStateInPlan(this, parenOfElement, terminalState, terminalExtension, Types.SUCCESSSTATE);
+                break;
+            case Types.TRANSITION:
+                State in = null;
+                State out = null;
+                if(mmq instanceof UiTransitionModelModificationQuery) {
+                    in = (State) getPlanElement(((UiTransitionModelModificationQuery) mmq).getNewIn());
+                    out = (State) getPlanElement(((UiTransitionModelModificationQuery) mmq).getNewOut());
+                }
+                cmd = new AddTransitionInPlan(this, parenOfElement, in, out);
                 break;
             case Types.ENTRYPOINT:
                 EntryPoint entryPoint = new EntryPoint();

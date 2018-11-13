@@ -41,13 +41,7 @@ public abstract class AbstractTool {
     protected HashMap<EventType, EventHandler> customHandlerMap;
     protected Cursor previousCursor;
 
-
     private boolean recentlyDone;
-    private EventHandler<? super ScrollEvent> onScrollInPlanTab;
-    private ScrollPane.ScrollBarPolicy vBarPolicy;
-    private ScrollPane.ScrollBarPolicy hBarPolicy;
-    private double vmax;
-    private double hmax;
 
     public AbstractTool(TabPane planEditorTabPane, PlanTab planTab) {
         this.planEditorTabPane = planEditorTabPane;
@@ -105,8 +99,6 @@ public abstract class AbstractTool {
                 .forEach(entry -> planEditorTabPane.getScene().addEventFilter(entry.getKey(), entry.getValue()));
 
         previousCursor = planEditorTabPane.getScene().getCursor();
-        // TODO: should be done in the derived tool classes' start phase methods
-        //planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon("special elementType of abstract tool")));
     }
 
     public void endPhase() {
@@ -157,7 +149,7 @@ public abstract class AbstractTool {
      * @param event  the {@link MouseDragEvent} containing the base coordinates
      * @return  the relative coordinates or null, if the drag was released outside of the editor
      */
-    protected Point2D getLocalCoordinatesFromEvent(MouseDragEvent event){
+    protected Point2D getLocalCoordinatesFromEvent(MouseEvent event){
         //If the events target is the editor, calculate the local coordinates
         if(event.getTarget() != null && isMouseDragEventOnValidTarget(event)){
             return planTab.getPlanEditorGroup().sceneToLocal(event.getX(), event.getY());
@@ -166,7 +158,7 @@ public abstract class AbstractTool {
         return null;
     }
 
-    private boolean isMouseDragEventOnValidTarget(MouseDragEvent event){
+    private boolean isMouseDragEventOnValidTarget(MouseEvent event){
         //The target may be the StackPane itself
         return event.getTarget() == planTab.getPlanContent()
                 //Or one of the children of its children

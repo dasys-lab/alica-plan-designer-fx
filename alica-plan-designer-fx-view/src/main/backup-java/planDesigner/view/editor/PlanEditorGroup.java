@@ -2,8 +2,10 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor;
 
 import de.uni_kassel.vs.cn.generator.EMFModelUtils;
 import de.uni_kassel.vs.cn.planDesigner.aggregatedModel.PlanModelVisualisationObject;
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.planDesigner.command.CommandStack;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.container.*;
 import javafx.scene.Group;
 import org.eclipse.emf.ecore.EObject;
 

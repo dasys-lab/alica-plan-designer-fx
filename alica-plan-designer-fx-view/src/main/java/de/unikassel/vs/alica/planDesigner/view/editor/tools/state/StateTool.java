@@ -8,8 +8,10 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
 
@@ -22,8 +24,6 @@ public class StateTool extends AbstractTool {
         super(workbench, planTab);
     }
 
-
-
     /**
      * Creating a handler, that creates an event to request the creation of a new State.
      */
@@ -31,6 +31,7 @@ public class StateTool extends AbstractTool {
     protected void initHandlerMap() {
         if (customHandlerMap.isEmpty()) {
             customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, (EventHandler<MouseDragEvent>) event -> {
+                planEditorTabPane.getScene().setCursor(previousCursor);
 
                 // Calculate the relative coordinates of the event
                 Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
@@ -50,6 +51,9 @@ public class StateTool extends AbstractTool {
                 guiEvent.setNewY((int) eventTargetCoordinates.getY());
                 guiEvent.setParentId(getPlanTab().getPlan().getId());
                 handler.handle(guiEvent);
+            });
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, (EventHandler<MouseDragEvent>) event -> {
+                planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon(Types.STATE, AlicaIcon.Size.SMALL)));
             });
         }
     }

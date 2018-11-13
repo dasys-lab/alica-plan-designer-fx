@@ -1,8 +1,8 @@
 package de.unikassel.vs.alica.generator;
 
 import de.unikassel.vs.alica.generator.cpp.CPPGeneratorImpl;
-import de.uni_kassel.vs.generator.cpp.parser.CommentsLexer;
-import de.uni_kassel.vs.generator.cpp.parser.CommentsParser;
+import de.unikassel.vs.alica.generator.cpp.parser.CommentsLexer;
+import de.unikassel.vs.alica.generator.cpp.parser.CommentsParser;
 import de.unikassel.vs.alica.generator.cpp.parser.ProtectedRegionsVisitor;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;

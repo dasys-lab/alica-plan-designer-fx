@@ -1,5 +1,7 @@
 package de.uni_kassel.vs.cn.generator;
 
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+
 import java.util.List;
 
 /**

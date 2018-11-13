@@ -1,5 +1,6 @@
 package de.uni_kassel.vs.cn.generator;
 
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
 import de.uni_kassel.vs.cn.generator.configuration.Configuration;
 import de.uni_kassel.vs.cn.generator.configuration.ConfigurationManager;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.impl.AlicaFactoryImpl;

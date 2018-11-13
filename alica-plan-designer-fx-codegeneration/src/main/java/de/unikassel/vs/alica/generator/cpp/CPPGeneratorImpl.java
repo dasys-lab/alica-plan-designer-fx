@@ -27,14 +27,14 @@ import java.util.function.Function;
 public class CPPGeneratorImpl implements IGenerator {
 
     private static final Logger LOG = LogManager.getLogger(CPPGeneratorImpl.class);
-    private de.unikassel.vs.alica.generator.cpp.XtendTemplates xtendTemplates;
+    private XtendTemplates xtendTemplates;
 
     private GeneratedSourcesManager generatedSourcesManager;
     private String formatter;
 
     public CPPGeneratorImpl(GeneratedSourcesManager generatedSourcesManager) {
         this.generatedSourcesManager = generatedSourcesManager;
-        xtendTemplates = new de.unikassel.vs.alica.generator.cpp.XtendTemplates();
+        xtendTemplates = new XtendTemplates();
     }
 
     /**

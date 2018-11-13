@@ -1,12 +1,11 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
+import de.unikassel.vs.alica.planDesigner.events.TransitionAddEvent;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.UiTransitionModelModificationQuery;
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelFactory.ViewModelFactory;
-import de.unikassel.vs.alica.planDesigner.alicamodel.AnnotatedPlan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
-import de.unikassel.vs.alica.planDesigner.alicamodel.PlanType;
+import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
@@ -235,6 +234,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         ((StateViewModel) viewModelElement).setYPosition(y);
                         planViewModel.getStates().add((StateViewModel) viewModelElement);
                         break;
+                    case Types.TRANSITION: {
+                        plan = modelManager.getPlanElement(event.getParentId());
+                        planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
+                        ((TransitionViewModel) viewModelElement).setInState((StateViewModel) viewModelFactory.getViewModelElement(((Transition)planElement).getInState()));
+                        ((TransitionViewModel) viewModelElement).setOutState((StateViewModel) viewModelFactory.getViewModelElement(((Transition)planElement).getOutState()));
+                        planViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
+                    } break;
                     case Types.ENTRYPOINT:
                         plan = modelManager.getPlanElement(event.getParentId());
                         planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
@@ -349,7 +355,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     uimmq.setNewX(((GuiChangePositionEvent) event).getNewX());
                     uimmq.setNewY(((GuiChangePositionEvent) event).getNewY());
                     mmq = uimmq;
-                }else {
+                } else if (event instanceof TransitionAddEvent) {
+                    UiTransitionModelModificationQuery tmmq = new UiTransitionModelModificationQuery(ModelQueryType.ADD_ELEMENT
+                            , event.getElementType(), event.getElementId(), event.getParentId());
+                    tmmq.setNewIn(((TransitionAddEvent) event).getNewIn());
+                    tmmq.setNewOut(((TransitionAddEvent) event).getNewOut());
+                    mmq = tmmq;
+                } else {
                     mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
                     mmq.setElementId(event.getElementId());
                     mmq.setElementType(event.getElementType());
@@ -444,7 +456,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             System.err.println("Controller: Unknown filesystem event elementType received that gets ignored!");
             return;
         }
-        modelManager.handleModelModificationQuery(mmq);
+        this.modelManager.handleModelModificationQuery(mmq);
     }
 
     @Override

@@ -2,6 +2,8 @@
  */
 package de.uni_kassel.vs.cn.planDesigner.alicamodel.impl;
 
+import de.uni_kassel.vs.cn.planDesigner.alicamodel.*;
+
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;

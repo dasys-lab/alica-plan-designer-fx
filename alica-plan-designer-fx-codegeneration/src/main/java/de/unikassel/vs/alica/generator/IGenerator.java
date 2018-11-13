@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * This interface declares methods for generating code.
  * An example for an implementation for C++ as target language
- * can be found at {@link de.uni_kassel.vs.cn.generator.cpp.CPPGeneratorImpl}
+ * can be found at {@link de.unikassel.vs.alica.generator.cpp.CPPGeneratorImpl}
  */
 public interface IGenerator {
 
