@@ -683,6 +683,10 @@ public class ModelManager implements Observer {
                 if (serializeToDisk) {
                     serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
                 }
+                break;
+            case Types.TRANSITION:
+                // TODO something with UiExtension?
+                break;
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
                 return null;
@@ -945,6 +949,7 @@ public class ModelManager implements Observer {
                     case Types.POSTCONDITION:
                     case Types.SYNCHRONISATION:
                     case Types.SYNCTRANSITION:
+                    case Types.TRANSITION:
                         cmd = handleNewElementInPlanQuery( mmq);
                         break;
                     default:
@@ -1140,6 +1145,15 @@ public class ModelManager implements Observer {
                 extension.setYPos(y);
                 //create an command, that inserts the created State in the Plan
                 cmd = new AddStateInPlan(this, parenOfElement, state, extension);
+                break;
+            case Types.TRANSITION:
+                State in = null;
+                State out = null;
+                if(mmq instanceof UiTransitionModelModificationQuery) {
+                    in = (State) getPlanElement(((UiTransitionModelModificationQuery) mmq).getNewIn());
+                    out = (State) getPlanElement(((UiTransitionModelModificationQuery) mmq).getNewOut());
+                }
+                cmd = new AddTransitionInPlan(this, parenOfElement, in, out);
                 break;
             case Types.ENTRYPOINT:
                 EntryPoint entryPoint = new EntryPoint();

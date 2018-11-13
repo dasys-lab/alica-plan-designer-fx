@@ -1,112 +1,136 @@
 package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.transition;
 
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
+import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
+import de.uni_kassel.vs.cn.planDesigner.events.TransitionAddEvent;
+import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
+import de.uni_kassel.vs.cn.planDesigner.view.editor.container.StateContainer;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
-import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
-import javafx.event.Event;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.model.StateViewModel;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
+import javafx.geometry.Point2D;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
 
 public class TransitionTool extends AbstractTool {
 
-    private boolean initial = true;
-//    private StateContainer start;
-//    private StateContainer finish;
+    private int initial = 0;
+    private LinkedList<Point2D> bendPoints = new LinkedList<>();
+
+    private StateViewModel startState;
 
     public TransitionTool(TabPane workbench, PlanTab planTab) {
         super(workbench, planTab);
     }
 
-//    public Transition createNewObject() {
-//        return getAlicaFactory().createTransition();
-//    }
-
-    public void draw() {
-//        ((PlanTab) parentTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
-    }
-
     @Override
     protected void initHandlerMap() {
         if (customHandlerMap.isEmpty()) {
-            customHandlerMap.put(MouseEvent.MOUSE_CLICKED, event -> {
-//                    if (initial) {
-//                        if(((Node)event.getTarget()).getParent() instanceof StateContainer &&
-//                                ((Node)event.getTarget()).getParent() instanceof TerminalStateContainer == false) {
-//                            start = (StateContainer) ((Node)event.getTarget()).getParent();
-//                            initial = false;
-//                        } else {
-//                            endPhase();
-//                        }
-//                    } else {
-//                        if (((Node)event.getTarget()).getParent() instanceof StateContainer) {
-//                            finish = (StateContainer) ((Node)event.getTarget()).getParent();
-//                            AddTransitionInPlan command = new AddTransitionInPlan(
-//                                    ((PlanTab) parentTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject(),
-//                                    start.getModelElementId(), finish.getModelElementId());
-//                            MainWindowController.getInstance()
-//                                    .getCommandStack()
-//                                    .storeAndExecute(command);
-//                        }
-//
-//                        initial = true;
-//                        endPhase();
-//                    }
+            ImageCursor imageCursor = new ImageCursor(new AlicaIcon(Types.TRANSITION, AlicaIcon.Size.SMALL), 0, 8);
+            ImageCursor forbiddenCursor = new ImageCursor(new AlicaIcon("FORBIDDEN", AlicaIcon.Size.SMALL), 8, 8);
+            ImageCursor addCursor = new ImageCursor(new AlicaIcon("ADD", AlicaIcon.Size.SMALL), 8, 8);
+
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, (EventHandler<MouseDragEvent>) event -> {
+                planEditorTabPane.getScene().setCursor(imageCursor);
             });
 
-            customHandlerMap.put(MouseEvent.MOUSE_MOVED, event -> {
-                if (event.getTarget() instanceof Node == false) {
-                    event.consume();
-                    return;
-                }
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, (EventHandler<MouseDragEvent>) event -> {
                 Node target = (Node) event.getTarget();
-
-//                if (initial) {
-//                    if (((Node)event.getTarget()).getParent() instanceof StateContainer == false ||
-//                            ((Node)event.getTarget()).getParent() instanceof TerminalStateContainer) {
-//                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
-//                            previousCursor = target.getScene().getCursor();
-//                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
-//                        }
-//                    } else {
-//                        target.getScene().setCursor(previousCursor);
-//                    }
-//                } else {
-//                    if (((Node)event.getTarget()).getParent() instanceof StateContainer == false) {
-//                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
-//                            previousCursor = target.getScene().getCursor();
-//                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
-//                        }
-//                    } else {
-//                        target.getScene().setCursor(previousCursor);
-//                    }
-//                }
-                event.consume();
+                if (!(target.getParent() instanceof StateContainer)) {
+                    planEditorTabPane.getScene().setCursor(forbiddenCursor);
+                } else {
+                    planEditorTabPane.getScene().setCursor(imageCursor);
+                }
             });
+
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, (EventHandler<MouseDragEvent>) event -> {
+                initial = 1;
+                Node target = (Node) event.getTarget();
+                if ((target.getParent() instanceof StateContainer)) {
+                    // SET STARTPOINT
+                    startState = ((StateContainer) ((Node)event.getTarget()).getParent()).getState();
+                }
+            });
+
+            customHandlerMap.put(MouseEvent.MOUSE_CLICKED, (EventHandler<MouseEvent>) event -> {
+                if (initial > 1) {
+                    Node target = (Node) event.getTarget();
+                    Node parent = target.getParent();
+                    if (parent instanceof StateContainer) {
+                        // SET ENDPOINT
+                        StateViewModel endState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+
+                        IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+
+                        TransitionAddEvent guiEvent = new TransitionAddEvent(GuiEventType.ADD_ELEMENT, Types.TRANSITION, null);
+                        guiEvent.setNewIn(startState.getId());
+                        guiEvent.setNewOut(endState.getId());
+                        guiEvent.setParentId(getPlanTab().getPlan().getId());
+                        handler.handle(guiEvent);
+
+                        endPhase();
+                    } else {
+                        // ADD BENDPOINT
+                        Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
+
+                        if (eventTargetCoordinates == null) {
+                            event.consume();
+                        }
+                        bendPoints.add(eventTargetCoordinates);
+                    }
+                }
+                initial++;
+            });
+
+            customHandlerMap.put(MouseEvent.MOUSE_MOVED, (EventHandler<MouseEvent>) event -> {
+                if(startState != null) {
+                    Node target = (Node) event.getTarget();
+                    if (target.getParent() instanceof StateContainer) {
+                        planEditorTabPane.getScene().setCursor(imageCursor);
+                    } else {
+                        planEditorTabPane.getScene().setCursor(addCursor);
+                    }
+                }
+            });
+
+            customHandlerMap.put(KeyEvent.KEY_RELEASED, (EventHandler<KeyEvent>) event -> {
+                if (initial != 0) {
+                    if (event.getCode() == KeyCode.ESCAPE) {
+                        endPhase();
+                    }
+                }
+            });
+
+            defaultHandlers().remove(MouseDragEvent.MOUSE_RELEASED);
         }
+    }
+
+    @Override
+    public void endPhase() {
+        super.endPhase();
+        initial = 0;
+        startState = null;
+        bendPoints.clear();
+        planEditorTabPane.getScene().setCursor(previousCursor);
+        getDraggableHBox().setEffect(null);
     }
 
     @Override
     public DraggableHBox createToolUI() {
         DraggableHBox draggableHBox = new DraggableHBox();
         draggableHBox.setIcon(Types.TRANSITION);
+        setDraggableHBox(draggableHBox);
         return draggableHBox;
     }
-
-//    private class TransitionHBox extends DraggableHBox<Transition> {
-//        public TransitionHBox() {
-//            super(TransitionTool.this.createNewObject(), TransitionTool.this);
-//            setOnDragDetected(Event::consume);
-//            setOnMouseClicked(event -> startPhase());
-//        }
-//    }
-
 }

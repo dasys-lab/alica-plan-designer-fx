@@ -15,6 +15,7 @@ import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.UiExtensionModelModificationQuery;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.UiTransitionModelModificationQuery;
 import de.uni_kassel.vs.cn.planDesigner.plugin.PluginEventHandler;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
@@ -225,14 +226,19 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     x = ((UiExtensionModelEvent) event).getNewX();
                     y = ((UiExtensionModelEvent) event).getNewY();
                 }
+                PlanElement plan = modelManager.getPlanElement(event.getParentId());
+                PlanViewModel planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
                 switch(event.getElementType()) {
                     case Types.STATE:
-                        PlanElement plan = modelManager.getPlanElement(event.getParentId());
-                        PlanViewModel planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
                         ((StateViewModel) viewModelElement).setXPosition(x);
                         ((StateViewModel) viewModelElement).setYPosition(y);
                         planViewModel.getStates().add((StateViewModel) viewModelElement);
                         break;
+                    case Types.TRANSITION: {
+                        ((TransitionViewModel) viewModelElement).setInState((StateViewModel) viewModelFactory.getViewModelElement(((Transition)planElement).getInState()));
+                        ((TransitionViewModel) viewModelElement).setOutState((StateViewModel) viewModelFactory.getViewModelElement(((Transition)planElement).getOutState()));
+                        planViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
+                    } break;
                     case Types.SUCCESSSTATE:
                     case Types.FAILURESTATE:
                     case Types.ENTRYPOINT:
@@ -243,6 +249,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     case Types.SYNCTRANSITION:
                         //TODO: Handle these cases
                 }
+                break;
+            case ELEMENT_PARSED:
+                break;
+            case ELEMENT_SERIALIZED:
                 break;
         }
     }
@@ -344,7 +354,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     uimmq.setNewX(((GuiChangePositionEvent) event).getNewX());
                     uimmq.setNewY(((GuiChangePositionEvent) event).getNewY());
                     mmq = uimmq;
-                }else {
+                } else if (event instanceof TransitionAddEvent) {
+                    UiTransitionModelModificationQuery tmmq = new UiTransitionModelModificationQuery(ModelQueryType.ADD_ELEMENT
+                            , event.getElementType(), event.getElementId(), event.getParentId());
+                    tmmq.setNewIn(((TransitionAddEvent) event).getNewIn());
+                    tmmq.setNewOut(((TransitionAddEvent) event).getNewOut());
+                    mmq = tmmq;
+                } else {
                     mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
                     mmq.setElementId(event.getElementId());
                     mmq.setElementType(event.getElementType());
@@ -438,7 +454,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             System.err.println("Controller: Unknown filesystem event elementType received that gets ignored!");
             return;
         }
-        modelManager.handleModelModificationQuery(mmq);
+        this.modelManager.handleModelModificationQuery(mmq);
     }
 
     @Override

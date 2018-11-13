@@ -5,6 +5,7 @@ import de.uni_kassel.vs.cn.planDesigner.alicamodel.State;
 import de.uni_kassel.vs.cn.planDesigner.alicamodel.Transition;
 import de.uni_kassel.vs.cn.planDesigner.command.AbstractCommand;
 import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
+import de.uni_kassel.vs.cn.planDesigner.modelmanagement.Types;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 import de.uni_kassel.vs.cn.planDesigner.uiextensionmodel.PmlUiExtension;
 
@@ -26,24 +27,23 @@ public class AddTransitionInPlan extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        transition.setPreCondition(new PreCondition());
+        /*transition.setPreCondition(new PreCondition());
         transition.setInState(from);
         transition.setOutState(to);
         parentOfElement.getPlan().getTransitions().add(transition);
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .put(transition, newlyCreatedPmlUiExtension);
+                .put(transition, newlyCreatedPmlUiExtension);*/
+        transition.setInState(from);
+        transition.setOutState(to);
+        modelManager.addPlanElement(Types.TRANSITION, transition, parentOfElement.getPlan(), false);
     }
 
     @Override
     public void undoCommand() {
         transition.setOutState(null);
         transition.setInState(null);
-        parentOfElement.getPlan().getTransitions().remove(transition);
-        parentOfElement
-                .getPmlUiExtensionMap()
-                .getExtension()
-                .remove(transition);
+        modelManager.removePlanElement(Types.TRANSITION, transition, parentOfElement.getPlan(), false);
     }
 }

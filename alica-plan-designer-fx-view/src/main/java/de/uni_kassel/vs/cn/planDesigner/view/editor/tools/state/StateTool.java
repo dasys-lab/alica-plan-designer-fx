@@ -3,23 +3,18 @@ package de.uni_kassel.vs.cn.planDesigner.view.editor.tools.state;
 import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiChangePositionEvent;
 import de.uni_kassel.vs.cn.planDesigner.events.GuiEventType;
-import de.uni_kassel.vs.cn.planDesigner.events.GuiModificationEvent;
 import de.uni_kassel.vs.cn.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.uni_kassel.vs.cn.planDesigner.view.Types;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.AbstractTool;
 import de.uni_kassel.vs.cn.planDesigner.view.editor.tools.DraggableHBox;
-import de.uni_kassel.vs.cn.planDesigner.view.model.PlanViewModel;
-import javafx.event.Event;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon;
+import de.uni_kassel.vs.cn.planDesigner.view.img.AlicaIcon.Size;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Point2D;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseDragEvent;
-
-import java.lang.annotation.ElementType;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The {@link StateTool} is used for adding new states to the currently edited plan.
@@ -30,8 +25,6 @@ public class StateTool extends AbstractTool {
         super(workbench, planTab);
     }
 
-
-
     /**
      * Creating a handler, that creates an event to request the creation of a new State.
      */
@@ -39,6 +32,7 @@ public class StateTool extends AbstractTool {
     protected void initHandlerMap() {
         if (customHandlerMap.isEmpty()) {
             customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, (EventHandler<MouseDragEvent>) event -> {
+                planEditorTabPane.getScene().setCursor(previousCursor);
 
                 // Calculate the relative coordinates of the event
                 Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
@@ -58,26 +52,9 @@ public class StateTool extends AbstractTool {
                 guiEvent.setNewY((int) eventTargetCoordinates.getY());
                 guiEvent.setParentId(getPlanTab().getPlan().getId());
                 handler.handle(guiEvent);
-
-//                    updateLocalCoords(event);
-//                    if (((Node) event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
-//                            event.getTarget() instanceof StackPane == false) {
-//                        event.consume();
-//                        endPhase();
-//                        return;
-//                    }
-//                    AddStateInPlan command = new AddStateInPlan(planModelVisualisationObject,
-//                            createNewObject());
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(command);
-//
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
-//                                    (int) (localCoord.getX()),
-//                                    (int) (localCoord.getY()), planModelVisualisationObject.getPlan()));
-//                    endPhase();
+            });
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, (EventHandler<MouseDragEvent>) event -> {
+                planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon(Types.STATE, Size.SMALL)));
             });
         }
     }
