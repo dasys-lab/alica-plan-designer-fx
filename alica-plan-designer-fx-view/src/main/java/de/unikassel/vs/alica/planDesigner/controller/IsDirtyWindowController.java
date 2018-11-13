@@ -18,7 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.stage.StageStyle;
 
 public class IsDirtyWindowController {
 
@@ -28,7 +28,7 @@ public class IsDirtyWindowController {
      */
     public static void createIsDirtyWindow(AbstractPlanTab tab, Event event) {
         I18NRepo i18NRepo = I18NRepo.getInstance();
-        Stage stage = init();
+        Stage stage = init(event);
         Button saveBtn = new Button(i18NRepo.getString("action.save"));
         saveBtn.setOnAction(new EventHandler<ActionEvent>(){
 
@@ -71,7 +71,7 @@ public class IsDirtyWindowController {
      **/
     public static void createMultipleTabsDirtyWindow(Event event) {
         I18NRepo i18NRepo = I18NRepo.getInstance();
-        Stage stage = init();
+        Stage stage = init(event);
         Button cancelBtn = new Button(i18NRepo.getString("action.cancel"));
         cancelBtn.setOnAction(new EventHandler<ActionEvent>(){
 
@@ -107,7 +107,7 @@ public class IsDirtyWindowController {
                     return true;
                 }
             } else if(openTab instanceof  AbstractPlanTab) {
-                if (((SerializableViewModel) ((AbstractPlanTab) openTab).getPresentedViewModelElement()).getDirty()) {
+                if (((SerializableViewModel) ((AbstractPlanTab) openTab).getPresentedViewModelElement()).getDirty() || ((AbstractPlanTab) openTab).isDirty()) {
                     return true;
                 }
             }
@@ -115,24 +115,22 @@ public class IsDirtyWindowController {
         return false;
     }
 
-    private static Stage init() {
+    private static Stage init(Event event) {
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
         Stage primaryStage = PlanDesignerApplication.getPrimaryStage();
         stage.initOwner(primaryStage);
         stage.setTitle("Warning");
         // Relocate the pop-up Stage
-        stage.setOnShown(event -> {
+        stage.setOnShown(e -> {
             stage.setX(primaryStage.getX() + primaryStage.getWidth() / 2.0 - stage.getWidth() / 2.0);
             stage.setY(primaryStage.getY() + primaryStage.getHeight() / 2.0 - stage.getHeight() / 2.0);
             stage.show();
         });
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                event.consume();
-                stage.close();
-            }
+        stage.setOnCloseRequest(e ->{
+            event.consume();
+            stage.close();
         });
         return stage;
     }

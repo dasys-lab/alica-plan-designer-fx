@@ -235,7 +235,9 @@ public class ViewModelFactory {
         // we need to add the ep before creating the state, in order to avoid circles (EntryPoint <-> State)
         this.viewModelElements.put(entryPointViewModel.getId(), entryPointViewModel);
         if(ep.getState() != null) {
-            entryPointViewModel.setState((StateViewModel) getViewModelElement(modelManager.getPlanElement(ep.getState().getId())));
+            StateViewModel entryState = (StateViewModel) getViewModelElement(modelManager.getPlanElement(ep.getState().getId()));
+            entryPointViewModel.setState(entryState);
+            entryState.setEntryPoint(entryPointViewModel);
         }
         if(ep.getTask() != null) {
             entryPointViewModel.setTask((TaskViewModel) getViewModelElement(ep.getTask()));
@@ -321,6 +323,10 @@ public class ViewModelFactory {
                 planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(entryPointViewModel.getParentId()));
 
                 planViewModel.getEntryPoints().remove(entryPointViewModel);
+                if(entryPointViewModel.getState() != null){
+                    StateViewModel entryState = entryPointViewModel.getState();
+                    entryState.setEntryPoint(null);
+                }
                 break;
             //TODO: handle other types
         }

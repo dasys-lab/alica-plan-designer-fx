@@ -1,6 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.collections.ObservableList;
@@ -29,13 +32,12 @@ public class EntryPointCreatorDialogController implements Initializable {
     @FXML
     private ComboBox<ViewModelElement> taskComboBox;
 
-    private I18NRepo i18NRepo;
-
     private AtomicReference<TaskViewModel> selectedTask;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        i18NRepo = I18NRepo.getInstance();
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+
         createTaskButton.setText(i18NRepo.getString("action.create.task"));
         createTaskButton.setOnAction(e -> createTask());
         confirmTaskChoiceButton.setText(i18NRepo.getString("action.confirm"));
@@ -60,56 +62,7 @@ public class EntryPointCreatorDialogController implements Initializable {
             ((Stage) confirmTaskChoiceButton.getScene().getWindow()).close();
         });
 
-//        confirmTaskChoiceButton.setOnAction(e -> {
-//            Stage window = (Stage) confirmTaskChoiceButton.getScene().getWindow();
-//            Task selectedItem = taskComboBox.getSelectionModel().getSelectedItem();
-//            if (selectedItem != null) {
-//                createNewEntryPoint(selectedItem);
-//                window.close();
-//            }
-//        });
-
-//        taskComboBox.setItems(FXCollections.observableArrayList(RepoViewBackend.getInstance().getTasks().getKey()));
-//        taskComboBox.setButtonCell(new ListCell<Task>() {
-//            @Override
-//            protected void updateItem(Task item, boolean empty) {
-//                super.updateItem(item, empty);
-//                if (item != null) {
-//                    setText(item.getName());
-//                } else {
-//                    setText(null);
-//                }
-//            }
-//        });
-//        taskComboBox.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-//            @Override
-//            public ListCell<Task> call(ListView<Task> param) {
-//                return new ListCell<Task>() {
-//                    @Override
-//                    protected void updateItem(Task item, boolean empty) {
-//                        super.updateItem(item, empty);
-//                        if (item != null) {
-//                            setText(item.getName());
-//                        } else {
-//                            setText(null);
-//                        }
-//                    }
-//                };
-//            }
-//        });
-//
-//        taskComboBox.onShownProperty().addListener((observable, oldValue, newValue) -> {
-//            if (createEntryPoint == false) {
-//                taskComboBox.setVisible(false);
-//                confirmTaskChoiceButton.setVisible(false);
-//                Stage window = (Stage) newTaskNameTextField.getScene().getWindow();
-//                window.setTitle(i18NRepo.getString("action.create.task"));
-//                createTaskButton.setOnAction(e -> {
-//                    createTask();
-//                    window.close();
-//                });
-//            }
-//        });
+        createTaskButton.setOnAction(e -> createTask());
 
     }
 
@@ -118,7 +71,10 @@ public class EntryPointCreatorDialogController implements Initializable {
     }
 
     private void createTask() {
-        if (newTaskNameTextField.getText() != null && newTaskNameTextField.getText().isEmpty() == false) {
-            }
+        if (newTaskNameTextField.getText() != null && !newTaskNameTextField.getText().isEmpty()) {
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.TASK, newTaskNameTextField.getText());
+            event.setParentId(MainWindowController.getInstance().getGuiModificationHandler().getRepoViewModel().getTasks().get(0).getParentId());
+            MainWindowController.getInstance().getGuiModificationHandler().handle(event);
         }
+    }
 }
