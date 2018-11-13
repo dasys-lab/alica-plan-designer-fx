@@ -43,7 +43,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.uni_kassel.vs.cn.generator.StandaloneCodegenerator</mainClass>
+                            <mainClass>de.unikassel.vs.alica.generator.StandaloneCodegenerator</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

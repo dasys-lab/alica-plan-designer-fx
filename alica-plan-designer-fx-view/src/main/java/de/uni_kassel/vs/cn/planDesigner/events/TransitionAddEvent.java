@@ -1,5 +1,8 @@
-package de.uni_kassel.vs.cn.planDesigner.events;
+package de.unikassel.vs.alica.planDesigner.events;
 
+
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 
 public class TransitionAddEvent extends GuiModificationEvent {
 

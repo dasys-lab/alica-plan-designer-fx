@@ -1,18 +1,16 @@
 
-import de.uni_kassel.vs.cn.planDesigner.PlanDesignerApplication;
-import de.uni_kassel.vs.cn.planDesigner.alicamodel.Plan;
-import de.uni_kassel.vs.cn.planDesigner.configuration.ConfigurationManager;
-import de.uni_kassel.vs.cn.planDesigner.controller.MainWindowController;
-import de.uni_kassel.vs.cn.planDesigner.modelmanagement.ModelManager;
-import de.uni_kassel.vs.cn.planDesigner.view.filebrowser.FileTreeView;
+import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
+import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
 import javafx.stage.Stage;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
 import java.io.File;

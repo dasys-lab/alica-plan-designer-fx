@@ -28,7 +28,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.uni_kassel.vs.cn.planDesigner.PlanDesigner</mainClass>
+                            <mainClass>de.unikassel.vs.alica.planDesigner.PlanDesigner</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

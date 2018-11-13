@@ -1,6 +1,6 @@
 grammar Comments;
 
-@header { package de.uni_kassel.vs.cn.generator.cpp.parser; }
+@header { package de.unikassel.vs.alica.generator.cpp.parser; }
 
 options {
     language = Java;
