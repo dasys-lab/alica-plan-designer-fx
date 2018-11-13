@@ -153,7 +153,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     }
 
     @Override
-    public ViewModelElement getPresentedViewModelElement() {
+    public TaskRepositoryViewModel getPresentedViewModelElement() {
         return taskRepository;
     }
 

@@ -124,6 +124,9 @@ public final class RepositoryViewModel {
     public ObservableList<ViewModelElement> getPlans() {
         return plans;
     }
+    public ObservableList<ViewModelElement> getTasks(){
+        return tasks;
+    }
 
     public void addElement(ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {

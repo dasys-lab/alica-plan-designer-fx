@@ -232,10 +232,15 @@ public class ViewModelFactory {
 
     private EntryPointViewModel createEntryPointViewModel(EntryPoint ep) {
         EntryPointViewModel entryPointViewModel = new EntryPointViewModel(ep.getId(), ep.getName(), Types.ENTRYPOINT);
-        entryPointViewModel.setTask(new PlanElementViewModel(ep.getTask().getId(), ep.getTask().getName(), Types.TASK));
         // we need to add the ep before creating the state, in order to avoid circles (EntryPoint <-> State)
         this.viewModelElements.put(entryPointViewModel.getId(), entryPointViewModel);
-        entryPointViewModel.setState((StateViewModel) getViewModelElement(modelManager.getPlanElement(ep.getState().getId())));
+        if(ep.getState() != null) {
+            entryPointViewModel.setState((StateViewModel) getViewModelElement(modelManager.getPlanElement(ep.getState().getId())));
+        }
+        if(ep.getTask() != null) {
+            entryPointViewModel.setTask((TaskViewModel) getViewModelElement(ep.getTask()));
+        }
+        entryPointViewModel.setParentId(ep.getPlan().getId());
         return entryPointViewModel;
     }
 
@@ -310,6 +315,12 @@ public class ViewModelFactory {
                 PlanViewModel planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
 
                 planViewModel.getStates().remove(stateViewModel);
+                break;
+            case Types.ENTRYPOINT:
+                EntryPointViewModel entryPointViewModel = (EntryPointViewModel) viewModelElement;
+                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(entryPointViewModel.getParentId()));
+
+                planViewModel.getEntryPoints().remove(entryPointViewModel);
                 break;
             //TODO: handle other types
         }

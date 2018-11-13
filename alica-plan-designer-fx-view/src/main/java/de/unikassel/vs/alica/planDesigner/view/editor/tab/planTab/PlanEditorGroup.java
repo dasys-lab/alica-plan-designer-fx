@@ -45,6 +45,7 @@ public class PlanEditorGroup extends Group {
         getChildren().addAll(synchronisationContainers.values());
 
         createStateListeners();
+        createEntryPointListeners();
         //TODO: create Listeners for other types
 
         //TODO add class later
@@ -74,7 +75,7 @@ public class PlanEditorGroup extends Group {
     private Map<Long, EntryPointContainer> createEntryPointContainers() {
         Map<Long, EntryPointContainer> entryPoints = new HashMap<>();
         for (EntryPointViewModel ep : plan.getEntryPoints()) {
-            entryPoints.put(ep.getId(), new EntryPointContainer(ep, stateContainers.get(ep.getState().getId()), planEditorTab));
+            entryPoints.put(ep.getId(), new EntryPointContainer(ep, ep.getState() == null ? null : stateContainers.get(ep.getState().getId()), planEditorTab));
         }
         return entryPoints;
     }
@@ -154,5 +155,37 @@ public class PlanEditorGroup extends Group {
             default:
                 throw new IllegalStateException("State has a non-state type!");
         }
+    }
+
+    private void createEntryPointListeners(){
+        plan.getEntryPoints().addListener((ListChangeListener<EntryPointViewModel>) c -> {
+            while(c.next()){
+                if(c.wasAdded()){
+                    for(EntryPointViewModel entryPoint : c.getAddedSubList()){
+                        StateContainer stateContainer = null;
+                        if(entryPoint.getState() != null){
+                            stateContainer = stateContainers.get(entryPoint.getState().getId());
+                        }
+                        EntryPointContainer entryPointContainer = new EntryPointContainer(entryPoint, stateContainer, planEditorTab);
+                        entryPointContainers.put(entryPoint.getId(), entryPointContainer);
+                        getChildren().add(entryPointContainer);
+                        int x = entryPoint.getXPosition();
+                        int y = entryPoint.getYPosition();
+                        entryPointContainer.setLayoutX(x);
+                        entryPointContainer.setLayoutY(y);
+
+                        planEditorTab.setDirty(true);
+                    }
+                }else if(c.wasRemoved()){
+                    for(EntryPointViewModel entryPoint : c.getRemoved()){
+                        EntryPointContainer entryPointContainer = entryPointContainers.remove(entryPoint.getId());
+                        getChildren().remove(entryPointContainer);
+
+                        planEditorTab.setDirty(true);
+                    }
+
+                }
+            }
+        });
     }
 }

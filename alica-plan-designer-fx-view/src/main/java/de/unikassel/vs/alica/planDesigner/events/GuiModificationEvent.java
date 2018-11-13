@@ -1,5 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.events;
 
+import java.util.Map;
+
 public class GuiModificationEvent {
 
     // mandatory
@@ -12,6 +14,7 @@ public class GuiModificationEvent {
     protected String newAbsoluteDirectory;
     protected long parentId;
     protected long elementId;
+    protected Map<String, Long> relatedObjects;
 
     public GuiModificationEvent(GuiEventType eventType, String elementType, String name) {
         this.eventType = eventType;
@@ -62,4 +65,12 @@ public class GuiModificationEvent {
     public void setNewAbsoluteDirectory(String newAbsoluteDirectory) {
         this.newAbsoluteDirectory = newAbsoluteDirectory;
     }
+    public Map<String, Long> getRelatedObjects() {
+        return relatedObjects;
+    }
+
+    public void setRelatedObjects(Map<String, Long> relatedObjects) {
+        this.relatedObjects = relatedObjects;
+    }
+
 }

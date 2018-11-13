@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.behaviourTab.Behaviour
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public interface IGuiModificationHandler {
     public abstract void handleTabOpenedEvent(PlanTypeTab planTypeTab);
     public abstract void handleUndo();
     public abstract void handleRedo();
+    public RepositoryViewModel getRepoViewModel();
 
     void handleGuiChangePositionEvent(GuiChangePositionEvent event);
 }

@@ -236,6 +236,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         planViewModel.getStates().add((StateViewModel) viewModelElement);
                         break;
                     case Types.ENTRYPOINT:
+                        plan = modelManager.getPlanElement(event.getParentId());
+                        planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
+                        ((EntryPointViewModel) viewModelElement).setXPosition(x);
+                        ((EntryPointViewModel) viewModelElement).setYPosition(y);
+                        planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:
@@ -350,6 +355,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     mmq.setElementType(event.getElementType());
                     mmq.setParentId(event.getParentId());
                 }
+                mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
             case REMOVE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ELEMENT);
@@ -519,6 +525,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
             }
         }
+    }
+
+    @Override
+    public RepositoryViewModel getRepoViewModel(){
+        return repoViewModel;
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.unikassel.vs.alica.planDesigner.modelmanagement;
 import de.unikassel.vs.alica.planDesigner.events.ModelQueryType;
 
 import java.io.File;
+import java.util.Map;
 
 public class ModelModificationQuery {
 
@@ -18,6 +19,7 @@ public class ModelModificationQuery {
     protected String attributeName;
     protected String newValue;
     protected String attributeType;
+    protected Map<String, Long> relatedObjects;
 
     public ModelModificationQuery(ModelQueryType queryType) {
         this.queryType = queryType;
@@ -127,6 +129,14 @@ public class ModelModificationQuery {
 
     public void setAttributeType(String attributeType) {
         this.attributeType = attributeType;
+    }
+
+    public Map<String, Long> getRelatedObjects() {
+        return relatedObjects;
+    }
+
+    public void setRelatedObjects(Map<String, Long> relatedObjects) {
+        this.relatedObjects = relatedObjects;
     }
 
 }

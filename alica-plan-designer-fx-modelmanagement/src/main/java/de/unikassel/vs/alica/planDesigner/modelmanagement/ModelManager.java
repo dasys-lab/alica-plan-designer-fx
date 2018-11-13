@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.*;
+import de.unikassel.vs.alica.planDesigner.command.add.AddEntryPointInPlan;
 import de.unikassel.vs.alica.planDesigner.command.add.AddPlanToPlanType;
 import de.unikassel.vs.alica.planDesigner.command.add.AddStateInPlan;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
@@ -704,6 +705,8 @@ public class ModelManager implements Observer {
     }
 
     public PlanElement addPlanElementAtPosition(String type, PlanElement newElement, PmlUiExtension extension, PlanModelVisualisationObject parentElement){
+        UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+
         switch(type){
             case Types.STATE:
             case Types.SUCCESSSTATE:
@@ -712,6 +715,9 @@ public class ModelManager implements Observer {
                 break;
             case Types.ENTRYPOINT:
                 parentElement.getPlan().getEntryPoints().add((EntryPoint) newElement);
+                HashMap<String, Long> related = new HashMap<>();
+                related.put(Types.TASK, ((EntryPoint)newElement).getTask().getId());
+                event.setRelatedObjects(related);
                 break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
@@ -726,7 +732,6 @@ public class ModelManager implements Observer {
 
         PlanElement oldElement = planElementMap.put(newElement.getId(), newElement);
 
-        UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
         event.setParentId(parentElement.getPlan().getId());
         event.setNewX(extension.getXPos());
         event.setNewY(extension.getYPos());
@@ -782,6 +787,13 @@ public class ModelManager implements Observer {
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
                 break;
             case Types.ENTRYPOINT:
+                ((Plan) parentElement).getEntryPoints().remove(planElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
+                State entryState = ((EntryPoint) planElement).getState();
+                if(entryState != null){
+                    entryState.setEntryPoint(null);
+                }
+                break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:
@@ -1141,16 +1153,22 @@ public class ModelManager implements Observer {
                 break;
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
-                TerminalState successState = new TerminalState(mmq.elementType == Types.SUCCESSSTATE, null);
-                successState.setParentPlan(parenOfElement.getPlan());
-                PmlUiExtension successExtension = new PmlUiExtension();
-                successExtension.setXPos(x);
-                successExtension.setYPos(y);
-                cmd = new AddStateInPlan(this, parenOfElement, successState, successExtension, Types.SUCCESSSTATE);
+                TerminalState terminalState = new TerminalState(mmq.elementType == Types.SUCCESSSTATE, null);
+                terminalState.setParentPlan(parenOfElement.getPlan());
+                PmlUiExtension terminalExtension = new PmlUiExtension();
+                terminalExtension.setXPos(x);
+                terminalExtension.setYPos(y);
+                cmd = new AddStateInPlan(this, parenOfElement, terminalState, terminalExtension, Types.SUCCESSSTATE);
                 break;
             case Types.ENTRYPOINT:
                 EntryPoint entryPoint = new EntryPoint();
                 entryPoint.setPlan(parenOfElement.getPlan());
+                PmlUiExtension entryPointExtension = new PmlUiExtension();
+                entryPointExtension.setXPos(x);
+                entryPointExtension.setYPos(y);
+                entryPoint.setTask((Task) getPlanElement(mmq.getRelatedObjects().get(Types.TASK)));
+                cmd = new AddEntryPointInPlan(this, parenOfElement, entryPoint, entryPointExtension);
+                break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:

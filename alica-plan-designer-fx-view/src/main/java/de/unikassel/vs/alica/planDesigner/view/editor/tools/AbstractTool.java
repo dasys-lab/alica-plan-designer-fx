@@ -102,24 +102,6 @@ public abstract class AbstractTool {
                 .entrySet()
                 .forEach(entry -> planEditorTabPane.getScene().addEventFilter(entry.getKey(), entry.getValue()));
 
-        // deactivate scrolling, fixes scrolling to infinity when handling a tool
-//        if (planEditorTabPane.getSelectionModel().getSelectedItem() instanceof PlanTab) {
-//            PlanTab planTab = (PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem();
-//            onScrollInPlanTab = planTab.getScrollPane().getOnScroll();
-//            vBarPolicy = planTab.getScrollPane().getHbarPolicy();
-//            hBarPolicy = planTab.getScrollPane().getVbarPolicy();
-//            planTab.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-//            planTab.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-//            vmax = planTab.getScrollPane().getVmax();
-//            hmax = planTab.getScrollPane().getHmax();
-//
-//            planTab.getScrollPane().setVmax(0);
-//            planTab.getScrollPane().setHmax(0);
-//            planTab.getScrollPane().setOnScroll(Event::consume);
-//            planTab.getPlanEditorGroup().setAutoSizeChildren(false);
-//            planTab.getPlanEditorGroup().setManaged(false);
-//        }
-
         previousCursor = planEditorTabPane.getScene().getCursor();
         // TODO: should be done in the derived tool classes' start phase methods
         //planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon("special elementType of abstract tool")));
@@ -133,29 +115,10 @@ public abstract class AbstractTool {
         defaultHandlers()
                 .entrySet()
                 .forEach(entry -> getPlanEditorTabPane().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
-//        if (planEditorTabPane.getSelectionModel().getSelectedItem() instanceof PlanTab) {
-//            // reactivate scrolling
-//            PlanTab planTab = (PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem();
-//            planTab.getScrollPane().setOnScroll(onScrollInPlanTab);
-//            planTab.getScrollPane().setVbarPolicy(vBarPolicy);
-//            planTab.getScrollPane().setHbarPolicy(hBarPolicy);
-//            planTab.getScrollPane().setVmax(vmax);
-//            planTab.getScrollPane().setHmax(hmax);
-//            planTab.getPlanEditorGroup().setAutoSizeChildren(true);
-//            planTab.getPlanEditorGroup().setManaged(true);
-//        }
 
         // TODO: fire event to signal successful termination of event
         //draw();
         planEditorTabPane.getScene().setCursor(previousCursor);
-//        AbstractPlanTab selectedItem = (AbstractPlanTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel()
-//                .getSelectedItem();
-//        if (selectedItem != null) {
-//            List<Pair<Long, AbstractPlanElementContainer>> noSelection = new ArrayList<>();
-//            noSelection.onAddElement(new Pair<>(null, null));
-//            selectedItem
-//                    .getSelectedPlanElements().set(noSelection);
-//        }
         setRecentlyDone(true);
     }
 
