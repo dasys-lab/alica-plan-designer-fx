@@ -9,13 +9,16 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -136,6 +139,21 @@ public class EntryPointTool extends AbstractTool {
                 // endPhase() needs to be called here manually, because the automatic call seems to be interfered by
                 // the dialog-window opening
                 endPhase();
+            });
+
+
+            //Cursor:
+
+            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, (EventHandler<MouseDragEvent>) event ->
+                    planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon(Types.ENTRYPOINT, AlicaIcon.Size.SMALL))));
+
+            customHandlerMap.put(MouseEvent.MOUSE_MOVED, (EventHandler<MouseEvent>) event -> {
+                Node node = (Node) event.getTarget();
+                if(node.getParent() instanceof StateContainer && ((StateContainer) node.getParent()).getState().getEntryPoint() == null){
+                    planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon("ADD", AlicaIcon.Size.SMALL), 8, 8));
+                }else{
+                    planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon("FORBIDDEN", AlicaIcon.Size.SMALL), 8, 8));
+                }
             });
         }
     }

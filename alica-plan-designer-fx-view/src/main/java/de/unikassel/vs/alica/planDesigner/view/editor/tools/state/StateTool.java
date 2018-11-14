@@ -53,7 +53,7 @@ public class StateTool extends AbstractTool {
                 handler.handle(guiEvent);
             });
             customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, (EventHandler<MouseDragEvent>) event -> {
-                planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon(Types.STATE, AlicaIcon.Size.SMALL)));
+                planEditorTabPane.getScene().setCursor(getImageCursor());
             });
         }
     }
@@ -76,4 +76,12 @@ public class StateTool extends AbstractTool {
         return new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.STATE, null);
     }
 
+    /**
+     * Create an {@link ImageCursor} with the symbol of this tool.
+     *
+     * @return  the cursor representing this tool
+     */
+    protected ImageCursor getImageCursor(){
+        return new ImageCursor(new AlicaIcon(Types.STATE, AlicaIcon.Size.SMALL));
+    }
 }
