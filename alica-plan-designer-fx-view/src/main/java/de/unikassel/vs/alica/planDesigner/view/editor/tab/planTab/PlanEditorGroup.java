@@ -46,6 +46,7 @@ public class PlanEditorGroup extends Group {
 
         createStateListeners();
         createEntryPointListeners();
+        createTransitionListeners();
         //TODO: create Listeners for other types
 
         //TODO add class later
@@ -91,8 +92,8 @@ public class PlanEditorGroup extends Group {
     private Map<Long, TransitionContainer> createTransitionContainers() {
         Map<Long, TransitionContainer> transitions = new HashMap<>();
         for (TransitionViewModel trans : plan.getTransitions()) {
-            transitions.put(trans.getId(), new TransitionContainer(trans, stateContainers.get(trans.getOutState().getId()),
-                    stateContainers.get(trans.getInState().getId()), planEditorTab));
+            transitions.put(trans.getId(), new TransitionContainer(trans, stateContainers.get(trans.getInState().getId()),
+                    stateContainers.get(trans.getOutState().getId()), planEditorTab));
         }
         return transitions;
     }
@@ -187,5 +188,9 @@ public class PlanEditorGroup extends Group {
                 }
             }
         });
+    }
+
+    private void createTransitionListeners(){
+       // TODO for transitions in order to update GUI
     }
 }
