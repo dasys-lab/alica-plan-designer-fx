@@ -689,6 +689,9 @@ public class ModelManager implements Observer {
                 }
                 break;
             case Types.TRANSITION:
+                Transition transition = (Transition) newElement;
+                plan = (Plan) parentElement;
+                plan.getTransitions().add(transition);
                 // TODO something with UiExtension?
                 break;
             default:
