@@ -12,7 +12,6 @@ public class AddEntryPointInPlan extends AbstractCommand {
     protected PlanModelVisualisationObject parentOfElement;
     protected PmlUiExtension newlyCreatedPmlUiExtension;
     protected EntryPoint entryPoint;
-    private EntryPoint oldEntryPoint;
 
     public AddEntryPointInPlan(ModelManager manager, PlanModelVisualisationObject parentOfElement, EntryPoint entryPoint, PmlUiExtension pmlUiExtension) {
         super(manager);

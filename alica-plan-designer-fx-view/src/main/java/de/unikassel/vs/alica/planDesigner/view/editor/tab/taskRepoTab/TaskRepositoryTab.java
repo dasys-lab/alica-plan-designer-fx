@@ -63,7 +63,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
      * This allows to create new Tasks, too.
      */
     private void initGui() {
-        propertiesTable = new PropertiesTable();
+        propertiesTable = new PropertiesTable<>();
         propertiesTable.setEditable(true);
         propertiesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
         propertiesTable.addColumn(i18NRepo.getString("label.column.id"), "id", new LongStringConverter(), false);
@@ -74,7 +74,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
         // guiModificationHandler for creating new tasks
         HBox createTaskHBox = new HBox();
         Button createTaskButton = new Button();
-        createTaskButton.setText(i18NRepo.getInstance().getString("action.create.task"));
+        createTaskButton.setText(i18NRepo.getString("action.create.task"));
         TextField taskNameField = new TextField();
         createTaskButton.setOnAction(e -> {
             if (taskNameField.getText() != null && !taskNameField.getText().isEmpty()) {

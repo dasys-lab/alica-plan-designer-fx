@@ -689,6 +689,9 @@ public class ModelManager implements Observer {
                 }
                 break;
             case Types.TRANSITION:
+                Transition transition = (Transition) newElement;
+                plan = (Plan) parentElement;
+                plan.getTransitions().add(transition);
                 // TODO something with UiExtension?
                 break;
             default:
@@ -721,6 +724,8 @@ public class ModelManager implements Observer {
                 break;
             case Types.ENTRYPOINT:
                 parentElement.getPlan().getEntryPoints().add((EntryPoint) newElement);
+                State entryState = ((EntryPoint) newElement).getState();
+                entryState.setEntryPoint((EntryPoint) newElement);
                 HashMap<String, Long> related = new HashMap<>();
                 related.put(Types.TASK, ((EntryPoint)newElement).getTask().getId());
                 event.setRelatedObjects(related);
@@ -1183,6 +1188,7 @@ public class ModelManager implements Observer {
                 entryPointExtension.setXPos(x);
                 entryPointExtension.setYPos(y);
                 entryPoint.setTask((Task) getPlanElement(mmq.getRelatedObjects().get(Types.TASK)));
+                entryPoint.setState((State) getPlanElement(mmq.getRelatedObjects().get(Types.STATE)));
                 cmd = new AddEntryPointInPlan(this, parenOfElement, entryPoint, entryPointExtension);
                 break;
             case Types.PRECONDITION:

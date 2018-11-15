@@ -1,7 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 
+import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -163,5 +165,11 @@ public abstract class AbstractTool {
                 || planTab.getPlanEditorGroup().getChildren()
                 .stream().flatMap(container -> ((Pane) container).getChildren().stream())
                 .anyMatch(x -> x == event.getTarget());
+    }
+
+    protected ViewModelElement getElementFromEvent(Event event){
+        return planTab.getPlanEditorGroup().getChildren().stream()
+                .filter(container -> ((Pane) container).getChildren().contains(event.getTarget()))
+                .findFirst().map(node -> ((AbstractPlanElementContainer)node).getModelElement()).orElse(null);
     }
 }
