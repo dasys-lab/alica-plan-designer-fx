@@ -191,6 +191,29 @@ public class PlanEditorGroup extends Group {
     }
 
     private void createTransitionListeners(){
-       // TODO for transitions in order to update GUI
+       plan.getTransitions().addListener((ListChangeListener<TransitionViewModel>) c -> {
+            while (c.next()) {
+                if(c.wasAdded()) {
+                    for(TransitionViewModel transition : c.getAddedSubList()) {
+                        StateContainer fromState = stateContainers.get(transition.getInState().getId());
+                        StateContainer toState = stateContainers.get(transition.getOutState().getId());
+                        TransitionContainer transitionContainer = new TransitionContainer(transition, fromState, toState, planEditorTab);
+                        transitionContainers.put(transition.getId(), transitionContainer);
+
+                        // Has to be with index because otherwise it would be drawn on top of states
+                        getChildren().add(0, transitionContainer);
+
+                        planEditorTab.setDirty(true);
+                    }
+                } else if (c.wasRemoved()) {
+                    for (TransitionViewModel transition : c.getRemoved()) {
+                        TransitionContainer transitionContainer = transitionContainers.remove(transition.getId());
+                        getChildren().remove(transitionContainer);
+
+                        planEditorTab.setDirty(true);
+                    }
+                }
+            }
+       });
     }
 }

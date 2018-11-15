@@ -11,15 +11,15 @@ import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import java.util.ArrayList;
 
 public interface IGuiModificationHandler {
-    public void handle(GuiModificationEvent event);
-    public ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement);
-    public ViewModelElement getViewModelElement(long id);
-    public abstract void handleTabOpenedEvent(PlanTab planTab);
-    public abstract void handleTabOpenedEvent(BehaviourTab behaviourTab);
-    public abstract void handleTabOpenedEvent(PlanTypeTab planTypeTab);
-    public abstract void handleUndo();
-    public abstract void handleRedo();
-    public RepositoryViewModel getRepoViewModel();
+    void handle(GuiModificationEvent event);
+    ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement);
+    ViewModelElement getViewModelElement(long id);
+    void handleTabOpenedEvent(PlanTab planTab);
+    void handleTabOpenedEvent(BehaviourTab behaviourTab);
+    void handleTabOpenedEvent(PlanTypeTab planTypeTab);
+    void handleUndo();
+    void handleRedo();
+    RepositoryViewModel getRepoViewModel();
 
     void handleGuiChangePositionEvent(GuiChangePositionEvent event);
 }

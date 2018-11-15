@@ -3,7 +3,6 @@ package de.unikassel.vs.alica.planDesigner.modelmanagement;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.UiTransitionModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.AddEntryPointInPlan;
@@ -1173,12 +1172,8 @@ public class ModelManager implements Observer {
                 cmd = new AddStateInPlan(this, parenOfElement, terminalState, terminalExtension, Types.SUCCESSSTATE);
                 break;
             case Types.TRANSITION:
-                State in = null;
-                State out = null;
-                if(mmq instanceof UiTransitionModelModificationQuery) {
-                    in = (State) getPlanElement(((UiTransitionModelModificationQuery) mmq).getNewIn());
-                    out = (State) getPlanElement(((UiTransitionModelModificationQuery) mmq).getNewOut());
-                }
+                State in = (State) getPlanElement(mmq.getRelatedObjects().get(Transition.INSTATE));
+                State out = (State) getPlanElement(mmq.getRelatedObjects().get(Transition.OUTSTATE));
                 cmd = new AddTransitionInPlan(this, parenOfElement, in, out);
                 break;
             case Types.ENTRYPOINT:

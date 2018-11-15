@@ -1,7 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
-import de.unikassel.vs.alica.planDesigner.events.TransitionAddEvent;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.UiTransitionModelModificationQuery;
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelFactory.ViewModelFactory;
@@ -355,12 +353,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     uimmq.setNewX(((GuiChangePositionEvent) event).getNewX());
                     uimmq.setNewY(((GuiChangePositionEvent) event).getNewY());
                     mmq = uimmq;
-                } else if (event instanceof TransitionAddEvent) {
-                    UiTransitionModelModificationQuery tmmq = new UiTransitionModelModificationQuery(ModelQueryType.ADD_ELEMENT
-                            , event.getElementType(), event.getElementId(), event.getParentId());
-                    tmmq.setNewIn(((TransitionAddEvent) event).getNewIn());
-                    tmmq.setNewOut(((TransitionAddEvent) event).getNewOut());
-                    mmq = tmmq;
                 } else {
                     mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
                     mmq.setElementId(event.getElementId());

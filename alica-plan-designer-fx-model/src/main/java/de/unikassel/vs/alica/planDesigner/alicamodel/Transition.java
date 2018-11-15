@@ -1,6 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
 public class Transition extends  PlanElement{
+    public static final String INSTATE = "inState";
+    public static final String OUTSTATE = "outState";
+
     protected State inState;
     protected State outState;
     protected PreCondition preCondition;

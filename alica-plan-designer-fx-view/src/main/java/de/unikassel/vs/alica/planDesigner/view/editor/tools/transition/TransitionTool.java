@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
-import de.unikassel.vs.alica.planDesigner.events.TransitionAddEvent;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -11,6 +11,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
@@ -21,6 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class TransitionTool extends AbstractTool {
@@ -28,7 +30,7 @@ public class TransitionTool extends AbstractTool {
     private int initial = 0;
     private LinkedList<Point2D> bendPoints = new LinkedList<>();
 
-    private StateViewModel startState;
+    private StateViewModel inState;
 
     public TransitionTool(TabPane workbench, PlanTab planTab) {
         super(workbench, planTab);
@@ -59,7 +61,7 @@ public class TransitionTool extends AbstractTool {
                 Node target = (Node) event.getTarget();
                 if ((target.getParent() instanceof StateContainer)) {
                     // SET STARTPOINT
-                    startState = ((StateContainer) ((Node)event.getTarget()).getParent()).getState();
+                    inState = ((StateContainer) ((Node)event.getTarget()).getParent()).getState();
                 }
             });
 
@@ -69,15 +71,21 @@ public class TransitionTool extends AbstractTool {
                     Node parent = target.getParent();
                     if (parent instanceof StateContainer) {
                         // SET ENDPOINT
-                        StateViewModel endState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+                        StateViewModel outState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
 
                         IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
-                        TransitionAddEvent guiEvent = new TransitionAddEvent(GuiEventType.ADD_ELEMENT, Types.TRANSITION, null);
-                        guiEvent.setNewIn(startState.getId());
-                        guiEvent.setNewOut(endState.getId());
+                        GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.TRANSITION, null);
+
+                        HashMap<String, Long> relatedObjects = new HashMap<>();
+                        relatedObjects.put(TransitionViewModel.INSTATE, inState.getId());
+                        relatedObjects.put(TransitionViewModel.OUTSTATE, outState.getId());
+
+                        guiEvent.setRelatedObjects(relatedObjects);
                         guiEvent.setParentId(getPlanTab().getPlan().getId());
                         handler.handle(guiEvent);
+
+                        // TODO Bendpoint Events
 
                         endPhase();
                     } else {
@@ -94,7 +102,7 @@ public class TransitionTool extends AbstractTool {
             });
 
             customHandlerMap.put(MouseEvent.MOUSE_MOVED, (EventHandler<MouseEvent>) event -> {
-                if(startState != null) {
+                if(inState != null) {
                     Node target = (Node) event.getTarget();
                     if (target.getParent() instanceof StateContainer) {
                         planEditorTabPane.getScene().setCursor(imageCursor);
@@ -120,7 +128,7 @@ public class TransitionTool extends AbstractTool {
     public void endPhase() {
         super.endPhase();
         initial = 0;
-        startState = null;
+        inState = null;
         bendPoints.clear();
         planEditorTabPane.getScene().setCursor(previousCursor);
         getDraggableHBox().setEffect(null);

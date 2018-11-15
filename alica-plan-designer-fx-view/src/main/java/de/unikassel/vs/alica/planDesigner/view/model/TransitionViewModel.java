@@ -2,6 +2,9 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 
 public class TransitionViewModel extends PlanElementViewModel {
 
+    public static final String INSTATE = "inState";
+    public static final String OUTSTATE = "outState";
+
     protected StateViewModel inState;
     protected StateViewModel outState;
     protected ConditionViewModel preCondition;
