@@ -212,6 +212,7 @@ public class ViewModelFactory {
             type = Types.STATE;
         }
         StateViewModel stateViewModel = new StateViewModel(state.getId(), state.getName(), type);
+        stateViewModel.setComment(state.getComment());
         stateViewModel.setParentId(state.getParentPlan().getId());
 
 //        PlanModelVisualisationObject planModelVisualisationObject = modelManager.getPlanModelVisualisationObjectMap().get(state.getParentPlan().getId());

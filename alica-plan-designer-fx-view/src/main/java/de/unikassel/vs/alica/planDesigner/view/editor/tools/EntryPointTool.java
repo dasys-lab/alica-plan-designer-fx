@@ -92,7 +92,7 @@ public class EntryPointTool extends AbstractTool {
                     controller.setSelectedTaskReference(task);
                     Stage stage = new Stage();
                     stage.setResizable(false);
-                    stage.setTitle(I18NRepo.getInstance().getString("label.choose.task"));
+                    stage.setTitle(i18NRepo.getString("label.choose.task"));
                     stage.setScene(new Scene(rootOfDialog));
                     stage.initModality(Modality.WINDOW_MODAL);
                     stage.initOwner(PlanDesignerApplication.getPrimaryStage());

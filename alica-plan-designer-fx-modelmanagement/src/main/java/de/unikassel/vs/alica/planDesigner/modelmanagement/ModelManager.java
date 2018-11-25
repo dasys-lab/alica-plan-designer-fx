@@ -1153,6 +1153,8 @@ public class ModelManager implements Observer {
                 //Creating a new State and setting all necessary fields
                 State state = new State();
                 state.setParentPlan(parenOfElement.getPlan());
+                state.setName(mmq.name);
+                state.setComment(mmq.getComment());
 //                //Putting the created state in the planElementMap so that it can be found there later
 //                planElementMap.put(state.getId(), state);
                 //Creating an extension with coordinates
@@ -1166,6 +1168,8 @@ public class ModelManager implements Observer {
             case Types.FAILURESTATE:
                 TerminalState terminalState = new TerminalState(mmq.elementType == Types.SUCCESSSTATE, null);
                 terminalState.setParentPlan(parenOfElement.getPlan());
+                terminalState.setName(mmq.name);
+                terminalState.setComment(mmq.getComment());
                 PmlUiExtension terminalExtension = new PmlUiExtension();
                 terminalExtension.setXPos(x);
                 terminalExtension.setYPos(y);
