@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
+import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
@@ -85,7 +86,24 @@ public class TransitionTool extends AbstractTool {
                         guiEvent.setParentId(getPlanTab().getPlan().getId());
                         handler.handle(guiEvent);
 
-                        // TODO Bendpoint Events
+                        long transitionID = 0;
+                        for (TransitionViewModel transition : getPlanTab().getPlan().getTransitions()) {
+                            if (transition.getOutState().getId() == outState.getId()
+                             && transition.getInState().getId() == inState.getId()) {
+                                transitionID = transition.getId();
+                            }
+                        }
+
+                        for (Point2D point : bendPoints) {
+                            GuiChangePositionEvent bendEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.BENDPOINT, null);
+                            bendEvent.setNewX((int) point.getX());
+                            bendEvent.setNewY((int) point.getY());
+                            bendEvent.setParentId(getPlanTab().getPlan().getId());
+                            HashMap<String, Long> related = new HashMap<>();
+                            related.put(Types.TRANSITION, transitionID);
+                            bendEvent.setRelatedObjects(related);
+                            handler.handle(bendEvent);
+                        }
 
                         endPhase();
                     } else {

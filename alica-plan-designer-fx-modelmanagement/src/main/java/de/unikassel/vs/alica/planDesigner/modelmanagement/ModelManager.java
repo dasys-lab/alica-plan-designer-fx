@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.*;
-import de.unikassel.vs.alica.planDesigner.command.add.AddEntryPointInPlan;
-import de.unikassel.vs.alica.planDesigner.command.add.AddPlanToPlanType;
-import de.unikassel.vs.alica.planDesigner.command.add.AddStateInPlan;
-import de.unikassel.vs.alica.planDesigner.command.add.AddTransitionInPlan;
+import de.unikassel.vs.alica.planDesigner.command.add.*;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
 import de.unikassel.vs.alica.planDesigner.command.create.CreateBehaviour;
@@ -18,6 +15,7 @@ import de.unikassel.vs.alica.planDesigner.command.create.CreateTask;
 import de.unikassel.vs.alica.planDesigner.command.delete.*;
 import de.unikassel.vs.alica.planDesigner.events.*;
 import de.unikassel.vs.alica.planDesigner.modelMixIns.*;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtensionMap;
@@ -729,6 +727,8 @@ public class ModelManager implements Observer {
                 related.put(Types.TASK, ((EntryPoint)newElement).getTask().getId());
                 event.setRelatedObjects(related);
                 break;
+            case Types.BENDPOINT:
+                break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:
@@ -969,6 +969,7 @@ public class ModelManager implements Observer {
                     case Types.SYNCHRONISATION:
                     case Types.SYNCTRANSITION:
                     case Types.TRANSITION:
+                    case Types.BENDPOINT:
                         cmd = handleNewElementInPlanQuery( mmq);
                         break;
                     default:
@@ -1153,8 +1154,8 @@ public class ModelManager implements Observer {
                 //Creating a new State and setting all necessary fields
                 State state = new State();
                 state.setParentPlan(parenOfElement.getPlan());
-//                //Putting the created state in the planElementMap so that it can be found there later
-//                planElementMap.put(state.getId(), state);
+                //Putting the created state in the planElementMap so that it can be found there later
+                //planElementMap.put(state.getId(), state);
                 //Creating an extension with coordinates
                 PmlUiExtension extension = new PmlUiExtension();
                 extension.setXPos(x);
@@ -1185,6 +1186,14 @@ public class ModelManager implements Observer {
                 entryPoint.setTask((Task) getPlanElement(mmq.getRelatedObjects().get(Types.TASK)));
                 entryPoint.setState((State) getPlanElement(mmq.getRelatedObjects().get(Types.STATE)));
                 cmd = new AddEntryPointInPlan(this, parenOfElement, entryPoint, entryPointExtension);
+                break;
+            case Types.BENDPOINT:
+                BendPoint bendPoint = new BendPoint();
+                bendPoint.setXPos(x);
+                bendPoint.setYPos(y);
+                Transition transition = (Transition) getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
+                bendPoint.setTransition(transition);
+                cmd = new AddBendpointToPlan(this, bendPoint, parenOfElement, new PmlUiExtension());
                 break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
@@ -1238,7 +1247,7 @@ public class ModelManager implements Observer {
      *
      * Similarly to the handleModelModificationQuery-method this Method receives a query containing the information
      * about the changes to the model, which is in this case the UiExtensionModel, and creates an {@link AbstractCommand}
-     * to execute these changes. Because this method is only called, when an object was moved (chnaged its position) in
+     * to execute these changes. Because this method is only called, when an object was moved (changed its position) in
      * the ui, it will always create a {@link ChangePosition}-command.
      *
      * @param uimmq  query containing information about a change in the UiExtensionModel

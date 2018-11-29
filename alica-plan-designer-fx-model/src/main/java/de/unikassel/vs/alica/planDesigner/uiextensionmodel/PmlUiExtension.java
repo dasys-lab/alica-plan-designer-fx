@@ -3,6 +3,7 @@ package de.unikassel.vs.alica.planDesigner.uiextensionmodel;
 import javafx.beans.property.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class PmlUiExtension extends PositionedElement {
 
@@ -13,10 +14,10 @@ public class PmlUiExtension extends PositionedElement {
     protected final SimpleBooleanProperty collapsed = new SimpleBooleanProperty();
     protected final SimpleBooleanProperty visible = new SimpleBooleanProperty();
 
-    protected ArrayList<BendPoint> bendPoints;
+    protected LinkedList<BendPoint> bendPoints;
 
     public PmlUiExtension() {
-        bendPoints = new ArrayList<>();
+        bendPoints = new LinkedList<>();
     }
 
     public long getLayoutedModelElementId() {
@@ -55,7 +56,7 @@ public class PmlUiExtension extends PositionedElement {
         return collapsed;
     }
 
-    public ArrayList<BendPoint> getBendPoints() {return this.bendPoints;}
+    public LinkedList<BendPoint> getBendPoints() {return this.bendPoints;}
 
     public boolean isVisible() {return this.visible.get();}
 

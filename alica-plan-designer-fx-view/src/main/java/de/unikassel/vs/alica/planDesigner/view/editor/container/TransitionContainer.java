@@ -2,13 +2,16 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
+import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
@@ -27,7 +30,12 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         super(transition, null, planTab);
         this.fromState = fromState;
         this.toState = toState;
-        InvalidationListener invalidationListener = observable -> setupContainer();
+        InvalidationListener invalidationListener = new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                TransitionContainer.this.setupContainer();
+            }
+        };
         fromState.addListener(invalidationListener);
         toState.addListener(invalidationListener);
         draggableNodes = new ArrayList<>();
@@ -60,69 +68,74 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         double triangleSpanVecX = vecY;
         double triangleSpanVecY = -vecX;
         double triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
-//        if (getPmlUiExtension().getBendpoints().size() == 0) {
-            visualRepresentation = new Line(_fromX,
-                    _fromY,
+
+        List<BendPointViewModel> bendpoints = ((TransitionViewModel) getModelElement()).getBendpoints();
+        int size = bendpoints.size();
+        if (size == 0) {
+            visualRepresentation = new Line(_fromX, _fromY, _toX, _toY);
+
+            /* TODO create possible new bendpoint
+            Bendpoint bendpoint = createBendpointInMiddle(_toX, _toY, _fromX, _fromY);
+            potentialDraggableNodes.add(makePotentialBendpoint(bendpoint));
+            */
+
+            polygon = new Polygon(_toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen),
+                    _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
                     _toX,
-                    _toY);
-//            Bendpoint bendpoint = createBendpointInMiddle(_toX, _toY, _fromX, _fromY);
-//            potentialDraggableNodes.add(makePotentialBendpoint(bendpoint));
-//            polygon = new Polygon(
-//            _toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
-//                    _toX, _toY,
-//                    _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
-//        } else {
-//            double[] points = new double[getPmlUiExtension().getBendpoints().size() * 2 + 4];
-//            points[0] = _fromX;
-//            points[1] = _fromY;
-//
-//
-//
-//            Bendpoint bendpoint = getPmlUiExtension().getBendpoints().get(0);
-//            Bendpoint firstMiddle = createBendpointInMiddle(bendpoint.getXPos(), bendpoint.getYPos(), _fromX, _fromY);
-//            potentialDraggableNodes.add(makePotentialBendpoint(firstMiddle));
-//
-//            for (int i = 0, j = 2; i < points.length / 2 - 2; i++, j += 2) {
-//                Bendpoint currentBendpoint = getPmlUiExtension().getBendpoints().get(i);
-//                points[j] = currentBendpoint.getXPos();
-//                points[j + 1] = currentBendpoint.getYPos();
-//                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint,
-//                        getPmlUiExtension(), commandStack, fromState.getModelElementId().getInPlan());
-//                bendpointContainer.setVisible(false);
-//                draggableNodes.add(bendpointContainer);
-//                _fromX = points[j];
-//                _fromY = points[j+1];
-//                vecX = _toX - _fromX;
-//                vecY = _toY - _fromY;
-//                vecLen = Math.sqrt(vecX*vecX + vecY*vecY);
-//                triangleSpanVecX = vecY;
-//                triangleSpanVecY = -vecX;
-//                triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
-//
-//                if (i != getPmlUiExtension().getBendpoints().size() -1 && getPmlUiExtension().getBendpoints().size() != 1) {
-//                    Bendpoint from = getPmlUiExtension().getBendpoints().get(i);
-//                    Bendpoint to = getPmlUiExtension().getBendpoints().get(i + 1);
-//                    Bendpoint bendpointInMiddle = createBendpointInMiddle(to.getXPos(), to.getYPos(), from.getXPos(), from.getYPos());
-//                    potentialDraggableNodes.add(makePotentialBendpoint(bendpointInMiddle));
-//                }
-//
-//            }
-//
-//            points[points.length - 2] = _toX;
-//            points[points.length - 1] = _toY;
-//
-//            Bendpoint lastBendpoint = getPmlUiExtension().getBendpoints()
-//                    .get(getPmlUiExtension().getBendpoints().size() - 1);
-//            Bendpoint bendpointInMiddle = createBendpointInMiddle(_toX, _toY, lastBendpoint.getXPos(), lastBendpoint.getYPos());
-//            potentialDraggableNodes.add(makePotentialBendpoint(bendpointInMiddle));
-//
-//            visualRepresentation = new Polyline(points);
+                    _toY,
+                    _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen),
+                    _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
+        } else {
+            double[] points = new double[size * 2 + 4];
+            points[0] = _fromX;
+            points[1] = _fromY;
+
+            //BendPointViewModel bendpoint = bendpoints.get(0);
+            //BendPointViewModel firstMiddle = createBendpointInMiddle(bendpoint.getX(), bendpoint.getY(), _fromX, _fromY);
+            //potentialDraggableNodes.add(makePotentialBendpoint(firstMiddle));
+
+
+            for (int i = 0, j = 2; i < points.length / 2 - 2; i++, j += 2) {
+                BendPointViewModel currentBendpoint = bendpoints.get(i);
+                points[j] = currentBendpoint.getX();
+                points[j + 1] = currentBendpoint.getY();
+                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getModelElement(), null);
+                //bendpointContainer.setVisible(false);
+                draggableNodes.add(bendpointContainer);
+                _fromX = points[j];
+                _fromY = points[j+1];
+                vecX = _toX - _fromX;
+                vecY = _toY - _fromY;
+                vecLen = Math.sqrt(vecX*vecX + vecY*vecY);
+                triangleSpanVecX = vecY;
+                triangleSpanVecY = -vecX;
+                triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
+
+                if (i != size -1 && size != 1) {
+                    BendPointViewModel from = bendpoints.get(i);
+                    BendPointViewModel to = bendpoints.get(i + 1);
+                    //Bendpoint bendpointInMiddle = createBendpointInMiddle(to.getXPos(), to.getYPos(), from.getXPos(), from.getYPos());
+                    //potentialDraggableNodes.add(makePotentialBendpoint(bendpointInMiddle));
+                }
+
+            }
+
+            points[points.length - 2] = _toX;
+            points[points.length - 1] = _toY;
+
+            BendPointViewModel lastBendpoint = bendpoints.get(size - 1);
+            //Bendpoint bendpointInMiddle = createBendpointInMiddle(_toX, _toY, lastBendpoint.getXPos(), lastBendpoint.getYPos());
+            //potentialDraggableNodes.add(makePotentialBendpoint(bendpointInMiddle));
+
+            visualRepresentation = new Polyline(points);
             ((Shape)visualRepresentation).setFill(null);
-            polygon = new Polygon(
-                    _toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
-                    _toX, _toY,
-                    _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen), _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
-//        }
+            polygon = new Polygon(_toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen),
+                    _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
+                    _toX,
+                    _toY,
+                    _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen),
+                    _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
+        }
 
         polygon.setFill(getVisualisationColor());
         polygon.setStroke(getVisualisationColor());
@@ -130,8 +143,8 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         polygon.setVisible(true);
         ((Shape)visualRepresentation).setStrokeWidth(3);
         ((Shape)visualRepresentation).setStroke(getVisualisationColor());
-        setBendpointContainerVisibility(MainWindowController.getInstance().isSelectedPlanElement(this));
-        setPotentialDraggableNodesVisible(MainWindowController.getInstance().isSelectedPlanElement(this));
+        //setBendpointContainerVisibility(MainWindowController.getInstance().isSelectedPlanElement(this));
+        //setPotentialDraggableNodesVisible(MainWindowController.getInstance().isSelectedPlanElement(this));
         visualRepresentation.setPickOnBounds(false);
         this.getChildren().add(visualRepresentation);
         this.getChildren().add(polygon);

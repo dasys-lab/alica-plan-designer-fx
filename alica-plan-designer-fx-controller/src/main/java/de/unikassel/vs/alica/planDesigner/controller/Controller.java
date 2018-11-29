@@ -245,6 +245,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         ((EntryPointViewModel) viewModelElement).setXPosition(x);
                         ((EntryPointViewModel) viewModelElement).setYPosition(y);
                         planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
+                    case Types.BENDPOINT:
+                        plan = modelManager.getPlanElement(event.getParentId());
+                        planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
+                        BendPointViewModel bendpoint = new BendPointViewModel(0, null, Types.BENDPOINT);
+                        bendpoint.setX(x);
+                        bendpoint.setY(y);
+                        ((TransitionViewModel) viewModelElement).getBendpoints().add(bendpoint);
+                        planViewModel.getTransitions().remove(viewModelElement);
+                        planViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:
@@ -348,8 +357,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ADD_ELEMENT:
                 if(event instanceof GuiChangePositionEvent){
-                    UiExtensionModelModificationQuery uimmq = new UiExtensionModelModificationQuery(ModelQueryType.ADD_ELEMENT
-                            , event.getElementType(), event.getElementId(), event.getParentId());
+                    UiExtensionModelModificationQuery uimmq = new UiExtensionModelModificationQuery(ModelQueryType.ADD_ELEMENT,
+                                                                    event.getElementType(),
+                                                                    event.getElementId(),
+                                                                    event.getParentId());
                     uimmq.setNewX(((GuiChangePositionEvent) event).getNewX());
                     uimmq.setNewY(((GuiChangePositionEvent) event).getNewY());
                     mmq = uimmq;
