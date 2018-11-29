@@ -46,6 +46,7 @@ public class PlanDesignerApplication extends Application {
         // The next two lines replace this attribute in mainWindow.fxml::AnchorPane "fx:controller="MainWindowController"
         MainWindowController mainWindowController = MainWindowController.getInstance();
         fxmlLoader.setController(mainWindowController);
+        fxmlLoader.setClassLoader(getClass().getClassLoader());
         Parent root = fxmlLoader.load();
 
         // TODO: does not load the key.xpm

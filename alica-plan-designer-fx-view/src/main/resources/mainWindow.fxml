@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Rectangle?>
-<?import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane?>
-<?import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane?>
 <?import javafx.scene.text.Text?>
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+
+<?import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane?>
+<?import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView?>
+<?import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <SplitPane dividerPositions="0.1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" orientation="HORIZONTAL">
             <items>
-                <FileTreeView fx:id="fileTreeView" maxWidth="1.7976931348623157E308" minWidth="100.0"
-                              prefWidth="300.0"/>
-                <SplitPane dividerPositions="0.9">
+                <SplitPane dividerPositions="0.8" orientation="VERTICAL">
                     <items>
-                        <EditorTabPane fx:id="editorTabPane" maxHeight="1.7976931348623157E308"
-                                       maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="100.0"
-                                       tabClosingPolicy="ALL_TABS"/>
-                        <SplitPane dividerPositions="0.5" maxWidth="1.7976931348623157E308" minWidth="100.0"
-                                   orientation="VERTICAL" prefWidth="300.0">
-                            <items>
-                                <RepositoryTabPane fx:id="repositoryTabPane" tabClosingPolicy="UNAVAILABLE"/>
-                            </items>
-                        </SplitPane>
+                        <VBox minHeight="-Infinity">
+                            <children>
+                                <Label text="FileTreeView"/>
+                                <FileTreeView fx:id="fileTreeView" minWidth="100.0" prefWidth="300.0"
+                                              VBox.vgrow="ALWAYS"/>
+                            </children>
+                        </VBox>
+                        <VBox minHeight="-Infinity">
+                            <children>
+                                <Label text="RepositoryView"/>
+                                <RepositoryTabPane fx:id="repositoryTabPane" minWidth="100.0" prefWidth="300.0"
+                                                   tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS"/>
+                            </children>
+                        </VBox>
                     </items>
                 </SplitPane>
+                <EditorTabPane fx:id="editorTabPane" minHeight="100.0" minWidth="100.0" tabClosingPolicy="ALL_TABS"/>
             </items>
             <padding>
                 <Insets top="29.0"/>
