@@ -1,7 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
@@ -9,10 +9,10 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.IEditorTab;
 import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView;
-import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.menu.EditMenu;
 import de.unikassel.vs.alica.planDesigner.view.menu.NewResourceMenu;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
@@ -20,7 +20,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -68,7 +67,7 @@ public class MainWindowController implements Initializable {
 //  CONSTANTS AND STATICS
 //--------------------------------------------------------------------------------------------
     private static final Logger LOG = LogManager.getLogger(MainWindowController.class);
-    public static Cursor FORBIDDEN_CURSOR = new ImageCursor(new AlicaIcon("forbidden", AlicaIcon.Size.NONE));
+    public static Cursor FORBIDDEN_CURSOR = new AlicaCursor(AlicaCursor.Type.forbidden);
 
 //--------------------------------------------------------------------------------------------
 //  FXML INJECTED

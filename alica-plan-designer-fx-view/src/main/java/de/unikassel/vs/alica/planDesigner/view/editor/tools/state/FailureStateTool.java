@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import javafx.scene.ImageCursor;
 import javafx.scene.control.TabPane;
@@ -30,8 +31,8 @@ public class FailureStateTool extends StateTool {
     }
 
     @Override
-    protected ImageCursor getImageCursor() {
-        return new ImageCursor(new AlicaIcon(Types.FAILURESTATE, AlicaIcon.Size.SMALL));
+    protected AlicaCursor getImageCursor() {
+        return new AlicaCursor(AlicaCursor.Type.failurestate);
     }
 
 }

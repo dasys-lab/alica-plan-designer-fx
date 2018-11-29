@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.filebrowser;
 
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
@@ -333,20 +334,20 @@ public final class FileTreeView extends TreeView<File> {
                 startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
                 switch (draggedItem.getViewModelElement().getType()) {
                     case Types.BEHAVIOUR:
-                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("behaviour", AlicaIcon.Size.BIG)));
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.behaviour));
                         break;
                     case Types.PLAN:
-                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("plan", AlicaIcon.Size.BIG)));
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.plan));
                         break;
                     case Types.MASTERPLAN:
 
-                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("masterplan", AlicaIcon.Size.BIG)));
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.masterplan));
                         break;
                     case Types.PLANTYPE:
-                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("plantype", AlicaIcon.Size.BIG)));
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.plantype));
                         break;
                     case Types.TASKREPOSITORY:
-                        FileTreeView.this.getScene().setCursor(new ImageCursor(new AlicaIcon("tasks", AlicaIcon.Size.BIG)));
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.tasks));
                         break;
                     default:
                         System.err.println("FileTreeView: " + draggedItem.getViewModelElement().getType() + " not handled!");

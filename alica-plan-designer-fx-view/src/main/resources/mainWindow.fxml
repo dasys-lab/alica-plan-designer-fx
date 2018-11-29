@@ -19,14 +19,22 @@
                     <items>
                         <VBox minHeight="-Infinity">
                             <children>
-                                <Label text="FileTreeView"/>
+                                <Label text="FileTreeView">
+                                    <VBox.margin>
+                                        <Insets left="10.0"/>
+                                    </VBox.margin>
+                                </Label>
                                 <FileTreeView fx:id="fileTreeView" minWidth="100.0" prefWidth="300.0"
                                               VBox.vgrow="ALWAYS"/>
                             </children>
                         </VBox>
                         <VBox minHeight="-Infinity">
                             <children>
-                                <Label text="RepositoryView"/>
+                                <Label text="RepositoryView">
+                                    <VBox.margin>
+                                        <Insets left="10.0"/>
+                                    </VBox.margin>
+                                </Label>
                                 <RepositoryTabPane fx:id="repositoryTabPane" minWidth="100.0" prefWidth="300.0"
                                                    tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS"/>
                             </children>

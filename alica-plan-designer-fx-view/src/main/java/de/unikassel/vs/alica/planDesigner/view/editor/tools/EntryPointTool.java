@@ -11,6 +11,7 @@ import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
@@ -145,14 +146,14 @@ public class EntryPointTool extends AbstractTool {
             //Cursor:
 
             customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, (EventHandler<MouseDragEvent>) event ->
-                    planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon(Types.ENTRYPOINT, AlicaIcon.Size.SMALL))));
+                    planEditorTabPane.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.entrypoint)));
 
             customHandlerMap.put(MouseEvent.MOUSE_MOVED, (EventHandler<MouseEvent>) event -> {
                 Node node = (Node) event.getTarget();
                 if(node.getParent() instanceof StateContainer && ((StateContainer) node.getParent()).getState().getEntryPoint() == null){
-                    planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon("ADD", AlicaIcon.Size.SMALL), 8, 8));
+                    planEditorTabPane.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.add, 8, 8));
                 }else{
-                    planEditorTabPane.getScene().setCursor(new ImageCursor(new AlicaIcon("FORBIDDEN", AlicaIcon.Size.SMALL), 8, 8));
+                    planEditorTabPane.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.forbidden, 8, 8));
                 }
             });
         }

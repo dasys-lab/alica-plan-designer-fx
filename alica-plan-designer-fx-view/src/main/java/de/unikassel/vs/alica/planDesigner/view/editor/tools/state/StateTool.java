@@ -12,6 +12,7 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -121,11 +122,11 @@ public class StateTool extends AbstractTool {
     }
 
     /**
-     * Create an {@link ImageCursor} with the symbol of this tool.
+     * Create an {@link AlicaCursor} with the symbol of this tool.
      *
      * @return  the cursor representing this tool
      */
-    protected ImageCursor getImageCursor(){
-        return new ImageCursor(new AlicaIcon(Types.STATE, AlicaIcon.Size.SMALL));
+    protected AlicaCursor getImageCursor(){
+        return new AlicaCursor(AlicaCursor.Type.state);
     }
 }

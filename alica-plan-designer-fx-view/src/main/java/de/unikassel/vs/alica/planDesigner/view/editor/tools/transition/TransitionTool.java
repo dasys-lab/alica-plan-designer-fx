@@ -10,6 +10,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
@@ -40,9 +41,9 @@ public class TransitionTool extends AbstractTool {
     @Override
     protected void initHandlerMap() {
         if (customHandlerMap.isEmpty()) {
-            ImageCursor imageCursor = new ImageCursor(new AlicaIcon(Types.TRANSITION, AlicaIcon.Size.SMALL), 0, 8);
-            ImageCursor forbiddenCursor = new ImageCursor(new AlicaIcon("FORBIDDEN", AlicaIcon.Size.SMALL), 8, 8);
-            ImageCursor addCursor = new ImageCursor(new AlicaIcon("ADD", AlicaIcon.Size.SMALL), 8, 8);
+            ImageCursor imageCursor = new AlicaCursor(AlicaCursor.Type.transition, 0, 8);
+            ImageCursor forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_transition, 8, 8);
+            ImageCursor addCursor = new AlicaCursor(AlicaCursor.Type.add_transition, 8, 8);
 
             customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, (EventHandler<MouseDragEvent>) event -> {
                 planEditorTabPane.getScene().setCursor(imageCursor);
