@@ -14,6 +14,8 @@ public class GuiModificationEvent {
     protected String newAbsoluteDirectory;
     protected long parentId;
     protected long elementId;
+
+    protected String comment;
     protected Map<String, Long> relatedObjects;
 
     public GuiModificationEvent(GuiEventType eventType, String elementType, String name) {
@@ -32,6 +34,10 @@ public class GuiModificationEvent {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAbsoluteDirectory() {
@@ -65,6 +71,15 @@ public class GuiModificationEvent {
     public void setNewAbsoluteDirectory(String newAbsoluteDirectory) {
         this.newAbsoluteDirectory = newAbsoluteDirectory;
     }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public Map<String, Long> getRelatedObjects() {
         return relatedObjects;
     }

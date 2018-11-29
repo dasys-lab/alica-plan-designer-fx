@@ -3,7 +3,6 @@ package de.unikassel.vs.alica.planDesigner.command.add;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 
@@ -21,7 +20,9 @@ public class AddStateInPlan extends AbstractCommand {
         super(manager);
         this.newState = newState;
         this.type = type;
-        newState.setName(DEFAULT_STATE_NAME);
+        if(newState.getName() == null || newState.getName().equals("")) {
+            newState.setName(DEFAULT_STATE_NAME);
+        }
         this.parentOfElement = parentOfElement;
         this.newlyCreatedPmlUiExtension = pmlUiExtension;
     }

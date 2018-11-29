@@ -363,12 +363,16 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                                                                     event.getParentId());
                     uimmq.setNewX(((GuiChangePositionEvent) event).getNewX());
                     uimmq.setNewY(((GuiChangePositionEvent) event).getNewY());
+                    uimmq.setName(event.getName());
+                    uimmq.setComment(event.getComment());
                     mmq = uimmq;
                 } else {
                     mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
                     mmq.setElementId(event.getElementId());
                     mmq.setElementType(event.getElementType());
                     mmq.setParentId(event.getParentId());
+                    mmq.setName(event.getName());
+                    mmq.setComment(event.getComment());
                 }
                 mmq.setRelatedObjects(event.getRelatedObjects());
                 break;

@@ -19,6 +19,7 @@ public class ModelModificationQuery {
     protected String attributeName;
     protected String newValue;
     protected String attributeType;
+    protected String comment;
     protected Map<String, Long> relatedObjects;
 
     public ModelModificationQuery(ModelQueryType queryType) {
@@ -77,6 +78,10 @@ public class ModelModificationQuery {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getElementType() {
@@ -139,4 +144,11 @@ public class ModelModificationQuery {
         this.relatedObjects = relatedObjects;
     }
 
+    public String getComment(){
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }
