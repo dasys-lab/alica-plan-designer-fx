@@ -70,7 +70,7 @@ public abstract class AbstractConditionTool extends AbstractTool {
 //                                    .storeAndExecute(command);
 //                        }
                     }
-                    endPhase();
+                    endTool();
                 }
             });
         }

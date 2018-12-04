@@ -64,7 +64,7 @@ public class BehaviourTool extends AbstractTool {
 //
 //                    // don't do anything if no new behaviour was created
 //                    if (newBehaviour == null) {
-//                        endPhase();
+//                        endTool();
 //                        return;
 //                    }
 //
@@ -74,7 +74,7 @@ public class BehaviourTool extends AbstractTool {
 //                            .getCommandStack()
 //                            .storeAndExecute(command);
 //                }
-                endPhase();
+                endTool();
             });
         }
     }

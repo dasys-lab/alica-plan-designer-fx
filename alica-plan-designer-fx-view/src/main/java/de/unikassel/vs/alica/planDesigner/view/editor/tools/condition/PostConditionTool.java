@@ -87,14 +87,14 @@ public class PostConditionTool extends AbstractConditionTool {
 //                                    .storeAndExecute(command);
 //                        }
                     }
-                    endPhase();
+                    endTool();
                 }
             });
 
             customHandlerMap.put(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    endPhase();
+                    endTool();
                 }
             });
         }

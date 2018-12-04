@@ -3,19 +3,21 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -42,6 +44,11 @@ public abstract class AbstractTool {
     protected Cursor previousCursor;
 
     private boolean recentlyDone;
+    private boolean activated;
+
+    protected ImageCursor imageCursor;
+    protected ImageCursor forbiddenCursor;
+    protected ImageCursor addCursor;
 
     public AbstractTool(TabPane planEditorTabPane, PlanTab planTab) {
         this.planEditorTabPane = planEditorTabPane;
@@ -60,21 +67,19 @@ public abstract class AbstractTool {
     protected Map<EventType, EventHandler> defaultHandlers() {
         if (defaultHandlerMap == null) {
             defaultHandlerMap = new HashMap<>();
-            // The tool phase is ended, when the courser leaves the scene.
-            defaultHandlerMap.put(MouseEvent.MOUSE_DRAGGED, new EventHandler() {
+            defaultHandlerMap.put(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
                 @Override
-                public void handle(Event event) {
-                    MouseEvent e = (MouseEvent) event;
-                    if (e.getSceneX() + 5 > getPlanEditorTabPane().getScene().getWidth()
-                        || e.getSceneY() + 5 > getPlanEditorTabPane().getScene().getHeight()
-                        || e.getSceneX() - 5 < 0 || e.getSceneY() - 5 < 0) {
-                     endPhase();
+                public void handle(KeyEvent event) {
+                    if (event.getCode() == KeyCode.ESCAPE) {
+                        if (activated) {
+                            endTool();
+                        }
                     }
                 }
             });
 
             //Listener, that ends a phase, when the mouse is released
-            defaultHandlerMap.put(MouseDragEvent.MOUSE_RELEASED, (event) -> endPhase());
+            //defaultHandlerMap.put(MouseDragEvent.MOUSE_RELEASED, (event) -> endTool());
         }
         return defaultHandlerMap;
     }
@@ -89,31 +94,27 @@ public abstract class AbstractTool {
         return customHandlerMap;
     }
 
-    public void startPhase() {
+    public void startTool() {
         draggableHBox.setEffect(dropShadowEffect);
         getCustomHandlerMap()
-                .entrySet()
-                .forEach(entry -> planEditorTabPane.getScene().addEventFilter(entry.getKey(), entry.getValue()));
+                .forEach((key, value) -> planEditorTabPane.getScene().addEventFilter(key, value));
         defaultHandlers()
-                .entrySet()
-                .forEach(entry -> planEditorTabPane.getScene().addEventFilter(entry.getKey(), entry.getValue()));
+                .forEach((key, value) -> planEditorTabPane.getScene().addEventFilter(key, value));
 
-        previousCursor = planEditorTabPane.getScene().getCursor();
+        previousCursor = getCursor();
+        setCursor(imageCursor);
+        activated = !activated;
     }
 
-    public void endPhase() {
+    public void endTool() {
         draggableHBox.setEffect(null);
         getCustomHandlerMap()
-                .entrySet()
-                .forEach(entry -> getPlanEditorTabPane().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
+                .forEach((key, value) -> getPlanEditorTabPane().getScene().removeEventFilter(key, value));
         defaultHandlers()
-                .entrySet()
-                .forEach(entry -> getPlanEditorTabPane().getScene().removeEventFilter(entry.getKey(), entry.getValue()));
-
-        // TODO: fire event to signal successful termination of event
-        //draw();
-        planEditorTabPane.getScene().setCursor(previousCursor);
+                .forEach((key, value) -> getPlanEditorTabPane().getScene().removeEventFilter(key, value));
+        setCursor(Cursor.DEFAULT);
         setRecentlyDone(true);
+        activated = !activated;
     }
 
     public boolean isRecentlyDone() {
@@ -125,9 +126,17 @@ public abstract class AbstractTool {
     }
 
     public void setDraggableHBox(DraggableHBox draggableHBox){
+        draggableHBox.setOnMouseClicked(event -> {
+            if (activated) {
+                endTool();
+            } else {
+                startTool();
+            }
+        });
+
         draggableHBox.setOnDragDetected(event -> {
             draggableHBox.startFullDrag();
-            this.startPhase();
+            this.startTool();
             event.consume();
         });
 
@@ -171,5 +180,13 @@ public abstract class AbstractTool {
         return planTab.getPlanEditorGroup().getChildren().stream()
                 .filter(container -> ((Pane) container).getChildren().contains(event.getTarget()))
                 .findFirst().map(node -> ((AbstractPlanElementContainer)node).getModelElement()).orElse(null);
+    }
+
+    public void setCursor(Cursor cursor) {
+        planEditorTabPane.getScene().setCursor(cursor);
+    }
+
+    private Cursor getCursor() {
+        return planEditorTabPane.getScene().getCursor();
     }
 }

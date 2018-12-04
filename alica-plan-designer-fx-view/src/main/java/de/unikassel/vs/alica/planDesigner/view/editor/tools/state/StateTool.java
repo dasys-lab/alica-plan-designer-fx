@@ -13,11 +13,9 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
-import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
@@ -96,7 +94,7 @@ public class StateTool extends AbstractTool {
                 handler.handle(guiEvent);
 
                 //End phase manually, because dialog-window seems to prevent automatic end of phase
-                endPhase();
+                endTool();
             });
             customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, (EventHandler<MouseDragEvent>) event ->
                     planEditorTabPane.getScene().setCursor(getImageCursor()));

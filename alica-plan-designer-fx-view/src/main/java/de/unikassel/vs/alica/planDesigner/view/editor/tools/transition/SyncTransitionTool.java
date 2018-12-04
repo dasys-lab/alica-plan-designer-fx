@@ -42,7 +42,7 @@ public class SyncTransitionTool extends AbstractTool {
 //                        initial = false;
 //                    } else {
 //                        initial = true;
-//                        endPhase();
+//                        endTool();
 //                    }
 //                } else if (((Node)event.getTarget()).getParent() instanceof TransitionContainer && initial == false) {
 //                    finish = (TransitionContainer) ((Node)event.getTarget()).getParent();
@@ -56,10 +56,10 @@ public class SyncTransitionTool extends AbstractTool {
 //                            .storeAndExecute(command);
 //                    start = null;
 //                    finish = null;
-//                    endPhase();
+//                    endTool();
 //                } else {
 //                    initial = true;
-//                    endPhase();
+//                    endTool();
 //                }
 
             });
@@ -114,7 +114,7 @@ public class SyncTransitionTool extends AbstractTool {
 //        public SyncTransitionHBox() {
 //            super(SyncTransitionTool.this.createNewObject(), SyncTransitionTool.this);
 //            setOnDragDetected(Event::consume);
-//            setOnMouseClicked(event -> startPhase());
+//            setOnMouseClicked(event -> startTool());
 //        }
 //    }
 }

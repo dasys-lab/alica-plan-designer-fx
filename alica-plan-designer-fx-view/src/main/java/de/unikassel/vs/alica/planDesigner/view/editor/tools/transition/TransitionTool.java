@@ -1,31 +1,40 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
+import com.sun.javafx.scene.control.skin.ScrollPaneSkin;
 import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.SynchronizationContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
-import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class TransitionTool extends AbstractTool {
 
@@ -33,6 +42,7 @@ public class TransitionTool extends AbstractTool {
     private LinkedList<Point2D> bendPoints = new LinkedList<>();
 
     private StateViewModel inState;
+    private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition);
 
     public TransitionTool(TabPane workbench, PlanTab planTab) {
         super(workbench, planTab);
@@ -41,31 +51,27 @@ public class TransitionTool extends AbstractTool {
     @Override
     protected void initHandlerMap() {
         if (customHandlerMap.isEmpty()) {
-            ImageCursor imageCursor = new AlicaCursor(AlicaCursor.Type.transition, 0, 8);
-            ImageCursor forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_transition, 8, 8);
-            ImageCursor addCursor = new AlicaCursor(AlicaCursor.Type.add_transition, 8, 8);
 
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, (EventHandler<MouseDragEvent>) event -> {
-                planEditorTabPane.getScene().setCursor(imageCursor);
-            });
-
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, (EventHandler<MouseDragEvent>) event -> {
-                Node target = (Node) event.getTarget();
-                if (!(target.getParent() instanceof StateContainer)) {
-                    planEditorTabPane.getScene().setCursor(forbiddenCursor);
-                } else {
-                    planEditorTabPane.getScene().setCursor(imageCursor);
+            customHandlerMap.put(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    Node target = (Node) event.getTarget();
+                    Parent parent = target.getParent();
+                    if (parent instanceof StateContainer) {
+                        setCursor(addCursor);
+                    } else if (target instanceof StackPane){
+                        if (initial > 1) {
+                            setCursor(bendPointCursor);
+                        }
+                        else {
+                            setCursor(imageCursor);
+                        }
+                    } else {
+                        setCursor(forbiddenCursor);
+                    }
                 }
             });
 
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, (EventHandler<MouseDragEvent>) event -> {
-                initial = 1;
-                Node target = (Node) event.getTarget();
-                if ((target.getParent() instanceof StateContainer)) {
-                    // SET STARTPOINT
-                    inState = ((StateContainer) ((Node)event.getTarget()).getParent()).getState();
-                }
-            });
 
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, (EventHandler<MouseEvent>) event -> {
                 if (initial > 1) {
@@ -90,7 +96,7 @@ public class TransitionTool extends AbstractTool {
                         long transitionID = 0;
                         for (TransitionViewModel transition : getPlanTab().getPlan().getTransitions()) {
                             if (transition.getOutState().getId() == outState.getId()
-                             && transition.getInState().getId() == inState.getId()) {
+                                    && transition.getInState().getId() == inState.getId()) {
                                 transitionID = transition.getId();
                             }
                         }
@@ -106,7 +112,7 @@ public class TransitionTool extends AbstractTool {
                             handler.handle(bendEvent);
                         }
 
-                        endPhase();
+                        reset();
                     } else {
                         // ADD BENDPOINT
                         Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
@@ -116,41 +122,34 @@ public class TransitionTool extends AbstractTool {
                         }
                         bendPoints.add(eventTargetCoordinates);
                     }
+                } else {
+                    initial = 1;
+                    Node target = null;
+                    try {
+                        target = (Node) event.getTarget();
+                        if ((target.getParent() instanceof StateContainer)) {
+                            // SET STARTPOINT
+                            inState = ((StateContainer) ((Node)event.getTarget()).getParent()).getState();
+                        }
+                    } catch (ClassCastException e) {
+                        e.printStackTrace();
+                    }
                 }
                 initial++;
             });
-
-            customHandlerMap.put(MouseEvent.MOUSE_MOVED, (EventHandler<MouseEvent>) event -> {
-                if(inState != null) {
-                    Node target = (Node) event.getTarget();
-                    if (target.getParent() instanceof StateContainer) {
-                        planEditorTabPane.getScene().setCursor(imageCursor);
-                    } else {
-                        planEditorTabPane.getScene().setCursor(addCursor);
-                    }
-                }
-            });
-
-            customHandlerMap.put(KeyEvent.KEY_RELEASED, (EventHandler<KeyEvent>) event -> {
-                if (initial != 0) {
-                    if (event.getCode() == KeyCode.ESCAPE) {
-                        endPhase();
-                    }
-                }
-            });
-
-            defaultHandlers().remove(MouseDragEvent.MOUSE_RELEASED);
         }
     }
 
     @Override
-    public void endPhase() {
-        super.endPhase();
+    public void endTool() {
+        reset();
+        super.endTool();
+    }
+
+    private void reset() {
         initial = 0;
         inState = null;
         bendPoints.clear();
-        planEditorTabPane.getScene().setCursor(previousCursor);
-        getDraggableHBox().setEffect(null);
     }
 
     @Override
@@ -158,6 +157,9 @@ public class TransitionTool extends AbstractTool {
         DraggableHBox draggableHBox = new DraggableHBox();
         draggableHBox.setIcon(Types.TRANSITION);
         setDraggableHBox(draggableHBox);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.transition, 0, 8);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_transition, 8, 8);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_transition, 8, 8);
         return draggableHBox;
     }
 }

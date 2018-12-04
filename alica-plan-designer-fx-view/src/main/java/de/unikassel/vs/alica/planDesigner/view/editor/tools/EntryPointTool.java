@@ -12,14 +12,12 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
-import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -107,7 +105,7 @@ public class EntryPointTool extends AbstractTool {
                     ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.entryPoint.noTask"), null);
                     //No task was chosen, so no EntryPoint will be created
                     eventReference.set(null);
-                    endPhase();
+                    endTool();
                     return;
                 }
                 HashMap<String, Long> related = new HashMap<>();
@@ -137,9 +135,9 @@ public class EntryPointTool extends AbstractTool {
                 }
 
                 eventReference.set(null);
-                // endPhase() needs to be called here manually, because the automatic call seems to be interfered by
+                // endTool() needs to be called here manually, because the automatic call seems to be interfered by
                 // the dialog-window opening
-                endPhase();
+                endTool();
             });
 
 

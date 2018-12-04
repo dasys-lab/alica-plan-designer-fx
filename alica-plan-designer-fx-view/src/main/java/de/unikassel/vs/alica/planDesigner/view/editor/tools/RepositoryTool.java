@@ -42,7 +42,7 @@ public class RepositoryTool extends AbstractTool {
             @Override
             public void handle(MouseDragEvent event) {
                 if (event.getTarget() == null) {
-                    endPhase();
+                    endTool();
                     event.consume();
                     return;
                 }

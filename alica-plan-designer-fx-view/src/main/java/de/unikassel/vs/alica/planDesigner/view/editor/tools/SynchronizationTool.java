@@ -91,7 +91,7 @@ public class SynchronizationTool extends AbstractTool{
                     if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
                             event.getTarget() instanceof StackPane == false) {
                         event.consume();
-                        endPhase();
+                        endTool();
                         return;
                     }
 //                    ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
@@ -106,7 +106,7 @@ public class SynchronizationTool extends AbstractTool{
 //                            .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
 //                                    (int) (localCoord.getX()),
 //                                    (int) (localCoord.getY()), planModelVisualisationObject.getPlan()));
-//                    endPhase();
+//                    endTool();
                     initial = true;
                 }
             });

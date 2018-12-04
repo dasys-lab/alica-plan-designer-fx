@@ -36,7 +36,7 @@ public class InitTransitionTool extends AbstractTool {
 //                        start = (EntryPointContainer) ((Node)event.getTarget()).getParent();
 //                        initial = false;
 //                    } else {
-//                        endPhase();
+//                        endTool();
 //                    }
 //                } else if (((Node)event.getTarget()).getParent() instanceof StateContainer && initial == false) {
 //                    finish = (StateContainer) ((Node)event.getTarget()).getParent();
@@ -46,7 +46,7 @@ public class InitTransitionTool extends AbstractTool {
 //                            .getCommandStack()
 //                            .storeAndExecute(command);
 //                } else {
-//                    endPhase();
+//                    endTool();
 //                }
 
                 event.consume();
@@ -94,7 +94,7 @@ public class InitTransitionTool extends AbstractTool {
         public InitStateConnectionHBox() {
             setIcon(Types.INITSTATECONNECTION);
             setOnDragDetected(Event::consume);
-            setOnMouseClicked(event -> startPhase());
+            setOnMouseClicked(event -> startTool());
         }
     }
 
