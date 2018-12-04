@@ -1,6 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.uiextensionmodel;
 
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class PositionedElement {

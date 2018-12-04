@@ -15,6 +15,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.UiExtensionModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.plugin.PluginEventHandler;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
@@ -245,15 +246,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         ((EntryPointViewModel) viewModelElement).setXPosition(x);
                         ((EntryPointViewModel) viewModelElement).setYPosition(y);
                         planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
-                    case Types.BENDPOINT:
-                        plan = modelManager.getPlanElement(event.getParentId());
-                        planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
-                        BendPointViewModel bendpoint = new BendPointViewModel(0, null, Types.BENDPOINT);
-                        bendpoint.setX(x);
-                        bendpoint.setY(y);
-                        ((TransitionViewModel) viewModelElement).getBendpoints().add(bendpoint);
-                        planViewModel.getTransitions().remove(viewModelElement);
-                        planViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:

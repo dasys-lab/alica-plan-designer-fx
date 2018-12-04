@@ -97,6 +97,7 @@ public class ModelManager implements Observer {
         objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
         objectMapper.addMixIn(PlanModelVisualisationObject.class, PlanModelVisualizationObjectMixIn.class);
         objectMapper.addMixIn(PmlUiExtensionMap.class, PmlUiExtensionMapMixIn.class);
+        objectMapper.addMixIn(BendPoint.class, BendPointMixIn.class);
     }
 
     public void setPlansPath(String plansPath) {
@@ -728,7 +729,6 @@ public class ModelManager implements Observer {
                 event.setRelatedObjects(related);
                 break;
             case Types.BENDPOINT:
-                break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:
@@ -1197,7 +1197,9 @@ public class ModelManager implements Observer {
                 bendPoint.setYPos(y);
                 Transition transition = (Transition) getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
                 bendPoint.setTransition(transition);
-                cmd = new AddBendpointToPlan(this, bendPoint, parenOfElement, new PmlUiExtension());
+                PlanModelVisualisationObject modelObject = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
+                extension = modelObject.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(transition);
+                cmd = new AddBendpointToPlan(this, parenOfElement, bendPoint, extension);
                 break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:

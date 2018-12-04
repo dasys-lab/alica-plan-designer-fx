@@ -66,4 +66,11 @@ public class PmlUiExtension extends PositionedElement {
         return visible;
     }
 
+    public void addBendpoint(BendPoint bendPoint) {
+        bendPoints.add(bendPoint);
+    }
+
+    public void removeBendpoint(BendPoint bendPoint) {
+        bendPoints.remove(bendPoint);
+    }
 }
