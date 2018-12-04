@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class ParsedModelReferences {
     // SINGLETON
     private static volatile ParsedModelReferences instance;
+
     public static ParsedModelReferences getInstance() {
         if (instance == null) {
             synchronized (ParsedModelReferences.class) {
@@ -27,6 +28,8 @@ public class ParsedModelReferences {
     public ArrayList<Long> incompleteStatesInTransitions = new ArrayList<>(); // done
 
     public ArrayList<Long> incompleteSynchronizationsInTransitions = new ArrayList<>(); // done
+
+    public ArrayList<Long> incompleteBendPointTransitions = new ArrayList<>(); // done
 
     public void setDefaultTaskId(long defaultTaskId) {
         this.defaultTaskId = defaultTaskId;
@@ -59,6 +62,12 @@ public class ParsedModelReferences {
     public void addIncompleteSynchronizationInTransition(long incompleteSynchronizationId) {
         if (!incompleteSynchronizationsInTransitions.contains(incompleteSynchronizationId)) {
             incompleteSynchronizationsInTransitions.add(incompleteSynchronizationId);
+        }
+    }
+
+    public void addIncompleteBendPointTransition(long incompleteTransitionId) {
+        if (!incompleteBendPointTransitions.contains(incompleteTransitionId)) {
+            incompleteBendPointTransitions.add(incompleteTransitionId);
         }
     }
 }

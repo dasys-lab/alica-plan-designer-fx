@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-public class Transition extends  PlanElement{
+public class Transition extends  PlanElement {
     public static final String INSTATE = "inState";
     public static final String OUTSTATE = "outState";
 
@@ -8,6 +8,14 @@ public class Transition extends  PlanElement{
     protected State outState;
     protected PreCondition preCondition;
     protected Synchronization synchronization;
+
+    public Transition(long id) {
+        this.id = id;
+    }
+
+    public Transition() {
+
+    }
 
     public State getInState() {
         return inState;
