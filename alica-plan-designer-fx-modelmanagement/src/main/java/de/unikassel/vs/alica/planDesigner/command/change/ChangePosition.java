@@ -53,8 +53,10 @@ public class ChangePosition extends AbstractCommand {
 
     private UiExtensionModelEvent createUiExtensiomModelEvent(int x, int y){
         UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, null);
-        event.setNewX(x);
-        event.setNewY(y);
+        PmlUiExtension extension = new PmlUiExtension();
+        extension.setXPos(x);
+        extension.setYPos(y);
+        event.setExtension(extension);
 
         return event;
     }

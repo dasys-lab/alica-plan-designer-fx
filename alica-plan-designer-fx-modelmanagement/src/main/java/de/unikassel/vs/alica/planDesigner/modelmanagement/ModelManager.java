@@ -226,6 +226,7 @@ public class ModelManager implements Observer {
             replaceIncompleteTasksInEntryPoints(plan);
             replaceIncompleteAbstractPlansInStates(plan);
             replaceIncompleteStatesAndSynchronizationsInTransitions(plan);
+            replaceIncompleteBendPointTransitions(plan);
             if (plan.getMasterPlan()) {
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
             } else {
@@ -462,6 +463,25 @@ public class ModelManager implements Observer {
         }
     }
 
+    public void replaceIncompleteBendPointTransitions(Plan plan) {
+        PlanModelVisualisationObject visualisationObject = getCorrespondingPlanModelVisualisationObject(plan.getId());
+        HashMap<PlanElement, PmlUiExtension> extensionMap = visualisationObject.getPmlUiExtensionMap().getExtension();
+        ArrayList<Long> incompleteBendPointTransitions = ParsedModelReferences.getInstance().incompleteBendPointTransitions;
+        for (Map.Entry<PlanElement, PmlUiExtension> extensionEntry: extensionMap.entrySet()) {
+            long transitionId = extensionEntry.getKey().getId();
+            if (incompleteBendPointTransitions.contains(transitionId)) {
+                for (Transition transition: plan.getTransitions()) {
+                    if (transition.getId() == transitionId) {
+                        for (BendPoint bendPoint : extensionEntry.getValue().getBendPoints()) {
+                            bendPoint.setTransition(transition);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     private void replaceIncompleteAbstractPlansInStates(Plan plan) {
         ParsedModelReferences refs = ParsedModelReferences.getInstance();
         for (State state : plan.getStates()) {
@@ -528,8 +548,7 @@ public class ModelManager implements Observer {
                 newMap.put(complete, value);
 
                 UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_PARSED, complete, null);
-                event.setNewX(value.getXPos());
-                event.setNewY(value.getYPos());
+                event.setExtension(value);
                 fireUiExtensionModelEvent(event);
             }
         }
@@ -614,8 +633,7 @@ public class ModelManager implements Observer {
         for(PlanElement planElement : planModelVisualisationObject.getPmlUiExtensionMap().getExtension().keySet()){
             PmlUiExtension uiExtension = planModelVisualisationObject.getPmlUiExtensionMap().getExtension().get(planElement);
             UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, null);
-            event.setNewX(uiExtension.getXPos());
-            event.setNewY(uiExtension.getYPos());
+            event.setExtension(uiExtension);
             fireUiExtensionModelEvent(event);
         }
     }
@@ -728,7 +746,6 @@ public class ModelManager implements Observer {
                 related.put(Types.TASK, ((EntryPoint)newElement).getTask().getId());
                 event.setRelatedObjects(related);
                 break;
-            case Types.BENDPOINT:
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:
@@ -743,8 +760,7 @@ public class ModelManager implements Observer {
         PlanElement oldElement = planElementMap.put(newElement.getId(), newElement);
 
         event.setParentId(parentElement.getPlan().getId());
-        event.setNewX(extension.getXPos());
-        event.setNewY(extension.getYPos());
+        event.setExtension(extension);
         fireEvent(event);
 
         return oldElement;

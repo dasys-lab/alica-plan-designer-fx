@@ -15,6 +15,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.UiExtensionModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.plugin.PluginEventHandler;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
@@ -33,10 +34,12 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import org.apache.commons.beanutils.BeanUtils;
 
+import java.lang.annotation.ElementType;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
+import java.security.cert.Extension;
 import java.util.ArrayList;
 
 /**
@@ -160,8 +163,21 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         ViewModelElement viewModelElement = viewModelFactory.getViewModelElement(modelElement);
         PlanElementViewModel planElementViewModel = (PlanElementViewModel) viewModelElement;
 
-        planElementViewModel.setXPosition(event.getNewX());
-        planElementViewModel.setYPosition(event.getNewY());
+        planElementViewModel.setXPosition(event.getExtension().getXPos());
+        planElementViewModel.setYPosition(event.getExtension().getYPos());
+
+        if (event.getExtension().getBendPoints().size() != 0) {
+            TransitionViewModel transition = (TransitionViewModel) planElementViewModel;
+            transition.getBendpoints().clear();
+            for (BendPoint bendPoint:event.getExtension().getBendPoints()) {
+                BendPointViewModel bendPointViewModel = new BendPointViewModel(0, "", Types.BENDPOINT);
+                bendPointViewModel.setX(bendPoint.getXPos());
+                bendPointViewModel.setY(bendPoint.getYPos());
+                transition.addBendpoint(bendPointViewModel);
+            }
+            ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, modelElement, Types.BENDPOINT);
+            updateViewModel(event, viewModelElement, modelElement);
+        }
     }
 
     /**
@@ -211,7 +227,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 try {
-                    BeanUtils.setProperty((ViewModelElement) viewModelElement, event.getChangedAttribute(), BeanUtils.getProperty(planElement, event.getChangedAttribute()));
+                    BeanUtils.setProperty(viewModelElement, event.getChangedAttribute(), BeanUtils.getProperty(planElement, event.getChangedAttribute()));
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                     throw new RuntimeException(e);
                 }
@@ -220,32 +236,35 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 int x = 0;
                 int y = 0;
                 if(event instanceof UiExtensionModelEvent){
-                    x = ((UiExtensionModelEvent) event).getNewX();
-                    y = ((UiExtensionModelEvent) event).getNewY();
+                    PmlUiExtension extension = ((UiExtensionModelEvent) event).getExtension();
+                    x = extension.getXPos();
+                    y = extension.getYPos();
                 }
+
+
+                PlanElement plan = modelManager.getPlanElement(event.getParentId());
+                PlanViewModel planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
                 switch(event.getElementType()) {
                     case Types.STATE:
                     case Types.SUCCESSSTATE:
                     case Types.FAILURESTATE:
-                        PlanElement plan = modelManager.getPlanElement(event.getParentId());
-                        PlanViewModel planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
                         ((StateViewModel) viewModelElement).setXPosition(x);
                         ((StateViewModel) viewModelElement).setYPosition(y);
                         planViewModel.getStates().add((StateViewModel) viewModelElement);
                         break;
                     case Types.TRANSITION: {
-                        plan = modelManager.getPlanElement(event.getParentId());
-                        planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
                         ((TransitionViewModel) viewModelElement).setInState((StateViewModel) viewModelFactory.getViewModelElement(((Transition)planElement).getInState()));
                         ((TransitionViewModel) viewModelElement).setOutState((StateViewModel) viewModelFactory.getViewModelElement(((Transition)planElement).getOutState()));
                         planViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
                     } break;
                     case Types.ENTRYPOINT:
-                        plan = modelManager.getPlanElement(event.getParentId());
-                        planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
                         ((EntryPointViewModel) viewModelElement).setXPosition(x);
                         ((EntryPointViewModel) viewModelElement).setYPosition(y);
                         planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
+                    case Types.BENDPOINT:
+                        TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
+                        planViewModel.getTransitions().remove(transitionViewModel);
+                        planViewModel.getTransitions().add(transitionViewModel);
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:

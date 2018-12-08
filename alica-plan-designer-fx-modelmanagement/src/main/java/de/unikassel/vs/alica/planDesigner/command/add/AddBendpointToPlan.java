@@ -9,8 +9,6 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 
-import java.lang.annotation.ElementType;
-
 public class AddBendpointToPlan extends AbstractCommand {
 
     protected PmlUiExtension extension;
@@ -27,10 +25,18 @@ public class AddBendpointToPlan extends AbstractCommand {
     @Override
     public void doCommand() {
         extension.addBendpoint(bendPoint);
+        UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, bendPoint.getTransition(), Types.BENDPOINT);
+        event.setExtension(extension);
+        event.setParentId(parentOfElement.getPlan().getId());
+        modelManager.fireUiExtensionModelEvent(event);
     }
 
     @Override
     public void undoCommand() {
         extension.removeBendpoint(bendPoint);
+        UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, bendPoint.getTransition(), Types.BENDPOINT);
+        event.setExtension(extension);
+        event.setParentId(parentOfElement.getPlan().getId());
+        modelManager.fireUiExtensionModelEvent(event);
     }
 }

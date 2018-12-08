@@ -49,4 +49,8 @@ public class TransitionViewModel extends PlanElementViewModel {
     public void setBendpoints(List<BendPointViewModel> bendpoints) {
         this.bendpoints = bendpoints;
     }
+
+    public void addBendpoint(BendPointViewModel bendPointViewModel) {
+        bendpoints.add(bendPointViewModel);
+    }
 }

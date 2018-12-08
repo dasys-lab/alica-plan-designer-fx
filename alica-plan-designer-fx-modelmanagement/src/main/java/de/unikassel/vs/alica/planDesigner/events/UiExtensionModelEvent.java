@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.events;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 
 import java.util.Map;
 
@@ -9,10 +10,8 @@ import java.util.Map;
  */
 public class UiExtensionModelEvent extends ModelEvent{
 
-    private int newX;
-    private int newY;
     private Map<String, Long> relatedObjects;
-
+    private PmlUiExtension extension;
 
     public UiExtensionModelEvent(ModelEventType modelEventType, PlanElement element, String elementType) {
         super(modelEventType, element, elementType);
@@ -20,22 +19,6 @@ public class UiExtensionModelEvent extends ModelEvent{
 
     public PlanElement getElement() {
         return element;
-    }
-
-    public int getNewX() {
-        return newX;
-    }
-
-    public void setNewX(int newX) {
-        this.newX = newX;
-    }
-
-    public int getNewY() {
-        return newY;
-    }
-
-    public void setNewY(int newY) {
-        this.newY = newY;
     }
 
     public Map<String, Long> getRelatedObjects() {
@@ -46,4 +29,11 @@ public class UiExtensionModelEvent extends ModelEvent{
         this.relatedObjects = relatedObjects;
     }
 
+    public void setExtension(PmlUiExtension extension) {
+        this.extension = extension;
+    }
+
+    public PmlUiExtension getExtension() {
+        return extension;
+    }
 }
