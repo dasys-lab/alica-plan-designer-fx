@@ -14,10 +14,7 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -77,9 +74,6 @@ public abstract class AbstractTool {
                     }
                 }
             });
-
-            //Listener, that ends a phase, when the mouse is released
-            //defaultHandlerMap.put(MouseDragEvent.MOUSE_RELEASED, (event) -> endTool());
         }
         return defaultHandlerMap;
     }
@@ -96,10 +90,12 @@ public abstract class AbstractTool {
 
     public void startTool() {
         draggableHBox.setEffect(dropShadowEffect);
-        getCustomHandlerMap()
-                .forEach((key, value) -> planEditorTabPane.getScene().addEventFilter(key, value));
-        defaultHandlers()
-                .forEach((key, value) -> planEditorTabPane.getScene().addEventFilter(key, value));
+        for (Map.Entry<EventType, EventHandler> entry : getCustomHandlerMap().entrySet()) {
+            planEditorTabPane.getScene().addEventFilter(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<EventType, EventHandler> entry : defaultHandlers().entrySet()) {
+            planEditorTabPane.getScene().addEventFilter(entry.getKey(), entry.getValue());
+        }
 
         previousCursor = getCursor();
         setCursor(imageCursor);
@@ -108,10 +104,12 @@ public abstract class AbstractTool {
 
     public void endTool() {
         draggableHBox.setEffect(null);
-        getCustomHandlerMap()
-                .forEach((key, value) -> getPlanEditorTabPane().getScene().removeEventFilter(key, value));
-        defaultHandlers()
-                .forEach((key, value) -> getPlanEditorTabPane().getScene().removeEventFilter(key, value));
+        for (Map.Entry<EventType, EventHandler> entry : getCustomHandlerMap().entrySet()) {
+            getPlanEditorTabPane().getScene().removeEventFilter(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<EventType, EventHandler> entry : defaultHandlers().entrySet()) {
+            getPlanEditorTabPane().getScene().removeEventFilter(entry.getKey(), entry.getValue());
+        }
         setCursor(Cursor.DEFAULT);
         setRecentlyDone(true);
         activated = !activated;
@@ -134,11 +132,12 @@ public abstract class AbstractTool {
             }
         });
 
+        /*
         draggableHBox.setOnDragDetected(event -> {
             draggableHBox.startFullDrag();
             this.startTool();
             event.consume();
-        });
+        });*/
 
         this.draggableHBox = draggableHBox;
         this.draggableHBox.setOnDragDone(Event::consume);

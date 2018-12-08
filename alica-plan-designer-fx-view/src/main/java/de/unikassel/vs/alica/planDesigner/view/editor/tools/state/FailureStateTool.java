@@ -21,6 +21,9 @@ public class FailureStateTool extends StateTool {
         DraggableHBox draggableHBox = new DraggableHBox();
         draggableHBox.setIcon(Types.FAILURESTATE);
         setDraggableHBox(draggableHBox);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.failurestate);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_failurestate);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_failurestate);
         return draggableHBox;
     }
 
@@ -29,10 +32,4 @@ public class FailureStateTool extends StateTool {
     protected GuiChangePositionEvent createEvent(){
         return new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.FAILURESTATE, null);
     }
-
-    @Override
-    protected AlicaCursor getImageCursor() {
-        return new AlicaCursor(AlicaCursor.Type.failurestate);
-    }
-
 }

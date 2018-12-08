@@ -19,7 +19,7 @@ public class AlicaCursor extends ImageCursor {
         //successstate
         successstate,
         forbidden_successstate,
-        add_failure_state,
+        add_successstate,
 
         //failurestate
         failurestate,

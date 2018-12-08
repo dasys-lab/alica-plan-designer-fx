@@ -22,16 +22,14 @@ public class SuccessStateTool extends StateTool {
         DraggableHBox draggableHBox = new DraggableHBox();
         draggableHBox.setIcon(Types.SUCCESSSTATE);
         setDraggableHBox(draggableHBox);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.successstate);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_successstate);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_successstate);
         return draggableHBox;
     }
 
     @Override
     protected GuiChangePositionEvent createEvent() {
         return new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.SUCCESSSTATE, null);
-    }
-
-    @Override
-    protected AlicaCursor getImageCursor() {
-        return new AlicaCursor(AlicaCursor.Type.successstate);
     }
 }
