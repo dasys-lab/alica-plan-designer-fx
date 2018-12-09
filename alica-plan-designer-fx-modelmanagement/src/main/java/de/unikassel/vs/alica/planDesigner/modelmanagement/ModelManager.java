@@ -652,6 +652,9 @@ public class ModelManager implements Observer {
         if (ignoreModifiedEvent(newElement)) {
             return null;
         }
+
+        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+
         switch (type) {
             case Types.PLAN:
             case Types.MASTERPLAN:
@@ -710,6 +713,31 @@ public class ModelManager implements Observer {
                 plan.getTransitions().add(transition);
                 // TODO something with UiExtension?
                 break;
+            case Types.STATE:
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                plan = (Plan) parentElement;
+                visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
+                visualisation.getPlan().getStates().add((State) newElement);
+                UiExtensionModelEvent uiExtensionEvent = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+                PmlUiExtension extension = visualisation.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(newElement);
+                uiExtensionEvent.setExtension(extension);
+                event = uiExtensionEvent;
+                break;
+            case Types.ENTRYPOINT:
+                plan = (Plan) parentElement;
+                visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
+                visualisation.getPlan().getEntryPoints().add((EntryPoint) newElement);
+//                State entryState = ((EntryPoint) newElement).getState();
+//                entryState.setEntryPoint((EntryPoint) newElement);
+                HashMap<String, Long> related = new HashMap<>();
+                related.put(Types.TASK, ((EntryPoint)newElement).getTask().getId());
+                uiExtensionEvent = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+                uiExtensionEvent.setRelatedObjects(related);
+                extension = visualisation.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(newElement);
+                uiExtensionEvent.setExtension(extension);
+                event = uiExtensionEvent;
+                break;
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
                 return null;
@@ -720,49 +748,9 @@ public class ModelManager implements Observer {
         }
         planElementMap.put(newElement.getId(), newElement);
         if (parentElement != null) {
-            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
             event.setParentId(parentElement.getId());
-            fireEvent(event);
-        } else {
-            fireEvent(new ModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type));
         }
-        return oldElement;
-    }
-
-    public PlanElement addPlanElementAtPosition(String type, PlanElement newElement, PmlUiExtension extension, PlanModelVisualisationObject parentElement){
-        UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
-
-        switch(type){
-            case Types.STATE:
-            case Types.SUCCESSSTATE:
-            case Types.FAILURESTATE:
-                parentElement.getPlan().getStates().add((State) newElement);
-                break;
-            case Types.ENTRYPOINT:
-                parentElement.getPlan().getEntryPoints().add((EntryPoint) newElement);
-//                State entryState = ((EntryPoint) newElement).getState();
-//                entryState.setEntryPoint((EntryPoint) newElement);
-                HashMap<String, Long> related = new HashMap<>();
-                related.put(Types.TASK, ((EntryPoint)newElement).getTask().getId());
-                event.setRelatedObjects(related);
-                break;
-            case Types.PRECONDITION:
-            case Types.RUNTIMECONDITION:
-            case Types.POSTCONDITION:
-            case Types.SYNCHRONISATION:
-            case Types.SYNCTRANSITION:
-            default:
-                //TODO: Handle the other cases
-                System.out.println("ModelManager: adding type " + type + " at position not implemented yet!");
-        }
-        parentElement.getPmlUiExtensionMap().getExtension().put(newElement, extension);
-
-        PlanElement oldElement = planElementMap.put(newElement.getId(), newElement);
-
-        event.setParentId(parentElement.getPlan().getId());
-        event.setExtension(extension);
         fireEvent(event);
-
         return oldElement;
     }
 

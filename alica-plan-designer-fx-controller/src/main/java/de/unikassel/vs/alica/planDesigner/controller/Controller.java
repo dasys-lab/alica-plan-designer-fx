@@ -34,12 +34,10 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import org.apache.commons.beanutils.BeanUtils;
 
-import java.lang.annotation.ElementType;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.security.cert.Extension;
 import java.util.ArrayList;
 
 /**
@@ -261,6 +259,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                         ((EntryPointViewModel) viewModelElement).setXPosition(x);
                         ((EntryPointViewModel) viewModelElement).setYPosition(y);
                         planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
+                        break;
                     case Types.BENDPOINT:
                         TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
                         planViewModel.getTransitions().remove(transitionViewModel);
