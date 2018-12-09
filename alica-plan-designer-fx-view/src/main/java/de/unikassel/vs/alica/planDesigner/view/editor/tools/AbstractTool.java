@@ -2,8 +2,6 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 
 import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
-
-import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -179,6 +177,33 @@ public abstract class AbstractTool {
         return planTab.getPlanEditorGroup().getChildren().stream()
                 .filter(container -> ((Pane) container).getChildren().contains(event.getTarget()))
                 .findFirst().map(node -> ((AbstractPlanElementContainer)node).getModelElement()).orElse(null);
+    }
+
+
+    /**
+     * React clicks of buttons, that are not the primary mouse button (usually left button).
+     *
+     * In most cases only a click of the primary button is supposed to trigger the associated action. Because a
+     * {@link MouseEvent} does not differentiate the different buttons, this methods implements some standard behaviour.
+     * A click of the secondary button (usually right) ends the phase and consumes the event. A click of any button that
+     * is neither the primary nor the secondary button consumes the event. Only the primary button leaves the event
+     * unconsumed and therefore enables further actions.
+     * <br>
+     * <i></b>IMPORTANT:</i> do not ignore returned value, because event might be consumed already!
+     *
+     * @param event  the {@link MouseEvent} to handle
+     * @return  true, if the button was not the primary button
+     */
+    protected boolean handleNonPrimaryButtonEvent(MouseEvent event){
+        if(event.getButton() != MouseButton.PRIMARY){
+            if(event.getButton() == MouseButton.SECONDARY){
+                this.endTool();
+            }
+            event.consume();
+            return true;
+        }
+
+        return false;
     }
 
     public void setCursor(Cursor cursor) {

@@ -1,34 +1,22 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.state;
 
-import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
-import de.unikassel.vs.alica.planDesigner.controller.ErrorWindowController;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.controller.NameAndCommentDialogController;
 import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
-import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The {@link StateTool} is used for adding new states to the currently edited plan.
@@ -63,6 +51,10 @@ public class StateTool extends AbstractTool {
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+
+                    if(handleNonPrimaryButtonEvent(event)){
+                        return;
+                    }
 
                     // Calculate the relative coordinates of the event
                     Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
