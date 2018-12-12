@@ -4,6 +4,8 @@ import de.unikassel.vs.alica.planDesigner.controller.IsDirtyWindowController;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -68,6 +70,19 @@ public class PlanDesignerApplication extends Application {
         scene.getStylesheets().add(cssPath);
         PlanDesignerApplication.primaryStage = primaryStage;
         PlanDesignerApplication.primaryStage.setScene(scene);
+
+        /**
+         * Just for setting the divider default position to a certain position, after all resize events
+         * of the main window during initialisation have happened. Setting it before, or by editing the fxml file
+         * won't work, because the events reset the dividers position.
+         */
+        primaryStage.showingProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                mainWindowController.getMainSplitPane().setDividerPosition(0, 0.16);
+                observable.removeListener(this);
+            }
+        });
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();

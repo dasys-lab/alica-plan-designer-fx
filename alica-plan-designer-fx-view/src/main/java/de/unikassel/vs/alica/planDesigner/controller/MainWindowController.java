@@ -21,10 +21,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -39,6 +36,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Spliterator;
 
 public class MainWindowController implements Initializable {
 
@@ -93,6 +91,9 @@ public class MainWindowController implements Initializable {
     @FXML
     private Text statusText;
 
+    @FXML
+    private SplitPane mainSplitPane;
+
 //--------------------------------------------------------------------------------------------
 //  FIELDS
 //--------------------------------------------------------------------------------------------
@@ -125,6 +126,7 @@ public class MainWindowController implements Initializable {
     public String getRolesPath() {
         return rolesPath;
     }
+    public SplitPane getMainSplitPane () {return mainSplitPane; }
 
     public FileTreeView getFileTreeView() {
         return fileTreeView;

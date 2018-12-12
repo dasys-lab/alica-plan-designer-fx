@@ -12,10 +12,10 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <SplitPane dividerPositions="0.1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+        <SplitPane fx:id="mainSplitPane" dividerPositions="0.01" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" orientation="HORIZONTAL">
             <items>
-                <SplitPane dividerPositions="0.8" orientation="VERTICAL">
+                <SplitPane fx:id="treeRepoSplitPane" dividerPositions="0.8" orientation="VERTICAL">
                     <items>
                         <VBox minHeight="-Infinity">
                             <children>
