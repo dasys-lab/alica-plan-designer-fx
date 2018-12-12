@@ -36,7 +36,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Spliterator;
 
 public class MainWindowController implements Initializable {
 
@@ -213,7 +212,7 @@ public class MainWindowController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
                 if (newValue != null) {
-                    String type = ((IEditorTab) newValue).getPresentedViewModelElement().getType();
+                    String type = ((IEditorTab) newValue).getViewModelElement().getType();
                     if (type.equals(Types.BEHAVIOUR) ||
                             type.equals(Types.PLAN) ||
                             type.equals(Types.MASTERPLAN) ||
@@ -229,7 +228,7 @@ public class MainWindowController implements Initializable {
 
         generateCurrentFile.setOnAction(e -> {
             long modelElementId = ((AbstractPlanTab) editorTabPane
-                    .getSelectionModel().getSelectedItem()).getPresentedViewModelElement().getId();
+                    .getSelectionModel().getSelectedItem()).getViewModelElement().getId();
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
 //            	waitOnProgressWindow(() -> new Codegenerator().generate(modelElementId));

@@ -11,6 +11,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
 import javafx.event.EventHandler;
@@ -81,11 +82,11 @@ public class TransitionTool extends AbstractTool {
                             relatedObjects.put(TransitionViewModel.OUTSTATE, outState.getId());
 
                             guiEvent.setRelatedObjects(relatedObjects);
-                            guiEvent.setParentId(TransitionTool.this.getPlanTab().getPlan().getId());
+                            guiEvent.setParentId(TransitionTool.this.getPlanTab().getViewModelElement().getId());
                             handler.handle(guiEvent);
 
                             long transitionID = 0;
-                            for (TransitionViewModel transition : TransitionTool.this.getPlanTab().getPlan().getTransitions()) {
+                            for (TransitionViewModel transition : ((PlanViewModel) TransitionTool.this.getPlanTab().getViewModelElement()).getTransitions()) {
                                 if (transition.getOutState().getId() == outState.getId()
                                         && transition.getInState().getId() == inState.getId()) {
                                     transitionID = transition.getId();
@@ -96,7 +97,7 @@ public class TransitionTool extends AbstractTool {
                                 GuiChangePositionEvent bendEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.BENDPOINT, null);
                                 bendEvent.setNewX((int) point.getX());
                                 bendEvent.setNewY((int) point.getY());
-                                bendEvent.setParentId(TransitionTool.this.getPlanTab().getPlan().getId());
+                                bendEvent.setParentId(TransitionTool.this.getPlanTab().getViewModelElement().getId());
                                 HashMap<String, Long> related = new HashMap<>();
                                 related.put(Types.TRANSITION, transitionID);
                                 bendEvent.setRelatedObjects(related);

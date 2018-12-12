@@ -477,19 +477,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     @Override
-    public void handleTabOpenedEvent(PlanTab planTab) {
-        planTab.setPlanViewModel((PlanViewModel) viewModelFactory.getViewModelElement((Plan) modelManager.getPlanElement(planTab.getPresentedViewModelElement().getId())));
-
-    }
-
-    @Override
-    public void handleTabOpenedEvent(BehaviourTab behaviourTab) {
-        System.err.println("Controller: Opening BehaviourTabs not implemented, yet!");
-    }
-
-    @Override
     public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {
-        planTypeTab.setPlanTypeViewModel((PlanTypeViewModel) viewModelFactory.getViewModelElement((PlanType) modelManager.getPlanElement(planTypeTab.getPresentedViewModelElement().getId())));
+        planTypeTab.setPlanTypeViewModel((PlanTypeViewModel) viewModelFactory.getViewModelElement((PlanType) modelManager.getPlanElement(planTypeTab.getViewModelElement().getId())));
     }
 
     @Override
@@ -513,7 +502,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             if (!(tab instanceof PlanTypeTab)) {
                 continue;
             }
-            if (((PlanTypeTab) tab).getPresentedViewModelElement().getId() != planTypeID) {
+            if (((PlanTypeTab) tab).getViewModelElement().getId() != planTypeID) {
                 continue;
             }
             PlanTypeTab planTypeTab = (PlanTypeTab) tab;
@@ -531,7 +520,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         for (Tab tab : editorTabPane.getTabs()) {
             if (tab instanceof AbstractPlanTab) {
                 AbstractPlanTab abstractPlanTab = (AbstractPlanTab) tab;
-                if (abstractPlanTab.getPresentedViewModelElement().getId() == planElementId) {
+                if (abstractPlanTab.getViewModelElement().getId() == planElementId) {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
@@ -543,7 +532,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             }
             if (tab instanceof TaskRepositoryTab) {
                 TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab) tab;
-                if (taskRepositoryTab.getPresentedViewModelElement().getId() == planElementId) {
+                if (taskRepositoryTab.getViewModelElement().getId() == planElementId) {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {

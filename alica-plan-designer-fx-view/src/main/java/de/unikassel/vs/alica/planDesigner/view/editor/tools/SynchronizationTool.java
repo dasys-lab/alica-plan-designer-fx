@@ -105,7 +105,7 @@ public class SynchronizationTool extends AbstractTool{
 //                            .getCommandStack()
 //                            .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
 //                                    (int) (localCoord.getX()),
-//                                    (int) (localCoord.getY()), planModelVisualisationObject.getPlan()));
+//                                    (int) (localCoord.getY()), planModelVisualisationObject.getPlanViewModel()));
 //                    endTool();
                     initial = true;
                 }

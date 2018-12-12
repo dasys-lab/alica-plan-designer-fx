@@ -29,8 +29,8 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
     I18NRepo i18NRepo;
     IGuiModificationHandler guiModificationHandler;
 
-    public BehaviourTab(BehaviourViewModel behaviourViewModel) {
-        super(behaviourViewModel);
+    public BehaviourTab(BehaviourViewModel behaviourViewModel,IGuiModificationHandler guiModificationHandler) {
+        super(behaviourViewModel, guiModificationHandler);
         setText(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + behaviourViewModel.getName());
         i18NRepo = I18NRepo.getInstance();
         this.behaviourViewModel = behaviourViewModel;
@@ -73,10 +73,7 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         }
 
         setContent(contentList);
-    }
 
-    public void init(IGuiModificationHandler guiModificationHandler) {
-        this.guiModificationHandler = guiModificationHandler;
         behaviourViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
             setDirty(true);
             fireModificationEvent(newValue, "name", String.class.getSimpleName());
@@ -116,7 +113,7 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
     }
 
     @Override
-    public ViewModelElement getPresentedViewModelElement() {
+    public ViewModelElement getViewModelElement() {
         return behaviourViewModel;
     }
 
@@ -129,8 +126,8 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
     @Override
     public void save() {
         if (isDirty()) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.BEHAVIOUR, presentedViewModelElement.getName());
-            event.setElementId(presentedViewModelElement.getId());
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.BEHAVIOUR, viewModelElement.getName());
+            event.setElementId(viewModelElement.getId());
             guiModificationHandler.handle(event);
         }
     }

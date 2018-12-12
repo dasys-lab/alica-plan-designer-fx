@@ -14,8 +14,6 @@ public interface IGuiModificationHandler {
     void handle(GuiModificationEvent event);
     ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement);
     ViewModelElement getViewModelElement(long id);
-    void handleTabOpenedEvent(PlanTab planTab);
-    void handleTabOpenedEvent(BehaviourTab behaviourTab);
     void handleTabOpenedEvent(PlanTypeTab planTypeTab);
     void handleUndo();
     void handleRedo();

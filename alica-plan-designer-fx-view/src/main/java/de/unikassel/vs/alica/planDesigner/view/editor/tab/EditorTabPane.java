@@ -46,8 +46,7 @@ public class EditorTabPane extends TabPane {
         switch (viewModelElement.getType()) {
             case Types.MASTERPLAN:
             case Types.PLAN:
-                PlanTab planTab = new PlanTab(viewModelElement, this.guiModificationHandler);
-                guiModificationHandler.handleTabOpenedEvent(planTab);
+                PlanTab planTab = new PlanTab(guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
                 return planTab;
             case Types.TASKREPOSITORY:
                 TaskRepositoryTab taskRepositoryTab = new TaskRepositoryTab((TaskRepositoryViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
@@ -56,9 +55,7 @@ public class EditorTabPane extends TabPane {
                 taskRepositoryTab = new TaskRepositoryTab((TaskRepositoryViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getParentId()), this.guiModificationHandler);
                 return taskRepositoryTab;
             case Types.BEHAVIOUR:
-                BehaviourTab behaviourTab = new BehaviourTab((BehaviourViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()));
-                behaviourTab.init(guiModificationHandler);
-                guiModificationHandler.handleTabOpenedEvent(behaviourTab);
+                BehaviourTab behaviourTab = new BehaviourTab((BehaviourViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
                 return behaviourTab;
             case Types.PLANTYPE:
                 PlanTypeTab planTypeTab = new PlanTypeTab(viewModelElement, this.guiModificationHandler);

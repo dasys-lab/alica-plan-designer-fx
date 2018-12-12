@@ -18,13 +18,10 @@ public class PlanTypeTab extends AbstractPlanTab {
 
     private PlanTypeWindowController planTypeWindowController;
 
-    private IGuiModificationHandler guiModificationHandler;
-
     public PlanTypeTab(ViewModelElement planType, IGuiModificationHandler guiModificationHandler) {
-        super(planType);
+        super(planType, guiModificationHandler);
         setText(I18NRepo.getInstance().getString("label.caption.plantype") + ": " + planType.getName());
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("planTypeWindow.fxml"));
-        this.guiModificationHandler = guiModificationHandler;
         try {
             Parent window = fxmlLoader.load();
             planTypeWindowController = fxmlLoader.getController();
@@ -49,8 +46,8 @@ public class PlanTypeTab extends AbstractPlanTab {
     @Override
     public void save() {
         if (isDirty()) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, presentedViewModelElement.getName());
-            event.setElementId(presentedViewModelElement.getId());
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, viewModelElement.getName());
+            event.setElementId(viewModelElement.getId());
             guiModificationHandler.handle(event);
         }
     }
