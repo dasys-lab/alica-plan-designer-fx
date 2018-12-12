@@ -765,6 +765,7 @@ public class ModelManager implements Observer {
                 }
                 break;
             case Types.ANNOTATEDPLAN:
+                // TODO Why adding Annotated Plan, when it gets removed!?
                 AnnotatedPlan annotatedPlan = (AnnotatedPlan) planElement;
                 annotatedPlanMap.put(annotatedPlan.getId(), annotatedPlan);
                 break;

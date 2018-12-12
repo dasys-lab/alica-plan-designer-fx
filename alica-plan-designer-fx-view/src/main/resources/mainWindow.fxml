@@ -13,7 +13,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <SplitPane dividerPositions="0.1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" orientation="HORIZONTAL">
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" orientation="HORIZONTAL">
             <items>
                 <SplitPane dividerPositions="0.8" orientation="VERTICAL">
                     <items>
@@ -43,9 +43,6 @@
                 </SplitPane>
                 <EditorTabPane fx:id="editorTabPane" minHeight="100.0" minWidth="100.0" tabClosingPolicy="ALL_TABS"/>
             </items>
-            <padding>
-                <Insets top="29.0"/>
-            </padding>
         </SplitPane>
         <MenuBar fx:id="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
         <Rectangle fx:id="statusBlob" arcHeight="20.0" arcWidth="20.0" fill="#b3d9fc" height="20.0" stroke="BLACK"

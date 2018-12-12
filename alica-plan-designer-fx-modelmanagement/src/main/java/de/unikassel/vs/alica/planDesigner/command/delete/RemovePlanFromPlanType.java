@@ -19,6 +19,7 @@ public class RemovePlanFromPlanType extends AbstractCommand {
         super(modelManager);
         this.plan = plan;
         this.planType = planType;
+        // TODO: Don't create your own AnnotatedPlan, use the existing one!
         this.annotatedPlan = new AnnotatedPlan();
         annotatedPlan.setPlan(plan);
     }
