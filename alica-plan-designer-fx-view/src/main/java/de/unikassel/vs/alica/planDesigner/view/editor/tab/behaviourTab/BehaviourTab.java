@@ -29,11 +29,11 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
     I18NRepo i18NRepo;
     IGuiModificationHandler guiModificationHandler;
 
-    public BehaviourTab(BehaviourViewModel behaviourViewModel,IGuiModificationHandler guiModificationHandler) {
-        super(behaviourViewModel, guiModificationHandler);
-        setText(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + behaviourViewModel.getName());
+    public BehaviourTab(ViewModelElement viewModelElement,IGuiModificationHandler guiModificationHandler) {
+        super(viewModelElement, guiModificationHandler);
+        setText(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + viewModelElement.getName());
         i18NRepo = I18NRepo.getInstance();
-        this.behaviourViewModel = behaviourViewModel;
+        this.behaviourViewModel = (BehaviourViewModel) viewModelElement;
 
         // Properties
         propertiesTable = new PropertiesTable();
@@ -44,11 +44,11 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         propertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
         propertiesTable.addColumn(i18NRepo.getString("label.column.frequency"), "frequency", new IntegerStringConverter(), true);
         propertiesTable.addColumn(i18NRepo.getString("label.column.deferring"), "deferring", new LongStringConverter(), true);
-        propertiesTable.addItem(behaviourViewModel);
+        propertiesTable.addItem(this.behaviourViewModel);
 
         // Variables
-        variablesTab = new VariablesTab(behaviourViewModel);
-        for (VariableViewModel variableViewModel : behaviourViewModel.getVariables()) {
+        variablesTab = new VariablesTab(viewModelElement);
+        for (VariableViewModel variableViewModel : this.behaviourViewModel.getVariables()) {
             variablesTab.addItem(variableViewModel);
         }
         TabPane variablesTabPane = new TabPane();
@@ -59,34 +59,34 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         contentList.getChildren().addAll(propertiesTable, variablesTabPane);
 
         // Behaviours Conditions
-        if (behaviourViewModel.getPreCondition() != null) {
-            ConditionsTitledPane preConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.preCondtions"), behaviourViewModel.getPreCondition());
+        if (this.behaviourViewModel.getPreCondition() != null) {
+            ConditionsTitledPane preConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.preCondtions"), this.behaviourViewModel.getPreCondition());
             contentList.getChildren().addAll(preConditionTabPane);
         }
-        if (behaviourViewModel.getRuntimeCondition() != null) {
-            ConditionsTitledPane runtimeConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.runtimeCondtions"), behaviourViewModel.getRuntimeCondition());
+        if (this.behaviourViewModel.getRuntimeCondition() != null) {
+            ConditionsTitledPane runtimeConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.runtimeCondtions"), this.behaviourViewModel.getRuntimeCondition());
             contentList.getChildren().addAll(runtimeConditionTabPane);
         }
-        if (behaviourViewModel.getPostCondition() != null) {
-            ConditionsTitledPane postConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.postCondtions"), behaviourViewModel.getPostCondition());
+        if (this.behaviourViewModel.getPostCondition() != null) {
+            ConditionsTitledPane postConditionTabPane = new ConditionsTitledPane(i18NRepo.getString("label.caption.postCondtions"), this.behaviourViewModel.getPostCondition());
             contentList.getChildren().addAll(postConditionTabPane);
         }
 
         setContent(contentList);
 
-        behaviourViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
+        this.behaviourViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
             setDirty(true);
             fireModificationEvent(newValue, "name", String.class.getSimpleName());
         });
-        behaviourViewModel.commentProperty().addListener((observable, oldValue, newValue) -> {
+        this.behaviourViewModel.commentProperty().addListener((observable, oldValue, newValue) -> {
             setDirty(true);
             fireModificationEvent(newValue, "comment", String.class.getSimpleName());
         });
-        behaviourViewModel.frequencyProperty().addListener((observable, oldValue, newValue) -> {
+        this.behaviourViewModel.frequencyProperty().addListener((observable, oldValue, newValue) -> {
             setDirty(true);
             fireModificationEvent(newValue.toString(), "frequency", Integer.class.getSimpleName());
         });
-        behaviourViewModel.deferringProperty().addListener((observable, oldValue, newValue) -> {
+        this.behaviourViewModel.deferringProperty().addListener((observable, oldValue, newValue) -> {
             setDirty(true);
             fireModificationEvent(newValue.toString(), "deferring", Long.class.getSimpleName());
         });

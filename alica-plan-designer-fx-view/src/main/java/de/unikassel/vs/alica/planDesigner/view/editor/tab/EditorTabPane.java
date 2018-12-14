@@ -1,15 +1,14 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab;
 
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
-import de.unikassel.vs.alica.planDesigner.view.model.TaskRepositoryViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
-import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
+import de.unikassel.vs.alica.planDesigner.view.model.TaskRepositoryViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
@@ -46,21 +45,19 @@ public class EditorTabPane extends TabPane {
         switch (viewModelElement.getType()) {
             case Types.MASTERPLAN:
             case Types.PLAN:
-                PlanTab planTab = new PlanTab(guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
-                return planTab;
+//                return new PlanTab(guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
+               return new PlanTab(viewModelElement, this.guiModificationHandler);
             case Types.TASKREPOSITORY:
-                TaskRepositoryTab taskRepositoryTab = new TaskRepositoryTab((TaskRepositoryViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
-                return taskRepositoryTab;
+//                return new TaskRepositoryTab((TaskRepositoryViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
+                return new TaskRepositoryTab(viewModelElement, this.guiModificationHandler);
             case Types.TASK:
-                taskRepositoryTab = new TaskRepositoryTab((TaskRepositoryViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getParentId()), this.guiModificationHandler);
-                return taskRepositoryTab;
+                return new TaskRepositoryTab((TaskRepositoryViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getParentId()), this.guiModificationHandler);
             case Types.BEHAVIOUR:
-                BehaviourTab behaviourTab = new BehaviourTab((BehaviourViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
-                return behaviourTab;
+//                return new BehaviourTab((BehaviourViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
+                return new BehaviourTab(viewModelElement, this.guiModificationHandler);
             case Types.PLANTYPE:
-                PlanTypeTab planTypeTab = new PlanTypeTab(viewModelElement, this.guiModificationHandler);
-                guiModificationHandler.handleTabOpenedEvent(planTypeTab);
-                return planTypeTab;
+//                return new PlanTypeTab((PlanTypeViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getId()), this.guiModificationHandler);
+                return new PlanTypeTab(viewModelElement, this.guiModificationHandler);
             default:
                 System.err.println("EditorTabPane: Opening tab of elementType " + viewModelElement.getType() + " not implemented!");
                 return null;

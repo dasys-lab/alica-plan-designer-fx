@@ -40,10 +40,10 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     private I18NRepo i18NRepo;
     private PropertiesTable<ViewModelElement> propertiesTable;
 
-    public TaskRepositoryTab(TaskRepositoryViewModel taskRepository, IGuiModificationHandler handler) {
+    public TaskRepositoryTab(ViewModelElement viewModelElement, IGuiModificationHandler handler) {
         super(I18NRepo.getInstance().getString("label.caption.taskrepository"), null);
         this.guiModificationHandler = handler;
-        this.taskRepository = taskRepository;
+        this.taskRepository = (TaskRepositoryViewModel) viewModelElement;
         this.addElements(taskRepository.getTaskViewModels());
 
         i18NRepo = I18NRepo.getInstance();
