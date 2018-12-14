@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab;
 
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -46,8 +47,7 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
     }
 
     public void setViewModelElement(ViewModelElement element) {
-        System.out.println("PropertiesConditionsVariablesPane::setViewModelElement() - Not yet implemented!");
-        this.planPropertiesTable.setItem(element);
+        this.planPropertiesTable.setPlanViewModel((PlanViewModel) element);
     }
 
 }

@@ -49,11 +49,9 @@ public class ViewModelElement {
         return type.get();
     }
 
-    public String getRelativeDirectory() {
-        return relativeDirectory.get();
-    }
-
-    public void setRelativeDirectory(String relativeDirectory) {this.relativeDirectory.setValue(relativeDirectory);}
+    public final SimpleStringProperty relativeDirectoryProperty() {return this.relativeDirectory; }
+    public void setRelativeDirectory(String relativeDirectory) {this.relativeDirectory.set(relativeDirectory);}
+    public String getRelativeDirectory() {return this.relativeDirectory.get();}
 
     public void setParentId(long id) {
         this.parentId.setValue(id);

@@ -1,49 +1,122 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab;
 
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
-import javafx.util.converter.DefaultStringConverter;
+import javafx.util.Pair;
+import org.controlsfx.control.PropertySheet;
 
-public class PlanPropertiesTable<S> extends TableView<S> {
+public class PlanPropertiesTable extends TableView<Pair<String, Object>> {
 
     protected PlanViewModel planViewModel;
 
     public PlanPropertiesTable () {
-        this.addColumn("Key", "None", new DefaultStringConverter(), true);
-        this.addColumn("Value", "None", new DefaultStringConverter(), true);
+//        PropertySheet
+        // table definition
+        //TODO replay strings with i18n lookup
+        TableColumn<Pair<String, Object>, String> nameColumn = new TableColumn<>("Key");
+        nameColumn.setPrefWidth(100);
+        TableColumn<Pair<String, Object>, Object> valueColumn = new TableColumn<>("Value");
+        valueColumn.setSortable(false);
+        valueColumn.setPrefWidth(150);
+
+        nameColumn.setCellValueFactory(new PairKeyFactory());
+        valueColumn.setCellValueFactory(new PairValueFactory());
+
+        this.getColumns().setAll(nameColumn, valueColumn);
+
+        valueColumn.setCellFactory(new Callback<TableColumn<Pair<String, Object>, Object>, TableCell<Pair<String, Object>, Object>>() {
+            @Override
+            public TableCell<Pair<String, Object>, Object> call(TableColumn<Pair<String, Object>, Object> column) {
+                PairValueCell cell = new PairValueCell();
+                cell.setEditable(true);
+                cell.itemProperty().addListener((obs, oldValue, newValue) -> {
+                    TableRow row = cell.getTableRow();
+                    if (row == null) {
+                        cell.setEditable(false);
+                    } else {
+                        Pair<String, Object> item = (Pair<String, Object>) cell.getTableRow().getItem();
+                        if (item != null && item.getKey() == "Comment") {
+                            cell.setEditable(true);
+                        }
+                    }
+//                    cell.pseudoClassStateChanged(editableCssClass, cell.isEditable());
+                });
+                return cell;
+            }
+        });
     }
 
-    protected <T> void addColumn(String title, String propertyName, StringConverter<T> converter, boolean editable) {
-        TableColumn<S, T> column = new TableColumn<S, T>(title);
-        column.setCellValueFactory(new PropertyValueFactory<S, T>(propertyName));
-        Callback<TableColumn<S, T>, TableCell<S, T>> defaultTextFieldCellFactory
-                = TextFieldTableCell.<S, T>forTableColumn(converter);
-        column.setCellFactory(col -> {
-            TableCell<S, T> cell = defaultTextFieldCellFactory.call(col);
-            cell.setEditable(editable);
-            return cell;
-        });
-        getColumns().add(column);
-        // 24 Pixel * (1 empty row + 1 heading) + 2 pixel for border
-        setPrefHeight(24 * (1 + 1) + 2);
+    public void setPlanViewModel(PlanViewModel planViewModel) {
+        this.planViewModel = planViewModel;
+        this.getItems().clear();
+        // Name
+        this.getItems().add(new Pair<>("Name", planViewModel.nameProperty()));
+        this.getItems().add(new Pair<>("ID", planViewModel.idProperty()));
+        this.getItems().add(new Pair<>("Comment", planViewModel.commentProperty()));
+        this.getItems().add(new Pair<>("Master Plan", planViewModel.masterPlanProperty()));
+        this.getItems().add(new Pair<>("Utility Threshold", planViewModel.utilityThresholdProperty()));
+        this.getItems().add(new Pair<>("Relative Directory", planViewModel.relativeDirectoryProperty()));
     }
 
     /**
-     * Removes all items and set the new one.
-     * @param viewModelItem
-     */
-    public void setItem(S viewModelItem) {
-        getItems().clear();
-        getItems().add(viewModelItem);
+     * Alot nested classes for special cell handling stuff.
+     * From: https://stackoverflow.com/questions/17067481/javafx-2-tableview-different-cell-factory-depending-on-the-data-inside-the-cel)
+      */
 
-        // TODO: depends on the number of properties to show...
-//        setPrefHeight(24 * (getItems().size() + 1) + 2);
+    class PairKeyFactory implements Callback<TableColumn.CellDataFeatures<Pair<String, Object>, String>, ObservableValue<String>> {
+        @Override
+        public ObservableValue<String> call(TableColumn.CellDataFeatures<Pair<String, Object>, String> data) {
+            return new ReadOnlyObjectWrapper<>(data.getValue().getKey());
+        }
+    }
+
+    class PairValueFactory implements Callback<TableColumn.CellDataFeatures<Pair<String, Object>, Object>, ObservableValue<Object>> {
+        @SuppressWarnings("unchecked")
+        @Override
+        public ObservableValue<Object> call(TableColumn.CellDataFeatures<Pair<String, Object>, Object> data) {
+            Object value = data.getValue().getValue();
+            return (value instanceof ObservableValue)
+                    ? (ObservableValue) value
+                    : new ReadOnlyObjectWrapper<>(value);
+        }
+    }
+
+    class PairValueCell extends TextFieldTableCell<Pair<String, Object>, Object> {
+        @Override
+        public void updateItem(Object item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (item != null) {
+                if (item instanceof String) {
+                    setText((String) item);
+                    setGraphic(null);
+                } else if (item instanceof SimpleStringProperty) {
+                    setText(((SimpleStringProperty) item).get());
+                    setGraphic(null);
+                } else if (item instanceof Boolean) {
+                    CheckBox checkBox = new CheckBox();
+                    checkBox.setSelected((boolean) item);
+                    setGraphic(checkBox);
+                } else if (item instanceof Double) {
+                    setText(Double.toString((Double) item));
+                    setGraphic(null);
+                } else if (item instanceof Long) {
+                    setText(Long.toString((Long) item));
+                    setGraphic(null);
+                } else {
+                    setText("N/A");
+                    setGraphic(null);
+                }
+            } else {
+                setText(null);
+                setGraphic(null);
+            }
+        }
     }
 
 }

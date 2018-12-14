@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class BehaviourViewModel extends SerializableViewModel {
 
-    protected StringProperty relativeDirectory = new SimpleStringProperty();
     protected IntegerProperty frequency = new SimpleIntegerProperty();
     protected LongProperty deferring = new SimpleLongProperty();
 
@@ -19,19 +18,6 @@ public class BehaviourViewModel extends SerializableViewModel {
         super(id, name, type);
         variables = new ArrayList<>();
     }
-
-    public void setRelativeDirectory(String relativeDirectory) {
-        this.relativeDirectory.set(relativeDirectory);
-    }
-
-    public String getRelativeDirectory() {
-        return this.relativeDirectory.get();
-    }
-
-    public StringProperty relativeDirectoryProperty() {
-        return relativeDirectory;
-    }
-
 
     public void setDeferring(long deferring) {
         this.deferring.set(deferring);
