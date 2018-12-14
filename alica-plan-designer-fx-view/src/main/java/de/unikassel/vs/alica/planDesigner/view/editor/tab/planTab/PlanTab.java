@@ -81,6 +81,7 @@ public class PlanTab extends AbstractPlanTab {
 
         propertiesConditionsVariablesPane = new PropertiesConditionsVariablesPane();
         propertiesConditionsVariablesPane.setText(planViewModel.getName());
+        propertiesConditionsVariablesPane.setViewModelElement(planViewModel);
 
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
