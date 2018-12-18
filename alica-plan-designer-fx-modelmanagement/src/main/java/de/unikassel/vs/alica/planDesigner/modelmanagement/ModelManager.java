@@ -381,6 +381,7 @@ public class ModelManager implements Observer {
                         planTypeMap.put(planType.getId(), planType);
                         for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
                             planElementMap.put(annotatedPlan.getId(), annotatedPlan);
+                            annotatedPlanMap.put(annotatedPlan.getId(), annotatedPlan);
                         }
                     }
                     break;
@@ -1128,7 +1129,7 @@ public class ModelManager implements Observer {
             return null;
         }
         if (parent instanceof PlanType) {
-            Plan plan = planMap.get(mmq.getElementId());
+            AnnotatedPlan plan = annotatedPlanMap.get(mmq.getElementId());
             if (plan == null) {
                 return null;
             }

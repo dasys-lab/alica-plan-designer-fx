@@ -10,16 +10,12 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 public class AddPlanToPlanType extends AbstractCommand {
 
     private PlanType parentOfElement;
-    private Plan plan;
     private AnnotatedPlan annotatedPlan;
 
-    public AddPlanToPlanType(ModelManager modelManager, Plan plan, PlanType parentOfElement) {
+    public AddPlanToPlanType(ModelManager modelManager, AnnotatedPlan annotatedPlan, PlanType parentOfElement) {
         super(modelManager);
-        this.plan = plan;
         this.parentOfElement = parentOfElement;
-        this.annotatedPlan = new AnnotatedPlan();
-        annotatedPlan.setPlan(plan);
-        annotatedPlan.setActivated(true);
+        this.annotatedPlan = annotatedPlan;
     }
 
     @Override

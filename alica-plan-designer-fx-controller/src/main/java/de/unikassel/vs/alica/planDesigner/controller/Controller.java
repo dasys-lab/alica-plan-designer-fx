@@ -221,7 +221,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private void updateViewModel(ModelEvent event, ViewModelElement viewModelElement, PlanElement planElement) {
         switch(event.getEventType()) {
             case ELEMENT_DELETED:
-                viewModelFactory.removeElement(viewModelElement);
+                viewModelFactory.removeElement(event.getParentId(), viewModelElement);
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 try {
@@ -368,9 +368,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case ADD_ELEMENT:
                 if(event instanceof GuiChangePositionEvent){
                     UiExtensionModelModificationQuery uimmq = new UiExtensionModelModificationQuery(ModelQueryType.ADD_ELEMENT,
-                                                                    event.getElementType(),
-                                                                    event.getElementId(),
-                                                                    event.getParentId());
+                            event.getElementType(),
+                            event.getElementId(),
+                            event.getParentId());
                     uimmq.setNewX(((GuiChangePositionEvent) event).getNewX());
                     uimmq.setNewY(((GuiChangePositionEvent) event).getNewY());
                     uimmq.setName(event.getName());

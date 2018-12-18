@@ -85,7 +85,7 @@ public class PlanTypeTab extends AbstractPlanTab {
             if (selectedItem == null) {
                 return;
             }
-            fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), ((AnnotatedPlanView) selectedItem.getViewModelElement()).getPlanId());
+            fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), selectedItem.getViewModelElement().getId());
             setDirty(true);
         });
 
@@ -94,7 +94,7 @@ public class PlanTypeTab extends AbstractPlanTab {
             if (selectedItem == null) {
                 return;
             }
-            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, selectedItem.getName(), ((AnnotatedPlanView) selectedItem).getPlanId());
+            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, selectedItem.getName(), selectedItem.getId());
             setDirty(true);
         });
 
@@ -114,12 +114,12 @@ public class PlanTypeTab extends AbstractPlanTab {
                 c.next();
                 if (c.wasAdded()) {
                     for (ViewModelElement element : c.getAddedSubList()) {
-                        planTypeViewModel.getAllPlans().remove(element);
-                        planTypeTableView.getItems().add((AnnotatedPlanView) element);
+                        planTypeViewModel.removePlanFromAllPlans(element.getId());
+                        //planTypeTableView.getItems().add((AnnotatedPlanView) element);
                     }
                 } else if (c.wasRemoved()) {
                     for (ViewModelElement element : c.getRemoved()) {
-                        planTypeViewModel.getAllPlans().add(element);
+                        planTypeViewModel.addPlanToAllPlans(element);
                         for (AnnotatedPlanView view : planTypeTableView.getItems()) {
                             if (view.getId() == element.getId()) {
                                 planTypeTableView.getItems().remove(view);

@@ -193,13 +193,16 @@ public class ViewModelFactory {
 
     private AnnotatedPlanView createAnnotatedPlanViewModel(AnnotatedPlan annotatedPlan) {
         Plan plan = annotatedPlan.getPlan();
-        if (plan.getMasterPlan()) {
+        //TODO new types ANNOTATEDMASTERPLAN?
+        return new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.ANNOTATEDPLAN, annotatedPlan
+                .isActivated(), plan.getId());
+        /*if (plan.getMasterPlan()) {
             return new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.MASTERPLAN, annotatedPlan
                     .isActivated(), plan.getId());
         } else {
             return new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.PLAN, annotatedPlan
                     .isActivated(), plan.getId());
-        }
+        }*/
     }
 
     private StateViewModel createStateViewModel(State state) {
@@ -304,7 +307,7 @@ public class ViewModelFactory {
         return planViewModel;
     }
 
-    public void removeElement(ViewModelElement viewModelElement) {
+    public void removeElement(long parentId, ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {
             case Types.TASK:
                 ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
@@ -327,7 +330,14 @@ public class ViewModelFactory {
                     entryState.setEntryPoint(null);
                 }
                 break;
-            //TODO: handle other types
+            case Types.ANNOTATEDPLAN:
+                AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) viewModelElement;
+                PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                planTypeViewModel.removePlanFromPlansInPlanType(annotatedPlanView.getPlanId());
+                    break;
+            default:
+                    System.err.println("Remove Element not supported for type: " + viewModelElement.getType());
+                    //TODO: handle other types
         }
 
         viewModelElements.remove(viewModelElement.getId());
