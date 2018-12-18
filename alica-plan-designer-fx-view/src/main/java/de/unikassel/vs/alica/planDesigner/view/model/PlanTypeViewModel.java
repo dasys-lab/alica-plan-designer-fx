@@ -78,4 +78,13 @@ public class PlanTypeViewModel extends SerializableViewModel {
     public String getRelativeDirectory() {
         return this.relativeDirectory.get();
     }
+
+    public boolean containsPlan(long id) {
+        for (AnnotatedPlanView annotatedPlan : plansInPlanType) {
+            if (annotatedPlan.getPlanId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

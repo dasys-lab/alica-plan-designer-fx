@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.Arrays;
+
 public class PlanElementViewModel extends ViewModelElement {
 
     protected final StringProperty comment = new SimpleStringProperty();
@@ -14,6 +16,9 @@ public class PlanElementViewModel extends ViewModelElement {
 
     public PlanElementViewModel (long id, String name, String type) {
         super(id, name, type);
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
     }
 
     public final StringProperty commentProperty() {return comment; }

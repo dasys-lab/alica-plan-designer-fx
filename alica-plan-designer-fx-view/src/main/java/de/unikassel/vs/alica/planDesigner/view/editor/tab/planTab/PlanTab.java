@@ -10,7 +10,6 @@ import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorElement;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.ConditionHBox;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
@@ -23,15 +22,12 @@ import javafx.scene.paint.Color;
 public class PlanTab extends AbstractPlanTab {
 
     private PlanEditorGroup planEditorGroup;
-    private ConditionHBox conditionHBox;
     private EditorToolBar editorToolBar;
     private StackPane planContent;
     private ScrollPane scrollPane;
 
-    private I18NRepo i18NRepo;
+
     private PropertiesConditionsVariablesPane propertiesConditionsVariablesPane;
-//    private PropertiesTable<ViewModelElement> upperPropertiesTable;
-//    private PropertiesTable<ViewModelElement> lowerPropertiesTable;
 
     public PlanTab(ViewModelElement viewModelElement, IGuiModificationHandler handler) {
         super(viewModelElement, handler);
@@ -49,40 +45,6 @@ public class PlanTab extends AbstractPlanTab {
 
         planEditorGroup.setManaged(true);
 
-//        upperPropertiesTable = new PropertiesTable<>();
-//        upperPropertiesTable.setEditable(true);
-//        upperPropertiesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
-//        upperPropertiesTable.addColumn(i18NRepo.getString("label.column.id"), "id", new LongStringConverter(), false);
-//        upperPropertiesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
-//        upperPropertiesTable.addColumn(i18NRepo.getString("label.column.relDir"), "relativeDirectory", new DefaultStringConverter(), false);
-//        upperPropertiesTable.addItem(planViewModel);
-//        planViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
-//            setDirty(true);
-//            fireGuiChangeAttributeEvent(newValue, "name", String.class.getSimpleName());
-//        });
-//        planViewModel.commentProperty().addListener((observable, oldValue, newValue) -> {
-//            setDirty(true);
-//            fireGuiChangeAttributeEvent(newValue, "comment", String.class.getSimpleName());
-//        });
-//
-//        lowerPropertiesTable = new PropertiesTable<>();
-//        lowerPropertiesTable.setEditable(true);
-//        lowerPropertiesTable.addColumn(i18NRepo.getString("label.column.utilitythreshold"), "utilityThreshold", new DoubleStringConverter(), true);
-//        lowerPropertiesTable.addColumn(i18NRepo.getString("label.column.masterplan"), "masterPlan", new BooleanStringConverter(), true);
-//        lowerPropertiesTable.addItem(planViewModel);
-//        planViewModel.utilityThresholdProperty().addListener((observable, oldValue, newValue) -> {
-//            setDirty(true);
-//            fireGuiChangeAttributeEvent(newValue.toString(), "utilityThreshold", Double.class.getSimpleName());
-//        });
-//        planViewModel.masterPlanProperty().addListener((observable, oldValue, newValue) -> {
-//            setDirty(true);
-//            fireGuiChangeAttributeEvent(newValue.toString(), "masterPlan", Boolean.class.getSimpleName());
-//        });
-
-        propertiesConditionsVariablesPane = new PropertiesConditionsVariablesPane();
-        propertiesConditionsVariablesPane.setText(planViewModel.getName());
-        propertiesConditionsVariablesPane.setViewModelElement(planViewModel);
-
         scrollPane = new ScrollPane(planContent);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
@@ -95,11 +57,8 @@ public class PlanTab extends AbstractPlanTab {
         scrollPlaneAndToolBarHBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         VBox.setVgrow(scrollPlaneAndToolBarHBox,Priority.ALWAYS);
 
-//        conditionHBox = new ConditionHBox(planViewModel, selectedPlanElements);
+        globalVBox.getChildren().add(0,scrollPlaneAndToolBarHBox);
 
-//        VBox globalVBox = new VBox(upperPropertiesTable, lowerPropertiesTable, conditionHBox, scrollPlaneAndToolBarHBox);
-        VBox globalVBox = new VBox(scrollPlaneAndToolBarHBox, propertiesConditionsVariablesPane);
-        setContent(globalVBox);
     }
 
     private void fireGuiChangeAttributeEvent(String newValue, String attribute, String type) {
@@ -127,10 +86,6 @@ public class PlanTab extends AbstractPlanTab {
         event.setNewY((int) newY);
 
         guiModificationHandler.handleGuiChangePositionEvent(event);
-    }
-
-    public ConditionHBox getConditionHBox() {
-        return conditionHBox;
     }
 
     public EditorToolBar getEditorToolBar() {

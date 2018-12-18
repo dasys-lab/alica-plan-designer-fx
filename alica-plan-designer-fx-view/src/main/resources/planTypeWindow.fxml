@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PropertiesConditionsVariablesPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable?>
 <VBox xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.unikassel.vs.alica.planDesigner.controller.PlanTypeWindowController">
     <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" spacing="15.0" VBox.vgrow="ALWAYS">
-        <PropertiesTable fx:id="propertiesTable" prefHeight="220.0" prefWidth="220.0" HBox.hgrow="ALWAYS"/>
         <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" spacing="15.0" VBox.vgrow="ALWAYS">
             <ListView fx:id="planListView" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS"/>
             <VBox spacing="20.0" HBox.hgrow="ALWAYS">
@@ -25,6 +24,7 @@
                 </columns>
             </TableView>
         </HBox>
+        <PropertiesConditionsVariablesPane fx:id="propertiesConditionsVariablesPane" HBox.hgrow="ALWAYS"/>
     </VBox>
     <ButtonBar VBox.vgrow="NEVER">
         <buttons>

@@ -151,7 +151,7 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
      * Method also sets the current position according to the {@link PlanElementViewModel} on call.
      *
      * @param node  the Node to change the position of
-     * @param planElementViewModel  the element, that contains the coordinates to listen to
+     * @param planElementViewModel  the element, that containsPlan the coordinates to listen to
      */
     public void createPositionListeners(Node node, PlanElementViewModel planElementViewModel){
         //Set to initial Position

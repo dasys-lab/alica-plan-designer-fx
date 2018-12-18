@@ -153,7 +153,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     /**
      * Handles events fired by the {@link ModelManager}, when the UiExtensionModel has changed.
      *
-     * @param event  contains all information about the changes in the UiExtensionModel
+     * @param event  containsPlan all information about the changes in the UiExtensionModel
      */
     @Override
     public void handleUiExtensionModelEvent(UiExtensionModelEvent event) {
@@ -431,7 +431,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * Method is separate from the handle-method, because this event is about a change to the UiExtensionModel, which is
      * separate from the model.
      *
-     * @param event  contains information about which object was moved and to which position it was moved
+     * @param event  containsPlan information about which object was moved and to which position it was moved
      */
     @Override
     public void handleGuiChangePositionEvent(GuiChangePositionEvent event) {
@@ -477,11 +477,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     @Override
-    public void handleTabOpenedEvent(PlanTypeTab planTypeTab) {
-        planTypeTab.setPlanTypeViewModel((PlanTypeViewModel) viewModelFactory.getViewModelElement((PlanType) modelManager.getPlanElement(planTypeTab.getViewModelElement().getId())));
-    }
-
-    @Override
     public ViewModelElement getViewModelElement(long id) {
         return viewModelFactory.getViewModelElement(modelManager.getPlanElement(id));
     }
@@ -491,7 +486,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         for (Tab tab : tabs) {
             if (tab instanceof PlanTypeTab) {
                 PlanTypeTab planTypeTab = (PlanTypeTab) tab;
-                planTypeTab.getPlanTypeWindowController().getPlanTypeViewModel().addPlanToAllPlans(planViewModel);
+                planTypeTab.addPlanToAllPlans(planViewModel);
             }
         }
     }
@@ -507,9 +502,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             }
             PlanTypeTab planTypeTab = (PlanTypeTab) tab;
             if (add) {
-                planTypeTab.getPlanTypeWindowController().getPlanTypeViewModel().addPlanToPlansInPlanType((AnnotatedPlanView) viewModelFactory.getViewModelElement(annotatedPlan));
+                planTypeTab.addPlanToPlansInPlanType((AnnotatedPlanView) viewModelFactory.getViewModelElement(annotatedPlan));
             } else {
-                planTypeTab.getPlanTypeWindowController().getPlanTypeViewModel().removePlanFromPlansInPlanType(annotatedPlan.getPlan().getId());
+                planTypeTab.removePlanFromPlansInPlanType(annotatedPlan.getPlan().getId());
             }
 
         }

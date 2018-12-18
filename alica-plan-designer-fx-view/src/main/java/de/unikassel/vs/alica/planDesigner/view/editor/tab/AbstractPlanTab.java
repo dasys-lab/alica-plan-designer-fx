@@ -7,6 +7,7 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanHBox;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PropertiesConditionsVariablesPane;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.controller.IsDirtyWindowController;
@@ -22,6 +23,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
@@ -31,18 +33,27 @@ import java.util.List;
 
 public abstract class AbstractPlanTab extends Tab implements IEditorTab{
 
+    protected I18NRepo i18NRepo;
     protected boolean dirty;
     protected SimpleObjectProperty<List<Pair<ViewModelElement, AbstractPlanElementContainer>>> selectedPlanElements;
 
     protected IGuiModificationHandler guiModificationHandler;
     protected ViewModelElement viewModelElement;
-    private ObservableList<Node> visualRepresentations;
+    protected ObservableList<Node> visualRepresentations;
+
+    protected VBox globalVBox;
+    protected PropertiesConditionsVariablesPane propertiesConditionsVariablesPane;
 
     public AbstractPlanTab(ViewModelElement viewModelElement, IGuiModificationHandler handler) {
         // set Tab Caption to name of file, represented by this Tab
         super(viewModelElement.getName());
+        this.i18NRepo = I18NRepo.getInstance();
         this.guiModificationHandler = handler;
         this.viewModelElement = viewModelElement;
+        propertiesConditionsVariablesPane = new PropertiesConditionsVariablesPane();
+        propertiesConditionsVariablesPane.setText(viewModelElement.getName());
+        propertiesConditionsVariablesPane.setViewModelElement(viewModelElement);
+
         initSelectedPlanElements(viewModelElement);
 
         // onAddElement close tab handlerinterfaces
@@ -53,6 +64,9 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
                 IsDirtyWindowController.createIsDirtyWindow(this, e);
             }
         });
+
+        this.globalVBox = new VBox(propertiesConditionsVariablesPane);
+        setContent(globalVBox);
     }
 
     public void setDirty(boolean dirty) {

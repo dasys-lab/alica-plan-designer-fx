@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * The {@link BendpointContainer} class holds a visual representation of a {}.
- * It also contains an object of elementType {@link} to hold modifications to it.
+ * It also containsPlan an object of elementType {@link} to hold modifications to it.
  * This modifications are later written back to the actual Resource.
  */
 public class BendpointContainer extends Rectangle implements DraggableEditorElement {

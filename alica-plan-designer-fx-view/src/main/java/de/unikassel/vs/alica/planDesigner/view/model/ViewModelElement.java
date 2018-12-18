@@ -3,12 +3,18 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.function.Predicate;
+
 public class ViewModelElement {
     protected SimpleLongProperty id;
     protected SimpleStringProperty name;
     protected SimpleStringProperty type;
     protected SimpleStringProperty relativeDirectory;
     protected SimpleLongProperty parentId;
+    protected ArrayList<String> uiPropertyList;
 
     public ViewModelElement(long id, String name, String type) {
         this.id = new SimpleLongProperty();
@@ -20,6 +26,9 @@ public class ViewModelElement {
         this.id.setValue(id);
         this.name.setValue(name);
         this.type.setValue(type);
+
+        this.uiPropertyList = new ArrayList<>();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "relativeDirectory"));
     }
 
     public ViewModelElement(long id, String name, String type, String relativeDirectory) {
@@ -59,6 +68,14 @@ public class ViewModelElement {
 
     public long getParentId() {
         return parentId.get();
+    }
+
+    public ArrayList<String> getUiPropertyList() {
+        return uiPropertyList;
+    }
+
+    public static Predicate<PropertyDescriptor> filterProperties(ArrayList<String> uiPropertyList) {
+        return p -> uiPropertyList.contains(p.getName());
     }
 
     public String toString() {

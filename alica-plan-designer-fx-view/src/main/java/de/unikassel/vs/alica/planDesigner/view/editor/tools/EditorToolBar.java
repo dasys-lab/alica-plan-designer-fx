@@ -1,9 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.condition.PostConditionTool;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.condition.PreConditionTool;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.condition.RuntimeConditionTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.state.FailureStateTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.state.StateTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.state.SuccessStateTool;
@@ -41,12 +38,6 @@ public class EditorToolBar extends ToolBar {
         getItems().add(successStateTool.createToolUI());
         FailureStateTool failureStateTool = new FailureStateTool(workbench, plan);
         getItems().add(failureStateTool.createToolUI());
-        RuntimeConditionTool runtimeConditionTool = new RuntimeConditionTool(workbench, plan);
-        getItems().add(runtimeConditionTool.createToolUI());
-        PreConditionTool preConditionTool = new PreConditionTool(workbench, plan);
-        getItems().add(preConditionTool.createToolUI());
-        PostConditionTool postConditionTool = new PostConditionTool(workbench, plan);
-        getItems().add(postConditionTool.createToolUI());
         InitTransitionTool initTransitionTool = new InitTransitionTool(workbench, plan);
         getItems().add(initTransitionTool.createToolUI());
         SynchronizationTool synchronizationTool = new SynchronizationTool(workbench, plan);
@@ -55,7 +46,7 @@ public class EditorToolBar extends ToolBar {
         getItems().add(syncTransitionTool.createToolUI());
 
         tools.addAll(Arrays.asList(stateTool, transitionTool, behaviourTool, entryPointTool, successStateTool,
-                failureStateTool, runtimeConditionTool, preConditionTool, postConditionTool, initTransitionTool,
+                failureStateTool, initTransitionTool,
                 synchronizationTool, syncTransitionTool));
 
     }

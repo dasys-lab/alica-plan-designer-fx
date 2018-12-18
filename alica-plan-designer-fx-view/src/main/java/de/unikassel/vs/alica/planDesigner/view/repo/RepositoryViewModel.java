@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * This class functions as backend for the repository view.
  * <p>
- * This class contains Lists of all Plans, PlanTypes, Behaviours and Tasks as ViewModelElement
+ * This class containsPlan Lists of all Plans, PlanTypes, Behaviours and Tasks as ViewModelElement
  */
 public final class RepositoryViewModel {
 

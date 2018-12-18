@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PlanViewModel extends SerializableViewModel {
 
@@ -26,6 +27,9 @@ public class PlanViewModel extends SerializableViewModel {
         this.transitions =  FXCollections.observableArrayList(new ArrayList<>());
         this.conditions = FXCollections.observableArrayList(new ArrayList<>());
         this.synchronisations = FXCollections.observableArrayList(new ArrayList<>());
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "masterPlan", "relativeDirectory", "utilityThreshold"));
     }
 
     public final BooleanProperty masterPlanProperty() {return masterPlan; }

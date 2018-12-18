@@ -122,7 +122,7 @@ public class RepositoryTabPane extends TabPane {
 //                List<Pair<TaskRepository, Path>> taskRepositories = RepositoryViewModel.getInstance().getTaskRepository();
 //                TaskRepository taskRepository = null;
 //                for (Pair<TaskRepository, Path> pair : taskRepositories) {
-//                    if (pair.getKey().getTasks().contains((Task) selectedPlanElement)) {
+//                    if (pair.getKey().getTasks().containsPlan((Task) selectedPlanElement)) {
 //                        taskRepository = pair.getKey();
 //                        break;
 //                    }

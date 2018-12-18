@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.Pair;
-import org.controlsfx.control.PropertySheet;
+
 
 public class PlanPropertiesTable extends TableView<Pair<String, Object>> {
 
