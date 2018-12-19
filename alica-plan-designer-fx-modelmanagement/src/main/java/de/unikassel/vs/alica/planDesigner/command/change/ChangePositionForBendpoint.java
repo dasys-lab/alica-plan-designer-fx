@@ -22,19 +22,19 @@ public class ChangePositionForBendpoint extends AbstractCommand {
         this.newY = newY;
 
         // save old position for undo
-        oldX = bendPoint.getXPos();
-        oldY = bendPoint.getYPos();
+        oldX = bendPoint.getX();
+        oldY = bendPoint.getY();
     }
 
     @Override
     public void doCommand() {
-        bendPoint.setXPos(newX);
-        bendPoint.setYPos(newY);
+        bendPoint.setX(newX);
+        bendPoint.setY(newY);
     }
 
     @Override
     public void undoCommand() {
-        bendPoint.setXPos(oldX);
-        bendPoint.setYPos(oldY);
+        bendPoint.setX(oldX);
+        bendPoint.setY(oldY);
     }
 }

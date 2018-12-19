@@ -27,12 +27,12 @@ public class DeleteTaskFromRepository extends AbstractCommand {
 
         // put outside the loop, in order to avoid concurrent modification exception
         if (taskToDelete != null) {
-            modelManager.removePlanElement(Types.TASK, taskToDelete, null, false);
+            modelManager.removedPlanElement(Types.TASK, taskToDelete, null, false);
         }
     }
 
     @Override
     public void undoCommand() {
-        modelManager.addPlanElement(Types.TASK, taskToDelete, null, false);
+        modelManager.createdPlanElement(Types.TASK, taskToDelete, null, false);
     }
 }

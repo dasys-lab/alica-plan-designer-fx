@@ -23,13 +23,13 @@ public class AddEntryPointInPlan extends AbstractCommand {
     @Override
     public void doCommand() {
         parentOfElement.getPmlUiExtensionMap().getExtension().put(entryPoint, newlyCreatedPmlUiExtension);
-        modelManager.addPlanElement(Types.ENTRYPOINT, entryPoint, entryPoint.getPlan(), false);
+        modelManager.createdPlanElement(Types.ENTRYPOINT, entryPoint, entryPoint.getPlan(), false);
     }
 
     @Override
     public void undoCommand() {
         parentOfElement.getPmlUiExtensionMap().getExtension().remove(entryPoint);
-        modelManager.removePlanElement(Types.ENTRYPOINT, entryPoint, parentOfElement.getPlan(), false);
+        modelManager.removedPlanElement(Types.ENTRYPOINT, entryPoint, parentOfElement.getPlan(), false);
     }
 
     public PmlUiExtension getNewlyCreatedPmlUiExtension() {

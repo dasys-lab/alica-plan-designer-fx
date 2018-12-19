@@ -72,34 +72,23 @@ public class PlanTypeTab extends AbstractPlanTab {
 
         // init button callbacks
         saveButton.setOnAction(e -> {
-            if (!isDirty()) {
-                return;
+            if (isDirty()) {
+                fireModificationEvent(GuiEventType.SAVE_ELEMENT, viewModelElement);
             }
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, viewModelElement.getName());
-            event.setElementId(viewModelElement.getId());
-            guiModificationHandler.handle(event);
         });
 
         addPlanButton.setOnAction(e -> {
-            RepositoryHBox selectedItem = planListView.getSelectionModel().getSelectedItem();
-            if (selectedItem == null) {
-                return;
-            }
-            fireModificationEvent(GuiEventType.ADD_ELEMENT, selectedItem.getViewModelName(), selectedItem.getViewModelElement().getId());
+            fireModificationEvent(GuiEventType.ADD_ELEMENT, planListView.getSelectionModel().getSelectedItem().getViewModelElement());
             setDirty(true);
         });
 
         removePlanButton.setOnAction(e -> {
-            ViewModelElement selectedItem = planTypeTableView.getSelectionModel().getSelectedItem();
-            if (selectedItem == null) {
-                return;
-            }
-            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, selectedItem.getName(), selectedItem.getId());
+            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, planTypeTableView.getSelectionModel().getSelectedItem());
             setDirty(true);
         });
 
         removeAllPlansButton.setOnAction(e -> {
-            fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, viewModelElement.getName(), viewModelElement.getId());
+            fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, viewModelElement);
             setDirty(true);
         });
     }
@@ -108,18 +97,17 @@ public class PlanTypeTab extends AbstractPlanTab {
         PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) viewModelElement;
         planTypeTableView.setItems(planTypeViewModel.getPlansInPlanType());
         planTypeTableView.getItems().sort(viewModelElementComparator);
-        planTypeViewModel.getPlansInPlanType().addListener(new ListChangeListener<ViewModelElement>() {
+        planTypeViewModel.getPlansInPlanType().addListener(new ListChangeListener<AnnotatedPlanView>() {
             @Override
-            public void onChanged(Change<? extends ViewModelElement> c) {
+            public void onChanged(Change<? extends AnnotatedPlanView> c) {
                 c.next();
                 if (c.wasAdded()) {
-                    for (ViewModelElement element : c.getAddedSubList()) {
-                        planTypeViewModel.removePlanFromAllPlans(element.getId());
-                        //planTypeTableView.getItems().add((AnnotatedPlanView) element);
+                    for (AnnotatedPlanView element : c.getAddedSubList()) {
+                        planTypeViewModel.removePlanFromAllPlans(element.getPlanId());
                     }
                 } else if (c.wasRemoved()) {
-                    for (ViewModelElement element : c.getRemoved()) {
-                        planTypeViewModel.addPlanToAllPlans(element);
+                    for (AnnotatedPlanView element : c.getRemoved()) {
+                        planTypeViewModel.addPlanToAllPlans((PlanViewModel) guiModificationHandler.getViewModelElement(element.getPlanId()));
                         for (AnnotatedPlanView view : planTypeTableView.getItems()) {
                             if (view.getId() == element.getId()) {
                                 planTypeTableView.getItems().remove(view);
@@ -266,13 +254,15 @@ public class PlanTypeTab extends AbstractPlanTab {
     /**
      * Called for adding, removing plans from plantype...
      * @param type
-     * @param viewModelName
-     * @param viewModelId
+     * @param element
      */
-    private void fireModificationEvent(GuiEventType type, String viewModelName, long viewModelId) {
-        GuiModificationEvent event = new GuiModificationEvent(type, Types.ANNOTATEDPLAN, viewModelName);
-        event.setParentId(viewModelElement.getId());
-        event.setElementId(viewModelId);
+    private void fireModificationEvent(GuiEventType type, ViewModelElement element) {
+        if (element == null) {
+            return;
+        }
+        GuiModificationEvent event = new GuiModificationEvent(type, element.getType(), element.getName());
+        event.setElementId(element.getId());
+        event.setParentId(this.viewModelElement.getId());
         guiModificationHandler.handle(event);
     }
 
@@ -298,10 +288,10 @@ public class PlanTypeTab extends AbstractPlanTab {
 
     // TODO
     public void addPlanToPlansInPlanType(AnnotatedPlanView annotatedPlan) {
-        ((PlanTypeViewModel) viewModelElement).addPlanToPlansInPlanType(annotatedPlan);
+        ((PlanTypeViewModel) viewModelElement).getPlansInPlanType().add(annotatedPlan);
     }
     // TODO
-    public void removePlanFromPlansInPlanType(long id) {
-        ((PlanTypeViewModel) viewModelElement).removePlanFromPlansInPlanType(id);
+    public void removePlanFromPlansInPlanType(AnnotatedPlanView annotatedPlan) {
+        ((PlanTypeViewModel) viewModelElement).getPlansInPlanType().remove(annotatedPlan);
     }
 }

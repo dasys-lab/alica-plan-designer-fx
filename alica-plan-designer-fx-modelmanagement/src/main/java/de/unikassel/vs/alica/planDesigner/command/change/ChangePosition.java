@@ -25,14 +25,14 @@ public class ChangePosition extends AbstractCommand {
         this.newY = newY;
 
         // save old position for undo
-        oldX = uiElement.getXPos();
-        oldY = uiElement.getYPos();
+        oldX = uiElement.getX();
+        oldY = uiElement.getY();
     }
 
     @Override
     public void doCommand() {
-        uiElement.setXPos(newX);
-        uiElement.setYPos(newY);
+        uiElement.setX(newX);
+        uiElement.setY(newY);
 
         UiExtensionModelEvent event = createUiExtensiomModelEvent(newX, newY);
         fireUiExtensionModelEvent(event);
@@ -40,8 +40,8 @@ public class ChangePosition extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        uiElement.setXPos(oldX);
-        uiElement.setYPos(oldY);
+        uiElement.setX(oldX);
+        uiElement.setY(oldY);
 
         UiExtensionModelEvent event = createUiExtensiomModelEvent(oldX, oldY);
         fireUiExtensionModelEvent(event);
@@ -54,8 +54,8 @@ public class ChangePosition extends AbstractCommand {
     private UiExtensionModelEvent createUiExtensiomModelEvent(int x, int y){
         UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, null);
         PmlUiExtension extension = new PmlUiExtension();
-        extension.setXPos(x);
-        extension.setYPos(y);
+        extension.setX(x);
+        extension.setY(y);
         event.setExtension(extension);
 
         return event;

@@ -20,7 +20,7 @@ public class DeletePlan extends AbstractCommand {
         if (plan == null) {
             return;
         }
-        modelManager.removePlanElement(Types.PLAN, plan, null, true);
+        modelManager.removedPlanElement(Types.PLAN, plan, null, true);
     }
 
     @Override
@@ -29,9 +29,9 @@ public class DeletePlan extends AbstractCommand {
             return;
         }
         if (!plan.getMasterPlan()) {
-            modelManager.addPlanElement(Types.PLAN, plan, null, true);
+            modelManager.createdPlanElement(Types.PLAN, plan, null, true);
         } else {
-            modelManager.addPlanElement(Types.MASTERPLAN, plan, null, true);
+            modelManager.createdPlanElement(Types.MASTERPLAN, plan, null, true);
         }
     }
 }

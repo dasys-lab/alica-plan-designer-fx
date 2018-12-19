@@ -70,13 +70,13 @@ public class ParseAbstractPlan extends AbstractCommand {
             }
 
             if(newPlan.getMasterPlan()) {
-                modelManager.addPlanElement(Types.MASTERPLAN, newElement, null, false);
+                modelManager.createdPlanElement(Types.MASTERPLAN, newElement, null, false);
             } else {
-                modelManager.addPlanElement(Types.PLAN, newElement, null, false);
+                modelManager.createdPlanElement(Types.PLAN, newElement, null, false);
             }
         } else {
 //            replaceIncompleteElements(newElement);
-            modelManager.addPlanElement(modelModificationQuery.getElementType(), newElement, null, false);
+            modelManager.createdPlanElement(modelModificationQuery.getElementType(), newElement, null, false);
         }
 
     }
@@ -86,16 +86,16 @@ public class ParseAbstractPlan extends AbstractCommand {
         if (oldElement != null) {
             // replace new object with former old one
             if (oldElement instanceof Plan && ((Plan) oldElement).getMasterPlan()) {
-                modelManager.addPlanElement(Types.MASTERPLAN, oldElement, null, false);
+                modelManager.createdPlanElement(Types.MASTERPLAN, oldElement, null, false);
             } else {
-                modelManager.addPlanElement(modelModificationQuery.getElementType(), oldElement, null, false);
+                modelManager.createdPlanElement(modelModificationQuery.getElementType(), oldElement, null, false);
             }
         } else {
             // remove new object
             if (newElement instanceof Plan && ((Plan) newElement).getMasterPlan()) {
-                modelManager.removePlanElement(Types.MASTERPLAN, newElement, null, false);
+                modelManager.removedPlanElement(Types.MASTERPLAN, newElement, null, false);
             } else {
-                modelManager.removePlanElement(modelModificationQuery.getElementType(), newElement, null, false);
+                modelManager.removedPlanElement(modelModificationQuery.getElementType(), newElement, null, false);
             }
         }
     }

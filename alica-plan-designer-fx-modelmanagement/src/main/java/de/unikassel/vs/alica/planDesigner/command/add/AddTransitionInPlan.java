@@ -1,6 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.command.add;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.PreCondition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
@@ -37,13 +36,13 @@ public class AddTransitionInPlan extends AbstractCommand {
                 .put(transition, newlyCreatedPmlUiExtension);*/
         transition.setInState(from);
         transition.setOutState(to);
-        modelManager.addPlanElement(Types.TRANSITION, transition, parentOfElement.getPlan(), false);
+        modelManager.createdPlanElement(Types.TRANSITION, transition, parentOfElement.getPlan(), false);
     }
 
     @Override
     public void undoCommand() {
         transition.setOutState(null);
         transition.setInState(null);
-        modelManager.removePlanElement(Types.TRANSITION, transition, parentOfElement.getPlan(), false);
+        modelManager.removedPlanElement(Types.TRANSITION, transition, parentOfElement.getPlan(), false);
     }
 }

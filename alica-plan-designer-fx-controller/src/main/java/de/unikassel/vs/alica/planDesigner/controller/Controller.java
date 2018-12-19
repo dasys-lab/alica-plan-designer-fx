@@ -2,7 +2,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
-import de.unikassel.vs.alica.planDesigner.ViewModelFactory.ViewModelFactory;
+import de.unikassel.vs.alica.planDesigner.ViewModelFactory.ViewModelManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
@@ -20,8 +20,6 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
@@ -63,7 +61,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private ConfigurationWindowController configWindowController;
     private RepositoryTabPane repoTabPane;
     private EditorTabPane editorTabPane;
-    private ViewModelFactory viewModelFactory;
+    private ViewModelManager viewModelManager;
 
     // Code Generation Objects
     private GeneratedSourcesManager generatedSourcesManager;
@@ -86,9 +84,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         setupModelManager();
         setupGeneratedSourcesManager();
 
-        viewModelFactory = new ViewModelFactory(modelManager);
+        viewModelManager = new ViewModelManager(modelManager);
 
-        repoViewModel = viewModelFactory.createRepositoryViewModel();
+        repoViewModel = viewModelManager.createRepositoryViewModel();
     }
 
     protected void setupGeneratedSourcesManager() {
@@ -127,13 +125,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     /**
      * Handles events fired by the model manager, when the model has changed.
+     *
      * @param event Object that describes the purpose/context of the fired event.
      */
     public void handleModelEvent(ModelEvent event) {
         PlanElement modelElement = event.getElement();
-        ViewModelElement viewModelElement = viewModelFactory.getViewModelElement(modelElement);
+        ViewModelElement viewModelElement = viewModelManager.getViewModelElement(modelElement);
 
-        switch(event.getElementType()) {
+        switch (event.getElementType()) {
             case Types.MASTERPLAN:
             case Types.PLAN:
             case Types.PLANTYPE:
@@ -153,38 +152,35 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     /**
      * Handles events fired by the {@link ModelManager}, when the UiExtensionModel has changed.
      *
-     * @param event  containsPlan all information about the changes in the UiExtensionModel
+     * @param event contains all information about the changes in the UiExtensionModel
      */
     @Override
     public void handleUiExtensionModelEvent(UiExtensionModelEvent event) {
         PlanElement modelElement = event.getElement();
-        ViewModelElement viewModelElement = viewModelFactory.getViewModelElement(modelElement);
-        PlanElementViewModel planElementViewModel = (PlanElementViewModel) viewModelElement;
+        PlanElementViewModel planElementViewModel = (PlanElementViewModel) viewModelManager.getViewModelElement(modelElement);
 
-        planElementViewModel.setXPosition(event.getExtension().getXPos());
-        planElementViewModel.setYPosition(event.getExtension().getYPos());
+        planElementViewModel.setXPosition(event.getExtension().getX());
+        planElementViewModel.setYPosition(event.getExtension().getY());
 
         if (event.getExtension().getBendPoints().size() != 0) {
             TransitionViewModel transition = (TransitionViewModel) planElementViewModel;
             transition.getBendpoints().clear();
-            for (BendPoint bendPoint:event.getExtension().getBendPoints()) {
-                BendPointViewModel bendPointViewModel = new BendPointViewModel(0, "", Types.BENDPOINT);
-                bendPointViewModel.setX(bendPoint.getXPos());
-                bendPointViewModel.setY(bendPoint.getYPos());
-                transition.addBendpoint(bendPointViewModel);
+            for (BendPoint bendPoint : event.getExtension().getBendPoints()) {
+                transition.addBendpoint((BendPointViewModel) viewModelManager.getViewModelElement(bendPoint));
             }
             ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, modelElement, Types.BENDPOINT);
-            updateViewModel(event, viewModelElement, modelElement);
+            updateViewModel(modelEvent, planElementViewModel, modelElement);
         }
     }
 
     /**
      * Handles the model event for the repository view.
+     *
      * @param eventType
      * @param viewModelElement
      */
     private void updateRepos(ModelEventType eventType, ViewModelElement viewModelElement) {
-        switch(eventType) {
+        switch (eventType) {
             case ELEMENT_PARSED:
             case ELEMENT_CREATED:
                 repoViewModel.addElement(viewModelElement);
@@ -197,11 +193,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     /**
      * Handles the model event for the file tree view.
+     *
      * @param eventType
      * @param viewModelElement
      */
     private void updateFileTreeView(ModelEventType eventType, ViewModelElement viewModelElement) {
-        switch(eventType) {
+        switch (eventType) {
             case ELEMENT_PARSED:
             case ELEMENT_CREATED:
                 mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
@@ -214,14 +211,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     /**
      * Handles the model event for the the view model elements.
+     *
      * @param event
      * @param viewModelElement
      * @param planElement
      */
     private void updateViewModel(ModelEvent event, ViewModelElement viewModelElement, PlanElement planElement) {
-        switch(event.getEventType()) {
+        switch (event.getEventType()) {
             case ELEMENT_DELETED:
-                viewModelFactory.removeElement(event.getParentId(), viewModelElement);
+                viewModelManager.removeElement(event.getParentId(), viewModelElement);
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 try {
@@ -231,45 +229,53 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
                 break;
             case ELEMENT_CREATED:
-                int x = 0;
-                int y = 0;
-                if(event instanceof UiExtensionModelEvent){
-                    PmlUiExtension extension = ((UiExtensionModelEvent) event).getExtension();
-                    x = extension.getXPos();
-                    y = extension.getYPos();
-                }
+                viewModelManager.addElement(event.getParentId(), viewModelElement);
 
-
+                // TODO: @Fax Not everything is a plan, please clean that up...
                 PlanElement plan = modelManager.getPlanElement(event.getParentId());
-                PlanViewModel planViewModel = (PlanViewModel) viewModelFactory.getViewModelElement(plan);
-                switch(event.getElementType()) {
-                    case Types.STATE:
-                    case Types.SUCCESSSTATE:
-                    case Types.FAILURESTATE:
-                        ((StateViewModel) viewModelElement).setXPosition(x);
-                        ((StateViewModel) viewModelElement).setYPosition(y);
-                        planViewModel.getStates().add((StateViewModel) viewModelElement);
+                if (plan instanceof Plan) {
+
+                    int x = 0;
+                    int y = 0;
+                    if (event instanceof UiExtensionModelEvent) {
+                        PmlUiExtension extension = ((UiExtensionModelEvent) event).getExtension();
+                        x = extension.getX();
+                        y = extension.getY();
+                    }
+
+
+                    PlanViewModel planViewModel = (PlanViewModel) viewModelManager.getViewModelElement(plan);
+                    switch (event.getElementType()) {
+                        case Types.STATE:
+                        case Types.SUCCESSSTATE:
+                        case Types.FAILURESTATE:
+                            ((StateViewModel) viewModelElement).setXPosition(x);
+                            ((StateViewModel) viewModelElement).setYPosition(y);
+                            planViewModel.getStates().add((StateViewModel) viewModelElement);
+                            break;
+                        case Types.TRANSITION: {
+                            ((TransitionViewModel) viewModelElement).setInState((StateViewModel) viewModelManager.getViewModelElement(((Transition) planElement).getInState()));
+                            ((TransitionViewModel) viewModelElement).setOutState((StateViewModel) viewModelManager.getViewModelElement(((Transition) planElement).getOutState()));
+                            planViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
+                        }
                         break;
-                    case Types.TRANSITION: {
-                        ((TransitionViewModel) viewModelElement).setInState((StateViewModel) viewModelFactory.getViewModelElement(((Transition)planElement).getInState()));
-                        ((TransitionViewModel) viewModelElement).setOutState((StateViewModel) viewModelFactory.getViewModelElement(((Transition)planElement).getOutState()));
-                        planViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
-                    } break;
-                    case Types.ENTRYPOINT:
-                        ((EntryPointViewModel) viewModelElement).setXPosition(x);
-                        ((EntryPointViewModel) viewModelElement).setYPosition(y);
-                        planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
-                        break;
-                    case Types.BENDPOINT:
-                        TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
-                        planViewModel.getTransitions().remove(transitionViewModel);
-                        planViewModel.getTransitions().add(transitionViewModel);
-                    case Types.PRECONDITION:
-                    case Types.RUNTIMECONDITION:
-                    case Types.POSTCONDITION:
-                    case Types.SYNCHRONIZATION:
-                    case Types.SYNCTRANSITION:
-                        //TODO: Handle these cases
+                        case Types.ENTRYPOINT:
+                            ((EntryPointViewModel) viewModelElement).setXPosition(x);
+                            ((EntryPointViewModel) viewModelElement).setYPosition(y);
+                            planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
+                            break;
+                        case Types.BENDPOINT:
+                            // TODO: @Fax WTF??? remove add???
+                            TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
+                            planViewModel.getTransitions().remove(transitionViewModel);
+                            planViewModel.getTransitions().add(transitionViewModel);
+                        case Types.PRECONDITION:
+                        case Types.RUNTIMECONDITION:
+                        case Types.POSTCONDITION:
+                        case Types.SYNCHRONIZATION:
+                        case Types.SYNCTRANSITION:
+                            //TODO: Handle these cases
+                    }
                 }
                 break;
         }
@@ -287,7 +293,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         ArrayList<PlanElement> usagePlanElements = this.modelManager.getUsages(viewModelElement.getId());
         if (usagePlanElements != null) {
             for (PlanElement planElement : usagePlanElements) {
-                usageViewModelElements.add(viewModelFactory.getViewModelElement(planElement));
+                usageViewModelElements.add(viewModelManager.getViewModelElement(planElement));
             }
         }
         return usageViewModelElements;
@@ -366,7 +372,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementId(event.getElementId());
                 break;
             case ADD_ELEMENT:
-                if(event instanceof GuiChangePositionEvent){
+                if (event instanceof GuiChangePositionEvent) {
                     UiExtensionModelModificationQuery uimmq = new UiExtensionModelModificationQuery(ModelQueryType.ADD_ELEMENT,
                             event.getElementType(),
                             event.getElementId(),
@@ -427,11 +433,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     /**
      * Called, when an object was moved in the gui.
-     *
+     * <p>
      * Method is separate from the handle-method, because this event is about a change to the UiExtensionModel, which is
      * separate from the model.
      *
-     * @param event  containsPlan information about which object was moved and to which position it was moved
+     * @param event containsPlan information about which object was moved and to which position it was moved
      */
     @Override
     public void handleGuiChangePositionEvent(GuiChangePositionEvent event) {
@@ -478,7 +484,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public ViewModelElement getViewModelElement(long id) {
-        return viewModelFactory.getViewModelElement(modelManager.getPlanElement(id));
+        return viewModelManager.getViewModelElement(modelManager.getPlanElement(id));
     }
 
     protected void updatePlansInPlanTypeTabs(PlanViewModel planViewModel) {
@@ -502,9 +508,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             }
             PlanTypeTab planTypeTab = (PlanTypeTab) tab;
             if (add) {
-                planTypeTab.addPlanToPlansInPlanType((AnnotatedPlanView) viewModelFactory.getViewModelElement(annotatedPlan));
+                planTypeTab.addPlanToPlansInPlanType((AnnotatedPlanView) viewModelManager.getViewModelElement(annotatedPlan));
             } else {
-                planTypeTab.removePlanFromPlansInPlanType(annotatedPlan.getPlan().getId());
+                planTypeTab.removePlanFromPlansInPlanType((AnnotatedPlanView) viewModelManager.getViewModelElement(annotatedPlan));
             }
 
         }
@@ -541,7 +547,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     @Override
-    public RepositoryViewModel getRepoViewModel(){
+    public RepositoryViewModel getRepoViewModel() {
         return repoViewModel;
     }
 

@@ -5,28 +5,33 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanType;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class AddPlanToPlanType extends AbstractCommand {
 
-    private PlanType parentOfElement;
+    private PlanType planType;
     private AnnotatedPlan annotatedPlan;
 
-    public AddPlanToPlanType(ModelManager modelManager, AnnotatedPlan annotatedPlan, PlanType parentOfElement) {
+    public AddPlanToPlanType(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        this.parentOfElement = parentOfElement;
-        this.annotatedPlan = annotatedPlan;
+
+        this.planType = (PlanType) modelManager.getPlanElement(mmq.getParentId());
+
+        this.annotatedPlan = new AnnotatedPlan();
+        this.annotatedPlan.setPlan((Plan) modelManager.getPlanElement(mmq.getElementId()));
+        this.annotatedPlan.setActivated(true);
     }
 
     @Override
     public void doCommand() {
-        modelManager.addPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, parentOfElement, false);
-        parentOfElement.getPlans().add(annotatedPlan);
+        planType.getPlans().add(annotatedPlan);
+        modelManager.createdPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.removePlanElement(Types.ANNOTATEDPLAN, annotatedPlan, parentOfElement, false);
-        parentOfElement.getPlans().remove(annotatedPlan);
+        planType.getPlans().remove(annotatedPlan);
+        modelManager.removedPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
     }
 }

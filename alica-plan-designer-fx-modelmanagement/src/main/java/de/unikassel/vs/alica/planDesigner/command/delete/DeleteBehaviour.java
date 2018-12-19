@@ -20,7 +20,7 @@ public class DeleteBehaviour extends AbstractCommand {
         if (behaviour == null) {
             return;
         }
-        modelManager.removePlanElement(Types.BEHAVIOUR, behaviour, null, true);
+        modelManager.removedPlanElement(Types.BEHAVIOUR, behaviour, null, true);
     }
 
     @Override
@@ -28,6 +28,6 @@ public class DeleteBehaviour extends AbstractCommand {
         if (behaviour == null) {
             return;
         }
-        modelManager.addPlanElement(Types.BEHAVIOUR, behaviour, null, true);
+        modelManager.createdPlanElement(Types.BEHAVIOUR, behaviour, null, true);
     }
 }

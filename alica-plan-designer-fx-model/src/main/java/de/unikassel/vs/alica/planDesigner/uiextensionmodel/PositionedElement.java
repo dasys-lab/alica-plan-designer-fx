@@ -1,29 +1,30 @@
 package de.unikassel.vs.alica.planDesigner.uiextensionmodel;
 
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class PositionedElement {
+public class PositionedElement extends PlanElement {
 
-    protected final SimpleIntegerProperty xPos = new SimpleIntegerProperty();
-    protected final SimpleIntegerProperty yPos = new SimpleIntegerProperty();
+    protected final SimpleIntegerProperty x = new SimpleIntegerProperty();
+    protected final SimpleIntegerProperty y = new SimpleIntegerProperty();
 
-    public int getXPos() {return this.xPos.get();}
+    public int getX() {return this.x.get();}
 
-    public void setXPos(int xPos) {this.xPos.set(xPos);}
+    public void setX(int x) {this.x.set(x);}
 
-    public SimpleIntegerProperty xPosProperty() {
-        return xPos;
+    public SimpleIntegerProperty xProperty() {
+        return x;
     }
 
-    public int getYPos() {
-        return this.yPos.get();
+    public int getY() {
+        return this.y.get();
     }
 
-    public void setYPos(int yPos) {
-        this.yPos.set(yPos);
+    public void setY(int y) {
+        this.y.set(y);
     }
 
-    public SimpleIntegerProperty yPosProperty() {
-        return yPos;
+    public SimpleIntegerProperty yProperty() {
+        return y;
     }
 }

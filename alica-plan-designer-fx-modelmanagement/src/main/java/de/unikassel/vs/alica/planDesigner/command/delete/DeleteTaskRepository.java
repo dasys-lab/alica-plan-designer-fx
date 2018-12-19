@@ -20,7 +20,7 @@ public class DeleteTaskRepository extends AbstractCommand {
         if (taskRepository == null) {
             return;
         }
-        modelManager.removePlanElement(Types.PLAN, taskRepository, null, true);
+        modelManager.removedPlanElement(Types.PLAN, taskRepository, null, true);
     }
 
     @Override
@@ -28,6 +28,6 @@ public class DeleteTaskRepository extends AbstractCommand {
         if (taskRepository == null) {
             return;
         }
-            modelManager.addPlanElement(Types.TASKREPOSITORY, taskRepository, null, true);
+            modelManager.createdPlanElement(Types.TASKREPOSITORY, taskRepository, null, true);
     }
 }

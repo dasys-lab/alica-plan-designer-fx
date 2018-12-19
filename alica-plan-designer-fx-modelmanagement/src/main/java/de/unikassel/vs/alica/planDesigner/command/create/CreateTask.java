@@ -26,7 +26,7 @@ public class CreateTask extends AbstractCommand {
     public void doCommand() {
         TaskRepository taskRepository = modelManager.getTaskRepository();
         if (taskRepository.getId() == mmq.getParentId()) {
-            modelManager.addPlanElement(Types.TASK, task, taskRepository, false);
+            modelManager.createdPlanElement(Types.TASK, task, taskRepository, false);
         } else {
             System.err.println("CreateTask: TaskRepository ID in ModelManager does not match the TaskRepository ID of the ModelModificationQuery!");
         }
@@ -36,7 +36,7 @@ public class CreateTask extends AbstractCommand {
     public void undoCommand() {
         TaskRepository taskRepository = modelManager.getTaskRepository();
         if (taskRepository.getId() == mmq.getParentId()) {
-            modelManager.removePlanElement(Types.TASK, task, taskRepository, false);
+            modelManager.removedPlanElement(Types.TASK, task, taskRepository, false);
         } else {
             System.err.println("CreateTask: TaskRepository ID in ModelManager does not match the TaskRepository ID of the ModelModificationQuery (Undo)!");
         }
