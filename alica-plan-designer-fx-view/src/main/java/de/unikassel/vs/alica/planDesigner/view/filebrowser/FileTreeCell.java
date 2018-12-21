@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiChangeAttributeEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -121,7 +122,7 @@ public class FileTreeCell extends TreeCell<File> {
                         if (getItem().isDirectory()) {
                             getTreeItem().setExpanded(!getTreeItem().isExpanded());
                         } else {
-                            controller.openFile(((FileTreeItem) getTreeItem()).getViewModelElement());
+                            controller.openFile((SerializableViewModel) ((FileTreeItem) getTreeItem()).getViewModelElement());
                         }
                     }
                 }

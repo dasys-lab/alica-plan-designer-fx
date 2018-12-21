@@ -25,13 +25,13 @@ public class AddPlanToPlanType extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        planType.getPlans().add(annotatedPlan);
+        planType.addPlan(annotatedPlan);
         modelManager.createdPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
     }
 
     @Override
     public void undoCommand() {
-        planType.getPlans().remove(annotatedPlan);
+        planType.removePlan(annotatedPlan);
         modelManager.removedPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
     }
 }

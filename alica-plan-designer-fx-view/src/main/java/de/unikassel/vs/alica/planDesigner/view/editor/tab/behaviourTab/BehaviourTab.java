@@ -11,6 +11,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.ConditionsTitledPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.IEditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.VariablesTab;
 import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.VariableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable;
@@ -29,11 +30,11 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
     I18NRepo i18NRepo;
     IGuiModificationHandler guiModificationHandler;
 
-    public BehaviourTab(ViewModelElement viewModelElement,IGuiModificationHandler guiModificationHandler) {
-        super(viewModelElement, guiModificationHandler);
-        setText(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + viewModelElement.getName());
+    public BehaviourTab(SerializableViewModel serializableViewModel, IGuiModificationHandler guiModificationHandler) {
+        super(serializableViewModel, guiModificationHandler);
+        setText(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + serializableViewModel.getName());
         i18NRepo = I18NRepo.getInstance();
-        this.behaviourViewModel = (BehaviourViewModel) viewModelElement;
+        this.behaviourViewModel = (BehaviourViewModel) serializableViewModel;
 
         // Properties
         propertiesTable = new PropertiesTable();
@@ -47,7 +48,7 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         propertiesTable.addItem(this.behaviourViewModel);
 
         // Variables
-        variablesTab = new VariablesTab(viewModelElement);
+        variablesTab = new VariablesTab(serializableViewModel);
         for (VariableViewModel variableViewModel : this.behaviourViewModel.getVariables()) {
             variablesTab.addItem(variableViewModel);
         }
@@ -75,19 +76,15 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         setContent(contentList);
 
         this.behaviourViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
-            setDirty(true);
             fireModificationEvent(newValue, "name", String.class.getSimpleName());
         });
         this.behaviourViewModel.commentProperty().addListener((observable, oldValue, newValue) -> {
-            setDirty(true);
             fireModificationEvent(newValue, "comment", String.class.getSimpleName());
         });
         this.behaviourViewModel.frequencyProperty().addListener((observable, oldValue, newValue) -> {
-            setDirty(true);
             fireModificationEvent(newValue.toString(), "frequency", Integer.class.getSimpleName());
         });
         this.behaviourViewModel.deferringProperty().addListener((observable, oldValue, newValue) -> {
-            setDirty(true);
             fireModificationEvent(newValue.toString(), "deferring", Long.class.getSimpleName());
         });
 
@@ -113,7 +110,7 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
     }
 
     @Override
-    public ViewModelElement getViewModelElement() {
+    public ViewModelElement getSerializableViewModel() {
         return behaviourViewModel;
     }
 
@@ -126,14 +123,13 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
     @Override
     public void save() {
         if (isDirty()) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.BEHAVIOUR, viewModelElement.getName());
-            event.setElementId(viewModelElement.getId());
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.BEHAVIOUR, serializableViewModel.getName());
+            event.setElementId(serializableViewModel.getId());
             guiModificationHandler.handle(event);
         }
     }
 
     public void updateText(String newName) {
         this.setText(i18NRepo.getString("label.caption.behaviour") + ": " + newName);
-        setDirty(true);
     }
 }

@@ -48,7 +48,4 @@ public class PlanElementViewModel extends ViewModelElement {
     public int getYPosition(){
         return yPosition.get();
     }
-
-
-
 }

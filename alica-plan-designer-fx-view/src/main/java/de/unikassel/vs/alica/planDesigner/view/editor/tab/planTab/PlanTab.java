@@ -12,6 +12,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorE
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
@@ -29,15 +30,15 @@ public class PlanTab extends AbstractPlanTab {
 
     private PropertiesConditionsVariablesPane propertiesConditionsVariablesPane;
 
-    public PlanTab(ViewModelElement viewModelElement, IGuiModificationHandler handler) {
-        super(viewModelElement, handler);
+    public PlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
+        super(serializableViewModel, handler);
         i18NRepo = I18NRepo.getInstance();
-        setText(i18NRepo.getString("label.caption.plan") + ": " + viewModelElement.getName());
+        setText(i18NRepo.getString("label.caption.plan") + ": " + serializableViewModel.getName());
         draw();
     }
 
     private void draw() {
-        PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
+        PlanViewModel planViewModel = (PlanViewModel) serializableViewModel;
         planEditorGroup = new PlanEditorGroup(planViewModel, this);
         planContent = new StackPane(planEditorGroup);
         planContent.setPadding(new Insets(50, 50, 50, 50));
@@ -62,11 +63,11 @@ public class PlanTab extends AbstractPlanTab {
     }
 
     private void fireGuiChangeAttributeEvent(String newValue, String attribute, String type) {
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLAN, viewModelElement.getName());
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLAN, serializableViewModel.getName());
         guiChangeAttributeEvent.setNewValue(newValue);
         guiChangeAttributeEvent.setAttributeType(type);
         guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setElementId(viewModelElement.getId());
+        guiChangeAttributeEvent.setElementId(serializableViewModel.getId());
         guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 
@@ -81,7 +82,7 @@ public class PlanTab extends AbstractPlanTab {
     public void fireChangePositionEvent(DraggableEditorElement planElementContainer, String type, double newX, double newY) {
         GuiChangePositionEvent event = new GuiChangePositionEvent(GuiEventType.CHANGE_ELEMENT, type, planElementContainer.getModelElement().getName());
         event.setElementId(planElementContainer.getModelElement().getId());
-        event.setParentId(viewModelElement.getId());
+        event.setParentId(serializableViewModel.getId());
         event.setNewX((int) newX);
         event.setNewY((int) newY);
 
@@ -100,10 +101,9 @@ public class PlanTab extends AbstractPlanTab {
     @Override
     public void save() {
         if (isDirty()) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLAN, viewModelElement.getName());
-            event.setElementId(viewModelElement.getId());
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLAN, serializableViewModel.getName());
+            event.setElementId(serializableViewModel.getId());
             guiModificationHandler.handle(event);
-            setDirty(false);
         }
     }
 

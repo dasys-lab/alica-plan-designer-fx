@@ -278,6 +278,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     }
                 }
                 break;
+            default:
+                System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
+                break;
         }
     }
 
@@ -401,7 +404,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case REMOVE_ALL_ELEMENTS:
                 mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ALL_ELEMENTS);
                 mmq.setElementType(event.getElementType());
-                mmq.setParentId(event.getParentId());
+                mmq.setElementId(event.getElementId());
                 break;
             case RELOAD_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.RELOAD_ELEMENT);
@@ -503,7 +506,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             if (!(tab instanceof PlanTypeTab)) {
                 continue;
             }
-            if (((PlanTypeTab) tab).getViewModelElement().getId() != planTypeID) {
+            if (((PlanTypeTab) tab).getSerializableViewModel().getId() != planTypeID) {
                 continue;
             }
             PlanTypeTab planTypeTab = (PlanTypeTab) tab;
@@ -521,7 +524,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         for (Tab tab : editorTabPane.getTabs()) {
             if (tab instanceof AbstractPlanTab) {
                 AbstractPlanTab abstractPlanTab = (AbstractPlanTab) tab;
-                if (abstractPlanTab.getViewModelElement().getId() == planElementId) {
+                if (abstractPlanTab.getSerializableViewModel().getId() == planElementId) {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
@@ -533,7 +536,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             }
             if (tab instanceof TaskRepositoryTab) {
                 TaskRepositoryTab taskRepositoryTab = (TaskRepositoryTab) tab;
-                if (taskRepositoryTab.getViewModelElement().getId() == planElementId) {
+                if (taskRepositoryTab.getSerializableViewModel().getId() == planElementId) {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {

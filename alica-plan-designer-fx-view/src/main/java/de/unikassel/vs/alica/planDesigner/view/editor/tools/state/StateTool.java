@@ -103,7 +103,7 @@ public class StateTool extends AbstractTool {
                     guiEvent.setComment("");
                     guiEvent.setNewX((int) eventTargetCoordinates.getX());
                     guiEvent.setNewY((int) eventTargetCoordinates.getY());
-                    guiEvent.setParentId(getPlanTab().getViewModelElement().getId());
+                    guiEvent.setParentId(getPlanTab().getSerializableViewModel().getId());
                     handler.handle(guiEvent);
                 }
             });

@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.repo;
 
 import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -42,7 +43,7 @@ public class RepositoryHBox extends DraggableHBox {
         // double click for open the corresponding file
         setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
-                MainWindowController.getInstance().openFile(viewModelElement);
+                MainWindowController.getInstance().openFile((SerializableViewModel) viewModelElement);
                 e.consume();
             }
         });

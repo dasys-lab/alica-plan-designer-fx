@@ -161,15 +161,11 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
         //Create Listeners
         planElementViewModel.xPositionProperty().addListener((observable, oldValue, newValue) -> {
            node.setLayoutX(newValue.doubleValue());
-           planTab.setDirty(true);
-
            Platform.runLater(this::redrawElement);
         });
 
         planElementViewModel.yPositionProperty().addListener((observable, oldValue, newValue) -> {
             node.setLayoutY(newValue.doubleValue());
-            planTab.setDirty(true);
-
             Platform.runLater(this::redrawElement);
         });
     }

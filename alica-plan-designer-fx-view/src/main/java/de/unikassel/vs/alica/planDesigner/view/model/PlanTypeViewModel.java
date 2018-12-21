@@ -29,14 +29,6 @@ public class PlanTypeViewModel extends SerializableViewModel {
         }
     }
 
-    public void clearAllPlans() {
-        allPlans.clear();
-    }
-
-    public void clearPlansInPlanType() {
-        plansInPlanType.clear();
-    }
-
     public ObservableList<PlanViewModel> getAllPlans() {
         return allPlans;
     }

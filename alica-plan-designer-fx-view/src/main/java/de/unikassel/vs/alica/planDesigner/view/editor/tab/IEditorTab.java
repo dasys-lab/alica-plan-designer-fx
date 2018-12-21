@@ -5,7 +5,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 
 public interface IEditorTab {
     public abstract boolean representsViewModelElement(ViewModelElement element);
-    public abstract ViewModelElement getViewModelElement();
+    public abstract ViewModelElement getSerializableViewModel();
     public abstract GuiModificationEvent handleDelete();
     public abstract void save();
 }

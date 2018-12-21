@@ -111,8 +111,8 @@ public final class FileTreeView extends TreeView<File> {
 //        boolean deleted = false;
         if (folder != null) {
             // TODO: maybe unnecessary if complete view model elements are used.
-//            if (folderContainsViewModelElement(viewModelElement, folder)) {
-//                removeFromFolder(viewModelElement, folder);
+//            if (folderContainsViewModelElement(serializableViewModel, folder)) {
+//                removeFromFolder(serializableViewModel, folder);
 //                deleted = true;
 //            }
             FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(getImage(viewModelElement.getType

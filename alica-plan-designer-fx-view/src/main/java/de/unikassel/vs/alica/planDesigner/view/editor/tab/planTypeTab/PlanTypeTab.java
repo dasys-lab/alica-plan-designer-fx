@@ -7,10 +7,7 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
-import de.unikassel.vs.alica.planDesigner.view.model.AnnotatedPlanView;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanTypeViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryHBox;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -36,7 +33,7 @@ public class PlanTypeTab extends AbstractPlanTab {
     private Comparator<RepositoryHBox> repositoryHBoxComparator;
     private Comparator<ViewModelElement> viewModelElementComparator;
 
-    public PlanTypeTab(ViewModelElement planType, IGuiModificationHandler guiModificationHandler) {
+    public PlanTypeTab(SerializableViewModel planType, IGuiModificationHandler guiModificationHandler) {
         super(planType, guiModificationHandler);
         setText(i18NRepo.getString("label.caption.plantype") + ": " + planType.getName());
 
@@ -73,28 +70,29 @@ public class PlanTypeTab extends AbstractPlanTab {
         // init button callbacks
         saveButton.setOnAction(e -> {
             if (isDirty()) {
-                fireModificationEvent(GuiEventType.SAVE_ELEMENT, viewModelElement);
+                fireModificationEvent(GuiEventType.SAVE_ELEMENT, serializableViewModel);
             }
         });
 
         addPlanButton.setOnAction(e -> {
-            fireModificationEvent(GuiEventType.ADD_ELEMENT, planListView.getSelectionModel().getSelectedItem().getViewModelElement());
-            setDirty(true);
+            if (!planListView.getSelectionModel().isEmpty()) {
+                fireModificationEvent(GuiEventType.ADD_ELEMENT, planListView.getSelectionModel().getSelectedItem().getViewModelElement());
+            }
         });
 
         removePlanButton.setOnAction(e -> {
-            fireModificationEvent(GuiEventType.REMOVE_ELEMENT, planTypeTableView.getSelectionModel().getSelectedItem());
-            setDirty(true);
+            if (!planTypeTableView.getSelectionModel().isEmpty()) {
+                fireModificationEvent(GuiEventType.REMOVE_ELEMENT, planTypeTableView.getSelectionModel().getSelectedItem());
+            }
         });
 
         removeAllPlansButton.setOnAction(e -> {
-            fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, viewModelElement);
-            setDirty(true);
+            fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, serializableViewModel);
         });
     }
 
     private void initPlansInPlanTypeTable() {
-        PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) viewModelElement;
+        PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) serializableViewModel;
         planTypeTableView.setItems(planTypeViewModel.getPlansInPlanType());
         planTypeTableView.getItems().sort(viewModelElementComparator);
         planTypeViewModel.getPlansInPlanType().addListener(new ListChangeListener<AnnotatedPlanView>() {
@@ -129,9 +127,8 @@ public class PlanTypeTab extends AbstractPlanTab {
                 if (e.getClickCount() == 2 && item != null) {
                     item.setActivated(!item.isActivated());
                     planTypeTableView.refresh();
-                    setDirty(true);
                     GuiChangeAttributeEvent event = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.ANNOTATEDPLAN, item.getName());
-                    event.setParentId(viewModelElement.getId());
+                    event.setParentId(serializableViewModel.getId());
                     event.setElementId(item.getId());
                     event.setAttributeName("activated");
                     event.setAttributeType(Boolean.class.getSimpleName());
@@ -144,7 +141,7 @@ public class PlanTypeTab extends AbstractPlanTab {
     }
 
     private void initAllPlansListView() {
-        PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) viewModelElement;
+        PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) serializableViewModel;
         for (ViewModelElement plan : planTypeViewModel.getAllPlans()) {
             if (planTypeViewModel.containsPlan(plan.getId())) {
                 continue;
@@ -199,7 +196,6 @@ public class PlanTypeTab extends AbstractPlanTab {
                         super.updateItem(item, empty);
                         if (empty == false) {
                             setText(item);
-                            System.out.println("PTWC:" + item);
                         }
                     }
                 };
@@ -243,11 +239,11 @@ public class PlanTypeTab extends AbstractPlanTab {
      * @param attribute
      */
     private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, viewModelElement.getName());
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, serializableViewModel.getName());
         guiChangeAttributeEvent.setNewValue(newValue);
         guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
         guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setElementId(viewModelElement.getId());
+        guiChangeAttributeEvent.setElementId(serializableViewModel.getId());
         guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 
@@ -262,7 +258,7 @@ public class PlanTypeTab extends AbstractPlanTab {
         }
         GuiModificationEvent event = new GuiModificationEvent(type, element.getType(), element.getName());
         event.setElementId(element.getId());
-        event.setParentId(this.viewModelElement.getId());
+        event.setParentId(this.serializableViewModel.getId());
         guiModificationHandler.handle(event);
     }
 
@@ -275,23 +271,23 @@ public class PlanTypeTab extends AbstractPlanTab {
     @Override
     public void save() {
         if (isDirty()) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, viewModelElement.getName());
-            event.setElementId(viewModelElement.getId());
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, serializableViewModel.getName());
+            event.setElementId(serializableViewModel.getId());
             guiModificationHandler.handle(event);
         }
     }
 
     // TODO
     public void addPlanToAllPlans (PlanViewModel planViewModel) {
-        ((PlanTypeViewModel) viewModelElement).addPlanToAllPlans(planViewModel);
+        ((PlanTypeViewModel) serializableViewModel).addPlanToAllPlans(planViewModel);
     }
 
     // TODO
     public void addPlanToPlansInPlanType(AnnotatedPlanView annotatedPlan) {
-        ((PlanTypeViewModel) viewModelElement).getPlansInPlanType().add(annotatedPlan);
+        ((PlanTypeViewModel) serializableViewModel).getPlansInPlanType().add(annotatedPlan);
     }
     // TODO
     public void removePlanFromPlansInPlanType(AnnotatedPlanView annotatedPlan) {
-        ((PlanTypeViewModel) viewModelElement).getPlansInPlanType().remove(annotatedPlan);
+        ((PlanTypeViewModel) serializableViewModel).getPlansInPlanType().remove(annotatedPlan);
     }
 }

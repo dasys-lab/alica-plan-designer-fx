@@ -12,6 +12,7 @@ import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.menu.EditMenu;
 import de.unikassel.vs.alica.planDesigner.view.menu.NewResourceMenu;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import javafx.animation.FadeTransition;
@@ -212,7 +213,7 @@ public class MainWindowController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
                 if (newValue != null) {
-                    String type = ((IEditorTab) newValue).getViewModelElement().getType();
+                    String type = ((IEditorTab) newValue).getSerializableViewModel().getType();
                     if (type.equals(Types.BEHAVIOUR) ||
                             type.equals(Types.PLAN) ||
                             type.equals(Types.MASTERPLAN) ||
@@ -228,7 +229,7 @@ public class MainWindowController implements Initializable {
 
         generateCurrentFile.setOnAction(e -> {
             long modelElementId = ((AbstractPlanTab) editorTabPane
-                    .getSelectionModel().getSelectedItem()).getViewModelElement().getId();
+                    .getSelectionModel().getSelectedItem()).getSerializableViewModel().getId();
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
 //            	waitOnProgressWindow(() -> new Codegenerator().generate(modelElementId));
@@ -303,7 +304,7 @@ public class MainWindowController implements Initializable {
      *
      * @param toOpen file that should be opened
      */
-    public void openFile(ViewModelElement toOpen) {
+    public void openFile(SerializableViewModel toOpen) {
         editorTabPane.openTab(toOpen);
     }
 

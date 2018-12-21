@@ -70,7 +70,7 @@ public class ViewModelManager {
         } else if (planElement instanceof BendPoint) {
             element = createBendPointViewModel((BendPoint) planElement);
         } else {
-            System.err.println("ViewModelManager: getViewModelElement for type " + planElement.getClass().toString() + " not implemented!");
+            System.err.println("ViewModelManager: getSerializableViewModel for type " + planElement.getClass().toString() + " not implemented!");
         }
 
         viewModelElements.put(planElement.getId(), element);

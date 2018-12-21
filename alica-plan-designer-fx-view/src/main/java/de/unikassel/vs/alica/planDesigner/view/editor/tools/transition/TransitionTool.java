@@ -82,11 +82,11 @@ public class TransitionTool extends AbstractTool {
                             relatedObjects.put(TransitionViewModel.OUTSTATE, outState.getId());
 
                             guiEvent.setRelatedObjects(relatedObjects);
-                            guiEvent.setParentId(TransitionTool.this.getPlanTab().getViewModelElement().getId());
+                            guiEvent.setParentId(TransitionTool.this.getPlanTab().getSerializableViewModel().getId());
                             handler.handle(guiEvent);
 
                             long transitionID = 0;
-                            for (TransitionViewModel transition : ((PlanViewModel) TransitionTool.this.getPlanTab().getViewModelElement()).getTransitions()) {
+                            for (TransitionViewModel transition : ((PlanViewModel) TransitionTool.this.getPlanTab().getSerializableViewModel()).getTransitions()) {
                                 if (transition.getOutState().getId() == outState.getId()
                                         && transition.getInState().getId() == inState.getId()) {
                                     transitionID = transition.getId();
@@ -97,7 +97,7 @@ public class TransitionTool extends AbstractTool {
                                 GuiChangePositionEvent bendEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.BENDPOINT, null);
                                 bendEvent.setNewX((int) point.getX());
                                 bendEvent.setNewY((int) point.getY());
-                                bendEvent.setParentId(TransitionTool.this.getPlanTab().getViewModelElement().getId());
+                                bendEvent.setParentId(TransitionTool.this.getPlanTab().getSerializableViewModel().getId());
                                 HashMap<String, Long> related = new HashMap<>();
                                 related.put(Types.TRANSITION, transitionID);
                                 bendEvent.setRelatedObjects(related);

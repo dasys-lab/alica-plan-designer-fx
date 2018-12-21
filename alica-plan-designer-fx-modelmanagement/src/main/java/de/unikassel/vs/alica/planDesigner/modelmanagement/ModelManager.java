@@ -297,7 +297,7 @@ public class ModelManager implements Observer {
                 case FileSystemUtil.PLAN_ENDING:
                     Plan plan = objectMapper.readValue(modelFile, Plan.class);
                     plan.dirtyProperty().addListener((observable, oldValue, newValue) -> {
-                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, taskRepository, Types.TASKREPOSITORY);
+                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, plan, Types.PLAN);
                         event.setChangedAttribute("dirty");
                         event.setNewValue(newValue);
                         this.fireEvent(event);
@@ -338,7 +338,7 @@ public class ModelManager implements Observer {
                 case FileSystemUtil.BEHAVIOUR_ENDING:
                     Behaviour behaviour = objectMapper.readValue(modelFile, Behaviour.class);
                     behaviour.dirtyProperty().addListener((observable, oldValue, newValue) -> {
-                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, taskRepository, Types.TASKREPOSITORY);
+                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, behaviour, Types.BEHAVIOUR);
                         event.setChangedAttribute("dirty");
                         event.setNewValue(newValue);
                         this.fireEvent(event);
@@ -366,7 +366,7 @@ public class ModelManager implements Observer {
                 case FileSystemUtil.PLANTYPE_ENDING:
                     PlanType planType = objectMapper.readValue(modelFile, PlanType.class);
                     planType.dirtyProperty().addListener((observable, oldValue, newValue) -> {
-                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, taskRepository, Types.TASKREPOSITORY);
+                        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planType, Types.PLANTYPE);
                         event.setChangedAttribute("dirty");
                         event.setNewValue(newValue);
                         this.fireEvent(event);
@@ -510,7 +510,7 @@ public class ModelManager implements Observer {
      * Replaces all incomplete Plans in given PlanType by already parsed ones
      */
     public void replaceIncompletePlansInPlanType(PlanType planType) {
-        ArrayList<AnnotatedPlan> annotatedPlans = planType.getPlans();
+        List<AnnotatedPlan> annotatedPlans = planType.getPlans();
         for (int i = 0; i < annotatedPlans.size(); i++) {
             if (ParsedModelReferences.getInstance().incompletePlansInPlanTypes.contains(annotatedPlans.get(i).getPlan().getId())) {
                 annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
@@ -668,7 +668,7 @@ public class ModelManager implements Observer {
                     serializeToDisk(plan, FileSystemUtil.PLAN_ENDING, true);
                 }
                 break;
-           case Types.ANNOTATEDPLAN:
+            case Types.ANNOTATEDPLAN:
                 // NO-OP
                 break;
             case Types.PLANTYPE:
@@ -759,10 +759,9 @@ public class ModelManager implements Observer {
                     removeFromDisk(plan, FileSystemUtil.PLAN_ENDING, true);
                 }
                 break;
-/*            case Types.ANNOTATEDPLAN:
-                AnnotatedPlan annotatedPlan = (AnnotatedPlan) planElement;
-                annotatedPlanMap.remove(annotatedPlan.getId());
-                break;*/
+            case Types.ANNOTATEDPLAN:
+                //NO-OP
+                break;
             case Types.PLANTYPE:
                 PlanType planType = (PlanType) planElement;
                 planTypeMap.remove(planType.getId());
@@ -810,7 +809,7 @@ public class ModelManager implements Observer {
             case Types.SYNCTRANSITION:
                 //TODO: Handle these cases
             default:
-                System.err.println("ModelManager: removing " + type + " not implemented, yet!");
+                System.err.println("ModelManager: Removing " + type + " not implemented, yet!");
         }
         for (IModelEventHandler eventHandler : eventHandlerList) {
             eventHandler.handleCloseTab(planElement.getId());
@@ -989,8 +988,8 @@ public class ModelManager implements Observer {
                 break;
             case REMOVE_ALL_ELEMENTS:
                 switch (mmq.getElementType()) {
-                    case Types.ANNOTATEDPLAN:
-                        PlanType planType = planTypeMap.get(mmq.getParentId());
+                    case Types.PLANTYPE:
+                        PlanType planType = planTypeMap.get(mmq.getElementId());
                         cmd = new RemoveAllPlansFromPlanType(this, planType);
                         break;
                     default:
@@ -1096,7 +1095,7 @@ public class ModelManager implements Observer {
                 objectMapper.writeValue(outfile, (TaskRepository) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.TASKREPOSITORY));
             } else {
-                throw new RuntimeException("Modelmanager: Trying to serialize a file with unknow ending: " + ending);
+                throw new RuntimeException("Modelmanager: Trying to serialize a file with unknown ending: " + ending);
             }
             planElement.setDirty(false);
         } catch (IOException e) {

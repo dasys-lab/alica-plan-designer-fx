@@ -17,23 +17,21 @@ public class RemoveAllPlansFromPlanType extends AbstractCommand {
     public RemoveAllPlansFromPlanType(ModelManager manager, PlanType planType) {
         super(manager);
         this.planType = planType;
-        backupPlans = new ArrayList<>();
+        backupPlans = new ArrayList<>(planType.getPlans());
     }
 
     @Override
     public void doCommand() {
-        backupPlans.addAll(planType.getPlans());
         for(AnnotatedPlan annotatedPlan : backupPlans) {
+            planType.removePlan(annotatedPlan);
             modelManager.removedPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
         }
-        planType.getPlans().clear();
-
     }
 
     @Override
     public void undoCommand() {
-        planType.getPlans().addAll(backupPlans);
         for(AnnotatedPlan annotatedPlan : backupPlans) {
+            planType.addPlan(annotatedPlan);
             modelManager.createdPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
         }
     }

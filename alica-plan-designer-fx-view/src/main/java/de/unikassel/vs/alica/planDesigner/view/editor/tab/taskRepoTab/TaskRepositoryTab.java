@@ -9,6 +9,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskRepositoryViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
@@ -40,17 +41,17 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     private I18NRepo i18NRepo;
     private PropertiesTable<ViewModelElement> propertiesTable;
 
-    public TaskRepositoryTab(ViewModelElement viewModelElement, IGuiModificationHandler handler) {
+    public TaskRepositoryTab(SerializableViewModel taskRepoViewModel, IGuiModificationHandler handler) {
         super(I18NRepo.getInstance().getString("label.caption.taskrepository"), null);
         this.guiModificationHandler = handler;
-        this.taskRepository = (TaskRepositoryViewModel) viewModelElement;
+        this.taskRepository = (TaskRepositoryViewModel) taskRepoViewModel;
         this.addElements(taskRepository.getTaskViewModels());
 
         i18NRepo = I18NRepo.getInstance();
         setText(I18NRepo.getInstance().getString("label.caption.taskrepository") + ": " + this.taskRepository.getName());
         initGui();
         setOnCloseRequest(e-> {
-            if (taskRepository.getDirty()) {
+            if (taskRepository.isDirty()) {
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.close.task"), null);
                 e.consume();
             }
@@ -153,7 +154,7 @@ public class TaskRepositoryTab extends RepositoryTab implements IEditorTab {
     }
 
     @Override
-    public TaskRepositoryViewModel getViewModelElement() {
+    public TaskRepositoryViewModel getSerializableViewModel() {
         return taskRepository;
     }
 

@@ -10,7 +10,7 @@ public class SerializableViewModel extends PlanElementViewModel {
         super(id, name, type);
     }
 
-    public boolean getDirty() {
+    public boolean isDirty() {
         return dirty.get();
     }
     public void setDirty(boolean dirty) {

@@ -8,6 +8,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanHBox
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PropertiesConditionsVariablesPane;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.controller.IsDirtyWindowController;
@@ -20,48 +21,50 @@ import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 public abstract class AbstractPlanTab extends Tab implements IEditorTab{
 
     protected I18NRepo i18NRepo;
-    protected boolean dirty;
     protected SimpleObjectProperty<List<Pair<ViewModelElement, AbstractPlanElementContainer>>> selectedPlanElements;
 
     protected IGuiModificationHandler guiModificationHandler;
-    protected ViewModelElement viewModelElement;
+    protected SerializableViewModel serializableViewModel;
     protected ObservableList<Node> visualRepresentations;
 
     protected VBox globalVBox;
     protected PropertiesConditionsVariablesPane propertiesConditionsVariablesPane;
 
-    public AbstractPlanTab(ViewModelElement viewModelElement, IGuiModificationHandler handler) {
+    public AbstractPlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         // set Tab Caption to name of file, represented by this Tab
-        super(viewModelElement.getName());
+        super(serializableViewModel.getName());
         this.i18NRepo = I18NRepo.getInstance();
         this.guiModificationHandler = handler;
-        this.viewModelElement = viewModelElement;
+        this.serializableViewModel = serializableViewModel;
         propertiesConditionsVariablesPane = new PropertiesConditionsVariablesPane();
-        propertiesConditionsVariablesPane.setText(viewModelElement.getName());
-        propertiesConditionsVariablesPane.setViewModelElement(viewModelElement);
+        propertiesConditionsVariablesPane.setText(serializableViewModel.getName());
+        propertiesConditionsVariablesPane.setViewModelElement(serializableViewModel);
 
-        initSelectedPlanElements(viewModelElement);
+        initSelectedPlanElements(serializableViewModel);
 
         // onAddElement close tab handlerinterfaces
         setClosable(true);
         setOnCloseRequest(e -> {
             // popup for trying to close dirty tab
-            if (dirty) {
+            if (serializableViewModel.isDirty()) {
                 IsDirtyWindowController.createIsDirtyWindow(this, e);
+            }
+        });
+
+        serializableViewModel.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+            if (!getText().contains("*") && newValue) {
+                this.setText(getText() + "*");
+            } else if (getText().contains("*") && !newValue) {
+                this.setText(getText().substring(0, getText().length()-1));
             }
         });
 
@@ -69,16 +72,7 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         setContent(globalVBox);
     }
 
-    public void setDirty(boolean dirty) {
-        if (!getText().contains("*") && dirty) {
-            this.setText(getText() + "*");
-        } else if (getText().contains("*") && !dirty) {
-            this.setText(getText().substring(0, getText().length()-1));
-        }
-        this.dirty = dirty;
-    }
-
-    public boolean isDirty() {return dirty;}
+    public boolean isDirty() {return serializableViewModel.isDirty();}
 
     public SimpleObjectProperty<List<Pair<ViewModelElement, AbstractPlanElementContainer>>> getSelectedPlanElements() {
         return selectedPlanElements;
@@ -182,18 +176,18 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         return value;
     }
 
-    public ViewModelElement getViewModelElement() {
-        return viewModelElement;
+    public ViewModelElement getSerializableViewModel() {
+        return serializableViewModel;
     }
 
     @Override
     public boolean representsViewModelElement(ViewModelElement viewModelElement) {
-        return this.viewModelElement.equals(viewModelElement);
+        return this.serializableViewModel.equals(viewModelElement);
     }
 
     public void revertChanges() {
-        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.RELOAD_ELEMENT, viewModelElement.getType(), viewModelElement.getName());
-        event.setElementId(viewModelElement.getId());
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.RELOAD_ELEMENT, serializableViewModel.getType(), serializableViewModel.getName());
+        event.setElementId(serializableViewModel.getId());
         MainWindowController.getInstance().getGuiModificationHandler().handle(event);
     }
 }

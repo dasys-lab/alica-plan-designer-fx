@@ -130,15 +130,11 @@ public class PlanEditorGroup extends Group {
                         int y = state.getYPosition();
                         stateContainer.setLayoutX(x);
                         stateContainer.setLayoutY(y);
-
-                        planEditorTab.setDirty(true);
                     }
                 }else if(c.wasRemoved()){
                     for(StateViewModel state : c.getRemoved()){
                         StateContainer stateContainer = stateContainers.remove(state.getId());
                         getChildren().remove(stateContainer);
-
-                        planEditorTab.setDirty(true);
                     }
                 }
             }
@@ -174,15 +170,11 @@ public class PlanEditorGroup extends Group {
                         int y = entryPoint.getYPosition();
                         entryPointContainer.setLayoutX(x);
                         entryPointContainer.setLayoutY(y);
-
-                        planEditorTab.setDirty(true);
                     }
                 }else if(c.wasRemoved()){
                     for(EntryPointViewModel entryPoint : c.getRemoved()){
                         EntryPointContainer entryPointContainer = entryPointContainers.remove(entryPoint.getId());
                         getChildren().remove(entryPointContainer);
-
-                        planEditorTab.setDirty(true);
                     }
 
                 }
@@ -202,15 +194,11 @@ public class PlanEditorGroup extends Group {
 
                         // Has to be with index because otherwise it would be drawn on top of states
                         getChildren().add(0, transitionContainer);
-
-                        planEditorTab.setDirty(true);
                     }
                 } else if (c.wasRemoved()) {
                     for (TransitionViewModel transition : c.getRemoved()) {
                         TransitionContainer transitionContainer = transitionContainers.remove(transition.getId());
                         getChildren().remove(transitionContainer);
-
-                        planEditorTab.setDirty(true);
                     }
                 }
             }
