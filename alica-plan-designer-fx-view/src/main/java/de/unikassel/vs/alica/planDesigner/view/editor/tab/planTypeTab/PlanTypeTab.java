@@ -74,6 +74,7 @@ public class PlanTypeTab extends AbstractPlanTab {
         saveButton.setOnAction(e -> {
             if (isDirty()) {
                 fireModificationEvent(GuiEventType.SAVE_ELEMENT, viewModelElement);
+                setDirty(false);
             }
         });
 
@@ -278,6 +279,7 @@ public class PlanTypeTab extends AbstractPlanTab {
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLANTYPE, viewModelElement.getName());
             event.setElementId(viewModelElement.getId());
             guiModificationHandler.handle(event);
+            setDirty(false);
         }
     }
 
