@@ -11,10 +11,13 @@ import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryHBox;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
@@ -60,7 +63,35 @@ public class PlanTypeTab extends AbstractPlanTab {
         initAllPlansListView();
 
         VBox buttonsVBox = new VBox(addPlanButton, removePlanButton, removeAllPlansButton, saveButton);
+        VBox.setVgrow(buttonsVBox, Priority.ALWAYS);
+
+        buttonsVBox.setSpacing(20.0);
+        buttonsVBox.setPadding(new Insets(20,20,20,20));
+
+        addPlanButton.setMnemonicParsing(false);
+        removePlanButton.setMnemonicParsing(false);
+        removeAllPlansButton.setMnemonicParsing(false);
+        saveButton.setMnemonicParsing(false);
+
         HBox tablesAndButtonsHBox = new HBox(planListView, buttonsVBox, planTypeTableView);
+
+        VBox.setVgrow(addPlanButton, Priority.ALWAYS);
+        VBox.setVgrow(removePlanButton, Priority.ALWAYS);
+        VBox.setVgrow(removeAllPlansButton, Priority.ALWAYS);
+        VBox.setVgrow(saveButton, Priority.ALWAYS);
+        VBox.setVgrow(tablesAndButtonsHBox, Priority.ALWAYS);
+
+
+        HBox.setHgrow(tablesAndButtonsHBox, Priority.ALWAYS);
+        HBox.setHgrow(planTypeTableView, Priority.ALWAYS);
+        HBox.setHgrow(planListView, Priority.ALWAYS);
+
+        tablesAndButtonsHBox.setSpacing(15.0);
+        tablesAndButtonsHBox.setAlignment(Pos.CENTER);
+
+        planListView.setPrefHeight(200.0);
+        planListView.setPrefWidth(200.0);
+
         globalVBox.getChildren().add(0,tablesAndButtonsHBox);
     }
 
@@ -120,6 +151,10 @@ public class PlanTypeTab extends AbstractPlanTab {
 
         planTypeTableView.getColumns().add(createActiveColumn());
         planTypeTableView.getColumns().add(createNameColumn());
+
+        //set auto columns size
+        planTypeTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         planTypeTableView.setRowFactory(tv -> {
             TableRow<AnnotatedPlanView> annotatedPlanTableRow = new TableRow<>();
             annotatedPlanTableRow.setOnMouseClicked(e -> {
@@ -186,6 +221,7 @@ public class PlanTypeTab extends AbstractPlanTab {
 
     private TableColumn<AnnotatedPlanView, String> createNameColumn() {
         TableColumn<AnnotatedPlanView, String> planNameColumn = new TableColumn<>(i18NRepo.getString("label.column.planName"));
+        planNameColumn.setMinWidth(120);
         planNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         planNameColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlanView, String>, TableCell<AnnotatedPlanView, String>>() {
             @Override
@@ -207,7 +243,7 @@ public class PlanTypeTab extends AbstractPlanTab {
 
     private TableColumn<AnnotatedPlanView, Boolean> createActiveColumn() {
         TableColumn<AnnotatedPlanView, Boolean> activeColumn = new TableColumn<>(i18NRepo.getString("label.column.active"));
-        activeColumn.setResizable(false);
+        activeColumn.setMaxWidth(2500);
         activeColumn.setCellValueFactory(new PropertyValueFactory<>(i18NRepo.getString("label.column.activated")));
         activeColumn.setCellFactory(new Callback<TableColumn<AnnotatedPlanView, Boolean>, TableCell<AnnotatedPlanView, Boolean>>() {
             @Override
