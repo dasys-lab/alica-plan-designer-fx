@@ -62,16 +62,19 @@ public class PlanTypeTab extends AbstractPlanTab {
         initPlansInPlanTypeTable();
         initAllPlansListView();
 
-        VBox buttonsVBox = new VBox(addPlanButton, removePlanButton, removeAllPlansButton, saveButton);
+        Button[] buttons = { addPlanButton, removePlanButton, removeAllPlansButton, saveButton};
+
+        VBox buttonsVBox = new VBox(buttons);
         VBox.setVgrow(buttonsVBox, Priority.ALWAYS);
 
         buttonsVBox.setSpacing(20.0);
-        buttonsVBox.setPadding(new Insets(20,20,20,20));
+        buttonsVBox.setPadding(new Insets(5,15,5,15));
+        buttonsVBox.setAlignment(Pos.CENTER);
 
-        addPlanButton.setMnemonicParsing(false);
-        removePlanButton.setMnemonicParsing(false);
-        removeAllPlansButton.setMnemonicParsing(false);
-        saveButton.setMnemonicParsing(false);
+        for(Button btn : buttons) {
+            btn.setPrefSize(130, 30);
+            btn.setMnemonicParsing(false);
+        }
 
         HBox tablesAndButtonsHBox = new HBox(planListView, buttonsVBox, planTypeTableView);
 
@@ -80,7 +83,6 @@ public class PlanTypeTab extends AbstractPlanTab {
         VBox.setVgrow(removeAllPlansButton, Priority.ALWAYS);
         VBox.setVgrow(saveButton, Priority.ALWAYS);
         VBox.setVgrow(tablesAndButtonsHBox, Priority.ALWAYS);
-
 
         HBox.setHgrow(tablesAndButtonsHBox, Priority.ALWAYS);
         HBox.setHgrow(planTypeTableView, Priority.ALWAYS);
@@ -91,8 +93,7 @@ public class PlanTypeTab extends AbstractPlanTab {
 
         planListView.setPrefHeight(200.0);
         planListView.setPrefWidth(200.0);
-
-        globalVBox.getChildren().add(0,tablesAndButtonsHBox);
+        splitPane.getItems().add(0, tablesAndButtonsHBox);
     }
 
     protected void initButtons() {

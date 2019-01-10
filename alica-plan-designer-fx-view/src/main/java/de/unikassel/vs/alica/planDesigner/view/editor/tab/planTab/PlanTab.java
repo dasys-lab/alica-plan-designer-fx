@@ -58,7 +58,7 @@ public class PlanTab extends AbstractPlanTab {
         scrollPlaneAndToolBarHBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         VBox.setVgrow(scrollPlaneAndToolBarHBox,Priority.ALWAYS);
 
-        globalVBox.getChildren().add(0,scrollPlaneAndToolBarHBox);
+        splitPane.getItems().add(0, scrollPlaneAndToolBarHBox);
 
     }
 

@@ -17,11 +17,12 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElem
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
@@ -36,8 +37,8 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
     protected SerializableViewModel serializableViewModel;
     protected ObservableList<Node> visualRepresentations;
 
-    protected VBox globalVBox;
     protected PropertiesConditionsVariablesPane propertiesConditionsVariablesPane;
+    protected SplitPane splitPane;
 
     public AbstractPlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         // set Tab Caption to name of file, represented by this Tab
@@ -68,8 +69,12 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
             }
         });
 
-        this.globalVBox = new VBox(propertiesConditionsVariablesPane);
-        setContent(globalVBox);
+        propertiesConditionsVariablesPane.setMaxHeight(20000);
+
+        this.splitPane = new SplitPane(propertiesConditionsVariablesPane);
+        this.splitPane.setOrientation(Orientation.VERTICAL);
+
+        setContent(splitPane);
     }
 
     public boolean isDirty() {return serializableViewModel.isDirty();}
