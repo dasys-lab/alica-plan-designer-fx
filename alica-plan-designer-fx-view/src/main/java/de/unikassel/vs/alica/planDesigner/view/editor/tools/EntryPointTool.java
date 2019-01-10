@@ -13,11 +13,13 @@ import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -70,12 +72,20 @@ public class EntryPointTool extends AbstractTool {
                     } else {
                         setCursor(forbiddenCursor);
                     }
+                    if (parent instanceof DraggableHBox || parent instanceof EditorToolBar || parent instanceof VBox) {
+                        setCursor(Cursor.DEFAULT);
+                    }
                 }
             });
 
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    Node target = (Node) event.getTarget();
+                    Parent parent = target.getParent();
+                    if (parent instanceof DraggableHBox) {
+                        endTool();
+                    }
 
                     I18NRepo i18NRepo = I18NRepo.getInstance();
 
