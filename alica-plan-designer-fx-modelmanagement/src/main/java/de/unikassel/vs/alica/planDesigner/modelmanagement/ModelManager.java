@@ -967,6 +967,7 @@ public class ModelManager implements Observer {
                     case Types.POSTCONDITION:
                     case Types.SYNCHRONISATION:
                     case Types.SYNCTRANSITION:
+                    case Types.INITSTATECONNECTION:
                     case Types.TRANSITION:
                     case Types.BENDPOINT:
                         cmd = handleNewElementInPlanQuery(mmq);
@@ -1174,6 +1175,7 @@ public class ModelManager implements Observer {
                 State out = (State) getPlanElement(mmq.getRelatedObjects().get(Transition.OUTSTATE));
                 cmd = new AddTransitionInPlan(this, parenOfElement, in, out);
                 break;
+            case Types.INITSTATECONNECTION:
             case Types.ENTRYPOINT:
                 EntryPoint entryPoint = new EntryPoint();
                 entryPoint.setPlan(parenOfElement.getPlan());

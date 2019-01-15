@@ -36,6 +36,11 @@ public class AlicaCursor extends ImageCursor {
         forbidden_behaviour,
         add_behaviour,
 
+        //initstateconnection
+        initstateconnection,
+        forbidden_initstateconnection,
+        add_initstateconnection,
+
         //synchronization
         synchronization,
         forbidden_synchronization,
