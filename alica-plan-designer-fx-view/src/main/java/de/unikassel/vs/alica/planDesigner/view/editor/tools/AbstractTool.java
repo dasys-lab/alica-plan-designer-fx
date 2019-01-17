@@ -10,12 +10,14 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +73,28 @@ public abstract class AbstractTool {
                         if (activated) {
                             endTool();
                         }
+                    }
+                }
+            });
+
+            defaultHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.getButton() == MouseButton.SECONDARY) {
+                        if (activated) {
+                            endTool();
+                        }
+                    }
+                }
+            });
+
+            defaultHandlerMap.put(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    Node target = (Node) event.getTarget();
+                    Parent parent = target.getParent();
+                    if (parent instanceof DraggableHBox || parent instanceof EditorToolBar || parent instanceof VBox) {
+                        setCursor(Cursor.DEFAULT);
                     }
                 }
             });
