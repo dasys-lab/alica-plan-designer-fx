@@ -706,7 +706,6 @@ public class ModelManager implements Observer {
                 Transition transition = (Transition) newElement;
                 plan = (Plan) parentElement;
                 plan.getTransitions().add(transition);
-                // TODO something with UiExtension?
                 break;
             case Types.STATE:
             case Types.SUCCESSSTATE:
@@ -802,6 +801,9 @@ public class ModelManager implements Observer {
                     entryState.setEntryPoint(null);
                 }
                 break;
+            case Types.TRANSITION:
+                ((Plan) parentElement).getTransitions().remove(planElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:
