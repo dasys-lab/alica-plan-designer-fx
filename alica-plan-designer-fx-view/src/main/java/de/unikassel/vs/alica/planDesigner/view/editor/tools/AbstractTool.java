@@ -3,6 +3,9 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -122,7 +125,6 @@ public abstract class AbstractTool {
         }
 
         previousCursor = getCursor();
-        setCursor(imageCursor);
         activated = !activated;
     }
 
@@ -149,11 +151,23 @@ public abstract class AbstractTool {
 
     public void setToolButton(ToolButton toolButton){
         toolButton.setToggleGroup(group);
-        toolButton.setOnAction(event -> {
-            if (activated) {
-                endTool();
-            } else {
-                startTool();
+        toolButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (activated) {
+                    endTool();
+                } else {
+                    startTool();
+                }
+            }
+        });
+
+        toolButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    endTool();
+                }
             }
         });
 

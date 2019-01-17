@@ -9,7 +9,6 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
@@ -68,9 +67,9 @@ public class TransitionTool extends AbstractTool {
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    Node target = (Node) event.getTarget();
-                    Node parent = target.getParent();
                     if (initial > 1) {
+                        Node target = (Node) event.getTarget();
+                        Node parent = target.getParent();
                         if (parent instanceof StateContainer) {
                             // SET ENDPOINT
                             StateViewModel outState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
@@ -116,16 +115,20 @@ public class TransitionTool extends AbstractTool {
                             }
                             bendPoints.add(eventTargetCoordinates);
                         }
-                    } else if (!(target instanceof ToolButton)){
-                        initial = 1;
-                        try {
-                            target = (Node) event.getTarget();
-                            if ((target.getParent() instanceof StateContainer)) {
-                                // SET STARTPOINT
-                                inState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+                    } else {
+                        Node target = (Node) event.getTarget();
+                        Node parent = target.getParent();
+                        if (!(target instanceof ToolButton)){
+                            initial = 1;
+                            try {
+                                target = (Node) event.getTarget();
+                                if (parent instanceof StateContainer) {
+                                    // SET STARTPOINT
+                                    inState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+                                }
+                            } catch (ClassCastException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ClassCastException e) {
-                            e.printStackTrace();
                         }
                     }
                     initial++;
