@@ -5,6 +5,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseDragEvent;
 
 /**
@@ -14,7 +15,7 @@ import javafx.scene.input.MouseDragEvent;
 public class RepositoryTool extends AbstractTool {
 
     public RepositoryTool(TabPane workbench) {
-        super(workbench, null);
+        super(workbench, null, null);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class RepositoryTool extends AbstractTool {
     }
 
     @Override
-    public DraggableHBox createToolUI() {
+    public ToolButton createToolUI() {
         return null;
     }
 

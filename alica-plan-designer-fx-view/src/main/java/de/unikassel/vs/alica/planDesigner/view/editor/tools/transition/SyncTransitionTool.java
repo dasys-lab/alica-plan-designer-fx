@@ -4,8 +4,10 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
+import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 
 public class SyncTransitionTool extends AbstractTool {
@@ -14,8 +16,8 @@ public class SyncTransitionTool extends AbstractTool {
 //    private SynchronizationContainer start;
 //    private TransitionContainer finish;
 
-    public SyncTransitionTool(TabPane workbench, PlanTab planTab) {
-        super(workbench, planTab);
+    public SyncTransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
+        super(workbench, planTab, group);
     }
 
 //    public SyncTransition createNewObject() {
@@ -96,10 +98,10 @@ public class SyncTransitionTool extends AbstractTool {
     }
 
     @Override
-    public DraggableHBox createToolUI() {
-        DraggableHBox draggableHBox = new DraggableHBox();
-        draggableHBox.setIcon(Types.SYNCTRANSITION);
-        return draggableHBox;
+    public ToolButton createToolUI() {
+        ToolButton toolButton = new ToolButton();
+        toolButton.setIcon(Types.SYNCTRANSITION);
+        return toolButton;
     }
 
 //    /**

@@ -11,11 +11,11 @@ import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
-import javafx.scene.effect.DropShadow;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,10 +30,10 @@ import java.util.Map;
 public abstract class AbstractTool {
     protected TabPane planEditorTabPane;
     private PlanTab planTab;
-    // Contains Icon and Text and triggers the drag events (start and stop).
-    private DraggableHBox draggableHBox;
-    // Shadow Effect set on draggableHBox when dragged
-    private static final DropShadow dropShadowEffect = new DropShadow(10, Color.GREY);
+
+    // Tool Button
+    private ToolButton toolButton;
+
     private HashMap<EventType, EventHandler> defaultHandlerMap;
     protected HashMap<EventType, EventHandler> customHandlerMap;
     protected Cursor previousCursor;
@@ -45,15 +45,17 @@ public abstract class AbstractTool {
     protected ImageCursor forbiddenCursor;
     protected ImageCursor addCursor;
 
-    public AbstractTool(TabPane planEditorTabPane, PlanTab planTab) {
+    private final ToggleGroup group;
+
+    public AbstractTool(TabPane planEditorTabPane, PlanTab planTab, ToggleGroup group) {
         this.planEditorTabPane = planEditorTabPane;
         this.planTab = planTab;
-        dropShadowEffect.setSpread(0.5);
+        this.group = group;
     }
 
     protected abstract void initHandlerMap();
 
-    public abstract DraggableHBox createToolUI();
+    public abstract ToolButton createToolUI();
 
     protected Node getPlanEditorTabPane() {
         return planEditorTabPane;
@@ -87,7 +89,7 @@ public abstract class AbstractTool {
     }
 
     public void startTool() {
-        draggableHBox.setEffect(dropShadowEffect);
+        toolButton.setSelected(true);
         for (Map.Entry<EventType, EventHandler> entry : getCustomHandlerMap().entrySet()) {
             planEditorTabPane.getScene().addEventFilter(entry.getKey(), entry.getValue());
         }
@@ -101,7 +103,7 @@ public abstract class AbstractTool {
     }
 
     public void endTool() {
-        draggableHBox.setEffect(null);
+        toolButton.setSelected(false);
         for (Map.Entry<EventType, EventHandler> entry : getCustomHandlerMap().entrySet()) {
             getPlanEditorTabPane().getScene().removeEventFilter(entry.getKey(), entry.getValue());
         }
@@ -121,8 +123,9 @@ public abstract class AbstractTool {
         this.recentlyDone = recentlyDone;
     }
 
-    public void setDraggableHBox(DraggableHBox draggableHBox){
-        draggableHBox.setOnMouseClicked(event -> {
+    public void setToolButton(ToolButton toolButton){
+        toolButton.setToggleGroup(group);
+        toolButton.setOnAction(event -> {
             if (activated) {
                 endTool();
             } else {
@@ -130,18 +133,10 @@ public abstract class AbstractTool {
             }
         });
 
-        /*
-        draggableHBox.setOnDragDetected(event -> {
-            draggableHBox.startFullDrag();
-            this.startTool();
-            event.consume();
-        });*/
-
-        this.draggableHBox = draggableHBox;
-        this.draggableHBox.setOnDragDone(Event::consume);
+        this.toolButton = toolButton;
     }
-    public DraggableHBox getDraggableHBox() {
-        return draggableHBox;
+    public ToggleButton getToolButton() {
+        return toolButton;
     }
 
     public PlanTab getPlanTab() {

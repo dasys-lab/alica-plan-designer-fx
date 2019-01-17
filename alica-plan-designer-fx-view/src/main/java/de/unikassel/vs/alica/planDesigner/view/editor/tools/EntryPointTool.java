@@ -17,6 +17,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -32,19 +33,19 @@ public class EntryPointTool extends AbstractTool {
     private boolean initial = true;
     private Node visualRepresentation;
 
-    public EntryPointTool(TabPane workbench, PlanTab planTab) {
-        super(workbench, planTab);
+    public EntryPointTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
+        super(workbench, planTab, group);
     }
 
     @Override
-    public DraggableHBox createToolUI() {
-        DraggableHBox draggableHBox = new DraggableHBox();
-        draggableHBox.setIcon(Types.ENTRYPOINT);
-        setDraggableHBox(draggableHBox);
+    public ToolButton createToolUI() {
+        ToolButton toolButton = new ToolButton();
+        toolButton.setIcon(Types.ENTRYPOINT);
+        setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.entrypoint);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_entrypoint);
         addCursor = new AlicaCursor(AlicaCursor.Type.add_entrypoint);
-        return draggableHBox;
+        return toolButton;
     }
 
 //    @Override

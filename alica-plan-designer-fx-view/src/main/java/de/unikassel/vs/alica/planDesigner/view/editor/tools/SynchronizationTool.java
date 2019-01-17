@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.StackPane;
 
@@ -14,16 +15,16 @@ public class SynchronizationTool extends AbstractTool{
     private Node visualRepresentation;
     private boolean initial = true;
 
-    public SynchronizationTool(TabPane workbench, PlanTab planTab) {
-        super(workbench, planTab);
+    public SynchronizationTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
+        super(workbench, planTab, group);
     }
 
     @Override
-    public DraggableHBox createToolUI() {
-        DraggableHBox draggableHBox = new DraggableHBox();
-        draggableHBox.setIcon(Types.SYNCHRONIZATION);
-        setDraggableHBox(draggableHBox);
-        return draggableHBox;
+    public ToolButton createToolUI() {
+        ToolButton toolButton = new ToolButton();
+        toolButton.setIcon(Types.SYNCHRONIZATION);
+        setToolButton(toolButton);
+        return toolButton;
     }
 
 //    @Override

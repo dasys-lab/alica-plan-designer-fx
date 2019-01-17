@@ -10,6 +10,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
+import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
@@ -20,6 +21,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -34,8 +36,8 @@ public class TransitionTool extends AbstractTool {
     private StateViewModel inState;
     private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition);
 
-    public TransitionTool(TabPane workbench, PlanTab planTab) {
-        super(workbench, planTab);
+    public TransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
+        super(workbench, planTab, group);
     }
 
     @Override
@@ -146,13 +148,13 @@ public class TransitionTool extends AbstractTool {
     }
 
     @Override
-    public DraggableHBox createToolUI() {
-        DraggableHBox draggableHBox = new DraggableHBox();
-        draggableHBox.setIcon(Types.TRANSITION);
-        setDraggableHBox(draggableHBox);
+    public ToolButton createToolUI() {
+        ToolButton toolButton = new ToolButton();
+        toolButton.setIcon(Types.TRANSITION);
+        setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.transition, 0, 8);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_transition, 8, 8);
         addCursor = new AlicaCursor(AlicaCursor.Type.add_transition, 8, 8);
-        return draggableHBox;
+        return toolButton;
     }
 }

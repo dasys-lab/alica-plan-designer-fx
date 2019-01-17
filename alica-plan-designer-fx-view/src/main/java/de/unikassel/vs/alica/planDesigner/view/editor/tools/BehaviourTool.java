@@ -4,21 +4,22 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseDragEvent;
 
 
 public class BehaviourTool extends AbstractTool {
 
-    public BehaviourTool(TabPane workbench, PlanTab planTab) {
-        super(workbench, planTab);
+    public BehaviourTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
+        super(workbench, planTab, group);
     }
 
     @Override
-    public DraggableHBox createToolUI() {
-        DraggableHBox draggableHBox = new DraggableHBox();
-        draggableHBox.setIcon(Types.BEHAVIOUR);
-        setDraggableHBox(draggableHBox);
-        return draggableHBox;
+    public ToolButton createToolUI() {
+        ToolButton toolButton = new ToolButton();
+        toolButton.setIcon(Types.BEHAVIOUR);
+        setToolButton(toolButton);
+        return toolButton;
     }
 
 //    @Override

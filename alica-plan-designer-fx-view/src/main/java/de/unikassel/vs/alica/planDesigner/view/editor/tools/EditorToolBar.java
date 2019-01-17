@@ -9,6 +9,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tools.transition.SyncTrans
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.transition.TransitionTool;
 import javafx.geometry.Orientation;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 
 import java.util.ArrayList;
@@ -26,23 +27,25 @@ public class EditorToolBar extends ToolBar {
         setOrientation(Orientation.VERTICAL);
         tools = new ArrayList<>();
 
-        StateTool stateTool = new StateTool(workbench, plan);
+        ToggleGroup group = new ToggleGroup();
+
+        StateTool stateTool = new StateTool(workbench, plan, group);
         getItems().add(stateTool.createToolUI());
-        TransitionTool transitionTool = new TransitionTool(workbench, plan);
+        TransitionTool transitionTool = new TransitionTool(workbench, plan, group);
         getItems().add(transitionTool.createToolUI());
-        BehaviourTool behaviourTool = new BehaviourTool(workbench, plan);
+        BehaviourTool behaviourTool = new BehaviourTool(workbench, plan, group);
         getItems().add(behaviourTool.createToolUI());
-        EntryPointTool entryPointTool = new EntryPointTool(workbench, plan);
+        EntryPointTool entryPointTool = new EntryPointTool(workbench, plan, group);
         getItems().add(entryPointTool.createToolUI());
-        SuccessStateTool successStateTool = new SuccessStateTool(workbench, plan);
+        SuccessStateTool successStateTool = new SuccessStateTool(workbench, plan, group);
         getItems().add(successStateTool.createToolUI());
-        FailureStateTool failureStateTool = new FailureStateTool(workbench, plan);
+        FailureStateTool failureStateTool = new FailureStateTool(workbench, plan, group);
         getItems().add(failureStateTool.createToolUI());
-        InitTransitionTool initTransitionTool = new InitTransitionTool(workbench, plan);
+        InitTransitionTool initTransitionTool = new InitTransitionTool(workbench, plan, group);
         getItems().add(initTransitionTool.createToolUI());
-        SynchronizationTool synchronizationTool = new SynchronizationTool(workbench, plan);
+        SynchronizationTool synchronizationTool = new SynchronizationTool(workbench, plan, group);
         getItems().add(synchronizationTool.createToolUI());
-        SyncTransitionTool syncTransitionTool = new SyncTransitionTool(workbench, plan);
+        SyncTransitionTool syncTransitionTool = new SyncTransitionTool(workbench, plan, group);
         getItems().add(syncTransitionTool.createToolUI());
 
         tools.addAll(Arrays.asList(stateTool, transitionTool, behaviourTool, entryPointTool, successStateTool,

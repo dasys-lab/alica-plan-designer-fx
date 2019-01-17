@@ -1,9 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
-import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
-import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
@@ -11,6 +7,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
+import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -18,6 +15,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import javafx.scene.layout.VBox;
@@ -30,8 +28,8 @@ public class InitTransitionTool extends AbstractTool {
     private EntryPointContainer start;
     private StateContainer finish;
 
-    public InitTransitionTool(TabPane workbench, PlanTab planTab) {
-        super(workbench, planTab);
+    public InitTransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
+        super(workbench, planTab, group);
     }
 
 //    public InitStateConnection createNewObject() {
@@ -39,13 +37,14 @@ public class InitTransitionTool extends AbstractTool {
 //    }
 
     @Override
-    public DraggableHBox createToolUI() {
-        DraggableHBox draggableHBox = new InitStateConnectionHBox();
-        setDraggableHBox(draggableHBox);
+    public ToolButton createToolUI() {
+        ToolButton toolButton = new ToolButton();
+        toolButton.setIcon(Types.INITSTATECONNECTION);
+        setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.initstateconnection);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_initstateconnection);
         addCursor = new AlicaCursor(AlicaCursor.Type.add_initstateconnection);
-        return draggableHBox;
+        return toolButton;
     }
 
     private class InitStateConnectionHBox extends DraggableHBox {

@@ -8,13 +8,14 @@ import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
+import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -23,8 +24,8 @@ import javafx.scene.layout.StackPane;
  */
 public class StateTool extends AbstractTool {
 
-    public StateTool(TabPane workbench, PlanTab planTab) {
-        super(workbench, planTab);
+    public StateTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
+        super(workbench, planTab, group);
     }
 
     /**
@@ -111,14 +112,14 @@ public class StateTool extends AbstractTool {
     }
 
     @Override
-    public DraggableHBox createToolUI() {
-        DraggableHBox draggableHBox = new DraggableHBox();
-        draggableHBox.setIcon(Types.STATE);
-        setDraggableHBox(draggableHBox);
+    public ToolButton createToolUI() {
+        ToolButton tollButton = new ToolButton();
+        tollButton.setIcon(Types.STATE);
+        setToolButton(tollButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.state);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_state);
         addCursor = new AlicaCursor(AlicaCursor.Type.add_state);
-        return draggableHBox;
+        return tollButton;
     }
 
     /**
