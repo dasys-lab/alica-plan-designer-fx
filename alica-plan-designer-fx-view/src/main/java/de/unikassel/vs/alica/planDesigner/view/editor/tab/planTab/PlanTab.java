@@ -27,13 +27,17 @@ public class PlanTab extends AbstractPlanTab {
     private StackPane planContent;
     private ScrollPane scrollPane;
 
-
-    private PropertiesConditionsVariablesPane propertiesConditionsVariablesPane;
-
     public PlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         super(serializableViewModel, handler);
         i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getString("label.caption.plan") + ": " + serializableViewModel.getName());
+
+        if (serializableViewModel instanceof  PlanViewModel) {
+            PlanViewModel planViewModel = (PlanViewModel) serializableViewModel;
+            planViewModel.masterPlanProperty().addListener((observable, oldValue, newValue) -> {
+                System.out.println("PlanTab: MasterPlan is " + newValue);
+            });
+        }
         draw();
     }
 

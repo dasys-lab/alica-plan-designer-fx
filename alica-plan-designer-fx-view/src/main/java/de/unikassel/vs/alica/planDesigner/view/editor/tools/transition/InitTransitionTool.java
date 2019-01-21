@@ -114,7 +114,7 @@ public class InitTransitionTool extends AbstractTool {
 //                            .getCommandStack()
 //                            .storeAndExecute(command);
 
-//                        IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+//                        IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
 //
 //                        GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.INITSTATECONNECTION, null);
 //
@@ -124,7 +124,7 @@ public class InitTransitionTool extends AbstractTool {
 //
 //                        guiEvent.setRelatedObjects(relatedObjects);
 //                        guiEvent.setParentId(InitTransitionTool.this.getPlanTab().getSerializableViewModel().getId());
-//                        handler.handle(guiEvent);
+//                        guiModificationHandler.handle(guiEvent);
                     }
                 }
             });

@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
@@ -23,36 +24,40 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
      * should represent.
      */
     protected TabPane tabPane;
-    protected PropertySheet planPropertySheet;
+    protected PropertySheet propertySheet;
     protected Tab propertiesTab;
     protected Tab variablesTab;
-    protected Tab preconditionTab;
-    protected Tab runtimeconditionTab;
-    protected Tab postconditionTab;
+    protected Tab preConditionTab;
+    protected Tab runtimeConditionTab;
+    protected Tab postConditionTab;
+
+    protected IGuiModificationHandler guiModificationHandler;
 
     public PropertiesConditionsVariablesPane() {
         i18NRepo = I18NRepo.getInstance();
 
-        planPropertySheet = new PropertySheet();
-        planPropertySheet.setModeSwitcherVisible(false);
+        propertySheet = new PropertySheet();
+        propertySheet.setModeSwitcherVisible(false);
 
         propertiesTab = new Tab(i18NRepo.getString("label.caption.properties"));
-        propertiesTab.setContent(planPropertySheet);
+        propertiesTab.setContent(propertySheet);
         variablesTab = new Tab(i18NRepo.getString("label.caption.variables"));
-        preconditionTab = new Tab(i18NRepo.getString("label.caption.preCondtions"));
-        runtimeconditionTab = new Tab(i18NRepo.getString("label.caption.runtimeCondtions"));
-        postconditionTab = new Tab(i18NRepo.getString("label.caption.postCondtions"));
+        preConditionTab = new Tab(i18NRepo.getString("label.caption.preCondtions"));
+        runtimeConditionTab = new Tab(i18NRepo.getString("label.caption.runtimeCondtions"));
+        postConditionTab = new Tab(i18NRepo.getString("label.caption.postCondtions"));
 
         this.tabPane = new TabPane();
         this.tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, preconditionTab, runtimeconditionTab, postconditionTab);
+        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
 
         this.setContent(tabPane);
     }
 
+
     public void setViewModelElement(ViewModelElement element) {
-        planPropertySheet.getItems().addAll(createPropertySheetList(element));
+        propertySheet.getItems().addAll(createPropertySheetList(element));
     }
+
 
     protected ObservableList<PropertySheet.Item> createPropertySheetList(ViewModelElement element) {
         ObservableList<PropertySheet.Item> list = BeanPropertyUtils.getProperties(element, ViewModelElement.filterProperties(element.getUiPropertyList()));
@@ -70,4 +75,5 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
         retObsList.addAll(retList);
         return retObsList;
     }
+
 }
