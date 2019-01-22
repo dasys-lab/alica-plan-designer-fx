@@ -8,6 +8,7 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.*;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
+import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
 import de.unikassel.vs.alica.planDesigner.command.create.CreateBehaviour;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlan;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlanType;
@@ -1176,6 +1177,10 @@ public class ModelManager implements Observer {
                 cmd = new AddTransitionInPlan(this, parenOfElement, in, out);
                 break;
             case Types.INITSTATECONNECTION:
+                EntryPoint inEntryPoint = (EntryPoint) getPlanElement((mmq.getRelatedObjects().get(State.ENTRYPOINT)));
+                State outState = (State) getPlanElement(mmq.getRelatedObjects().get(EntryPoint.STATE));
+                cmd = new ConnectEntryPointsWithState(this, parenOfElement, inEntryPoint, outState);
+                break;
             case Types.ENTRYPOINT:
                 EntryPoint entryPoint = new EntryPoint();
                 entryPoint.setPlan(parenOfElement.getPlan());

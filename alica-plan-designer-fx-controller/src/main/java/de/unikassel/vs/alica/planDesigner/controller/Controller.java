@@ -269,6 +269,34 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                             TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
                             planViewModel.getTransitions().remove(transitionViewModel);
                             planViewModel.getTransitions().add(transitionViewModel);
+                        case Types.INITSTATECONNECTION:
+                            plan = (Plan) event.getElement();
+                            ArrayList<EntryPoint> entryPointArrayList = ((Plan) plan).getEntryPoints();
+                            EntryPoint entryPoint = entryPointArrayList.get(0);
+
+                            ObservableList<EntryPointViewModel> entryPointViewModelObservableList = planViewModel.getEntryPoints();
+                            ObservableList<StateViewModel> stateViewModelObservableList = planViewModel.getStates();
+
+                            EntryPointViewModel ent = null;
+                            StateViewModel state = null;
+                            for(EntryPointViewModel entryPointsViewModel: entryPointViewModelObservableList){
+                                for(StateViewModel stateViewModel: stateViewModelObservableList) {
+                                    if(entryPointsViewModel.getId() == entryPoint.getId() && stateViewModel.getId() == entryPoint.getState().getId()) {
+                                        entryPointsViewModel.setState(stateViewModel);
+                                        stateViewModel.setEntryPoint(entryPointsViewModel);
+                                        ent = entryPointsViewModel;
+                                        state = stateViewModel;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // You have duplicate, if not remove first
+                            planViewModel.getEntryPoints().remove(ent);
+                            planViewModel.getStates().remove(state);
+                            planViewModel.getStates().add(state);
+                            planViewModel.getEntryPoints().add(ent);
+                            break;
                         case Types.PRECONDITION:
                         case Types.RUNTIMECONDITION:
                         case Types.POSTCONDITION:

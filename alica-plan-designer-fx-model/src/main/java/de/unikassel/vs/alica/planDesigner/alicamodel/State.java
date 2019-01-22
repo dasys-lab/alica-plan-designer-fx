@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class State extends PlanElement {
+
+    public static final String ENTRYPOINT = "entryPoint";
     protected EntryPoint entryPoint;
     protected Plan parentPlan;
     protected ArrayList<AbstractPlan> plans;
