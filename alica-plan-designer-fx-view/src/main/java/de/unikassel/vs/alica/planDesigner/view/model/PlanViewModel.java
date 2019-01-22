@@ -12,8 +12,8 @@ import java.util.Arrays;
 
 public class PlanViewModel extends SerializableViewModel {
 
-    protected final BooleanProperty masterPlan = new SimpleBooleanProperty();
-    protected final DoubleProperty utilityThreshold = new SimpleDoubleProperty();
+    protected final BooleanProperty masterPlan = new SimpleBooleanProperty(null, "masterPlan", false);
+    protected final DoubleProperty utilityThreshold = new SimpleDoubleProperty(null, "utilityThreshold", 0.5);
     protected ObservableList<EntryPointViewModel> entryPoints;
     protected ObservableList<StateViewModel> states;
     protected ObservableList<TransitionViewModel> transitions;

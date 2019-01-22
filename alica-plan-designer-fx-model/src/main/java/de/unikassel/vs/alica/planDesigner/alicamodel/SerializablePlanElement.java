@@ -29,4 +29,18 @@ public class SerializablePlanElement extends PlanElement {
     public SimpleStringProperty relativeDirectoryProperty() {
         return relativeDirectory;
     }
+
+    public void registerDirtyFlag() {
+        name.addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
+
+        comment.addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
+
+        relativeDirectory.addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
+    }
 }

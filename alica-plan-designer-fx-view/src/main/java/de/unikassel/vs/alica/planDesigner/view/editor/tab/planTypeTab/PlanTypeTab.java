@@ -271,20 +271,6 @@ public class PlanTypeTab extends AbstractPlanTab {
     }
 
     /**
-     * Called for changing comment of plantype and stuff...
-     * @param newValue
-     * @param attribute
-     */
-    private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, serializableViewModel.getName());
-        guiChangeAttributeEvent.setNewValue(newValue);
-        guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
-        guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setElementId(serializableViewModel.getId());
-        guiModificationHandler.handle(guiChangeAttributeEvent);
-    }
-
-    /**
      * Called for adding, removing plans from plantype...
      * @param type
      * @param element

@@ -35,8 +35,11 @@ public class PlanTab extends AbstractPlanTab {
         if (serializableViewModel instanceof  PlanViewModel) {
             PlanViewModel planViewModel = (PlanViewModel) serializableViewModel;
             planViewModel.masterPlanProperty().addListener((observable, oldValue, newValue) -> {
-                System.out.println("PlanTab: MasterPlan is " + newValue);
+                fireGuiChangeAttributeEvent(newValue.toString(), planViewModel.masterPlanProperty().getName(), Boolean.class.getSimpleName());
             });
+        }
+        else {
+            System.err.println("PlanTab: Given ViewModel isn't a PlanViewModel!");
         }
         draw();
     }

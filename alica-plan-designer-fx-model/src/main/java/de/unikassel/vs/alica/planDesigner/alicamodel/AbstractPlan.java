@@ -10,4 +10,8 @@ public class AbstractPlan extends SerializablePlanElement {
         this.id = id;
     }
 
+    public void registerDirtyFlag() {
+        super.registerDirtyFlag();
+    }
+
 }

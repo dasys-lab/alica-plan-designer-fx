@@ -302,6 +302,8 @@ public class ModelManager implements Observer {
                         event.setNewValue(newValue);
                         this.fireEvent(event);
                     });
+                    plan.registerDirtyFlag();
+
                     if (planElementMap.containsKey(plan.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
                     } else {
@@ -327,11 +329,6 @@ public class ModelManager implements Observer {
                         }
                         if (plan.getRuntimeCondition() != null) {
                             planElementMap.put(plan.getRuntimeCondition().getId(), plan.getRuntimeCondition());
-                            if (plan.getMasterPlan()) {
-                                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
-                            } else {
-                                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
-                            }
                         }
                     }
                     break;
