@@ -87,11 +87,7 @@ public class PlanTab extends AbstractPlanTab {
 
     @Override
     public void save() {
-        if (isDirty()) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLAN, serializableViewModel.getName());
-            event.setElementId(serializableViewModel.getId());
-            guiModificationHandler.handle(event);
-        }
+        save(Types.PLAN);
     }
 
     protected void initSelectedPlanElement(ViewModelElement viewModelElement) {

@@ -4,6 +4,7 @@ import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanHBox;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
@@ -75,6 +76,14 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
         this.splitPane.setOrientation(Orientation.VERTICAL);
 
         setContent(splitPane);
+    }
+
+    public void save(String type) {
+        if (isDirty()) {
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, type, serializableViewModel.getName());
+            event.setElementId(serializableViewModel.getId());
+            guiModificationHandler.handle(event);
+        }
     }
 
     public boolean isDirty() {return serializableViewModel.isDirty();}
@@ -187,7 +196,7 @@ public abstract class AbstractPlanTab extends Tab implements IEditorTab{
 
     @Override
     public boolean representsViewModelElement(ViewModelElement viewModelElement) {
-        return this.serializableViewModel.equals(viewModelElement);
+        return this.serializableViewModel.equals(viewModelElement) || this.serializableViewModel.getId() == viewModelElement.getParentId();
     }
 
     public void revertChanges() {
