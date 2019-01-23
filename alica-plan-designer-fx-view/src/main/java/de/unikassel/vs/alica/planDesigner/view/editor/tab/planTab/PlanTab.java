@@ -10,6 +10,8 @@ import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorElement;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
@@ -27,8 +29,9 @@ public class PlanTab extends AbstractPlanTab {
     private StackPane planContent;
     private ScrollPane scrollPane;
 
-    public PlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
-        super(serializableViewModel, handler);
+    public PlanTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
+        super(serializableViewModel, editorTabPane.getGuiModificationHandler());
+
         draw();
     }
 

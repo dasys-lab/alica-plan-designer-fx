@@ -44,15 +44,15 @@ public class EditorTabPane extends TabPane {
         switch (serializableViewModel.getType()) {
             case Types.MASTERPLAN:
             case Types.PLAN:
-               return new PlanTab(serializableViewModel, this.guiModificationHandler);
+               return new PlanTab(serializableViewModel, this);
             case Types.TASKREPOSITORY:
-                return new TaskRepositoryTab(serializableViewModel, this.guiModificationHandler);
+                return new TaskRepositoryTab(serializableViewModel, this);
             case Types.TASK:
-                return new TaskRepositoryTab((SerializableViewModel) guiModificationHandler.getViewModelElement(serializableViewModel.getParentId()), this.guiModificationHandler);
+                return new TaskRepositoryTab((SerializableViewModel) guiModificationHandler.getViewModelElement(serializableViewModel.getParentId()), this);
             case Types.BEHAVIOUR:
-                return new BehaviourTab(serializableViewModel, this.guiModificationHandler);
+                return new BehaviourTab(serializableViewModel, this);
             case Types.PLANTYPE:
-                return new PlanTypeTab(serializableViewModel, this.guiModificationHandler);
+                return new PlanTypeTab(serializableViewModel, this);
             default:
                 System.err.println("EditorTabPane: Opening tab of elementType " + serializableViewModel.getType() + " not implemented!");
                 return null;
@@ -61,6 +61,10 @@ public class EditorTabPane extends TabPane {
 
     public void setGuiModificationHandler(IGuiModificationHandler handler) {
         this.guiModificationHandler = handler;
+    }
+
+    public IGuiModificationHandler getGuiModificationHandler() {
+        return this.guiModificationHandler;
     }
 
     public GuiModificationEvent handleDelete() {

@@ -15,7 +15,7 @@ import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.BeanPropertyUtils;
 
 /**
- * Root gui object for showing properties, conditions, and variables of selected objects in a plan.
+ * Root gui object for showing properties, conditions, and variables of selected objects.
  */
 public class PropertiesConditionsVariablesPane extends TitledPane {
 
@@ -58,6 +58,10 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
 
 
     public void setViewModelElement(ViewModelElement element) {
+        if (element == null) {
+            return;
+        }
+
         setText(element.getName());
         setGraphic(new ImageView(new AlicaIcon(element.getType(), AlicaIcon.Size.SMALL)));
 

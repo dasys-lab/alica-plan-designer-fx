@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryHBox;
@@ -36,8 +37,8 @@ public class PlanTypeTab extends AbstractPlanTab {
     private Comparator<RepositoryHBox> repositoryHBoxComparator;
     private Comparator<ViewModelElement> viewModelElementComparator;
 
-    public PlanTypeTab(SerializableViewModel planType, IGuiModificationHandler guiModificationHandler) {
-        super(planType, guiModificationHandler);
+    public PlanTypeTab(SerializableViewModel planType, EditorTabPane editorTabPane) {
+        super(planType, editorTabPane.getGuiModificationHandler());
 
         draw();
     }
@@ -182,7 +183,6 @@ public class PlanTypeTab extends AbstractPlanTab {
                 continue;
             }
             RepositoryHBox planRepositoryHBox = new RepositoryHBox(plan, guiModificationHandler);
-            planRepositoryHBox.setOnMouseClicked(null);
             planListView.getItems().add(planRepositoryHBox);
             planListView.getItems().sort(repositoryHBoxComparator);
         }
@@ -197,7 +197,6 @@ public class PlanTypeTab extends AbstractPlanTab {
                         }
 
                         RepositoryHBox planRepositoryHBox = new RepositoryHBox(element, guiModificationHandler);
-                        planRepositoryHBox.setOnMouseClicked(null);
                         Platform.runLater(() -> {
                             planListView.getItems().add(planRepositoryHBox);
                             planListView.getItems().sort(repositoryHBoxComparator);

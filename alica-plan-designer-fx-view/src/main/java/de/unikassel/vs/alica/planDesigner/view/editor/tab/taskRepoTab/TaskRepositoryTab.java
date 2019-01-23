@@ -7,6 +7,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskRepositoryViewModel;
@@ -34,8 +35,19 @@ public class TaskRepositoryTab extends EditorTab {
     protected TaskRepositoryViewModel taskRepositoryViewModel;
     protected RepositoryListView tasksRepoListView;
 
-    public TaskRepositoryTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
-        super(serializableViewModel, handler);
+    public TaskRepositoryTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
+        super(serializableViewModel, editorTabPane.getGuiModificationHandler());
+
+        editorTabPane.getSelectionModel().selectedItemProperty().addListener((observable, selectedTabBefore, selectedTab) -> {
+            if (this == selectedTab) {
+                this.propertiesConditionsVariablesPane.setViewModelElement(taskRepositoryViewModel);
+            }
+        });
+        editorTabPane.focusedProperty().addListener((observable, oldValue, focused) -> {
+            if (focused && editorTabPane.getSelectionModel().getSelectedItem() == this) {
+                this.propertiesConditionsVariablesPane.setViewModelElement(taskRepositoryViewModel);
+            }
+        });
 
         taskRepositoryViewModel = (TaskRepositoryViewModel) serializableViewModel;
         taskRepositoryViewModel.getTaskViewModels().addListener(new ListChangeListener<TaskViewModel>() {
@@ -58,13 +70,16 @@ public class TaskRepositoryTab extends EditorTab {
         });
 
         tasksRepoListView = new RepositoryListView();
+        tasksRepoListView.setGuiModificationHandler(editorTabPane.getGuiModificationHandler());
         tasksRepoListView.addElements(taskRepositoryViewModel.getTaskViewModels());
         tasksRepoListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            this.propertiesConditionsVariablesPane.setViewModelElement(newValue.getViewModelElement());
+            if (newValue != null) {
+                this.propertiesConditionsVariablesPane.setViewModelElement(newValue.getViewModelElement());
+            }
         });
         tasksRepoListView.focusedProperty().addListener((observable, focusedBefore, focused) -> {
-            if (!focused) {
-                this.propertiesConditionsVariablesPane.setViewModelElement(taskRepositoryViewModel);
+            if (focused) {
+                this.propertiesConditionsVariablesPane.setViewModelElement(tasksRepoListView.getSelectedItem());
             }
         });
 

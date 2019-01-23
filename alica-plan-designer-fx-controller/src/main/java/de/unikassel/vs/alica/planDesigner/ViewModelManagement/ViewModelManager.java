@@ -322,8 +322,8 @@ public class ViewModelManager {
                 planTypeViewModel.getPlansInPlanType().remove(annotatedPlanView);
                 break;
             default:
-                System.err.println("Remove Element not supported for type: " + viewModelElement.getType());
-                //TODO: handle other types
+                System.err.println("ViewModelManager: Remove Element not supported for type: " + viewModelElement.getType());
+                //TODO: maybe handle other types
         }
 
         viewModelElements.remove(viewModelElement.getId());
@@ -336,9 +336,12 @@ public class ViewModelManager {
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
                 planTypeViewModel.getPlansInPlanType().add(annotatedPlanView);
                 break;
+            case Types.TASK:
+                // NO-OP cause a taskViewModel is added to the taskRepositoryViewModel when its created
+                break;
             default:
-                System.err.println("Add Element not supported for type: " + viewModelElement.getType());
-                //TODO: handle other types
+                System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());
+                //TODO: maybe handle other types
         }
     }
 }

@@ -231,7 +231,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case ELEMENT_CREATED:
                 viewModelManager.addElement(event.getParentId(), viewModelElement);
 
-                // TODO: @Fax Not everything is a plan, please clean that up...
                 PlanElement plan = modelManager.getPlanElement(event.getParentId());
                 if (plan instanceof Plan) {
 
@@ -265,7 +264,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                             planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
                             break;
                         case Types.BENDPOINT:
-                            // TODO: @Fax WTF??? remove add???
                             // remove<->add to fire listeners
                             TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
                             planViewModel.getTransitions().remove(transitionViewModel);
