@@ -2,7 +2,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
-import de.unikassel.vs.alica.planDesigner.ViewModelFactory.ViewModelManager;
+import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
@@ -84,7 +84,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         setupModelManager();
         setupGeneratedSourcesManager();
 
-        viewModelManager = new ViewModelManager(modelManager);
+        viewModelManager = new ViewModelManager(modelManager, this);
 
         repoViewModel = viewModelManager.createRepositoryViewModel();
     }

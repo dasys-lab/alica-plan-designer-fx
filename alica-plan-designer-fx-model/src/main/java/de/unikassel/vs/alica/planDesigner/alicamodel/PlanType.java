@@ -9,6 +9,10 @@ public class PlanType extends AbstractPlan {
     protected final ArrayList<Parametrisation> parametrisations = new ArrayList<>();
     protected final ArrayList<AnnotatedPlan> plans = new ArrayList<>();
 
+    public void registerDirtyFlag() {
+        super.registerDirtyFlag();
+    }
+
     public void addParametrisation(Parametrisation parametrisation) {
         parametrisations.add(parametrisation);
         this.setDirty(true);

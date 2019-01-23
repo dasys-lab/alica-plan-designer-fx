@@ -31,16 +31,6 @@ public class PlanTab extends AbstractPlanTab {
         super(serializableViewModel, handler);
         i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getString("label.caption.plan") + ": " + serializableViewModel.getName());
-
-        if (serializableViewModel instanceof  PlanViewModel) {
-            PlanViewModel planViewModel = (PlanViewModel) serializableViewModel;
-            planViewModel.masterPlanProperty().addListener((observable, oldValue, newValue) -> {
-                fireGuiChangeAttributeEvent(newValue.toString(), planViewModel.masterPlanProperty().getName(), Boolean.class.getSimpleName());
-            });
-        }
-        else {
-            System.err.println("PlanTab: Given ViewModel isn't a PlanViewModel!");
-        }
         draw();
     }
 
@@ -66,16 +56,6 @@ public class PlanTab extends AbstractPlanTab {
         VBox.setVgrow(scrollPlaneAndToolBarHBox,Priority.ALWAYS);
 
         splitPane.getItems().add(0, scrollPlaneAndToolBarHBox);
-
-    }
-
-    private void fireGuiChangeAttributeEvent(String newValue, String attribute, String type) {
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLAN, serializableViewModel.getName());
-        guiChangeAttributeEvent.setNewValue(newValue);
-        guiChangeAttributeEvent.setAttributeType(type);
-        guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setElementId(serializableViewModel.getId());
-        guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 
     /**

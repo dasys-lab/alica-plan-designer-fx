@@ -1,5 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.events.GuiChangeAttributeEvent;
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,6 +33,16 @@ public class PlanViewModel extends SerializableViewModel {
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "masterPlan", "relativeDirectory", "utilityThreshold"));
+    }
+
+    public void registerListener(IGuiModificationHandler handler) {
+        super.registerListener(handler);
+        masterPlan.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, masterPlan.getClass().getSimpleName(), masterPlan.getName());
+        });
+        utilityThreshold.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, utilityThreshold.getClass().getSimpleName(), utilityThreshold.getName());
+        });
     }
 
     public final BooleanProperty masterPlanProperty() {return masterPlan; }

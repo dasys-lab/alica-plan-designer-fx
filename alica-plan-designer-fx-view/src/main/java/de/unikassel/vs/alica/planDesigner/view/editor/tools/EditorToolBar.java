@@ -29,29 +29,25 @@ public class EditorToolBar extends ToolBar {
 
         ToggleGroup group = new ToggleGroup();
 
-        StateTool stateTool = new StateTool(workbench, plan, group);
-        getItems().add(stateTool.createToolUI());
-        TransitionTool transitionTool = new TransitionTool(workbench, plan, group);
-        getItems().add(transitionTool.createToolUI());
-        BehaviourTool behaviourTool = new BehaviourTool(workbench, plan, group);
-        getItems().add(behaviourTool.createToolUI());
         EntryPointTool entryPointTool = new EntryPointTool(workbench, plan, group);
         getItems().add(entryPointTool.createToolUI());
+        InitTransitionTool initTransitionTool = new InitTransitionTool(workbench, plan, group);
+        getItems().add(initTransitionTool.createToolUI());
+        StateTool stateTool = new StateTool(workbench, plan, group);
+        getItems().add(stateTool.createToolUI());
         SuccessStateTool successStateTool = new SuccessStateTool(workbench, plan, group);
         getItems().add(successStateTool.createToolUI());
         FailureStateTool failureStateTool = new FailureStateTool(workbench, plan, group);
         getItems().add(failureStateTool.createToolUI());
-        InitTransitionTool initTransitionTool = new InitTransitionTool(workbench, plan, group);
-        getItems().add(initTransitionTool.createToolUI());
+        TransitionTool transitionTool = new TransitionTool(workbench, plan, group);
+        getItems().add(transitionTool.createToolUI());
         SynchronizationTool synchronizationTool = new SynchronizationTool(workbench, plan, group);
         getItems().add(synchronizationTool.createToolUI());
         SyncTransitionTool syncTransitionTool = new SyncTransitionTool(workbench, plan, group);
         getItems().add(syncTransitionTool.createToolUI());
 
-        tools.addAll(Arrays.asList(stateTool, transitionTool, behaviourTool, entryPointTool, successStateTool,
-                failureStateTool, initTransitionTool,
-                synchronizationTool, syncTransitionTool));
-
+        tools.addAll(Arrays.asList(entryPointTool, initTransitionTool, stateTool, successStateTool,
+                failureStateTool, transitionTool, synchronizationTool, syncTransitionTool));
     }
 
     public AbstractTool getRecentlyDoneTool() {
