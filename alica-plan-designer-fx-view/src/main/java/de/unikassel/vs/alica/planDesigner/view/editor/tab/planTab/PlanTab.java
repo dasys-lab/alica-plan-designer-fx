@@ -29,7 +29,6 @@ public class PlanTab extends AbstractPlanTab {
 
     public PlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         super(serializableViewModel, handler);
-        setText(i18NRepo.getString("label.caption.plan") + ": " + serializableViewModel.getName());
         draw();
     }
 

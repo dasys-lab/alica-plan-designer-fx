@@ -11,14 +11,8 @@ import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 
 public class BehaviourTab extends AbstractPlanTab {
 
-    BehaviourViewModel behaviourViewModel;
-    I18NRepo i18NRepo;
-
     public BehaviourTab(SerializableViewModel serializableViewModel, IGuiModificationHandler guiModificationHandler) {
         super(serializableViewModel, guiModificationHandler);
-        setText(I18NRepo.getInstance().getString("label.caption.behaviour") + ": " + serializableViewModel.getName());
-        i18NRepo = I18NRepo.getInstance();
-        this.behaviourViewModel = (BehaviourViewModel) serializableViewModel;
     }
 
     public GuiModificationEvent handleDelete() {

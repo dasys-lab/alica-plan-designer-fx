@@ -36,7 +36,6 @@ public class TaskRepositoryTab extends EditorTab {
 
     public TaskRepositoryTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         super(serializableViewModel, handler);
-        setText(i18NRepo.getString("label.caption.taskrepository") + ": " + serializableViewModel.getName());
 
         taskRepositoryViewModel = (TaskRepositoryViewModel) serializableViewModel;
         taskRepositoryViewModel.getTaskViewModels().addListener(new ListChangeListener<TaskViewModel>() {

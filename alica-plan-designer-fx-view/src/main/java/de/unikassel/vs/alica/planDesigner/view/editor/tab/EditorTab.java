@@ -7,11 +7,13 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PropertiesConditionsVariablesPane;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
+import javafx.scene.image.ImageView;
 
 public abstract class EditorTab extends Tab {
 
@@ -25,6 +27,8 @@ public abstract class EditorTab extends Tab {
 
     public EditorTab (SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         super(serializableViewModel.getName());
+        setGraphic(new ImageView(new AlicaIcon(serializableViewModel.getType(), AlicaIcon.Size.SMALL)));
+
         this.serializableViewModel = serializableViewModel;
         this. guiModificationHandler = handler;
         this.i18NRepo = I18NRepo.getInstance();

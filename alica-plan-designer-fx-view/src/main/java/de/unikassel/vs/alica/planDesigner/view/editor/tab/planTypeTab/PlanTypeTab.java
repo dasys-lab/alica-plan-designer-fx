@@ -38,12 +38,11 @@ public class PlanTypeTab extends AbstractPlanTab {
 
     public PlanTypeTab(SerializableViewModel planType, IGuiModificationHandler guiModificationHandler) {
         super(planType, guiModificationHandler);
-        setText(i18NRepo.getString("label.caption.plantype") + ": " + planType.getName());
 
-        initGui();
+        draw();
     }
 
-    private void initGui() {
+    private void draw() {
         // instantiate gui objects
         this.repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getViewModelType().equals(Types.MASTERPLAN));
         this.repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryHBox -> planRepositoryHBox.getViewModelName());
