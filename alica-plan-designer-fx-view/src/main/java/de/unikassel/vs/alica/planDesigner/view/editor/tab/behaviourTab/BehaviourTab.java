@@ -5,11 +5,11 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.IEditorTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 
-public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
+public class BehaviourTab extends AbstractPlanTab {
 
     BehaviourViewModel behaviourViewModel;
     I18NRepo i18NRepo;
@@ -21,13 +21,11 @@ public class BehaviourTab extends AbstractPlanTab implements IEditorTab {
         this.behaviourViewModel = (BehaviourViewModel) serializableViewModel;
     }
 
-    @Override
     public GuiModificationEvent handleDelete() {
         System.err.println("BehaviourTab: HandleDelete is a no-op for behaviour tabs!");
         return null;
     }
 
-    @Override
     public void save() {
         save(Types.BEHAVIOUR);
     }

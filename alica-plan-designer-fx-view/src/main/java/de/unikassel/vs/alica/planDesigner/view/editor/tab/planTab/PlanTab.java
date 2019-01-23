@@ -29,7 +29,6 @@ public class PlanTab extends AbstractPlanTab {
 
     public PlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         super(serializableViewModel, handler);
-        i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getString("label.caption.plan") + ": " + serializableViewModel.getName());
         draw();
     }
@@ -80,12 +79,10 @@ public class PlanTab extends AbstractPlanTab {
         return editorToolBar;
     }
 
-    @Override
     public GuiModificationEvent handleDelete() {
         return null;
     }
 
-    @Override
     public void save() {
         save(Types.PLAN);
     }

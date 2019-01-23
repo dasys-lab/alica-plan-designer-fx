@@ -43,6 +43,7 @@ public class RepositoryHBox extends DraggableHBox {
         // double click for open the corresponding file
         setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+                // TODO handle double click on tasks which are no serializableViewModel
                 MainWindowController.getInstance().openFile((SerializableViewModel) viewModelElement);
                 e.consume();
             }

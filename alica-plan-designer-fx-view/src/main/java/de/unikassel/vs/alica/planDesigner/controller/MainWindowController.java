@@ -7,7 +7,7 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.IEditorTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.menu.EditMenu;
@@ -192,7 +192,7 @@ public class MainWindowController implements Initializable {
             if (editorTabPane.getSelectionModel().getSelectedItem() == null) {
                 return;
             }
-            ((IEditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save();
+            ((EditorTab) editorTabPane.getSelectionModel().getSelectedItem()).save();
         });
         saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
@@ -213,7 +213,7 @@ public class MainWindowController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
                 if (newValue != null) {
-                    String type = ((IEditorTab) newValue).getSerializableViewModel().getType();
+                    String type = ((EditorTab) newValue).getSerializableViewModel().getType();
                     if (type.equals(Types.BEHAVIOUR) ||
                             type.equals(Types.PLAN) ||
                             type.equals(Types.MASTERPLAN) ||

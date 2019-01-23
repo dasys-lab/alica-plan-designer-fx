@@ -8,8 +8,6 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.TaskRepositoryViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
@@ -25,7 +23,7 @@ public class EditorTabPane extends TabPane {
         // find tab if it already opened
         Tab openedTab = null;
         for (Tab tab : getTabs()) {
-            if (((IEditorTab) tab).representsViewModelElement(serializableViewModel)) {
+            if (((EditorTab) tab).representsViewModelElement(serializableViewModel)) {
                 openedTab = tab;
             }
         }
@@ -71,6 +69,6 @@ public class EditorTabPane extends TabPane {
             return null;
         }
 
-        return ((IEditorTab) selectedTab).handleDelete();
+        return ((EditorTab) selectedTab).handleDelete();
     }
 }
