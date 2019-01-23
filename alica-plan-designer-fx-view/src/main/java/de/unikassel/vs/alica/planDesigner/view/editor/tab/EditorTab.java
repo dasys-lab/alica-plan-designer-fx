@@ -46,7 +46,6 @@ public abstract class EditorTab extends Tab {
         });
 
         propertiesConditionsVariablesPane = new PropertiesConditionsVariablesPane();
-        propertiesConditionsVariablesPane.setText(serializableViewModel.getName());
         propertiesConditionsVariablesPane.setViewModelElement(serializableViewModel);
         propertiesConditionsVariablesPane.setMaxHeight(20000);
 

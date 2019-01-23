@@ -39,8 +39,6 @@ public class TaskRepositoryTab extends EditorTab {
         setText(i18NRepo.getString("label.caption.taskrepository") + ": " + serializableViewModel.getName());
 
         taskRepositoryViewModel = (TaskRepositoryViewModel) serializableViewModel;
-        tasksRepoListView = new RepositoryListView();
-        tasksRepoListView.addElements(taskRepositoryViewModel.getTaskViewModels());
         taskRepositoryViewModel.getTaskViewModels().addListener(new ListChangeListener<TaskViewModel>() {
             @Override
             public void onChanged(Change<? extends TaskViewModel> c) {
@@ -57,6 +55,17 @@ public class TaskRepositoryTab extends EditorTab {
                         }
                     }
                 }
+            }
+        });
+
+        tasksRepoListView = new RepositoryListView();
+        tasksRepoListView.addElements(taskRepositoryViewModel.getTaskViewModels());
+        tasksRepoListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            this.propertiesConditionsVariablesPane.setViewModelElement(newValue.getViewModelElement());
+        });
+        tasksRepoListView.focusedProperty().addListener((observable, focusedBefore, focused) -> {
+            if (!focused) {
+                this.propertiesConditionsVariablesPane.setViewModelElement(taskRepositoryViewModel);
             }
         });
 

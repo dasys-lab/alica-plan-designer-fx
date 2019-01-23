@@ -2,12 +2,15 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.BeanPropertyUtils;
 
@@ -55,6 +58,10 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
 
 
     public void setViewModelElement(ViewModelElement element) {
+        setText(element.getName());
+        setGraphic(new ImageView(new AlicaIcon(element.getType(), AlicaIcon.Size.SMALL)));
+
+        propertySheet.getItems().clear();
         propertySheet.getItems().addAll(createPropertySheetList(element));
     }
 
