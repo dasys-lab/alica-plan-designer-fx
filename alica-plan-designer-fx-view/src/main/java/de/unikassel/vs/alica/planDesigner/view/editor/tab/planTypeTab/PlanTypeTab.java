@@ -298,17 +298,7 @@ public class PlanTypeTab extends AbstractPlanTab {
         }
     }
 
-    // TODO
     public void addPlanToAllPlans (PlanViewModel planViewModel) {
         ((PlanTypeViewModel) serializableViewModel).addPlanToAllPlans(planViewModel);
-    }
-
-    // TODO
-    public void addPlanToPlansInPlanType(AnnotatedPlanView annotatedPlan) {
-        ((PlanTypeViewModel) serializableViewModel).getPlansInPlanType().add(annotatedPlan);
-    }
-    // TODO
-    public void removePlanFromPlansInPlanType(AnnotatedPlanView annotatedPlan) {
-        ((PlanTypeViewModel) serializableViewModel).getPlansInPlanType().remove(annotatedPlan);
     }
 }

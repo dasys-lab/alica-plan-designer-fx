@@ -229,86 +229,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
                 break;
             case ELEMENT_CREATED:
-                viewModelManager.addElement(event.getParentId(), viewModelElement);
-
-                PlanElement plan = modelManager.getPlanElement(event.getParentId());
-                if (plan instanceof Plan) {
-
-                    int x = 0;
-                    int y = 0;
-                    if (event instanceof UiExtensionModelEvent) {
-                        PmlUiExtension extension = ((UiExtensionModelEvent) event).getExtension();
-                        x = extension.getX();
-                        y = extension.getY();
-                    }
-
-
-                    PlanViewModel planViewModel = (PlanViewModel) viewModelManager.getViewModelElement(plan);
-                    switch (event.getElementType()) {
-                        case Types.STATE:
-                        case Types.SUCCESSSTATE:
-                        case Types.FAILURESTATE:
-                            ((StateViewModel) viewModelElement).setXPosition(x);
-                            ((StateViewModel) viewModelElement).setYPosition(y);
-                            planViewModel.getStates().add((StateViewModel) viewModelElement);
-                            break;
-                        case Types.TRANSITION: {
-                            ((TransitionViewModel) viewModelElement).setInState((StateViewModel) viewModelManager.getViewModelElement(((Transition) planElement).getInState()));
-                            ((TransitionViewModel) viewModelElement).setOutState((StateViewModel) viewModelManager.getViewModelElement(((Transition) planElement).getOutState()));
-                            planViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
-                        }
-                        break;
-                        case Types.ENTRYPOINT:
-                            ((EntryPointViewModel) viewModelElement).setXPosition(x);
-                            ((EntryPointViewModel) viewModelElement).setYPosition(y);
-                            planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
-                            break;
-                        case Types.BENDPOINT:
-                            // remove<->add to fire listeners
-                            TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
-                            planViewModel.getTransitions().remove(transitionViewModel);
-                            planViewModel.getTransitions().add(transitionViewModel);
-                        case Types.INITSTATECONNECTION:
-                            plan = (Plan) event.getElement();
-                            EntryPoint entryPoint = null;
-                            Long changeAttribute = Long.valueOf(event.getChangedAttribute());
-                            for (EntryPoint ep: ((Plan) plan).getEntryPoints()) {
-                                if(ep.getId() == changeAttribute) {
-                                    entryPoint = ep;
-                                }
-                            }
-
-                            ObservableList<EntryPointViewModel> entryPointViewModelObservableList = planViewModel.getEntryPoints();
-                            ObservableList<StateViewModel> stateViewModelObservableList = planViewModel.getStates();
-
-                            EntryPointViewModel ent = null;
-                            StateViewModel state = null;
-                            for(EntryPointViewModel entryPointsViewModel: entryPointViewModelObservableList){
-                                for(StateViewModel stateViewModel: stateViewModelObservableList) {
-                                    if(entryPointsViewModel.getId() == entryPoint.getId() && stateViewModel.getId() == entryPoint.getState().getId()) {
-                                        entryPointsViewModel.setState(stateViewModel);
-                                        stateViewModel.setEntryPoint(entryPointsViewModel);
-                                        ent = entryPointsViewModel;
-                                        state = stateViewModel;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            // You have duplicate, if not remove first
-                            planViewModel.getEntryPoints().remove(ent);
-                            planViewModel.getStates().remove(state);
-                            planViewModel.getStates().add(state);
-                            planViewModel.getEntryPoints().add(ent);
-                            break;
-                        case Types.PRECONDITION:
-                        case Types.RUNTIMECONDITION:
-                        case Types.POSTCONDITION:
-                        case Types.SYNCHRONIZATION:
-                        case Types.SYNCTRANSITION:
-                            //TODO: Handle these cases
-                    }
-                }
+                viewModelManager.addElement(this, event);
                 break;
             default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
@@ -522,32 +443,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         return viewModelManager.getViewModelElement(modelManager.getPlanElement(id));
     }
 
-    protected void updatePlansInPlanTypeTabs(PlanViewModel planViewModel) {
+    public void updatePlansInPlanTypeTabs(PlanViewModel planViewModel) {
         ObservableList<Tab> tabs = editorTabPane.getTabs();
         for (Tab tab : tabs) {
             if (tab instanceof PlanTypeTab) {
                 PlanTypeTab planTypeTab = (PlanTypeTab) tab;
                 planTypeTab.addPlanToAllPlans(planViewModel);
             }
-        }
-    }
-
-    protected void updateAnnotatedPlansInPlanTypeTabs(long planTypeID, AnnotatedPlan annotatedPlan, boolean add) {
-        ObservableList<Tab> tabs = editorTabPane.getTabs();
-        for (Tab tab : tabs) {
-            if (!(tab instanceof PlanTypeTab)) {
-                continue;
-            }
-            if (((PlanTypeTab) tab).getSerializableViewModel().getId() != planTypeID) {
-                continue;
-            }
-            PlanTypeTab planTypeTab = (PlanTypeTab) tab;
-            if (add) {
-                planTypeTab.addPlanToPlansInPlanType((AnnotatedPlanView) viewModelManager.getViewModelElement(annotatedPlan));
-            } else {
-                planTypeTab.removePlanFromPlansInPlanType((AnnotatedPlanView) viewModelManager.getViewModelElement(annotatedPlan));
-            }
-
         }
     }
 

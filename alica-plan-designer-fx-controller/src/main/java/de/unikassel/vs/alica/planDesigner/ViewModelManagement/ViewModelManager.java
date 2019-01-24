@@ -1,12 +1,17 @@
 package de.unikassel.vs.alica.planDesigner.ViewModelManagement;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.controller.Controller;
+import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
+import de.unikassel.vs.alica.planDesigner.events.UiExtensionModelEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
+import javafx.collections.ObservableList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -329,15 +334,99 @@ public class ViewModelManager {
         viewModelElements.remove(viewModelElement.getId());
     }
 
-    public void addElement(long parentId, ViewModelElement viewModelElement) {
-        switch (viewModelElement.getType()) {
+    public void addElement(Controller controller, ModelEvent event) {
+        PlanElement parentPlanElement = modelManager.getPlanElement(event.getParentId());
+        ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
+        ViewModelElement viewModelElement = getViewModelElement(event.getElement());
+
+        int x = 0;
+        int y = 0;
+        if (event instanceof UiExtensionModelEvent) {
+            PmlUiExtension extension = ((UiExtensionModelEvent) event).getExtension();
+            x = extension.getX();
+            y = extension.getY();
+        }
+
+        switch (event.getElementType()) {
             case Types.ANNOTATEDPLAN:
                 AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) viewModelElement;
-                PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) parentViewModel;
                 planTypeViewModel.getPlansInPlanType().add(annotatedPlanView);
                 break;
             case Types.TASK:
                 // NO-OP cause a taskViewModel is added to the taskRepositoryViewModel when its created
+                break;
+            case Types.PLAN:
+            case Types.MASTERPLAN:
+                controller.updatePlansInPlanTypeTabs((PlanViewModel) viewModelElement);
+                if (parentPlanElement != null) {
+                    // TODO: plan is added into state
+                    return;
+                }
+                break;
+            case Types.STATE:
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                PlanViewModel parentPlanViewModel = (PlanViewModel) parentViewModel;
+                StateViewModel stateViewModel = (StateViewModel) viewModelElement;
+                stateViewModel.setXPosition(x);
+                stateViewModel.setYPosition(y);
+                parentPlanViewModel.getStates().add(stateViewModel);
+                break;
+            case Types.TRANSITION:
+                parentPlanViewModel = (PlanViewModel) parentViewModel;
+                Transition transition = (Transition) event.getElement();
+                TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
+                transitionViewModel.setInState((StateViewModel) getViewModelElement(transition.getInState()));
+                transitionViewModel.setOutState((StateViewModel) getViewModelElement(transition.getOutState()));
+                parentPlanViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
+            break;
+            case Types.ENTRYPOINT:
+                parentPlanViewModel = (PlanViewModel) parentViewModel;
+                EntryPointViewModel entryPointViewModel = (EntryPointViewModel) viewModelElement;
+                entryPointViewModel.setXPosition(x);
+                entryPointViewModel.setYPosition(y);
+                parentPlanViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
+                break;
+            case Types.BENDPOINT:
+                parentPlanViewModel = (PlanViewModel) parentViewModel;
+                transitionViewModel = (TransitionViewModel) viewModelElement;
+                // remove<->add to fire listeners, to redraw
+                parentPlanViewModel.getTransitions().remove(transitionViewModel);
+                parentPlanViewModel.getTransitions().add(transitionViewModel);
+            case Types.INITSTATECONNECTION:
+                // TODO rework and see sender side, the fields seems to be used wrong (e.g. changedAttribute has EntryPoint ID???)
+                Plan plan = (Plan) event.getElement();
+                EntryPoint entryPoint = null;
+                Long changeAttribute = Long.valueOf(event.getChangedAttribute());
+                for (EntryPoint ep: ((Plan) plan).getEntryPoints()) {
+                    if(ep.getId() == changeAttribute) {
+                        entryPoint = ep;
+                    }
+                }
+                PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
+                ObservableList<EntryPointViewModel> entryPointViewModelObservableList = planViewModel.getEntryPoints();
+                ObservableList<StateViewModel> stateViewModelObservableList = planViewModel.getStates();
+
+                EntryPointViewModel ent = null;
+                StateViewModel state = null;
+                for(EntryPointViewModel entryPointsViewModel: entryPointViewModelObservableList){
+                    for(StateViewModel stateViewModelTmp: stateViewModelObservableList) {
+                        if(entryPointsViewModel.getId() == entryPoint.getId() && stateViewModelTmp.getId() == entryPoint.getState().getId()) {
+                            entryPointsViewModel.setState(stateViewModelTmp);
+                            stateViewModelTmp.setEntryPoint(entryPointsViewModel);
+                            ent = entryPointsViewModel;
+                            state = stateViewModelTmp;
+                            break;
+                        }
+                    }
+                }
+
+                // remove<->add to fire listeners, to redraw
+                planViewModel.getEntryPoints().remove(ent);
+                planViewModel.getStates().remove(state);
+                planViewModel.getStates().add(state);
+                planViewModel.getEntryPoints().add(ent);
                 break;
             default:
                 System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());

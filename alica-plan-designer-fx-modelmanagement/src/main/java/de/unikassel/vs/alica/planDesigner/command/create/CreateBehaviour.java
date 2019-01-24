@@ -25,11 +25,11 @@ public class CreateBehaviour extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
+        modelManager.createdPlanElement(Types.BEHAVIOUR, behaviour, null, true);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.removeFromDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
+        modelManager.removedPlanElement(Types.BEHAVIOUR, behaviour, null, true);
     }
 }

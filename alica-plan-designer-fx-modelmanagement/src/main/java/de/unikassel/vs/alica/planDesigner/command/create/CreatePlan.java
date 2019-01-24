@@ -26,11 +26,11 @@ public class CreatePlan extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.serializeToDisk(plan, FileSystemUtil.PLAN_ENDING,true);
+        modelManager.createdPlanElement(Types.PLAN, plan, null, true);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.removeFromDisk(plan, FileSystemUtil.PLAN_ENDING, true);
+        modelManager.removedPlanElement(Types.PLAN, plan, null, true);
     }
 }

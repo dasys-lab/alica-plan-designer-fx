@@ -8,7 +8,6 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.*;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
 import de.unikassel.vs.alica.planDesigner.command.create.CreateBehaviour;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlan;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlanType;
@@ -20,6 +19,7 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtensionMap;
+import javafx.collections.ListChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -340,7 +340,6 @@ public class ModelManager implements Observer {
                         event.setNewValue(newValue);
                         this.fireEvent(event);
                     });
-                    behaviour.registerDirtyFlag();
                     if (planElementMap.containsKey(behaviour.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + behaviour.getId());
                     } else {
@@ -388,7 +387,22 @@ public class ModelManager implements Observer {
                         event.setNewValue(newValue);
                         this.fireEvent(event);
                     });
-                    taskRepository.registerDirtyFlag();
+                    taskRepository.getTasks().addListener(new ListChangeListener<Task>() {
+                        @Override
+                        public void onChanged(Change<? extends Task> change) {
+                            while (change.next()) {
+                                taskRepository.setDirty(true);
+                            }
+                        }
+                    });
+                    for (Task task : taskRepository.getTasks()) {
+                        task.nameProperty().addListener((observable, oldValue, newValue) -> {
+                            taskRepository.setDirty(true);
+                        });
+                        task.commentProperty().addListener((observable, oldValue, newValue) -> {
+                            taskRepository.setDirty(true);
+                        });
+                    }
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
@@ -689,7 +703,7 @@ public class ModelManager implements Observer {
             case Types.TRANSITION:
                 Transition transition = (Transition) newElement;
                 plan = (Plan) parentElement;
-                plan.addTransition(transition);
+                plan.getTransitions().add(transition);
                 break;
             case Types.STATE:
             case Types.SUCCESSSTATE:
@@ -1049,7 +1063,7 @@ public class ModelManager implements Observer {
 
             // Setting the values in the elementsSaved map at the beginning,
             // because otherwise listeners may react before values are updated
-            if (!movedOrCreated) {
+            if (movedOrCreated) {
                 // the counter is set to 2 because, saving an element always creates two filesystem modified events
                 int counter = 2;
                 // when a plan is saved it needs to be 4 however, because the extension is saved as well
@@ -1162,10 +1176,7 @@ public class ModelManager implements Observer {
                 cmd = new AddTransitionInPlan(this, parenOfElement, in, out);
                 break;
             case Types.INITSTATECONNECTION:
-                EntryPoint inEntryPoint = (EntryPoint) getPlanElement((mmq.getRelatedObjects().get(State.ENTRYPOINT)));
-                State outState = (State) getPlanElement(mmq.getRelatedObjects().get(EntryPoint.STATE));
-                cmd = new ConnectEntryPointsWithState(this, parenOfElement, inEntryPoint, outState);
-                break;
+                throw new RuntimeException("ModelManager: handleNewElementInPlanQuery(): @Vitali: Not done yet. ;-)");
             case Types.ENTRYPOINT:
                 EntryPoint entryPoint = new EntryPoint();
                 entryPoint.setPlan(parenOfElement.getPlan());
