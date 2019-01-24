@@ -2,17 +2,20 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.ImageView;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.BeanPropertyUtils;
 
 /**
- * Root gui object for showing properties, conditions, and variables of selected objects in a plan.
+ * Root gui object for showing properties, conditions, and variables of selected objects.
  */
 public class PropertiesConditionsVariablesPane extends TitledPane {
 
@@ -55,7 +58,56 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
 
 
     public void setViewModelElement(ViewModelElement element) {
+        if (element == null) {
+            return;
+        }
+
+        setText(element.getName());
+        setGraphic(new ImageView(new AlicaIcon(element.getType(), AlicaIcon.Size.SMALL)));
+
+        adaptUI(element.getType());
+
+        propertySheet.getItems().clear();
         propertySheet.getItems().addAll(createPropertySheetList(element));
+    }
+
+    private void adaptUI(String type) {
+        switch (type) {
+            case Types.TASKREPOSITORY:
+            case Types.TASK:
+            case Types.PLANTYPE:
+                this.setContent(propertySheet);
+                break;
+            case Types.PLAN:
+            case Types.MASTERPLAN:
+                this.setContent(tabPane);
+                tabPane.getTabs().removeAll(postConditionTab);
+                if (!tabPane.getTabs().contains(variablesTab)) {
+                    tabPane.getTabs().add(variablesTab);
+                }
+                if (!tabPane.getTabs().contains(preConditionTab)) {
+                    tabPane.getTabs().add(preConditionTab);
+                }
+                if (!tabPane.getTabs().contains(runtimeConditionTab)) {
+                    tabPane.getTabs().add(runtimeConditionTab);
+                }
+                break;
+            default:
+                this.setContent(tabPane);
+                if (!tabPane.getTabs().contains(variablesTab)) {
+                    tabPane.getTabs().add(variablesTab);
+                }
+                if (!tabPane.getTabs().contains(preConditionTab)) {
+                    tabPane.getTabs().add(preConditionTab);
+                }
+                if (!tabPane.getTabs().contains(runtimeConditionTab)) {
+                    tabPane.getTabs().add(runtimeConditionTab);
+                }
+                if (!tabPane.getTabs().contains(postConditionTab)) {
+                    tabPane.getTabs().add(postConditionTab);
+                }
+                break;
+        }
     }
 
 

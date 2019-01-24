@@ -1,5 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.events.GuiChangeAttributeEvent;
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -9,20 +12,14 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class ViewModelElement {
-    protected SimpleLongProperty id;
-    protected SimpleStringProperty name;
-    protected SimpleStringProperty type;
-    protected SimpleStringProperty relativeDirectory;
-    protected SimpleLongProperty parentId;
+    protected final SimpleLongProperty id = new SimpleLongProperty(null, "id", 0);
+    protected final SimpleStringProperty name = new SimpleStringProperty(null, "name", "");
+    protected final SimpleStringProperty type = new SimpleStringProperty(null, "type", "");
+    protected final SimpleStringProperty relativeDirectory = new SimpleStringProperty(null, "relativeDirectory", "");
+    protected final SimpleLongProperty parentId = new SimpleLongProperty(null, "parentId", 0);
     protected ArrayList<String> uiPropertyList;
 
     public ViewModelElement(long id, String name, String type) {
-        this.id = new SimpleLongProperty();
-        this.name = new SimpleStringProperty();
-        this.type = new SimpleStringProperty();
-        this.relativeDirectory = new SimpleStringProperty();
-        this.parentId = new SimpleLongProperty();
-
         this.id.setValue(id);
         this.name.setValue(name);
         this.type.setValue(type);
@@ -34,6 +31,24 @@ public class ViewModelElement {
     public ViewModelElement(long id, String name, String type, String relativeDirectory) {
         this(id, name, type);
         this.relativeDirectory.setValue(relativeDirectory);
+    }
+
+    public void registerListener(IGuiModificationHandler handler) {
+        name.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, name.getClass().getSimpleName(), name.getName());
+        });
+        relativeDirectory.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, relativeDirectory.getClass().getSimpleName(), relativeDirectory.getName());
+        });
+    }
+
+    protected void fireGUIAttributeChangeEvent(IGuiModificationHandler handler, Object newValue, String attributeType, String attributeName) {
+        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, getType(), getName());
+        guiChangeAttributeEvent.setNewValue(newValue);
+        guiChangeAttributeEvent.setAttributeType(attributeType);
+        guiChangeAttributeEvent.setAttributeName(attributeName);
+        guiChangeAttributeEvent.setElementId(getId());
+        handler.handle(guiChangeAttributeEvent);
     }
 
     public final SimpleLongProperty idProperty() {

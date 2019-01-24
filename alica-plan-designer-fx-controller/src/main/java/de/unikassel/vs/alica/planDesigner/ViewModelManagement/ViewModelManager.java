@@ -1,6 +1,7 @@
-package de.unikassel.vs.alica.planDesigner.ViewModelFactory;
+package de.unikassel.vs.alica.planDesigner.ViewModelManagement;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.view.Types;
@@ -13,10 +14,12 @@ import java.util.Map;
 public class ViewModelManager {
 
     protected ModelManager modelManager;
+    protected IGuiModificationHandler guiModificationHandler;
     protected Map<Long, ViewModelElement> viewModelElements;
 
-    public ViewModelManager(ModelManager modelManager) {
+    public ViewModelManager(ModelManager modelManager, IGuiModificationHandler handler) {
         this.modelManager = modelManager;
+        this.guiModificationHandler = handler;
         this.viewModelElements = new HashMap<>();
     }
 
@@ -74,6 +77,7 @@ public class ViewModelManager {
         }
 
         viewModelElements.put(planElement.getId(), element);
+        element.registerListener(guiModificationHandler);
         return element;
     }
 
@@ -318,8 +322,8 @@ public class ViewModelManager {
                 planTypeViewModel.getPlansInPlanType().remove(annotatedPlanView);
                 break;
             default:
-                System.err.println("Remove Element not supported for type: " + viewModelElement.getType());
-                //TODO: handle other types
+                System.err.println("ViewModelManager: Remove Element not supported for type: " + viewModelElement.getType());
+                //TODO: maybe handle other types
         }
 
         viewModelElements.remove(viewModelElement.getId());
@@ -332,9 +336,12 @@ public class ViewModelManager {
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
                 planTypeViewModel.getPlansInPlanType().add(annotatedPlanView);
                 break;
+            case Types.TASK:
+                // NO-OP cause a taskViewModel is added to the taskRepositoryViewModel when its created
+                break;
             default:
-                System.err.println("Add Element not supported for type: " + viewModelElement.getType());
-                //TODO: handle other types
+                System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());
+                //TODO: maybe handle other types
         }
     }
 }

@@ -341,6 +341,7 @@ public class ModelManager implements Observer {
                         event.setNewValue(newValue);
                         this.fireEvent(event);
                     });
+                    behaviour.registerDirtyFlag();
                     if (planElementMap.containsKey(behaviour.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + behaviour.getId());
                     } else {
@@ -369,6 +370,7 @@ public class ModelManager implements Observer {
                         event.setNewValue(newValue);
                         this.fireEvent(event);
                     });
+                    planType.registerDirtyFlag();
                     if (planElementMap.containsKey(planType.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + planType.getId());
                     } else {
@@ -387,22 +389,7 @@ public class ModelManager implements Observer {
                         event.setNewValue(newValue);
                         this.fireEvent(event);
                     });
-                    taskRepository.getTasks().addListener(new ListChangeListener<Task>() {
-                        @Override
-                        public void onChanged(Change<? extends Task> change) {
-                            while (change.next()) {
-                                taskRepository.setDirty(true);
-                            }
-                        }
-                    });
-                    for (Task task : taskRepository.getTasks()) {
-                        task.nameProperty().addListener((observable, oldValue, newValue) -> {
-                            taskRepository.setDirty(true);
-                        });
-                        task.commentProperty().addListener((observable, oldValue, newValue) -> {
-                            taskRepository.setDirty(true);
-                        });
-                    }
+                    taskRepository.registerDirtyFlag();
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {

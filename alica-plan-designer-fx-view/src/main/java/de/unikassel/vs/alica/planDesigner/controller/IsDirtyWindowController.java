@@ -3,6 +3,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.collections.ObservableList;
@@ -26,7 +27,7 @@ public class IsDirtyWindowController {
         Creates a modal for a Tab selected as dirty. Allows the user to save the content of the tab, cancel
         the close event, or to close the tab
      */
-    public static void createIsDirtyWindow(AbstractPlanTab tab, Event event) {
+    public static void createIsDirtyWindow(EditorTab tab, Event event) {
         I18NRepo i18NRepo = I18NRepo.getInstance();
         Stage stage = init(event);
         Button saveBtn = new Button(i18NRepo.getString("action.save"));
