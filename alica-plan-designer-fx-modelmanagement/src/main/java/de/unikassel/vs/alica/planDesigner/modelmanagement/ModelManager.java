@@ -20,7 +20,6 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtensionMap;
-import javafx.collections.ListChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -690,14 +689,14 @@ public class ModelManager implements Observer {
             case Types.TRANSITION:
                 Transition transition = (Transition) newElement;
                 plan = (Plan) parentElement;
-                plan.getTransitions().add(transition);
+                plan.addTransition(transition);
                 break;
             case Types.STATE:
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
                 plan = (Plan) parentElement;
                 visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
-                visualisation.getPlan().getStates().add((State) newElement);
+                visualisation.getPlan().addState((State) newElement);
                 UiExtensionModelEvent uiExtensionEvent = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
                 PmlUiExtension extension = visualisation.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(newElement);
                 uiExtensionEvent.setExtension(extension);
@@ -706,7 +705,7 @@ public class ModelManager implements Observer {
             case Types.ENTRYPOINT:
                 plan = (Plan) parentElement;
                 visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
-                visualisation.getPlan().getEntryPoints().add((EntryPoint) newElement);
+                visualisation.getPlan().addEntryPoint((EntryPoint) newElement);
 //                State entryState = ((EntryPoint) newElement).getState();
 //                entryState.setEntryPoint((EntryPoint) newElement);
                 HashMap<String, Long> related = new HashMap<>();

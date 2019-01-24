@@ -270,8 +270,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                             planViewModel.getTransitions().add(transitionViewModel);
                         case Types.INITSTATECONNECTION:
                             plan = (Plan) event.getElement();
-                            ArrayList<EntryPoint> entryPointArrayList = ((Plan) plan).getEntryPoints();
-                            EntryPoint entryPoint = entryPointArrayList.get(0);
+                            EntryPoint entryPoint = null;
+                            Long changeAttribute = Long.valueOf(event.getChangedAttribute());
+                            for (EntryPoint ep: ((Plan) plan).getEntryPoints()) {
+                                if(ep.getId() == changeAttribute) {
+                                    entryPoint = ep;
+                                }
+                            }
 
                             ObservableList<EntryPointViewModel> entryPointViewModelObservableList = planViewModel.getEntryPoints();
                             ObservableList<StateViewModel> stateViewModelObservableList = planViewModel.getStates();
