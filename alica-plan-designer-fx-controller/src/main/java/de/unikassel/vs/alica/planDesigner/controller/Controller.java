@@ -266,6 +266,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                             break;
                         case Types.BENDPOINT:
                             // TODO: @Fax WTF??? remove add???
+                            // remove<->add to fire listeners
                             TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
                             planViewModel.getTransitions().remove(transitionViewModel);
                             planViewModel.getTransitions().add(transitionViewModel);

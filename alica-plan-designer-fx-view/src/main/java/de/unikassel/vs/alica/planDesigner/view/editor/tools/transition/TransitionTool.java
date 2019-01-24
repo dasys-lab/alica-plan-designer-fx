@@ -119,16 +119,19 @@ public class TransitionTool extends AbstractTool {
                             bendPoints.add(eventTargetCoordinates);
                         }
                     } else {
-                        initial = 1;
-                        Node target = null;
-                        try {
-                            target = (Node) event.getTarget();
-                            if ((target.getParent() instanceof StateContainer)) {
-                                // SET STARTPOINT
-                                inState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+                        Node target = (Node) event.getTarget();
+                        Node parent = target.getParent();
+                        if (!(target instanceof ToolButton)){
+                            initial = 1;
+                            try {
+                                target = (Node) event.getTarget();
+                                if (parent instanceof StateContainer) {
+                                    // SET STARTPOINT
+                                    inState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+                                }
+                            } catch (ClassCastException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ClassCastException e) {
-                            e.printStackTrace();
                         }
                     }
                     initial++;

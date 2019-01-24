@@ -303,6 +303,8 @@ public class ModelManager implements Observer {
                         event.setNewValue(newValue);
                         this.fireEvent(event);
                     });
+                    plan.registerDirtyFlag();
+
                     if (planElementMap.containsKey(plan.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + plan.getId());
                     } else {
@@ -328,11 +330,6 @@ public class ModelManager implements Observer {
                         }
                         if (plan.getRuntimeCondition() != null) {
                             planElementMap.put(plan.getRuntimeCondition().getId(), plan.getRuntimeCondition());
-                            if (plan.getMasterPlan()) {
-                                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
-                            } else {
-                                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
-                            }
                         }
                     }
                     break;
@@ -707,7 +704,6 @@ public class ModelManager implements Observer {
                 Transition transition = (Transition) newElement;
                 plan = (Plan) parentElement;
                 plan.getTransitions().add(transition);
-                // TODO something with UiExtension?
                 break;
             case Types.STATE:
             case Types.SUCCESSSTATE:
@@ -803,6 +799,9 @@ public class ModelManager implements Observer {
                     entryState.setEntryPoint(null);
                 }
                 break;
+            case Types.TRANSITION:
+                ((Plan) parentElement).getTransitions().remove(planElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:

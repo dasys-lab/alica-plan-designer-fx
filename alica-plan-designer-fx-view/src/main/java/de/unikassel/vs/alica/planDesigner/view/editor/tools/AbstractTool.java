@@ -3,6 +3,9 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -10,12 +13,14 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,6 +79,28 @@ public abstract class AbstractTool {
                     }
                 }
             });
+
+            defaultHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.getButton() == MouseButton.SECONDARY) {
+                        if (activated) {
+                            endTool();
+                        }
+                    }
+                }
+            });
+
+            defaultHandlerMap.put(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    Node target = (Node) event.getTarget();
+                    Parent parent = target.getParent();
+                    if (parent instanceof DraggableHBox || parent instanceof EditorToolBar || parent instanceof VBox) {
+                        setCursor(Cursor.DEFAULT);
+                    }
+                }
+            });
         }
         return defaultHandlerMap;
     }
@@ -98,7 +125,6 @@ public abstract class AbstractTool {
         }
 
         previousCursor = getCursor();
-        setCursor(imageCursor);
         activated = !activated;
     }
 
@@ -125,11 +151,23 @@ public abstract class AbstractTool {
 
     public void setToolButton(ToolButton toolButton){
         toolButton.setToggleGroup(group);
-        toolButton.setOnAction(event -> {
-            if (activated) {
-                endTool();
-            } else {
-                startTool();
+        toolButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (activated) {
+                    endTool();
+                } else {
+                    startTool();
+                }
+            }
+        });
+
+        toolButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    endTool();
+                }
             }
         });
 

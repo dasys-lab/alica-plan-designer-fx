@@ -29,7 +29,7 @@ public class StateTool extends AbstractTool {
     }
 
     /**
-     * Creating a handler, that creates an event to request the creation of a new State.
+     * Creating a guiModificationHandler, that creates an event to request the creation of a new State.
      */
     @Override
     protected void initHandlerMap() {
@@ -94,7 +94,7 @@ public class StateTool extends AbstractTool {
                     */
 
 
-                    // Get the handler
+                    // Get the guiModificationHandler
                     IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
                     // Create an event. In this case use a GuiChangePositionEvent, because it can also hold the coordinates

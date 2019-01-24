@@ -73,9 +73,6 @@ public class EntryPointTool extends AbstractTool {
                     } else {
                         setCursor(forbiddenCursor);
                     }
-                    if (parent instanceof DraggableHBox || parent instanceof EditorToolBar || parent instanceof VBox) {
-                        setCursor(Cursor.DEFAULT);
-                    }
                 }
             });
 

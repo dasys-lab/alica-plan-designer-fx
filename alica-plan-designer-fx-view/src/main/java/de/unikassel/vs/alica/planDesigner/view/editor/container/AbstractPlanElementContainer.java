@@ -9,9 +9,11 @@ import de.unikassel.vs.alica.planDesigner.view.menu.ShowGeneratedSourcesMenuItem
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
@@ -44,9 +46,12 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
         setPickOnBounds(false);
         addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(modelElement));
         wrapper = this;
-        setOnContextMenuRequested(e -> {
-            ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem(this.modelElement.getId(), this.showGeneratedSourcesEventHandler));
-            contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY());
+        setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+            @Override
+            public void handle(ContextMenuEvent e) {
+                ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem(AbstractPlanElementContainer.this.modelElement.getId(), AbstractPlanElementContainer.this.showGeneratedSourcesEventHandler));
+                contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY());
+            }
         });
         // prohibit containers from growing indefinitely (especially transition containers)
         setMaxSize(1, 1);
@@ -59,18 +64,20 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
      * @param modelElement
      * @return
      */
-    @SuppressWarnings("unchecked")
-    protected EventHandler<MouseEvent> getMouseClickedEventHandler(ViewModelElement modelElement) {
-        return event -> {
-            PlanTab planTab = ((PlanTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem());
-            // Was the last click performed in the context of a tool?
-            AbstractTool recentlyDoneTool = planTab.getEditorToolBar().getRecentlyDoneTool();
-            if (recentlyDoneTool != null) {
-                recentlyDoneTool.setRecentlyDone(false);
-            } else {
-                ArrayList<Pair<ViewModelElement, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
-                selectedElements.add(new Pair<>(modelElement, this));
-                planTab.getSelectedPlanElements().setValue(selectedElements);
+    private EventHandler<MouseEvent> getMouseClickedEventHandler(ViewModelElement modelElement) {
+        return new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                PlanTab planTab = ((PlanTab) MainWindowController.getInstance().getEditorTabPane().getSelectionModel().getSelectedItem());
+                // Was the last click performed in the context of a tool?
+                AbstractTool recentlyDoneTool = planTab.getEditorToolBar().getRecentlyDoneTool();
+                if (recentlyDoneTool != null) {
+                    recentlyDoneTool.setRecentlyDone(false);
+                } else {
+                    ArrayList<Pair<ViewModelElement, AbstractPlanElementContainer>> selectedElements = new ArrayList<>();
+                    selectedElements.add(new Pair<>(modelElement, AbstractPlanElementContainer.this));
+                    planTab.getSelectedPlanElements().setValue(selectedElements);
+                }
             }
         };
     }
@@ -95,36 +102,34 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
     public void makeDraggable(Node node) {
         final DragContext dragContext = new DragContext();
 
-        node.addEventHandler(
-                MouseEvent.ANY,
-                mouseEvent -> {
-                    // disable mouse events for all children
-                    mouseEvent.consume();
+        // disable mouse events for all children
+        node.addEventHandler(MouseEvent.ANY, Event::consume);
+
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        AbstractPlanElementContainer.this.setDragged(false);
+                        // remember initial mouse cursor coordinates
+                        // and node position
+                        dragContext.mouseAnchorX = mouseEvent.getSceneX();
+                        dragContext.mouseAnchorY = mouseEvent.getSceneY();
+                        dragContext.initialLayoutX = node.getLayoutX();
+                        dragContext.initialLayoutY = node.getLayoutY();
+                    }
                 });
 
-        node.addEventHandler(
-                MouseEvent.MOUSE_PRESSED,
-                mouseEvent -> {
-                    setDragged(false);
-                    // remember initial mouse cursor coordinates
-                    // and node position
-                    dragContext.mouseAnchorX = mouseEvent.getSceneX();
-                    dragContext.mouseAnchorY = mouseEvent.getSceneY();
-                    dragContext.initialLayoutX = node.getLayoutX();
-                    dragContext.initialLayoutY = node.getLayoutY();
-                });
+        node.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        // shift node from its initial position by delta
+                        // calculated from mouse cursor movement
+                        AbstractPlanElementContainer.this.setDragged(true);
 
-        node.addEventHandler(
-                MouseEvent.MOUSE_DRAGGED,
-                mouseEvent -> {
-                    // shift node from its initial position by delta
-                    // calculated from mouse cursor movement
-                    setDragged(true);
-
-                    // set temporary translation
-                    node.setTranslateX(mouseEvent.getSceneX() - dragContext.mouseAnchorX);
-                    node.setTranslateY(mouseEvent.getSceneY() - dragContext.mouseAnchorY);
-                    //System.out.println("X: " + mouseEvent.getX() + " Y:" + mouseEvent.getY());
+                        // set temporary translation
+                        node.setTranslateX(mouseEvent.getSceneX() - dragContext.mouseAnchorX);
+                        node.setTranslateY(mouseEvent.getSceneY() - dragContext.mouseAnchorY);
+                        //System.out.println("X: " + mouseEvent.getX() + " Y:" + mouseEvent.getY());
+                    }
                 });
 
         node.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseEvent -> {

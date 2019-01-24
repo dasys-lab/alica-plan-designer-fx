@@ -108,7 +108,7 @@ public class InitTransitionTool extends AbstractTool {
                         state = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
                         initial = true;
 
-                        IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+                        IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
 
                         GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.INITSTATECONNECTION, null);
 
@@ -117,7 +117,7 @@ public class InitTransitionTool extends AbstractTool {
                         relatedObjects.put(EntryPointViewModel.STATE, state.getId());
                         guiEvent.setRelatedObjects(relatedObjects);
                         guiEvent.setParentId(InitTransitionTool.this.getPlanTab().getSerializableViewModel().getId());
-                        handler.handle(guiEvent);
+                        guiModificationHandler.handle(guiEvent);
                     }
                 }
             });

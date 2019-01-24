@@ -1,10 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
-import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.Node;
