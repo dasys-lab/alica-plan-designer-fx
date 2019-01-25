@@ -7,13 +7,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
-public abstract class PropertiesButtonTable<S extends ViewModelElement> extends VBox {
+public abstract class VariablesTable<S extends ViewModelElement> extends VBox {
 
     HBox addDeleteHBox;
     PropertiesTable<S> table;
     I18NRepo i18NRepo;
 
-    public PropertiesButtonTable() {
+    public VariablesTable() {
         super();
         i18NRepo = I18NRepo.getInstance();
         table = new PropertiesTable<>();
@@ -44,6 +44,16 @@ public abstract class PropertiesButtonTable<S extends ViewModelElement> extends 
 
     public void addItem(S viewModel) {
         table.addItem(viewModel);
+        table.setMaxHeight(24*(table.getItems().size()+1)+2);
+    }
+
+    public void removeItem(S viewModel) {
+        table.removeItem(viewModel);
+        table.setMaxHeight(24*(table.getItems().size()+1)+2);
+    }
+
+    public void clear() {
+        table.clear();
         table.setMaxHeight(24*(table.getItems().size()+1)+2);
     }
 

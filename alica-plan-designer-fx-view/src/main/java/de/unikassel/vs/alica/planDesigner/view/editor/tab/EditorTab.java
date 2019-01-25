@@ -6,7 +6,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PropertiesConditionsVariablesPane;
+import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesConditionsVariablesPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
@@ -49,7 +49,7 @@ public abstract class EditorTab extends Tab {
             }
         });
 
-        propertiesConditionsVariablesPane = new PropertiesConditionsVariablesPane();
+        propertiesConditionsVariablesPane = new PropertiesConditionsVariablesPane(guiModificationHandler);
         propertiesConditionsVariablesPane.setViewModelElement(serializableViewModel);
         propertiesConditionsVariablesPane.setMaxHeight(20000);
 

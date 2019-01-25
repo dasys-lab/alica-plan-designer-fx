@@ -1,8 +1,7 @@
-package de.unikassel.vs.alica.planDesigner.view.editor.tab;
+package de.unikassel.vs.alica.planDesigner.view.properties;
 
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.model.ConditionViewModel;
-import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -34,12 +33,13 @@ public class ConditionsTitledPane extends TitledPane {
         conditionPropertiesTable.addColumn(i18NRepo.getString("label.column.enabled"), "enabled", new BooleanStringConverter(), true);
 
         // Variables & Quantifier Tabs
-        VariablesTab variablesTab = new VariablesTab(conditionViewModel);
+        //VariablesTab variablesTab = new VariablesTab(); //TODO  conditions can also have variables
         QuantifiersTab quantifiersTab = new QuantifiersTab();
 
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        tabPane.getTabs().addAll(variablesTab, quantifiersTab);
+        //tabPane.getTabs().addAll(variablesTab, quantifiersTab);
+        tabPane.getTabs().addAll(quantifiersTab);
 
         // TODO: ask for the GUI of the condition plugin and integrate it
 

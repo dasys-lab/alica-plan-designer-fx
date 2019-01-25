@@ -1,6 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
@@ -9,14 +11,14 @@ public class BehaviourViewModel extends SerializableViewModel {
     protected IntegerProperty frequency = new SimpleIntegerProperty();
     protected LongProperty deferring = new SimpleLongProperty();
 
-    protected ArrayList<VariableViewModel> variables;
+    protected ObservableList<VariableViewModel> variables;
     protected ConditionViewModel preCondition;
     protected ConditionViewModel runtimeCondition;
     protected ConditionViewModel postCondition;
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
-        variables = new ArrayList<>();
+        variables = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public void setDeferring(long deferring) {
@@ -44,8 +46,7 @@ public class BehaviourViewModel extends SerializableViewModel {
         return frequency;
     }
 
-
-    public ArrayList<VariableViewModel> getVariables() {
+    public ObservableList<VariableViewModel> getVariables() {
         return variables;
     }
 
