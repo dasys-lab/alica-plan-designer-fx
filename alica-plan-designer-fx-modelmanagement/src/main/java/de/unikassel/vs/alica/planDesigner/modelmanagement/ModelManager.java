@@ -8,6 +8,7 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.*;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
+import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
 import de.unikassel.vs.alica.planDesigner.command.create.CreateBehaviour;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlan;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlanType;
@@ -1045,9 +1046,16 @@ public class ModelManager implements Observer {
                 }
                 break;
             case CHANGE_ELEMENT:
-                // TODO: Make this a switch case command, like everywhere else in this method, too!
-                cmd = new ChangeAttributeValue(this, mmq);
-                break;
+                switch (mmq.getElementType()) {
+                    case Types.SYNCTRANSITION: {
+                        PlanModelVisualisationObject parenOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
+                        cmd = new ConnectSynchronizationWithTransition(this, mmq.getElementId(), parenOfElement, (Long) mmq.getNewValue());
+                    } break;
+                    default:
+                        // TODO: Make this a switch case command, like everywhere else in this method, too!
+                        cmd = new ChangeAttributeValue(this, mmq);
+                        break;
+                } break;
             case MOVE_ELEMENT:
                 cmd = new MoveFile(this, mmq);
                 break;

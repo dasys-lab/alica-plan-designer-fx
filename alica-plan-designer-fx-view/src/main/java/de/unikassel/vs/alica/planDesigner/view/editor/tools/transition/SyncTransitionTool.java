@@ -1,122 +1,163 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
+import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
+import de.unikassel.vs.alica.planDesigner.events.GuiChangeAttributeEvent;
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.SynchronizationContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
+import de.unikassel.vs.alica.planDesigner.view.model.SynchronizationViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
+import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+
+import java.util.LinkedList;
 
 public class SyncTransitionTool extends AbstractTool {
 
-    private boolean initial = true;
-//    private SynchronizationContainer start;
-//    private TransitionContainer finish;
+    private int initial = 0;
+    private LinkedList<Point2D> bendPoints;
+    private SynchronizationViewModel sync;
+    private TransitionViewModel trans;
+
+    private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition);
 
     public SyncTransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
-    }
-
-//    public SyncTransition createNewObject() {
-//        return new SyncTransition();
-//    }
-
-    public void draw() {
-        PlanTab selectedItem = (PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem();
-//        if (selectedItem == null) {
-//            ChangeListener<Tab> listener = new TabChangeListener(planEditorTabPane);
-//            planEditorTabPane.getSelectionModel().selectedItemProperty().addListener(listener);
-//        } else {
-//            (selectedItem).getPlanEditorGroup().setupPlanVisualisation();
-//        }
+        bendPoints = new LinkedList<>();
     }
 
     @Override
     protected void initHandlerMap() {
-        if (customHandlerMap.isEmpty()) {
-            customHandlerMap.put(MouseEvent.MOUSE_CLICKED, event -> {
-//                if(((Node)event.getTarget()).getParent() instanceof SynchronizationContainer) {
-//                    if (initial) {
-//                        start = (SynchronizationContainer) ((Node)event.getTarget()).getParent();
-//                        initial = false;
-//                    } else {
-//                        initial = true;
-//                        endTool();
-//                    }
-//                } else if (((Node)event.getTarget()).getParent() instanceof TransitionContainer && initial == false) {
-//                    finish = (TransitionContainer) ((Node)event.getTarget()).getParent();
-//                    initial = true;
-//
-//                    AddTransitionToSynchronisation command =
-//                            new AddTransitionToSynchronisation(start.getModelElementId(), finish.getModelElementId(),
-//                                    ((AbstractEditorTab<PlanElement>) planEditorTabPane.getSelectionModel().getSelectedItem()).getEditable());
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(command);
-//                    start = null;
-//                    finish = null;
-//                    endTool();
-//                } else {
-//                    initial = true;
-//                    endTool();
-//                }
+        customHandlerMap.put(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Node target = (Node) event.getTarget();
+                Parent parent = target.getParent();
+                if ((parent instanceof TransitionContainer && trans == null) || (parent instanceof SynchronizationContainer && sync == null)) {
+                    setCursor(addCursor);
+                } else if (target instanceof StackPane){
+                    if (initial > 1) {
+                        setCursor(bendPointCursor);
+                    }
+                    else {
+                        setCursor(imageCursor);
+                    }
+                } else {
+                    setCursor(forbiddenCursor);
+                }
+            }
+        });
 
-            });
 
-            customHandlerMap.put(MouseEvent.MOUSE_MOVED, event -> {
-                if (event.getTarget() instanceof Node == false) {
-                    event.consume();
+        customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getTarget() instanceof ToolButton) {
                     return;
                 }
-                Node target = (Node) event.getTarget();
+                if (initial > 1) {
+                    Node target = (Node) event.getTarget();
+                    Node parent = target.getParent();
+                    if ((parent instanceof TransitionContainer && trans == null) || (parent instanceof SynchronizationContainer && sync == null)) {
+                        // SET ENDPOINT
+                        if (parent instanceof TransitionContainer) {
+                            // SET STARTPOINT
+                            trans = (TransitionViewModel) ((AbstractPlanElementContainer) parent).getModelElement();
+                        } else {
+                            sync = (SynchronizationViewModel) ((AbstractPlanElementContainer) parent).getModelElement();
+                        }
 
-//                if (initial) {
-//                    if (target.getParent() instanceof SynchronizationContainer == false) {
-//                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
-//                            previousCursor = target.getScene().getCursor();
-//                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
-//                        }
-//                    } else {
-//                        target.getScene().setCursor(previousCursor);
-//                    }
-//                } else {
-//                    if (((Node)event.getTarget()).getParent() instanceof TransitionContainer == false) {
-//                        if (target.getScene().getCursor().equals(PlanDesigner.FORBIDDEN_CURSOR) == false) {
-//                            previousCursor = target.getScene().getCursor();
-//                            target.getScene().setCursor(PlanDesigner.FORBIDDEN_CURSOR);
-//                        }
-//                    } else {
-//                        target.getScene().setCursor(previousCursor);
-//                    }
-//                }
-                event.consume();
-            });
-        }
+                        IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+
+                        GuiChangeAttributeEvent guiEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.SYNCTRANSITION, null);
+                        guiEvent.setElementId(sync.getId());
+
+                        guiEvent.setAttributeName(Types.TRANSITION);
+                        guiEvent.setNewValue(trans.getId());
+
+                        guiEvent.setParentId(getPlanTab().getSerializableViewModel().getId());
+                        handler.handle(guiEvent);
+
+                        /*
+                        for (Point2D point : bendPoints) {
+                            GuiChangePositionEvent bendEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.BENDPOINT, null);
+                            bendEvent.setNewX((int) point.getX());
+                            bendEvent.setNewY((int) point.getY());
+                            bendEvent.setParentId(SyncTransitionTool.this.getPlanTab().getSerializableViewModel().getId());
+                            HashMap<String, Long> related = new HashMap<>();
+                            related.put(Types.TRANSITION, transitionID);
+                            bendEvent.setRelatedObjects(related);
+                            handler.handle(bendEvent);
+                        }*/
+
+                        reset();
+                    } else {
+                        // ADD BENDPOINT
+                        Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
+
+                        if (eventTargetCoordinates == null) {
+                            event.consume();
+                        }
+                        bendPoints.add(eventTargetCoordinates);
+                    }
+                } else {
+                    Node target = (Node) event.getTarget();
+                    Node parent = target.getParent();
+                    if (!(target instanceof ToolButton)){
+                        initial = 1;
+                        try {
+                            target = (Node) event.getTarget();
+                            if (parent instanceof TransitionContainer) {
+                                // SET STARTPOINT
+                                trans = (TransitionViewModel) ((AbstractPlanElementContainer) parent).getModelElement();
+                            } else if (parent instanceof SynchronizationContainer) {
+                                sync = (SynchronizationViewModel) ((AbstractPlanElementContainer) parent).getModelElement();
+                            }
+                        } catch (ClassCastException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                initial++;
+            }
+        });
+    }
+
+    @Override
+    public void endTool() {
+        reset();
+        super.endTool();
+    }
+
+    private void reset() {
+        initial = 0;
+        sync = null;
+        trans = null;
+        bendPoints.clear();
     }
 
     @Override
     public ToolButton createToolUI() {
         ToolButton toolButton = new ToolButton();
         toolButton.setIcon(Types.SYNCTRANSITION);
+        setToolButton(toolButton);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.synctransition);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synctransition);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_synctransition);
         return toolButton;
     }
-
-//    /**
-//     * This is a pseudo class because sync transitions are no real objects.
-//     */
-//    static final class SyncTransition extends PlanElementImpl {
-//
-//    }
-//
-//
-//    private class SyncTransitionHBox extends DraggableHBox<SyncTransition> {
-//        public SyncTransitionHBox() {
-//            super(SyncTransitionTool.this.createNewObject(), SyncTransitionTool.this);
-//            setOnDragDetected(Event::consume);
-//            setOnMouseClicked(event -> startTool());
-//        }
-//    }
 }
