@@ -701,9 +701,10 @@ public class ModelManager implements Observer {
                 }
                 break;
             case Types.TRANSITION:
-                Transition transition = (Transition) newElement;
                 plan = (Plan) parentElement;
-                plan.getTransitions().add(transition);
+                visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
+                Transition transition = (Transition) newElement;
+                visualisation.getPlan().addTransition(transition);
                 break;
             case Types.STATE:
             case Types.SUCCESSSTATE:
@@ -733,7 +734,7 @@ public class ModelManager implements Observer {
             case Types.SYNCHRONIZATION:
                 plan = (Plan) parentElement;
                 visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
-                visualisation.getPlan().getSynchronizations().add((Synchronization) newElement);
+                visualisation.getPlan().addSynchronization((Synchronization) newElement);
                 UiExtensionModelEvent uiExtensionModelEvent = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
                 extension = visualisation.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(newElement);
                 uiExtensionModelEvent.setExtension(extension);
@@ -816,12 +817,12 @@ public class ModelManager implements Observer {
                 }
                 break;
             case Types.TRANSITION:
-                ((Plan) parentElement).getTransitions().remove(planElement);
-                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
+                ((Plan) parentElement).getTransitions().remove(removedElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.SYNCHRONIZATION:
-                ((Plan) parentElement).getSynchronizations().remove(planElement);
-                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
+                ((Plan) parentElement).getSynchronizations().remove(removedElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.VARIABLE:
                 if (parentElement instanceof Plan) {

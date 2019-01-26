@@ -229,63 +229,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
                 break;
             case ELEMENT_CREATED:
-<<<<<<< HEAD
-                viewModelManager.addElement(event.getParentId(), viewModelElement);
-
-                // TODO: @Fax Not everything is a plan, please clean that up...
-                PlanElement plan = modelManager.getPlanElement(event.getParentId());
-                if (plan instanceof Plan) {
-
-                    int x = 0;
-                    int y = 0;
-                    if (event instanceof UiExtensionModelEvent) {
-                        PmlUiExtension extension = ((UiExtensionModelEvent) event).getExtension();
-                        x = extension.getX();
-                        y = extension.getY();
-                    }
-
-
-                    PlanViewModel planViewModel = (PlanViewModel) viewModelManager.getViewModelElement(plan);
-                    switch (event.getElementType()) {
-                        case Types.STATE:
-                        case Types.SUCCESSSTATE:
-                        case Types.FAILURESTATE:
-                            ((StateViewModel) viewModelElement).setXPosition(x);
-                            ((StateViewModel) viewModelElement).setYPosition(y);
-                            planViewModel.getStates().add((StateViewModel) viewModelElement);
-                            break;
-                        case Types.TRANSITION: {
-                            ((TransitionViewModel) viewModelElement).setInState((StateViewModel) viewModelManager.getViewModelElement(((Transition) planElement).getInState()));
-                            ((TransitionViewModel) viewModelElement).setOutState((StateViewModel) viewModelManager.getViewModelElement(((Transition) planElement).getOutState()));
-                            planViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
-                        }
-                        break;
-                        case Types.ENTRYPOINT:
-                            ((EntryPointViewModel) viewModelElement).setXPosition(x);
-                            ((EntryPointViewModel) viewModelElement).setYPosition(y);
-                            planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
-                            break;
-                        case Types.BENDPOINT: {
-                            // TODO: @Fax WTF??? remove add???
-                            // remove<->add to fire listeners
-                            TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
-                            planViewModel.getTransitions().remove(transitionViewModel);
-                            planViewModel.getTransitions().add(transitionViewModel); }
-                            break;
-                        case Types.SYNCHRONIZATION: {
-                            SynchronizationViewModel syncViewModel = (SynchronizationViewModel) viewModelElement;
-                            planViewModel.getSynchronisations().add(syncViewModel);
-                        } break;
-                        case Types.PRECONDITION:
-                        case Types.RUNTIMECONDITION:
-                        case Types.POSTCONDITION:
-                        case Types.SYNCTRANSITION:
-                            //TODO: Handle these cases
-                    }
-                }
-=======
                 viewModelManager.addElement(this, event);
->>>>>>> 8628e73c892ae6f8d1929c23371406cd85f699e3
                 break;
             default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");

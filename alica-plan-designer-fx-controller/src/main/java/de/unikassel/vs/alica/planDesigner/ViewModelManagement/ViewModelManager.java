@@ -407,6 +407,11 @@ public class ViewModelManager {
                 // remove<->add to fire listeners, to redraw
                 parentPlan.getTransitions().remove(transitionViewModel);
                 parentPlan.getTransitions().add(transitionViewModel);
+                break;
+            case Types.SYNCHRONIZATION: {
+                SynchronizationViewModel syncViewModel = (SynchronizationViewModel) element;
+                parentPlan.getSynchronisations().add(syncViewModel);
+            } break;
             case Types.INITSTATECONNECTION:
                 // TODO rework and see sender side, the fields seems to be used wrong (e.g. changedAttribute has EntryPoint ID???)
                 Plan plan = (Plan) event.getElement();
