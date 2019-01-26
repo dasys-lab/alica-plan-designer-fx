@@ -264,16 +264,20 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                             ((EntryPointViewModel) viewModelElement).setYPosition(y);
                             planViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
                             break;
-                        case Types.BENDPOINT:
+                        case Types.BENDPOINT: {
                             // TODO: @Fax WTF??? remove add???
                             // remove<->add to fire listeners
                             TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
                             planViewModel.getTransitions().remove(transitionViewModel);
-                            planViewModel.getTransitions().add(transitionViewModel);
+                            planViewModel.getTransitions().add(transitionViewModel); }
+                            break;
+                        case Types.SYNCHRONIZATION: {
+                            SynchronizationViewModel syncViewModel = (SynchronizationViewModel) viewModelElement;
+                            planViewModel.getSynchronisations().add(syncViewModel);
+                        } break;
                         case Types.PRECONDITION:
                         case Types.RUNTIMECONDITION:
                         case Types.POSTCONDITION:
-                        case Types.SYNCHRONIZATION:
                         case Types.SYNCTRANSITION:
                             //TODO: Handle these cases
                     }

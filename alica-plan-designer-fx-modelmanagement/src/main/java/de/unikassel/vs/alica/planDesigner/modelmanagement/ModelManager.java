@@ -732,6 +732,15 @@ public class ModelManager implements Observer {
                 uiExtensionEvent.setExtension(extension);
                 event = uiExtensionEvent;
                 break;
+            case Types.SYNCHRONIZATION:
+                plan = (Plan) parentElement;
+                visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
+                visualisation.getPlan().getSynchronizations().add((Synchronization) newElement);
+                UiExtensionModelEvent uiExtensionModelEvent = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+                extension = visualisation.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(newElement);
+                uiExtensionModelEvent.setExtension(extension);
+                event = uiExtensionModelEvent;
+                break;
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
                 return null;
@@ -804,10 +813,14 @@ public class ModelManager implements Observer {
             case Types.TRANSITION:
                 ((Plan) parentElement).getTransitions().remove(planElement);
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
+                break;
+            case Types.SYNCHRONIZATION:
+                ((Plan) parentElement).getSynchronizations().remove(planElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
+                break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:
-            case Types.SYNCHRONISATION:
             case Types.SYNCTRANSITION:
                 //TODO: Handle these cases
             default:
@@ -967,7 +980,7 @@ public class ModelManager implements Observer {
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:
-                    case Types.SYNCHRONISATION:
+                    case Types.SYNCHRONIZATION:
                     case Types.SYNCTRANSITION:
                     case Types.INITSTATECONNECTION:
                     case Types.TRANSITION:
@@ -1198,10 +1211,19 @@ public class ModelManager implements Observer {
                 extension = modelObject.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(transition);
                 cmd = new AddBendpointToPlan(this, parenOfElement, bendPoint, extension);
                 break;
+            case Types.SYNCHRONIZATION:
+                Synchronization sync = new Synchronization();
+                sync.setName(mmq.name);
+                sync.setComment(mmq.getComment());
+                sync.setSyncedTransitions(new ArrayList<>());
+                extension = new PmlUiExtension();
+                extension.setX(x);
+                extension.setY(y);
+                cmd = new AddSynchronizationToPlan(this, sync, parenOfElement, extension);
+                break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:
-            case Types.SYNCHRONISATION:
             case Types.SYNCTRANSITION:
                 //TODO: Create commands for the other types
             default:
