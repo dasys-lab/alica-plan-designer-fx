@@ -36,6 +36,7 @@ public class AddTransitionInPlan extends AbstractCommand {
                 .put(transition, newlyCreatedPmlUiExtension);*/
         transition.setInState(from);
         transition.setOutState(to);
+        parentOfElement.getPmlUiExtensionMap().getExtension().put(transition, newlyCreatedPmlUiExtension);
         modelManager.createdPlanElement(Types.TRANSITION, transition, parentOfElement.getPlan(), false);
     }
 
@@ -43,6 +44,7 @@ public class AddTransitionInPlan extends AbstractCommand {
     public void undoCommand() {
         transition.setOutState(null);
         transition.setInState(null);
+        parentOfElement.getPmlUiExtensionMap().getExtension().put(transition, newlyCreatedPmlUiExtension);
         modelManager.removedPlanElement(Types.TRANSITION, transition, parentOfElement.getPlan(), false);
     }
 }

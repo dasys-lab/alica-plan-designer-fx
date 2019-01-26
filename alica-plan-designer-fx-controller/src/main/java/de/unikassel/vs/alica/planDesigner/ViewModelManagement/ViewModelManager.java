@@ -410,6 +410,8 @@ public class ViewModelManager {
                 break;
             case Types.SYNCHRONIZATION: {
                 SynchronizationViewModel syncViewModel = (SynchronizationViewModel) element;
+                syncViewModel.setXPosition(x);
+                syncViewModel.setYPosition(y);
                 parentPlan.getSynchronisations().add(syncViewModel);
             } break;
             case Types.INITSTATECONNECTION:

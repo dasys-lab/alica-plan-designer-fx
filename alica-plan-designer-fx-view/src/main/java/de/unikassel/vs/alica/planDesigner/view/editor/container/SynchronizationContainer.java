@@ -49,8 +49,11 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
     @Override
     public void setupContainer() {
         getChildren().clear();
-//        setLayoutX(getPmlUiExtension().getXPos());
-//        setLayoutY(getPmlUiExtension().getYPos());
+
+        SynchronizationViewModel syncViewModel = (SynchronizationViewModel) getModelElement();
+        setLayoutX(syncViewModel.getXPosition());
+        setLayoutY(syncViewModel.getYPosition());
+
         visualRepresentation = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
         setEffectToStandard();
         ((Circle) visualRepresentation).setFill(new ImagePattern(new AlicaIcon("synchronization", AlicaIcon.Size.SYNC)));
