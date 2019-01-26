@@ -10,6 +10,8 @@ import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorElement;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
@@ -27,13 +29,9 @@ public class PlanTab extends AbstractPlanTab {
     private StackPane planContent;
     private ScrollPane scrollPane;
 
+    public PlanTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
+        super(serializableViewModel, editorTabPane.getGuiModificationHandler());
 
-    private PropertiesConditionsVariablesPane propertiesConditionsVariablesPane;
-
-    public PlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
-        super(serializableViewModel, handler);
-        i18NRepo = I18NRepo.getInstance();
-        setText(i18NRepo.getString("label.caption.plan") + ": " + serializableViewModel.getName());
         draw();
     }
 
@@ -59,16 +57,6 @@ public class PlanTab extends AbstractPlanTab {
         VBox.setVgrow(scrollPlaneAndToolBarHBox,Priority.ALWAYS);
 
         splitPane.getItems().add(0, scrollPlaneAndToolBarHBox);
-
-    }
-
-    private void fireGuiChangeAttributeEvent(String newValue, String attribute, String type) {
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLAN, serializableViewModel.getName());
-        guiChangeAttributeEvent.setNewValue(newValue);
-        guiChangeAttributeEvent.setAttributeType(type);
-        guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setElementId(serializableViewModel.getId());
-        guiModificationHandler.handle(guiChangeAttributeEvent);
     }
 
     /**
@@ -93,18 +81,12 @@ public class PlanTab extends AbstractPlanTab {
         return editorToolBar;
     }
 
-    @Override
     public GuiModificationEvent handleDelete() {
         return null;
     }
 
-    @Override
     public void save() {
-        if (isDirty()) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.SAVE_ELEMENT, Types.PLAN, serializableViewModel.getName());
-            event.setElementId(serializableViewModel.getId());
-            guiModificationHandler.handle(event);
-        }
+        save(Types.PLAN);
     }
 
     protected void initSelectedPlanElement(ViewModelElement viewModelElement) {

@@ -1,5 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
+import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
@@ -8,8 +12,8 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
+import de.unikassel.vs.alica.planDesigner.view.model.EntryPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -20,13 +24,14 @@ import javafx.scene.input.MouseEvent;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import javafx.scene.layout.VBox;
 
+import java.util.HashMap;
 
 
 public class InitTransitionTool extends AbstractTool {
 
     private boolean initial = true;
-    private EntryPointContainer start;
-    private StateContainer finish;
+    private EntryPointContainer inEntryPoint;
+    private StateViewModel state;
 
     public InitTransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
@@ -45,14 +50,6 @@ public class InitTransitionTool extends AbstractTool {
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_initstateconnection);
         addCursor = new AlicaCursor(AlicaCursor.Type.add_initstateconnection);
         return toolButton;
-    }
-
-    private class InitStateConnectionHBox extends DraggableHBox {
-        public InitStateConnectionHBox() {
-            setIcon(Types.INITSTATECONNECTION);
-            setOnDragDetected(Event::consume);
-            setOnMouseClicked(event -> startTool());
-        }
     }
 
     public void draw() {
@@ -104,27 +101,23 @@ public class InitTransitionTool extends AbstractTool {
 
                     if (((Node) event.getTarget()).getParent() instanceof EntryPointContainer) {
                         if (initial) {
-                            start =  ((EntryPointContainer) ((Node) event.getTarget()).getParent());
+                            inEntryPoint =  ((EntryPointContainer) ((Node) event.getTarget()).getParent());
                             initial = false;
                         }
                     } else if (((Node) event.getTarget()).getParent() instanceof StateContainer && initial == false) {
-                        StateViewModel outState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();                        initial = true;
-//                    SetStateForEntryPoint command = new SetStateForEntryPoint(start.getModelElementId(), finish.getModelElementId());
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(command);
+                        state = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+                        initial = true;
 
-//                        IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
-//
-//                        GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.INITSTATECONNECTION, null);
-//
-//                        HashMap<String, Long> relatedObjects = new HashMap<>();
-//                        relatedObjects.put("inState", start.getModelElement().getId());
-//                        relatedObjects.put("outState", outState.getId());
-//
-//                        guiEvent.setRelatedObjects(relatedObjects);
-//                        guiEvent.setParentId(InitTransitionTool.this.getPlanTab().getSerializableViewModel().getId());
-//                        handler.handle(guiEvent);
+                        IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
+
+                        GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.INITSTATECONNECTION, null);
+
+                        HashMap<String, Long> relatedObjects = new HashMap<>();
+                        relatedObjects.put(StateViewModel.ENTRYPOINT, inEntryPoint.getModelElement().getId());
+                        relatedObjects.put(EntryPointViewModel.STATE, state.getId());
+                        guiEvent.setRelatedObjects(relatedObjects);
+                        guiEvent.setParentId(InitTransitionTool.this.getPlanTab().getSerializableViewModel().getId());
+                        guiModificationHandler.handle(guiEvent);
                     }
                 }
             });

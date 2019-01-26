@@ -53,7 +53,6 @@ public class ParseAbstractPlan extends AbstractCommand {
         oldElement = modelManager.getPlanElement(newElement.getId());
 
         if (newElement instanceof Plan ) {
-//            replaceIncompleteElements(newElement);
 
             //If the new element is a Plan, its visualisation has to be loaded as well
             Plan newPlan = (Plan) newElement;
@@ -75,7 +74,6 @@ public class ParseAbstractPlan extends AbstractCommand {
                 modelManager.createdPlanElement(Types.PLAN, newElement, null, false);
             }
         } else {
-//            replaceIncompleteElements(newElement);
             modelManager.createdPlanElement(modelModificationQuery.getElementType(), newElement, null, false);
         }
 
@@ -99,11 +97,4 @@ public class ParseAbstractPlan extends AbstractCommand {
             }
         }
     }
-
-//    //TODO complete for other PlanElements
-//    private void replaceIncompleteElements(PlanElement newElement) {
-//        if(newElement instanceof PlanType) {
-//            modelManager.replaceIncompletePlansInPlanType((PlanType) newElement);
-//        }
-//    }
 }

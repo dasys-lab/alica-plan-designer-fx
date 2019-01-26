@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PropertiesConditionsVariablesPane?>
+<?import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesConditionsVariablesPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Behaviour extends AbstractPlan {
     protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
@@ -12,11 +14,7 @@ public class Behaviour extends AbstractPlan {
     protected PreCondition preCondition;
     protected RuntimeCondition runtimeCondition;
     protected PostCondition postCondition;
-    protected ArrayList<Variable> variables;
-
-    public Behaviour() {
-        variables = new ArrayList<>();
-    }
+    protected final ArrayList<Variable> variables= new ArrayList<>();
 
     public PreCondition getPreCondition() {
         return preCondition;
@@ -42,8 +40,16 @@ public class Behaviour extends AbstractPlan {
         this.postCondition = postCondition;
     }
 
-    public ArrayList<Variable> getVariables() {
-        return variables;
+    public void addVariable(Variable variable) {
+        variables.add(variable);
+        this.setDirty(true);
+    }
+    public void removeVariable(Variable variable) {
+        variables.remove(variable);
+        this.setDirty(true);
+    }
+    public List<Variable> getVariables() {
+        return Collections.unmodifiableList(variables);
     }
 
     public int getFrequency() {

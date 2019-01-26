@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,16 +10,23 @@ import java.util.Arrays;
 
 public class PlanElementViewModel extends ViewModelElement {
 
-    protected final StringProperty comment = new SimpleStringProperty();
+    protected final StringProperty comment = new SimpleStringProperty(null, "comment", "");
 
-    private final IntegerProperty xPosition = new SimpleIntegerProperty();
-    private final IntegerProperty yPosition = new SimpleIntegerProperty();
+    private final IntegerProperty xPosition = new SimpleIntegerProperty(null, "xPosition", 0);
+    private final IntegerProperty yPosition = new SimpleIntegerProperty(null, "xPosition", 0);
 
     public PlanElementViewModel (long id, String name, String type) {
         super(id, name, type);
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
+    }
+
+    public void registerListener(IGuiModificationHandler handler) {
+        super.registerListener(handler);
+        comment.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, comment.getClass().getSimpleName(), comment.getName());
+        });
     }
 
     public final StringProperty commentProperty() {return comment; }

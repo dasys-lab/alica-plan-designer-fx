@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryHBox;
@@ -36,14 +37,13 @@ public class PlanTypeTab extends AbstractPlanTab {
     private Comparator<RepositoryHBox> repositoryHBoxComparator;
     private Comparator<ViewModelElement> viewModelElementComparator;
 
-    public PlanTypeTab(SerializableViewModel planType, IGuiModificationHandler guiModificationHandler) {
-        super(planType, guiModificationHandler);
-        setText(i18NRepo.getString("label.caption.plantype") + ": " + planType.getName());
+    public PlanTypeTab(SerializableViewModel planType, EditorTabPane editorTabPane) {
+        super(planType, editorTabPane.getGuiModificationHandler());
 
-        initGui();
+        draw();
     }
 
-    private void initGui() {
+    private void draw() {
         // instantiate gui objects
         this.repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getViewModelType().equals(Types.MASTERPLAN));
         this.repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryHBox -> planRepositoryHBox.getViewModelName());
@@ -183,7 +183,6 @@ public class PlanTypeTab extends AbstractPlanTab {
                 continue;
             }
             RepositoryHBox planRepositoryHBox = new RepositoryHBox(plan, guiModificationHandler);
-            planRepositoryHBox.setOnMouseClicked(null);
             planListView.getItems().add(planRepositoryHBox);
             planListView.getItems().sort(repositoryHBoxComparator);
         }
@@ -198,7 +197,6 @@ public class PlanTypeTab extends AbstractPlanTab {
                         }
 
                         RepositoryHBox planRepositoryHBox = new RepositoryHBox(element, guiModificationHandler);
-                        planRepositoryHBox.setOnMouseClicked(null);
                         Platform.runLater(() -> {
                             planListView.getItems().add(planRepositoryHBox);
                             planListView.getItems().sort(repositoryHBoxComparator);
@@ -271,20 +269,6 @@ public class PlanTypeTab extends AbstractPlanTab {
     }
 
     /**
-     * Called for changing comment of plantype and stuff...
-     * @param newValue
-     * @param attribute
-     */
-    private void fireGuiChangeAttributeEvent(String newValue, String attribute) {
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.PLANTYPE, serializableViewModel.getName());
-        guiChangeAttributeEvent.setNewValue(newValue);
-        guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
-        guiChangeAttributeEvent.setAttributeName(attribute);
-        guiChangeAttributeEvent.setElementId(serializableViewModel.getId());
-        guiModificationHandler.handle(guiChangeAttributeEvent);
-    }
-
-    /**
      * Called for adding, removing plans from plantype...
      * @param type
      * @param element
@@ -314,17 +298,7 @@ public class PlanTypeTab extends AbstractPlanTab {
         }
     }
 
-    // TODO
     public void addPlanToAllPlans (PlanViewModel planViewModel) {
         ((PlanTypeViewModel) serializableViewModel).addPlanToAllPlans(planViewModel);
-    }
-
-    // TODO
-    public void addPlanToPlansInPlanType(AnnotatedPlanView annotatedPlan) {
-        ((PlanTypeViewModel) serializableViewModel).getPlansInPlanType().add(annotatedPlan);
-    }
-    // TODO
-    public void removePlanFromPlansInPlanType(AnnotatedPlanView annotatedPlan) {
-        ((PlanTypeViewModel) serializableViewModel).getPlansInPlanType().remove(annotatedPlan);
     }
 }

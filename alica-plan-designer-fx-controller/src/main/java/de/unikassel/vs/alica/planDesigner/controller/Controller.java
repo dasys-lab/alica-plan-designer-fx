@@ -2,7 +2,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
-import de.unikassel.vs.alica.planDesigner.ViewModelFactory.ViewModelManager;
+import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
@@ -84,7 +84,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         setupModelManager();
         setupGeneratedSourcesManager();
 
-        viewModelManager = new ViewModelManager(modelManager);
+        viewModelManager = new ViewModelManager(modelManager, this);
 
         repoViewModel = viewModelManager.createRepositoryViewModel();
     }
@@ -229,6 +229,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 }
                 break;
             case ELEMENT_CREATED:
+<<<<<<< HEAD
                 viewModelManager.addElement(event.getParentId(), viewModelElement);
 
                 // TODO: @Fax Not everything is a plan, please clean that up...
@@ -282,6 +283,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                             //TODO: Handle these cases
                     }
                 }
+=======
+                viewModelManager.addElement(this, event);
+>>>>>>> 8628e73c892ae6f8d1929c23371406cd85f699e3
                 break;
             default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
@@ -495,32 +499,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         return viewModelManager.getViewModelElement(modelManager.getPlanElement(id));
     }
 
-    protected void updatePlansInPlanTypeTabs(PlanViewModel planViewModel) {
+    public void updatePlansInPlanTypeTabs(PlanViewModel planViewModel) {
         ObservableList<Tab> tabs = editorTabPane.getTabs();
         for (Tab tab : tabs) {
             if (tab instanceof PlanTypeTab) {
                 PlanTypeTab planTypeTab = (PlanTypeTab) tab;
                 planTypeTab.addPlanToAllPlans(planViewModel);
             }
-        }
-    }
-
-    protected void updateAnnotatedPlansInPlanTypeTabs(long planTypeID, AnnotatedPlan annotatedPlan, boolean add) {
-        ObservableList<Tab> tabs = editorTabPane.getTabs();
-        for (Tab tab : tabs) {
-            if (!(tab instanceof PlanTypeTab)) {
-                continue;
-            }
-            if (((PlanTypeTab) tab).getSerializableViewModel().getId() != planTypeID) {
-                continue;
-            }
-            PlanTypeTab planTypeTab = (PlanTypeTab) tab;
-            if (add) {
-                planTypeTab.addPlanToPlansInPlanType((AnnotatedPlanView) viewModelManager.getViewModelElement(annotatedPlan));
-            } else {
-                planTypeTab.removePlanFromPlansInPlanType((AnnotatedPlanView) viewModelManager.getViewModelElement(annotatedPlan));
-            }
-
         }
     }
 

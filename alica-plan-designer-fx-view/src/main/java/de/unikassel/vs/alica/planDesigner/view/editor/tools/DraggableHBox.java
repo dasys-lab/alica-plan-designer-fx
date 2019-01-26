@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
+import java.awt.*;
+
 /**
  * GUI Container class for all [Icon,Text,Tool]-based entries.
  * Child classes are ToolHBox {@link EditorToolBar} and RepositoryHBox (for reusing plan elements from repo view).

@@ -8,8 +8,6 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.TaskRepositoryViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
@@ -25,7 +23,7 @@ public class EditorTabPane extends TabPane {
         // find tab if it already opened
         Tab openedTab = null;
         for (Tab tab : getTabs()) {
-            if (((IEditorTab) tab).representsViewModelElement(serializableViewModel)) {
+            if (((EditorTab) tab).representsViewModelElement(serializableViewModel)) {
                 openedTab = tab;
             }
         }
@@ -46,15 +44,15 @@ public class EditorTabPane extends TabPane {
         switch (serializableViewModel.getType()) {
             case Types.MASTERPLAN:
             case Types.PLAN:
-               return new PlanTab(serializableViewModel, this.guiModificationHandler);
+               return new PlanTab(serializableViewModel, this);
             case Types.TASKREPOSITORY:
-                return new TaskRepositoryTab(serializableViewModel, this.guiModificationHandler);
+                return new TaskRepositoryTab(serializableViewModel, this);
             case Types.TASK:
-                return new TaskRepositoryTab((SerializableViewModel) guiModificationHandler.getViewModelElement(serializableViewModel.getParentId()), this.guiModificationHandler);
+                return new TaskRepositoryTab((SerializableViewModel) guiModificationHandler.getViewModelElement(serializableViewModel.getParentId()), this);
             case Types.BEHAVIOUR:
-                return new BehaviourTab(serializableViewModel, this.guiModificationHandler);
+                return new BehaviourTab(serializableViewModel, this);
             case Types.PLANTYPE:
-                return new PlanTypeTab(serializableViewModel, this.guiModificationHandler);
+                return new PlanTypeTab(serializableViewModel, this);
             default:
                 System.err.println("EditorTabPane: Opening tab of elementType " + serializableViewModel.getType() + " not implemented!");
                 return null;
@@ -65,12 +63,16 @@ public class EditorTabPane extends TabPane {
         this.guiModificationHandler = handler;
     }
 
+    public IGuiModificationHandler getGuiModificationHandler() {
+        return this.guiModificationHandler;
+    }
+
     public GuiModificationEvent handleDelete() {
         Tab selectedTab = getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
             return null;
         }
 
-        return ((IEditorTab) selectedTab).handleDelete();
+        return ((EditorTab) selectedTab).handleDelete();
     }
 }

@@ -2,6 +2,8 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 
 public class EntryPointViewModel extends PlanElementViewModel {
 
+    public static final String STATE = "state";
+
     protected StateViewModel state;
     protected PlanElementViewModel task;
 

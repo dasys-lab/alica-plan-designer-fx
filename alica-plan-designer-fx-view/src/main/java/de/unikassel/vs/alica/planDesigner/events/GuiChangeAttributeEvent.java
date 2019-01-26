@@ -3,7 +3,7 @@ package de.unikassel.vs.alica.planDesigner.events;
 public class GuiChangeAttributeEvent extends GuiModificationEvent {
 
     protected String attributeName;
-    protected String newValue;
+    protected Object newValue;
     protected String attributeType;
 
     public GuiChangeAttributeEvent (GuiEventType eventType, String elementType, String name) {
@@ -18,11 +18,11 @@ public class GuiChangeAttributeEvent extends GuiModificationEvent {
         this.attributeName = attributeName;
     }
 
-    public String getNewValue() {
+    public Object getNewValue() {
         return newValue;
     }
 
-    public void setNewValue(String newValue) {
+    public void setNewValue(Object newValue) {
         this.newValue = newValue;
     }
 

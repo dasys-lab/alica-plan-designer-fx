@@ -115,8 +115,8 @@ public final class FileTreeView extends TreeView<File> {
 //                removeFromFolder(serializableViewModel, folder);
 //                deleted = true;
 //            }
-            FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(getImage(viewModelElement.getType
-                    ())), viewModelElement);
+            FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(new AlicaIcon(viewModelElement.getType
+                    (), AlicaIcon.Size.BIG)), viewModelElement);
             folder.getChildren().add(newItem);
             folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
 //            if (deleted) {
@@ -244,34 +244,6 @@ public final class FileTreeView extends TreeView<File> {
         }
         return null;
     }
-
-    /**
-     * Gets the fitting optical representation according to the given PlanElement elementType
-     *
-     * @param type
-     * @return
-     */
-
-    private Image getImage(String type) {
-        switch (type) {
-            case Types.BEHAVIOUR:
-                return new AlicaIcon("behaviour", AlicaIcon.Size.BIG);
-            case Types.MASTERPLAN:
-                return new AlicaIcon("masterplan", AlicaIcon.Size.BIG);
-            case Types.PLAN:
-                return new AlicaIcon("plan", AlicaIcon.Size.BIG);
-            case Types.PLANTYPE:
-                return new AlicaIcon("plantype", AlicaIcon.Size.BIG);
-            case Types.TASKREPOSITORY:
-                return new AlicaIcon("tasks", AlicaIcon.Size.BIG);
-            case Types.FOLDER:
-                return new AlicaIcon("folder", AlicaIcon.Size.BIG);
-            default:
-                System.err.println("FileTreeView: No image available for " + type + "!");
-                return null;
-        }
-    }
-
 
     /**
      * Sets the PlansPath and adds a new {@link FileTreeItem} as top level folder

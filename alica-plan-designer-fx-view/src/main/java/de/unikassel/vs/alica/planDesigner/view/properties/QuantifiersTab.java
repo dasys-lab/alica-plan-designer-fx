@@ -1,22 +1,21 @@
-package de.unikassel.vs.alica.planDesigner.view.editor.tab;
+package de.unikassel.vs.alica.planDesigner.view.properties;
 
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.model.QuantifierViewModel;
-import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesButtonTable;
 import javafx.scene.control.Tab;
 import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.LongStringConverter;
 
 public class QuantifiersTab extends Tab {
 
-    PropertiesButtonTable<QuantifierViewModel> buttonTableVBox;
+    VariablesTable<QuantifierViewModel> buttonTableVBox;
     I18NRepo i18NRepo;
 
     public QuantifiersTab() {
         i18NRepo = I18NRepo.getInstance();
         setText(i18NRepo.getString("label.caption.quantifiers"));
 
-        buttonTableVBox = new PropertiesButtonTable<QuantifierViewModel>() {
+        buttonTableVBox = new VariablesTable<QuantifierViewModel>() {
             @Override
             protected void onAddElement() {
                 System.out.println("QuantifiersTab: Sending a createElement event not implemented, yet!");

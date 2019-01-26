@@ -18,86 +18,40 @@ import java.util.List;
  */
 public class RepositoryTab extends Tab {
 
-    protected ListView<RepositoryHBox> repositoryListView;
-    protected Comparator<RepositoryHBox> modelElementComparator;
     protected RepositoryTool repoTool;
-    protected IGuiModificationHandler guiModificationHandler;
+    protected RepositoryListView repositoryListView;
 
     public RepositoryTab(String tabTitle, RepositoryTool repoTool) {
         setText(tabTitle);
         this.repoTool = repoTool;
-        this.repositoryListView = new ListView();
-        this.repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
+        this.repositoryListView = new RepositoryListView();
+
         this.setContent(this.repositoryListView);
-
-        modelElementComparator = Comparator.comparing(o -> !o.getViewModelType().equals(Types.MASTERPLAN));
-        modelElementComparator = modelElementComparator.thenComparing(o -> o.getViewModelName());
     }
-
 
     public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
-        this.guiModificationHandler = guiModificationHandler;
+        this.repositoryListView.setGuiModificationHandler(guiModificationHandler);
     }
 
-    public void removeElement(ViewModelElement viewModel) {
-        Iterator<RepositoryHBox> iter = repositoryListView.getItems().iterator();
-        while(iter.hasNext()) {
-            RepositoryHBox repositoryHBox = iter.next();
-            if (repositoryHBox.getViewModelId() == viewModel.getId()) {
-                iter.remove();
-            }
-        }
-        repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
-        sort();
+    public void removeElement(ViewModelElement viewModelElement) {
+        this.repositoryListView.removeElement(viewModelElement);
     }
-
 
     public void addElement(ViewModelElement viewModelElement) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
-                repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
-                sort();
-            }
-        });
+        this.repositoryListView.addElement(viewModelElement);
     }
 
     public void addElements(List<? extends ViewModelElement> viewModelElements) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < viewModelElements.size(); i++) {
-                    ViewModelElement viewModelElement = viewModelElements.get(i);
-                    repositoryListView.getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
-                }
-                repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
-                sort();
-            }
-        });
+        this.repositoryListView.addElements(viewModelElements);
     }
 
     public void clearGuiContent() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                repositoryListView.getItems().clear();
-                repositoryListView.setPrefHeight(repositoryListView.getItems().size() * 24 + 2);
-            }
-        });
+        this.repositoryListView.clearGuiContent();
     }
 
     public ViewModelElement getSelectedItem() {
-        RepositoryHBox repoHBox = repositoryListView.getSelectionModel().getSelectedItem();
-        if (repoHBox != null) {
-            return repoHBox.getViewModelElement();
-        } else {
-            return null;
-        }
+        return this.repositoryListView.getSelectedItem();
     }
 
-    protected void sort() {
-        repositoryListView.getItems().sort(modelElementComparator);
-    }
 
 }

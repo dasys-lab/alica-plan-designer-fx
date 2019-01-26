@@ -67,6 +67,9 @@ public class TransitionTool extends AbstractTool {
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    if (event.getTarget() instanceof ToolButton) {
+                        return;
+                    }
                     if (initial > 1) {
                         Node target = (Node) event.getTarget();
                         Node parent = target.getParent();
