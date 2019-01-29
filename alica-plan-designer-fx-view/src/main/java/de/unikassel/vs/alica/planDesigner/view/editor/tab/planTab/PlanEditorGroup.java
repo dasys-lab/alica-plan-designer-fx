@@ -22,7 +22,7 @@ public class PlanEditorGroup extends Group {
     private Map<Long, StateContainer> stateContainers;
     private Map<Long, TransitionContainer> transitionContainers;
     private Map<Long, EntryPointContainer> entryPointContainers;
-    private Map<Long, SynchronizationContainer> synchronisationContainers;
+    private Map<Long, SynchronizationContainer> synchronizationContainers;
 
     public PlanEditorGroup(PlanViewModel plan, PlanTab planEditorTab) {
         super();
@@ -37,16 +37,17 @@ public class PlanEditorGroup extends Group {
         stateContainers = createStateContainers();
         transitionContainers = createTransitionContainers();
         entryPointContainers = createEntryPointContainers();
-        synchronisationContainers = createSynchronisationContainers();
+        synchronizationContainers = createSynchronisationContainers();
 
         getChildren().addAll(transitionContainers.values());
         getChildren().addAll(stateContainers.values());
         getChildren().addAll(entryPointContainers.values());
-        getChildren().addAll(synchronisationContainers.values());
+        getChildren().addAll(synchronizationContainers.values());
 
         createStateListeners();
         createEntryPointListeners();
         createTransitionListeners();
+        createSynchronizationListeners();
         //TODO: create Listeners for other types
 
         //TODO add class later
@@ -65,8 +66,8 @@ public class PlanEditorGroup extends Group {
         return entryPointContainers;
     }
 
-    public Map<Long, SynchronizationContainer> getSynchronisationContainers() {
-        return synchronisationContainers;
+    public Map<Long, SynchronizationContainer> getSynchronizationContainers() {
+        return synchronizationContainers;
     }
 
     public AbstractPlanTab getPlanEditorTab() {
@@ -203,5 +204,29 @@ public class PlanEditorGroup extends Group {
                 }
             }
        });
+    }
+
+    private void createSynchronizationListeners() {
+        plan.getSynchronisations().addListener((ListChangeListener<SynchronizationViewModel>) c -> {
+            while (c.next()) {
+                if(c.wasAdded()) {
+                    for(SynchronizationViewModel sync : c.getAddedSubList()) {
+                        ArrayList<TransitionContainer> synchedTransitions = new ArrayList<>();
+                        for(TransitionViewModel model : sync.getTransitions()) {
+                            synchedTransitions.add(transitionContainers.get(model.getId()));
+                        }
+                        SynchronizationContainer syncContainer = new SynchronizationContainer(sync, synchedTransitions, planEditorTab);
+                        synchronizationContainers.put(sync.getId(), syncContainer);
+
+                        getChildren().add(syncContainer);
+                    }
+                } else if (c.wasRemoved()) {
+                    for (SynchronizationViewModel sync : c.getRemoved()) {
+                        SynchronizationContainer syncContainer = synchronizationContainers.remove(sync.getId());
+                        getChildren().remove(syncContainer);
+                    }
+                }
+            }
+        });
     }
 }

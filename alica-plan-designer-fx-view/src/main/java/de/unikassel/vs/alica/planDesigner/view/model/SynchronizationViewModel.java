@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class SynchronizationViewModel extends ViewModelElement {
+public class SynchronizationViewModel extends PlanElementViewModel {
 
     protected ObservableList<TransitionViewModel> transitions;
 

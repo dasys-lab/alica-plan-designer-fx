@@ -339,12 +339,9 @@ public class ViewModelManager {
         ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
         ViewModelElement viewModelElement = getViewModelElement(event.getElement());
 
-        int x = 0;
-        int y = 0;
-        if (event instanceof UiExtensionModelEvent) {
-            PmlUiExtension extension = ((UiExtensionModelEvent) event).getExtension();
-            x = extension.getX();
-            y = extension.getY();
+        if (parentViewModel instanceof  PlanViewModel) {
+            addToPlan((PlanViewModel) parentViewModel, viewModelElement, event);
+            return;
         }
 
         switch (event.getElementType()) {
@@ -364,47 +361,69 @@ public class ViewModelManager {
                     return;
                 }
                 break;
+            case Types.VARIABLE:
+                // it must be a behaviour, because plans are handled in "addToPlan".
+                ((BehaviourViewModel) parentViewModel).getVariables().add((VariableViewModel)viewModelElement);
+                break;
+            default:
+                System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());
+                //TODO: maybe handle other types
+        }
+    }
+
+    private void addToPlan(PlanViewModel parentPlan, ViewModelElement element, ModelEvent event) {
+        int x = 0;
+        int y = 0;
+        if (event instanceof UiExtensionModelEvent) {
+            PmlUiExtension extension = ((UiExtensionModelEvent) event).getExtension();
+            x = extension.getX();
+            y = extension.getY();
+        }
+
+        switch (event.getElementType()) {
             case Types.STATE:
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
-                PlanViewModel parentPlanViewModel = (PlanViewModel) parentViewModel;
-                StateViewModel stateViewModel = (StateViewModel) viewModelElement;
+                StateViewModel stateViewModel = (StateViewModel) element;
                 stateViewModel.setXPosition(x);
                 stateViewModel.setYPosition(y);
-                parentPlanViewModel.getStates().add(stateViewModel);
+                parentPlan.getStates().add(stateViewModel);
                 break;
             case Types.TRANSITION:
-                parentPlanViewModel = (PlanViewModel) parentViewModel;
                 Transition transition = (Transition) event.getElement();
-                TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
+                TransitionViewModel transitionViewModel = (TransitionViewModel) element;
                 transitionViewModel.setInState((StateViewModel) getViewModelElement(transition.getInState()));
                 transitionViewModel.setOutState((StateViewModel) getViewModelElement(transition.getOutState()));
-                parentPlanViewModel.getTransitions().add((TransitionViewModel) viewModelElement);
-            break;
+                parentPlan.getTransitions().add((TransitionViewModel) element);
+                break;
             case Types.ENTRYPOINT:
-                parentPlanViewModel = (PlanViewModel) parentViewModel;
-                EntryPointViewModel entryPointViewModel = (EntryPointViewModel) viewModelElement;
+                EntryPointViewModel entryPointViewModel = (EntryPointViewModel) element;
                 entryPointViewModel.setXPosition(x);
                 entryPointViewModel.setYPosition(y);
-                parentPlanViewModel.getEntryPoints().add((EntryPointViewModel) viewModelElement);
+                parentPlan.getEntryPoints().add((EntryPointViewModel) element);
                 break;
             case Types.BENDPOINT:
-                parentPlanViewModel = (PlanViewModel) parentViewModel;
-                transitionViewModel = (TransitionViewModel) viewModelElement;
+                transitionViewModel = (TransitionViewModel) element;
                 // remove<->add to fire listeners, to redraw
-                parentPlanViewModel.getTransitions().remove(transitionViewModel);
-                parentPlanViewModel.getTransitions().add(transitionViewModel);
+                parentPlan.getTransitions().remove(transitionViewModel);
+                parentPlan.getTransitions().add(transitionViewModel);
+                break;
+            case Types.SYNCHRONIZATION: {
+                SynchronizationViewModel syncViewModel = (SynchronizationViewModel) element;
+                syncViewModel.setXPosition(x);
+                syncViewModel.setYPosition(y);
+                parentPlan.getSynchronisations().add(syncViewModel);
+            } break;
             case Types.INITSTATECONNECTION:
-                // TODO rework and see sender side, the fields seems to be used wrong (e.g. changedAttribute has EntryPoint ID???)
                 Plan plan = (Plan) event.getElement();
                 EntryPoint entryPoint = null;
-                Long changeAttribute = Long.valueOf(event.getChangedAttribute());
+                Long entryPointID = (Long) event.getNewValue();
                 for (EntryPoint ep: ((Plan) plan).getEntryPoints()) {
-                    if(ep.getId() == changeAttribute) {
+                    if(ep.getId() == entryPointID) {
                         entryPoint = ep;
                     }
                 }
-                PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
+                PlanViewModel planViewModel = (PlanViewModel) element;
                 ObservableList<EntryPointViewModel> entryPointViewModelObservableList = planViewModel.getEntryPoints();
                 ObservableList<StateViewModel> stateViewModelObservableList = planViewModel.getStates();
 
@@ -428,9 +447,12 @@ public class ViewModelManager {
                 planViewModel.getStates().add(state);
                 planViewModel.getEntryPoints().add(ent);
                 break;
+            case Types.VARIABLE:
+                parentPlan.getVariables().add((VariableViewModel)element);
+                break;
             default:
-                System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());
-                //TODO: maybe handle other types
+                System.err.println("ViewModelManager: Add Element to plan not supported for type: " + element.getType());
+                break;
         }
     }
 }

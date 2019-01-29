@@ -8,6 +8,7 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.*;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
+import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
 import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
 import de.unikassel.vs.alica.planDesigner.command.create.CreateBehaviour;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlan;
@@ -702,9 +703,10 @@ public class ModelManager implements Observer {
                 }
                 break;
             case Types.TRANSITION:
-                Transition transition = (Transition) newElement;
                 plan = (Plan) parentElement;
-                plan.getTransitions().add(transition);
+                visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
+                Transition transition = (Transition) newElement;
+                visualisation.getPlan().addTransition(transition);
                 break;
             case Types.STATE:
             case Types.SUCCESSSTATE:
@@ -731,6 +733,22 @@ public class ModelManager implements Observer {
                 uiExtensionEvent.setExtension(extension);
                 event = uiExtensionEvent;
                 break;
+            case Types.SYNCHRONIZATION:
+                plan = (Plan) parentElement;
+                visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
+                visualisation.getPlan().addSynchronization((Synchronization) newElement);
+                UiExtensionModelEvent uiExtensionModelEvent = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
+                extension = visualisation.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(newElement);
+                uiExtensionModelEvent.setExtension(extension);
+                event = uiExtensionModelEvent;
+                break;
+            case Types.VARIABLE:
+                if (parentElement instanceof Plan) {
+                    ((Plan) parentElement).addVariable((Variable)newElement);
+                } else if (parentElement instanceof Behaviour) {
+                    ((Behaviour) parentElement).addVariable((Variable)newElement);
+                }
+                break;
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
                 return null;
@@ -747,11 +765,11 @@ public class ModelManager implements Observer {
         return oldElement;
     }
 
-    public void removedPlanElement(String type, PlanElement planElement, PlanElement parentElement, boolean removeFromDisk) {
+    public void removedPlanElement(String type, PlanElement removedElement, PlanElement parentElement, boolean removeFromDisk) {
         switch (type) {
             case Types.PLAN:
             case Types.MASTERPLAN:
-                Plan plan = (Plan) planElement;
+                Plan plan = (Plan) removedElement;
                 planMap.remove(plan.getId());
                 if (removeFromDisk) {
                     removeFromDisk(plan, FileSystemUtil.PLAN_ENDING, true);
@@ -761,25 +779,25 @@ public class ModelManager implements Observer {
                 //NO-OP
                 break;
             case Types.PLANTYPE:
-                PlanType planType = (PlanType) planElement;
+                PlanType planType = (PlanType) removedElement;
                 planTypeMap.remove(planType.getId());
                 if (removeFromDisk) {
                     removeFromDisk(planType, FileSystemUtil.PLANTYPE_ENDING, true);
                 }
                 break;
             case Types.TASK:
-                Task task = (Task) planElement;
+                Task task = (Task) removedElement;
                 taskRepository.getTasks().remove(task);
                 task.setTaskRepository(null);
                 break;
             case Types.TASKREPOSITORY:
                 taskRepository = null;
                 if (removeFromDisk) {
-                    removeFromDisk((TaskRepository) planElement, FileSystemUtil.TASKREPOSITORY_ENDING, true);
+                    removeFromDisk((TaskRepository) removedElement, FileSystemUtil.TASKREPOSITORY_ENDING, true);
                 }
                 break;
             case Types.BEHAVIOUR:
-                Behaviour behaviour = (Behaviour) planElement;
+                Behaviour behaviour = (Behaviour) removedElement;
                 behaviourMap.remove(behaviour.getId());
                 if (removeFromDisk) {
                     removeFromDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
@@ -789,41 +807,47 @@ public class ModelManager implements Observer {
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
                 //These types only exist inside of plans
-                ((Plan) parentElement).getStates().remove(planElement);
-                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
+                ((Plan) parentElement).getStates().remove(removedElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.ENTRYPOINT:
-                ((Plan) parentElement).getEntryPoints().remove(planElement);
-                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
-                State entryState = ((EntryPoint) planElement).getState();
+                ((Plan) parentElement).getEntryPoints().remove(removedElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
+                State entryState = ((EntryPoint) removedElement).getState();
                 if (entryState != null) {
                     entryState.setEntryPoint(null);
                 }
                 break;
             case Types.TRANSITION:
-                ((Plan) parentElement).getTransitions().remove(planElement);
-                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(planElement);
-            case Types.PRECONDITION:
-            case Types.RUNTIMECONDITION:
-            case Types.POSTCONDITION:
-            case Types.SYNCHRONISATION:
-            case Types.SYNCTRANSITION:
-                //TODO: Handle these cases
+                ((Plan) parentElement).getTransitions().remove(removedElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
+                break;
+            case Types.SYNCHRONIZATION:
+                ((Plan) parentElement).getSynchronizations().remove(removedElement);
+                getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
+                break;
+            case Types.VARIABLE:
+                if (parentElement instanceof Plan) {
+                    ((Plan) parentElement).removeVariable((Variable)removedElement);
+                } else if (parentElement instanceof Behaviour) {
+                    ((Behaviour) parentElement).removeVariable((Variable)removedElement);
+                }
+                break;
             default:
                 System.err.println("ModelManager: Removing " + type + " not implemented, yet!");
         }
         for (IModelEventHandler eventHandler : eventHandlerList) {
-            eventHandler.handleCloseTab(planElement.getId());
+            eventHandler.handleCloseTab(removedElement.getId());
         }
         if (parentElement != null) {
-            planElementMap.remove(planElement.getId());
+            planElementMap.remove(removedElement.getId());
 
-            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, type);
+            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, removedElement, type);
             event.setParentId(parentElement.getId());
             fireEvent(event);
         } else {
             System.out.println("Parent is null");
-            fireEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, planElement, type));
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, removedElement, type));
         }
     }
 
@@ -909,8 +933,11 @@ public class ModelManager implements Observer {
                     case Types.TASK:
                         cmd = new CreateTask(this, mmq);
                         break;
+                    case Types.VARIABLE:
+                        cmd = new AddNewVariable(this, mmq);
+                        break;
                     default:
-                        System.err.println("ModelManager: Creation of unknown model element eventType gets ignored!");
+                        System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
                         return;
                 }
 
@@ -966,7 +993,7 @@ public class ModelManager implements Observer {
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:
-                    case Types.SYNCHRONISATION:
+                    case Types.SYNCHRONIZATION:
                     case Types.SYNCTRANSITION:
                     case Types.INITSTATECONNECTION:
                     case Types.TRANSITION:
@@ -1020,9 +1047,16 @@ public class ModelManager implements Observer {
                 }
                 break;
             case CHANGE_ELEMENT:
-                // TODO: Make this a switch case command, like everywhere else in this method, too!
-                cmd = new ChangeAttributeValue(this, mmq);
-                break;
+                switch (mmq.getElementType()) {
+                    case Types.SYNCTRANSITION: {
+                        PlanModelVisualisationObject parenOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
+                        cmd = new ConnectSynchronizationWithTransition(this, mmq.getElementId(), parenOfElement, (Long) mmq.getNewValue());
+                    } break;
+                    default:
+                        // TODO: Make this a switch case command, like everywhere else in this method, too!
+                        cmd = new ChangeAttributeValue(this, mmq);
+                        break;
+                } break;
             case MOVE_ELEMENT:
                 cmd = new MoveFile(this, mmq);
                 break;
@@ -1201,10 +1235,19 @@ public class ModelManager implements Observer {
                 extension = modelObject.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(transition);
                 cmd = new AddBendpointToPlan(this, parenOfElement, bendPoint, extension);
                 break;
+            case Types.SYNCHRONIZATION:
+                Synchronization sync = new Synchronization();
+                sync.setName(mmq.name);
+                sync.setComment(mmq.getComment());
+                sync.setSyncedTransitions(new ArrayList<>());
+                extension = new PmlUiExtension();
+                extension.setX(x);
+                extension.setY(y);
+                cmd = new AddSynchronizationToPlan(this, sync, parenOfElement, extension);
+                break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
             case Types.POSTCONDITION:
-            case Types.SYNCHRONISATION:
             case Types.SYNCTRANSITION:
                 //TODO: Create commands for the other types
             default:

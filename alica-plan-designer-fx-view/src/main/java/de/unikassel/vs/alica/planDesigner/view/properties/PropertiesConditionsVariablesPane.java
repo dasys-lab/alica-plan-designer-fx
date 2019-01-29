@@ -1,4 +1,4 @@
-package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab;
+package de.unikassel.vs.alica.planDesigner.view.properties;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
@@ -29,22 +29,23 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
     protected TabPane tabPane;
     protected PropertySheet propertySheet;
     protected Tab propertiesTab;
-    protected Tab variablesTab;
+    protected VariablesTab variablesTab;
     protected Tab preConditionTab;
     protected Tab runtimeConditionTab;
     protected Tab postConditionTab;
 
     protected IGuiModificationHandler guiModificationHandler;
 
-    public PropertiesConditionsVariablesPane() {
+    public PropertiesConditionsVariablesPane(IGuiModificationHandler handler) {
         i18NRepo = I18NRepo.getInstance();
+        guiModificationHandler = handler;
 
         propertySheet = new PropertySheet();
         propertySheet.setModeSwitcherVisible(false);
 
         propertiesTab = new Tab(i18NRepo.getString("label.caption.properties"));
         propertiesTab.setContent(propertySheet);
-        variablesTab = new Tab(i18NRepo.getString("label.caption.variables"));
+        variablesTab = new VariablesTab(guiModificationHandler);
         preConditionTab = new Tab(i18NRepo.getString("label.caption.preCondtions"));
         runtimeConditionTab = new Tab(i18NRepo.getString("label.caption.runtimeCondtions"));
         postConditionTab = new Tab(i18NRepo.getString("label.caption.postCondtions"));
@@ -66,6 +67,7 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
         setGraphic(new ImageView(new AlicaIcon(element.getType(), AlicaIcon.Size.SMALL)));
 
         adaptUI(element.getType());
+        variablesTab.setParentViewModel(element);
 
         propertySheet.getItems().clear();
         propertySheet.getItems().addAll(createPropertySheetList(element));

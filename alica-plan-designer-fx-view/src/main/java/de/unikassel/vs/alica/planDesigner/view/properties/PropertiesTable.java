@@ -30,4 +30,14 @@ public class PropertiesTable<S> extends TableView<S> {
         // 24 Pixel * (#items + 1 heading) + 2 pixel for border
         setPrefHeight(24 * (getItems().size() + 1) + 2);
     }
+
+    public void clear() {
+        getItems().clear();
+        setPrefHeight(24 * (getItems().size() + 1) + 2);
+    }
+
+    public void removeItem(S viewModelItem) {
+        getItems().remove(viewModelItem);
+        setPrefHeight(24 * (getItems().size() + 1) + 2);
+    }
 }

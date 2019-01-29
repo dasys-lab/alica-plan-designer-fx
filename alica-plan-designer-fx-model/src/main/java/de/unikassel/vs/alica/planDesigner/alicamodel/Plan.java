@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;

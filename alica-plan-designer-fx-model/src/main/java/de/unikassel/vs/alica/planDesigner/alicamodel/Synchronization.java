@@ -58,4 +58,8 @@ public class Synchronization extends PlanElement{
     public ArrayList<Transition> getSyncedTransitions() {
         return syncedTransitions;
     }
+
+    public void setSyncedTransitions(ArrayList<Transition> transitions) {
+        this.syncedTransitions = transitions;
+    }
 }
