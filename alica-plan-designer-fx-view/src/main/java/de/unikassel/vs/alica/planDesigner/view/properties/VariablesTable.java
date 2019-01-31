@@ -17,6 +17,7 @@ public abstract class VariablesTable<S extends ViewModelElement> extends VBox {
         super();
         i18NRepo = I18NRepo.getInstance();
         table = new PropertiesTable<>();
+        table.setEditable(true);
 
         // Add & Remove Buttons
         Button addButton = new Button(i18NRepo.getString("action.list.addShort"));

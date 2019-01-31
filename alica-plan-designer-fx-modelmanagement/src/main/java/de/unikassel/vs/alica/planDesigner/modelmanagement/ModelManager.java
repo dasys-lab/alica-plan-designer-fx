@@ -875,8 +875,10 @@ public class ModelManager implements Observer {
                         break;
                 }
 
-                renameFile(getAbsoluteDirectory(planElement), (String) newValue, (String) oldValue, ending);
-                serializeToDisk((SerializablePlanElement) planElement, ending, false);
+                if (ending != "") {
+                    renameFile(getAbsoluteDirectory(planElement), (String) newValue, (String) oldValue, ending);
+                    serializeToDisk((SerializablePlanElement) planElement, ending, false);
+                }
                 ArrayList<PlanElement> usages = getUsages(planElement.getId());
                 if (usages != null) {
                     for (PlanElement element : usages) {
@@ -940,56 +942,98 @@ public class ModelManager implements Observer {
             return null;
         }
 
-        if (planElement instanceof Plan) {
-            usages.addAll(getUsagesInStates(planElement));
-            usages.addAll(getUsagesInPlanTypes(planElement));
-        } else if (planElement instanceof Behaviour) {
-            usages.addAll(getUsagesInStates(planElement));
-        } else if (planElement instanceof PlanType) {
-            usages.addAll(getUsagesInStates(planElement));
+        if (planElement instanceof AbstractPlan) {
+            usages.addAll(getAbstractPlanUsages(planElement));
         } else if (planElement instanceof Task) {
-            usages.addAll(getUsagesInEntryPoints(planElement));
+            usages.addAll(getTaskUsages(planElement));
+        } else if (planElement instanceof Variable) {
+            usages.addAll(getVariableUsages(planElement));
         } else if (planElement instanceof TaskRepository) {
-            // TODO: Why do all plans use the task repository? Actually, they use tasks out of the task repo...
-            usages.addAll(getPlans());
-        } else {
+            usages.addAll(getTaskRepoUsages(planElement));
+        }
+        else {
             throw new RuntimeException("Usages requested for unhandled elementType of element with id  " + modelElementId);
         }
         return usages;
     }
 
-    private ArrayList<Plan> getUsagesInEntryPoints(PlanElement planElement) {
-        ArrayList<Plan> usages = new ArrayList<>();
+    private HashSet<Plan> getTaskRepoUsages(PlanElement planElement) {
+        HashSet<Plan> usages = new HashSet<>();
+        TaskRepository taskRepo = (TaskRepository) planElement;
+        for (Plan parent : planMap.values()) {
+            for (EntryPoint entryPoint : parent.getEntryPoints()) {
+                if (taskRepo.getTasks().contains(entryPoint.getTask())) {
+                    usages.add(parent);
+                    break;
+                }
+            }
+        }
+        return usages;
+    }
+
+    private HashSet<Plan> getVariableUsages(PlanElement planElement) {
+        HashSet<Plan> usages = new HashSet<>();
+        for (Plan parent : planMap.values()) {
+            for (Variable var : parent.getVariables()) {
+                if (var.getId() == planElement.getId()) {
+                    usages.add(parent);
+                    break;
+                }
+            }
+            stateLoop:
+            for (State state : parent.getStates()) {
+                for (Parametrisation param : state.getParametrisations()) {
+                    if (param.getSubVariable().getId() == planElement.getId()) {
+                        usages.add(parent);
+                        break stateLoop;
+                    }
+                    if (param.getVariable().getId() == planElement.getId()) {
+                        usages.add(parent);
+                        break stateLoop;
+                    }
+                }
+            }
+        }
+        return usages;
+    }
+
+    private HashSet<Plan> getTaskUsages(PlanElement planElement) {
+        HashSet<Plan> usages = new HashSet<>();
         for (Plan parent : planMap.values()) {
             for (EntryPoint entryPoint : parent.getEntryPoints()) {
                 if (entryPoint.getTask().getId() == planElement.getId()) {
                     usages.add(parent);
+                    break;
                 }
             }
         }
         return usages;
     }
 
-    private ArrayList<PlanType> getUsagesInPlanTypes(PlanElement planElement) {
-        ArrayList<PlanType> usages = new ArrayList<>();
-        for (PlanType parent : planTypeMap.values()) {
-            for (AnnotatedPlan child : parent.getPlans()) {
-                if (child.getPlan().getId() == planElement.getId()) {
-                    usages.add(parent);
-                }
-            }
-        }
-        return usages;
-    }
-
-    private ArrayList<Plan> getUsagesInStates(PlanElement planElement) {
-        ArrayList<Plan> usages = new ArrayList<>();
-        for (Plan parent : planMap.values()) {
-            for (State state : parent.getStates()) {
+    /**
+     * Finds AbstractPlans in states and returns the set of parent plans
+     * of that states.
+     * @param planElement
+     * @return Set of plans that hold the relevant states, using the given element
+     */
+    private HashSet<AbstractPlan> getAbstractPlanUsages(PlanElement planElement) {
+        HashSet<AbstractPlan> usages = new HashSet<>();
+        for (Plan parentPlan : planMap.values()) {
+            stateLoop:
+            for (State state : parentPlan.getStates()) {
                 for (AbstractPlan child : state.getPlans()) {
                     if (child.getId() == planElement.getId()) {
-                        usages.add(parent);
+                        usages.add(parentPlan);
+                        break stateLoop;
                     }
+                }
+            }
+        }
+        for (PlanType parentPlanType : planTypeMap.values()) {
+            for (AnnotatedPlan child : parentPlanType.getPlans()) {
+                if (child.getPlan().getId() == planElement.getId()) {
+                    usages.add(parentPlanType);
+                    break;
                 }
             }
         }

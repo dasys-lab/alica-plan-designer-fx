@@ -42,9 +42,19 @@ public class Behaviour extends AbstractPlan implements HasVariables {
 
     public void addVariable(Variable variable) {
         variables.add(variable);
+        variable.nameProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
+        variable.commentProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
+        variable.typeProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
         this.setDirty(true);
     }
     public void removeVariable(Variable variable) {
+        // TODO: make listener in add method a local variable that is removed from the list of listeners here...
         variables.remove(variable);
         this.setDirty(true);
     }

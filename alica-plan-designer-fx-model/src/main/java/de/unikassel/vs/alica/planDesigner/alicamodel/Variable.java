@@ -1,14 +1,14 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class Variable extends PlanElement {
 
-    protected String type;
+    protected final SimpleStringProperty type = new SimpleStringProperty();
 
-    public String getType() {
+    public String getType() { return type.get(); }
+    public void setType(String type) { this.type.set(type); }
+    public SimpleStringProperty typeProperty() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 }
