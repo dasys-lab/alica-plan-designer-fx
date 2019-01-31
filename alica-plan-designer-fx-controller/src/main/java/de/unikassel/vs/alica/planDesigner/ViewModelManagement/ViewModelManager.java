@@ -326,6 +326,15 @@ public class ViewModelManager {
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
                 planTypeViewModel.getPlansInPlanType().remove(annotatedPlanView);
                 break;
+            case Types.VARIABLE:
+                ViewModelElement parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                if ( parentViewModel instanceof HasVariablesView) {
+                    ((HasVariablesView) parentViewModel).getVariables().remove(viewModelElement);
+                } else {
+                    throw new RuntimeException(getClass().getName() + ": Parent ViewModel object has no variables");
+                }
+                break;
+
             default:
                 System.err.println("ViewModelManager: Remove Element not supported for type: " + viewModelElement.getType());
                 //TODO: maybe handle other types

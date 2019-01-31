@@ -743,10 +743,10 @@ public class ModelManager implements Observer {
                 event = uiExtensionModelEvent;
                 break;
             case Types.VARIABLE:
-                if (parentElement instanceof Plan) {
-                    ((Plan) parentElement).addVariable((Variable)newElement);
-                } else if (parentElement instanceof Behaviour) {
-                    ((Behaviour) parentElement).addVariable((Variable)newElement);
+                if (parentElement instanceof HasVariables) {
+                    ((HasVariables) parentElement).addVariable((Variable)newElement);
+                } else {
+                    throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
                 }
                 break;
             default:
@@ -827,10 +827,10 @@ public class ModelManager implements Observer {
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.VARIABLE:
-                if (parentElement instanceof Plan) {
-                    ((Plan) parentElement).removeVariable((Variable)removedElement);
-                } else if (parentElement instanceof Behaviour) {
-                    ((Behaviour) parentElement).removeVariable((Variable)removedElement);
+                if (parentElement instanceof HasVariables) {
+                    ((HasVariables) parentElement).removeVariable((Variable)removedElement);
+                } else {
+                    throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
                 }
                 break;
             default:
@@ -971,6 +971,9 @@ public class ModelManager implements Observer {
                         break;
                     case Types.TASKREPOSITORY:
                         cmd = new DeleteTaskRepository(this, mmq);
+                        break;
+                    case Types.VARIABLE:
+                        cmd = new DeleteVariableFromAbstractPlan(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");

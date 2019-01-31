@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Behaviour extends AbstractPlan {
+public class Behaviour extends AbstractPlan implements HasVariables {
     protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
     protected final SimpleLongProperty deferring = new SimpleLongProperty();
 
