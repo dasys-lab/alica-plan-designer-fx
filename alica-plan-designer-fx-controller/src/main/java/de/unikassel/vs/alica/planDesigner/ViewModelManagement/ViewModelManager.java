@@ -456,4 +456,35 @@ public class ViewModelManager {
                 break;
         }
     }
+
+    public void connectElement(ModelEvent event) {
+        PlanElement parentPlanElement = modelManager.getPlanElement(event.getParentId());
+        ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
+        ViewModelElement viewModelElement = getViewModelElement(event.getElement());
+
+        switch (event.getElementType()) {
+            case Types.SYNCTRANSITION:
+                ((SynchronizationViewModel) parentViewModel).getTransitions().add((TransitionViewModel) viewModelElement);
+                break;
+                default:
+                    System.err.println("ViewModelManager: Connect Element not supported for type: " + event.getElementType());
+                    break;
+        }
+
+    }
+
+    public void disconnectElement(ModelEvent event) {
+        PlanElement parentPlanElement = modelManager.getPlanElement(event.getParentId());
+        ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
+        ViewModelElement viewModelElement = getViewModelElement(event.getElement());
+
+        switch (event.getElementType()) {
+            case Types.SYNCTRANSITION:
+                ((SynchronizationViewModel) parentViewModel).getTransitions().remove((TransitionViewModel) viewModelElement);
+                break;
+            default:
+                System.err.println("ViewModelManager: Disconnect Element not supported for type: " + event.getElementType());
+                break;
+        }
+    }
 }

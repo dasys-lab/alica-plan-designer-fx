@@ -3,7 +3,10 @@ package de.unikassel.vs.alica.planDesigner.command.change;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronization;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 
 public class ConnectSynchronizationWithTransition extends AbstractCommand {
@@ -29,11 +32,17 @@ public class ConnectSynchronizationWithTransition extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        // TODO
+        synchronization.getSyncedTransitions().add(transition);
+        ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CONNECTED, transition, Types.SYNCTRANSITION);
+        modelEvent.setParentId(synchronization.getId());
+        modelManager.fireEvent(modelEvent);
     }
 
     @Override
     public void undoCommand() {
-        // TODO
+        synchronization.getSyncedTransitions().remove(transition);
+        ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_DISCONNECTED, transition, Types.SYNCTRANSITION);
+        modelEvent.setParentId(synchronization.getId());
+        modelManager.fireEvent(modelEvent);
     }
 }

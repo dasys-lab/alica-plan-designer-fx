@@ -993,11 +993,14 @@ public class ModelManager implements Observer {
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:
                     case Types.SYNCHRONIZATION:
-                    case Types.SYNCTRANSITION:
                     case Types.INITSTATECONNECTION:
                     case Types.TRANSITION:
                     case Types.BENDPOINT:
                         cmd = handleNewElementInPlanQuery(mmq);
+                        break;
+                    case Types.SYNCTRANSITION:
+                        PlanModelVisualisationObject parentOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
+                        cmd = new ConnectSynchronizationWithTransition(this, mmq.getElementId(), parentOfElement, mmq.getRelatedObjects().get(Types.TRANSITION));
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");

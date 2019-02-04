@@ -231,6 +231,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case ELEMENT_CREATED:
                 viewModelManager.addElement(this, event);
                 break;
+            case ELEMENT_CONNECTED:
+                viewModelManager.connectElement(event);
+                break;
+            case ELEMENT_DISCONNECTED:
+                viewModelManager.disconnectElement(event);
             default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
                 break;
