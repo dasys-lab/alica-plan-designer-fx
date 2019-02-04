@@ -326,6 +326,15 @@ public class ViewModelManager {
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
                 planTypeViewModel.getPlansInPlanType().remove(annotatedPlanView);
                 break;
+            case Types.VARIABLE:
+                ViewModelElement parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                if ( parentViewModel instanceof HasVariablesView) {
+                    ((HasVariablesView) parentViewModel).getVariables().remove(viewModelElement);
+                } else {
+                    throw new RuntimeException(getClass().getName() + ": Parent ViewModel object has no variables");
+                }
+                break;
+
             default:
                 System.err.println("ViewModelManager: Remove Element not supported for type: " + viewModelElement.getType());
                 //TODO: maybe handle other types
@@ -380,7 +389,7 @@ public class ViewModelManager {
             y = extension.getY();
         }
 
-        switch (element.getType()) {
+        switch (event.getElementType()) {
             case Types.STATE:
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
@@ -415,12 +424,11 @@ public class ViewModelManager {
                 parentPlan.getSynchronisations().add(syncViewModel);
             } break;
             case Types.INITSTATECONNECTION:
-                // TODO rework and see sender side, the fields seems to be used wrong (e.g. changedAttribute has EntryPoint ID???)
                 Plan plan = (Plan) event.getElement();
                 EntryPoint entryPoint = null;
-                Long changeAttribute = Long.valueOf(event.getChangedAttribute());
+                Long entryPointID = (Long) event.getNewValue();
                 for (EntryPoint ep: ((Plan) plan).getEntryPoints()) {
-                    if(ep.getId() == changeAttribute) {
+                    if(ep.getId() == entryPointID) {
                         entryPoint = ep;
                     }
                 }

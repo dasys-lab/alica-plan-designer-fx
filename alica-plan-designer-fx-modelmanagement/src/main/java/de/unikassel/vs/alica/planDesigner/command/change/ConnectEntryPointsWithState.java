@@ -44,7 +44,8 @@ public class ConnectEntryPointsWithState extends AbstractCommand {
         Plan plan = (Plan) parentOfElement.getPlan();
         ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, plan, Types.INITSTATECONNECTION);
         event.setParentId(parentOfElement.getPlan().getId());
-        event.setChangedAttribute(Long.toString(entryPoint.getId()));
+        event.setNewValue(entryPoint.getId());
+
         modelManager.fireEvent(event);
     }
 

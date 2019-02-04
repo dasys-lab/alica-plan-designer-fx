@@ -1,38 +1,39 @@
 package de.unikassel.vs.alica.planDesigner.command.delete;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Variable;
+import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class DeleteVariableFromAbstractPlan extends AbstractCommand {
 
     protected Variable variable;
     protected AbstractPlan abstractPlan;
 
-    public DeleteVariableFromAbstractPlan(ModelManager modelManager, Variable variable, AbstractPlan abstractPlan) {
+    public DeleteVariableFromAbstractPlan(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        this.variable = variable;
-        this.abstractPlan = abstractPlan;
+        this.variable = (Variable) modelManager.getPlanElement(mmq.getElementId());
+        this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getParentId());
     }
 
     @Override
     public void doCommand() {
-        if (abstractPlan instanceof Plan) {
-            ((Plan) abstractPlan).getVariables().remove(variable);
-        } else {
-            ((Behaviour) abstractPlan).getVariables().remove(variable);
-        }
+        modelManager.removedPlanElement(Types.VARIABLE, variable, abstractPlan, false);
+//        if (abstractPlan instanceof WithVariables) {
+//            ((WithVariables) abstractPlan).removeVariable(variable);
+//        } else {
+//          throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
+//        }
     }
 
     @Override
     public void undoCommand() {
-        if (abstractPlan instanceof Plan) {
-            ((Plan) abstractPlan).getVariables().add(variable);
-        } else {
-            ((Behaviour) abstractPlan).getVariables().add(variable);
-        }
+        modelManager.createdPlanElement(Types.VARIABLE, variable, abstractPlan, false);
+//        if (abstractPlan instanceof WithVariables) {
+//            ((Plan) abstractPlan).addVariable(variable);
+//        } else {
+//            throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
+//        }
     }
 }

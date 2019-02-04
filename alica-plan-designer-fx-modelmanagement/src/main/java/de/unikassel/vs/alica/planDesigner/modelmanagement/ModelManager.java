@@ -9,6 +9,7 @@ import de.unikassel.vs.alica.planDesigner.command.add.*;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
 import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
+import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
 import de.unikassel.vs.alica.planDesigner.command.create.CreateBehaviour;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlan;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlanType;
@@ -21,11 +22,13 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisatio
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtensionMap;
 import javafx.collections.ListChangeListener;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -742,10 +745,10 @@ public class ModelManager implements Observer {
                 event = uiExtensionModelEvent;
                 break;
             case Types.VARIABLE:
-                if (parentElement instanceof Plan) {
-                    ((Plan) parentElement).addVariable((Variable)newElement);
-                } else if (parentElement instanceof Behaviour) {
-                    ((Behaviour) parentElement).addVariable((Variable)newElement);
+                if (parentElement instanceof HasVariables) {
+                    ((HasVariables) parentElement).addVariable((Variable)newElement);
+                } else {
+                    throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
                 }
                 break;
             default:
@@ -826,10 +829,10 @@ public class ModelManager implements Observer {
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.VARIABLE:
-                if (parentElement instanceof Plan) {
-                    ((Plan) parentElement).removeVariable((Variable)removedElement);
-                } else if (parentElement instanceof Behaviour) {
-                    ((Behaviour) parentElement).removeVariable((Variable)removedElement);
+                if (parentElement instanceof HasVariables) {
+                    ((HasVariables) parentElement).removeVariable((Variable)removedElement);
+                } else {
+                    throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
                 }
                 break;
             default:
@@ -850,6 +853,86 @@ public class ModelManager implements Observer {
         }
     }
 
+    public void changeAttribute (PlanElement planElement, String elementType, String attribute, Object newValue, Object oldValue) {
+        try {
+            BeanUtils.setProperty(planElement, attribute, newValue);
+
+            if (attribute.equals("name")) {
+
+                String ending = "";
+                switch (elementType) {
+                    case Types.PLAN:
+                        ending = FileSystemUtil.PLAN_ENDING;
+                        break;
+                    case Types.PLANTYPE:
+                        ending = FileSystemUtil.PLANTYPE_ENDING;
+                        break;
+                    case Types.BEHAVIOUR:
+                        ending = FileSystemUtil.BEHAVIOUR_ENDING;
+                        break;
+                    case Types.TASKREPOSITORY:
+                        ending = FileSystemUtil.TASKREPOSITORY_ENDING;
+                        break;
+                }
+
+                if (ending != "") {
+                    renameFile(getAbsoluteDirectory(planElement), (String) newValue, (String) oldValue, ending);
+                    serializeToDisk((SerializablePlanElement) planElement, ending, false);
+                }
+                ArrayList<PlanElement> usages = getUsages(planElement.getId());
+                if (usages != null) {
+                    for (PlanElement element : usages) {
+                        if (element instanceof Plan) {
+                            serializeToDisk((SerializablePlanElement) element, FileSystemUtil.PLAN_ENDING, false);
+                        } else if (element instanceof PlanType) {
+                            serializeToDisk((SerializablePlanElement) element, FileSystemUtil.PLANTYPE_ENDING, false);
+                        } else if (element instanceof Behaviour) {
+                            serializeToDisk((SerializablePlanElement) element, FileSystemUtil.BEHAVIOUR_ENDING, false);
+                        } else if (element instanceof TaskRepository) {
+                            serializeToDisk((SerializablePlanElement) element, FileSystemUtil.TASKREPOSITORY_ENDING, false);
+                        }
+                    }
+                }
+            }
+
+        } catch (IllegalAccessException | InvocationTargetException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, elementType);
+        event.setChangedAttribute(attribute);
+        event.setNewValue(newValue);
+        fireEvent(event);
+    }
+
+    public void moveFile(SerializablePlanElement elementToMove, String newAbsoluteDirectory, String ending) {
+        // 1. Delete file from file system
+        removeFromDisk(elementToMove, ending, true);
+
+        // 2. Change relative directory property
+        elementToMove.setRelativeDirectory(makeRelativeDirectory(newAbsoluteDirectory, elementToMove.getName() + "." + ending));
+
+        // 3. Serialize file to file system
+        serializeToDisk(elementToMove, ending, true);
+
+        // 4. Do the 1-3 for the pmlex file in case of pml files
+        //TODO implement once pmlex is supported
+
+        // 5. Update external references to file
+        serializeEffectedPlanElements(elementToMove);
+    }
+
+    private void renameFile(String absoluteDirectory, String newName, String oldName, String ending) throws IOException {
+        File oldFile = FileSystemUtil.getFile(absoluteDirectory, oldName, ending);
+        File newFile = new File(Paths.get(absoluteDirectory, newName + "." + ending).toString());
+        if (newFile.exists()) {
+            throw new IOException("ChangeAttributeValue: File " + newFile.toString() + " already exists!");
+        }
+        if (!oldFile.renameTo(newFile)) {
+            throw new IOException("ChangeAttributeValue: Could not rename " + oldFile.toString() + " to " + newFile.toString());
+        }
+    }
+
     public ArrayList<PlanElement> getUsages(long modelElementId) {
         ArrayList<PlanElement> usages = new ArrayList<>();
 
@@ -859,56 +942,98 @@ public class ModelManager implements Observer {
             return null;
         }
 
-        if (planElement instanceof Plan) {
-            usages.addAll(getUsagesInStates(planElement));
-            usages.addAll(getUsagesInPlanTypes(planElement));
-        } else if (planElement instanceof Behaviour) {
-            usages.addAll(getUsagesInStates(planElement));
-        } else if (planElement instanceof PlanType) {
-            usages.addAll(getUsagesInStates(planElement));
+        if (planElement instanceof AbstractPlan) {
+            usages.addAll(getAbstractPlanUsages(planElement));
         } else if (planElement instanceof Task) {
-            usages.addAll(getUsagesInEntryPoints(planElement));
+            usages.addAll(getTaskUsages(planElement));
+        } else if (planElement instanceof Variable) {
+            usages.addAll(getVariableUsages(planElement));
         } else if (planElement instanceof TaskRepository) {
-            // TODO: Why do all plans use the task repository? Actually, they use tasks out of the task repo...
-            usages.addAll(getPlans());
-        } else {
+            usages.addAll(getTaskRepoUsages(planElement));
+        }
+        else {
             throw new RuntimeException("Usages requested for unhandled elementType of element with id  " + modelElementId);
         }
         return usages;
     }
 
-    private ArrayList<Plan> getUsagesInEntryPoints(PlanElement planElement) {
-        ArrayList<Plan> usages = new ArrayList<>();
+    private HashSet<Plan> getTaskRepoUsages(PlanElement planElement) {
+        HashSet<Plan> usages = new HashSet<>();
+        TaskRepository taskRepo = (TaskRepository) planElement;
+        for (Plan parent : planMap.values()) {
+            for (EntryPoint entryPoint : parent.getEntryPoints()) {
+                if (taskRepo.getTasks().contains(entryPoint.getTask())) {
+                    usages.add(parent);
+                    break;
+                }
+            }
+        }
+        return usages;
+    }
+
+    private HashSet<Plan> getVariableUsages(PlanElement planElement) {
+        HashSet<Plan> usages = new HashSet<>();
+        for (Plan parent : planMap.values()) {
+            for (Variable var : parent.getVariables()) {
+                if (var.getId() == planElement.getId()) {
+                    usages.add(parent);
+                    break;
+                }
+            }
+            stateLoop:
+            for (State state : parent.getStates()) {
+                for (Parametrisation param : state.getParametrisations()) {
+                    if (param.getSubVariable().getId() == planElement.getId()) {
+                        usages.add(parent);
+                        break stateLoop;
+                    }
+                    if (param.getVariable().getId() == planElement.getId()) {
+                        usages.add(parent);
+                        break stateLoop;
+                    }
+                }
+            }
+        }
+        return usages;
+    }
+
+    private HashSet<Plan> getTaskUsages(PlanElement planElement) {
+        HashSet<Plan> usages = new HashSet<>();
         for (Plan parent : planMap.values()) {
             for (EntryPoint entryPoint : parent.getEntryPoints()) {
                 if (entryPoint.getTask().getId() == planElement.getId()) {
                     usages.add(parent);
+                    break;
                 }
             }
         }
         return usages;
     }
 
-    private ArrayList<PlanType> getUsagesInPlanTypes(PlanElement planElement) {
-        ArrayList<PlanType> usages = new ArrayList<>();
-        for (PlanType parent : planTypeMap.values()) {
-            for (AnnotatedPlan child : parent.getPlans()) {
-                if (child.getPlan().getId() == planElement.getId()) {
-                    usages.add(parent);
-                }
-            }
-        }
-        return usages;
-    }
-
-    private ArrayList<Plan> getUsagesInStates(PlanElement planElement) {
-        ArrayList<Plan> usages = new ArrayList<>();
-        for (Plan parent : planMap.values()) {
-            for (State state : parent.getStates()) {
+    /**
+     * Finds AbstractPlans in states and returns the set of parent plans
+     * of that states.
+     * @param planElement
+     * @return Set of plans that hold the relevant states, using the given element
+     */
+    private HashSet<AbstractPlan> getAbstractPlanUsages(PlanElement planElement) {
+        HashSet<AbstractPlan> usages = new HashSet<>();
+        for (Plan parentPlan : planMap.values()) {
+            stateLoop:
+            for (State state : parentPlan.getStates()) {
                 for (AbstractPlan child : state.getPlans()) {
                     if (child.getId() == planElement.getId()) {
-                        usages.add(parent);
+                        usages.add(parentPlan);
+                        break stateLoop;
                     }
+                }
+            }
+        }
+        for (PlanType parentPlanType : planTypeMap.values()) {
+            for (AnnotatedPlan child : parentPlanType.getPlans()) {
+                if (child.getPlan().getId() == planElement.getId()) {
+                    usages.add(parentPlanType);
+                    break;
                 }
             }
         }
@@ -970,6 +1095,9 @@ public class ModelManager implements Observer {
                         break;
                     case Types.TASKREPOSITORY:
                         cmd = new DeleteTaskRepository(this, mmq);
+                        break;
+                    case Types.VARIABLE:
+                        cmd = new DeleteVariableFromAbstractPlan(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
@@ -1091,16 +1219,43 @@ public class ModelManager implements Observer {
     }
 
     /**
+     * This method is just for the SerializePlanElement Command. Nobody else should call it ... :P
+     * @param planElement
+     * @param type
+     */
+    public void serialize(SerializablePlanElement planElement, String type) {
+        switch (type) {
+            case Types.TASK:
+            case Types.TASKREPOSITORY:
+                serializeToDisk(planElement, FileSystemUtil.TASKREPOSITORY_ENDING, false);
+                break;
+            case Types.PLANTYPE:
+                serializeToDisk(planElement, FileSystemUtil.PLANTYPE_ENDING, false);
+                break;
+            case Types.PLAN:
+            case Types.MASTERPLAN:
+                serializeToDisk(planElement, FileSystemUtil.PLAN_ENDING, false);
+                break;
+            case Types.BEHAVIOUR:
+                serializeToDisk(planElement, FileSystemUtil.BEHAVIOUR_ENDING, false);
+                break;
+            default:
+                System.err.println("ModelManager: Serialization of type " + type + " not implemented, yet!");
+                break;
+        }
+    }
+
+    /**
      * Serializes an SerializablePlanElement to disk.
      *
      * @param planElement
      */
-    public void serializeToDisk(SerializablePlanElement planElement, String ending, boolean movedOrCreated) {
+    private void serializeToDisk(SerializablePlanElement planElement, String ending, boolean movedOrCreated) {
         try {
 
             // Setting the values in the elementsSaved map at the beginning,
             // because otherwise listeners may react before values are updated
-            if (movedOrCreated) {
+            if (!movedOrCreated) {
                 // the counter is set to 2 because, saving an element always creates two filesystem modified events
                 int counter = 2;
                 // when a plan is saved it needs to be 4 however, because the extension is saved as well
@@ -1213,7 +1368,10 @@ public class ModelManager implements Observer {
                 cmd = new AddTransitionInPlan(this, parenOfElement, in, out);
                 break;
             case Types.INITSTATECONNECTION:
-                throw new RuntimeException("ModelManager: handleNewElementInPlanQuery(): @Vitali: Not done yet. ;-)");
+                EntryPoint inEntryPoint = (EntryPoint) getPlanElement((mmq.getRelatedObjects().get(State.ENTRYPOINT)));
+                State outState = (State) getPlanElement(mmq.getRelatedObjects().get(EntryPoint.STATE));
+                cmd = new ConnectEntryPointsWithState(this, parenOfElement, inEntryPoint, outState);
+                break;
             case Types.ENTRYPOINT:
                 EntryPoint entryPoint = new EntryPoint();
                 entryPoint.setPlan(parenOfElement.getPlan());
@@ -1333,6 +1491,20 @@ public class ModelManager implements Observer {
     }
 
     /**
+     * Serializes all Elements that could be effected by moving the given PlanElement.
+     * @param movedElement
+     */
+    private void serializeEffectedPlanElements(PlanElement movedElement) {
+        ArrayList<PlanElement> usages = getUsages(movedElement.getId());
+        for (PlanElement planElement : usages) {
+            if (planElement instanceof SerializablePlanElement) {
+                SerializablePlanElement serializablePlanElement = (SerializablePlanElement) planElement;
+                serializeToDisk(serializablePlanElement, FileSystemUtil.getFileEnding(serializablePlanElement), true);
+            }
+        }
+    }
+
+    /**
      * Check, whether to ignore the modification of the given {@link PlanElement}
      *
      * @param newElement the {@link PlanElement} to check
@@ -1352,5 +1524,6 @@ public class ModelManager implements Observer {
         }
         return false;
     }
+
 
 }
