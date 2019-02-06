@@ -37,6 +37,7 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
     public StateContainer(/*PmlUiExtension pmlUiExtension,*/ StateViewModel state, PlanTab planTab) {
         super(state, /*pmlUiExtension,*/null, planTab);
         this.state = state;
+        this.statePlans = new ArrayList<>();
         invalidationListeners = new ArrayList<>();
         makeDraggable(this);
         createPositionListeners(this, state);
@@ -58,7 +59,10 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         for (PlanElementViewModel plan : state.getPlanElements()) {
             statePlans.add(new AbstractPlanHBox(plan, this));
         }
-        getChildren().addAll(statePlans);
+
+        if(statePlans != null && !statePlans.isEmpty()) {
+            getChildren().addAll(statePlans);
+        }
     }
 
     @Override
