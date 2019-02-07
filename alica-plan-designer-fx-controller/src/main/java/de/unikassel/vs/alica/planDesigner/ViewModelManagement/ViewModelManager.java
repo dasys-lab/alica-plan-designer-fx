@@ -351,7 +351,13 @@ public class ViewModelManager {
                 planTypeViewModel.getPlansInPlanType().add(annotatedPlanView);
                 break;
             case Types.TASK:
-                // NO-OP cause a taskViewModel is added to the taskRepositoryViewModel when its created
+                PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
+                EntryPoint entryPoint = (EntryPoint) event.getNewValue();
+                for(EntryPointViewModel entryPointViewModel : planViewModel.getEntryPoints()){
+                    if(entryPointViewModel.getId() == entryPoint.getId()){
+                        entryPointViewModel.setTask((PlanElementViewModel) parentViewModel);
+                    }
+                }
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
@@ -364,6 +370,15 @@ public class ViewModelManager {
             case Types.VARIABLE:
                 // it must be a behaviour, because plans are handled in "addToPlan".
                 ((BehaviourViewModel) parentViewModel).getVariables().add((VariableViewModel)viewModelElement);
+                break;
+            case Types.ABSTRACTPLAN:
+                planViewModel = (PlanViewModel) viewModelElement;
+                State state = (State) event.getNewValue();
+                for (StateViewModel stateViewModel: planViewModel.getStates()) {
+                    if(stateViewModel.getId() == state.getId()){
+                       stateViewModel.getPlanElements().add((PlanElementViewModel) parentViewModel);
+                    }
+                }
                 break;
             default:
                 System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());

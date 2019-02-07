@@ -24,4 +24,5 @@ public class Types {
     public static final String SYNCHRONIZATION = "synchronization";
     public static final String SYNCTRANSITION = "synctransition";
     public static final String BENDPOINT = "bendpoint";
+    public static final String ABSTRACTPLAN = "abstractplan";
 }

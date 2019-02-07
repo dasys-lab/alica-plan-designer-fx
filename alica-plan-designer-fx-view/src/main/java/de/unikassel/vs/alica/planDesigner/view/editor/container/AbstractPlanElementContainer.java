@@ -6,9 +6,12 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IShowGeneratedSource
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
+import de.unikassel.vs.alica.planDesigner.view.model.EntryPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -106,31 +109,31 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
         node.addEventHandler(MouseEvent.ANY, Event::consume);
 
         node.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        AbstractPlanElementContainer.this.setDragged(false);
-                        // remember initial mouse cursor coordinates
-                        // and node position
-                        dragContext.mouseAnchorX = mouseEvent.getSceneX();
-                        dragContext.mouseAnchorY = mouseEvent.getSceneY();
-                        dragContext.initialLayoutX = node.getLayoutX();
-                        dragContext.initialLayoutY = node.getLayoutY();
-                    }
-                });
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                AbstractPlanElementContainer.this.setDragged(false);
+                // remember initial mouse cursor coordinates
+                // and node position
+                dragContext.mouseAnchorX = mouseEvent.getSceneX();
+                dragContext.mouseAnchorY = mouseEvent.getSceneY();
+                dragContext.initialLayoutX = node.getLayoutX();
+                dragContext.initialLayoutY = node.getLayoutY();
+            }
+        });
 
         node.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        // shift node from its initial position by delta
-                        // calculated from mouse cursor movement
-                        AbstractPlanElementContainer.this.setDragged(true);
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                // shift node from its initial position by delta
+                // calculated from mouse cursor movement
+                AbstractPlanElementContainer.this.setDragged(true);
 
-                        // set temporary translation
-                        node.setTranslateX(mouseEvent.getSceneX() - dragContext.mouseAnchorX);
-                        node.setTranslateY(mouseEvent.getSceneY() - dragContext.mouseAnchorY);
-                        //System.out.println("X: " + mouseEvent.getX() + " Y:" + mouseEvent.getY());
-                    }
-                });
+                // set temporary translation
+                node.setTranslateX(mouseEvent.getSceneX() - dragContext.mouseAnchorX);
+                node.setTranslateY(mouseEvent.getSceneY() - dragContext.mouseAnchorY);
+                //System.out.println("X: " + mouseEvent.getX() + " Y:" + mouseEvent.getY());
+            }
+        });
 
         node.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseEvent -> {
             // save final position in actual bendpoint
@@ -140,7 +143,7 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
                 node.setTranslateY(0);
                 node.setLayoutX(dragContext.initialLayoutX + mouseEvent.getSceneX() - dragContext.mouseAnchorX);
                 node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getSceneY() - dragContext.mouseAnchorY);
-                
+
                 planTab.fireChangePositionEvent(this, modelElement.getType(), node.getLayoutX(), node.getLayoutY());
                 //getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
                 mouseEvent.consume();
@@ -165,12 +168,28 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
 
         //Create Listeners
         planElementViewModel.xPositionProperty().addListener((observable, oldValue, newValue) -> {
-           node.setLayoutX(newValue.doubleValue());
-           Platform.runLater(this::redrawElement);
+            node.setLayoutX(newValue.doubleValue());
+            Platform.runLater(this::redrawElement);
         });
 
         planElementViewModel.yPositionProperty().addListener((observable, oldValue, newValue) -> {
             node.setLayoutY(newValue.doubleValue());
+            Platform.runLater(this::redrawElement);
+        });
+    }
+
+    public void createAbstractPlanToStateListeners(Node node, StateViewModel state) {
+        state.getPlanElements().addListener(new ListChangeListener<PlanElementViewModel>() {
+            @Override
+            public void onChanged(Change<? extends PlanElementViewModel> c) {
+                Platform.runLater(AbstractPlanElementContainer.this::redrawElement);
+            }
+        });
+    }
+
+    public void createTaskToEntryPointListeners(Node node, EntryPointViewModel entryPoint){
+
+        entryPoint.taskProperty().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(this::redrawElement);
         });
     }

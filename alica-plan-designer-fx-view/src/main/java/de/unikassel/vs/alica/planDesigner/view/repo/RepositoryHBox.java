@@ -1,17 +1,21 @@
 package de.unikassel.vs.alica.planDesigner.view.repo;
 
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEventExpanded;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
-import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.menu.DeleteElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
-import javafx.concurrent.Task;
+import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.PickResult;
+import javafx.scene.shape.Circle;
 
 public class RepositoryHBox extends DraggableHBox {
 
@@ -56,6 +60,33 @@ public class RepositoryHBox extends DraggableHBox {
                 e.consume();
             }
         });
+
+        setOnMouseReleased(e ->{
+            if(viewModelElement instanceof PlanViewModel) {
+                return;
+            }
+            PickResult pickResult = e.getPickResult();
+            Parent parent = pickResult.getIntersectedNode().getParent();
+            if(pickResult.getIntersectedNode() instanceof Circle) {
+                if(parent instanceof StateContainer) {
+                    if(viewModelElement instanceof TaskViewModel) { return; }
+                    StateContainer stateContainer = (StateContainer) parent;
+                    GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(),stateContainer.getModelElement().getId());
+                    guiModificationEventExpanded.setParentId(stateContainer.getState().getParentId());
+                    guiModificationEventExpanded.setElementId(viewModelElement.getId());
+                    guiModificationHandler.handle(guiModificationEventExpanded);
+                }
+                if(parent instanceof EntryPointContainer && viewModelElement instanceof TaskViewModel) {
+                    EntryPointContainer entryPointContainer = (EntryPointContainer) parent;
+                    GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(),entryPointContainer.getModelElement().getId());
+                    guiModificationEventExpanded.setParentId(entryPointContainer.getModelElement().getParentId());
+                    guiModificationEventExpanded.setElementId(viewModelElement.getId());
+                    guiModificationHandler.handle(guiModificationEventExpanded);
+                }
+            }
+            e.consume();
+        });
+
     }
 
     public String getViewModelType() {

@@ -16,7 +16,6 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery
 import de.unikassel.vs.alica.planDesigner.modelmanagement.UiExtensionModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.plugin.PluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
@@ -231,6 +230,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case ELEMENT_CREATED:
                 viewModelManager.addElement(this, event);
                 break;
+            case ELEMENT_ADD:
+                viewModelManager.addElement(this, event);
+                break;
             default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
                 break;
@@ -338,7 +340,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     uimmq.setName(event.getName());
                     uimmq.setComment(event.getComment());
                     mmq = uimmq;
-                } else {
+                } else if(event instanceof GuiModificationEventExpanded) {
+                    mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
+                    mmq.setElementId(event.getElementId());
+                    mmq.setElementType(event.getElementType());
+                    mmq.setParentId(event.getParentId());
+                    mmq.setName(event.getName());
+                    mmq.setComment(event.getComment());
+                    mmq.setTargetID(((GuiModificationEventExpanded) event).getTargetID());
+                } else{
                     mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
                     mmq.setElementId(event.getElementId());
                     mmq.setElementType(event.getElementType());

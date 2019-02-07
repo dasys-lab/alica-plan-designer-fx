@@ -53,6 +53,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
         taskIcon = new ImageView(new AlicaIcon(Task.class.getSimpleName(), AlicaIcon.Size.SMALL));
 
         makeDraggable(this);
+        createTaskToEntryPointListeners(this, containedElement);
         createPositionListeners(this, containedElement);
         setupContainer();
     }

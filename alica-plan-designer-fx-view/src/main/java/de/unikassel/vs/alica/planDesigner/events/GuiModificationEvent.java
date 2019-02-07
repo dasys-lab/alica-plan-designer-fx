@@ -18,6 +18,9 @@ public class GuiModificationEvent {
     protected String comment;
     protected Map<String, Long> relatedObjects;
 
+    //constructor
+    public GuiModificationEvent() {}
+
     public GuiModificationEvent(GuiEventType eventType, String elementType, String name) {
         this.eventType = eventType;
         this.elementType = elementType;

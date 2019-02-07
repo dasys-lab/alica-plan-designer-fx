@@ -1,11 +1,14 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import javafx.beans.property.SimpleObjectProperty;
+
 public class EntryPointViewModel extends PlanElementViewModel {
 
     public static final String STATE = "state";
 
     protected StateViewModel state;
-    protected PlanElementViewModel task;
+
+    protected final SimpleObjectProperty<TaskViewModel> task = new SimpleObjectProperty<>();
 
     public EntryPointViewModel(long id, String name, String type) {
         super(id, name, type);
@@ -19,11 +22,9 @@ public class EntryPointViewModel extends PlanElementViewModel {
         this.state = state;
     }
 
-    public PlanElementViewModel getTask() {
-        return task;
-    }
+    public TaskViewModel getTask() { return task.get(); }
 
-    public void setTask(PlanElementViewModel task) {
-        this.task = task;
-    }
+    public SimpleObjectProperty<TaskViewModel> taskProperty() { return task; }
+
+    public void setTask(PlanElementViewModel task) { this.task.set((TaskViewModel) task); }
 }

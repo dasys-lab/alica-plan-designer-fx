@@ -45,7 +45,7 @@ public abstract class AbstractTool {
 
     private boolean recentlyDone;
     private boolean activated;
-
+    private boolean isActivated;
     protected ImageCursor imageCursor;
     protected ImageCursor forbiddenCursor;
     protected ImageCursor addCursor;
@@ -88,6 +88,16 @@ public abstract class AbstractTool {
                             endTool();
                         }
                     }
+//                    if (event.getTarget() instanceof ToolButton) {
+//                        if(activated) {
+//                            if(isActivated) {
+//                                isActivated = !isActivated;
+//                                endTool();
+//                            } else {
+//                                isActivated = !isActivated;
+//                            }
+//                        }
+//                    }
                 }
             });
 
