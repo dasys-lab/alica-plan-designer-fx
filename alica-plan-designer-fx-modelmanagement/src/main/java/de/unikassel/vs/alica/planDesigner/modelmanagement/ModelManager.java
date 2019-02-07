@@ -813,11 +813,11 @@ public class ModelManager implements Observer {
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
                 //These types only exist inside of plans
-                ((Plan) parentElement).getStates().remove(removedElement);
+                ((Plan) parentElement).removeState((State) removedElement);
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.ENTRYPOINT:
-                ((Plan) parentElement).getEntryPoints().remove(removedElement);
+                ((Plan) parentElement).removeEntryPoint((EntryPoint) removedElement);
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 State entryState = ((EntryPoint) removedElement).getState();
                 if (entryState != null) {
@@ -825,11 +825,11 @@ public class ModelManager implements Observer {
                 }
                 break;
             case Types.TRANSITION:
-                ((Plan) parentElement).getTransitions().remove(removedElement);
+                ((Plan) parentElement).removeTransition((Transition) removedElement);
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.SYNCHRONIZATION:
-                ((Plan) parentElement).getSynchronizations().remove(removedElement);
+                ((Plan) parentElement).removeSynchronization((Synchronization) removedElement);
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.VARIABLE:

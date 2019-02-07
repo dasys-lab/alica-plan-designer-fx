@@ -306,25 +306,31 @@ public class ViewModelManager {
     public void removeElement(long parentId, ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {
             case Types.TASK:
-                ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
+                ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(parentId);
                 break;
             case Types.STATE:
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
                 StateViewModel stateViewModel = (StateViewModel) viewModelElement;
-                PlanViewModel planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
+                PlanViewModel planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
 
                 planViewModel.getStates().remove(stateViewModel);
                 break;
             case Types.ENTRYPOINT:
                 EntryPointViewModel entryPointViewModel = (EntryPointViewModel) viewModelElement;
-                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(entryPointViewModel.getParentId()));
+                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
 
                 planViewModel.getEntryPoints().remove(entryPointViewModel);
                 if (entryPointViewModel.getState() != null) {
                     StateViewModel entryState = entryPointViewModel.getState();
                     entryState.setEntryPoint(null);
                 }
+                break;
+            case Types.TRANSITION:
+                TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
+                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+
+                planViewModel.getTransitions().remove(transitionViewModel);
                 break;
             case Types.ANNOTATEDPLAN:
                 AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) viewModelElement;
