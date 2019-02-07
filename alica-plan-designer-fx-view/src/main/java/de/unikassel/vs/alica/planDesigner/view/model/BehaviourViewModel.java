@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class BehaviourViewModel extends SerializableViewModel {
+public class BehaviourViewModel extends SerializableViewModel implements HasVariablesView {
 
     protected IntegerProperty frequency = new SimpleIntegerProperty();
     protected LongProperty deferring = new SimpleLongProperty();
@@ -46,6 +46,7 @@ public class BehaviourViewModel extends SerializableViewModel {
         return frequency;
     }
 
+    @Override
     public ObservableList<VariableViewModel> getVariables() {
         return variables;
     }

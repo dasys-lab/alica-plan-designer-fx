@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab;
 
+import de.unikassel.vs.alica.planDesigner.controller.IsDirtyWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
@@ -8,8 +9,11 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.WindowEvent;
 
 public class EditorTabPane extends TabPane {
 

@@ -6,7 +6,6 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import javafx.event.EventHandler;
@@ -29,13 +28,13 @@ public class SynchronizationTool extends AbstractTool {
 
     @Override
     public ToolButton createToolUI() {
-        ToolButton tollButton = new ToolButton();
-        tollButton.setIcon(Types.SYNCHRONIZATION);
-        setToolButton(tollButton);
+        ToolButton toolButton = new ToolButton();
+        toolButton.setIcon(Types.SYNCHRONIZATION);
+        setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.synchronization);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synchronization);
         addCursor = new AlicaCursor(AlicaCursor.Type.add_synchronization);
-        return tollButton;
+        return toolButton;
     }
 
     @Override

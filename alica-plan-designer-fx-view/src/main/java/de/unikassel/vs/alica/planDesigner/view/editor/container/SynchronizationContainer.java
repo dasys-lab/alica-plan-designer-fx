@@ -2,18 +2,18 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
+import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SynchronizationViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Polyline;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -51,58 +51,96 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
         getChildren().clear();
 
         SynchronizationViewModel syncViewModel = (SynchronizationViewModel) getModelElement();
+
+        // POSITION
         setLayoutX(syncViewModel.getXPosition());
         setLayoutY(syncViewModel.getYPosition());
 
-        visualRepresentation = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
+        // SYNC - CONTAINER
+        Circle circle = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
+        circle.setFill(new ImagePattern(new AlicaIcon("synchronization", AlicaIcon.Size.SYNC)));
+        visualRepresentation = circle;
         setEffectToStandard();
-        ((Circle) visualRepresentation).setFill(new ImagePattern(new AlicaIcon("synchronization", AlicaIcon.Size.SYNC)));
+
+        // TEXT
         Text e = new Text(synchronisation.getName());
         getChildren().add(e);
         e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth() / 2);
         e.setLayoutY(e.getLayoutY() - StateContainer.STATE_RADIUS);
+
+        // SYNC - TRANSITIONS
         if (transitionContainers != null && transitionContainers.size() > 0) {
-            transitionContainers.forEach(transitionContainer -> {
-                if (transitionContainer.getVisualRepresentation() instanceof Line) {
-                    Line visualRepresentation = (Line) transitionContainer.getVisualRepresentation();
-                    double middleXT = visualRepresentation.getStartX() + (visualRepresentation.getEndX() - visualRepresentation.getStartX()) / 2;
-                    double middleYT = visualRepresentation.getStartY() + (visualRepresentation.getEndY() - visualRepresentation.getStartY()) / 2;
-                    Point2D middleP = transitionContainer.localToParent(middleXT, middleYT);
-                    Point2D middleS = this.parentToLocal(middleP);
-                    Line line = new Line(visualRepresentation.getLayoutX(),
-                            visualRepresentation.getLayoutY(),
-                            middleS.getX(),
-                            middleS.getY());
-                    line.setFill(Color.VIOLET);
-                    getChildren().add(line);
-                    transitionToLineMap.put(transitionContainer, line);
-                } else if (transitionContainer.getVisualRepresentation() instanceof Polyline) {
-                    Polyline visualRepresentation = (Polyline) transitionContainer.getVisualRepresentation();
+
+            Point2D middle = null;
+            Shape transitionLine = null;
+            for (TransitionContainer transContainer: transitionContainers) {
+                // LINE (WITHOUT BENDPOINTS)
+                if (transContainer.getVisualRepresentation() instanceof Line) {
+                    transitionLine = (Line) transContainer.getVisualRepresentation();
+
+                    // CALCULATE MIDDLE OF TRANSITION
+                    double middleXT = ((Line) transitionLine).getStartX() + (((Line) transitionLine).getEndX() - ((Line) transitionLine).getStartX()) / 2;
+                    double middleYT = ((Line) transitionLine).getStartY() + (((Line) transitionLine).getEndY() - ((Line) transitionLine).getStartY()) / 2;
+                    middle = parentToLocal(transContainer.localToParent(middleXT, middleYT));
+
+                    // POLYLINE (WITH BENDPOINTS)
+                } else if (transContainer.getVisualRepresentation() instanceof Polyline) {
+                    transitionLine = (Polyline) transContainer.getVisualRepresentation();
+
+                    ObservableList<Double> points = ((Polyline) transitionLine).getPoints();
                     double middleXT;
                     double middleYT;
-                    if (((visualRepresentation.getPoints().size() / 2) / 2) % 2 == 1) {
-                        int i = ((visualRepresentation.getPoints().size() / 2) / 2) * 2;
-                        middleXT = visualRepresentation.getPoints().get(i);
-                        middleYT = visualRepresentation.getPoints().get(i + 1);
+
+                    // CALCULATE "MIDDLE" OF TRANSITION
+                    if (((points.size() / 2) / 2) % 2 == 1) {
+                        int i = ((points.size() / 2) / 2) * 2;
+                        middleXT = points.get(i);
+                        middleYT = points.get(i + 1);
 
                     } else {
-                        int i = (visualRepresentation.getPoints().size() / 2);
-                        middleXT =
-                                visualRepresentation.getPoints().get(i - 2) + visualRepresentation.getPoints().get(i) - visualRepresentation.getPoints().get(i - 2);
-                        middleYT =
-                                visualRepresentation.getPoints().get(i - 1) + visualRepresentation.getPoints().get(i + 1) - visualRepresentation.getPoints().get(i - 1);
+                        int i = (points.size() / 2);
+                        middleXT = points.get(i - 2) + points.get(i) - points.get(i - 2);
+                        middleYT = points.get(i - 1) + points.get(i + 1) - points.get(i - 1);
                     }
-                    Point2D middleP = transitionContainer.localToParent(middleXT, middleYT);
-                    Point2D middleS = this.parentToLocal(middleP);
-                    Line line = new Line(visualRepresentation.getLayoutX(),
-                            visualRepresentation.getLayoutY(),
-                            middleS.getX(),
-                            middleS.getY());
-                    line.setFill(Color.VIOLET);
-                    getChildren().add(line);
-                    transitionToLineMap.put(transitionContainer, line);
+                    middle = parentToLocal(transContainer.localToParent(middleXT, middleYT));
                 }
-            });
+
+                // MAGICAL MATH
+                double _fromX = transitionLine.getLayoutX();
+                double _fromY = transitionLine.getLayoutY();
+                double _toX = middle.getX() - 3 * ((middle.getX() - _fromX) / Math.sqrt(Math.pow(middle.getX() - _fromX, 2) + Math.pow(middle.getY() - _fromY, 2)));
+                double _toY = middle.getY() - 3 * ((middle.getY() - _fromY) / Math.sqrt(Math.pow(middle.getX() - _fromX, 2) + Math.pow(middle.getY() - _fromY, 2)));
+                double vecX = _toX - _fromX;
+                double vecY = _toY - _fromY;
+                double vecLen = Math.sqrt((vecX * vecX) + (vecY * vecY));
+                double triangleSpanVecX = vecY;
+                double triangleSpanVecY = -vecX;
+                double triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
+
+
+                // CREATE SYNCTRANSITION LINE
+                Line line = new Line(_fromX, _fromY, _toX, _toY);
+                line.setStroke(Color.RED);
+                line.setStrokeWidth(3);
+                getChildren().add(line);
+
+                // CREATE SYNTRANSITION ARROWHEAD
+                int arrowSize = 5;
+                Polygon polygon = new Polygon(
+                        _toX - arrowSize * (vecX / vecLen) + arrowSize * (triangleSpanVecX / triangleSpanLen),
+                        _toY - arrowSize * (vecY / vecLen) + arrowSize * (triangleSpanVecY / triangleSpanLen),
+                        _toX,
+                        _toY,
+                        _toX - arrowSize * (vecX / vecLen) - arrowSize * (triangleSpanVecX / triangleSpanLen),
+                        _toY - arrowSize * (vecY / vecLen) - arrowSize * (triangleSpanVecY / triangleSpanLen));
+                polygon.setFill(Color.RED);
+                polygon.setStroke(Color.RED);
+                polygon.setStrokeWidth(4);
+                polygon.setVisible(true);
+                getChildren().add(polygon);
+
+                transitionToLineMap.put(transContainer, line);
+            }
 
         }
         getChildren().add(visualRepresentation);

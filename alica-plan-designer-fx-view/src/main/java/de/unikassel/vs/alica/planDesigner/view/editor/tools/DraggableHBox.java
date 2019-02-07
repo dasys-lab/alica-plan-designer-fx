@@ -19,7 +19,6 @@ public class DraggableHBox extends HBox {
 
     public DraggableHBox() {
         EventHandler<Event> eventHandler = new EventHandler<Event>() {
-
             @Override
             public void handle(Event event) {
                 fireEvent(event);

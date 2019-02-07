@@ -44,8 +44,7 @@ public abstract class AbstractTool {
     protected Cursor previousCursor;
 
     private boolean recentlyDone;
-    private boolean activated;
-    private boolean isActivated;
+
     protected ImageCursor imageCursor;
     protected ImageCursor forbiddenCursor;
     protected ImageCursor addCursor;
@@ -73,7 +72,7 @@ public abstract class AbstractTool {
                 @Override
                 public void handle(KeyEvent event) {
                     if (event.getCode() == KeyCode.ESCAPE) {
-                        if (activated) {
+                        if (toolButton.isSelected()) {
                             endTool();
                         }
                     }
@@ -84,20 +83,10 @@ public abstract class AbstractTool {
                 @Override
                 public void handle(MouseEvent event) {
                     if (event.getButton() == MouseButton.SECONDARY) {
-                        if (activated) {
+                        if (toolButton.isSelected()) {
                             endTool();
                         }
                     }
-//                    if (event.getTarget() instanceof ToolButton) {
-//                        if(activated) {
-//                            if(isActivated) {
-//                                isActivated = !isActivated;
-//                                endTool();
-//                            } else {
-//                                isActivated = !isActivated;
-//                            }
-//                        }
-//                    }
                 }
             });
 
@@ -135,7 +124,6 @@ public abstract class AbstractTool {
         }
 
         previousCursor = getCursor();
-        activated = !activated;
     }
 
     public void endTool() {
@@ -148,7 +136,6 @@ public abstract class AbstractTool {
         }
         setCursor(Cursor.DEFAULT);
         setRecentlyDone(true);
-        activated = !activated;
     }
 
     public boolean isRecentlyDone() {
@@ -164,10 +151,10 @@ public abstract class AbstractTool {
         toolButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (activated) {
-                    endTool();
-                } else {
+                if (toolButton.isSelected()) {
                     startTool();
+                } else {
+                    endTool();
                 }
             }
         });

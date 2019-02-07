@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class PlanViewModel extends SerializableViewModel {
+public class PlanViewModel extends SerializableViewModel implements HasVariablesView{
 
     protected final BooleanProperty masterPlan = new SimpleBooleanProperty(null, "masterPlan", false);
     protected final DoubleProperty utilityThreshold = new SimpleDoubleProperty(null, "utilityThreshold", 0.5);

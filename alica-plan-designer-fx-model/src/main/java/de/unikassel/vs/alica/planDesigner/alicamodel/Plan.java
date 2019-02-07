@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Plan extends AbstractPlan {
+public class Plan extends AbstractPlan implements HasVariables {
 
     protected final SimpleBooleanProperty masterPlan = new SimpleBooleanProperty();
     protected final SimpleDoubleProperty utilityThreshold = new SimpleDoubleProperty();
@@ -120,14 +120,26 @@ public class Plan extends AbstractPlan {
         return Collections.unmodifiableList(entryPoints);
     }
 
+    @Override
     public void addVariable(Variable variable) {
         variables.add(variable);
+        variable.nameProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
+        variable.commentProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
+        variable.variableTypeProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
         this.setDirty(true);
     }
+    @Override
     public void removeVariable(Variable variable) {
         variables.remove(variable);
         this.setDirty(true);
     }
+    @Override
     public List<Variable> getVariables() {
         return Collections.unmodifiableList(variables);
     }
@@ -141,6 +153,17 @@ public class Plan extends AbstractPlan {
         utilityThreshold.addListener((observable, oldValue, newValue) -> {
             this.setDirty(true);
         });
+        for (Variable variable : variables) {
+            variable.nameProperty().addListener((observable, oldValue, newValue) -> {
+                this.setDirty(true);
+            });
+            variable.commentProperty().addListener((observable, oldValue, newValue) -> {
+                this.setDirty(true);
+            });
+            variable.variableTypeProperty().addListener((observable, oldValue, newValue) -> {
+                this.setDirty(true);
+            });
+        }
         this.setDirty(false);
     }
 }

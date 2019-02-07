@@ -148,7 +148,8 @@ public class ViewModelManager {
 
     private VariableViewModel createVariableViewModel(Variable var) {
         VariableViewModel variableViewModel = new VariableViewModel(var.getId(), var.getName(), Types.VARIABLE);
-        variableViewModel.setVariableType(var.getType());
+        variableViewModel.setVariableType(var.getVariableType());
+        variableViewModel.setComment(var.getComment());
         return variableViewModel;
     }
 
@@ -285,6 +286,9 @@ public class ViewModelManager {
         for (Synchronization synchronization : plan.getSynchronizations()) {
             planViewModel.getSynchronisations().add((SynchronizationViewModel) getViewModelElement(synchronization));
         }
+        for (Variable var : plan.getVariables()) {
+            planViewModel.getVariables().add((VariableViewModel) getViewModelElement(var));
+        }
         if (plan.getPreCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(plan.getPreCondition());
             conditionViewModel.setParentId(plan.getId());
@@ -295,25 +299,26 @@ public class ViewModelManager {
             conditionViewModel.setParentId(plan.getId());
             planViewModel.getConditions().add(conditionViewModel);
         }
+
         return planViewModel;
     }
 
     public void removeElement(long parentId, ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {
             case Types.TASK:
-                ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
+                ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(parentId);
                 break;
             case Types.STATE:
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
                 StateViewModel stateViewModel = (StateViewModel) viewModelElement;
-                PlanViewModel planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
+                PlanViewModel planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
 
                 planViewModel.getStates().remove(stateViewModel);
                 break;
             case Types.ENTRYPOINT:
                 EntryPointViewModel entryPointViewModel = (EntryPointViewModel) viewModelElement;
-                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(entryPointViewModel.getParentId()));
+                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
 
                 planViewModel.getEntryPoints().remove(entryPointViewModel);
                 if (entryPointViewModel.getState() != null) {
@@ -321,11 +326,26 @@ public class ViewModelManager {
                     entryState.setEntryPoint(null);
                 }
                 break;
+            case Types.TRANSITION:
+                TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
+                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+
+                planViewModel.getTransitions().remove(transitionViewModel);
+                break;
             case Types.ANNOTATEDPLAN:
                 AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) viewModelElement;
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
                 planTypeViewModel.getPlansInPlanType().remove(annotatedPlanView);
                 break;
+            case Types.VARIABLE:
+                ViewModelElement parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                if ( parentViewModel instanceof HasVariablesView) {
+                    ((HasVariablesView) parentViewModel).getVariables().remove(viewModelElement);
+                } else {
+                    throw new RuntimeException(getClass().getName() + ": Parent ViewModel object has no variables");
+                }
+                break;
+
             default:
                 System.err.println("ViewModelManager: Remove Element not supported for type: " + viewModelElement.getType());
                 //TODO: maybe handle other types
@@ -336,7 +356,10 @@ public class ViewModelManager {
 
     public void addElement(Controller controller, ModelEvent event) {
         PlanElement parentPlanElement = modelManager.getPlanElement(event.getParentId());
-        ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
+        ViewModelElement parentViewModel = null;
+        if(parentPlanElement != null) {
+            parentViewModel = getViewModelElement(parentPlanElement);
+        }
         ViewModelElement viewModelElement = getViewModelElement(event.getElement());
 
         if (parentViewModel instanceof  PlanViewModel) {
@@ -467,6 +490,37 @@ public class ViewModelManager {
                 break;
             default:
                 System.err.println("ViewModelManager: Add Element to plan not supported for type: " + element.getType());
+                break;
+        }
+    }
+
+    public void connectElement(ModelEvent event) {
+        PlanElement parentPlanElement = modelManager.getPlanElement(event.getParentId());
+        ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
+        ViewModelElement viewModelElement = getViewModelElement(event.getElement());
+
+        switch (event.getElementType()) {
+            case Types.SYNCTRANSITION:
+                ((SynchronizationViewModel) parentViewModel).getTransitions().add((TransitionViewModel) viewModelElement);
+                break;
+                default:
+                    System.err.println("ViewModelManager: Connect Element not supported for type: " + event.getElementType());
+                    break;
+        }
+
+    }
+
+    public void disconnectElement(ModelEvent event) {
+        PlanElement parentPlanElement = modelManager.getPlanElement(event.getParentId());
+        ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
+        ViewModelElement viewModelElement = getViewModelElement(event.getElement());
+
+        switch (event.getElementType()) {
+            case Types.SYNCTRANSITION:
+                ((SynchronizationViewModel) parentViewModel).getTransitions().remove((TransitionViewModel) viewModelElement);
+                break;
+            default:
+                System.err.println("ViewModelManager: Disconnect Element not supported for type: " + event.getElementType());
                 break;
         }
     }

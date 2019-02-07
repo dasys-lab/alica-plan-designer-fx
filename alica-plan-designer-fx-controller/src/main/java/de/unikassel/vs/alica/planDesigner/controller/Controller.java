@@ -3,7 +3,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
-import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
@@ -233,6 +233,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case ELEMENT_ADD:
                 viewModelManager.addElement(this, event);
                 break;
+            case ELEMENT_CONNECTED:
+                viewModelManager.connectElement(event);
+                break;
+            case ELEMENT_DISCONNECTED:
+                viewModelManager.disconnectElement(event);
             default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
                 break;

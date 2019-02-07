@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -16,7 +17,6 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StateContainer extends AbstractPlanElementContainer implements Observable {
 
@@ -36,6 +36,7 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
     public StateContainer(/*PmlUiExtension pmlUiExtension,*/ StateViewModel state, PlanTab planTab) {
         super(state, /*pmlUiExtension,*/null, planTab);
         this.state = state;
+        this.statePlans = new ArrayList<>();
         invalidationListeners = new ArrayList<>();
         makeDraggable(this);
         createPositionListeners(this, state);
@@ -48,8 +49,6 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
     @Override
     public void setupContainer() {
         getChildren().clear();
-//        setLayoutX(getPmlUiExtension().getXPos());
-//        setLayoutY(getPmlUiExtension().getYPos());
         visualRepresentation = new Circle(STATE_RADIUS, getVisualisationColor());
         setEffectToStandard();
         getChildren().add(visualRepresentation);
@@ -58,17 +57,13 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         elementName.setLayoutX(elementName.getLayoutX() - elementName.getLayoutBounds().getWidth() / 2);
         elementName.setLayoutY(elementName.getLayoutY() - STATE_RADIUS * 1.3);
 
-        statePlans = state.getPlanElements()
-                .stream()
-                .map(abstractPlan -> new AbstractPlanHBox(abstractPlan, this))
-                .collect(Collectors.toList());
-//        if (getModelElementId() instanceof TerminalState) {
-//            PostCondition postCondition = ((TerminalState) getModelElementId()).getPostCondition();
-//            if (postCondition != null) {
-//                statePlans.add(new AbstractPlanHBox(postCondition, this));
-//            }
-//        }
-        getChildren().addAll(statePlans);
+        for (PlanElementViewModel plan : state.getPlanElements()) {
+            statePlans.add(new AbstractPlanHBox(plan, this));
+        }
+
+        if(statePlans != null && !statePlans.isEmpty()) {
+            getChildren().addAll(statePlans);
+        }
     }
 
     @Override

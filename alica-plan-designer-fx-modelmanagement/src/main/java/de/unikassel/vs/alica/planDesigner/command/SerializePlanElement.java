@@ -21,31 +21,11 @@ public class SerializePlanElement extends AbstractCommand {
 
     @Override
     public void doCommand() {
-
         //Prevent confusing behavior in combination with undo and redo.
         //Saving should take place only once and not again via redo, because it would overwrite later safes of the user.
         //Therefore a boolean is used to keep track of whether this is the first time doCommand is called
         if(!hasBeenSaved) {
-            switch (mmq.getElementType()) {
-                case Types.TASK:
-                case Types.TASKREPOSITORY:
-                    modelManager.serializeToDisk(planElement, FileSystemUtil.TASKREPOSITORY_ENDING, false);
-                    break;
-                case Types.PLANTYPE:
-                    modelManager.serializeToDisk(planElement, FileSystemUtil.PLANTYPE_ENDING, false);
-                    break;
-                case Types.PLAN:
-                case Types.MASTERPLAN:
-                    modelManager.serializeToDisk(planElement, FileSystemUtil.PLAN_ENDING, false);
-                    break;
-                case Types.BEHAVIOUR:
-                    modelManager.serializeToDisk(planElement, FileSystemUtil.BEHAVIOUR_ENDING, false);
-                    break;
-                default:
-                    System.err.println("SerializePlanElement: Serialization of type " + mmq.getElementType() + " not implemented, yet!");
-                    break;
-            }
-
+            this.modelManager.serialize(planElement, mmq.getElementType());
             hasBeenSaved = true;
         }
     }
