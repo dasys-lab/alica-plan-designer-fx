@@ -5,7 +5,7 @@ public class EntryPointViewModel extends PlanElementViewModel {
     public static final String STATE = "state";
 
     protected StateViewModel state;
-    protected PlanElementViewModel task;
+    protected TaskViewModel task;
 
     public EntryPointViewModel(long id, String name, String type) {
         super(id, name, type);
@@ -24,6 +24,6 @@ public class EntryPointViewModel extends PlanElementViewModel {
     }
 
     public void setTask(PlanElementViewModel task) {
-        this.task = task;
+        this.task = (TaskViewModel) task;
     }
 }

@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.planDesigner.alicamodel;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 public class EntryPoint extends PlanElement {
 
@@ -10,16 +11,18 @@ public class EntryPoint extends PlanElement {
     protected final SimpleIntegerProperty minCardinality = new SimpleIntegerProperty();
     protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty();
 
-    protected Task task;
+    protected final SimpleObjectProperty<Task> task = new SimpleObjectProperty<>();
     protected State state;
     protected Plan plan;
 
     public Task getTask() {
-        return task;
+        return task.get();
     }
-
     public void setTask(Task task) {
-        this.task = task;
+        this.task.set(task);
+    }
+    public SimpleObjectProperty<Task> taskProperty() {
+        return task;
     }
 
     public boolean getSuccessRequired() {
