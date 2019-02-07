@@ -103,14 +103,8 @@ public class IsDirtyWindowController {
     public static boolean isAnyTabDirty() {
         ObservableList<Tab> openTabs = MainWindowController.getInstance().getEditorTabPane().getTabs();
         for(Tab openTab : openTabs) {
-            if(openTab instanceof  TaskRepositoryTab) {
-                if (((SerializableViewModel) ((TaskRepositoryTab) openTab).getSerializableViewModel()).isDirty()) {
-                    return true;
-                }
-            } else if(openTab instanceof  AbstractPlanTab) {
-                if (((SerializableViewModel) ((AbstractPlanTab) openTab).getSerializableViewModel()).isDirty() || ((AbstractPlanTab) openTab).isDirty()) {
-                    return true;
-                }
+            if(((EditorTab) openTab).isDirty()) {
+                return true;
             }
         }
         return false;
