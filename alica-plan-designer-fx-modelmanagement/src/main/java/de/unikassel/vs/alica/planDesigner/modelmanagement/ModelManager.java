@@ -8,8 +8,8 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.*;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
 import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
+import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
 import de.unikassel.vs.alica.planDesigner.command.create.CreateBehaviour;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlan;
 import de.unikassel.vs.alica.planDesigner.command.create.CreatePlanType;
@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
@@ -575,7 +576,10 @@ public class ModelManager implements Observer {
         return true;
     }
 
-    public <T> T parseFile(File modelFile, Class<T> type) {
+    public <T> T parseFile(File modelFile, Class<T> type) throws FileNotFoundException {
+        if(!modelFile.exists()){
+            throw new FileNotFoundException("The file " + modelFile.getAbsolutePath() + " does not exist!");
+        }
         T planElement;
         try {
             while (!modelFile.canRead()) {

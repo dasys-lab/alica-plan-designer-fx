@@ -1,6 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.command;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
@@ -8,6 +10,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * Parses a given file and adds the resulting object to the corresponding maps of the model manager.
@@ -28,26 +31,39 @@ public class ParseAbstractPlan extends AbstractCommand {
     public void doCommand() {
         // 1. parse file
         // 2. delete already existing object and add new one
-        switch (modelModificationQuery.getElementType()) {
-            case Types.PLAN:
-            case Types.MASTERPLAN:
-                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
-                modelManager.replaceIncompleteTasksInEntryPoints((Plan) newElement);
-                break;
-            case Types.PLANTYPE:
-                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
-                modelManager.replaceIncompletePlansInPlanType((PlanType)newElement);
-                break;
-            case Types.BEHAVIOUR:
-                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Behaviour.class);
-                break;
-            case Types.TASKREPOSITORY:
-                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), TaskRepository.class);
-                break;
-            default:
-                System.err.println("ParseAbstractPlan: Parsing model eventType " + modelModificationQuery.getElementType() + " not implemented, yet!");
-                return;
+        try {
+            switch (modelModificationQuery.getElementType()) {
+                case Types.PLAN:
+                case Types.MASTERPLAN:
+                    newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
+                    modelManager.replaceIncompleteTasksInEntryPoints((Plan) newElement);
+                    break;
+                case Types.PLANTYPE:
+                    newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
+                    modelManager.replaceIncompletePlansInPlanType((PlanType) newElement);
+                    break;
+                case Types.BEHAVIOUR:
+                    newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Behaviour.class);
+                    break;
+                case Types.TASKREPOSITORY:
+                    newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), TaskRepository.class);
+                    break;
+                default:
+                    System.err.println("ParseAbstractPlan: Parsing model eventType " + modelModificationQuery.getElementType() + " not implemented, yet!");
+                    return;
+            }
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
         }
+
+        //Add listeners to newElements isDirty-flag
+        ((AbstractPlan)newElement).dirtyProperty().addListener((observable, oldValue, newValue) -> {
+            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, newElement
+                    , modelModificationQuery.getElementType());
+            event.setChangedAttribute("dirty");
+            event.setNewValue(newValue);
+            modelManager.fireEvent(event);
+        });
 
         //Searching for an existing element with the same id, because that will be replaced and needs to be stored for undo
         oldElement = modelManager.getPlanElement(newElement.getId());
@@ -58,7 +74,14 @@ public class ParseAbstractPlan extends AbstractCommand {
             Plan newPlan = (Plan) newElement;
             File uiExtensionFile = FileSystemUtil.getFile(modelModificationQuery.getAbsoluteDirectory()
                     , modelModificationQuery.getName(), FileSystemUtil.PLAN_EXTENSION_ENDING);
-            PlanModelVisualisationObject newPlanModelVisualisationObject = modelManager.parseFile(uiExtensionFile, PlanModelVisualisationObject.class);
+            PlanModelVisualisationObject newPlanModelVisualisationObject;
+            try {
+                newPlanModelVisualisationObject= modelManager.parseFile(uiExtensionFile, PlanModelVisualisationObject.class);
+            } catch (FileNotFoundException e) {
+                // A plan does not necessarily need a PlanModelVisualisationObject, this FileNotFoundException therefore
+                // can occur under normal conditions
+                newPlanModelVisualisationObject = null;
+            }
 
             if(newPlanModelVisualisationObject != null){
 
