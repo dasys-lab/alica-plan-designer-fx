@@ -128,6 +128,7 @@ public class IsDirtyWindowController {
             stage.setX(primaryStage.getX() + primaryStage.getWidth() / 2.0 - stage.getWidth() / 2.0);
             stage.setY(primaryStage.getY() + primaryStage.getHeight() / 2.0 - stage.getHeight() / 2.0);
             stage.show();
+            stage.requestFocus();
         });
         stage.setOnCloseRequest(e ->{
             event.consume();
