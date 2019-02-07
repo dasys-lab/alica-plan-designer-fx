@@ -345,7 +345,10 @@ public class ViewModelManager {
 
     public void addElement(Controller controller, ModelEvent event) {
         PlanElement parentPlanElement = modelManager.getPlanElement(event.getParentId());
-        ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
+        ViewModelElement parentViewModel = null;
+        if(parentPlanElement != null) {
+            parentViewModel = getViewModelElement(parentPlanElement);
+        }
         ViewModelElement viewModelElement = getViewModelElement(event.getElement());
 
         if (parentViewModel instanceof  PlanViewModel) {

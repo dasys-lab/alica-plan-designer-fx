@@ -23,7 +23,6 @@ import java.util.List;
 
 public abstract class AbstractEditorTab extends Tab {
 
-    protected boolean dirty;
     protected SimpleObjectProperty<List<Pair<Long, AbstractPlanElementContainer>>> selectedPlanElements;
 
     private Pair<Long, Path> editablePathPair;
@@ -61,10 +60,6 @@ public abstract class AbstractEditorTab extends Tab {
                 IsDirtyWindowController.createIsDirtyWindow(this, e);
             }
         });
-    }
-
-    public void setDirty(boolean dirty) {
-        this.dirty = dirty;
     }
 
     private void selectAllPlanElements(EditorTabPane editorTabPane, KeyEvent event) {

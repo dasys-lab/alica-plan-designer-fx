@@ -3,7 +3,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
-import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
@@ -16,7 +16,6 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery
 import de.unikassel.vs.alica.planDesigner.modelmanagement.UiExtensionModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.plugin.PluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
