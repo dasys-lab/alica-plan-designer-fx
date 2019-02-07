@@ -148,7 +148,8 @@ public class ViewModelManager {
 
     private VariableViewModel createVariableViewModel(Variable var) {
         VariableViewModel variableViewModel = new VariableViewModel(var.getId(), var.getName(), Types.VARIABLE);
-        variableViewModel.setVariableType(var.getType());
+        variableViewModel.setVariableType(var.getVariableType());
+        variableViewModel.setComment(var.getComment());
         return variableViewModel;
     }
 
@@ -285,6 +286,9 @@ public class ViewModelManager {
         for (Synchronization synchronization : plan.getSynchronizations()) {
             planViewModel.getSynchronisations().add((SynchronizationViewModel) getViewModelElement(synchronization));
         }
+        for (Variable var : plan.getVariables()) {
+            planViewModel.getVariables().add((VariableViewModel) getViewModelElement(var));
+        }
         if (plan.getPreCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(plan.getPreCondition());
             conditionViewModel.setParentId(plan.getId());
@@ -295,6 +299,7 @@ public class ViewModelManager {
             conditionViewModel.setParentId(plan.getId());
             planViewModel.getConditions().add(conditionViewModel);
         }
+
         return planViewModel;
     }
 

@@ -48,7 +48,7 @@ public class Behaviour extends AbstractPlan implements HasVariables {
         variable.commentProperty().addListener((observable, oldValue, newValue) -> {
             this.setDirty(true);
         });
-        variable.typeProperty().addListener((observable, oldValue, newValue) -> {
+        variable.variableTypeProperty().addListener((observable, oldValue, newValue) -> {
             this.setDirty(true);
         });
         this.setDirty(true);

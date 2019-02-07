@@ -4,11 +4,11 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Variable extends PlanElement {
 
-    protected final SimpleStringProperty type = new SimpleStringProperty();
+    protected final SimpleStringProperty variableType = new SimpleStringProperty();
 
-    public String getType() { return type.get(); }
-    public void setType(String type) { this.type.set(type); }
-    public SimpleStringProperty typeProperty() {
-        return type;
+    public String getVariableType() { return variableType.get(); }
+    public void setVariableType(String variableType) { this.variableType.set(variableType); }
+    public SimpleStringProperty variableTypeProperty() {
+        return variableType;
     }
 }

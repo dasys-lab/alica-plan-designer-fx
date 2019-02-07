@@ -123,6 +123,15 @@ public class Plan extends AbstractPlan implements HasVariables {
     @Override
     public void addVariable(Variable variable) {
         variables.add(variable);
+        variable.nameProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
+        variable.commentProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
+        variable.variableTypeProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
         this.setDirty(true);
     }
     @Override
@@ -144,6 +153,17 @@ public class Plan extends AbstractPlan implements HasVariables {
         utilityThreshold.addListener((observable, oldValue, newValue) -> {
             this.setDirty(true);
         });
+        for (Variable variable : variables) {
+            variable.nameProperty().addListener((observable, oldValue, newValue) -> {
+                this.setDirty(true);
+            });
+            variable.commentProperty().addListener((observable, oldValue, newValue) -> {
+                this.setDirty(true);
+            });
+            variable.variableTypeProperty().addListener((observable, oldValue, newValue) -> {
+                this.setDirty(true);
+            });
+        }
         this.setDirty(false);
     }
 }
