@@ -12,9 +12,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -22,6 +20,37 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class IsDirtyWindowController {
+
+
+    /*
+        Creates a modal for a Tab selected as dirty. Allows the user to save the content of the tab, cancel
+        the close event, or to close the tab
+
+        Same function as createIsDirtyWindow, but with the much better javafx alert class.
+     */
+    public static void createIsDirtyWindowAlert(EditorTab tab, Event event) {
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText(i18NRepo.getString("label.error.closePlanDesigner"));
+        alert.setContentText("Choose your option.");
+
+        ButtonType saveBtn = new ButtonType(i18NRepo.getString("action.save"));
+        ButtonType cancelBtn = new ButtonType(i18NRepo.getString("action.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"));
+
+        alert.getButtonTypes().setAll(saveBtn, cancelBtn, closeBtn);
+
+        alert.showAndWait();
+        if (alert.getResult() == saveBtn){
+            tab.save();
+        } else if (alert.getResult() == cancelBtn) {
+            event.consume();
+        } else if (alert.getResult() == closeBtn) {
+            tab.revertChanges();
+        }
+    }
 
     /*
         Creates a modal for a Tab selected as dirty. Allows the user to save the content of the tab, cancel
