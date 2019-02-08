@@ -21,6 +21,12 @@ public class AddAbstractPlanToState extends AbstractCommand {
 
     @Override
     public void doCommand() {
+        //Don't add AbstractPlan, if the same existing
+        for (AbstractPlan existingAbstractPlan: state.getPlans()) {
+            if (existingAbstractPlan.getId() == abstractPlan.getId()) {
+                return;
+            }
+        }
         state.addAbstractPlan(abstractPlan);
 
         //event for updateView

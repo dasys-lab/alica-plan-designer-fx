@@ -65,9 +65,7 @@ public class RepositoryHBox extends DraggableHBox {
         });
 
         setOnMouseReleased(e ->{
-            if(viewModelElement instanceof PlanViewModel) {
-                return;
-            }
+
             PickResult pickResult = e.getPickResult();
             Parent parent = pickResult.getIntersectedNode().getParent();
             if(pickResult.getIntersectedNode() instanceof Circle) {

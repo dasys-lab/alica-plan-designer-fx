@@ -1115,7 +1115,11 @@ public class ModelManager implements Observer {
                 switch (mmq.getElementType()) {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
-                        cmd = handlePlanTypeMMQ(mmq);
+                        if(mmq.getTargetID() != null){
+                            cmd = handleAddAbstractPlanToPlan(mmq);
+                        } else {
+                            cmd = handlePlanTypeMMQ(mmq);
+                        }
                         break;
                     case Types.PLANTYPE:
                     case Types.BEHAVIOUR:
@@ -1338,14 +1342,23 @@ public class ModelManager implements Observer {
         AbstractCommand cmd = null;
         PlanModelVisualisationObject parenOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
         State state = null;
-
+        for (State states: parenOfElement.getPlan().getStates()) {
+            if(states.getId() == mmq.getTargetID()) {
+                state = states;
+            }
+        }
         switch (mmq.elementType) {
-            case Types.PLANTYPE:
-                for (State states: parenOfElement.getPlan().getStates()) {
-                    if(states.getId() == mmq.getTargetID()) {
-                        state = states;
+            case Types.MASTERPLAN:
+            case Types.PLAN:
+                Plan plan = null;
+                for (Plan plans: getPlans()) {
+                    if(plans.getId() == mmq.getElementId()) {
+                        plan = plans;
                     }
                 }
+                cmd = new AddAbstractPlanToState(this, plan, state);
+                break;
+            case Types.PLANTYPE:
                 PlanType planType = null;
                 for (PlanType planTypes: getPlanTypes()) {
                     if(planTypes.getId() == mmq.getElementId()) {
@@ -1355,11 +1368,6 @@ public class ModelManager implements Observer {
                 cmd = new AddAbstractPlanToState(this, planType, state);
                 break;
             case Types.BEHAVIOUR:
-                for (State states: parenOfElement.getPlan().getStates()) {
-                    if(states.getId() == mmq.getTargetID()) {
-                        state = states;
-                    }
-                }
                 Behaviour behaviour = null;
                 for (Behaviour behaviours: getBehaviours()) {
                     if(behaviours.getId() == mmq.getElementId()) {

@@ -362,7 +362,7 @@ public class ViewModelManager {
         }
         ViewModelElement viewModelElement = getViewModelElement(event.getElement());
 
-        if (parentViewModel instanceof  PlanViewModel) {
+        if (parentViewModel instanceof  PlanViewModel && event.getElementType() != Types.ABSTRACTPLAN) {
             addToPlan((PlanViewModel) parentViewModel, viewModelElement, event);
             return;
         }
