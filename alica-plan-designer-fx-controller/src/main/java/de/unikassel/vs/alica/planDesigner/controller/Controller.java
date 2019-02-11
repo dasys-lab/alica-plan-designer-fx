@@ -427,6 +427,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * @param path
      */
     public void handleFileSystemEvent(WatchEvent event, Path path) {
+        // A change in a sub-directory also creates an event for the parent-directory. This event must be ignored,
+        // because its filename is only the name of the subdirectory
+        if(!path.toFile().isFile()){
+            return;
+        }
+
         WatchEvent.Kind kind = event.kind();
         ModelModificationQuery mmq;
         if (kind.equals((StandardWatchEventKinds.ENTRY_MODIFY))) {

@@ -345,6 +345,7 @@ public class ModelManager implements Observer {
                         event.setNewValue(newValue);
                         this.fireEvent(event);
                     });
+                    behaviour.registerDirtyFlag();
                     if (planElementMap.containsKey(behaviour.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + behaviour.getId());
                     } else {
@@ -392,6 +393,7 @@ public class ModelManager implements Observer {
                         event.setNewValue(newValue);
                         this.fireEvent(event);
                     });
+                    taskRepository.registerDirtyFlag();
                     taskRepository.getTasks().addListener(new ListChangeListener<Task>() {
                         @Override
                         public void onChanged(Change<? extends Task> change) {

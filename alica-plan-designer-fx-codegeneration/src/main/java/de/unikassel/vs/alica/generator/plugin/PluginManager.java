@@ -75,13 +75,16 @@ public class PluginManager {
             }
 
             // Partially copied from: https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
-            while (e.hasMoreElements()) {
+            while (e != null && e.hasMoreElements()) {
                 JarEntry je = e.nextElement();
                 if (je.isDirectory() || !je.getName().endsWith(".class")) {
                     continue;
                 }
                 String className = je.getName().substring(0, je.getName().length() - String.valueOf(".class").length());
-                className = className.replace(File.separatorChar, '.');
+                // Replacing both / and \. It seems the returned file names use / as separator even under windows
+                // Replacing both to guarantee a valid result (neither / nor \ should appear in class or package names
+                // anyways)
+                className = className.replaceAll("[/\\\\]", ".");
                 try {
                     URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 

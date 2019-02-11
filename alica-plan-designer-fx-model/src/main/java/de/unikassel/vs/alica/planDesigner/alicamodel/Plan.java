@@ -144,6 +144,7 @@ public class Plan extends AbstractPlan implements HasVariables {
         return Collections.unmodifiableList(variables);
     }
 
+    @Override
     public void registerDirtyFlag() {
         super.registerDirtyFlag();
         masterPlan.addListener((observable, oldValue, newValue) -> {
