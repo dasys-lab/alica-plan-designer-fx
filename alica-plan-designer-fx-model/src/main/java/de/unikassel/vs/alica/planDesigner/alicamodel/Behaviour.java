@@ -90,8 +90,5 @@ public class Behaviour extends AbstractPlan implements HasVariables {
     @Override
     public void registerDirtyFlag(){
         super.registerDirtyFlag();
-        nameProperty().addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
     }
 }
