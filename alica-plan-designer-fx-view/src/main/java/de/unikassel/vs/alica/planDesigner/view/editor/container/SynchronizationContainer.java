@@ -2,13 +2,15 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
-import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SynchronizationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
@@ -31,9 +33,9 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
     /**
      * @param containedElement
      */
-    public SynchronizationContainer(SynchronizationViewModel containedElement, List<TransitionContainer> transitionContainers
-            /*, PmlUiExtension pmlUiExtension*/, PlanTab planTab) {
+    public SynchronizationContainer(SynchronizationViewModel containedElement, List<TransitionContainer> transitionContainers, PlanTab planTab) {
         super(containedElement, null, planTab);
+
         invalidationListeners = new ArrayList<>();
         transitionToLineMap = new HashMap<>();
         this.synchronisation = containedElement;
@@ -41,16 +43,48 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
         for (TransitionContainer transitionContainer : transitionContainers) {
             transitionContainer.addListener(observable -> setupContainer());
         }
-        makeDraggable(this);
 
+        createSyncTransitionToSynchronisationListeners(this,synchronisation);
+
+        makeDraggable(this);
         setupContainer();
+    }
+
+    public void createSyncTransitionToSynchronisationListeners(Node node, SynchronizationViewModel synchronization) {
+        synchronization.getTransitions().addListener(new ListChangeListener<TransitionViewModel>() {
+            @Override
+            public void onChanged(Change<? extends TransitionViewModel> c) {
+                while(c.next()){
+                    if(c.wasAdded()) {
+                        for(TransitionViewModel transitionViewModel : c.getAddedSubList()){
+                            for (TransitionContainer transitionContainer : SynchronizationContainer.this.getPlanEditorGroup().getTransitionContainers().values()) {
+                                if (transitionContainer.getViewModelElement() == transitionViewModel) {
+                                    transitionContainers.add(transitionContainer);
+                                    getChildren().add(transitionContainer);
+                                }
+                            }
+                        }
+                    }else if(c.wasRemoved()){
+                        for(TransitionViewModel transitionViewModel : c.getRemoved()){
+                            for (TransitionContainer transitionContainer : transitionContainers) {
+                                if (transitionContainer.getViewModelElement() == transitionViewModel) {
+                                    transitionContainers.remove(transitionContainer);
+                                    getChildren().remove(transitionContainer);
+                                }
+                            }
+                        }
+                    }
+                }
+                Platform.runLater(SynchronizationContainer.this::redrawElement);
+            }
+        });
     }
 
     @Override
     public void setupContainer() {
         getChildren().clear();
 
-        SynchronizationViewModel syncViewModel = (SynchronizationViewModel) getModelElement();
+        SynchronizationViewModel syncViewModel = (SynchronizationViewModel) getViewModelElement();
 
         // POSITION
         setLayoutX(syncViewModel.getXPosition());
@@ -159,7 +193,6 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
 
     @Override
     public void redrawElement() {
-        //((PlanEditorGroup) getParent()).setupPlanVisualisation();
         setupContainer();
         invalidationListeners.forEach(listener -> listener.invalidated(this));
     }

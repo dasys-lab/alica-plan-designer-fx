@@ -82,14 +82,6 @@ public class PlanEditorGroup extends Group {
         return entryPoints;
     }
 
-//    private PmlUiExtension createPmlUiExtension(PlanElement element, PmlUiExtension pmlUiExtension) {
-//        if (pmlUiExtension == null) {
-//            pmlUiExtension = EMFModelUtils.getPmlUiExtensionModelFactory().createPmlUiExtension();
-//            getPlanModelVisualisationObject().getPmlUiExtensionMap().getExtension().put(element, pmlUiExtension);
-//        }
-//        return pmlUiExtension;
-//    }
-
     private Map<Long, TransitionContainer> createTransitionContainers() {
         Map<Long, TransitionContainer> transitions = new HashMap<>();
         for (TransitionViewModel trans : plan.getTransitions()) {

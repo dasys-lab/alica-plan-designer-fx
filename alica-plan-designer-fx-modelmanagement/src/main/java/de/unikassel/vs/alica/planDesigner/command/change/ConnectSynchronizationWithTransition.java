@@ -6,28 +6,19 @@ import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
 
 public class ConnectSynchronizationWithTransition extends AbstractCommand {
 
     private Transition transition;
-    private final PlanModelVisualisationObject parentOfElement;
     private Synchronization synchronization;
 
-    public ConnectSynchronizationWithTransition(ModelManager modelManager, long syncId, PlanModelVisualisationObject parenOfElement, long transId) {
+    public ConnectSynchronizationWithTransition(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        for (Synchronization sync : parenOfElement.getPlan().getSynchronizations()) {
-            if (syncId == sync.getId()) {
-                this.synchronization = sync;
-            }
-        }
-        for (Transition trans : parenOfElement.getPlan().getTransitions()) {
-            if (transId == trans.getId()) {
-                this.transition = trans;
-            }
-        }
-        this.parentOfElement = parenOfElement;
+
+        synchronization = (Synchronization) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.SYNCHRONIZATION));
+        transition = (Transition) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
     }
 
     @Override

@@ -1,10 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
-import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
-import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.SynchronizationContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
@@ -19,6 +15,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
@@ -31,13 +28,10 @@ public class SyncTransitionTool extends AbstractTool {
 
     private SynchronizationViewModel sync;
     private TransitionViewModel trans;
-    private LinkedList<Point2D> bendPoints;
 
-    private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_synctransition);
 
     public SyncTransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
-        bendPoints = new LinkedList<>();
     }
 
     @Override
@@ -56,8 +50,6 @@ public class SyncTransitionTool extends AbstractTool {
                 } else {
                     if (parent instanceof TransitionContainer) {
                         setCursor(addCursor);
-                    } else if (parent instanceof StackPane) {
-                        setCursor(bendPointCursor);
                     } else {
                         setCursor(forbiddenCursor);
                     }
@@ -69,64 +61,37 @@ public class SyncTransitionTool extends AbstractTool {
         customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                try {
-                    Node target = (Node) event.getTarget();
-                    Node parent = target.getParent();
+                if (event.getTarget() instanceof Scene) {
+                    return;
+                }
 
-                    if (target instanceof ToolButton) {
-                        completeAddSync();
-                    } else if (parent instanceof SynchronizationContainer) {
-                        if (sync == null) {
-                            sync = (SynchronizationViewModel) ((SynchronizationContainer) parent).getModelElement();
-                        } else {
-                            if (!sync.equals(((SynchronizationContainer) parent).getModelElement())) {
-                                completeAddSync();
-                                sync = (SynchronizationViewModel) ((SynchronizationContainer) parent).getModelElement();
-                            } else {
-                                completeAddSync();
-                            }
-                        }
-                    } else if (parent instanceof TransitionContainer) {
-                        if (sync != null) {
-                            if (trans == null) {
-                                trans = (TransitionViewModel) ((TransitionContainer) parent).getModelElement();
-                                completeAddSync();
-                            }
-                        }
-                    } else if (parent instanceof StackPane) {
-                        if (sync != null) {
-                            Point2D eventTargetCoordinates = getLocalCoordinatesFromEvent(event);
-                            if (eventTargetCoordinates == null) {
-                                event.consume();
-                            }
-                            bendPoints.add(eventTargetCoordinates);
-                        }
+                Node target = (Node) event.getTarget();
+                Node parent = target.getParent();
+
+                if (sync == null && !(parent instanceof SynchronizationContainer)) {
+                    // need to select synchronisation first
+                    return;
+                }
+
+                if (parent instanceof SynchronizationContainer) {
+                    if (sync != null) {
+                        // selected a potentially new synchronisation, so reset state of the tool
+                        reset();
                     }
-                } catch (ClassCastException e) {
-                    e.printStackTrace();
+                    sync = (SynchronizationViewModel) ((SynchronizationContainer) parent).getViewModelElement();
+                    return;
+                }
+
+                if (parent instanceof TransitionContainer) {
+                    trans = (TransitionViewModel) ((TransitionContainer) parent).getViewModelElement();
+                    HashMap<String, Long> related = new HashMap<>();
+                    related.put(Types.SYNCHRONIZATION, sync.getId());
+                    related.put(Types.TRANSITION, trans.getId());
+                    planTab.fireModificationEvent(GuiEventType.ADD_ELEMENT, Types.SYNCTRANSITION, null, related);
+                    return;
                 }
             }
         });
-    }
-
-    private void completeAddSync() {
-        if (sync == null || trans == null) {
-            return;
-        }
-
-        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.SYNCTRANSITION, null);
-        event.setElementId(sync.getId());
-        event.setParentId(getPlanTab().getSerializableViewModel().getId());
-        HashMap<String, Long> related = new HashMap<>();
-        related.put(Types.TRANSITION, trans.getId());
-        event.setRelatedObjects(related);
-
-        IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
-        handler.handle(event);
-
-        // TODO handle bendpoints
-
-        reset();
     }
 
     @Override
@@ -138,7 +103,6 @@ public class SyncTransitionTool extends AbstractTool {
     private void reset() {
         sync = null;
         trans = null;
-        bendPoints.clear();
     }
 
     @Override

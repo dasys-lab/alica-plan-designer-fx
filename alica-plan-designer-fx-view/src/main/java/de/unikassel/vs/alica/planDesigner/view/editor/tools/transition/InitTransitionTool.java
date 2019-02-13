@@ -113,10 +113,10 @@ public class InitTransitionTool extends AbstractTool {
                         GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.INITSTATECONNECTION, null);
 
                         HashMap<String, Long> relatedObjects = new HashMap<>();
-                        relatedObjects.put(StateViewModel.ENTRYPOINT, inEntryPoint.getModelElement().getId());
+                        relatedObjects.put(StateViewModel.ENTRYPOINT, inEntryPoint.getViewModelElement().getId());
                         relatedObjects.put(EntryPointViewModel.STATE, state.getId());
                         guiEvent.setRelatedObjects(relatedObjects);
-                        guiEvent.setParentId(InitTransitionTool.this.getPlanTab().getSerializableViewModel().getId());
+                        guiEvent.setParentId(InitTransitionTool.this.planTab.getSerializableViewModel().getId());
                         guiModificationHandler.handle(guiEvent);
                     }
                 }

@@ -80,7 +80,7 @@ public abstract class AbstractPlanTab extends EditorTab {
                 AbstractPlanElementContainer planElementContainer = selectedPlanElementPair.getValue();
                 if (planElementContainer != null) {
                     // this is weird! If I use planElementContainer.setEffectToStandard() nothing happens..
-                    if (planElementContainer.getModelElement() == oldValue.get(0).getKey()) {
+                    if (planElementContainer.getViewModelElement() == oldValue.get(0).getKey()) {
                         planElementContainer.setEffect(null);
                     }
                     if (planElementContainer instanceof StateContainer) {

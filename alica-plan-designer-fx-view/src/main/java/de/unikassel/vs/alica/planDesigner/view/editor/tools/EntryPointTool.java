@@ -106,7 +106,7 @@ public class EntryPointTool extends AbstractTool {
                     GuiChangePositionEvent guiEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.ENTRYPOINT, null);
                     guiEvent.setNewX((int) localCoordinates.getX());
                     guiEvent.setNewY((int) localCoordinates.getY());
-                    guiEvent.setParentId(getPlanTab().getSerializableViewModel().getId());
+                    guiEvent.setParentId(planTab.getSerializableViewModel().getId());
                     HashMap<String, Long> related = new HashMap<>();
                     related.put(Types.TASK, task.getId());
                     guiEvent.setRelatedObjects(related);

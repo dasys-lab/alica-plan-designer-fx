@@ -1149,8 +1149,7 @@ public class ModelManager implements Observer {
                         cmd = handleNewElementInPlanQuery(mmq);
                         break;
                     case Types.SYNCTRANSITION:
-                        PlanModelVisualisationObject parentOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
-                        cmd = new ConnectSynchronizationWithTransition(this, mmq.getElementId(), parentOfElement, mmq.getRelatedObjects().get(Types.TRANSITION));
+                        cmd = new ConnectSynchronizationWithTransition(this, mmq);
                         break;
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
@@ -1211,8 +1210,7 @@ public class ModelManager implements Observer {
             case CHANGE_ELEMENT:
                 switch (mmq.getElementType()) {
                     case Types.SYNCTRANSITION: {
-                        PlanModelVisualisationObject parenOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
-                        cmd = new ConnectSynchronizationWithTransition(this, mmq.getElementId(), parenOfElement, (Long) mmq.getNewValue());
+                        cmd = new ConnectSynchronizationWithTransition(this, mmq);
                     } break;
                     default:
                         // TODO: Make this a switch case command, like everywhere else in this method, too!

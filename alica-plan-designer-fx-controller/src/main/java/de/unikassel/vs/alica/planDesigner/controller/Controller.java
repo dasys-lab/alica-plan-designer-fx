@@ -353,7 +353,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     mmq.setName(event.getName());
                     mmq.setComment(event.getComment());
                     mmq.setTargetID(((GuiModificationEventExpanded) event).getTargetID());
-                } else{
+                } else {
                     mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
                     mmq.setElementId(event.getElementId());
                     mmq.setElementType(event.getElementType());

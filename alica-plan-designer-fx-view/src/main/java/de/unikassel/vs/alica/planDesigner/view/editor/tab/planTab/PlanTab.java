@@ -1,17 +1,14 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiChangeAttributeEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorElement;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
@@ -21,6 +18,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+
+import java.util.HashMap;
 
 public class PlanTab extends AbstractPlanTab {
 
@@ -68,13 +67,20 @@ public class PlanTab extends AbstractPlanTab {
      * @param newY  the new y-coordinate
      */
     public void fireChangePositionEvent(DraggableEditorElement planElementContainer, String type, double newX, double newY) {
-        GuiChangePositionEvent event = new GuiChangePositionEvent(GuiEventType.CHANGE_ELEMENT, type, planElementContainer.getModelElement().getName());
-        event.setElementId(planElementContainer.getModelElement().getId());
+        GuiChangePositionEvent event = new GuiChangePositionEvent(GuiEventType.CHANGE_ELEMENT, type, planElementContainer.getViewModelElement().getName());
+        event.setElementId(planElementContainer.getViewModelElement().getId());
         event.setParentId(serializableViewModel.getId());
         event.setNewX((int) newX);
         event.setNewY((int) newY);
 
         guiModificationHandler.handleGuiChangePositionEvent(event);
+    }
+
+    public void fireModificationEvent(GuiEventType eventType, String elementType, String name, HashMap<String, Long> relatedElements) {
+        GuiModificationEvent event = new GuiModificationEvent(eventType, elementType, name);
+        event.setParentId(getSerializableViewModel().getId());
+        event.setRelatedObjects(relatedElements);
+        guiModificationHandler.handle(event);
     }
 
     public EditorToolBar getEditorToolBar() {

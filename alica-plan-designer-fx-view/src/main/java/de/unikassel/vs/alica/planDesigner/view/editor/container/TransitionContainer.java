@@ -67,7 +67,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         double triangleSpanVecY = -vecX;
         double triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
 
-        List<BendPointViewModel> bendpoints = ((TransitionViewModel) getModelElement()).getBendpoints();
+        List<BendPointViewModel> bendpoints = ((TransitionViewModel) getViewModelElement()).getBendpoints();
         int size = bendpoints.size();
         if (size == 0) {
             visualRepresentation = new Line(_fromX, _fromY, _toX, _toY);
@@ -97,7 +97,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
                 BendPointViewModel currentBendpoint = bendpoints.get(i);
                 points[j] = currentBendpoint.getX();
                 points[j + 1] = currentBendpoint.getY();
-                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getModelElement(), null);
+                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getViewModelElement(), null);
                 //bendpointContainer.setVisible(false);
                 draggableNodes.add(bendpointContainer);
                 _fromX = points[j];

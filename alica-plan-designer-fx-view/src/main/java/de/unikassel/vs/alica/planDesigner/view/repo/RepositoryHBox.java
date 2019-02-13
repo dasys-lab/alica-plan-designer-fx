@@ -81,15 +81,15 @@ public class RepositoryHBox extends DraggableHBox {
                     if(viewModelElement instanceof TaskViewModel) { return; }
 
                     StateContainer stateContainer = (StateContainer) parent;
-                    GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(),stateContainer.getModelElement().getId());
+                    GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(),stateContainer.getViewModelElement().getId());
                     guiModificationEventExpanded.setParentId(stateContainer.getState().getParentId());
                     guiModificationEventExpanded.setElementId(viewModelElement.getId());
                     guiModificationHandler.handle(guiModificationEventExpanded);
                 }
                 if(parent instanceof EntryPointContainer && viewModelElement instanceof TaskViewModel) {
                     EntryPointContainer entryPointContainer = (EntryPointContainer) parent;
-                    GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(),entryPointContainer.getModelElement().getId());
-                    guiModificationEventExpanded.setParentId(entryPointContainer.getModelElement().getParentId());
+                    GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(),entryPointContainer.getViewModelElement().getId());
+                    guiModificationEventExpanded.setParentId(entryPointContainer.getViewModelElement().getParentId());
                     guiModificationEventExpanded.setElementId(viewModelElement.getId());
                     guiModificationHandler.handle(guiModificationEventExpanded);
                 }

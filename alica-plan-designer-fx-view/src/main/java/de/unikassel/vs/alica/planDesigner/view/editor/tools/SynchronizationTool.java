@@ -75,84 +75,10 @@ public class SynchronizationTool extends AbstractTool {
                     guiEvent.setComment("");
                     guiEvent.setNewX((int) eventTargetCoordinates.getX());
                     guiEvent.setNewY((int) eventTargetCoordinates.getY());
-                    guiEvent.setParentId(getPlanTab().getSerializableViewModel().getId());
+                    guiEvent.setParentId(planTab.getSerializableViewModel().getId());
                     handler.handle(guiEvent);
                 }
             });
         }
-
-        /*
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
-                @Override
-                public void handle(MouseDragEvent event) {
-//                    localCoord = null;
-//                    if (updateLocalCoords(event)) return;
-//
-//                    double x = localCoord.getX();
-//                    double y = localCoord.getY();
-//                    if (initial) {
-//                        visualRepresentation.setLayoutX(x);
-//                        visualRepresentation.setLayoutY(y);
-//                        initial = false;
-//                    }
-//
-//                    visualRepresentation.setTranslateX(x);
-//                    visualRepresentation.setTranslateY(y);
-//
-//                    if (event.getGestureSource() != planEditorTabPane) {
-//                        visualRepresentation.setTranslateX(x);
-//                        visualRepresentation.setTranslateY(y);
-//                    }
-//                    System.out.println("X: " + x + " Y: " + y);
-//                    event.consume();
-                }
-            });
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
-                @Override
-                public void handle(MouseDragEvent event) {
-//                    updateLocalCoords(event);
-//                    if (event.getGestureSource() != planEditorTabPane && visualRepresentation == null) {
-//                        visualRepresentation = new Circle(localCoord.getX(),localCoord.getY(), 10, new StateContainer().getVisualisationColor());
-//                        ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().add(visualRepresentation);
-//                    }
-                    event.consume();
-                }
-            });
-
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
-                @Override
-                public void handle(MouseDragEvent event) {
-//                    ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
-                    visualRepresentation = null;
-                }
-            });
-
-
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
-                @Override
-                public void handle(MouseDragEvent event) {
-                    if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
-                            event.getTarget() instanceof StackPane == false) {
-                        event.consume();
-                        endTool();
-                        return;
-                    }
-//                    ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
-//                    PlanModelVisualisationObject planModelVisualisationObject = ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject();
-//                    AddSynchronisationToPlan command = new AddSynchronisationToPlan(createNewObject(),
-//                            planModelVisualisationObject);
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(command);
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
-//                                    (int) (localCoord.getX()),
-//                                    (int) (localCoord.getY()), planModelVisualisationObject.getPlanViewModel()));
-//                    endTool();
-                    initial = true;
-                }
-            });
-        }*/
     }
 }
