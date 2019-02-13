@@ -292,12 +292,12 @@ public class ViewModelManager {
         if (plan.getPreCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(plan.getPreCondition());
             conditionViewModel.setParentId(plan.getId());
-            planViewModel.getConditions().add(conditionViewModel);
+            planViewModel.setPreCondition(conditionViewModel);
         }
         if (plan.getRuntimeCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(plan.getRuntimeCondition());
             conditionViewModel.setParentId(plan.getId());
-            planViewModel.getConditions().add(conditionViewModel);
+            planViewModel.setRuntimeCondition(conditionViewModel);
         }
 
         return planViewModel;
@@ -345,7 +345,46 @@ public class ViewModelManager {
                     throw new RuntimeException(getClass().getName() + ": Parent ViewModel object has no variables");
                 }
                 break;
+            case Types.PRECONDITION:
+                parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                switch (parentViewModel.getType()){
+                    case Types.PLAN:
+                    case Types.MASTERPLAN:
+                        ((PlanViewModel) parentViewModel).setPreCondition(null);
+                        break;
+                    case Types.BEHAVIOUR:
+                        ((BehaviourViewModel) parentViewModel).setPreCondition(null);
+                        break;
+                    default:
+                }
+                break;
+            case Types.RUNTIMECONDITION:
+                parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                switch (parentViewModel.getType()) {
+                    case Types.PLAN:
+                    case Types.MASTERPLAN:
+                        ((PlanViewModel)parentViewModel).setRuntimeCondition(null);
+                        break;
+                    case Types.BEHAVIOUR:
+                        ((BehaviourViewModel)parentViewModel).setRuntimeCondition(null);
+                        break;
+                    default:
+                }
+                break;
+            case Types.POSTCONDITION:
+                parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                switch (parentViewModel.getType()) {
+//                    case Types.SUCCESSSTATE:
+//                    case Types.FAILURESTATE:
+//
+//                        break;
+                    case Types.BEHAVIOUR:
+                        ((BehaviourViewModel)parentViewModel).setPostCondition(null);
+                        break;
+                    default:
+                }
 
+                break;
             default:
                 System.err.println("ViewModelManager: Remove Element not supported for type: " + viewModelElement.getType());
                 //TODO: maybe handle other types
@@ -401,6 +440,45 @@ public class ViewModelManager {
                     if(stateViewModel.getId() == state.getId()){
                        stateViewModel.getPlanElements().add((PlanElementViewModel) parentViewModel);
                     }
+                }
+                break;
+            case Types.PRECONDITION:
+                switch (parentViewModel.getType()){
+                    case Types.PLAN:
+                    case Types.MASTERPLAN:
+                        ((PlanViewModel)parentViewModel).setPreCondition((ConditionViewModel) viewModelElement);
+                        break;
+                    case Types.BEHAVIOUR:
+                        ((BehaviourViewModel)parentViewModel).setPreCondition((ConditionViewModel) viewModelElement);
+                        break;
+                    default:
+                        System.err.println("ViewModelManager: Add Element not supported for preCondition and " + parentViewModel.getType());
+                }
+                break;
+            case Types.RUNTIMECONDITION:
+                switch (parentViewModel.getType()){
+                    case Types.PLAN:
+                    case Types.MASTERPLAN:
+                        ((PlanViewModel)parentViewModel).setRuntimeCondition((ConditionViewModel) viewModelElement);
+                        break;
+                    case Types.BEHAVIOUR:
+                        ((BehaviourViewModel)parentViewModel).setRuntimeCondition((ConditionViewModel) viewModelElement);
+                        break;
+                    default:
+                        System.err.println("ViewModelManager: Add Element not supported for runtimeCondition and " + parentViewModel.getType());
+                }
+                break;
+            case Types.POSTCONDITION:
+                switch (parentViewModel.getType()){
+                    case Types.BEHAVIOUR:
+                        ((BehaviourViewModel)parentViewModel).setPostCondition((ConditionViewModel) viewModelElement);
+                        break;
+//                    case Types.SUCCESSSTATE:
+//                    case Types.FAILURESTATE:
+//
+//                        break;
+                    default:
+                        System.err.println("ViewModelManager: Add Element not supported for postCondition and " + parentViewModel.getType());
                 }
                 break;
             default:

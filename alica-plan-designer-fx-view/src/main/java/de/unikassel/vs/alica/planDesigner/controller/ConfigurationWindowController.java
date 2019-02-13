@@ -139,6 +139,9 @@ public class ConfigurationWindowController implements Initializable {
     public String getSourceFolder() {
         return genSourceFolderTextField.getText();
     }
+    public IPluginEventHandler getPluginEventHandler(){
+        return pluginEventHandler;
+    }
 
     public String getSelectedConfName() {
         return this.availableWorkspacesListView.getSelectionModel().getSelectedItem();

@@ -4,6 +4,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PreCondition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class AddPreConditionToBehaviour extends AbstractCommand {
 
@@ -19,9 +20,8 @@ public class AddPreConditionToBehaviour extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        if (behaviour.getPreCondition() != null) {
-            previousPreCondition = behaviour.getPreCondition();
-        }
+        previousPreCondition = behaviour.getPreCondition();
+        modelManager.createdPlanElement(Types.PRECONDITION, newPreCondition, behaviour, false);
         behaviour.setPreCondition(newPreCondition);
     }
 

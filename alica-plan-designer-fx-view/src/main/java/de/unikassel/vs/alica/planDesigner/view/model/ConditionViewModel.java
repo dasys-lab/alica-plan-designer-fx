@@ -1,15 +1,17 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.util.ArrayList;
 
 public class ConditionViewModel extends PlanElementViewModel {
 
-    protected StringProperty conditionString;
-    protected StringProperty pluginName;
-    protected BooleanProperty enabled;
+    protected StringProperty conditionString = new SimpleStringProperty(this, "conditionString", null);
+    protected StringProperty pluginName = new SimpleStringProperty(this, "pluginName", null);
+    protected BooleanProperty enabled = new SimpleBooleanProperty(this, "enabled", false);
     protected ArrayList<VariableViewModel> vars;
     protected ArrayList<QuantifierViewModel> quantifier;
 

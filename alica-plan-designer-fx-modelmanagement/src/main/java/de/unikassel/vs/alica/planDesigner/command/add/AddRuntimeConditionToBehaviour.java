@@ -4,6 +4,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.RuntimeCondition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class AddRuntimeConditionToBehaviour extends AbstractCommand {
 
@@ -21,8 +22,8 @@ public class AddRuntimeConditionToBehaviour extends AbstractCommand {
     @Override
     public void doCommand() {
         previousRuntimeCondition = behaviour.getRuntimeCondition();
+        modelManager.createdPlanElement(Types.RUNTIMECONDITION, newRuntimeCondition, behaviour, false);
         behaviour.setRuntimeCondition(newRuntimeCondition);
-
     }
 
     @Override

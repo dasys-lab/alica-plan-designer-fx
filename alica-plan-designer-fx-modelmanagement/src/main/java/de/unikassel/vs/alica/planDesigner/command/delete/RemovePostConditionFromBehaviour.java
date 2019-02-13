@@ -4,6 +4,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PostCondition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class RemovePostConditionFromBehaviour extends AbstractCommand {
 
@@ -22,6 +23,7 @@ public class RemovePostConditionFromBehaviour extends AbstractCommand {
     public void doCommand() {
         if (behaviour.getPostCondition().getId() == conditionId) {
             previousPostCondition = behaviour.getPostCondition();
+            modelManager.removedPlanElement(Types.POSTCONDITION, previousPostCondition, behaviour, false);
             behaviour.setPostCondition(null);
         }
     }

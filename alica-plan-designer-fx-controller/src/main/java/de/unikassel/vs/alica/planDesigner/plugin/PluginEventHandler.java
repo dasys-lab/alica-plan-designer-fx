@@ -4,6 +4,10 @@ import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.controller.ConfigurationWindowController;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Parent;
+
+import java.io.IOException;
+import java.util.List;
 
 public class PluginEventHandler implements IPluginEventHandler {
 
@@ -19,6 +23,16 @@ public class PluginEventHandler implements IPluginEventHandler {
     public void updateAvailablePlugins() {
         pluginManager.updateAvailablePlugins(configWindowController.getPluginsFolder());
         configWindowController.setAvailablePlugins(pluginManager.getAvailablePluginNames());
+    }
+
+    @Override
+    public List<String> getAvailablePlugins() {
+        return pluginManager.getAvailablePluginNames();
+    }
+
+    @Override
+    public Parent getPluginUI(String pluginName) throws IOException {
+        return pluginManager.getPlugin(pluginName).getPluginUI();
     }
 
     @Override

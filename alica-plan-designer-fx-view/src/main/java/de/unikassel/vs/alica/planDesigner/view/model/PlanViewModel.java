@@ -1,10 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import de.unikassel.vs.alica.planDesigner.view.Types;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,10 +13,11 @@ public class PlanViewModel extends SerializableViewModel implements HasVariables
 
     protected final BooleanProperty masterPlan = new SimpleBooleanProperty(null, "masterPlan", false);
     protected final DoubleProperty utilityThreshold = new SimpleDoubleProperty(null, "utilityThreshold", 0.5);
+    protected final ObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(null, Types.PRECONDITION, null);
+    protected final ObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(null, Types.RUNTIMECONDITION, null);
     protected final ObservableList<EntryPointViewModel> entryPoints = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<StateViewModel> states = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<TransitionViewModel> transitions = FXCollections.observableArrayList(new ArrayList<>());
-    protected final ObservableList<ConditionViewModel> conditions = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<SynchronizationViewModel> synchronisations = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<VariableViewModel> variables = FXCollections.observableArrayList(new ArrayList<>());
 
@@ -55,6 +54,26 @@ public class PlanViewModel extends SerializableViewModel implements HasVariables
         return utilityThreshold.get();
     }
 
+    public final ObjectProperty<ConditionViewModel> preConditionProperty(){
+        return preCondition;
+    }
+    public void setPreCondition(ConditionViewModel condition){
+        this.preCondition.set(condition);
+    }
+    public ConditionViewModel getPreCondition(){
+        return this.preCondition.get();
+    }
+
+    public final ObjectProperty<ConditionViewModel> runtimeConditionProperty(){
+        return runtimeCondition;
+    }
+    public void setRuntimeCondition(ConditionViewModel condition){
+        this.runtimeCondition.set(condition);
+    }
+    public ConditionViewModel getRuntimeCondition(){
+        return this.runtimeCondition.get();
+    }
+
     public ObservableList<EntryPointViewModel> getEntryPoints() {
         return entryPoints;
     }
@@ -65,10 +84,6 @@ public class PlanViewModel extends SerializableViewModel implements HasVariables
 
     public ObservableList<TransitionViewModel> getTransitions() {
         return transitions;
-    }
-
-    public ObservableList<ConditionViewModel> getConditions() {
-        return conditions;
     }
 
     public ObservableList<SynchronizationViewModel> getSynchronisations() {

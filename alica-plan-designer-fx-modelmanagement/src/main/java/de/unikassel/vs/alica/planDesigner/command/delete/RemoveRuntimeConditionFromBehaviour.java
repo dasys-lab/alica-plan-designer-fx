@@ -4,6 +4,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.RuntimeCondition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class RemoveRuntimeConditionFromBehaviour extends AbstractCommand {
 
@@ -22,6 +23,7 @@ public class RemoveRuntimeConditionFromBehaviour extends AbstractCommand {
     public void doCommand() {
         if (behaviour.getRuntimeCondition().getId() == conditionId) {
             previousRuntimeCondition = behaviour.getRuntimeCondition();
+            modelManager.removedPlanElement(Types.RUNTIMECONDITION, previousRuntimeCondition, behaviour, false);
         }
         behaviour.setRuntimeCondition(null);
     }

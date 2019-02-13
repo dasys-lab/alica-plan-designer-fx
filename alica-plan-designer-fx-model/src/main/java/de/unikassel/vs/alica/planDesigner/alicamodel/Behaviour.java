@@ -1,7 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,33 +13,33 @@ public class Behaviour extends AbstractPlan implements HasVariables {
     protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
     protected final SimpleLongProperty deferring = new SimpleLongProperty();
 
-    protected PreCondition preCondition;
-    protected RuntimeCondition runtimeCondition;
-    protected PostCondition postCondition;
+    protected ObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
+    protected ObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
+    protected ObjectProperty<PostCondition> postCondition = new SimpleObjectProperty<>();
     protected final ArrayList<Variable> variables= new ArrayList<>();
 
     public PreCondition getPreCondition() {
-        return preCondition;
+        return preCondition.get();
     }
 
     public void setPreCondition(PreCondition preCondition) {
-        this.preCondition = preCondition;
+        this.preCondition.set(preCondition);
     }
 
     public RuntimeCondition getRuntimeCondition() {
-        return runtimeCondition;
+        return runtimeCondition.get();
     }
 
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
-        this.runtimeCondition = runtimeCondition;
+        this.runtimeCondition.set(runtimeCondition);
     }
 
     public PostCondition getPostCondition() {
-        return postCondition;
+        return postCondition.get();
     }
 
     public void setPostCondition(PostCondition postCondition) {
-        this.postCondition = postCondition;
+        this.postCondition.set(postCondition);
     }
 
     public void addVariable(Variable variable) {
@@ -88,10 +90,10 @@ public class Behaviour extends AbstractPlan implements HasVariables {
 
 
     @Override
-    public void registerDirtyFlag(){
+    public void registerDirtyFlag() {
         super.registerDirtyFlag();
-        nameProperty().addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
+        preCondition    .addListener((observable, oldValue, newValue) -> this.setDirty(true));
+        runtimeCondition.addListener((observable, oldValue, newValue) -> this.setDirty(true));
+        postCondition   .addListener((observable, oldValue, newValue) -> this.setDirty(true));
     }
 }

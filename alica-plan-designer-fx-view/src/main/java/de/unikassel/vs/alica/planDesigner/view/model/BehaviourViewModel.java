@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,13 +13,16 @@ public class BehaviourViewModel extends SerializableViewModel implements HasVari
     protected LongProperty deferring = new SimpleLongProperty();
 
     protected ObservableList<VariableViewModel> variables;
-    protected ConditionViewModel preCondition;
-    protected ConditionViewModel runtimeCondition;
-    protected ConditionViewModel postCondition;
+    protected final ObjectProperty<ConditionViewModel> preCondition;
+    protected final ObjectProperty<ConditionViewModel> runtimeCondition;
+    protected final ObjectProperty<ConditionViewModel> postCondition;
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
         variables = FXCollections.observableArrayList(new ArrayList<>());
+        preCondition        = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
+        runtimeCondition    = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
+        postCondition       = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
     }
 
     public void setDeferring(long deferring) {
@@ -51,27 +55,39 @@ public class BehaviourViewModel extends SerializableViewModel implements HasVari
         return variables;
     }
 
-    public ConditionViewModel getPreCondition() {
+    public ObjectProperty<ConditionViewModel> preConditionProperty(){
         return preCondition;
     }
 
-    public void setPreCondition(ConditionViewModel conditionViewModel) {
-        this.preCondition = conditionViewModel;
+    public ConditionViewModel getPreCondition() {
+        return preCondition.get();
     }
 
-    public ConditionViewModel getRuntimeCondition() {
+    public void setPreCondition(ConditionViewModel conditionViewModel) {
+        this.preCondition.set(conditionViewModel);
+    }
+
+    public ObjectProperty<ConditionViewModel> runtimeConditionProperty(){
         return runtimeCondition;
     }
 
-    public void setRuntimeCondition(ConditionViewModel conditionViewModel) {
-        this.runtimeCondition = conditionViewModel;
+    public ConditionViewModel getRuntimeCondition() {
+        return runtimeCondition.get();
     }
 
-    public ConditionViewModel getPostCondition() {
+    public void setRuntimeCondition(ConditionViewModel conditionViewModel) {
+        this.runtimeCondition.set(conditionViewModel);
+    }
+
+    public ObjectProperty<ConditionViewModel> posConditionProperty(){
         return postCondition;
     }
 
+    public ConditionViewModel getPostCondition() {
+        return postCondition.get();
+    }
+
     public void setPostCondition(ConditionViewModel conditionViewModel) {
-        this.postCondition = conditionViewModel;
+        this.postCondition.set(conditionViewModel);
     }
 }

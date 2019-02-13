@@ -757,6 +757,11 @@ public class ModelManager implements Observer {
                     throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
                 }
                 break;
+            case Types.PRECONDITION:
+            case Types.RUNTIMECONDITION:
+            case Types.POSTCONDITION:
+                  //NO-OP
+                break;
             default:
                 System.err.println("ModelManager: adding or replacing " + type + " not implemented, yet!");
                 return null;
@@ -840,6 +845,11 @@ public class ModelManager implements Observer {
                 } else {
                     throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
                 }
+                break;
+            case Types.PRECONDITION:
+            case Types.RUNTIMECONDITION:
+            case Types.POSTCONDITION:
+
                 break;
             default:
                 System.err.println("ModelManager: Removing " + type + " not implemented, yet!");
@@ -1132,9 +1142,6 @@ public class ModelManager implements Observer {
                     case Types.SUCCESSSTATE:
                     case Types.FAILURESTATE:
                     case Types.ENTRYPOINT:
-                    case Types.PRECONDITION:
-                    case Types.RUNTIMECONDITION:
-                    case Types.POSTCONDITION:
                     case Types.SYNCHRONIZATION:
                     case Types.INITSTATECONNECTION:
                     case Types.TRANSITION:
@@ -1145,6 +1152,11 @@ public class ModelManager implements Observer {
                         PlanModelVisualisationObject parentOfElement = getCorrespondingPlanModelVisualisationObject(mmq.getParentId());
                         cmd = new ConnectSynchronizationWithTransition(this, mmq.getElementId(), parentOfElement, mmq.getRelatedObjects().get(Types.TRANSITION));
                         break;
+                    case Types.PRECONDITION:
+                    case Types.RUNTIMECONDITION:
+                    case Types.POSTCONDITION:
+                        cmd = handleNewConditionAdded(mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");
                         return;
@@ -1154,6 +1166,11 @@ public class ModelManager implements Observer {
                 switch (mmq.getElementType()) {
                     case Types.ANNOTATEDPLAN:
                         cmd = handlePlanTypeMMQ(mmq);
+                        break;
+                    case Types.PRECONDITION:
+                    case Types.RUNTIMECONDITION:
+                    case Types.POSTCONDITION:
+                        cmd = handleConditionRemoved(mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");
@@ -1210,6 +1227,75 @@ public class ModelManager implements Observer {
                 return;
         }
         commandStack.storeAndExecute(cmd);
+    }
+
+    private AbstractCommand handleNewConditionAdded(ModelModificationQuery mmq) {
+        AbstractCommand cmd;
+
+        PlanElement parent = getPlanElement(mmq.getParentId());
+        if(parent instanceof Plan){
+            cmd = null; // TODO: implement
+        }else if(parent instanceof Behaviour){
+            switch(mmq.getElementType()){
+                case Types.PRECONDITION:
+                    PreCondition preCondition = new PreCondition();
+                    preCondition.setPluginName(mmq.getName());
+                    cmd = new AddPreConditionToBehaviour(this, preCondition, (Behaviour) parent);
+                    break;
+                case Types.RUNTIMECONDITION:
+                    RuntimeCondition runtimeCondition = new RuntimeCondition();
+                    runtimeCondition.setPluginName(mmq.getName());
+                    cmd = new AddRuntimeConditionToBehaviour(this, runtimeCondition, (Behaviour) parent);
+                    break;
+                case Types.POSTCONDITION:
+                    PostCondition postCondition = new PostCondition();
+                    postCondition.setPluginName(mmq.getName());
+                    cmd = new AddPostConditionToBehaviour(this, postCondition, (Behaviour) parent);
+                    break;
+                default:
+                    System.err.println("ModelManager: Condition of type " + mmq.getElementType() + " can't be added to Behaviour");
+                    return null;
+            }
+        }else if(parent instanceof TerminalState){
+            cmd = null; // TODO: implement
+        }else {
+            System.err.println("ModelManager: Condition can't be added to " + parent.getClass().getSimpleName());
+            return null;
+        }
+
+        return cmd;
+    }
+
+    private AbstractCommand handleConditionRemoved(ModelModificationQuery mmq){
+        AbstractCommand cmd;
+
+        PlanElement parent = getPlanElement(mmq.getParentId());
+
+        if(parent instanceof Plan){
+            cmd = null; //TODO: implement
+        }else if(parent instanceof Behaviour){
+            switch(mmq.getElementType()){
+                case Types.PRECONDITION:
+                    cmd = new RemovePreConditionFromBehaviour(this, (Behaviour) parent, mmq.elementId);
+                    break;
+                case Types.RUNTIMECONDITION:
+                    cmd = new RemoveRuntimeConditionFromBehaviour(this, (Behaviour) parent, mmq.getElementId());
+                    break;
+                case Types.POSTCONDITION:
+                    cmd = new RemovePostConditionFromBehaviour(this, (Behaviour) parent, mmq.getElementId());
+                    break;
+                default:
+                    System.err.println("ModelManager: Condition of type " + mmq.getElementType() + " can't be added to Behaviour");
+                    return null;
+            }
+        }else if(parent instanceof TerminalState){
+            cmd = null; //TODO: implement
+        }else{
+            System.err.println("ModelManager: Condition can't be removed from " + parent.getClass().getSimpleName());
+            return null;
+        }
+
+        return cmd;
     }
 
     /**

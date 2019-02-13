@@ -140,6 +140,9 @@ public class MainWindowController implements Initializable {
     public RepositoryTabPane getRepositoryTabPane() {
         return repositoryTabPane;
     }
+    public ConfigurationWindowController getConfigWindowController(){
+        return configWindowController;
+    }
 
     // ---- SETTER ----
     public void setConfigWindowController(ConfigurationWindowController configWindowController) {
