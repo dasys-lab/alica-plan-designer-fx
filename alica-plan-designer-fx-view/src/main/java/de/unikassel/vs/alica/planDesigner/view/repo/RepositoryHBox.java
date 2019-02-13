@@ -10,7 +10,8 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.menu.DeleteElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
@@ -64,13 +65,21 @@ public class RepositoryHBox extends DraggableHBox {
             }
         });
 
-        setOnMouseReleased(e ->{
+        // set the onDragObjectImage to cursor
+        setOnDragDetected(e -> {
+            RepositoryHBox repositoryHBox = (RepositoryHBox) e.getSource();
+            ImageCursor cursor = new ImageCursor(repositoryHBox.icon.getImage());
+            getScene().setCursor(cursor);
+         });
 
+        setOnMouseReleased(e ->{
+            getScene().setCursor(Cursor.DEFAULT);
             PickResult pickResult = e.getPickResult();
             Parent parent = pickResult.getIntersectedNode().getParent();
             if(pickResult.getIntersectedNode() instanceof Circle) {
                 if(parent instanceof StateContainer) {
                     if(viewModelElement instanceof TaskViewModel) { return; }
+
                     StateContainer stateContainer = (StateContainer) parent;
                     GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(),stateContainer.getModelElement().getId());
                     guiModificationEventExpanded.setParentId(stateContainer.getState().getParentId());
