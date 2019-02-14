@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
+import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ConditionViewModel;
@@ -15,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.PropertySheet;
@@ -41,12 +43,12 @@ public class ConditionsTab extends Tab {
     private ViewModelElement parentElement;
     private ConditionViewModel condition;
 
+    private final VBox hideableView;
+
     public ConditionsTab(String title, String type){
         super(title);
         this.type = type;
         pluginHandler = MainWindowController.getInstance().getConfigWindowController().getPluginEventHandler();
-
-        VBox content = new VBox();
 
         pluginUI = new Pane();
         pluginSelection = new ComboBox<>();
@@ -57,8 +59,18 @@ public class ConditionsTab extends Tab {
         properties = new PropertySheet();
         properties.setModeSwitcherVisible(false);
 
-        content.getChildren().addAll(pluginSelection, properties, pluginUI);
-        this.setContent(content);
+        TitledPane section0 = new TitledPane();
+        section0.setContent(properties);
+        section0.setText(I18NRepo.getInstance().getString("label.caption.properties"));
+
+        TitledPane section1 = new TitledPane();
+        section1.setContent(pluginUI);
+        section1.setText(I18NRepo.getInstance().getString("label.caption.pluginui"));
+        section1.setExpanded(false);
+
+        this.hideableView = new VBox(section0, section1);
+
+        this.setContent(new VBox(pluginSelection, hideableView));
     }
 
     public void setViewModelElement(ViewModelElement viewModelElement){
@@ -180,6 +192,11 @@ public class ConditionsTab extends Tab {
         this.properties.getItems().clear();
         if(condition != null) {
             this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
+            hideableView.setVisible(true);
+            setPluginSelection(condition.getPluginName());
+        }else{
+            hideableView.setVisible(false);
+            setPluginSelection(NONE);
         }
 
         // Update for new values
@@ -190,9 +207,10 @@ public class ConditionsTab extends Tab {
             this.properties.getItems().clear();
             if(condition != null) {
                 this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
-
+                hideableView.setVisible(true);
                 setPluginSelection(this.condition.getPluginName());
             }else{
+                hideableView.setVisible(false);
                 setPluginSelection(NONE);
             }
         });

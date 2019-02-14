@@ -1232,7 +1232,21 @@ public class ModelManager implements Observer {
 
         PlanElement parent = getPlanElement(mmq.getParentId());
         if(parent instanceof Plan){
-            cmd = null; // TODO: implement
+            switch(mmq.getElementType()){
+                case Types.PRECONDITION:
+                    PreCondition preCondition = new PreCondition();
+                    preCondition.setPluginName(mmq.getName());
+                    cmd = new AddPreConditionToPlan(this, preCondition, (Plan) parent);
+                    break;
+                case Types.RUNTIMECONDITION:
+                    RuntimeCondition runtimeCondition = new RuntimeCondition();
+                    runtimeCondition.setPluginName(mmq.getName());
+                    cmd = new AddRuntimeConditionToPlan(this, runtimeCondition, (Plan) parent);
+                    break;
+                default:
+                    System.err.println("ModelManager: Condition of type " + mmq.getElementType() + " can't be added to Plan");
+                    return null;
+            }
         }else if(parent instanceof Behaviour){
             switch(mmq.getElementType()){
                 case Types.PRECONDITION:
@@ -1270,7 +1284,17 @@ public class ModelManager implements Observer {
         PlanElement parent = getPlanElement(mmq.getParentId());
 
         if(parent instanceof Plan){
-            cmd = null; //TODO: implement
+            switch ((mmq.getElementType())){
+                case Types.PRECONDITION:
+                    cmd = new RemovePreConditionFromPlan(this, (Plan) parent, mmq.getElementId());
+                    break;
+                case Types.RUNTIMECONDITION:
+                    cmd = new RemoveRuntimeConditionFromPlan(this, (Plan) parent, mmq.getElementId());
+                    break;
+                default:
+                    System.err.println("ModelManager: Condition of type " + mmq.getElementType() + " can't be removed from Behaviour");
+                    return null;
+            }
         }else if(parent instanceof Behaviour){
             switch(mmq.getElementType()){
                 case Types.PRECONDITION:
@@ -1283,7 +1307,7 @@ public class ModelManager implements Observer {
                     cmd = new RemovePostConditionFromBehaviour(this, (Behaviour) parent, mmq.getElementId());
                     break;
                 default:
-                    System.err.println("ModelManager: Condition of type " + mmq.getElementType() + " can't be added to Behaviour");
+                    System.err.println("ModelManager: Condition of type " + mmq.getElementType() + " can't be removed from Behaviour");
                     return null;
             }
         }else if(parent instanceof TerminalState){

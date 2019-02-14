@@ -1,7 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,10 +13,10 @@ public class Plan extends AbstractPlan implements HasVariables {
 
     protected final SimpleBooleanProperty masterPlan = new SimpleBooleanProperty();
     protected final SimpleDoubleProperty utilityThreshold = new SimpleDoubleProperty();
+    protected final ObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
+    protected final ObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
 
-    // TODO: probably need to make this conditions a simpleObjectProperty or something similar custom...
-    protected PreCondition preCondition;
-    protected RuntimeCondition runtimeCondition;
+
     protected final ArrayList<EntryPoint> entryPoints = new ArrayList<>();
     protected final ArrayList<State> states = new ArrayList<>();
     protected final ArrayList<Transition> transitions = new ArrayList<>();
@@ -59,17 +61,24 @@ public class Plan extends AbstractPlan implements HasVariables {
     }
 
     public PreCondition getPreCondition() {
-        return preCondition;
+        return preCondition.get();
     }
     public void setPreCondition(PreCondition preCondition) {
-        this.preCondition = preCondition;
+        this.preCondition.set(preCondition);
+    }
+    public ObjectProperty<PreCondition> preConditionProperty(){
+        return preCondition;
     }
 
     public RuntimeCondition getRuntimeCondition() {
-        return runtimeCondition;
+        return runtimeCondition.get();
     }
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
-        this.runtimeCondition = runtimeCondition;
+        this.runtimeCondition.set(runtimeCondition);
+    }
+
+    public ObjectProperty<RuntimeCondition> runtimeConditionProperty(){
+        return runtimeCondition;
     }
 
     public void addTransition(Transition transition) {
@@ -147,13 +156,11 @@ public class Plan extends AbstractPlan implements HasVariables {
     @Override
     public void registerDirtyFlag() {
         super.registerDirtyFlag();
-        masterPlan.addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
+        masterPlan.addListener(         (observable, oldValue, newValue) -> this.setDirty(true));
+        utilityThreshold.addListener(   (observable, oldValue, newValue) -> this.setDirty(true));
+        preCondition.addListener(       (observable, oldValue, newValue) -> this.setDirty(true));
+        runtimeCondition.addListener(   (observable, oldValue, newValue) -> this.setDirty(true));
 
-        utilityThreshold.addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
         for (Variable variable : variables) {
             variable.nameProperty().addListener((observable, oldValue, newValue) -> {
                 this.setDirty(true);

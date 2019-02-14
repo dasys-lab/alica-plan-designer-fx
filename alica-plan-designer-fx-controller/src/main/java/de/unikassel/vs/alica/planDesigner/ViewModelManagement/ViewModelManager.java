@@ -401,7 +401,8 @@ public class ViewModelManager {
         }
         ViewModelElement viewModelElement = getViewModelElement(event.getElement());
 
-        if (parentViewModel instanceof  PlanViewModel && event.getElementType() != Types.ABSTRACTPLAN) {
+        if (parentViewModel instanceof  PlanViewModel && !event.getElementType().equals(Types.ABSTRACTPLAN)
+                && !event.getElementType().equals(Types.PRECONDITION) && !event.getElementType().equals(Types.RUNTIMECONDITION)) {
             addToPlan((PlanViewModel) parentViewModel, viewModelElement, event);
             return;
         }
@@ -565,6 +566,10 @@ public class ViewModelManager {
                 break;
             case Types.VARIABLE:
                 parentPlan.getVariables().add((VariableViewModel)element);
+                break;
+            case Types.PRECONDITION:
+            case Types.RUNTIMECONDITION:
+                // NO-OP
                 break;
             default:
                 System.err.println("ViewModelManager: Add Element to plan not supported for type: " + element.getType());
