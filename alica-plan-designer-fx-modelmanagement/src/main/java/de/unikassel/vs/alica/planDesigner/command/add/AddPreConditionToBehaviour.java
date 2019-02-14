@@ -16,17 +16,22 @@ public class AddPreConditionToBehaviour extends AbstractCommand {
         super(modelManager);
         this.behaviour = behaviour;
         this.newPreCondition = preCondition;
+        this.previousPreCondition = behaviour.getPreCondition();
     }
 
     @Override
     public void doCommand() {
-        previousPreCondition = behaviour.getPreCondition();
         modelManager.createdPlanElement(Types.PRECONDITION, newPreCondition, behaviour, false);
         behaviour.setPreCondition(newPreCondition);
     }
 
     @Override
     public void undoCommand() {
+        if(previousPreCondition == null){
+            modelManager.removedPlanElement(Types.PRECONDITION, newPreCondition, behaviour, false);
+        }else{
+            modelManager.createdPlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
+        }
         behaviour.setPreCondition(previousPreCondition);
     }
 }

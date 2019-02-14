@@ -10,26 +10,24 @@ public class RemovePostConditionFromBehaviour extends AbstractCommand {
 
     protected PostCondition previousPostCondition;
     protected Behaviour behaviour;
-    private long conditionId;
 
     public RemovePostConditionFromBehaviour(ModelManager modelManager, Behaviour behaviour, long conditionId) {
         super(modelManager);
         this.behaviour = behaviour;
-        this.conditionId = conditionId;
-        this.previousPostCondition = null;
+        this.previousPostCondition = (PostCondition) modelManager.getPlanElement(conditionId);
     }
 
     @Override
     public void doCommand() {
-        if (behaviour.getPostCondition().getId() == conditionId) {
-            previousPostCondition = behaviour.getPostCondition();
-            modelManager.removedPlanElement(Types.POSTCONDITION, previousPostCondition, behaviour, false);
-            behaviour.setPostCondition(null);
-        }
+        modelManager.removedPlanElement(Types.POSTCONDITION, previousPostCondition, behaviour, false);
+        behaviour.setPostCondition(null);
     }
 
     @Override
     public void undoCommand() {
+        if(previousPostCondition != null){
+            modelManager.createdPlanElement(Types.POSTCONDITION, previousPostCondition, behaviour, false);
+        }
         behaviour.setPostCondition(previousPostCondition);
     }
 }

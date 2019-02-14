@@ -11,6 +11,8 @@ import de.unikassel.vs.alica.planDesigner.view.model.ConditionViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.beans.property.ObjectProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
@@ -125,9 +127,11 @@ public class ConditionsTab extends Tab {
             updateGuiOnChange(condition.getPluginName());
         }
 
-        pluginSelection.valueProperty().addListener((ev, ol, nw) -> {
-            updateModelOnChange(nw);
-            updateGuiOnChange(nw);
+
+        pluginSelection.setOnAction(event -> {
+            String newValue = pluginSelection.getValue();
+            updateModelOnChange(newValue);
+            updateGuiOnChange(newValue);
         });
     }
 
@@ -180,12 +184,24 @@ public class ConditionsTab extends Tab {
 
         // Update for new values
         property.addListener((observable, oldValue, newValue) -> {
+
             this.condition = newValue;
 
             this.properties.getItems().clear();
             if(condition != null) {
                 this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
+
+                setPluginSelection(this.condition.getPluginName());
+            }else{
+                setPluginSelection(NONE);
             }
         });
+    }
+
+    private void setPluginSelection(String plugiName){
+        EventHandler<ActionEvent> handler = this.pluginSelection.getOnAction();
+        this.pluginSelection.setOnAction(null);
+        this.pluginSelection.getSelectionModel().select(plugiName);
+        this.pluginSelection.setOnAction(handler);
     }
 }

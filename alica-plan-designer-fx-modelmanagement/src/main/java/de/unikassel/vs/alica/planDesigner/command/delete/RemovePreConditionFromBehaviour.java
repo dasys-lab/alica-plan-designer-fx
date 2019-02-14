@@ -10,27 +10,24 @@ public class RemovePreConditionFromBehaviour extends AbstractCommand {
 
     private PreCondition previousPreCondition;
     private Behaviour behaviour;
-    private long conditionId;
 
     public RemovePreConditionFromBehaviour(ModelManager manager, Behaviour behaviour, long conditionId) {
         super(manager);
         this.behaviour = behaviour;
-        this.conditionId = conditionId;
-        this.previousPreCondition = null;
+        this.previousPreCondition = (PreCondition) modelManager.getPlanElement(conditionId);
     }
 
     @Override
     public void doCommand() {
-        if (behaviour.getPreCondition().getId() == conditionId) {
-            previousPreCondition = behaviour.getPreCondition();
-            modelManager.removedPlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
-            behaviour.setPreCondition(null);
-        }
-
+        modelManager.removedPlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
+        behaviour.setPreCondition(null);
     }
 
     @Override
     public void undoCommand() {
+        if(previousPreCondition != null){
+            modelManager.createdPlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
+        }
         behaviour.setPreCondition(previousPreCondition);
     }
 }
