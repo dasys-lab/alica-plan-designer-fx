@@ -16,7 +16,6 @@ public class Plan extends AbstractPlan implements HasVariables {
     protected final ObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
     protected final ObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
 
-
     protected final ArrayList<EntryPoint> entryPoints = new ArrayList<>();
     protected final ArrayList<State> states = new ArrayList<>();
     protected final ArrayList<Transition> transitions = new ArrayList<>();
@@ -76,7 +75,6 @@ public class Plan extends AbstractPlan implements HasVariables {
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
         this.runtimeCondition.set(runtimeCondition);
     }
-
     public ObjectProperty<RuntimeCondition> runtimeConditionProperty(){
         return runtimeCondition;
     }
@@ -107,6 +105,9 @@ public class Plan extends AbstractPlan implements HasVariables {
 
     public void addSynchronization(Synchronisation synchronisation) {
         synchronisations.add(synchronisation);
+        synchronisation.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
         this.setDirty(true);
     }
     public void removeSynchronization(Synchronisation synchronisation) {

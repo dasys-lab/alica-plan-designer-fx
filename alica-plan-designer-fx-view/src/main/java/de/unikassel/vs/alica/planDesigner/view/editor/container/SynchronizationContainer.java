@@ -96,7 +96,7 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
 
         // SYNC - CONTAINER
         Circle circle = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
-        circle.setFill(new ImagePattern(new AlicaIcon("synchronization", AlicaIcon.Size.SYNC)));
+        circle.setFill(new ImagePattern(new AlicaIcon(syncViewModel.getType(), AlicaIcon.Size.SYNC)));
         visualRepresentation = circle;
         setEffectToStandard();
 

@@ -41,10 +41,10 @@ public class AlicaCursor extends ImageCursor {
         forbidden_initstateconnection,
         add_initstateconnection,
 
-        //synchronization
-        synchronization,
-        forbidden_synchronization,
-        add_synchronization,
+        //synchronisation
+        synchronisation,
+        forbidden_synchronisation,
+        add_synchronisation,
 
         //synctransition
         synctransition,

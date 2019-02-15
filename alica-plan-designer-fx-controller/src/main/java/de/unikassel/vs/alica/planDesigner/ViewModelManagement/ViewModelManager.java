@@ -254,7 +254,7 @@ public class ViewModelManager {
 
     private SynchronizationViewModel createSynchronizationViewModel(Synchronisation synchronisation) {
         SynchronizationViewModel synchronizationViewModel = new SynchronizationViewModel(synchronisation.getId(), synchronisation.getName(),
-                Types.SYNCHRONIZATION);
+                Types.SYNCHRONISATION);
         for (Transition transition : synchronisation.getSyncedTransitions()) {
             synchronizationViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
         }
@@ -525,7 +525,7 @@ public class ViewModelManager {
                 parentPlan.getTransitions().remove(transitionViewModel);
                 parentPlan.getTransitions().add(transitionViewModel);
                 break;
-            case Types.SYNCHRONIZATION: {
+            case Types.SYNCHRONISATION: {
                 SynchronizationViewModel syncViewModel = (SynchronizationViewModel) element;
                 syncViewModel.setXPosition(x);
                 syncViewModel.setYPosition(y);

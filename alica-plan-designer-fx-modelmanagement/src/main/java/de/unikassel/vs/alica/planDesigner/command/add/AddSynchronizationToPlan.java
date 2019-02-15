@@ -30,7 +30,7 @@ public class AddSynchronizationToPlan extends AbstractCommand {
                 .getExtension()
                 .put(synchronisation, newlyCreatedPmlUiExtension);*/
         parentOfElement.getPmlUiExtensionMap().getExtension().put(synchronisation, newlyCreatedPmlUiExtension);
-        modelManager.createdPlanElement(Types.SYNCHRONIZATION, synchronisation, parentOfElement.getPlan(), false);
+        modelManager.createdPlanElement(Types.SYNCHRONISATION, synchronisation, parentOfElement.getPlan(), false);
     }
 
     @Override
@@ -41,6 +41,6 @@ public class AddSynchronizationToPlan extends AbstractCommand {
                 .getExtension()
                 .remove(synchronisation);*/
         parentOfElement.getPmlUiExtensionMap().getExtension().remove(synchronisation, newlyCreatedPmlUiExtension);
-        modelManager.createdPlanElement(Types.SYNCHRONIZATION, synchronisation, parentOfElement.getPlan(), false);
+        modelManager.createdPlanElement(Types.SYNCHRONISATION, synchronisation, parentOfElement.getPlan(), false);
     }
 }

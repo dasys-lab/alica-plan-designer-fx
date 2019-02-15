@@ -17,13 +17,13 @@ public class ConnectSynchronizationWithTransition extends AbstractCommand {
     public ConnectSynchronizationWithTransition(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
 
-        synchronisation = (Synchronisation) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.SYNCHRONIZATION));
+        synchronisation = (Synchronisation) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.SYNCHRONISATION));
         transition = (Transition) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
     }
 
     @Override
     public void doCommand() {
-        synchronisation.getSyncedTransitions().add(transition);
+        synchronisation.addSyncedTransition(transition);
         ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CONNECTED, transition, Types.SYNCTRANSITION);
         modelEvent.setParentId(synchronisation.getId());
         modelManager.fireEvent(modelEvent);
@@ -31,7 +31,7 @@ public class ConnectSynchronizationWithTransition extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        synchronisation.getSyncedTransitions().remove(transition);
+        synchronisation.removeSyncedTransition(transition);
         ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_DISCONNECTED, transition, Types.SYNCTRANSITION);
         modelEvent.setParentId(synchronisation.getId());
         modelManager.fireEvent(modelEvent);

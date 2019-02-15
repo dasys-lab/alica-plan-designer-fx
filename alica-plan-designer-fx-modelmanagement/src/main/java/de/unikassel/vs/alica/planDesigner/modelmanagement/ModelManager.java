@@ -741,7 +741,7 @@ public class ModelManager implements Observer {
                 uiExtensionEvent.setExtension(extension);
                 event = uiExtensionEvent;
                 break;
-            case Types.SYNCHRONIZATION:
+            case Types.SYNCHRONISATION:
                 plan = (Plan) parentElement;
                 visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
                 visualisation.getPlan().addSynchronization((Synchronisation) newElement);
@@ -835,7 +835,7 @@ public class ModelManager implements Observer {
                 ((Plan) parentElement).removeTransition((Transition) removedElement);
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
-            case Types.SYNCHRONIZATION:
+            case Types.SYNCHRONISATION:
                 ((Plan) parentElement).removeSynchronization((Synchronisation) removedElement);
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
@@ -1142,7 +1142,7 @@ public class ModelManager implements Observer {
                     case Types.SUCCESSSTATE:
                     case Types.FAILURESTATE:
                     case Types.ENTRYPOINT:
-                    case Types.SYNCHRONIZATION:
+                    case Types.SYNCHRONISATION:
                     case Types.INITSTATECONNECTION:
                     case Types.TRANSITION:
                     case Types.BENDPOINT:
@@ -1576,11 +1576,10 @@ public class ModelManager implements Observer {
                 extension = modelObject.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(transition);
                 cmd = new AddBendpointToPlan(this, parenOfElement, bendPoint, extension);
                 break;
-            case Types.SYNCHRONIZATION:
+            case Types.SYNCHRONISATION:
                 Synchronisation sync = new Synchronisation();
                 sync.setName(mmq.name);
                 sync.setComment(mmq.getComment());
-                sync.setSyncedTransitions(new ArrayList<>());
                 extension = new PmlUiExtension();
                 extension.setX(x);
                 extension.setY(y);

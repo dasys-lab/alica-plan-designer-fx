@@ -29,11 +29,11 @@ public class SynchronizationTool extends AbstractTool {
     @Override
     public ToolButton createToolUI() {
         ToolButton toolButton = new ToolButton();
-        toolButton.setIcon(Types.SYNCHRONIZATION);
+        toolButton.setIcon(Types.SYNCHRONISATION);
         setToolButton(toolButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.synchronization);
-        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synchronization);
-        addCursor = new AlicaCursor(AlicaCursor.Type.add_synchronization);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.synchronisation);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synchronisation);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_synchronisation);
         return toolButton;
     }
 
@@ -71,7 +71,7 @@ public class SynchronizationTool extends AbstractTool {
 
                     IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
-                    GuiChangePositionEvent guiEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.SYNCHRONIZATION, "Sync Default");
+                    GuiChangePositionEvent guiEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.SYNCHRONISATION, "Sync Default");
                     guiEvent.setComment("");
                     guiEvent.setNewX((int) eventTargetCoordinates.getX());
                     guiEvent.setNewY((int) eventTargetCoordinates.getY());
