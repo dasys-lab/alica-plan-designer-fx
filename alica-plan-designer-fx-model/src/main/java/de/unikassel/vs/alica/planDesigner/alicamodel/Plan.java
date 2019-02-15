@@ -20,7 +20,7 @@ public class Plan extends AbstractPlan implements HasVariables {
     protected final ArrayList<EntryPoint> entryPoints = new ArrayList<>();
     protected final ArrayList<State> states = new ArrayList<>();
     protected final ArrayList<Transition> transitions = new ArrayList<>();
-    protected final ArrayList<Synchronization> synchronizations = new ArrayList<>();
+    protected final ArrayList<Synchronisation> synchronisations = new ArrayList<>();
     protected final ArrayList<Variable> variables= new ArrayList<>();
 
     /**
@@ -105,16 +105,16 @@ public class Plan extends AbstractPlan implements HasVariables {
         return Collections.unmodifiableList(states);
     }
 
-    public void addSynchronization(Synchronization synchronization) {
-        synchronizations.add(synchronization);
+    public void addSynchronization(Synchronisation synchronisation) {
+        synchronisations.add(synchronisation);
         this.setDirty(true);
     }
-    public void removeSynchronization(Synchronization synchronization) {
-        synchronizations.remove(synchronization);
+    public void removeSynchronization(Synchronisation synchronisation) {
+        synchronisations.remove(synchronisation);
         this.setDirty(true);
     }
-    public List<Synchronization> getSynchronizations() {
-        return Collections.unmodifiableList(synchronizations);
+    public List<Synchronisation> getSynchronisations() {
+        return Collections.unmodifiableList(synchronisations);
     }
 
     public void addEntryPoint(EntryPoint entryPoint) {

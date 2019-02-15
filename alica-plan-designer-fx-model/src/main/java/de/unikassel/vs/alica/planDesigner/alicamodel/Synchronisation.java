@@ -5,15 +5,15 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.ArrayList;
 
-public class Synchronization extends PlanElement{
+public class Synchronisation extends PlanElement{
 
     protected final SimpleIntegerProperty talkTimeout = new SimpleIntegerProperty();
     protected final SimpleIntegerProperty syncTimeout = new SimpleIntegerProperty();
     protected final SimpleBooleanProperty failOnSyncTimeout = new SimpleBooleanProperty();
 
-    public Synchronization(){}
+    public Synchronisation(){}
 
-    public Synchronization(long id) {
+    public Synchronisation(long id) {
         this.id = id;
     }
 

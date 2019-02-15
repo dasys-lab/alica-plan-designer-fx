@@ -94,7 +94,7 @@ public class ModelManager implements Observer {
         objectMapper.addMixIn(Plan.class, PlanMixIn.class);
         objectMapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
         objectMapper.addMixIn(State.class, StateMixIn.class);
-        objectMapper.addMixIn(Synchronization.class, SynchronizationMixIn.class);
+        objectMapper.addMixIn(Synchronisation.class, SynchronizationMixIn.class);
         objectMapper.addMixIn(Task.class, TaskMixIn.class);
         objectMapper.addMixIn(TaskRepository.class, TaskRepositoryMixIn.class);
         objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
@@ -323,7 +323,7 @@ public class ModelManager implements Observer {
                         for (EntryPoint ep : plan.getEntryPoints()) {
                             planElementMap.put(ep.getId(), ep);
                         }
-                        for (Synchronization sync : plan.getSynchronizations()) {
+                        for (Synchronisation sync : plan.getSynchronisations()) {
                             planElementMap.put(sync.getId(), sync);
                         }
                         for (Variable variable : plan.getVariables()) {
@@ -504,8 +504,8 @@ public class ModelManager implements Observer {
             if (refs.incompleteAbstractPlansInStates.contains(transition.getOutState().getId())) {
                 transition.setOutState((State) planElementMap.get(transition.getOutState().getId()));
             }
-            if (transition.getSynchronization() != null && refs.incompleteSynchronizationsInTransitions.contains(transition.getSynchronization().getId())) {
-                transition.setSynchronization((Synchronization) planElementMap.get(transition.getSynchronization().getId()));
+            if (transition.getSynchronisation() != null && refs.incompleteSynchronizationsInTransitions.contains(transition.getSynchronisation().getId())) {
+                transition.setSynchronisation((Synchronisation) planElementMap.get(transition.getSynchronisation().getId()));
             }
         }
     }
@@ -744,7 +744,7 @@ public class ModelManager implements Observer {
             case Types.SYNCHRONIZATION:
                 plan = (Plan) parentElement;
                 visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
-                visualisation.getPlan().addSynchronization((Synchronization) newElement);
+                visualisation.getPlan().addSynchronization((Synchronisation) newElement);
                 UiExtensionModelEvent uiExtensionModelEvent = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
                 extension = visualisation.getPmlUiExtensionMap().getPmlUiExtensionOrCreateNew(newElement);
                 uiExtensionModelEvent.setExtension(extension);
@@ -836,7 +836,7 @@ public class ModelManager implements Observer {
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.SYNCHRONIZATION:
-                ((Plan) parentElement).removeSynchronization((Synchronization) removedElement);
+                ((Plan) parentElement).removeSynchronization((Synchronisation) removedElement);
                 getCorrespondingPlanModelVisualisationObject(parentElement.getId()).getPmlUiExtensionMap().getExtension().remove(removedElement);
                 break;
             case Types.VARIABLE:
@@ -1577,7 +1577,7 @@ public class ModelManager implements Observer {
                 cmd = new AddBendpointToPlan(this, parenOfElement, bendPoint, extension);
                 break;
             case Types.SYNCHRONIZATION:
-                Synchronization sync = new Synchronization();
+                Synchronisation sync = new Synchronisation();
                 sync.setName(mmq.name);
                 sync.setComment(mmq.getComment());
                 sync.setSyncedTransitions(new ArrayList<>());

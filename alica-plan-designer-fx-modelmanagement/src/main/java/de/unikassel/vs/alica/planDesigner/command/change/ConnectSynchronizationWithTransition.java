@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.command.change;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronization;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
@@ -12,28 +12,28 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 public class ConnectSynchronizationWithTransition extends AbstractCommand {
 
     private Transition transition;
-    private Synchronization synchronization;
+    private Synchronisation synchronisation;
 
     public ConnectSynchronizationWithTransition(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
 
-        synchronization = (Synchronization) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.SYNCHRONIZATION));
+        synchronisation = (Synchronisation) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.SYNCHRONIZATION));
         transition = (Transition) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
     }
 
     @Override
     public void doCommand() {
-        synchronization.getSyncedTransitions().add(transition);
+        synchronisation.getSyncedTransitions().add(transition);
         ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CONNECTED, transition, Types.SYNCTRANSITION);
-        modelEvent.setParentId(synchronization.getId());
+        modelEvent.setParentId(synchronisation.getId());
         modelManager.fireEvent(modelEvent);
     }
 
     @Override
     public void undoCommand() {
-        synchronization.getSyncedTransitions().remove(transition);
+        synchronisation.getSyncedTransitions().remove(transition);
         ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_DISCONNECTED, transition, Types.SYNCTRANSITION);
-        modelEvent.setParentId(synchronization.getId());
+        modelEvent.setParentId(synchronisation.getId());
         modelManager.fireEvent(modelEvent);
     }
 }

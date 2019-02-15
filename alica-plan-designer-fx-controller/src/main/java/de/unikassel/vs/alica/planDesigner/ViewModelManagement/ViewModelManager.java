@@ -69,8 +69,8 @@ public class ViewModelManager {
             element = createVariableViewModel((Variable) planElement);
         } else if (planElement instanceof Transition) {
             element = createTransitionViewModel((Transition) planElement);
-        } else if (planElement instanceof Synchronization) {
-            element = createSynchronizationViewModel((Synchronization) planElement);
+        } else if (planElement instanceof Synchronisation) {
+            element = createSynchronizationViewModel((Synchronisation) planElement);
         } else if (planElement instanceof Quantifier) {
             element = createQuantifierViewModel((Quantifier) planElement);
         } else if (planElement instanceof Condition) {
@@ -252,10 +252,10 @@ public class ViewModelManager {
         return transitionViewModel;
     }
 
-    private SynchronizationViewModel createSynchronizationViewModel(Synchronization synchronization) {
-        SynchronizationViewModel synchronizationViewModel = new SynchronizationViewModel(synchronization.getId(), synchronization.getName(),
+    private SynchronizationViewModel createSynchronizationViewModel(Synchronisation synchronisation) {
+        SynchronizationViewModel synchronizationViewModel = new SynchronizationViewModel(synchronisation.getId(), synchronisation.getName(),
                 Types.SYNCHRONIZATION);
-        for (Transition transition : synchronization.getSyncedTransitions()) {
+        for (Transition transition : synchronisation.getSyncedTransitions()) {
             synchronizationViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
         }
         return synchronizationViewModel;
@@ -283,8 +283,8 @@ public class ViewModelManager {
         for (Transition transition : plan.getTransitions()) {
             planViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
         }
-        for (Synchronization synchronization : plan.getSynchronizations()) {
-            planViewModel.getSynchronisations().add((SynchronizationViewModel) getViewModelElement(synchronization));
+        for (Synchronisation synchronisation : plan.getSynchronisations()) {
+            planViewModel.getSynchronisations().add((SynchronizationViewModel) getViewModelElement(synchronisation));
         }
         for (Variable var : plan.getVariables()) {
             planViewModel.getVariables().add((VariableViewModel) getViewModelElement(var));

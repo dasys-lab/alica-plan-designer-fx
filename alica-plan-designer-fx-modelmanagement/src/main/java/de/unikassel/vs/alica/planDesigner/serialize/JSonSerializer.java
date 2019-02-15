@@ -22,7 +22,7 @@ public class JSonSerializer {
         mapper.addMixIn(Plan.class, PlanMixIn.class);
         mapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
         mapper.addMixIn(State.class, StateMixIn.class);
-        mapper.addMixIn(Synchronization.class, SynchronizationMixIn.class);
+        mapper.addMixIn(Synchronisation.class, SynchronizationMixIn.class);
         mapper.addMixIn(Task.class, TaskMixIn.class);
         mapper.addMixIn(TaskRepository.class, TaskRepositoryMixIn.class);
         mapper.addMixIn(Transition.class, TransitionMixIn.class);

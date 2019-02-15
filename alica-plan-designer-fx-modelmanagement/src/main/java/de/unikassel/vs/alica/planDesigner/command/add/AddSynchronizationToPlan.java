@@ -1,7 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.command.add;
 
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronization;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
@@ -12,11 +12,11 @@ public class AddSynchronizationToPlan extends AbstractCommand {
 
     private PlanModelVisualisationObject parentOfElement;
     private PmlUiExtension newlyCreatedPmlUiExtension;
-    protected Synchronization synchronization;
+    protected Synchronisation synchronisation;
 
-    public AddSynchronizationToPlan(ModelManager manager, Synchronization synchronization, PlanModelVisualisationObject parentOfElement, PmlUiExtension extension) {
+    public AddSynchronizationToPlan(ModelManager manager, Synchronisation synchronisation, PlanModelVisualisationObject parentOfElement, PmlUiExtension extension) {
         super(manager);
-        this.synchronization = synchronization;
+        this.synchronisation = synchronisation;
         this.parentOfElement = parentOfElement;
         this.newlyCreatedPmlUiExtension = extension;
     }
@@ -24,23 +24,23 @@ public class AddSynchronizationToPlan extends AbstractCommand {
     @Override
     public void doCommand() {
         /*
-        parentOfElement.getPlan().getSynchronizations().add(synchronization);
+        parentOfElement.getPlan().getSynchronisations().add(synchronisation);
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .put(synchronization, newlyCreatedPmlUiExtension);*/
-        parentOfElement.getPmlUiExtensionMap().getExtension().put(synchronization, newlyCreatedPmlUiExtension);
-        modelManager.createdPlanElement(Types.SYNCHRONIZATION, synchronization, parentOfElement.getPlan(), false);
+                .put(synchronisation, newlyCreatedPmlUiExtension);*/
+        parentOfElement.getPmlUiExtensionMap().getExtension().put(synchronisation, newlyCreatedPmlUiExtension);
+        modelManager.createdPlanElement(Types.SYNCHRONIZATION, synchronisation, parentOfElement.getPlan(), false);
     }
 
     @Override
     public void undoCommand() {
-       /* parentOfElement.getPlan().getSynchronizations().remove(synchronization);
+       /* parentOfElement.getPlan().getSynchronisations().remove(synchronisation);
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .remove(synchronization);*/
-        parentOfElement.getPmlUiExtensionMap().getExtension().remove(synchronization, newlyCreatedPmlUiExtension);
-        modelManager.createdPlanElement(Types.SYNCHRONIZATION, synchronization, parentOfElement.getPlan(), false);
+                .remove(synchronisation);*/
+        parentOfElement.getPmlUiExtensionMap().getExtension().remove(synchronisation, newlyCreatedPmlUiExtension);
+        modelManager.createdPlanElement(Types.SYNCHRONIZATION, synchronisation, parentOfElement.getPlan(), false);
     }
 }
