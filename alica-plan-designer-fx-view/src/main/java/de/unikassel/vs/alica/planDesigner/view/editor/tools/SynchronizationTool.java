@@ -19,9 +19,6 @@ import javafx.scene.layout.StackPane;
 
 public class SynchronizationTool extends AbstractTool {
 
-    private Node visualRepresentation;
-    private boolean initial = true;
-
     public SynchronizationTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
     }
@@ -39,7 +36,6 @@ public class SynchronizationTool extends AbstractTool {
 
     @Override
     protected void initHandlerMap() {
-        I18NRepo i18NRepo = I18NRepo.getInstance();
 
         if (customHandlerMap.isEmpty()) {
             customHandlerMap.put(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
