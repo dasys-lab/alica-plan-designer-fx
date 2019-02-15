@@ -1,15 +1,14 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab;
 
 import de.unikassel.vs.alica.planDesigner.controller.IsDirtyWindowController;
-import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
-import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesConditionsVariablesPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesConditionsVariablesPane;
 import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -72,7 +71,7 @@ public abstract class EditorTab extends Tab {
     public void revertChanges() {
         GuiModificationEvent event = new GuiModificationEvent(GuiEventType.RELOAD_ELEMENT, serializableViewModel.getType(), serializableViewModel.getName());
         event.setElementId(serializableViewModel.getId());
-        MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+        guiModificationHandler.handle(event);
     }
 
     public void save(String type) {

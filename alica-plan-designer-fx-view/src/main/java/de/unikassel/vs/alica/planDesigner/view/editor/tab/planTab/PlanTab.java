@@ -35,8 +35,7 @@ public class PlanTab extends AbstractPlanTab {
     }
 
     private void draw() {
-        PlanViewModel planViewModel = (PlanViewModel) serializableViewModel;
-        planEditorGroup = new PlanEditorGroup(planViewModel, this);
+        planEditorGroup = new PlanEditorGroup((PlanViewModel) serializableViewModel, this);
         planContent = new StackPane(planEditorGroup);
         planContent.setPadding(new Insets(50, 50, 50, 50));
         planContent.setManaged(true);
@@ -51,11 +50,11 @@ public class PlanTab extends AbstractPlanTab {
 
         editorToolBar = new EditorToolBar(MainWindowController.getInstance().getEditorTabPane(), this);
 
-        HBox scrollPlaneAndToolBarHBox = new HBox(scrollPane, editorToolBar);
-        scrollPlaneAndToolBarHBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-        VBox.setVgrow(scrollPlaneAndToolBarHBox,Priority.ALWAYS);
+        HBox scrollPaneAndToolBarHBox = new HBox(scrollPane, editorToolBar);
+        scrollPaneAndToolBarHBox.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        VBox.setVgrow(scrollPaneAndToolBarHBox,Priority.ALWAYS);
 
-        splitPane.getItems().add(0, scrollPlaneAndToolBarHBox);
+        splitPane.getItems().add(0, scrollPaneAndToolBarHBox);
     }
 
     /**

@@ -30,7 +30,6 @@ public abstract class StateMixIn {
     @JsonSerialize(using = ExternalRefArraySerializer.class)
     @JsonDeserialize(using = FileArrayDeserializer.class)
     protected ArrayList<AbstractPlan> plans;
-    @JsonSerialize(using = InternalRefArraySerializer.class)
     protected ArrayList<Parametrisation> parametrisations;
     @JsonSerialize(using = InternalRefArraySerializer.class)
     protected ArrayList<Transition> inTransitions;

@@ -43,7 +43,7 @@ public class TaskRepositoryTab extends EditorTab {
                 this.propertiesConditionsVariablesPane.setViewModelElement(taskRepositoryViewModel);
             }
         });
-        editorTabPane.focusedProperty().addListener((observable, oldValue, focused) -> {
+        editorTabPane.focusedProperty().addListener((observable, focusedBefore, focused) -> {
             if (focused && editorTabPane.getSelectionModel().getSelectedItem() == this) {
                 this.propertiesConditionsVariablesPane.setViewModelElement(taskRepositoryViewModel);
             }

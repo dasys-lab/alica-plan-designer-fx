@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class EntryPoint extends PlanElement {
 
-    public static final String STATE = "state";
     protected final SimpleBooleanProperty successRequired = new SimpleBooleanProperty();
     protected final SimpleIntegerProperty minCardinality = new SimpleIntegerProperty();
     protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty();

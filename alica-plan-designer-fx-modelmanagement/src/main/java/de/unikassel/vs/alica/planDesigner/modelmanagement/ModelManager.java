@@ -1172,7 +1172,7 @@ public class ModelManager implements Observer {
                         cmd = handleConditionRemoved(mmq);
                         break;
                     default:
-                        System.err.println("ModelManager: Unknown model modification query gets ignored!");
+                        System.err.println("ModelManager: Unknown model modification query element gets ignored!");
                         return;
                 }
                 break;
@@ -1183,7 +1183,7 @@ public class ModelManager implements Observer {
                         cmd = new RemoveAllPlansFromPlanType(this, planType);
                         break;
                     default:
-                        System.err.println("ModelManager: Unknown model modification query gets ignored!");
+                        System.err.println("ModelManager: Unknown model modification query element gets ignored!");
                         return;
                 }
                 break;
@@ -1203,7 +1203,7 @@ public class ModelManager implements Observer {
                         cmd = new ParseAbstractPlan(this, mmq);
                         break;
                     default:
-                        System.err.println("ModelManager: Unknown model modification query gets ignored!");
+                        System.err.println("ModelManager: Unknown model modification query element gets ignored!");
                         return;
                 }
                 break;
@@ -1553,7 +1553,7 @@ public class ModelManager implements Observer {
                 break;
             case Types.INITSTATECONNECTION:
                 EntryPoint inEntryPoint = (EntryPoint) getPlanElement((mmq.getRelatedObjects().get(State.ENTRYPOINT)));
-                State outState = (State) getPlanElement(mmq.getRelatedObjects().get(EntryPoint.STATE));
+                State outState = (State) getPlanElement(mmq.getRelatedObjects().get(Types.STATE));
                 cmd = new ConnectEntryPointsWithState(this, parenOfElement, inEntryPoint, outState);
                 break;
             case Types.ENTRYPOINT:
