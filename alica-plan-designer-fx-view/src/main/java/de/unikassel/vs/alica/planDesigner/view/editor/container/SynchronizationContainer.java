@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class SynchronizationContainer extends AbstractPlanElementContainer implements Observable {
     private boolean dragged;
@@ -41,7 +42,12 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
         this.synchronisation = containedElement;
         this.transitionContainers = new ArrayList<>(transitionContainers);
         for (TransitionContainer transitionContainer : transitionContainers) {
-            transitionContainer.addListener(observable -> setupContainer());
+            transitionContainer.addListener(new InvalidationListener() {
+                @Override
+                public void invalidated(Observable observable) {
+                    SynchronizationContainer.this.setupContainer();
+                }
+            });
         }
 
         createSyncTransitionToSynchronisationListeners(this,synchronisation);
@@ -60,7 +66,6 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
                             for (TransitionContainer transitionContainer : SynchronizationContainer.this.getPlanEditorGroup().getTransitionContainers().values()) {
                                 if (transitionContainer.getViewModelElement() == transitionViewModel) {
                                     transitionContainers.add(transitionContainer);
-                                    getChildren().add(transitionContainer);
                                 }
                             }
                         }
@@ -69,7 +74,6 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
                             for (TransitionContainer transitionContainer : transitionContainers) {
                                 if (transitionContainer.getViewModelElement() == transitionViewModel) {
                                     transitionContainers.remove(transitionContainer);
-                                    getChildren().remove(transitionContainer);
                                 }
                             }
                         }
@@ -194,7 +198,12 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
     @Override
     public void redrawElement() {
         setupContainer();
-        invalidationListeners.forEach(listener -> listener.invalidated(this));
+        invalidationListeners.forEach(new Consumer<InvalidationListener>() {
+            @Override
+            public void accept(InvalidationListener listener) {
+                listener.invalidated(SynchronizationContainer.this);
+            }
+        });
     }
 
     @Override
