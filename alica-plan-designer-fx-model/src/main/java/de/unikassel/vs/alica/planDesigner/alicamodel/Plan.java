@@ -162,6 +162,12 @@ public class Plan extends AbstractPlan implements HasVariables {
         preCondition.addListener(       (observable, oldValue, newValue) -> this.setDirty(true));
         runtimeCondition.addListener(   (observable, oldValue, newValue) -> this.setDirty(true));
 
+        for (Synchronisation synchronisation : synchronisations) {
+            synchronisation.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+                this.setDirty(true);
+            });
+        }
+
         for (Variable variable : variables) {
             variable.nameProperty().addListener((observable, oldValue, newValue) -> {
                 this.setDirty(true);
