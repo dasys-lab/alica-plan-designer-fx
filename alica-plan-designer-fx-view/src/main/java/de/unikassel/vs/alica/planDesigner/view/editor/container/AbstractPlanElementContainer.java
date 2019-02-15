@@ -196,8 +196,6 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
         });
     }
 
-
-
     /**
      * Sets the standard effect for the {@link AbstractPlanElementContainer}.
      * This should be overwritten by a child class for individual styling. By default no effect is set.
@@ -209,14 +207,10 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
     public abstract Color getVisualisationColor();
 
     @Override
-    public void redrawElement() {
-
-    }
+    public void redrawElement() {}
 
     @Override
-    public void setDragged(boolean dragged) {
-
-    }
+    public void setDragged(boolean dragged) {}
 
     @Override
     public boolean wasDragged() {

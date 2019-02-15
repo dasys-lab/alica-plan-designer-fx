@@ -35,12 +35,12 @@ public abstract class AbstractPlanTab extends EditorTab {
      * specializations for specific selections of {@link AbstractPlanElementContainer}s can be found under
      * AbstractPlanElementContainer#getMouseClickedEventHandler(PlanElement)
      *
-     * @param editablePathPair
+     * @param viewModelElement
      */
     // TODO: Review necessary, due to MVC pattern adaption.
-    protected void initSelectedPlanElements(ViewModelElement editablePathPair) {
+    protected void initSelectedPlanElements(ViewModelElement viewModelElement) {
           selectedPlanElements = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-          selectedPlanElements.get().add(new Pair<>(editablePathPair, null));
+          selectedPlanElements.get().add(new Pair<>(viewModelElement, null));
           selectedPlanElements.addListener((observable, oldValue, newValue) -> {
 //            if (newValue == null) {
 //                // TODO: cannot return here because this avoid deleting selectedEffect on oldValue
