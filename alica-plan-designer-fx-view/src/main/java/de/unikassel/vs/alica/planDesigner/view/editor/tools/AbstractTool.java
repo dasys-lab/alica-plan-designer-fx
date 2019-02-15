@@ -94,7 +94,7 @@ public abstract class AbstractTool {
                 public void handle(MouseEvent event) {
                     Node target = (Node) event.getTarget();
                     Parent parent = target.getParent();
-                    if (parent instanceof DraggableHBox || parent instanceof EditorToolBar || parent instanceof VBox) {
+                    if (parent instanceof DraggableLabel || parent instanceof EditorToolBar || parent instanceof VBox) {
                         setCursor(Cursor.DEFAULT);
                     }
                 }

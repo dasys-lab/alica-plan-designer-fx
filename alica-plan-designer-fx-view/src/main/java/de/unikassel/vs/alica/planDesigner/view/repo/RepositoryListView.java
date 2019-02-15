@@ -10,9 +10,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-public class RepositoryListView extends ListView<RepositoryHBox> {
+public class RepositoryListView extends ListView<RepositoryLabel> {
 
-    protected Comparator<RepositoryHBox> modelElementComparator;
+    protected Comparator<RepositoryLabel> modelElementComparator;
     protected IGuiModificationHandler guiModificationHandler;
 
     public RepositoryListView () {
@@ -28,10 +28,10 @@ public class RepositoryListView extends ListView<RepositoryHBox> {
     }
 
     public void removeElement(ViewModelElement viewModel) {
-        Iterator<RepositoryHBox> iter = getItems().iterator();
+        Iterator<RepositoryLabel> iter = getItems().iterator();
         while(iter.hasNext()) {
-            RepositoryHBox repositoryHBox = iter.next();
-            if (repositoryHBox.getViewModelId() == viewModel.getId()) {
+            RepositoryLabel repositoryLabel = iter.next();
+            if (repositoryLabel.getViewModelId() == viewModel.getId()) {
                 iter.remove();
             }
         }
@@ -44,7 +44,7 @@ public class RepositoryListView extends ListView<RepositoryHBox> {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
+                getItems().add(new RepositoryLabel(viewModelElement, guiModificationHandler));
                 setPrefHeight(getItems().size() * 24 + 2);
                 sort();
             }
@@ -57,7 +57,7 @@ public class RepositoryListView extends ListView<RepositoryHBox> {
             public void run() {
                 for (int i = 0; i < viewModelElements.size(); i++) {
                     ViewModelElement viewModelElement = viewModelElements.get(i);
-                    getItems().add(new RepositoryHBox(viewModelElement, guiModificationHandler));
+                    getItems().add(new RepositoryLabel(viewModelElement, guiModificationHandler));
                 }
                 setPrefHeight(getItems().size() * 24 + 2);
                 sort();
@@ -76,7 +76,7 @@ public class RepositoryListView extends ListView<RepositoryHBox> {
     }
 
     public ViewModelElement getSelectedItem() {
-        RepositoryHBox repoHBox = getSelectionModel().getSelectedItem();
+        RepositoryLabel repoHBox = getSelectionModel().getSelectedItem();
         if (repoHBox != null) {
             return repoHBox.getViewModelElement();
         } else {

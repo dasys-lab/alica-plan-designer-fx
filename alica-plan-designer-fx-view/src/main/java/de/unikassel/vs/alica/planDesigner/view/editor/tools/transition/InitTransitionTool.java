@@ -9,7 +9,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContai
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
+import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableLabel;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
 import de.unikassel.vs.alica.planDesigner.view.model.EntryPointViewModel;
@@ -78,7 +78,7 @@ public class InitTransitionTool extends AbstractTool {
                         }
                     }
 
-                    if (parent instanceof DraggableHBox || parent instanceof EditorToolBar || parent instanceof VBox) {
+                    if (parent instanceof DraggableLabel || parent instanceof EditorToolBar || parent instanceof VBox) {
                         setCursor(Cursor.DEFAULT);
                     }
                 }
@@ -91,7 +91,7 @@ public class InitTransitionTool extends AbstractTool {
                     Node target = (Node) event.getTarget();
                     Parent parent = target.getParent();
 
-                    if (parent instanceof DraggableHBox) {
+                    if (parent instanceof DraggableLabel) {
                         endTool();
                     }
 

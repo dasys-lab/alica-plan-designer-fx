@@ -6,7 +6,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEventExpanded;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
+import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableLabel;
 import de.unikassel.vs.alica.planDesigner.view.menu.DeleteElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
@@ -21,12 +21,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.PickResult;
 import javafx.scene.shape.Circle;
 
-public class RepositoryHBox extends DraggableHBox {
+public class RepositoryLabel extends DraggableLabel {
 
     protected IGuiModificationHandler guiModificationHandler;
     protected ViewModelElement viewModelElement;
 
-    public RepositoryHBox(ViewModelElement viewModelElement, IGuiModificationHandler guiModificationHandler) {
+    public RepositoryLabel(ViewModelElement viewModelElement, IGuiModificationHandler guiModificationHandler) {
         this.guiModificationHandler = guiModificationHandler;
         this.viewModelElement = viewModelElement;
         setIcon(this.viewModelElement.getType());
@@ -46,7 +46,7 @@ public class RepositoryHBox extends DraggableHBox {
             ShowUsagesMenuItem usageMenu = new ShowUsagesMenuItem(this.viewModelElement, guiModificationHandler);
             DeleteElementMenuItem deleteMenu = new DeleteElementMenuItem(this.viewModelElement, guiModificationHandler);
             ContextMenu contextMenu = new ContextMenu(renameFileMenuItem, usageMenu, deleteMenu);
-            contextMenu.show(RepositoryHBox.this, e.getScreenX(), e.getScreenY());
+            contextMenu.show(RepositoryLabel.this, e.getScreenX(), e.getScreenY());
             e.consume();
         });
 
@@ -59,7 +59,7 @@ public class RepositoryHBox extends DraggableHBox {
                     TaskViewModel taskViewModel = (TaskViewModel) viewModelElement;
                     MainWindowController.getInstance().openFile(taskViewModel.getTaskRepositoryViewModel());
                 } else {
-                    throw new RuntimeException("RepositoryHBox: Unkown ViewModelElement type " + viewModelElement.getType() + " for opening tab!");
+                    throw new RuntimeException("RepositoryLabel: Unkown ViewModelElement type " + viewModelElement.getType() + " for opening tab!");
                 }
                 e.consume();
             }
@@ -67,8 +67,8 @@ public class RepositoryHBox extends DraggableHBox {
 
         // set the onDragObjectImage to cursor
         setOnDragDetected(e -> {
-            RepositoryHBox repositoryHBox = (RepositoryHBox) e.getSource();
-            ImageCursor cursor = new ImageCursor(repositoryHBox.icon.getImage());
+            RepositoryLabel repositoryLabel = (RepositoryLabel) e.getSource();
+            ImageCursor cursor = new ImageCursor(repositoryLabel.icon.getImage());
             getScene().setCursor(cursor);
          });
 

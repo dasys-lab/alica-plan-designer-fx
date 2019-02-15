@@ -2,7 +2,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
-import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryHBox;
+import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryLabel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -19,18 +19,18 @@ import java.util.ResourceBundle;
 public class UsagesWindowController implements Initializable {
 
     @FXML
-    private ListView<RepositoryHBox> listOfReferences;
+    private ListView<RepositoryLabel> listOfReferences;
 
     @FXML
     private Button continueButton;
 
 
     public void createReferencesList(ArrayList<ViewModelElement> usages, IGuiModificationHandler usageHandler) {
-        List<RepositoryHBox> repositoryHBoxes = new ArrayList<>();
+        List<RepositoryLabel> repositoryLabels = new ArrayList<>();
         for (ViewModelElement usage : usages) {
-            repositoryHBoxes.add(new RepositoryHBox(usage, usageHandler));
+            repositoryLabels.add(new RepositoryLabel(usage, usageHandler));
         }
-        listOfReferences.setItems(FXCollections.observableArrayList(repositoryHBoxes));
+        listOfReferences.setItems(FXCollections.observableArrayList(repositoryLabels));
     }
 
     @Override

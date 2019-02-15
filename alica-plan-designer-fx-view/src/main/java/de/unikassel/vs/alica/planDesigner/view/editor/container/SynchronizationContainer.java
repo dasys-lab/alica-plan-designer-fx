@@ -64,7 +64,7 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
                                 }
                             }
                         }
-                    }else if(c.wasRemoved()){
+                    } else if(c.wasRemoved()){
                         for(TransitionViewModel transitionViewModel : c.getRemoved()){
                             for (TransitionContainer transitionContainer : transitionContainers) {
                                 if (transitionContainer.getViewModelElement() == transitionViewModel) {
