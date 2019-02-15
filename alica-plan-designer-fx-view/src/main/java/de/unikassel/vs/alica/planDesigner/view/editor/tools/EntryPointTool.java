@@ -16,6 +16,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -79,7 +80,7 @@ public class EntryPointTool extends AbstractTool {
                 public void handle(MouseEvent event) {
                     Node target = (Node) event.getTarget();
                     Parent parent = target.getParent();
-                    if (parent instanceof DraggableLabel) {
+                    if (parent instanceof ToggleButton) {
                         endTool();
                     }
 

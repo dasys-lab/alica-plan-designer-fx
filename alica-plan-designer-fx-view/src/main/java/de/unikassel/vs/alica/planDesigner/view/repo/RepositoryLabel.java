@@ -6,7 +6,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEventExpanded;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableLabel;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.menu.DeleteElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
@@ -17,11 +17,14 @@ import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.PickResult;
 import javafx.scene.shape.Circle;
 
-public class RepositoryLabel extends DraggableLabel {
+public class RepositoryLabel extends Label {
 
     protected IGuiModificationHandler guiModificationHandler;
     protected ViewModelElement viewModelElement;
@@ -29,7 +32,7 @@ public class RepositoryLabel extends DraggableLabel {
     public RepositoryLabel(ViewModelElement viewModelElement, IGuiModificationHandler guiModificationHandler) {
         this.guiModificationHandler = guiModificationHandler;
         this.viewModelElement = viewModelElement;
-        setIcon(this.viewModelElement.getType());
+        setGraphic(this.viewModelElement.getType());
         setText(this.viewModelElement.getName());
 
         this.viewModelElement.nameProperty().addListener((observable, oldValue, newValue) -> {
@@ -37,7 +40,7 @@ public class RepositoryLabel extends DraggableLabel {
         });
 
         this.viewModelElement.typeProperty().addListener((observable, oldValue, newValue) -> {
-            setIcon(newValue);
+            setGraphic(newValue);
         });
 
         // right click for opening context menu with option to show usage of model element
@@ -68,7 +71,7 @@ public class RepositoryLabel extends DraggableLabel {
         // set the onDragObjectImage to cursor
         setOnDragDetected(e -> {
             RepositoryLabel repositoryLabel = (RepositoryLabel) e.getSource();
-            ImageCursor cursor = new ImageCursor(repositoryLabel.icon.getImage());
+            ImageCursor cursor = new ImageCursor(new AlicaIcon(viewModelElement.getType(), AlicaIcon.Size.SMALL));
             getScene().setCursor(cursor);
          });
 
@@ -96,6 +99,10 @@ public class RepositoryLabel extends DraggableLabel {
             }
             e.consume();
         });
+    }
+
+    public void setGraphic(String iconName) {
+        this.setGraphic(new ImageView(new AlicaIcon(iconName, AlicaIcon.Size.SMALL)));
     }
 
     public String getViewModelType() {
