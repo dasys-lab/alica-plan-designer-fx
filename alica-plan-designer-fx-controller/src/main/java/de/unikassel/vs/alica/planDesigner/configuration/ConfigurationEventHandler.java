@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.planDesigner.configuration;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.controller.ConfigurationWindowController;
+import de.unikassel.vs.alica.planDesigner.events.ConfigEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IConfigurationEventHandler;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
@@ -10,6 +11,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Properties;
 
 public class ConfigurationEventHandler implements IConfigurationEventHandler<ListView.EditEvent<String>> {
 
@@ -160,6 +164,30 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     @Override
     public void setClangFormatPath(String clangFormatPath) {
         configManager.setClangFormatPath(clangFormatPath);
+    }
+
+    @Override
+    public void handlePreferredWindowSettings(ConfigEvent event) {
+        switch (event.getType()) {
+            case ConfigEvent.WINDOW_SETTINGS: {
+                HashMap<String, Double> parameters = event.getParameters();
+                configManager.saveWindowPreferences(parameters.get("height"), parameters.get("width"), parameters.get("x"), parameters.get("y"));
+            } break;
+            default: {
+                System.err.println("ConfigurationEventHandler: Wrong Eventtype!");
+            }
+        }
+    }
+
+    @Override
+    public HashMap<String, Double> getPreferredWindowSettings() {
+        Properties windowPreferences = configManager.getWindowPreferences();
+        HashMap<String, Double> params = new HashMap<>();
+        params.put("height", Double.valueOf(windowPreferences.getProperty("height")));
+        params.put("width", Double.valueOf(windowPreferences.getProperty("width")));
+        params.put("x", Double.valueOf(windowPreferences.getProperty("x")));
+        params.put("y", Double.valueOf(windowPreferences.getProperty("y")));
+        return params;
     }
 }
 
