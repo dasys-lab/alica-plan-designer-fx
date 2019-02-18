@@ -22,7 +22,7 @@ public class DeleteTransitionInPlan extends AbstractCommand{
     }
 
     private void saveForLaterRetrieval() {
-        pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(transition);
+        pmlUiExtension = parentOfElement.getPmlUiExtension(transition);
         outState = transition.getOutState();
         inState = transition.getInState();
     }
@@ -32,7 +32,7 @@ public class DeleteTransitionInPlan extends AbstractCommand{
         saveForLaterRetrieval();
 
         parentOfElement.getPlan().getTransitions().remove(transition);
-        parentOfElement.getPmlUiExtensionMap().getExtension().remove(transition);
+        parentOfElement.removePlanElement(transition);
         transition.setInState(null);
         transition.setOutState(null);
     }
@@ -40,7 +40,7 @@ public class DeleteTransitionInPlan extends AbstractCommand{
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().getTransitions().add(transition);
-        parentOfElement.getPmlUiExtensionMap().getExtension().put(transition, pmlUiExtension);
+        parentOfElement.put(transition, pmlUiExtension);
         transition.setInState(inState);
         transition.setOutState(outState);
     }

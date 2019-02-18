@@ -81,7 +81,7 @@ public class Behaviour extends AbstractPlan implements HasVariables {
         this.setDirty(true);
     }
     public void removeVariable(Variable variable) {
-        // TODO: make listener in add method a local variable that is removed from the list of listeners here...
+        // TODO: make listener in put method a local variable that is removed from the list of listeners here...
         variables.remove(variable);
         this.setDirty(true);
     }

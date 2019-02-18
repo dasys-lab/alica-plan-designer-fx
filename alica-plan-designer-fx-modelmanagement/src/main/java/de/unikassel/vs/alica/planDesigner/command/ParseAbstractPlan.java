@@ -30,7 +30,7 @@ public class ParseAbstractPlan extends AbstractCommand {
     @Override
     public void doCommand() {
         // 1. parse file
-        // 2. delete already existing object and add new one
+        // 2. delete already existing object and put new one
         try {
             switch (modelModificationQuery.getElementType()) {
                 case Types.PLAN:

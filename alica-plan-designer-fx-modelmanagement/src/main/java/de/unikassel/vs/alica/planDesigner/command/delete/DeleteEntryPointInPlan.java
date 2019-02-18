@@ -18,14 +18,14 @@ public class DeleteEntryPointInPlan extends AbstractCommand {
         super(modelManager);
         this.entryPoint = entryPoint;
         this.parentOfElement = parentOfElement;
-        this.pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(entryPoint);
+        this.pmlUiExtension = parentOfElement.getPmlUiExtension(entryPoint);
         this.associatedState = entryPoint.getState();
     }
 
     @Override
     public void doCommand() {
         parentOfElement.getPlan().getEntryPoints().remove(entryPoint);
-        parentOfElement.getPmlUiExtensionMap().getExtension().remove(entryPoint);
+        parentOfElement.removePlanElement(entryPoint);
         if (associatedState != null) {
             associatedState.setEntryPoint(null);
         }
@@ -34,7 +34,7 @@ public class DeleteEntryPointInPlan extends AbstractCommand {
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().getEntryPoints().add(entryPoint);
-        parentOfElement.getPmlUiExtensionMap().getExtension().put(entryPoint, pmlUiExtension);
+        parentOfElement.put(entryPoint, pmlUiExtension);
         if (associatedState != null) {
             associatedState.setEntryPoint(entryPoint);
         }
