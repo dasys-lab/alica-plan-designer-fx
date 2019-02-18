@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -64,6 +65,14 @@ public class Plan extends AbstractPlan implements HasVariables {
     }
     public void setPreCondition(PreCondition preCondition) {
         this.preCondition.set(preCondition);
+        if(preCondition != null){
+            InvalidationListener dirty = obs -> this.setDirty(true);
+            preCondition.nameProperty().addListener(dirty);
+            preCondition.conditionStringProperty().addListener(dirty);
+            preCondition.enabledProperty().addListener(dirty);
+            preCondition.pluginNameProperty().addListener(dirty);
+            preCondition.commentProperty().addListener(dirty);
+        }
     }
     public ObjectProperty<PreCondition> preConditionProperty(){
         return preCondition;
@@ -74,6 +83,14 @@ public class Plan extends AbstractPlan implements HasVariables {
     }
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
         this.runtimeCondition.set(runtimeCondition);
+        if(runtimeCondition != null){
+            InvalidationListener dirty = obs -> this.setDirty(true);
+            runtimeCondition.nameProperty().addListener(dirty);
+            runtimeCondition.conditionStringProperty().addListener(dirty);
+            runtimeCondition.enabledProperty().addListener(dirty);
+            runtimeCondition.pluginNameProperty().addListener(dirty);
+            runtimeCondition.commentProperty().addListener(dirty);
+        }
     }
     public ObjectProperty<RuntimeCondition> runtimeConditionProperty(){
         return runtimeCondition;

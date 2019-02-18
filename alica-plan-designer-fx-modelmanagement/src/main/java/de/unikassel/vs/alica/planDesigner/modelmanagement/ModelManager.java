@@ -665,6 +665,13 @@ public class ModelManager implements Observer {
                 Plan plan = (Plan) newElement;
                 planMap.put(plan.getId(), plan);
 
+                if(plan.getPreCondition() != null){
+                    createdPlanElement(Types.PRECONDITION, plan.getPreCondition(), plan, false);
+                }
+                if(plan.getRuntimeCondition() != null){
+                    createdPlanElement(Types.RUNTIMECONDITION, plan.getRuntimeCondition(), plan, false);
+                }
+
                 //If an PlanModelVisualisationObject exists for a plan with the same id, the plan inside the
                 //PlanModelVisualisationObject has to be replaced with the new plan
                 PlanModelVisualisationObject visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
@@ -706,6 +713,17 @@ public class ModelManager implements Observer {
             case Types.BEHAVIOUR:
                 Behaviour behaviour = (Behaviour) newElement;
                 behaviourMap.put(behaviour.getId(), behaviour);
+
+                if(behaviour.getPreCondition() != null){
+                    createdPlanElement(Types.PRECONDITION, behaviour.getPreCondition(), behaviour, false);
+                }
+                if(behaviour.getRuntimeCondition() != null){
+                    createdPlanElement(Types.RUNTIMECONDITION, behaviour.getRuntimeCondition(), behaviour, false);
+                }
+                if(behaviour.getPostCondition() != null){
+                    createdPlanElement(Types.POSTCONDITION, behaviour.getPostCondition(), behaviour, false);
+                }
+
                 if (serializeToDisk) {
                     serializeToDisk(behaviour, FileSystemUtil.BEHAVIOUR_ENDING, true);
                 }
@@ -716,9 +734,14 @@ public class ModelManager implements Observer {
                 Transition transition = (Transition) newElement;
                 visualisation.getPlan().addTransition(transition);
                 break;
-            case Types.STATE:
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
+                TerminalState terminalState = (TerminalState) newElement;
+                if(terminalState.getPostCondition() != null){
+                    createdPlanElement(Types.POSTCONDITION, terminalState.getPostCondition(), terminalState, false);
+                }
+                // No break wanted here, TerminalState is also State
+            case Types.STATE:
                 plan = (Plan) parentElement;
                 visualisation = getCorrespondingPlanModelVisualisationObject(plan.getId());
                 visualisation.getPlan().addState((State) newElement);
@@ -768,7 +791,11 @@ public class ModelManager implements Observer {
         }
         PlanElement oldElement = planElementMap.get(newElement.getId());
         if (oldElement != null) {
-            fireEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, oldElement, type));
+            ModelEvent deleteEvent = new ModelEvent(ModelEventType.ELEMENT_DELETED, oldElement, type);
+            if(parentElement != null) {
+                deleteEvent.setParentId(parentElement.getId());
+            }
+            fireEvent(deleteEvent);
         }
         planElementMap.put(newElement.getId(), newElement);
         if (parentElement != null) {
@@ -1200,6 +1227,12 @@ public class ModelManager implements Observer {
                         Plan plan = planMap.get(mmq.getElementId());
                         mmq.absoluteDirectory = Paths.get(plansPath, plan.getRelativeDirectory()).toString();
                         mmq.name = plan.getName();
+                        cmd = new ParseAbstractPlan(this, mmq);
+                        break;
+                    case Types.BEHAVIOUR:
+                        Behaviour behaviour = behaviourMap.get(mmq.getElementId());
+                        mmq.absoluteDirectory = Paths.get(plansPath, behaviour.getRelativeDirectory()).toString();
+                        mmq.name = behaviour.getName();
                         cmd = new ParseAbstractPlan(this, mmq);
                         break;
                     default:
