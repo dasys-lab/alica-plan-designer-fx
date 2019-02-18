@@ -14,17 +14,11 @@ public class DeleteTaskFromRepository extends AbstractCommand {
     public DeleteTaskFromRepository(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
         this.mmq = mmq;
+        taskToDelete = (Task) modelManager.getPlanElement(mmq.getElementId());
     }
 
     @Override
     public void doCommand() {
-        for (Task task : modelManager.getTaskRepository().getTasks()) {
-            if (task.getId() == mmq.getElementId()) {
-                taskToDelete = task;
-                break;
-            }
-        }
-
         // put outside the loop, in order to avoid concurrent modification exception
         if (taskToDelete != null) {
             modelManager.removedPlanElement(Types.TASK, taskToDelete, null, false);

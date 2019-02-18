@@ -880,16 +880,13 @@ public class ModelManager implements Observer {
         for (IModelEventHandler eventHandler : eventHandlerList) {
             eventHandler.handleCloseTab(removedElement.getId());
         }
-        if (parentElement != null) {
-            planElementMap.remove(removedElement.getId());
+        planElementMap.remove(removedElement.getId());
 
-            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, removedElement, type);
+        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DELETED, removedElement, type);
+        if (parentElement != null) {
             event.setParentId(parentElement.getId());
-            fireEvent(event);
-        } else {
-            System.out.println("Parent is null");
-            fireEvent(new ModelEvent(ModelEventType.ELEMENT_DELETED, removedElement, type));
         }
+        fireEvent(event);
     }
 
     public void changeAttribute(PlanElement planElement, String elementType, String attribute, Object newValue, Object oldValue) {
@@ -958,7 +955,13 @@ public class ModelManager implements Observer {
         //TODO implement once pmlex is supported
 
         // 5. Update external references to file
-        serializeEffectedPlanElements(elementToMove);
+        ArrayList<PlanElement> usages = getUsages(elementToMove.getId());
+        for (PlanElement planElement : usages) {
+            if (planElement instanceof SerializablePlanElement) {
+                SerializablePlanElement serializablePlanElement = (SerializablePlanElement) planElement;
+                serializeToDisk(serializablePlanElement, FileSystemUtil.getFileEnding(serializablePlanElement), true);
+            }
+        }
     }
 
     private void renameFile(String absoluteDirectory, String newName, String oldName, String ending) throws IOException {
@@ -1526,7 +1529,7 @@ public class ModelManager implements Observer {
                     }
                 }
                 Task task = null;
-                for (Task tasks : getTaskRepository().getTasks()) {
+                for (Task tasks : taskRepository.getTasks()) {
                     if (tasks.getId() == mmq.getElementId()) {
                         task = tasks;
                     }
@@ -1630,10 +1633,6 @@ public class ModelManager implements Observer {
         return cmd;
     }
 
-    public TaskRepository getTaskRepository() {
-        return taskRepository;
-    }
-
     public String getAbsoluteDirectory(PlanElement element) {
         if (element instanceof Plan || element instanceof PlanType || element instanceof Behaviour) {
             return Paths.get(plansPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
@@ -1702,21 +1701,6 @@ public class ModelManager implements Observer {
             planModelVisualisationObjectMap.put(id, pmvo);
         }
         return pmvo;
-    }
-
-    /**
-     * Serializes all Elements that could be effected by moving the given PlanElement.
-     *
-     * @param movedElement
-     */
-    private void serializeEffectedPlanElements(PlanElement movedElement) {
-        ArrayList<PlanElement> usages = getUsages(movedElement.getId());
-        for (PlanElement planElement : usages) {
-            if (planElement instanceof SerializablePlanElement) {
-                SerializablePlanElement serializablePlanElement = (SerializablePlanElement) planElement;
-                serializeToDisk(serializablePlanElement, FileSystemUtil.getFileEnding(serializablePlanElement), true);
-            }
-        }
     }
 
     /**
