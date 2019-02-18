@@ -8,16 +8,16 @@ import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
 
 public class ConnectEntryPointsWithState extends AbstractCommand {
 
     protected EntryPoint entryPoint;
     protected State newState;
     protected State previousState;
-    protected PlanModelVisualisationObject parentOfElement;
+    protected PlanUiExtensionPair parentOfElement;
 
-    public ConnectEntryPointsWithState(ModelManager modelManager, PlanModelVisualisationObject parentOfElement, EntryPoint entryPoint, State state) {
+    public ConnectEntryPointsWithState(ModelManager modelManager, PlanUiExtensionPair parentOfElement, EntryPoint entryPoint, State state) {
         super(modelManager);
         this.entryPoint = entryPoint;
         this.parentOfElement = parentOfElement;

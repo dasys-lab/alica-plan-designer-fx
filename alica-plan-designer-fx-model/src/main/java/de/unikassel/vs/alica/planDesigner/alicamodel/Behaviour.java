@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -24,6 +25,14 @@ public class Behaviour extends AbstractPlan implements HasVariables {
 
     public void setPreCondition(PreCondition preCondition) {
         this.preCondition.set(preCondition);
+        if (preCondition != null) {
+            InvalidationListener dirty = obs -> this.setDirty(true);
+            preCondition.nameProperty().addListener(dirty);
+            preCondition.conditionStringProperty().addListener(dirty);
+            preCondition.enabledProperty().addListener(dirty);
+            preCondition.pluginNameProperty().addListener(dirty);
+            preCondition.commentProperty().addListener(dirty);
+        }
     }
 
     public RuntimeCondition getRuntimeCondition() {
@@ -32,6 +41,14 @@ public class Behaviour extends AbstractPlan implements HasVariables {
 
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
         this.runtimeCondition.set(runtimeCondition);
+        if (runtimeCondition != null) {
+            InvalidationListener dirty = ons -> this.setDirty(true);
+            runtimeCondition.nameProperty().addListener(dirty);
+            runtimeCondition.conditionStringProperty().addListener(dirty);
+            runtimeCondition.enabledProperty().addListener(dirty);
+            runtimeCondition.pluginNameProperty().addListener(dirty);
+            runtimeCondition.commentProperty().addListener(dirty);
+        }
     }
 
     public PostCondition getPostCondition() {
@@ -40,6 +57,14 @@ public class Behaviour extends AbstractPlan implements HasVariables {
 
     public void setPostCondition(PostCondition postCondition) {
         this.postCondition.set(postCondition);
+        if (postCondition != null) {
+            InvalidationListener dirty = obs -> this.setDirty(true);
+            postCondition.nameProperty().addListener(dirty);
+            postCondition.conditionStringProperty().addListener(dirty);
+            postCondition.enabledProperty().addListener(dirty);
+            postCondition.pluginNameProperty().addListener(dirty);
+            postCondition.commentProperty().addListener(dirty);
+        }
     }
 
     public void addVariable(Variable variable) {

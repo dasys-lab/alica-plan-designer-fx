@@ -3,16 +3,16 @@ package de.unikassel.vs.alica.planDesigner.command.delete;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
 public class DeleteSynchronisationFromPlan extends AbstractCommand {
 
-    protected PlanModelVisualisationObject parentOfElement;
-    protected PmlUiExtension pmlUiExtension;
+    protected PlanUiExtensionPair parentOfElement;
+    protected UiExtension uiExtension;
     protected Synchronisation synchronisation;
 
-    public DeleteSynchronisationFromPlan(ModelManager modelManager, Synchronisation synchronisation, PlanModelVisualisationObject parentOfElement) {
+    public DeleteSynchronisationFromPlan(ModelManager modelManager, Synchronisation synchronisation, PlanUiExtensionPair parentOfElement) {
         super(modelManager);
         this.synchronisation = synchronisation;
         this.parentOfElement = parentOfElement;
@@ -21,13 +21,13 @@ public class DeleteSynchronisationFromPlan extends AbstractCommand {
     @Override
     public void doCommand() {
         parentOfElement.getPlan().getSynchronisations().remove(synchronisation);
-        pmlUiExtension = parentOfElement.getPmlUiExtension(synchronisation);
-        parentOfElement.removePlanElement(pmlUiExtension);
+        uiExtension = parentOfElement.getUiExtension(synchronisation);
+        parentOfElement.remove(uiExtension);
     }
 
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().getSynchronisations().add(synchronisation);
-        parentOfElement.put(synchronisation, pmlUiExtension);
+        parentOfElement.put(synchronisation, uiExtension);
     }
 }

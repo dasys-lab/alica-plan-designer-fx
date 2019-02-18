@@ -5,19 +5,19 @@ import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.events.UiExtensionModelEvent;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
 public class ChangePosition extends AbstractCommand {
 
     protected PlanElement planElement;
-    protected PmlUiExtension uiElement;
+    protected UiExtension uiElement;
     protected int newX;
     protected int newY;
 
     protected int oldX;
     protected int oldY;
 
-    public ChangePosition(ModelManager modelManager, PmlUiExtension uiElement, PlanElement planElement, int newX, int newY) {
+    public ChangePosition(ModelManager modelManager, UiExtension uiElement, PlanElement planElement, int newX, int newY) {
         super(modelManager);
         this.uiElement = uiElement;
         this.planElement = planElement;
@@ -53,7 +53,7 @@ public class ChangePosition extends AbstractCommand {
 
     private UiExtensionModelEvent createUiExtensionModelEvent(int x, int y){
         UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, null);
-        PmlUiExtension extension = new PmlUiExtension();
+        UiExtension extension = new UiExtension();
         extension.setX(x);
         extension.setY(y);
         event.setExtension(extension);
