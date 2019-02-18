@@ -1,5 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,11 +14,11 @@ public class TransitionViewModel extends PlanElementViewModel {
     protected StateViewModel inState;
     protected StateViewModel outState;
     protected ConditionViewModel preCondition;
-    private List<BendPointViewModel> bendpoints;
+    private ObservableList<BendPointViewModel> bendpoints;
 
     public TransitionViewModel(long id, String name, String type) {
         super(id, name, type);
-        this.bendpoints = new LinkedList<>();
+        this.bendpoints = FXCollections.observableArrayList(new LinkedList<BendPointViewModel>());
     }
 
     public StateViewModel getInState() {
@@ -42,12 +45,12 @@ public class TransitionViewModel extends PlanElementViewModel {
         this.preCondition = preCondition;
     }
 
-    public List<BendPointViewModel> getBendpoints() {
+    public ObservableList<BendPointViewModel> getBendpoints() {
         return bendpoints;
     }
 
     public void setBendpoints(List<BendPointViewModel> bendpoints) {
-        this.bendpoints = bendpoints;
+        this.bendpoints = FXCollections.observableArrayList(bendpoints);
     }
 
     public void addBendpoint(BendPointViewModel bendPointViewModel) {

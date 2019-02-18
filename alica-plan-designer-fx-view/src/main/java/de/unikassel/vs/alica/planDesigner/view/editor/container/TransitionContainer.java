@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -39,6 +40,13 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         draggableNodes = new ArrayList<>();
         potentialDraggableNodes = new ArrayList<>();
         setupContainer();
+
+        ((TransitionViewModel) getViewModelElement()).getBendpoints().addListener(new ListChangeListener<BendPointViewModel>() {
+            @Override
+            public void onChanged(Change<? extends BendPointViewModel> c) {
+                redrawElement();
+            }
+        });
     }
 
     @Override
