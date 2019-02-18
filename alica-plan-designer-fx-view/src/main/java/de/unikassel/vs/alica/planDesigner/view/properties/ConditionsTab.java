@@ -14,11 +14,14 @@ import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TitledPane;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.util.Callback;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.BeanPropertyUtils;
 
@@ -43,7 +46,7 @@ public class ConditionsTab extends Tab {
     private ViewModelElement parentElement;
     private ConditionViewModel condition;
 
-    private final VBox hideableView;
+    private final ScrollPane hidableView;
 
     public ConditionsTab(String title, String type){
         super(title);
@@ -55,6 +58,29 @@ public class ConditionsTab extends Tab {
         List<String> availablePlugins = pluginHandler.getAvailablePlugins();
         pluginSelection.getItems().add(NONE);
         pluginSelection.getItems().addAll(availablePlugins);
+        pluginSelection.getItems();
+        pluginSelection.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override public ListCell<String> call(ListView<String> param) {
+                return new ListCell<String>() {
+                    {
+                        super.setPrefWidth(100);
+                    }
+                    @Override public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(item);
+                        if(NONE.equals(item)){
+                            setFont(Font.font(Font.getDefault().getFamily(), FontPosture.ITALIC, Font.getDefault().getSize()));
+                        }
+                    }
+                };
+            }
+        });
+
+        Label label = new Label(I18NRepo.getInstance().getString("label.column.pluginName"));
+        label.setMinWidth(150);
+        HBox selectionBox = new HBox(label, pluginSelection);
+        selectionBox.setSpacing(5);
+        selectionBox.setPadding(new Insets(5));
 
         properties = new PropertySheet();
         properties.setModeSwitcherVisible(false);
@@ -68,9 +94,15 @@ public class ConditionsTab extends Tab {
         section1.setText(I18NRepo.getInstance().getString("label.caption.pluginui"));
         section1.setExpanded(false);
 
-        this.hideableView = new VBox(section0, section1);
+        VBox vBox = new VBox(section0, section1);
+        this.hidableView = new ScrollPane(vBox);
+        hidableView.setFitToWidth(true);
 
-        this.setContent(new VBox(pluginSelection, hideableView));
+        TitledPane mainPane = new TitledPane();
+        mainPane.setText(I18NRepo.getInstance().getString("label.caption.selectedplugin"));
+        mainPane.setContent(new VBox(selectionBox, hidableView));
+        mainPane.setCollapsible(false);
+        this.setContent(mainPane);
     }
 
     public void setViewModelElement(ViewModelElement viewModelElement){
@@ -192,10 +224,8 @@ public class ConditionsTab extends Tab {
         this.properties.getItems().clear();
         if(condition != null) {
             this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
-            hideableView.setVisible(true);
             setPluginSelection(condition.getPluginName());
-        }else{
-            hideableView.setVisible(false);
+        }else {
             setPluginSelection(NONE);
         }
 
@@ -207,19 +237,18 @@ public class ConditionsTab extends Tab {
             this.properties.getItems().clear();
             if(condition != null) {
                 this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
-                hideableView.setVisible(true);
-                setPluginSelection(this.condition.getPluginName());
-            }else{
-                hideableView.setVisible(false);
+                setPluginSelection(condition.getPluginName());
+            }else {
                 setPluginSelection(NONE);
             }
         });
     }
 
-    private void setPluginSelection(String plugiName){
+    private void setPluginSelection(String pluginName){
         EventHandler<ActionEvent> handler = this.pluginSelection.getOnAction();
         this.pluginSelection.setOnAction(null);
-        this.pluginSelection.getSelectionModel().select(plugiName);
+        this.pluginSelection.getSelectionModel().select(pluginName);
+        this.hidableView.setVisible(pluginName != null && !pluginName.equals(NONE));
         this.pluginSelection.setOnAction(handler);
     }
 }
