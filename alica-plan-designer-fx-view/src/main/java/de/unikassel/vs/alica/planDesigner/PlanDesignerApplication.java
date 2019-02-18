@@ -8,13 +8,10 @@ import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.log4j.Level;
@@ -96,7 +93,7 @@ public class PlanDesignerApplication extends Application {
                 observable.removeListener(this);
             }
         });
-        
+
         primaryStage.show();
     }
 

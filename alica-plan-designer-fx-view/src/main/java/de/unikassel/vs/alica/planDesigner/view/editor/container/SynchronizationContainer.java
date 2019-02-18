@@ -66,6 +66,12 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
                             for (TransitionContainer transitionContainer : SynchronizationContainer.this.getPlanEditorGroup().getTransitionContainers().values()) {
                                 if (transitionContainer.getViewModelElement() == transitionViewModel) {
                                     transitionContainers.add(transitionContainer);
+                                    transitionContainer.addListener(new InvalidationListener() {
+                                        @Override
+                                        public void invalidated(Observable observable) {
+                                            SynchronizationContainer.this.setupContainer();
+                                        }
+                                    });
                                 }
                             }
                         }
