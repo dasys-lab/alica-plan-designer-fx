@@ -8,16 +8,17 @@ import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class AddTaskToEntryPoint extends AbstractCommand {
     protected EntryPoint entryPoint;
     protected Task task;
 
-    public AddTaskToEntryPoint(ModelManager modelManager, Task task, EntryPoint entryPoint) {
+    public AddTaskToEntryPoint(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        this.task = task;
-        this.entryPoint = entryPoint;
+        this.task = (Task) modelManager.getPlanElement(mmq.getElementId());
+        this.entryPoint = (EntryPoint) modelManager.getPlanElement(mmq.getTargetID());
     }
 
     @Override

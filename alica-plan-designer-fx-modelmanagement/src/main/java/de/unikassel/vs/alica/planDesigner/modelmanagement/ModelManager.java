@@ -1148,7 +1148,7 @@ public class ModelManager implements Observer {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
                         if (mmq.getTargetID() != null) {
-                            cmd = handleAddAbstractPlanToPlan(mmq);
+                            cmd = new AddAbstractPlanToState(this, mmq);
                         } else {
                             cmd = handlePlanTypeMMQ(mmq);
                         }
@@ -1156,7 +1156,7 @@ public class ModelManager implements Observer {
                     case Types.PLANTYPE:
                     case Types.BEHAVIOUR:
                     case Types.TASK:
-                        cmd = handleAddAbstractPlanToPlan(mmq);
+                        cmd =  new AddTaskToEntryPoint(this, mmq);;
                         break;
                     case Types.STATE:
                     case Types.SUCCESSSTATE:
@@ -1475,67 +1475,6 @@ public class ModelManager implements Observer {
         }
 
         return null;
-    }
-
-    private AbstractCommand handleAddAbstractPlanToPlan(ModelModificationQuery mmq) {
-        AbstractCommand cmd = null;
-        Plan parentPlan = (Plan) getPlanElement(mmq.getParentId());
-        State state = null;
-        for (State states : parentPlan.getStates()) {
-            if (states.getId() == mmq.getTargetID()) {
-                state = states;
-            }
-        }
-        switch (mmq.elementType) {
-            case Types.MASTERPLAN:
-            case Types.PLAN:
-                Plan plan = null;
-                for (Plan plans : getPlans()) {
-                    if (plans.getId() == mmq.getElementId()) {
-                        plan = plans;
-                    }
-                }
-                cmd = new AddAbstractPlanToState(this, plan, state);
-                break;
-            case Types.PLANTYPE:
-                PlanType planType = null;
-                for (PlanType planTypes : getPlanTypes()) {
-                    if (planTypes.getId() == mmq.getElementId()) {
-                        planType = planTypes;
-                    }
-                }
-                cmd = new AddAbstractPlanToState(this, planType, state);
-                break;
-            case Types.BEHAVIOUR:
-                Behaviour behaviour = null;
-                for (Behaviour behaviours : getBehaviours()) {
-                    if (behaviours.getId() == mmq.getElementId()) {
-                        behaviour = behaviours;
-                    }
-                }
-                cmd = new AddAbstractPlanToState(this, behaviour, state);
-                break;
-            case Types.TASK:
-                EntryPoint entryPoint = null;
-                for (EntryPoint entryPoints : parentPlan.getEntryPoints()) {
-                    if (entryPoints.getId() == mmq.getTargetID()) {
-                        entryPoint = entryPoints;
-                    }
-                }
-                Task task = null;
-                for (Task tasks : taskRepository.getTasks()) {
-                    if (tasks.getId() == mmq.getElementId()) {
-                        task = tasks;
-                    }
-                }
-                cmd = new AddTaskToEntryPoint(this, task, entryPoint);
-                break;
-            //TODO: Create commands for the other types
-            default:
-                System.err.println("ModelManger: Unknown type to put to plan gets ignored! Type was: " + mmq.elementType);
-                return null;
-        }
-        return cmd;
     }
 
     private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq) {
