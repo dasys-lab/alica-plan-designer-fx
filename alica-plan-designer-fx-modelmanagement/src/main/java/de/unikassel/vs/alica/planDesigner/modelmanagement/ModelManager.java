@@ -1539,80 +1539,29 @@ public class ModelManager implements Observer {
     }
 
     private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq) {
-        PlanUiExtensionPair parenOfElement = getPlanUIExtensionPair(mmq.getParentId());
         AbstractCommand cmd;
-        int x = 0;
-        int y = 0;
-        if (mmq instanceof UiExtensionModelModificationQuery) {
-            x = ((UiExtensionModelModificationQuery) mmq).getNewX();
-            y = ((UiExtensionModelModificationQuery) mmq).getNewY();
-        }
-
         switch (mmq.elementType) {
             case Types.STATE:
-                //Creating a new State and setting all necessary fields
-                State state = new State();
-                state.setParentPlan(parenOfElement.getPlan());
-                state.setName(mmq.name);
-                state.setComment(mmq.getComment());
-//                //Putting the created state in the planElementMap so that it can be found there later
-//                planElementMap.put(state.getId(), state);
-                //Creating an extension with coordinates
-                UiExtension extension = new UiExtension();
-                extension.setX(x);
-                extension.setY(y);
-                //create an command, that inserts the created State in the Plan
-                cmd = new AddStateInPlan(this, parenOfElement, state, extension, Types.STATE);
+                cmd = new AddStateInPlan(this, mmq);
                 break;
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
-                TerminalState terminalState = new TerminalState(mmq.elementType == Types.SUCCESSSTATE, null);
-                terminalState.setParentPlan(parenOfElement.getPlan());
-                terminalState.setName(mmq.name);
-                terminalState.setComment(mmq.getComment());
-                UiExtension terminalExtension = new UiExtension();
-                terminalExtension.setX(x);
-                terminalExtension.setY(y);
-                cmd = new AddStateInPlan(this, parenOfElement, terminalState, terminalExtension, Types.SUCCESSSTATE);
+                cmd = new AddTerminalStateInPlan(this, mmq);
                 break;
             case Types.TRANSITION:
-                State in = (State) getPlanElement(mmq.getRelatedObjects().get(Transition.INSTATE));
-                State out = (State) getPlanElement(mmq.getRelatedObjects().get(Transition.OUTSTATE));
-                cmd = new AddTransitionInPlan(this, parenOfElement, in, out);
+                cmd = new AddTransitionInPlan(this, mmq);
                 break;
             case Types.INITSTATECONNECTION:
-                EntryPoint inEntryPoint = (EntryPoint) getPlanElement((mmq.getRelatedObjects().get(State.ENTRYPOINT)));
-                State outState = (State) getPlanElement(mmq.getRelatedObjects().get(Types.STATE));
-                cmd = new ConnectEntryPointsWithState(this, parenOfElement, inEntryPoint, outState);
+                cmd = new ConnectEntryPointsWithState(this, mmq);
                 break;
             case Types.ENTRYPOINT:
-                EntryPoint entryPoint = new EntryPoint();
-                entryPoint.setPlan(parenOfElement.getPlan());
-                UiExtension entryPointExtension = new UiExtension();
-                entryPointExtension.setX(x);
-                entryPointExtension.setY(y);
-                entryPoint.setTask((Task) getPlanElement(mmq.getRelatedObjects().get(Types.TASK)));
-//                entryPoint.setState((State) getPlanElement(mmq.getRelatedObjects().getPmlUiExtension(Types.STATE)));
-                cmd = new AddEntryPointInPlan(this, parenOfElement, entryPoint, entryPointExtension);
+                cmd = new AddEntryPointInPlan(this, mmq);
                 break;
             case Types.BENDPOINT:
-                BendPoint bendPoint = new BendPoint();
-                bendPoint.setX(x);
-                bendPoint.setY(y);
-                Transition transition = (Transition) getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
-                bendPoint.setTransition(transition);
-                PlanUiExtensionPair modelObject = getPlanUIExtensionPair(mmq.getParentId());
-                extension = modelObject.getUiExtension(transition);
-                cmd = new AddBendpointToPlan(this, parenOfElement, bendPoint, extension);
+                cmd = new AddBendpointToPlan(this, mmq);
                 break;
             case Types.SYNCHRONISATION:
-                Synchronisation sync = new Synchronisation();
-                sync.setName(mmq.name);
-                sync.setComment(mmq.getComment());
-                extension = new UiExtension();
-                extension.setX(x);
-                extension.setY(y);
-                cmd = new AddSynchronizationToPlan(this, sync, parenOfElement, extension);
+                cmd = new AddSynchronizationToPlan(this, mmq);
                 break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:

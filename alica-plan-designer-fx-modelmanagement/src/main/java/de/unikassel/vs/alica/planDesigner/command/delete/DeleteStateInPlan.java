@@ -2,15 +2,16 @@ package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.AbstractUiPositionCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeleteStateInPlan extends AbstractCommand {
+public class DeleteStateInPlan extends AbstractUiPositionCommand {
 
     protected PlanUiExtensionPair parentOfDeleted;
 
@@ -20,10 +21,10 @@ public class DeleteStateInPlan extends AbstractCommand {
     protected UiExtension uiExtension;
     protected State state;
 
-    public DeleteStateInPlan(ModelManager modelManager, State state, PlanUiExtensionPair parentOfDeleted) {
-        super(modelManager);
-        this.parentOfDeleted = parentOfDeleted;
-        this.state = state;
+    public DeleteStateInPlan(ModelManager modelManager, ModelModificationQuery mmq) {
+        super(modelManager, mmq);
+        this.parentOfDeleted = modelManager.getPlanUIExtensionPair(mmq.getParentId());
+        this.state = (State) modelManager.getPlanElement(mmq.getElementId());
     }
 
     @Override
@@ -120,9 +121,11 @@ public class DeleteStateInPlan extends AbstractCommand {
             inTransition.setOutState(outStatesOfInTransitions.get(inTransition));
         }
 
-        parentOfDeleted.put(state, new UiExtension());
+        uiExtension = parentOfDeleted.getUiExtension(state);
+        uiExtension.setX(this.x);
+        uiExtension.setY(this.y);
         pmlUiExtensionsOfTransitions
                 .entrySet()
-                .forEach(e -> parentOfDeleted.put(e.getKey(), e.getValue()));
+                .forEach(e -> parentOfDeleted.getUiExtension(e.getKey()));
     }
 }

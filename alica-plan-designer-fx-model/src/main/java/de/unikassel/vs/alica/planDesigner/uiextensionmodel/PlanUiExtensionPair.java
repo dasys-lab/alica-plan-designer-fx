@@ -46,10 +46,6 @@ public class PlanUiExtensionPair {
         return extensionMap.keySet();
     }
 
-    public void put(PlanElement element, UiExtension uiExtension) {
-        this.extensionMap.put(element, uiExtension);
-    }
-
     public void remove(PlanElement element) {
         this.extensionMap.remove(element);
     }
@@ -70,8 +66,18 @@ public class PlanUiExtensionPair {
         if (uiExtension == null) {
             uiExtension = new UiExtension();
             extensionMap.put(planElement, uiExtension);
+            registerDirtyListeners(uiExtension);
         }
         return uiExtension;
+    }
+
+    private void registerDirtyListeners(UiExtension extension) {
+        extension.xProperty().addListener((observable, oldValue, newValue) ->
+                plan.setDirty(true)
+        );
+        extension.yProperty().addListener((observable, oldValue, newValue) ->
+                plan.setDirty(true)
+        );
     }
 
 }
