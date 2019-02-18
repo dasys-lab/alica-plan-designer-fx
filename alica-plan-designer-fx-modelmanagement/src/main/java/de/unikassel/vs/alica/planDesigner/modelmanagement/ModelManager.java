@@ -536,7 +536,9 @@ public class ModelManager implements Observer {
         }
 
         //Set the correct PlanElements the PmlUiExtensionMap
-        for (PlanElement incomplete : planModelVisualisationObject.getKeys()) {
+        PlanElement[] keys = planModelVisualisationObject.getKeys().toArray(new PlanElement[planModelVisualisationObject.getKeys().size()]);
+        for (int i = keys.length - 1; i >= 0; i--) {
+            PlanElement incomplete = keys[i];
             PmlUiExtension value = planModelVisualisationObject.getPmlUiExtension(incomplete);
             PlanElement complete = getPlanElement(incomplete.getId());
             planModelVisualisationObject.replaceKey(complete);
