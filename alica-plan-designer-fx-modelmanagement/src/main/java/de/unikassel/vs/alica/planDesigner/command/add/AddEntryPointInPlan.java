@@ -4,35 +4,35 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.EntryPoint;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
 
 public class AddEntryPointInPlan extends AbstractCommand {
-    protected PlanModelVisualisationObject parentOfElement;
-    protected PmlUiExtension newlyCreatedPmlUiExtension;
+    protected PlanUiExtensionPair parentOfElement;
+    protected UiExtension newlyCreatedUiExtension;
     protected EntryPoint entryPoint;
 
-    public AddEntryPointInPlan(ModelManager manager, PlanModelVisualisationObject parentOfElement, EntryPoint entryPoint, PmlUiExtension pmlUiExtension) {
+    public AddEntryPointInPlan(ModelManager manager, PlanUiExtensionPair parentOfElement, EntryPoint entryPoint, UiExtension uiExtension) {
         super(manager);
         this.entryPoint = entryPoint;
         this.parentOfElement = parentOfElement;
-        this.newlyCreatedPmlUiExtension = pmlUiExtension;
+        this.newlyCreatedUiExtension = uiExtension;
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.put(entryPoint, newlyCreatedPmlUiExtension);
+        parentOfElement.put(entryPoint, newlyCreatedUiExtension);
         modelManager.createdPlanElement(Types.ENTRYPOINT, entryPoint, entryPoint.getPlan(), false);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.removePlanElement(entryPoint);
+        parentOfElement.remove(entryPoint);
         modelManager.removedPlanElement(Types.ENTRYPOINT, entryPoint, parentOfElement.getPlan(), false);
     }
 
-    public PmlUiExtension getNewlyCreatedPmlUiExtension() {
-        return newlyCreatedPmlUiExtension;
+    public UiExtension getNewlyCreatedUiExtension() {
+        return newlyCreatedUiExtension;
     }
 }

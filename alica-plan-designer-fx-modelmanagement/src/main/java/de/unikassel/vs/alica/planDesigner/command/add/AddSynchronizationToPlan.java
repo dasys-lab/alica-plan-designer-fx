@@ -5,20 +5,20 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
 public class AddSynchronizationToPlan extends AbstractCommand {
 
-    private PlanModelVisualisationObject parentOfElement;
-    private PmlUiExtension newlyCreatedPmlUiExtension;
+    private PlanUiExtensionPair parentOfElement;
+    private UiExtension newlyCreatedUiExtension;
     protected Synchronisation synchronisation;
 
-    public AddSynchronizationToPlan(ModelManager manager, Synchronisation synchronisation, PlanModelVisualisationObject parentOfElement, PmlUiExtension extension) {
+    public AddSynchronizationToPlan(ModelManager manager, Synchronisation synchronisation, PlanUiExtensionPair parentOfElement, UiExtension extension) {
         super(manager);
         this.synchronisation = synchronisation;
         this.parentOfElement = parentOfElement;
-        this.newlyCreatedPmlUiExtension = extension;
+        this.newlyCreatedUiExtension = extension;
     }
 
     @Override
@@ -28,8 +28,8 @@ public class AddSynchronizationToPlan extends AbstractCommand {
         parentOfElement
                 .getPmlUiExtensionMap()
                 .getExtension()
-                .put(synchronisation, newlyCreatedPmlUiExtension);*/
-        parentOfElement.put(synchronisation, newlyCreatedPmlUiExtension);
+                .put(synchronisation, newlyCreatedUiExtension);*/
+        parentOfElement.put(synchronisation, newlyCreatedUiExtension);
         modelManager.createdPlanElement(Types.SYNCHRONISATION, synchronisation, parentOfElement.getPlan(), false);
     }
 
@@ -40,7 +40,7 @@ public class AddSynchronizationToPlan extends AbstractCommand {
                 .getPmlUiExtensionMap()
                 .getExtension()
                 .remove(synchronisation);*/
-        parentOfElement.removePlanElement(synchronisation);
+        parentOfElement.remove(synchronisation);
         modelManager.createdPlanElement(Types.SYNCHRONISATION, synchronisation, parentOfElement.getPlan(), false);
     }
 }

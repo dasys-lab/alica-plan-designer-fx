@@ -6,16 +6,16 @@ import de.unikassel.vs.alica.planDesigner.events.UiExtensionModelEvent;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
 public class AddBendpointToPlan extends AbstractCommand {
 
-    protected PmlUiExtension extension;
+    protected UiExtension extension;
     protected BendPoint bendPoint;
-    protected PlanModelVisualisationObject parentOfElement;
+    protected PlanUiExtensionPair parentOfElement;
 
-    public AddBendpointToPlan(ModelManager modelManager, PlanModelVisualisationObject parenOfElement, BendPoint bendPoint, PmlUiExtension extension) {
+    public AddBendpointToPlan(ModelManager modelManager, PlanUiExtensionPair parenOfElement, BendPoint bendPoint, UiExtension extension) {
         super(modelManager);
         this.parentOfElement = parenOfElement;
         this.bendPoint = bendPoint;

@@ -35,6 +35,9 @@ public class ExternalRefSerializer extends StdSerializer<PlanElement> {
             AbstractPlan variableContainingAbstractPlan = ((Variable) planElement).getParentPlan();
             jsonGenerator.writeString(Paths.get(variableContainingAbstractPlan.getRelativeDirectory(), variableContainingAbstractPlan.getName() + ".pml#" + planElement.getId()).toString());
         }
+        else {
+            throw new RuntimeException("ExternalRefSerializer: Unkown type to serialize... :D");
+        }
 
     }
 }

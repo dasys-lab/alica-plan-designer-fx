@@ -4,7 +4,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -13,7 +13,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
 
     private String type;
     private Map<Plan, List<State>> referencedStateListForBackup;
-    private Map<HashMap<PlanElement, PmlUiExtension>, List<PmlUiExtension>> referencesInStyleFiles;
+    private Map<HashMap<PlanElement, UiExtension>, List<UiExtension>> referencesInStyleFiles;
     private Map<PlanType, AnnotatedPlan> referencedAnnotatedPlansForBackup;
     private Map<Parametrisation, Variable> referencedParametrisationForBackup;
     private Path path;
@@ -105,7 +105,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
             //TODO handle PmlUiExtentions in modelmanager?
 //            if (element instanceof PmlUiExtensionMap) {
 //                PmlUiExtensionMap pmlUiExtensionMap = (PmlUiExtensionMap) element;
-//                List<PmlUiExtension> pmlUiExtensions = pmlUiExtensionMap
+//                List<UiExtension> pmlUiExtensions = pmlUiExtensionMap
 //                        .getExtension()
 //                        .entrySet()
 //                        .stream()
