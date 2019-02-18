@@ -716,12 +716,6 @@ public class ModelManager implements Observer {
                 PmlUiExtension extension = visualisation.getPmlUiExtensionOrCreateNew(newElement);
                 uiExtensionEvent.setExtension(extension);
                 event = uiExtensionEvent;
-                extension.xProperty().addListener((observable, oldValue, newValue) -> {
-                    plan.setDirty(true);
-                });
-                extension.yProperty().addListener((observable, oldValue, newValue) -> {
-                    plan.setDirty(true);
-                });
                 break;
             case Types.ENTRYPOINT:
                 plan = (Plan) parentElement;

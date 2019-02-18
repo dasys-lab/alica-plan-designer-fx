@@ -73,9 +73,19 @@ public class PlanModelVisualisationObject {
         PmlUiExtension pmlUiExtension = extensionMap.get(planElement);
         if (pmlUiExtension == null) {
             pmlUiExtension = new PmlUiExtension();
+            registerDirtyFlag(pmlUiExtension);
             extensionMap.put(planElement, pmlUiExtension);
         }
         return pmlUiExtension;
+    }
+
+    public void registerDirtyFlag(PmlUiExtension extension) {
+        extension.xProperty().addListener((observable, oldValue, newValue) -> {
+            plan.setDirty(true);
+        });
+        extension.yProperty().addListener((observable, oldValue, newValue) -> {
+            plan.setDirty(true);
+        });
     }
 
 }
