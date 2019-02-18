@@ -9,6 +9,7 @@ import de.unikassel.vs.alica.planDesigner.deserialization.PlanElementKeyDeserial
 import de.unikassel.vs.alica.planDesigner.serialization.InternalRefKeySerializer;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.HashMap;
 
@@ -21,4 +22,13 @@ public abstract class PlanModelVisualizationObjectMixIn {
     @JsonSerialize(keyUsing = InternalRefKeySerializer.class)
     @JsonDeserialize(keyUsing = PlanElementKeyDeserializer.class)
     protected HashMap<PlanElement, PmlUiExtension> extensionMap;
+
+
+    /**
+     * Ignore this method during serialization, because the protected field extensionHashMap is serialized instead
+     *
+     * @return  the extensionHashMap
+     */
+    @JsonIgnore
+    public abstract HashMap<PlanElement, PmlUiExtension> getExtension();
 }
