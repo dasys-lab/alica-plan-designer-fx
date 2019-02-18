@@ -18,7 +18,7 @@ public class DeleteEntryPointInPlan extends AbstractCommand {
         super(modelManager);
         this.entryPoint = entryPoint;
         this.parentOfElement = parentOfElement;
-        this.uiExtension = parentOfElement.getPmlUiExtension(entryPoint);
+        this.uiExtension = parentOfElement.getUiExtension(entryPoint);
         this.associatedState = entryPoint.getState();
     }
 

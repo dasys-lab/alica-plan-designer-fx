@@ -21,7 +21,7 @@ public class DeleteSynchronisationFromPlan extends AbstractCommand {
     @Override
     public void doCommand() {
         parentOfElement.getPlan().getSynchronisations().remove(synchronisation);
-        uiExtension = parentOfElement.getPmlUiExtension(synchronisation);
+        uiExtension = parentOfElement.getUiExtension(synchronisation);
         parentOfElement.remove(uiExtension);
     }
 

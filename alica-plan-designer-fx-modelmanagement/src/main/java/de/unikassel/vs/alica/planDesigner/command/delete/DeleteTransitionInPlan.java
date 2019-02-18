@@ -22,7 +22,7 @@ public class DeleteTransitionInPlan extends AbstractCommand{
     }
 
     private void saveForLaterRetrieval() {
-        uiExtension = parentOfElement.getPmlUiExtension(transition);
+        uiExtension = parentOfElement.getUiExtension(transition);
         outState = transition.getOutState();
         inState = transition.getInState();
     }

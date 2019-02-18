@@ -83,14 +83,14 @@ public class DeleteStateInPlan extends AbstractCommand {
                 .forEach(t -> inStatesOfOutTransitions.put(t, t.getInState()));
 
         // save pml view extension of state
-        uiExtension = parentOfDeleted.getPmlUiExtension(state);
+        uiExtension = parentOfDeleted.getUiExtension(state);
 
 
         // save pml view extensions of transitions, if they have any
         outStatesOfInTransitions
                 .keySet()
                 .forEach(k -> {
-                    UiExtension uiExtension = parentOfDeleted.getPmlUiExtension(k);
+                    UiExtension uiExtension = parentOfDeleted.getUiExtension(k);
                     if (uiExtension != null) {
                         pmlUiExtensionsOfTransitions.put(k, uiExtension);
                     }
@@ -99,7 +99,7 @@ public class DeleteStateInPlan extends AbstractCommand {
         inStatesOfOutTransitions
                 .keySet()
                 .forEach(k -> {
-                    UiExtension uiExtension = parentOfDeleted.getPmlUiExtension(k);
+                    UiExtension uiExtension = parentOfDeleted.getUiExtension(k);
                     if (uiExtension != null) {
                         pmlUiExtensionsOfTransitions.put(k, uiExtension);
                     }

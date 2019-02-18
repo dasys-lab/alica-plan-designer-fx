@@ -465,14 +465,14 @@ public class ModelManager implements Observer {
     }
 
     public void replaceIncompleteBendPointTransitions(Plan plan) {
-        PlanUiExtensionPair visualisationObject = getPlanModelVisualisationObject(plan.getId());
+        PlanUiExtensionPair visualisationObject = getPlanUIExtensionPair(plan.getId());
         ArrayList<Long> incompleteBendPointTransitions = ParsedModelReferences.getInstance().incompleteBendPointTransitions;
         for (PlanElement extensionEntry : visualisationObject.getKeys()) {
             long transitionId = extensionEntry.getId();
             if (incompleteBendPointTransitions.contains(transitionId)) {
                 for (Transition transition : plan.getTransitions()) {
                     if (transition.getId() == transitionId) {
-                        for (BendPoint bendPoint : visualisationObject.getPmlUiExtension(extensionEntry).getBendPoints()) {
+                        for (BendPoint bendPoint : visualisationObject.getUiExtension(extensionEntry).getBendPoints()) {
                             bendPoint.setTransition(transition);
                         }
                         break;
@@ -539,7 +539,7 @@ public class ModelManager implements Observer {
         PlanElement[] keys = planUiExtensionPair.getKeys().toArray(new PlanElement[planUiExtensionPair.getKeys().size()]);
         for (int i = keys.length - 1; i >= 0; i--) {
             PlanElement incomplete = keys[i];
-            UiExtension value = planUiExtensionPair.getPmlUiExtension(incomplete);
+            UiExtension value = planUiExtensionPair.getUiExtension(incomplete);
             PlanElement complete = getPlanElement(incomplete.getId());
             planUiExtensionPair.replaceKey(complete);
             UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_PARSED, complete, null);
@@ -625,7 +625,7 @@ public class ModelManager implements Observer {
      */
     public void updatePlanModelVisualisationObject(PlanUiExtensionPair planUiExtensionPair) {
         for (PlanElement planElement : planUiExtensionPair.getKeys()) {
-            UiExtension uiExtension = planUiExtensionPair.getPmlUiExtension(planElement);
+            UiExtension uiExtension = planUiExtensionPair.getUiExtension(planElement);
             UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, null);
             event.setExtension(uiExtension);
             fireUiExtensionModelEvent(event);
@@ -664,7 +664,7 @@ public class ModelManager implements Observer {
 
                 //If an PlanUiExtensionPair exists for a plan with the same id, the plan inside the
                 //PlanUiExtensionPair has to be replaced with the new plan
-                PlanUiExtensionPair visualisation = getPlanModelVisualisationObject(plan.getId());
+                PlanUiExtensionPair visualisation = getPlanUIExtensionPair(plan.getId());
                 if (visualisation != null) {
                     visualisation.setPlan(plan);
                 }
@@ -720,7 +720,7 @@ public class ModelManager implements Observer {
                 break;
             case Types.TRANSITION:
                 plan = (Plan) parentElement;
-                visualisation = getPlanModelVisualisationObject(plan.getId());
+                visualisation = getPlanUIExtensionPair(plan.getId());
                 Transition transition = (Transition) newElement;
                 visualisation.getPlan().addTransition(transition);
                 break;
@@ -733,7 +733,7 @@ public class ModelManager implements Observer {
                 // No break wanted here, TerminalState is also State
             case Types.STATE:
                 plan = (Plan) parentElement;
-                visualisation = getPlanModelVisualisationObject(plan.getId());
+                visualisation = getPlanUIExtensionPair(plan.getId());
                 visualisation.getPlan().addState((State) newElement);
                 UiExtensionModelEvent uiExtensionEvent = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
                 UiExtension extension = visualisation.getUiExtension(newElement);
@@ -748,7 +748,7 @@ public class ModelManager implements Observer {
                 break;
             case Types.ENTRYPOINT:
                 plan = (Plan) parentElement;
-                visualisation = getPlanModelVisualisationObject(plan.getId());
+                visualisation = getPlanUIExtensionPair(plan.getId());
                 visualisation.getPlan().addEntryPoint((EntryPoint) newElement);
 //                State entryState = ((EntryPoint) newElement).getState();
 //                entryState.setEntryPoint((EntryPoint) newElement);
@@ -762,7 +762,7 @@ public class ModelManager implements Observer {
                 break;
             case Types.SYNCHRONISATION:
                 plan = (Plan) parentElement;
-                visualisation = getPlanModelVisualisationObject(plan.getId());
+                visualisation = getPlanUIExtensionPair(plan.getId());
                 visualisation.getPlan().addSynchronization((Synchronisation) newElement);
                 UiExtensionModelEvent uiExtensionModelEvent = new UiExtensionModelEvent(ModelEventType.ELEMENT_CREATED, newElement, type);
                 extension = visualisation.getUiExtension(newElement);
@@ -844,11 +844,11 @@ public class ModelManager implements Observer {
             case Types.FAILURESTATE:
                 //These types only exist inside of plans
                 ((Plan) parentElement).removeState((State) removedElement);
-                getPlanModelVisualisationObject(parentElement.getId()).remove(removedElement);
+                getPlanUIExtensionPair(parentElement.getId()).remove(removedElement);
                 break;
             case Types.ENTRYPOINT:
                 ((Plan) parentElement).removeEntryPoint((EntryPoint) removedElement);
-                getPlanModelVisualisationObject(parentElement.getId()).remove(removedElement);
+                getPlanUIExtensionPair(parentElement.getId()).remove(removedElement);
                 State entryState = ((EntryPoint) removedElement).getState();
                 if (entryState != null) {
                     entryState.setEntryPoint(null);
@@ -856,11 +856,11 @@ public class ModelManager implements Observer {
                 break;
             case Types.TRANSITION:
                 ((Plan) parentElement).removeTransition((Transition) removedElement);
-                getPlanModelVisualisationObject(parentElement.getId()).remove(removedElement);
+                getPlanUIExtensionPair(parentElement.getId()).remove(removedElement);
                 break;
             case Types.SYNCHRONISATION:
                 ((Plan) parentElement).removeSynchronization((Synchronisation) removedElement);
-                getPlanModelVisualisationObject(parentElement.getId()).remove(removedElement);
+                getPlanUIExtensionPair(parentElement.getId()).remove(removedElement);
                 break;
             case Types.VARIABLE:
                 if (parentElement instanceof HasVariables) {
@@ -1485,9 +1485,9 @@ public class ModelManager implements Observer {
 
     private AbstractCommand handleAddAbstractPlanToPlan(ModelModificationQuery mmq) {
         AbstractCommand cmd = null;
-        PlanUiExtensionPair parenOfElement = getPlanModelVisualisationObject(mmq.getParentId());
+        Plan parentPlan = (Plan) getPlanElement(mmq.getParentId());
         State state = null;
-        for (State states : parenOfElement.getPlan().getStates()) {
+        for (State states : parentPlan.getStates()) {
             if (states.getId() == mmq.getTargetID()) {
                 state = states;
             }
@@ -1523,7 +1523,7 @@ public class ModelManager implements Observer {
                 break;
             case Types.TASK:
                 EntryPoint entryPoint = null;
-                for (EntryPoint entryPoints : parenOfElement.getPlan().getEntryPoints()) {
+                for (EntryPoint entryPoints : parentPlan.getEntryPoints()) {
                     if (entryPoints.getId() == mmq.getTargetID()) {
                         entryPoint = entryPoints;
                     }
@@ -1545,7 +1545,7 @@ public class ModelManager implements Observer {
     }
 
     private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq) {
-        PlanUiExtensionPair parenOfElement = getPlanModelVisualisationObject(mmq.getParentId());
+        PlanUiExtensionPair parenOfElement = getPlanUIExtensionPair(mmq.getParentId());
         AbstractCommand cmd;
         int x = 0;
         int y = 0;
@@ -1607,7 +1607,7 @@ public class ModelManager implements Observer {
                 bendPoint.setY(y);
                 Transition transition = (Transition) getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
                 bendPoint.setTransition(transition);
-                PlanUiExtensionPair modelObject = getPlanModelVisualisationObject(mmq.getParentId());
+                PlanUiExtensionPair modelObject = getPlanUIExtensionPair(mmq.getParentId());
                 extension = modelObject.getUiExtension(transition);
                 cmd = new AddBendpointToPlan(this, parenOfElement, bendPoint, extension);
                 break;
@@ -1674,7 +1674,7 @@ public class ModelManager implements Observer {
      */
     public void handleUiExtensionModelModificationQuery(UiExtensionModelModificationQuery uimmq) {
         PlanElement planElement = getPlanElement(uimmq.getElementId());
-        PlanUiExtensionPair planUiExtensionPair = getPlanModelVisualisationObject(uimmq.getParentId());
+        PlanUiExtensionPair planUiExtensionPair = getPlanUIExtensionPair(uimmq.getParentId());
         UiExtension uiExtension = planUiExtensionPair.getUiExtension(planElement);
 
         AbstractCommand cmd = new ChangePosition(this, uiExtension, planElement, uimmq.getNewX(), uimmq.getNewY());
@@ -1689,7 +1689,7 @@ public class ModelManager implements Observer {
      * @param id the id of the {@link Plan} a {@link PlanUiExtensionPair} is required for
      * @return the {@link PlanUiExtensionPair} corresponding to the given id
      */
-    public PlanUiExtensionPair getPlanModelVisualisationObject(long id) {
+    public PlanUiExtensionPair getPlanUIExtensionPair(long id) {
         PlanUiExtensionPair pmvo = planModelVisualisationObjectMap.get(id);
         if (pmvo == null) {
             Plan plan = planMap.get(id);

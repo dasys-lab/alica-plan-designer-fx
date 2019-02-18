@@ -46,10 +46,6 @@ public class PlanUiExtensionPair {
         return extensionMap.keySet();
     }
 
-    public UiExtension getPmlUiExtension(PlanElement element) {
-        return extensionMap.get(element);
-    }
-
     public void put(PlanElement element, UiExtension uiExtension) {
         this.extensionMap.put(element, uiExtension);
     }
