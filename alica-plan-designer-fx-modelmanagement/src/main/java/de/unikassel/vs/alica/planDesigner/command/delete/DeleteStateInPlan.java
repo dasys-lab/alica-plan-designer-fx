@@ -57,11 +57,11 @@ public class DeleteStateInPlan extends AbstractCommand {
             inTransition.setOutState(null);
         }
         
-        parentOfDeleted.getPmlUiExtensionMap().getExtension().remove(state);
+        parentOfDeleted.removePlanElement(state);
 
         pmlUiExtensionsOfTransitions
                 .keySet()
-                .forEach(k -> parentOfDeleted.getPmlUiExtensionMap().getExtension().remove(k));
+                .forEach(k -> parentOfDeleted.removePlanElement(k));
         }
 
     /**
@@ -83,14 +83,14 @@ public class DeleteStateInPlan extends AbstractCommand {
                 .forEach(t -> inStatesOfOutTransitions.put(t, t.getInState()));
 
         // save pml view extension of state
-        pmlUiExtension = parentOfDeleted.getPmlUiExtensionMap().getExtension().get(state);
+        pmlUiExtension = parentOfDeleted.getPmlUiExtension(state);
 
 
         // save pml view extensions of transitions, if they have any
         outStatesOfInTransitions
                 .keySet()
                 .forEach(k -> {
-                    PmlUiExtension pmlUiExtension = parentOfDeleted.getPmlUiExtensionMap().getExtension().get(k);
+                    PmlUiExtension pmlUiExtension = parentOfDeleted.getPmlUiExtension(k);
                     if (pmlUiExtension != null) {
                         pmlUiExtensionsOfTransitions.put(k, pmlUiExtension);
                     }
@@ -99,7 +99,7 @@ public class DeleteStateInPlan extends AbstractCommand {
         inStatesOfOutTransitions
                 .keySet()
                 .forEach(k -> {
-                    PmlUiExtension pmlUiExtension = parentOfDeleted.getPmlUiExtensionMap().getExtension().get(k);
+                    PmlUiExtension pmlUiExtension = parentOfDeleted.getPmlUiExtension(k);
                     if (pmlUiExtension != null) {
                         pmlUiExtensionsOfTransitions.put(k, pmlUiExtension);
                     }
@@ -120,9 +120,9 @@ public class DeleteStateInPlan extends AbstractCommand {
             inTransition.setOutState(outStatesOfInTransitions.get(inTransition));
         }
 
-        parentOfDeleted.getPmlUiExtensionMap().getExtension().put(state, new PmlUiExtension());
+        parentOfDeleted.put(state, new PmlUiExtension());
         pmlUiExtensionsOfTransitions
                 .entrySet()
-                .forEach(e -> parentOfDeleted.getPmlUiExtensionMap().getExtension().put(e.getKey(), e.getValue()));
+                .forEach(e -> parentOfDeleted.put(e.getKey(), e.getValue()));
     }
 }

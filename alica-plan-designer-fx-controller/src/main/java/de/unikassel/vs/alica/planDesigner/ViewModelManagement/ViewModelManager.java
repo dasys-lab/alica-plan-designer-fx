@@ -98,7 +98,7 @@ public class ViewModelManager {
         TaskRepositoryViewModel taskRepositoryViewModel = new TaskRepositoryViewModel(taskRepository.getId(), taskRepository.getName(), Types.TASKREPOSITORY);
         taskRepositoryViewModel.setComment(taskRepository.getComment());
         taskRepositoryViewModel.setRelativeDirectory(taskRepository.getRelativeDirectory());
-        // we need to add the repo before creating tasks, in order to avoid circles (Task <-> Repo)
+        // we need to put the repo before creating tasks, in order to avoid circles (Task <-> Repo)
         this.viewModelElements.put(taskRepositoryViewModel.getId(), taskRepositoryViewModel);
         for (Task task : taskRepository.getTasks()) {
             taskRepositoryViewModel.addTask((TaskViewModel) getViewModelElement(task));
@@ -226,7 +226,7 @@ public class ViewModelManager {
 
     private EntryPointViewModel createEntryPointViewModel(EntryPoint ep) {
         EntryPointViewModel entryPointViewModel = new EntryPointViewModel(ep.getId(), ep.getName(), Types.ENTRYPOINT);
-        // we need to add the ep before creating the state, in order to avoid circles (EntryPoint <-> State)
+        // we need to put the ep before creating the state, in order to avoid circles (EntryPoint <-> State)
         this.viewModelElements.put(entryPointViewModel.getId(), entryPointViewModel);
         if (ep.getState() != null) {
             StateViewModel entryState = (StateViewModel) getViewModelElement(modelManager.getPlanElement(ep.getState().getId()));
@@ -521,7 +521,7 @@ public class ViewModelManager {
                 break;
             case Types.BENDPOINT:
                 transitionViewModel = (TransitionViewModel) element;
-                // remove<->add to fire listeners, to redraw
+                // remove<->put to fire listeners, to redraw
                 parentPlan.getTransitions().remove(transitionViewModel);
                 parentPlan.getTransitions().add(transitionViewModel);
                 break;
@@ -558,7 +558,7 @@ public class ViewModelManager {
                     }
                 }
 
-                // remove<->add to fire listeners, to redraw
+                // remove<->put to fire listeners, to redraw
                 planViewModel.getEntryPoints().remove(ent);
                 planViewModel.getStates().remove(state);
                 planViewModel.getStates().add(state);

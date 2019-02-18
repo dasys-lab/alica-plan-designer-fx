@@ -29,13 +29,13 @@ public class AddStateInPlan extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        parentOfElement.getPmlUiExtensionMap().getExtension().put(newState, newlyCreatedPmlUiExtension);
+        parentOfElement.put(newState, newlyCreatedPmlUiExtension);
         modelManager.createdPlanElement(type, newState, newState.getParentPlan(), false);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPmlUiExtensionMap().getExtension().remove(newState);
+        parentOfElement.removePlanElement(newState);
         modelManager.removedPlanElement(type, newState ,parentOfElement.getPlan(), false);
     }
 
