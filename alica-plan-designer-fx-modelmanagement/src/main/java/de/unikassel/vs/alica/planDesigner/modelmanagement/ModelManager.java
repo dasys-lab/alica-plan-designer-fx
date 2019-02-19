@@ -226,6 +226,8 @@ public class ModelManager implements Observer {
         for (Plan plan : planMap.values()) {
             replaceIncompleteTasksInEntryPoints(plan);
             replaceIncompleteAbstractPlansInStates(plan);
+            replaceIncompleteAbstractPlansInParametrisations(plan);
+            replaceIncompleteVariablesInParametrisations(plan);
             replaceIncompleteStatesAndSynchronizationsInTransitions(plan);
             replaceIncompleteBendPointTransitions(plan);
             if (plan.getMasterPlan()) {
@@ -487,7 +489,34 @@ public class ModelManager implements Observer {
         for (State state : plan.getStates()) {
             for (int i = 0; i < state.getPlans().size(); i++) {
                 if (refs.incompleteAbstractPlansInStates.contains(state.getPlans().get(i).getId())) {
-                    state.getPlans().set(i, (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+                    state.replaceAbstractPlan(state.getPlans().get(i), (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+//                    state.removeAbstractPlan();
+//                    state.addAbstractPlan((AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+//                    state.getPlans().set(i, (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+                }
+            }
+        }
+    }
+
+    private void replaceIncompleteAbstractPlansInParametrisations(Plan plan) {
+        ParsedModelReferences refs = ParsedModelReferences.getInstance();
+        for (State state : plan.getStates()) {
+            for (int i = 0; i < state.getParametrisations().size(); i++) {
+                Parametrisation parametrisation = state.getParametrisations().get(i);
+                if (refs.incompleteAbstractPlanInParametrisations.contains(parametrisation.getSubPlan().getId())) {
+                    parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
+                }
+            }
+        }
+    }
+
+    private void replaceIncompleteVariablesInParametrisations(Plan plan) {
+        ParsedModelReferences refs = ParsedModelReferences.getInstance();
+        for (State state : plan.getStates()) {
+            for (int i = 0; i < state.getParametrisations().size(); i++) {
+                Parametrisation parametrisation = state.getParametrisations().get(i);
+                if (refs.incompleteVariableInParametrisations.contains(parametrisation.getSubVariable().getId())) {
+                    parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
                 }
             }
         }
@@ -1153,6 +1182,8 @@ public class ModelManager implements Observer {
                         break;
                     case Types.PLANTYPE:
                     case Types.BEHAVIOUR:
+                        cmd = new AddAbstractPlanToState(this, mmq);
+                        break;
                     case Types.TASK:
                         cmd =  new AddTaskToEntryPoint(this, mmq);;
                         break;

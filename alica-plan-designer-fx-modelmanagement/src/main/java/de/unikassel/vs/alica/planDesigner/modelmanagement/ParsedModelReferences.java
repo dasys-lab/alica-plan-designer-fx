@@ -31,7 +31,7 @@ public class ParsedModelReferences {
 
     public ArrayList<Long> incompleteBendPointTransitions = new ArrayList<>(); // done
 
-    public ArrayList<Long> incompleteAbstractPlanInVariables = new ArrayList<>();
+    public ArrayList<Long> incompleteAbstractPlanInParametrisations = new ArrayList<>();
 
     public ArrayList<Long> incompleteVariableInParametrisations = new ArrayList<>();
 
@@ -76,8 +76,8 @@ public class ParsedModelReferences {
     }
 
     public void addIncompleteAbstractPlanInParametrisations(long incompleteAbstractPlanId) {
-        if (!incompleteAbstractPlanInVariables.contains(incompleteAbstractPlanId)) {
-            incompleteAbstractPlanInVariables.add(incompleteAbstractPlanId);
+        if (!incompleteAbstractPlanInParametrisations.contains(incompleteAbstractPlanId)) {
+            incompleteAbstractPlanInParametrisations.add(incompleteAbstractPlanId);
         }
     }
 

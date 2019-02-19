@@ -12,19 +12,20 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
-public class ExternalRefArraySerializer extends StdSerializer<ArrayList<AbstractPlan>> {
+public class ExternalRefArraySerializer extends StdSerializer<List<AbstractPlan>> {
 
     public ExternalRefArraySerializer() {
         this(null);
     }
 
-    public ExternalRefArraySerializer(Class<ArrayList<AbstractPlan>> t) {
+    public ExternalRefArraySerializer(Class<List<AbstractPlan>> t) {
         super(t);
     }
 
     @Override
-    public void serialize(ArrayList<AbstractPlan> planElements, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(List<AbstractPlan> planElements, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         String result = "";
         for (AbstractPlan element : planElements) {
             if(element instanceof Plan) {

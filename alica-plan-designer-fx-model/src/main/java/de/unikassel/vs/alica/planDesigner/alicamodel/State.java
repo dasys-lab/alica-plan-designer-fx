@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class State extends PlanElement {
@@ -8,14 +9,13 @@ public class State extends PlanElement {
     public static final String ENTRYPOINT = "entryPoint";
     protected EntryPoint entryPoint;
     protected Plan parentPlan;
-    protected ArrayList<AbstractPlan> plans;
+    protected final ArrayList<AbstractPlan> plans = new ArrayList<>();
     protected ArrayList<Parametrisation> parametrisations;
     protected ArrayList<Transition> inTransitions;
     protected ArrayList<Transition> outTransitions;
 
     public State ()
     {
-        plans = new ArrayList<>();
         parametrisations = new ArrayList<>();
         inTransitions = new ArrayList<>();
         outTransitions = new ArrayList<>();
@@ -41,8 +41,8 @@ public class State extends PlanElement {
         this.entryPoint = entryPoint;
     }
 
-    public ArrayList<AbstractPlan> getPlans() {
-        return plans;
+    public List<AbstractPlan> getPlans() {
+        return Collections.unmodifiableList(plans);
     }
 
     public void addAbstractPlan(AbstractPlan abstractPlan) {
@@ -66,6 +66,7 @@ public class State extends PlanElement {
                 this.getParametrisations().add(param);
             });
         }
+        this.parentPlan.setDirty(true);
     }
 
     public void removeAbstractPlan(AbstractPlan abstractPlan) {
@@ -76,6 +77,12 @@ public class State extends PlanElement {
                 parametrisations.remove(param);
             }
         }
+        this.parentPlan.setDirty(true);
+    }
+
+    public void replaceAbstractPlan(AbstractPlan oldAbstractPlan, AbstractPlan newAbstractPlan) {
+        plans.remove(oldAbstractPlan);
+        addAbstractPlan(newAbstractPlan);
     }
 
     public ArrayList<Parametrisation> getParametrisations() {
