@@ -13,12 +13,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
@@ -370,7 +368,7 @@ public final class FileTreeView extends TreeView<File> {
                 return;
             }
 
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.MOVE_ELEMENT, draggedItem.getViewModelElement().getType(),
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.MOVE_FILE, draggedItem.getViewModelElement().getType(),
                     draggedItem.getViewModelElement().getName());
             event.setElementId(draggedItem.getViewModelElement().getId());
             event.setAbsoluteDirectory(parent.toString());

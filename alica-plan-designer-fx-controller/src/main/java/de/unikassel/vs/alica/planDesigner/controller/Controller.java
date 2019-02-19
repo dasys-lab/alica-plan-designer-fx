@@ -13,7 +13,6 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.UiExtensionModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.plugin.PluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.view.Types;
@@ -335,17 +334,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementId(event.getElementId());
                 break;
             case ADD_ELEMENT:
-                if (event instanceof GuiChangePositionEvent) {
-                    UiExtensionModelModificationQuery uimmq = new UiExtensionModelModificationQuery(ModelQueryType.ADD_ELEMENT,
-                            event.getElementType(),
-                            event.getElementId(),
-                            event.getParentId());
-                    uimmq.setNewX(((GuiChangePositionEvent) event).getNewX());
-                    uimmq.setNewY(((GuiChangePositionEvent) event).getNewY());
-                    uimmq.setName(event.getName());
-                    uimmq.setComment(event.getComment());
-                    mmq = uimmq;
-                } else if(event instanceof GuiModificationEventExpanded) {
+                if(event instanceof GuiModificationEventExpanded) {
                     mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
                     mmq.setElementId(event.getElementId());
                     mmq.setElementType(event.getElementType());
@@ -360,6 +349,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     mmq.setParentId(event.getParentId());
                     mmq.setName(event.getName());
                     mmq.setComment(event.getComment());
+                    mmq.setX(event.getX());
+                    mmq.setY(event.getY());
                 }
                 mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
@@ -391,33 +382,22 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     mmq.setNewValue(guiChangeAttributeEvent.getNewValue());
                 }
                 break;
-            case MOVE_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.MOVE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
+            case CHANGE_POSITION:
+                mmq = new ModelModificationQuery(ModelQueryType.CHANGE_POSITION);
+                mmq.setElementType(event.getElementType());
+                mmq.setElementId(event.getElementId());
+                mmq.setParentId(event.getParentId());
+                mmq.setX(event.getX());
+                mmq.setY(event.getY());
+                break;
+            case MOVE_FILE:
+                mmq = new ModelModificationQuery(ModelQueryType.MOVE_FILE, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
                 mmq.setElementId(event.getElementId());
                 break;
             default:
                 mmq = null;
         }
         this.modelManager.handleModelModificationQuery(mmq);
-    }
-
-
-    /**
-     * Called, when an object was moved in the gui.
-     * <p>
-     * Method is separate from the handle-method, because this event is about a change to the UiExtensionModel, which is
-     * separate from the model.
-     *
-     * @param event containsPlan information about which object was moved and to which position it was moved
-     */
-    @Override
-    public void handleGuiChangePositionEvent(GuiChangePositionEvent event) {
-        UiExtensionModelModificationQuery uimmq =
-                new UiExtensionModelModificationQuery(event.getElementType(), event.getElementId(), event.getParentId());
-        uimmq.setNewX(event.getNewX());
-        uimmq.setNewY(event.getNewY());
-
-        this.modelManager.handleUiExtensionModelModificationQuery(uimmq);
     }
 
     /**

@@ -1,7 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -66,13 +65,12 @@ public class PlanTab extends AbstractPlanTab {
      * @param newY  the new y-coordinate
      */
     public void fireChangePositionEvent(DraggableEditorElement planElementContainer, String type, double newX, double newY) {
-        GuiChangePositionEvent event = new GuiChangePositionEvent(GuiEventType.CHANGE_ELEMENT, type, planElementContainer.getViewModelElement().getName());
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_POSITION, type, planElementContainer.getViewModelElement().getName());
         event.setElementId(planElementContainer.getViewModelElement().getId());
         event.setParentId(serializableViewModel.getId());
-        event.setNewX((int) newX);
-        event.setNewY((int) newY);
-
-        guiModificationHandler.handleGuiChangePositionEvent(event);
+        event.setX((int) newX);
+        event.setY((int) newY);
+        guiModificationHandler.handle(event);
     }
 
     public void fireModificationEvent(GuiEventType eventType, String elementType, String name, HashMap<String, Long> relatedElements) {

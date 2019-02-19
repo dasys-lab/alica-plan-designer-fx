@@ -888,7 +888,6 @@ public class ModelManager implements Observer {
             BeanUtils.setProperty(planElement, attribute, newValue);
 
             if (attribute.equals("name")) {
-
                 String ending = "";
                 switch (elementType) {
                     case Types.PLAN:
@@ -1111,7 +1110,6 @@ public class ModelManager implements Observer {
                 break;
             case DELETE_ELEMENT:
                 if (elementDeletedMap.containsKey(mmq.getElementId())) {
-                    // TODO change map to list, cause counter is only 1
                     elementDeletedMap.remove(mmq.getElementId());
                     return;
                 }
@@ -1150,7 +1148,7 @@ public class ModelManager implements Observer {
                         if (mmq.getTargetID() != null) {
                             cmd = new AddAbstractPlanToState(this, mmq);
                         } else {
-                            cmd = handlePlanTypeMMQ(mmq);
+                            cmd = new AddPlanToPlanType(this, mmq);
                         }
                         break;
                     case Types.PLANTYPE:
@@ -1174,7 +1172,7 @@ public class ModelManager implements Observer {
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:
-                        cmd = handleNewConditionAdded(mmq);
+                        cmd = handleConditionAdded(mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");
@@ -1184,7 +1182,7 @@ public class ModelManager implements Observer {
             case REMOVE_ELEMENT:
                 switch (mmq.getElementType()) {
                     case Types.ANNOTATEDPLAN:
-                        cmd = handlePlanTypeMMQ(mmq);
+                        cmd = new RemovePlanFromPlanType(this, mmq);
                         break;
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
@@ -1197,55 +1195,28 @@ public class ModelManager implements Observer {
                 }
                 break;
             case REMOVE_ALL_ELEMENTS:
-                switch (mmq.getElementType()) {
-                    case Types.PLANTYPE:
-                        PlanType planType = planTypeMap.get(mmq.getElementId());
-                        cmd = new RemoveAllPlansFromPlanType(this, planType);
-                        break;
-                    default:
-                        System.err.println("ModelManager: Unknown model modification query element gets ignored!");
-                        return;
-                }
+                cmd = new RemoveAllPlansFromPlanType(this, mmq);
                 break;
             case RELOAD_ELEMENT:
-                switch (mmq.getElementType()) {
-                    case Types.PLANTYPE:
-                        PlanType planType = planTypeMap.get(mmq.getElementId());
-                        mmq.absoluteDirectory = Paths.get(plansPath, planType.getRelativeDirectory()).toString();
-                        mmq.name = planType.getName();
-                        cmd = new ParseAbstractPlan(this, mmq);
-                        break;
-                    case Types.PLAN:
-                    case Types.MASTERPLAN:
-                        Plan plan = planMap.get(mmq.getElementId());
-                        mmq.absoluteDirectory = Paths.get(plansPath, plan.getRelativeDirectory()).toString();
-                        mmq.name = plan.getName();
-                        cmd = new ParseAbstractPlan(this, mmq);
-                        break;
-                    case Types.BEHAVIOUR:
-                        Behaviour behaviour = behaviourMap.get(mmq.getElementId());
-                        mmq.absoluteDirectory = Paths.get(plansPath, behaviour.getRelativeDirectory()).toString();
-                        mmq.name = behaviour.getName();
-                        cmd = new ParseAbstractPlan(this, mmq);
-                        break;
-                    default:
-                        System.err.println("ModelManager: Unknown model modification query element gets ignored!");
-                        return;
-                }
+                SerializablePlanElement serializablePlanElement = (SerializablePlanElement) getPlanElement(mmq.getElementId());
+                mmq.absoluteDirectory = Paths.get(plansPath, serializablePlanElement.getRelativeDirectory()).toString();
+                mmq.name = serializablePlanElement.getName();
+                cmd = new ParseAbstractPlan(this, mmq);
                 break;
             case CHANGE_ELEMENT:
                 switch (mmq.getElementType()) {
-                    case Types.SYNCTRANSITION: {
+                    case Types.SYNCTRANSITION:
                         cmd = new ConnectSynchronizationWithTransition(this, mmq);
-                    }
-                    break;
+                        break;
                     default:
-                        // TODO: Make this a switch case command, like everywhere else in this method, too!
                         cmd = new ChangeAttributeValue(this, mmq);
                         break;
                 }
                 break;
-            case MOVE_ELEMENT:
+            case CHANGE_POSITION:
+                cmd = new ChangePosition(this, mmq);
+                break;
+            case MOVE_FILE:
                 cmd = new MoveFile(this, mmq);
                 break;
             default:
@@ -1255,7 +1226,7 @@ public class ModelManager implements Observer {
         commandStack.storeAndExecute(cmd);
     }
 
-    private AbstractCommand handleNewConditionAdded(ModelModificationQuery mmq) {
+    private AbstractCommand handleConditionAdded(ModelModificationQuery mmq) {
         AbstractCommand cmd;
 
         PlanElement parent = getPlanElement(mmq.getParentId());
@@ -1461,22 +1432,6 @@ public class ModelManager implements Observer {
         outfile.delete();
     }
 
-    public AbstractCommand handlePlanTypeMMQ(ModelModificationQuery mmq) {
-        PlanElement parent = planElementMap.get(mmq.getParentId());
-        if (parent == null || !(parent instanceof PlanType)
-                || (mmq.getQueryType() != ModelQueryType.ADD_ELEMENT && mmq.getQueryType() != ModelQueryType.REMOVE_ELEMENT)) {
-            return null;
-        }
-
-        if (mmq.getQueryType() == ModelQueryType.ADD_ELEMENT) {
-            return new AddPlanToPlanType(this, mmq);
-        } else if (mmq.getQueryType() == ModelQueryType.REMOVE_ELEMENT) {
-            return new RemovePlanFromPlanType(this, mmq);
-        }
-
-        return null;
-    }
-
     private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq) {
         AbstractCommand cmd;
         switch (mmq.elementType) {
@@ -1545,25 +1500,6 @@ public class ModelManager implements Observer {
     }
 
     /**
-     * Method to handle changes concerning the UiExtensionModel.
-     * <p>
-     * Similarly to the handleModelModificationQuery-method this Method receives a query containing the information
-     * about the changes to the model, which is in this case the UiExtensionModel, and creates an {@link AbstractCommand}
-     * to execute these changes. Because this method is only called, when an object was moved (changed its position) in
-     * the ui, it will always create a {@link ChangePosition}-command.
-     *
-     * @param uimmq query containing information about a change in the UiExtensionModel
-     */
-    public void handleUiExtensionModelModificationQuery(UiExtensionModelModificationQuery uimmq) {
-        PlanElement planElement = getPlanElement(uimmq.getElementId());
-        PlanUiExtensionPair planUiExtensionPair = getPlanUIExtensionPair(uimmq.getParentId());
-        UiExtension uiExtension = planUiExtensionPair.getUiExtension(planElement);
-
-        AbstractCommand cmd = new ChangePosition(this, uiExtension, planElement, uimmq.getNewX(), uimmq.getNewY());
-        commandStack.storeAndExecute(cmd);
-    }
-
-    /**
      * Finding a {@link PlanUiExtensionPair} by the id of its {@link Plan}.
      * <p>
      * If no such {@link PlanUiExtensionPair} exits, a new one is created and stored.
@@ -1605,6 +1541,4 @@ public class ModelManager implements Observer {
         }
         return false;
     }
-
-
 }
