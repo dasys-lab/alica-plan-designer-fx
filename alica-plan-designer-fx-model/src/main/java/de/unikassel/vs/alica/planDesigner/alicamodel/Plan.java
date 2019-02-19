@@ -197,7 +197,6 @@ public class Plan extends AbstractPlan implements HasVariables {
             });
         }
 
-
         this.setDirty(false);
     }
 }

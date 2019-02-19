@@ -3,8 +3,8 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 import de.unikassel.vs.alica.planDesigner.controller.EntryPointCreatorDialogController;
 import de.unikassel.vs.alica.planDesigner.controller.ErrorWindowController;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
@@ -28,10 +28,6 @@ import java.util.HashMap;
 
 public class EntryPointTool extends AbstractTool {
 
-    private static final Logger LOG = LogManager.getLogger(EntryPointTool.class);
-    private boolean initial = true;
-    private Node visualRepresentation;
-
     public EntryPointTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
     }
@@ -46,16 +42,6 @@ public class EntryPointTool extends AbstractTool {
         addCursor = new AlicaCursor(AlicaCursor.Type.add_entrypoint);
         return toolButton;
     }
-
-//    @Override
-//    public EntryPoint createNewObject() {
-//        return getAlicaFactory().createEntryPoint();
-//    }
-//
-//    @Override
-//    public void draw() {
-//        ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
-//    }
 
     @Override
     protected void initHandlerMap() {
@@ -102,9 +88,9 @@ public class EntryPointTool extends AbstractTool {
                         return;
                     }
 
-                    GuiChangePositionEvent guiEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.ENTRYPOINT, null);
-                    guiEvent.setNewX((int) localCoordinates.getX());
-                    guiEvent.setNewY((int) localCoordinates.getY());
+                    GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.ENTRYPOINT, null);
+                    guiEvent.setX((int) localCoordinates.getX());
+                    guiEvent.setY((int) localCoordinates.getY());
                     guiEvent.setParentId(planTab.getSerializableViewModel().getId());
                     HashMap<String, Long> related = new HashMap<>();
                     related.put(Types.TASK, task.getId());

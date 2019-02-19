@@ -226,6 +226,8 @@ public class ModelManager implements Observer {
         for (Plan plan : planMap.values()) {
             replaceIncompleteTasksInEntryPoints(plan);
             replaceIncompleteAbstractPlansInStates(plan);
+            replaceIncompleteAbstractPlansInParametrisations(plan);
+            replaceIncompleteVariablesInParametrisations(plan);
             replaceIncompleteStatesAndSynchronizationsInTransitions(plan);
             replaceIncompleteBendPointTransitions(plan);
             if (plan.getMasterPlan()) {
@@ -233,10 +235,14 @@ public class ModelManager implements Observer {
             } else {
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
             }
+            // replace-Stuff did trigger the flag already, so new stuff will get lost...
+            plan.setDirty(false);
         }
         for (PlanType planType : getPlanTypes()) {
             replaceIncompletePlansInPlanType(planType);
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE));
+            // replace-Stuff did trigger the flag already, so new stuff will get lost...
+            planType.setDirty(false);
         }
         for (PlanUiExtensionPair planUiExtensionPair : planModelVisualisationObjectMap.values()) {
             replaceIncompletePlanElementsInPlanModelVisualisationObject(planUiExtensionPair);
@@ -487,7 +493,34 @@ public class ModelManager implements Observer {
         for (State state : plan.getStates()) {
             for (int i = 0; i < state.getPlans().size(); i++) {
                 if (refs.incompleteAbstractPlansInStates.contains(state.getPlans().get(i).getId())) {
-                    state.getPlans().set(i, (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+                    state.replaceAbstractPlan(state.getPlans().get(i), (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+//                    state.removeAbstractPlan();
+//                    state.addAbstractPlan((AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+//                    state.getPlans().set(i, (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
+                }
+            }
+        }
+    }
+
+    private void replaceIncompleteAbstractPlansInParametrisations(Plan plan) {
+        ParsedModelReferences refs = ParsedModelReferences.getInstance();
+        for (State state : plan.getStates()) {
+            for (int i = 0; i < state.getParametrisations().size(); i++) {
+                Parametrisation parametrisation = state.getParametrisations().get(i);
+                if (refs.incompleteAbstractPlanInParametrisations.contains(parametrisation.getSubPlan().getId())) {
+                    parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
+                }
+            }
+        }
+    }
+
+    private void replaceIncompleteVariablesInParametrisations(Plan plan) {
+        ParsedModelReferences refs = ParsedModelReferences.getInstance();
+        for (State state : plan.getStates()) {
+            for (int i = 0; i < state.getParametrisations().size(); i++) {
+                Parametrisation parametrisation = state.getParametrisations().get(i);
+                if (refs.incompleteVariableInParametrisations.contains(parametrisation.getSubVariable().getId())) {
+                    parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
                 }
             }
         }
@@ -888,7 +921,6 @@ public class ModelManager implements Observer {
             BeanUtils.setProperty(planElement, attribute, newValue);
 
             if (attribute.equals("name")) {
-
                 String ending = "";
                 switch (elementType) {
                     case Types.PLAN:
@@ -1094,7 +1126,7 @@ public class ModelManager implements Observer {
                         cmd = new CreateTask(this, mmq);
                         break;
                     case Types.VARIABLE:
-                        cmd = new AddNewVariable(this, mmq);
+                        cmd = new AddVariable(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
@@ -1111,7 +1143,6 @@ public class ModelManager implements Observer {
                 break;
             case DELETE_ELEMENT:
                 if (elementDeletedMap.containsKey(mmq.getElementId())) {
-                    // TODO change map to list, cause counter is only 1
                     elementDeletedMap.remove(mmq.getElementId());
                     return;
                 }
@@ -1150,11 +1181,13 @@ public class ModelManager implements Observer {
                         if (mmq.getTargetID() != null) {
                             cmd = new AddAbstractPlanToState(this, mmq);
                         } else {
-                            cmd = handlePlanTypeMMQ(mmq);
+                            cmd = new AddPlanToPlanType(this, mmq);
                         }
                         break;
                     case Types.PLANTYPE:
                     case Types.BEHAVIOUR:
+                        cmd = new AddAbstractPlanToState(this, mmq);
+                        break;
                     case Types.TASK:
                         cmd =  new AddTaskToEntryPoint(this, mmq);;
                         break;
@@ -1174,7 +1207,7 @@ public class ModelManager implements Observer {
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:
-                        cmd = handleNewConditionAdded(mmq);
+                        cmd = handleConditionAdded(mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");
@@ -1184,7 +1217,7 @@ public class ModelManager implements Observer {
             case REMOVE_ELEMENT:
                 switch (mmq.getElementType()) {
                     case Types.ANNOTATEDPLAN:
-                        cmd = handlePlanTypeMMQ(mmq);
+                        cmd = new RemovePlanFromPlanType(this, mmq);
                         break;
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
@@ -1197,55 +1230,29 @@ public class ModelManager implements Observer {
                 }
                 break;
             case REMOVE_ALL_ELEMENTS:
-                switch (mmq.getElementType()) {
-                    case Types.PLANTYPE:
-                        PlanType planType = planTypeMap.get(mmq.getElementId());
-                        cmd = new RemoveAllPlansFromPlanType(this, planType);
-                        break;
-                    default:
-                        System.err.println("ModelManager: Unknown model modification query element gets ignored!");
-                        return;
-                }
+                cmd = new RemoveAllPlansFromPlanType(this, mmq);
                 break;
             case RELOAD_ELEMENT:
-                switch (mmq.getElementType()) {
-                    case Types.PLANTYPE:
-                        PlanType planType = planTypeMap.get(mmq.getElementId());
-                        mmq.absoluteDirectory = Paths.get(plansPath, planType.getRelativeDirectory()).toString();
-                        mmq.name = planType.getName();
-                        cmd = new ParseAbstractPlan(this, mmq);
-                        break;
-                    case Types.PLAN:
-                    case Types.MASTERPLAN:
-                        Plan plan = planMap.get(mmq.getElementId());
-                        mmq.absoluteDirectory = Paths.get(plansPath, plan.getRelativeDirectory()).toString();
-                        mmq.name = plan.getName();
-                        cmd = new ParseAbstractPlan(this, mmq);
-                        break;
-                    case Types.BEHAVIOUR:
-                        Behaviour behaviour = behaviourMap.get(mmq.getElementId());
-                        mmq.absoluteDirectory = Paths.get(plansPath, behaviour.getRelativeDirectory()).toString();
-                        mmq.name = behaviour.getName();
-                        cmd = new ParseAbstractPlan(this, mmq);
-                        break;
-                    default:
-                        System.err.println("ModelManager: Unknown model modification query element gets ignored!");
-                        return;
-                }
+                SerializablePlanElement serializablePlanElement = (SerializablePlanElement) getPlanElement(mmq.getElementId());
+                mmq.absoluteDirectory = Paths.get(plansPath, serializablePlanElement.getRelativeDirectory()).toString();
+                mmq.name = serializablePlanElement.getName();
+                cmd = new ParseAbstractPlan(this, mmq);
                 break;
             case CHANGE_ELEMENT:
                 switch (mmq.getElementType()) {
-                    case Types.SYNCTRANSITION: {
+                    // TODO probably does not work, if you change the comment of a sync transition
+                    case Types.SYNCTRANSITION:
                         cmd = new ConnectSynchronizationWithTransition(this, mmq);
-                    }
-                    break;
+                        break;
                     default:
-                        // TODO: Make this a switch case command, like everywhere else in this method, too!
                         cmd = new ChangeAttributeValue(this, mmq);
                         break;
                 }
                 break;
-            case MOVE_ELEMENT:
+            case CHANGE_POSITION:
+                cmd = new ChangePosition(this, mmq);
+                break;
+            case MOVE_FILE:
                 cmd = new MoveFile(this, mmq);
                 break;
             default:
@@ -1255,7 +1262,7 @@ public class ModelManager implements Observer {
         commandStack.storeAndExecute(cmd);
     }
 
-    private AbstractCommand handleNewConditionAdded(ModelModificationQuery mmq) {
+    private AbstractCommand handleConditionAdded(ModelModificationQuery mmq) {
         AbstractCommand cmd;
 
         PlanElement parent = getPlanElement(mmq.getParentId());
@@ -1348,25 +1355,42 @@ public class ModelManager implements Observer {
         return cmd;
     }
 
-    /**
-     * Creates a path relative to the plansPath
-     *
-     * @param absoluteDirectory
-     * @param fileName
-     * @return
-     */
-    public String makeRelativeDirectory(String absoluteDirectory, String fileName) {
-        String relativeDirectory = absoluteDirectory.replace(plansPath, "");
-        relativeDirectory = relativeDirectory.replace(tasksPath, "");
-        relativeDirectory = relativeDirectory.replace(rolesPath, "");
-        relativeDirectory = relativeDirectory.replace(fileName, "");
-        if (relativeDirectory.startsWith(File.separator)) {
-            relativeDirectory = relativeDirectory.substring(1);
+    private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq) {
+        AbstractCommand cmd;
+        switch (mmq.elementType) {
+            case Types.STATE:
+                cmd = new AddStateInPlan(this, mmq);
+                break;
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                cmd = new AddTerminalStateInPlan(this, mmq);
+                break;
+            case Types.TRANSITION:
+                cmd = new AddTransitionInPlan(this, mmq);
+                break;
+            case Types.INITSTATECONNECTION:
+                cmd = new ConnectEntryPointsWithState(this, mmq);
+                break;
+            case Types.ENTRYPOINT:
+                cmd = new AddEntryPointInPlan(this, mmq);
+                break;
+            case Types.BENDPOINT:
+                cmd = new AddBendpointToPlan(this, mmq);
+                break;
+            case Types.SYNCHRONISATION:
+                cmd = new AddSynchronizationToPlan(this, mmq);
+                break;
+            case Types.PRECONDITION:
+            case Types.RUNTIMECONDITION:
+            case Types.POSTCONDITION:
+            case Types.SYNCTRANSITION:
+                //TODO: Create commands for the other types
+            default:
+                System.err.println("ModelManger: Unknown type to put to plan gets ignored! Type was: " + mmq.elementType);
+                return null;
         }
-        if (relativeDirectory.endsWith(File.separator)) {
-            relativeDirectory = relativeDirectory.substring(0, relativeDirectory.length() - 1);
-        }
-        return relativeDirectory;
+
+        return cmd;
     }
 
     /**
@@ -1461,58 +1485,25 @@ public class ModelManager implements Observer {
         outfile.delete();
     }
 
-    public AbstractCommand handlePlanTypeMMQ(ModelModificationQuery mmq) {
-        PlanElement parent = planElementMap.get(mmq.getParentId());
-        if (parent == null || !(parent instanceof PlanType)
-                || (mmq.getQueryType() != ModelQueryType.ADD_ELEMENT && mmq.getQueryType() != ModelQueryType.REMOVE_ELEMENT)) {
-            return null;
+    /**
+     * Creates a path relative to the plansPath
+     *
+     * @param absoluteDirectory
+     * @param fileName
+     * @return
+     */
+    public String makeRelativeDirectory(String absoluteDirectory, String fileName) {
+        String relativeDirectory = absoluteDirectory.replace(plansPath, "");
+        relativeDirectory = relativeDirectory.replace(tasksPath, "");
+        relativeDirectory = relativeDirectory.replace(rolesPath, "");
+        relativeDirectory = relativeDirectory.replace(fileName, "");
+        if (relativeDirectory.startsWith(File.separator)) {
+            relativeDirectory = relativeDirectory.substring(1);
         }
-
-        if (mmq.getQueryType() == ModelQueryType.ADD_ELEMENT) {
-            return new AddPlanToPlanType(this, mmq);
-        } else if (mmq.getQueryType() == ModelQueryType.REMOVE_ELEMENT) {
-            return new RemovePlanFromPlanType(this, mmq);
+        if (relativeDirectory.endsWith(File.separator)) {
+            relativeDirectory = relativeDirectory.substring(0, relativeDirectory.length() - 1);
         }
-
-        return null;
-    }
-
-    private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq) {
-        AbstractCommand cmd;
-        switch (mmq.elementType) {
-            case Types.STATE:
-                cmd = new AddStateInPlan(this, mmq);
-                break;
-            case Types.SUCCESSSTATE:
-            case Types.FAILURESTATE:
-                cmd = new AddTerminalStateInPlan(this, mmq);
-                break;
-            case Types.TRANSITION:
-                cmd = new AddTransitionInPlan(this, mmq);
-                break;
-            case Types.INITSTATECONNECTION:
-                cmd = new ConnectEntryPointsWithState(this, mmq);
-                break;
-            case Types.ENTRYPOINT:
-                cmd = new AddEntryPointInPlan(this, mmq);
-                break;
-            case Types.BENDPOINT:
-                cmd = new AddBendpointToPlan(this, mmq);
-                break;
-            case Types.SYNCHRONISATION:
-                cmd = new AddSynchronizationToPlan(this, mmq);
-                break;
-            case Types.PRECONDITION:
-            case Types.RUNTIMECONDITION:
-            case Types.POSTCONDITION:
-            case Types.SYNCTRANSITION:
-                //TODO: Create commands for the other types
-            default:
-                System.err.println("ModelManger: Unknown type to put to plan gets ignored! Type was: " + mmq.elementType);
-                return null;
-        }
-
-        return cmd;
+        return relativeDirectory;
     }
 
     public String getAbsoluteDirectory(PlanElement element) {
@@ -1542,25 +1533,6 @@ public class ModelManager implements Observer {
 
     public void redo() {
         commandStack.redo();
-    }
-
-    /**
-     * Method to handle changes concerning the UiExtensionModel.
-     * <p>
-     * Similarly to the handleModelModificationQuery-method this Method receives a query containing the information
-     * about the changes to the model, which is in this case the UiExtensionModel, and creates an {@link AbstractCommand}
-     * to execute these changes. Because this method is only called, when an object was moved (changed its position) in
-     * the ui, it will always create a {@link ChangePosition}-command.
-     *
-     * @param uimmq query containing information about a change in the UiExtensionModel
-     */
-    public void handleUiExtensionModelModificationQuery(UiExtensionModelModificationQuery uimmq) {
-        PlanElement planElement = getPlanElement(uimmq.getElementId());
-        PlanUiExtensionPair planUiExtensionPair = getPlanUIExtensionPair(uimmq.getParentId());
-        UiExtension uiExtension = planUiExtensionPair.getUiExtension(planElement);
-
-        AbstractCommand cmd = new ChangePosition(this, uiExtension, planElement, uimmq.getNewX(), uimmq.getNewY());
-        commandStack.storeAndExecute(cmd);
     }
 
     /**
@@ -1605,6 +1577,4 @@ public class ModelManager implements Observer {
         }
         return false;
     }
-
-
 }

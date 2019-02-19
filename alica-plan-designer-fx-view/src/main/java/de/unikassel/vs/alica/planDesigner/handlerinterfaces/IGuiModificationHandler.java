@@ -1,10 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.handlerinterfaces;
 
-import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 
@@ -18,6 +14,4 @@ public interface IGuiModificationHandler {
     void handleUndo();
     void handleRedo();
     RepositoryViewModel getRepoViewModel();
-
-    void handleGuiChangePositionEvent(GuiChangePositionEvent event);
 }

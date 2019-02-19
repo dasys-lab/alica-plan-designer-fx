@@ -1,10 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
@@ -67,10 +66,10 @@ public class SynchronizationTool extends AbstractTool {
 
                     IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
-                    GuiChangePositionEvent guiEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.SYNCHRONISATION, "Sync Default");
+                    GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.SYNCHRONISATION, "Sync Default");
                     guiEvent.setComment("");
-                    guiEvent.setNewX((int) eventTargetCoordinates.getX());
-                    guiEvent.setNewY((int) eventTargetCoordinates.getY());
+                    guiEvent.setX((int) eventTargetCoordinates.getX());
+                    guiEvent.setY((int) eventTargetCoordinates.getY());
                     guiEvent.setParentId(planTab.getSerializableViewModel().getId());
                     handler.handle(guiEvent);
                 }

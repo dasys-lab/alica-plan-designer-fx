@@ -17,6 +17,8 @@ public class GuiModificationEvent {
 
     protected String comment;
     protected Map<String, Long> relatedObjects;
+    protected int x;
+    protected int y;
 
     //constructor
     public GuiModificationEvent() {}
@@ -89,6 +91,22 @@ public class GuiModificationEvent {
 
     public void setRelatedObjects(Map<String, Long> relatedObjects) {
         this.relatedObjects = relatedObjects;
+    }
+
+    public int getX(){
+        return x;
+    }
+
+    public void setX(int x){
+        this.x = x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
+    public void setY(int y){
+        this.y = y;
     }
 
 }

@@ -4,6 +4,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.AnnotatedPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanType;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 import java.util.ArrayList;
@@ -14,9 +15,9 @@ public class RemoveAllPlansFromPlanType extends AbstractCommand {
     private List<AnnotatedPlan> backupPlans;
     private PlanType planType;
 
-    public RemoveAllPlansFromPlanType(ModelManager manager, PlanType planType) {
+    public RemoveAllPlansFromPlanType(ModelManager manager, ModelModificationQuery mmq) {
         super(manager);
-        this.planType = planType;
+        this.planType = (PlanType) modelManager.getPlanElement(mmq.getElementId());
         backupPlans = new ArrayList<>(planType.getPlans());
     }
 

@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.State
 import java.util.Map
 import java.util.List
 import de.unikassel.vs.alica.planDesigner.alicamodel.EntryPoint
+import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan
 
 class DefaultTemplate {
 
@@ -22,7 +23,8 @@ class DefaultTemplate {
 			* Transition:
 			*   - Name: «transition.preCondition.name», ConditionString: «transition.preCondition.conditionString», Comment : «transition.comment»
 			*
-			* Plans in State: «FOR plan : state.plans»
+			* Plans in State: «var  List<AbstractPlan> plans = state.plans»
+			*     «FOR plan : plans»
 			*   - Plan - (Name): «plan.name», (PlanID): «plan.id» «ENDFOR»
 			*
 			* Tasks: «var  List<EntryPoint> entryPoints = state.parentPlan.entryPoints»
@@ -149,7 +151,8 @@ void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ProblemDescrip
 * - Name: «transition.preCondition.name»
 * - ConditionString: «transition.preCondition.conditionString»
 *
-* Plans in State: «FOR plan : state.plans»
+* «var  List<AbstractPlan> plans = state.plans»
+* Plans in State: «FOR plan : plans»
 * - Plan - (Name): «plan.name», (PlanID): «plan.id» «ENDFOR»
 * Static Variables: «FOR variable : transition.preCondition.variables»«variable.name» «ENDFOR»
 * Domain Variables:
