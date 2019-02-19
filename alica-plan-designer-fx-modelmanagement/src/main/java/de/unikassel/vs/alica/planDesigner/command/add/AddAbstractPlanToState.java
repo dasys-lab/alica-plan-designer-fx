@@ -27,6 +27,7 @@ public class AddAbstractPlanToState extends AbstractCommand {
                 return;
             }
         }
+        abstractPlan.setDirty(true);
         state.addAbstractPlan(abstractPlan);
 
         //event for updateView

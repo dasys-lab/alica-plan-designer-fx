@@ -22,9 +22,8 @@ public class AddTaskToEntryPoint extends AbstractCommand {
 
     @Override
     public void doCommand() {
-//        state.addAbstractPlan(abstractPlan);
         entryPoint.setTask(task);
-
+        entryPoint.getPlan().setDirty(true);
         //event for updateView
         Plan plan = (Plan) entryPoint.getPlan();
         ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ADD, plan, Types.TASK);
