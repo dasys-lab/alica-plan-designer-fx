@@ -235,10 +235,14 @@ public class ModelManager implements Observer {
             } else {
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
             }
+            // replace-Stuff did trigger the flag already, so new stuff will get lost...
+            plan.setDirty(false);
         }
         for (PlanType planType : getPlanTypes()) {
             replaceIncompletePlansInPlanType(planType);
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE));
+            // replace-Stuff did trigger the flag already, so new stuff will get lost...
+            planType.setDirty(false);
         }
         for (PlanUiExtensionPair planUiExtensionPair : planModelVisualisationObjectMap.values()) {
             replaceIncompletePlanElementsInPlanModelVisualisationObject(planUiExtensionPair);
