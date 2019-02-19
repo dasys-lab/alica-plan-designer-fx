@@ -4,6 +4,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PostCondition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class AddPostConditionToBehaviour extends AbstractCommand {
 
@@ -15,19 +16,22 @@ public class AddPostConditionToBehaviour extends AbstractCommand {
         super(modelManager);
         this.newPostCondition = postCondition;
         this.behaviour = behaviour;
-        this.previousPostCondition = null;
+        this.previousPostCondition = behaviour.getPostCondition();
     }
 
     @Override
     public void doCommand() {
-        if (behaviour.getPostCondition() != null) {
-            this.previousPostCondition = behaviour.getPostCondition();
-        }
+        modelManager.createdPlanElement(Types.POSTCONDITION, newPostCondition, behaviour, false);
         behaviour.setPostCondition(newPostCondition);
     }
 
     @Override
     public void undoCommand() {
+        if(previousPostCondition == null){
+            modelManager.removedPlanElement(Types.POSTCONDITION, newPostCondition, behaviour, false);
+        }else{
+            modelManager.createdPlanElement(Types.POSTCONDITION, previousPostCondition, behaviour, false);
+        }
         behaviour.setPostCondition(previousPostCondition);
     }
 }

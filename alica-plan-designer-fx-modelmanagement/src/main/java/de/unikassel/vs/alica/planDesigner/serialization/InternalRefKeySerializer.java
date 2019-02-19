@@ -11,6 +11,10 @@ public class InternalRefKeySerializer extends JsonSerializer<PlanElement> {
 
     @Override
     public void serialize(PlanElement value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        gen.writeFieldName(String.valueOf(value.getId()));
+        if (value != null) {
+            gen.writeFieldName(String.valueOf(value.getId()));
+        } else {
+            gen.writeFieldName("");
+        }
     }
 }

@@ -1,33 +1,37 @@
 package de.unikassel.vs.alica.planDesigner.command.delete;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronization;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.AbstractUiPositionCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
-public class DeleteSynchronisationFromPlan extends AbstractCommand {
+public class DeleteSynchronisationFromPlan extends AbstractUiPositionCommand {
 
-    protected PlanModelVisualisationObject parentOfElement;
-    protected PmlUiExtension pmlUiExtension;
-    protected Synchronization synchronization;
+    protected PlanUiExtensionPair parentOfElement;
+    protected UiExtension uiExtension;
+    protected Synchronisation synchronisation;
 
-    public DeleteSynchronisationFromPlan(ModelManager modelManager, Synchronization synchronization, PlanModelVisualisationObject parentOfElement) {
-        super(modelManager);
-        this.synchronization = synchronization;
-        this.parentOfElement = parentOfElement;
+    public DeleteSynchronisationFromPlan(ModelManager modelManager, ModelModificationQuery mmq) {
+        super(modelManager, mmq);
+        this.synchronisation = (Synchronisation) this.modelManager.getPlanElement(mmq.getElementId());
+        this.parentOfElement = this.modelManager.getPlanUIExtensionPair(mmq.getParentId());
     }
 
     @Override
     public void doCommand() {
-        parentOfElement.getPlan().getSynchronizations().remove(synchronization);
-        pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(synchronization);
-        parentOfElement.getPmlUiExtensionMap().getExtension().remove(pmlUiExtension);
+        parentOfElement.getPlan().getSynchronisations().remove(synchronisation);
+        uiExtension = parentOfElement.getUiExtension(synchronisation);
+        parentOfElement.remove(uiExtension);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlan().getSynchronizations().add(synchronization);
-        parentOfElement.getPmlUiExtensionMap().getExtension().put(synchronization, pmlUiExtension);
+        parentOfElement.getPlan().getSynchronisations().add(synchronisation);
+        this.uiExtension = parentOfElement.getUiExtension(synchronisation);
+        this.uiExtension.setX(this.x);
+        this.uiExtension.setY(this.y);
     }
 }

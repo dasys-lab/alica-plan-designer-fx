@@ -5,7 +5,6 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -34,7 +33,7 @@ import java.util.Map;
  */
 public abstract class AbstractTool {
     protected TabPane planEditorTabPane;
-    private PlanTab planTab;
+    protected PlanTab planTab;
 
     // Tool Button
     private ToolButton toolButton;
@@ -95,7 +94,7 @@ public abstract class AbstractTool {
                 public void handle(MouseEvent event) {
                     Node target = (Node) event.getTarget();
                     Parent parent = target.getParent();
-                    if (parent instanceof DraggableHBox || parent instanceof EditorToolBar || parent instanceof VBox) {
+                    if (parent instanceof ToggleButton || parent instanceof EditorToolBar || parent instanceof VBox) {
                         setCursor(Cursor.DEFAULT);
                     }
                 }
@@ -148,34 +147,21 @@ public abstract class AbstractTool {
 
     public void setToolButton(ToolButton toolButton){
         toolButton.setToggleGroup(group);
-        toolButton.setOnAction(new EventHandler<ActionEvent>() {
+        toolButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void handle(ActionEvent event) {
-                if (toolButton.isSelected()) {
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean buttonPressedBefore, Boolean buttonPressed) {
+                if (buttonPressed) {
                     startTool();
                 } else {
                     endTool();
                 }
             }
         });
-
-        toolButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (!newValue) {
-                    endTool();
-                }
-            }
-        });
-
         this.toolButton = toolButton;
     }
+
     public ToggleButton getToolButton() {
         return toolButton;
-    }
-
-    public PlanTab getPlanTab() {
-        return planTab;
     }
 
     /**
@@ -206,7 +192,7 @@ public abstract class AbstractTool {
     protected ViewModelElement getElementFromEvent(Event event){
         return planTab.getPlanEditorGroup().getChildren().stream()
                 .filter(container -> ((Pane) container).getChildren().contains(event.getTarget()))
-                .findFirst().map(node -> ((AbstractPlanElementContainer)node).getModelElement()).orElse(null);
+                .findFirst().map(node -> ((AbstractPlanElementContainer)node).getViewModelElement()).orElse(null);
     }
 
 

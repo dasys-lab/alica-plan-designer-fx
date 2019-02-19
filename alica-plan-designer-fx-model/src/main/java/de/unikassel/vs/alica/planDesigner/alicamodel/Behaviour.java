@@ -1,7 +1,10 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,33 +14,57 @@ public class Behaviour extends AbstractPlan implements HasVariables {
     protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
     protected final SimpleLongProperty deferring = new SimpleLongProperty();
 
-    protected PreCondition preCondition;
-    protected RuntimeCondition runtimeCondition;
-    protected PostCondition postCondition;
+    protected ObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
+    protected ObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
+    protected ObjectProperty<PostCondition> postCondition = new SimpleObjectProperty<>();
     protected final ArrayList<Variable> variables= new ArrayList<>();
 
     public PreCondition getPreCondition() {
-        return preCondition;
+        return preCondition.get();
     }
 
     public void setPreCondition(PreCondition preCondition) {
-        this.preCondition = preCondition;
+        this.preCondition.set(preCondition);
+        if (preCondition != null) {
+            InvalidationListener dirty = obs -> this.setDirty(true);
+            preCondition.nameProperty().addListener(dirty);
+            preCondition.conditionStringProperty().addListener(dirty);
+            preCondition.enabledProperty().addListener(dirty);
+            preCondition.pluginNameProperty().addListener(dirty);
+            preCondition.commentProperty().addListener(dirty);
+        }
     }
 
     public RuntimeCondition getRuntimeCondition() {
-        return runtimeCondition;
+        return runtimeCondition.get();
     }
 
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
-        this.runtimeCondition = runtimeCondition;
+        this.runtimeCondition.set(runtimeCondition);
+        if (runtimeCondition != null) {
+            InvalidationListener dirty = ons -> this.setDirty(true);
+            runtimeCondition.nameProperty().addListener(dirty);
+            runtimeCondition.conditionStringProperty().addListener(dirty);
+            runtimeCondition.enabledProperty().addListener(dirty);
+            runtimeCondition.pluginNameProperty().addListener(dirty);
+            runtimeCondition.commentProperty().addListener(dirty);
+        }
     }
 
     public PostCondition getPostCondition() {
-        return postCondition;
+        return postCondition.get();
     }
 
     public void setPostCondition(PostCondition postCondition) {
-        this.postCondition = postCondition;
+        this.postCondition.set(postCondition);
+        if (postCondition != null) {
+            InvalidationListener dirty = obs -> this.setDirty(true);
+            postCondition.nameProperty().addListener(dirty);
+            postCondition.conditionStringProperty().addListener(dirty);
+            postCondition.enabledProperty().addListener(dirty);
+            postCondition.pluginNameProperty().addListener(dirty);
+            postCondition.commentProperty().addListener(dirty);
+        }
     }
 
     public void addVariable(Variable variable) {
@@ -54,7 +81,7 @@ public class Behaviour extends AbstractPlan implements HasVariables {
         this.setDirty(true);
     }
     public void removeVariable(Variable variable) {
-        // TODO: make listener in add method a local variable that is removed from the list of listeners here...
+        // TODO: make listener in put method a local variable that is removed from the list of listeners here...
         variables.remove(variable);
         this.setDirty(true);
     }
@@ -88,7 +115,10 @@ public class Behaviour extends AbstractPlan implements HasVariables {
 
 
     @Override
-    public void registerDirtyFlag(){
+    public void registerDirtyFlag() {
         super.registerDirtyFlag();
+        preCondition    .addListener((observable, oldValue, newValue) -> this.setDirty(true));
+        runtimeCondition.addListener((observable, oldValue, newValue) -> this.setDirty(true));
+        postCondition   .addListener((observable, oldValue, newValue) -> this.setDirty(true));
     }
 }

@@ -7,29 +7,29 @@ import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
 
 public class ConnectEntryPointsWithState extends AbstractCommand {
 
     protected EntryPoint entryPoint;
     protected State newState;
     protected State previousState;
-    protected PlanModelVisualisationObject parentOfElement;
+    protected PlanUiExtensionPair parentOfElement;
 
-    public ConnectEntryPointsWithState(ModelManager modelManager, PlanModelVisualisationObject parentOfElement, EntryPoint entryPoint, State state) {
+    public ConnectEntryPointsWithState(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        this.entryPoint = entryPoint;
-        this.parentOfElement = parentOfElement;
-        this.newState = state;
+        this.entryPoint = (EntryPoint) modelManager.getPlanElement((mmq.getRelatedObjects().get(State.ENTRYPOINT)));
+        this.previousState = entryPoint.getState();
+        this.newState = (State) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.STATE));
+        this.parentOfElement = modelManager.getPlanUIExtensionPair(mmq.getParentId());
     }
 
 
     @Override
     public void doCommand() {
-        previousState = entryPoint.getState();
-
-        if(newState.getEntryPoint() != null){
+        if (newState.getEntryPoint() != null) {
             return;
         }
 
@@ -41,9 +41,9 @@ public class ConnectEntryPointsWithState extends AbstractCommand {
         }
 
         //event for updateView
-        Plan plan = (Plan) parentOfElement.getPlan();
+        Plan plan = parentOfElement.getPlan();
         ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_CREATED, plan, Types.INITSTATECONNECTION);
-        event.setParentId(parentOfElement.getPlan().getId());
+        event.setParentId(plan.getId());
         event.setNewValue(entryPoint.getId());
 
         modelManager.fireEvent(event);

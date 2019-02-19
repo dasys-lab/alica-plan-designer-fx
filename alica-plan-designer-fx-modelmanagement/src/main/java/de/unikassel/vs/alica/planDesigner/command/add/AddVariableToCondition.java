@@ -12,8 +12,8 @@ public class AddVariableToCondition extends AbstractCommand {
 
     public AddVariableToCondition(ModelManager modelManager, Condition condition) {
         super(modelManager);
-        this.variable = new Variable();
         this.condition = condition;
+        // TODO change constructor to take mmq and init variable with the parameters of the mmq
     }
 
     @Override

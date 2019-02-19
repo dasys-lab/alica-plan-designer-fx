@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.command.delete;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronization;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
@@ -8,21 +8,21 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 public class RemoveTransitionFromSynchronisation extends AbstractCommand {
 
     protected Transition transition;
-    protected Synchronization synchronization;
+    protected Synchronisation synchronisation;
 
-    public RemoveTransitionFromSynchronisation(ModelManager manager, Synchronization synchronization, Transition transition) {
+    public RemoveTransitionFromSynchronisation(ModelManager manager, Synchronisation synchronisation, Transition transition) {
         super(manager);
-        this.synchronization = synchronization;
+        this.synchronisation = synchronisation;
         this.transition = transition;
     }
 
     @Override
     public void doCommand() {
-        synchronization.getSyncedTransitions().remove(transition);
+        synchronisation.getSyncedTransitions().remove(transition);
     }
 
     @Override
     public void undoCommand() {
-        synchronization.getSyncedTransitions().add(transition);
+        synchronisation.getSyncedTransitions().add(transition);
     }
 }

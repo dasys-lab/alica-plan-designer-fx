@@ -98,7 +98,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     }
 
     @Override
-    public ViewModelElement getModelElement() {
+    public ViewModelElement getViewModelElement() {
         return containedElement;
     }
 

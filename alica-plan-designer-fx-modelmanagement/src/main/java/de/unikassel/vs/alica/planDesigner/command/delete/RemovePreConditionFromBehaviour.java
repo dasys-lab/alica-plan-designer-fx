@@ -4,31 +4,30 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PreCondition;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class RemovePreConditionFromBehaviour extends AbstractCommand {
 
     private PreCondition previousPreCondition;
     private Behaviour behaviour;
-    private long conditionId;
 
     public RemovePreConditionFromBehaviour(ModelManager manager, Behaviour behaviour, long conditionId) {
         super(manager);
         this.behaviour = behaviour;
-        this.conditionId = conditionId;
-        this.previousPreCondition = null;
+        this.previousPreCondition = (PreCondition) modelManager.getPlanElement(conditionId);
     }
 
     @Override
     public void doCommand() {
-        if (behaviour.getPreCondition().getId() == conditionId) {
-            previousPreCondition = behaviour.getPreCondition();
-            behaviour.setPreCondition(null);
-        }
-
+        modelManager.removedPlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
+        behaviour.setPreCondition(null);
     }
 
     @Override
     public void undoCommand() {
+        if(previousPreCondition != null){
+            modelManager.createdPlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
+        }
         behaviour.setPreCondition(previousPreCondition);
     }
 }

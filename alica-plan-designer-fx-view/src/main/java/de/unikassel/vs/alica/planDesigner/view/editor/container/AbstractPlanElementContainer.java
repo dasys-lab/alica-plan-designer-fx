@@ -3,13 +3,11 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IShowGeneratedSourcesEventHandler;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
-import de.unikassel.vs.alica.planDesigner.view.model.EntryPointViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
@@ -31,33 +29,37 @@ import java.util.ArrayList;
  */
 public abstract class AbstractPlanElementContainer extends Pane implements DraggableEditorElement {
 
-    private ViewModelElement modelElement;
+    private ViewModelElement viewModelElement;
     private IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler;
     protected Node visualRepresentation;
     protected Node wrapper;
     private PlanTab planTab;
 
     /**
-     * @param modelElement
+     * @param viewModelElement
      * @param planTab
      */
-    public AbstractPlanElementContainer(ViewModelElement modelElement, IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler, PlanTab planTab) {
-        this.modelElement = modelElement;
+    public AbstractPlanElementContainer(ViewModelElement viewModelElement, IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler, PlanTab planTab) {
+        this.viewModelElement = viewModelElement;
         this.showGeneratedSourcesEventHandler = showGeneratedSourcesEventHandler;
         this.planTab = planTab;
         setBackground(Background.EMPTY);
         setPickOnBounds(false);
-        addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(modelElement));
+        addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(viewModelElement));
         wrapper = this;
         setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
             public void handle(ContextMenuEvent e) {
-                ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem(AbstractPlanElementContainer.this.modelElement.getId(), AbstractPlanElementContainer.this.showGeneratedSourcesEventHandler));
+                ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem(AbstractPlanElementContainer.this.viewModelElement.getId(), AbstractPlanElementContainer.this.showGeneratedSourcesEventHandler));
                 contextMenu.show(AbstractPlanElementContainer.this, e.getScreenX(), e.getScreenY());
             }
         });
         // prohibit containers from growing indefinitely (especially transition containers)
         setMaxSize(1, 1);
+    }
+
+    public PlanEditorGroup getPlanEditorGroup() {
+        return planTab.getPlanEditorGroup();
     }
 
     /**
@@ -91,8 +93,8 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
     }
 
     @Override
-    public ViewModelElement getModelElement() {
-        return modelElement;
+    public ViewModelElement getViewModelElement() {
+        return viewModelElement;
     }
 
     public Node getWrapper() {
@@ -144,7 +146,7 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
                 node.setLayoutX(dragContext.initialLayoutX + mouseEvent.getSceneX() - dragContext.mouseAnchorX);
                 node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getSceneY() - dragContext.mouseAnchorY);
 
-                planTab.fireChangePositionEvent(this, modelElement.getType(), node.getLayoutX(), node.getLayoutY());
+                planTab.fireChangePositionEvent(this, viewModelElement.getType(), node.getLayoutX(), node.getLayoutY());
                 //getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
                 mouseEvent.consume();
                 redrawElement();
@@ -205,14 +207,10 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
     public abstract Color getVisualisationColor();
 
     @Override
-    public void redrawElement() {
-
-    }
+    public void redrawElement() {}
 
     @Override
-    public void setDragged(boolean dragged) {
-
-    }
+    public void setDragged(boolean dragged) {}
 
     @Override
     public boolean wasDragged() {

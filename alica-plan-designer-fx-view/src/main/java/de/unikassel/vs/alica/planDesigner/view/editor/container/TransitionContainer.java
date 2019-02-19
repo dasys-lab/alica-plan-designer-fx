@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -39,6 +40,13 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         draggableNodes = new ArrayList<>();
         potentialDraggableNodes = new ArrayList<>();
         setupContainer();
+
+        ((TransitionViewModel) getViewModelElement()).getBendpoints().addListener(new ListChangeListener<BendPointViewModel>() {
+            @Override
+            public void onChanged(Change<? extends BendPointViewModel> c) {
+                redrawElement();
+            }
+        });
     }
 
     @Override
@@ -67,7 +75,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         double triangleSpanVecY = -vecX;
         double triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
 
-        List<BendPointViewModel> bendpoints = ((TransitionViewModel) getModelElement()).getBendpoints();
+        List<BendPointViewModel> bendpoints = ((TransitionViewModel) getViewModelElement()).getBendpoints();
         int size = bendpoints.size();
         if (size == 0) {
             visualRepresentation = new Line(_fromX, _fromY, _toX, _toY);
@@ -97,7 +105,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
                 BendPointViewModel currentBendpoint = bendpoints.get(i);
                 points[j] = currentBendpoint.getX();
                 points[j + 1] = currentBendpoint.getY();
-                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getModelElement(), null);
+                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getViewModelElement(), null);
                 //bendpointContainer.setVisible(false);
                 draggableNodes.add(bendpointContainer);
                 _fromX = points[j];

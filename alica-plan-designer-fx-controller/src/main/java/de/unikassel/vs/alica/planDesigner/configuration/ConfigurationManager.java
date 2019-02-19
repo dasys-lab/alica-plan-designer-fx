@@ -13,7 +13,11 @@ import java.util.Properties;
 
 public final class ConfigurationManager {
 
-    // SINGLETON
+
+
+    //--------------------------------------------------------------------------------------------
+    //  SINGLETON
+    //--------------------------------------------------------------------------------------------
     private static volatile ConfigurationManager instance;
 
     public static ConfigurationManager getInstance() {
@@ -28,28 +32,58 @@ public final class ConfigurationManager {
         return instance;
     }
 
+    //--------------------------------------------------------------------------------------------
+    //  CONSTANTS
+    //--------------------------------------------------------------------------------------------
     private static final Logger LOG = LogManager.getLogger(ConfigurationManager.class);
+
+    //---- CONFIGFOLDER ----
+    private static final String CONFIG_FOLDERNAME = ".planDesigner";
+
+    //---- MAINCONFIG ----
     private static final String MAIN_CONFIG_FILENAME = "mainConfig";
 
-
-    // Not the domain config folder (etc). Its for plan designer only.
-    private static final String CONFIG_FOLDERNAME = ".planDesigner";
+    //-- PROPERTIES --
     private static final String ACTIVE_DOMAIN_CONF = "activeDomainConfig";
     private static final String DOMAIN_CONFIGS = "domainConfigs";
     private static final String CLANG_FORMAT_PATH = "clangFormatPath";
     private static final String EDITOR_EXEC_PATH = "editorExecutablePath";
 
-    private Properties mainConfigProperties;
-    private File mainConfigFile;
+    //---- WINDOWCONFIG ----
+    private static final String WINDOW_CONFIG_FILENAME = "windowConfig";
+
+    //-- PROPERTIES --
+    private static final String WINDOW_HEIGHT = "height";
+    private static final String WINDOW_WIDTH = "width";
+    private static final String WINDOW_X = "x";
+    private static final String WINDOW_Y = "y";
+
+
+    //--------------------------------------------------------------------------------------------
+    //  FIELDS
+    //--------------------------------------------------------------------------------------------
+    private Controller controller;
+
+    //---- CONFIGFOLDER ----
     private File planDesignerConfigFolder;
 
+    //---- MAINCONFIG ----
+    private Properties mainConfigProperties;
+    private File mainConfigFile;
     private List<Configuration> configurations;
     private Configuration activeConfiguration;
 
-    private Controller controller;
+    //---- WINDOWCONFIG ----
+    private Properties windowConfigProperties;
+    private File windowConfigFile;
 
+
+    //--------------------------------------------------------------------------------------------
+    //  CONSTRUCTOR
+    //--------------------------------------------------------------------------------------------
     private ConfigurationManager() {
         mainConfigProperties = new Properties();
+        windowConfigProperties = new Properties();
         configurations = new ArrayList<>();
 
         // check for home dir
@@ -67,7 +101,7 @@ public final class ConfigurationManager {
             }
         }
 
-
+        //---- MAINCONFIG ----
         mainConfigFile = Paths.get(planDesignerConfigFolder.toString(), MAIN_CONFIG_FILENAME + Configuration.FILE_ENDING).toFile();
         if (!mainConfigFile.exists()) {
             LOG.info(mainConfigFile.toString() + " does not exist!");
@@ -99,6 +133,28 @@ public final class ConfigurationManager {
                         LOG.error("Could not loadFromDisk " + conf.getName() + ".");
                     }
                 }
+            }
+        }
+
+        //---- WINDOWCONFIG ----
+        windowConfigFile = Paths.get(planDesignerConfigFolder.toString(), WINDOW_CONFIG_FILENAME + Configuration.FILE_ENDING).toFile();
+        if (!windowConfigFile.exists()) {
+            LOG.info(windowConfigFile.toString() + " does not exist!");
+
+            // loadFromDisk default values for mainConfig.properties
+            windowConfigProperties.setProperty(WINDOW_HEIGHT, "600");
+            windowConfigProperties.setProperty(WINDOW_WIDTH, "800");
+            windowConfigProperties.setProperty(WINDOW_X, "0");
+            windowConfigProperties.setProperty(WINDOW_Y, "0");
+        } else {
+            // loadFromDisk values from mainConfig.properties file in $HOME/.planDesigner/configurations.properties
+            try {
+                InputStream is = new FileInputStream(windowConfigFile);
+                windowConfigProperties.load(is);
+                is.close();
+            } catch (IOException e) {
+                LOG.fatal("Could not loadFromDisk " + windowConfigFile.toString() + " although it exists.", e);
+                e.printStackTrace();
             }
         }
 
@@ -249,5 +305,25 @@ public final class ConfigurationManager {
         } else {
             mainConfigProperties.setProperty(EDITOR_EXEC_PATH, editorExecutablePath);
         }
+    }
+
+    // WINDOW TOOLS
+    public void saveWindowPreferences(Double height, Double width, Double x, Double y) {
+        try {
+            windowConfigProperties.setProperty(WINDOW_HEIGHT, String.valueOf(height));
+            windowConfigProperties.setProperty(WINDOW_WIDTH, String.valueOf(width));
+            windowConfigProperties.setProperty(WINDOW_X, String.valueOf(x));
+            windowConfigProperties.setProperty(WINDOW_Y, String.valueOf(y));
+
+            // actual write to file
+            windowConfigProperties.store(new FileOutputStream(windowConfigFile), " Plan Designer - window configuration file");
+        } catch (IOException e) {
+            LOG.error("Could not save " + windowConfigFile.toString() + "!", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Properties getWindowPreferences() {
+        return windowConfigProperties;
     }
 }

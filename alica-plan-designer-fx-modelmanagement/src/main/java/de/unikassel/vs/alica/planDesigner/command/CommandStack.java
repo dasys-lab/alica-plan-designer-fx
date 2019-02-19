@@ -104,7 +104,7 @@ public class CommandStack extends Observable {
 //                .filter(e -> e.getAffectedPlan().getId() == abstractPlanId)
 //                .findFirst();
 //        if (abstractCommand.isPresent()) {
-//            abstractCommand.get().setSaved(true);
+//            abstractCommand.getPmlUiExtension().setSaved(true);
 //        }
 //    }
 

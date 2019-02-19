@@ -25,7 +25,7 @@ public class AddNewVariable extends AbstractCommand {
             throw new RuntimeException("AddNewVariable: The variable's parent element isn't a behaviour or a plan!");
         }
 
-        this.variable = new Variable();
+        this.variable = new Variable((AbstractPlan) parentPlanElement);
         this.variable.setName(mmq.getName());
     }
 

@@ -31,6 +31,10 @@ public class ParsedModelReferences {
 
     public ArrayList<Long> incompleteBendPointTransitions = new ArrayList<>(); // done
 
+    public ArrayList<Long> incompleteAbstractPlanInVariables = new ArrayList<>();
+
+    public ArrayList<Long> incompleteVariableInParametrisations = new ArrayList<>();
+
     public void setDefaultTaskId(long defaultTaskId) {
         this.defaultTaskId = defaultTaskId;
     }
@@ -68,6 +72,18 @@ public class ParsedModelReferences {
     public void addIncompleteBendPointTransition(long incompleteTransitionId) {
         if (!incompleteBendPointTransitions.contains(incompleteTransitionId)) {
             incompleteBendPointTransitions.add(incompleteTransitionId);
+        }
+    }
+
+    public void addIncompleteAbstractPlanInParametrisations(long incompleteAbstractPlanId) {
+        if (!incompleteAbstractPlanInVariables.contains(incompleteAbstractPlanId)) {
+            incompleteAbstractPlanInVariables.add(incompleteAbstractPlanId);
+        }
+    }
+
+    public void addIncompleteVariableInParametrisations(long incompleteVariableId) {
+        if (!incompleteVariableInParametrisations.contains(incompleteVariableId)) {
+            incompleteVariableInParametrisations.add(incompleteVariableId);
         }
     }
 }

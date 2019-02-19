@@ -4,8 +4,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtensionMap;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -14,14 +13,14 @@ public class DeleteAbstractPlan extends AbstractCommand {
 
     private String type;
     private Map<Plan, List<State>> referencedStateListForBackup;
-    private Map<PmlUiExtensionMap, List<PmlUiExtension>> referencesInStyleFiles;
+    private Map<HashMap<PlanElement, UiExtension>, List<UiExtension>> referencesInStyleFiles;
     private Map<PlanType, AnnotatedPlan> referencedAnnotatedPlansForBackup;
     private Map<Parametrisation, Variable> referencedParametrisationForBackup;
     private Path path;
     private AbstractPlan abstractPlan;
 
     // not always used
-    private PmlUiExtensionMap pmlUiExtensionMap;
+    //private PmlUiExtensionMap pmlUiExtensionMap;
 
     public DeleteAbstractPlan(ModelManager manager, AbstractPlan abstractPlan) {
         super(manager);
@@ -106,7 +105,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
             //TODO handle PmlUiExtentions in modelmanager?
 //            if (element instanceof PmlUiExtensionMap) {
 //                PmlUiExtensionMap pmlUiExtensionMap = (PmlUiExtensionMap) element;
-//                List<PmlUiExtension> pmlUiExtensions = pmlUiExtensionMap
+//                List<UiExtension> pmlUiExtensions = pmlUiExtensionMap
 //                        .getExtension()
 //                        .entrySet()
 //                        .stream()
@@ -138,14 +137,14 @@ public class DeleteAbstractPlan extends AbstractCommand {
         modelManager.removedPlanElement(Types.PLAN, abstractPlan, null, false);
 
         //TODO commads for file deletion
-//        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.get();
+//        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.getPmlUiExtension();
 //        switch (elementType) {
 //            case "plan":
 //                Pair<Plan, Path> planPathPair = RepositoryViewModel.getInstance().getPlans()
 //                        .stream()
 //                        .filter(e -> e.getKey().equals(elementToEdit))
 //                        .findFirst()
-//                        .get();
+//                        .getPmlUiExtension();
 //                path = planPathPair.getValue();
 //                RepositoryViewModel.getInstance().getPlans().remove(planPathPair);
 //                File pmlEx = new File(path.toFile().toString() + "ex");
@@ -155,8 +154,8 @@ public class DeleteAbstractPlan extends AbstractCommand {
 //                        .filter(e -> new File(path.toFile().toString() + "ex").toString()
 //                                .endsWith(e.getURI().toFileString()))
 //                        .collect(Collectors.toList());
-//                pmlUiExtensionMap = (PmlUiExtensionMap) pmlUiExt.get(0).getContents().get(0);
-//                AlicaResourceSet.getInstance().getResources().remove(pmlUiExt.get(0));
+//                pmlUiExtensionMap = (PmlUiExtensionMap) pmlUiExt.getPmlUiExtension(0).getContents().getPmlUiExtension(0);
+//                AlicaResourceSet.getInstance().getResources().remove(pmlUiExt.getPmlUiExtension(0));
 //                try {
 //                    Files.delete(planPathPair.getValue());
 //                    Files.delete(pmlEx.toPath());
@@ -172,7 +171,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
 //                        .stream()
 //                        .filter(e -> e.getKey().equals(elementToEdit))
 //                        .findFirst()
-//                        .get();
+//                        .getPmlUiExtension();
 //                path = planTypePathPair.getValue();
 //                RepositoryViewModel.getInstance().getPlans().remove(planTypePathPair);
 //                try {
@@ -186,7 +185,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
 //                        .stream()
 //                        .filter(e -> e.getKey().equals(elementToEdit))
 //                        .findFirst()
-//                        .get();
+//                        .getPmlUiExtension();
 //                path = behaviourPathPair.getValue();
 //                RepositoryViewModel.getInstance().getBehaviours().remove(behaviourPathPair);
 //                try {
@@ -239,8 +238,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
             referencesInStyleFiles
                     .entrySet()
                     .forEach(e -> {
-                        PmlUiExtensionMap key = e.getKey();
-                        e.getValue().forEach(f -> key.getExtension().put(abstractPlan, f));
+                        e.getValue().forEach(f -> e.getKey().put(abstractPlan, f));
                         // TODO introduce save command
 //                        try {
 //                            EMFModelUtils.saveAlicaFile(key);

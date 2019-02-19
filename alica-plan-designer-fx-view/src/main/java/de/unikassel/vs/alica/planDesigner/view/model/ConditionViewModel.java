@@ -1,15 +1,18 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.util.ArrayList;
 
 public class ConditionViewModel extends PlanElementViewModel {
 
-    protected StringProperty conditionString;
-    protected StringProperty pluginName;
-    protected BooleanProperty enabled;
+    protected StringProperty conditionString = new SimpleStringProperty(this, "conditionString", null);
+    protected StringProperty pluginName = new SimpleStringProperty(this, "pluginName", null);
+    protected BooleanProperty enabled = new SimpleBooleanProperty(this, "enabled", false);
     protected ArrayList<VariableViewModel> vars;
     protected ArrayList<QuantifierViewModel> quantifier;
 
@@ -61,5 +64,15 @@ public class ConditionViewModel extends PlanElementViewModel {
 
     public ArrayList<QuantifierViewModel> getQuantifier() {
         return quantifier;
+    }
+
+    @Override
+    public void registerListener(IGuiModificationHandler handler) {
+        super.registerListener(handler);
+        this.enabled.addListener((observable, oldValue, newValue) ->
+                fireGUIAttributeChangeEvent(handler, newValue, enabled.getClass().getSimpleName(), enabled.getName()));
+        this.conditionString.addListener((observable, oldValue, newValue) ->
+                fireGUIAttributeChangeEvent(handler, newValue, conditionString.getClass().getSimpleName()
+                        , conditionString.getName()));
     }
 }

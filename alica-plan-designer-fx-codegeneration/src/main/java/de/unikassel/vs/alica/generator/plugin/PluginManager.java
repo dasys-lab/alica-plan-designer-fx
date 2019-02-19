@@ -102,7 +102,7 @@ public class PluginManager {
                     Class c = classLoader.loadClass(className);
                     Object o = c.newInstance();
 
-                    // Only add the class, if it an instance of IPlugin.
+                    // Only put the class, if it an instance of IPlugin.
                     if (o instanceof IPlugin) {
                         ((IPlugin) o).setPluginFile(currentFile);
                         availablePlugins.put(className, (IPlugin<?>) o);

@@ -7,14 +7,12 @@ import javafx.scene.Node;
  * This interface defines functions for draggable editor elements.
  */
 public interface DraggableEditorElement {
-    //CommandStack getCommandStackForDrag();
-    //AbstractCommand createMoveElementCommand();
     void redrawElement();
     void setDragged(boolean dragged);
     boolean wasDragged();
     void makeDraggable(Node node);
 
-    ViewModelElement getModelElement();
+    ViewModelElement getViewModelElement();
 
     final class DragContext {
         public double mouseAnchorX;

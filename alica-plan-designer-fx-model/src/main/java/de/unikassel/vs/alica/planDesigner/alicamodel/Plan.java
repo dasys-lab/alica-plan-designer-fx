@@ -1,7 +1,10 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,14 +14,13 @@ public class Plan extends AbstractPlan implements HasVariables {
 
     protected final SimpleBooleanProperty masterPlan = new SimpleBooleanProperty();
     protected final SimpleDoubleProperty utilityThreshold = new SimpleDoubleProperty();
+    protected final ObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
+    protected final ObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
 
-    // TODO: probably need to make this conditions a simpleObjectProperty or something similar custom...
-    protected PreCondition preCondition;
-    protected RuntimeCondition runtimeCondition;
     protected final ArrayList<EntryPoint> entryPoints = new ArrayList<>();
     protected final ArrayList<State> states = new ArrayList<>();
     protected final ArrayList<Transition> transitions = new ArrayList<>();
-    protected final ArrayList<Synchronization> synchronizations = new ArrayList<>();
+    protected final ArrayList<Synchronisation> synchronisations = new ArrayList<>();
     protected final ArrayList<Variable> variables= new ArrayList<>();
 
     /**
@@ -59,17 +61,39 @@ public class Plan extends AbstractPlan implements HasVariables {
     }
 
     public PreCondition getPreCondition() {
-        return preCondition;
+        return preCondition.get();
     }
     public void setPreCondition(PreCondition preCondition) {
-        this.preCondition = preCondition;
+        this.preCondition.set(preCondition);
+        if(preCondition != null){
+            InvalidationListener dirty = obs -> this.setDirty(true);
+            preCondition.nameProperty().addListener(dirty);
+            preCondition.conditionStringProperty().addListener(dirty);
+            preCondition.enabledProperty().addListener(dirty);
+            preCondition.pluginNameProperty().addListener(dirty);
+            preCondition.commentProperty().addListener(dirty);
+        }
+    }
+    public ObjectProperty<PreCondition> preConditionProperty(){
+        return preCondition;
     }
 
     public RuntimeCondition getRuntimeCondition() {
-        return runtimeCondition;
+        return runtimeCondition.get();
     }
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
-        this.runtimeCondition = runtimeCondition;
+        this.runtimeCondition.set(runtimeCondition);
+        if(runtimeCondition != null){
+            InvalidationListener dirty = obs -> this.setDirty(true);
+            runtimeCondition.nameProperty().addListener(dirty);
+            runtimeCondition.conditionStringProperty().addListener(dirty);
+            runtimeCondition.enabledProperty().addListener(dirty);
+            runtimeCondition.pluginNameProperty().addListener(dirty);
+            runtimeCondition.commentProperty().addListener(dirty);
+        }
+    }
+    public ObjectProperty<RuntimeCondition> runtimeConditionProperty(){
+        return runtimeCondition;
     }
 
     public void addTransition(Transition transition) {
@@ -96,16 +120,19 @@ public class Plan extends AbstractPlan implements HasVariables {
         return Collections.unmodifiableList(states);
     }
 
-    public void addSynchronization(Synchronization synchronization) {
-        synchronizations.add(synchronization);
+    public void addSynchronization(Synchronisation synchronisation) {
+        synchronisations.add(synchronisation);
+        synchronisation.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+            this.setDirty(true);
+        });
         this.setDirty(true);
     }
-    public void removeSynchronization(Synchronization synchronization) {
-        synchronizations.remove(synchronization);
+    public void removeSynchronization(Synchronisation synchronisation) {
+        synchronisations.remove(synchronisation);
         this.setDirty(true);
     }
-    public List<Synchronization> getSynchronizations() {
-        return Collections.unmodifiableList(synchronizations);
+    public List<Synchronisation> getSynchronisations() {
+        return Collections.unmodifiableList(synchronisations);
     }
 
     public void addEntryPoint(EntryPoint entryPoint) {
@@ -147,13 +174,17 @@ public class Plan extends AbstractPlan implements HasVariables {
     @Override
     public void registerDirtyFlag() {
         super.registerDirtyFlag();
-        masterPlan.addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
+        masterPlan.addListener(         (observable, oldValue, newValue) -> this.setDirty(true));
+        utilityThreshold.addListener(   (observable, oldValue, newValue) -> this.setDirty(true));
+        preCondition.addListener(       (observable, oldValue, newValue) -> this.setDirty(true));
+        runtimeCondition.addListener(   (observable, oldValue, newValue) -> this.setDirty(true));
 
-        utilityThreshold.addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
+        for (Synchronisation synchronisation : synchronisations) {
+            synchronisation.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+                this.setDirty(true);
+            });
+        }
+
         for (Variable variable : variables) {
             variable.nameProperty().addListener((observable, oldValue, newValue) -> {
                 this.setDirty(true);
@@ -165,6 +196,8 @@ public class Plan extends AbstractPlan implements HasVariables {
                 this.setDirty(true);
             });
         }
+
+
         this.setDirty(false);
     }
 }

@@ -22,7 +22,7 @@ public class JSonSerializer {
         mapper.addMixIn(Plan.class, PlanMixIn.class);
         mapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
         mapper.addMixIn(State.class, StateMixIn.class);
-        mapper.addMixIn(Synchronization.class, SynchronizationMixIn.class);
+        mapper.addMixIn(Synchronisation.class, SynchronizationMixIn.class);
         mapper.addMixIn(Task.class, TaskMixIn.class);
         mapper.addMixIn(TaskRepository.class, TaskRepositoryMixIn.class);
         mapper.addMixIn(Transition.class, TransitionMixIn.class);
@@ -107,7 +107,7 @@ public class JSonSerializer {
 //        var.setQuantifierType("Variable Type String");
 //        var.setComment("Variable Comment String");
 //        var.setName("TestVariable");
-//        behaviour.getVariables().add(var);
+//        behaviour.getVariables().put(var);
 //
 //        PreCondition preCondition = new PreCondition();
 //        preCondition.setEnabled(true);
@@ -142,7 +142,7 @@ public class JSonSerializer {
 //        Role role = new Role();
 //        role.setName("TestRole");
 //        role.setComment("Role Comment String");
-//        role.getCharacteristics().add(charac);
+//        role.getCharacteristics().put(charac);
 
         try {
 

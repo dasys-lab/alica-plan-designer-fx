@@ -9,7 +9,6 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContai
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
-import de.unikassel.vs.alica.planDesigner.view.editor.tools.DraggableHBox;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
 import de.unikassel.vs.alica.planDesigner.view.model.EntryPointViewModel;
@@ -19,6 +18,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
@@ -78,7 +78,7 @@ public class InitTransitionTool extends AbstractTool {
                         }
                     }
 
-                    if (parent instanceof DraggableHBox || parent instanceof EditorToolBar || parent instanceof VBox) {
+                    if (parent instanceof ToggleButton || parent instanceof EditorToolBar || parent instanceof VBox) {
                         setCursor(Cursor.DEFAULT);
                     }
                 }
@@ -91,7 +91,7 @@ public class InitTransitionTool extends AbstractTool {
                     Node target = (Node) event.getTarget();
                     Parent parent = target.getParent();
 
-                    if (parent instanceof DraggableHBox) {
+                    if (parent instanceof ToggleButton) {
                         endTool();
                     }
 
@@ -113,10 +113,10 @@ public class InitTransitionTool extends AbstractTool {
                         GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.INITSTATECONNECTION, null);
 
                         HashMap<String, Long> relatedObjects = new HashMap<>();
-                        relatedObjects.put(StateViewModel.ENTRYPOINT, inEntryPoint.getModelElement().getId());
+                        relatedObjects.put(StateViewModel.ENTRYPOINT, inEntryPoint.getViewModelElement().getId());
                         relatedObjects.put(EntryPointViewModel.STATE, state.getId());
                         guiEvent.setRelatedObjects(relatedObjects);
-                        guiEvent.setParentId(InitTransitionTool.this.getPlanTab().getSerializableViewModel().getId());
+                        guiEvent.setParentId(InitTransitionTool.this.planTab.getSerializableViewModel().getId());
                         guiModificationHandler.handle(guiEvent);
                     }
                 }

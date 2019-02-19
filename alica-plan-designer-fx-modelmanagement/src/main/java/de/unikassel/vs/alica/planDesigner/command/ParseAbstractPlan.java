@@ -7,7 +7,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,7 +30,7 @@ public class ParseAbstractPlan extends AbstractCommand {
     @Override
     public void doCommand() {
         // 1. parse file
-        // 2. delete already existing object and add new one
+        // 2. delete already existing object and put new one
         try {
             switch (modelModificationQuery.getElementType()) {
                 case Types.PLAN:
@@ -75,21 +75,21 @@ public class ParseAbstractPlan extends AbstractCommand {
             Plan newPlan = (Plan) newElement;
             File uiExtensionFile = FileSystemUtil.getFile(modelModificationQuery.getAbsoluteDirectory()
                     , modelModificationQuery.getName(), FileSystemUtil.PLAN_EXTENSION_ENDING);
-            PlanModelVisualisationObject newPlanModelVisualisationObject;
+            PlanUiExtensionPair newPlanUiExtensionPair;
             try {
-                newPlanModelVisualisationObject= modelManager.parseFile(uiExtensionFile, PlanModelVisualisationObject.class);
+                newPlanUiExtensionPair = modelManager.parseFile(uiExtensionFile, PlanUiExtensionPair.class);
             } catch (FileNotFoundException e) {
-                // A plan does not necessarily need a PlanModelVisualisationObject, this FileNotFoundException therefore
+                // A plan does not necessarily need a PlanUiExtensionPair, this FileNotFoundException therefore
                 // can occur under normal conditions
-                newPlanModelVisualisationObject = null;
+                newPlanUiExtensionPair = null;
             }
 
-            if(newPlanModelVisualisationObject != null){
+            if(newPlanUiExtensionPair != null){
 
                 //If a visualisation was loaded, replace the old one and update the view
-                modelManager.replaceIncompletePlanElementsInPlanModelVisualisationObject(newPlanModelVisualisationObject);
-                modelManager.getPlanModelVisualisationObjectMap().put(modelModificationQuery.getElementId(), newPlanModelVisualisationObject);
-                modelManager.updatePlanModelVisualisationObject(newPlanModelVisualisationObject);
+                modelManager.replaceIncompletePlanElementsInPlanModelVisualisationObject(newPlanUiExtensionPair);
+                modelManager.getPlanModelVisualisationObjectMap().put(modelModificationQuery.getElementId(), newPlanUiExtensionPair);
+                modelManager.updatePlanModelVisualisationObject(newPlanUiExtensionPair);
             }
 
             if(newPlan.getMasterPlan()) {

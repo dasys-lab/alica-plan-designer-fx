@@ -11,8 +11,8 @@ public class Condition extends PlanElement {
     protected final SimpleStringProperty pluginName = new SimpleStringProperty();
     protected final SimpleBooleanProperty enabled = new SimpleBooleanProperty();
 
-    protected ArrayList<Variable> vars;
-    protected ArrayList<Quantifier> quantifier;
+    protected ArrayList<Variable> vars = new ArrayList<>();
+    protected ArrayList<Quantifier> quantifier = new ArrayList<>();
 
     public boolean getEnabled () {
         return enabled.get();

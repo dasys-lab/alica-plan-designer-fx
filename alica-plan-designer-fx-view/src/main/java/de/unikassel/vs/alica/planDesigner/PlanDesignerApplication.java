@@ -2,27 +2,29 @@ package de.unikassel.vs.alica.planDesigner;
 
 import de.unikassel.vs.alica.planDesigner.controller.IsDirtyWindowController;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
+import de.unikassel.vs.alica.planDesigner.events.ConfigEvent;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IConfigurationEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class PlanDesignerApplication extends Application {
     public static final String forbiddenCharacters = ".*[\\./\\*\\\\$§?\\[\\]!{}\\-äüö#\"%~'ÄÖÜß@,]+.*";
 
     private static Stage primaryStage;
+    private static MainWindowController mainWindowController;
 
     public static Stage getPrimaryStage() {
         return primaryStage;
@@ -46,7 +48,7 @@ public class PlanDesignerApplication extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("mainWindow.fxml"));
         // The next two lines replace this attribute in mainWindow.fxml::AnchorPane "fx:controller="MainWindowController"
-        MainWindowController mainWindowController = MainWindowController.getInstance();
+        mainWindowController = MainWindowController.getInstance();
         fxmlLoader.setController(mainWindowController);
         fxmlLoader.setClassLoader(getClass().getClassLoader());
         Parent root = fxmlLoader.load();
@@ -64,6 +66,14 @@ public class PlanDesignerApplication extends Application {
                 }
             }
         });
+
+        IConfigurationEventHandler configEventHandler = mainWindowController.getConfigWindowController().getConfigEventHandler();
+        HashMap<String, Double> params = configEventHandler.getPreferredWindowSettings();
+        primaryStage.setHeight(params.get("height"));
+        primaryStage.setWidth(params.get("width"));
+        primaryStage.setX(params.get("x"));
+        primaryStage.setY(params.get("y"));
+
 
         Scene scene = new Scene(root);
         String cssPath = PlanDesignerApplication.class.getResource("/styles.css").toExternalForm();
@@ -84,13 +94,26 @@ public class PlanDesignerApplication extends Application {
             }
         });
 
-        Screen screen = Screen.getPrimary();
-        Rectangle2D bounds = screen.getVisualBounds();
-
-        primaryStage.setX(bounds.getMinX());
-        primaryStage.setY(bounds.getMinY());
-        primaryStage.setWidth(bounds.getWidth());
-        primaryStage.setHeight(bounds.getHeight());
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        double height = getPrimaryStage().getHeight();
+        double width = getPrimaryStage().getWidth();
+        double x = getPrimaryStage().getX();
+        double y = getPrimaryStage().getY();
+
+        HashMap<String, Double> params = new HashMap<>();
+        params.put("height", height);
+        params.put("width", width);
+        params.put("x", x);
+        params.put("y", y);
+
+        IConfigurationEventHandler configEventHandler = mainWindowController.getConfigWindowController().getConfigEventHandler();
+        ConfigEvent configEvent = new ConfigEvent(ConfigEvent.WINDOW_SETTINGS);
+        configEvent.setParameters(params);
+        configEventHandler.handlePreferredWindowSettings(configEvent);
     }
 }

@@ -1,7 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -86,11 +85,11 @@ public class TransitionTool extends AbstractTool {
                             relatedObjects.put(TransitionViewModel.OUTSTATE, outState.getId());
 
                             guiEvent.setRelatedObjects(relatedObjects);
-                            guiEvent.setParentId(TransitionTool.this.getPlanTab().getSerializableViewModel().getId());
+                            guiEvent.setParentId(TransitionTool.this.planTab.getSerializableViewModel().getId());
                             handler.handle(guiEvent);
 
                             long transitionID = 0;
-                            for (TransitionViewModel transition : ((PlanViewModel) TransitionTool.this.getPlanTab().getSerializableViewModel()).getTransitions()) {
+                            for (TransitionViewModel transition : ((PlanViewModel) TransitionTool.this.planTab.getSerializableViewModel()).getTransitions()) {
                                 if (transition.getOutState().getId() == outState.getId()
                                         && transition.getInState().getId() == inState.getId()) {
                                     transitionID = transition.getId();
@@ -98,10 +97,10 @@ public class TransitionTool extends AbstractTool {
                             }
 
                             for (Point2D point : bendPoints) {
-                                GuiChangePositionEvent bendEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.BENDPOINT, null);
-                                bendEvent.setNewX((int) point.getX());
-                                bendEvent.setNewY((int) point.getY());
-                                bendEvent.setParentId(TransitionTool.this.getPlanTab().getSerializableViewModel().getId());
+                                GuiModificationEvent bendEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.BENDPOINT, null);
+                                bendEvent.setX((int) point.getX());
+                                bendEvent.setY((int) point.getY());
+                                bendEvent.setParentId(TransitionTool.this.planTab.getSerializableViewModel().getId());
                                 HashMap<String, Long> related = new HashMap<>();
                                 related.put(Types.TRANSITION, transitionID);
                                 bendEvent.setRelatedObjects(related);

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PreCondition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronization;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.deserialization.TransitionStateDeserializer;
 import de.unikassel.vs.alica.planDesigner.deserialization.TransitionSynchronizationDeserializer;
 import de.unikassel.vs.alica.planDesigner.serialization.InternalRefSerializer;
@@ -19,5 +19,5 @@ public abstract class TransitionMixIn {
     protected PreCondition preCondition;
     @JsonSerialize(using = InternalRefSerializer.class)
     @JsonDeserialize(using = TransitionSynchronizationDeserializer.class)
-    protected Synchronization synchronization;
+    protected Synchronisation synchronisation;
 }

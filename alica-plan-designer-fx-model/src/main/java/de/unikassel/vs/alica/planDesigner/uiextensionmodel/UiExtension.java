@@ -5,7 +5,7 @@ import javafx.beans.property.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class PmlUiExtension extends PositionedElement {
+public class UiExtension extends PositionedElement {
 
     // ID of the plan, this pmlUIExtension object helps to layout its elements in the Plan Designer
     protected final SimpleLongProperty layoutedModelElementId = new SimpleLongProperty();
@@ -16,7 +16,7 @@ public class PmlUiExtension extends PositionedElement {
 
     protected LinkedList<BendPoint> bendPoints;
 
-    public PmlUiExtension() {
+    public UiExtension() {
         bendPoints = new LinkedList<>();
     }
 

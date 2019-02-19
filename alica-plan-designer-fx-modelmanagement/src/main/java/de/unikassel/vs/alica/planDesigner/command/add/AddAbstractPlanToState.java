@@ -7,21 +7,22 @@ import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class AddAbstractPlanToState extends AbstractCommand {
     protected State state;
     protected AbstractPlan abstractPlan;
 
-    public AddAbstractPlanToState(ModelManager modelManager, AbstractPlan abstractPlan, State state) {
+    public AddAbstractPlanToState(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
-        this.abstractPlan = abstractPlan;
-        this.state = state;
+        this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getElementId());
+        this.state = (State) modelManager.getPlanElement(mmq.getTargetID());
     }
 
     @Override
     public void doCommand() {
-        //Don't add AbstractPlan, if the same existing
+        //Don't put AbstractPlan, if the same existing
         for (AbstractPlan existingAbstractPlan: state.getPlans()) {
             if (existingAbstractPlan.getId() == abstractPlan.getId()) {
                 return;
@@ -31,8 +32,7 @@ public class AddAbstractPlanToState extends AbstractCommand {
         state.addAbstractPlan(abstractPlan);
 
         //event for updateView
-        Plan plan = (Plan) state.getParentPlan();
-        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ADD, plan, Types.ABSTRACTPLAN);
+        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ADD, (Plan) state.getParentPlan(), Types.ABSTRACTPLAN);
         event.setParentId(abstractPlan.getId());
         event.setNewValue(state);
         modelManager.fireEvent(event);

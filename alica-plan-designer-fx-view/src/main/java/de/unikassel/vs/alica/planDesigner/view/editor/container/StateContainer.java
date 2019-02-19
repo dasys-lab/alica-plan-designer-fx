@@ -26,15 +26,8 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
     private List<AbstractPlanHBox> statePlans;
     private StateViewModel state;
 
-    /**
-     * This constructor is for dummy containers. NEVER use in real UI
-     */
-    public StateContainer() {
-        super(null, null, null);
-    }
-
-    public StateContainer(/*PmlUiExtension pmlUiExtension,*/ StateViewModel state, PlanTab planTab) {
-        super(state, /*pmlUiExtension,*/null, planTab);
+    public StateContainer(StateViewModel state, PlanTab planTab) {
+        super(state, null, planTab);
         this.state = state;
         this.statePlans = new ArrayList<>();
         invalidationListeners = new ArrayList<>();

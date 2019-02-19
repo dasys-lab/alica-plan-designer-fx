@@ -30,9 +30,9 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
     protected PropertySheet propertySheet;
     protected Tab propertiesTab;
     protected VariablesTab variablesTab;
-    protected Tab preConditionTab;
-    protected Tab runtimeConditionTab;
-    protected Tab postConditionTab;
+    protected ConditionsTab preConditionTab;
+    protected ConditionsTab runtimeConditionTab;
+    protected ConditionsTab postConditionTab;
 
     protected IGuiModificationHandler guiModificationHandler;
 
@@ -46,9 +46,9 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
         propertiesTab = new Tab(i18NRepo.getString("label.caption.properties"));
         propertiesTab.setContent(propertySheet);
         variablesTab = new VariablesTab(guiModificationHandler);
-        preConditionTab = new Tab(i18NRepo.getString("label.caption.preCondtions"));
-        runtimeConditionTab = new Tab(i18NRepo.getString("label.caption.runtimeCondtions"));
-        postConditionTab = new Tab(i18NRepo.getString("label.caption.postCondtions"));
+        preConditionTab     = new ConditionsTab(i18NRepo.getString("label.caption.preCondtions")    , Types.PRECONDITION);
+        runtimeConditionTab = new ConditionsTab(i18NRepo.getString("label.caption.runtimeCondtions"), Types.RUNTIMECONDITION);
+        postConditionTab    = new ConditionsTab(i18NRepo.getString("label.caption.postCondtions")   , Types.POSTCONDITION);
 
         this.tabPane = new TabPane();
         this.tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -67,6 +67,7 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
         setGraphic(new ImageView(new AlicaIcon(element.getType(), AlicaIcon.Size.SMALL)));
 
         adaptUI(element.getType());
+        adaptConditions(element);
         variablesTab.setParentViewModel(element);
 
         propertySheet.getItems().clear();
@@ -110,6 +111,12 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
                 }
                 break;
         }
+    }
+
+    private void adaptConditions(ViewModelElement element){
+        preConditionTab.setViewModelElement(element);
+        runtimeConditionTab.setViewModelElement(element);
+        postConditionTab.setViewModelElement(element);
     }
 
 

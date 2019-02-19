@@ -2,27 +2,28 @@ package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.AbstractUiPositionCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanModelVisualisationObject;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PmlUiExtension;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
-public class DeleteTransitionInPlan extends AbstractCommand{
+public class DeleteTransitionInPlan extends AbstractUiPositionCommand{
 
-    private final PlanModelVisualisationObject parentOfElement;
-    private PmlUiExtension pmlUiExtension;
+    private final PlanUiExtensionPair parentOfElement;
+    private UiExtension uiExtension;
     private State inState;
     private State outState;
     private Transition transition;
 
-    public DeleteTransitionInPlan(ModelManager manager, Transition transition, PlanModelVisualisationObject parentOfElement) {
-        super(manager);
-        this.parentOfElement = parentOfElement;
-        this.transition = transition;
+    public DeleteTransitionInPlan(ModelManager manager, ModelModificationQuery mmq) {
+        super(manager, mmq);
+        this.parentOfElement = this.modelManager.getPlanUIExtensionPair(mmq.getParentId());
+        this.transition = (Transition) this.modelManager.getPlanElement(mmq.getElementId());
     }
 
     private void saveForLaterRetrieval() {
-        pmlUiExtension = parentOfElement.getPmlUiExtensionMap().getExtension().get(transition);
+        uiExtension = parentOfElement.getUiExtension(transition);
         outState = transition.getOutState();
         inState = transition.getInState();
     }
@@ -32,7 +33,7 @@ public class DeleteTransitionInPlan extends AbstractCommand{
         saveForLaterRetrieval();
 
         parentOfElement.getPlan().getTransitions().remove(transition);
-        parentOfElement.getPmlUiExtensionMap().getExtension().remove(transition);
+        parentOfElement.remove(transition);
         transition.setInState(null);
         transition.setOutState(null);
     }
@@ -40,7 +41,9 @@ public class DeleteTransitionInPlan extends AbstractCommand{
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().getTransitions().add(transition);
-        parentOfElement.getPmlUiExtensionMap().getExtension().put(transition, pmlUiExtension);
+        this.uiExtension = parentOfElement.getUiExtension(this.transition);
+        this.uiExtension.setX(this.x);
+        this.uiExtension.setY(this.y);
         transition.setInState(inState);
         transition.setOutState(outState);
     }

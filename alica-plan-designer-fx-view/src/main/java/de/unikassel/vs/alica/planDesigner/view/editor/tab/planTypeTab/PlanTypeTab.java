@@ -3,13 +3,12 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab;
 import de.unikassel.vs.alica.planDesigner.events.GuiChangeAttributeEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
-import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryHBox;
+import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryLabel;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
@@ -32,9 +31,9 @@ public class PlanTypeTab extends AbstractPlanTab {
     private Button saveButton;
 
     private TableView<AnnotatedPlanView> planTypeTableView;
-    private ListView<RepositoryHBox> planListView;
+    private ListView<RepositoryLabel> planListView;
 
-    private Comparator<RepositoryHBox> repositoryHBoxComparator;
+    private Comparator<RepositoryLabel> repositoryHBoxComparator;
     private Comparator<ViewModelElement> viewModelElementComparator;
 
     public PlanTypeTab(SerializableViewModel planType, EditorTabPane editorTabPane) {
@@ -45,8 +44,8 @@ public class PlanTypeTab extends AbstractPlanTab {
 
     private void draw() {
         // instantiate gui objects
-        this.repositoryHBoxComparator = Comparator.comparing(planRepositoryHBox -> !planRepositoryHBox.getViewModelType().equals(Types.MASTERPLAN));
-        this.repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryHBox -> planRepositoryHBox.getViewModelName());
+        this.repositoryHBoxComparator = Comparator.comparing(planRepositoryLabel -> !planRepositoryLabel.getViewModelType().equals(Types.MASTERPLAN));
+        this.repositoryHBoxComparator = repositoryHBoxComparator.thenComparing(planRepositoryLabel -> planRepositoryLabel.getViewModelName());
         this.viewModelElementComparator = Comparator.comparing(annotatedPlan -> !annotatedPlan.getType().equals(Types.MASTERPLAN));
         this.viewModelElementComparator = viewModelElementComparator.thenComparing(annotatedPlan -> annotatedPlan.getName());
 
@@ -182,8 +181,8 @@ public class PlanTypeTab extends AbstractPlanTab {
             if (planTypeViewModel.containsPlan(plan.getId())) {
                 continue;
             }
-            RepositoryHBox planRepositoryHBox = new RepositoryHBox(plan, guiModificationHandler);
-            planListView.getItems().add(planRepositoryHBox);
+            RepositoryLabel planRepositoryLabel = new RepositoryLabel(plan, guiModificationHandler);
+            planListView.getItems().add(planRepositoryLabel);
             planListView.getItems().sort(repositoryHBoxComparator);
         }
         planTypeViewModel.getAllPlans().addListener(new ListChangeListener<ViewModelElement>() {
@@ -196,15 +195,15 @@ public class PlanTypeTab extends AbstractPlanTab {
                             continue;
                         }
 
-                        RepositoryHBox planRepositoryHBox = new RepositoryHBox(element, guiModificationHandler);
+                        RepositoryLabel planRepositoryLabel = new RepositoryLabel(element, guiModificationHandler);
                         Platform.runLater(() -> {
-                            planListView.getItems().add(planRepositoryHBox);
+                            planListView.getItems().add(planRepositoryLabel);
                             planListView.getItems().sort(repositoryHBoxComparator);
                         });
                     }
                 } else if (c.wasRemoved()) {
                     for (ViewModelElement element : c.getRemoved()) {
-                        for (RepositoryHBox plan : planListView.getItems()) {
+                        for (RepositoryLabel plan : planListView.getItems()) {
                             if (plan.getViewModelId() == element.getId()) {
                                 Platform.runLater(() -> {
                                     planListView.getItems().remove(plan);

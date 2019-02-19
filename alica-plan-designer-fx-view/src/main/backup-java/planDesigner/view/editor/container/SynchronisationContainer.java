@@ -62,7 +62,7 @@ public class SynchronisationContainer extends AbstractPlanElementContainer<Synch
         setLayoutY(getPmlUiExtension().getYPos());
         visualRepresentation = new Circle(StateContainer.STATE_RADIUS, getVisualisationColor());
         setEffectToStandard();
-        ((Circle)visualRepresentation).setFill(new ImagePattern(new AlicaIcon("synchronization", Size.SYNC))));
+        ((Circle)visualRepresentation).setFill(new ImagePattern(new AlicaIcon("synchronisation", Size.SYNC))));
         Text e = new Text(getModelElementId().getName());
         getChildren().add(e);
         e.setLayoutX(e.getLayoutX() - e.getLayoutBounds().getWidth()/2);

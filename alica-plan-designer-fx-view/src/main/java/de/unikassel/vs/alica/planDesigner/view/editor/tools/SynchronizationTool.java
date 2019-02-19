@@ -1,10 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiChangePositionEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
@@ -19,9 +18,6 @@ import javafx.scene.layout.StackPane;
 
 public class SynchronizationTool extends AbstractTool {
 
-    private Node visualRepresentation;
-    private boolean initial = true;
-
     public SynchronizationTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
     }
@@ -29,17 +25,16 @@ public class SynchronizationTool extends AbstractTool {
     @Override
     public ToolButton createToolUI() {
         ToolButton toolButton = new ToolButton();
-        toolButton.setIcon(Types.SYNCHRONIZATION);
+        toolButton.setIcon(Types.SYNCHRONISATION);
         setToolButton(toolButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.synchronization);
-        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synchronization);
-        addCursor = new AlicaCursor(AlicaCursor.Type.add_synchronization);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.synchronisation);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synchronisation);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_synchronisation);
         return toolButton;
     }
 
     @Override
     protected void initHandlerMap() {
-        I18NRepo i18NRepo = I18NRepo.getInstance();
 
         if (customHandlerMap.isEmpty()) {
             customHandlerMap.put(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
@@ -71,88 +66,14 @@ public class SynchronizationTool extends AbstractTool {
 
                     IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
-                    GuiChangePositionEvent guiEvent = new GuiChangePositionEvent(GuiEventType.ADD_ELEMENT, Types.SYNCHRONIZATION, "Sync Default");
+                    GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.SYNCHRONISATION, "Sync Default");
                     guiEvent.setComment("");
-                    guiEvent.setNewX((int) eventTargetCoordinates.getX());
-                    guiEvent.setNewY((int) eventTargetCoordinates.getY());
-                    guiEvent.setParentId(getPlanTab().getSerializableViewModel().getId());
+                    guiEvent.setX((int) eventTargetCoordinates.getX());
+                    guiEvent.setY((int) eventTargetCoordinates.getY());
+                    guiEvent.setParentId(planTab.getSerializableViewModel().getId());
                     handler.handle(guiEvent);
                 }
             });
         }
-
-        /*
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
-                @Override
-                public void handle(MouseDragEvent event) {
-//                    localCoord = null;
-//                    if (updateLocalCoords(event)) return;
-//
-//                    double x = localCoord.getX();
-//                    double y = localCoord.getY();
-//                    if (initial) {
-//                        visualRepresentation.setLayoutX(x);
-//                        visualRepresentation.setLayoutY(y);
-//                        initial = false;
-//                    }
-//
-//                    visualRepresentation.setTranslateX(x);
-//                    visualRepresentation.setTranslateY(y);
-//
-//                    if (event.getGestureSource() != planEditorTabPane) {
-//                        visualRepresentation.setTranslateX(x);
-//                        visualRepresentation.setTranslateY(y);
-//                    }
-//                    System.out.println("X: " + x + " Y: " + y);
-//                    event.consume();
-                }
-            });
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_ENTERED, new EventHandler<MouseDragEvent>() {
-                @Override
-                public void handle(MouseDragEvent event) {
-//                    updateLocalCoords(event);
-//                    if (event.getGestureSource() != planEditorTabPane && visualRepresentation == null) {
-//                        visualRepresentation = new Circle(localCoord.getX(),localCoord.getY(), 10, new StateContainer().getVisualisationColor());
-//                        ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().add(visualRepresentation);
-//                    }
-                    event.consume();
-                }
-            });
-
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_EXITED, new EventHandler<MouseDragEvent>() {
-                @Override
-                public void handle(MouseDragEvent event) {
-//                    ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
-                    visualRepresentation = null;
-                }
-            });
-
-
-            customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_RELEASED, new EventHandler<MouseDragEvent>() {
-                @Override
-                public void handle(MouseDragEvent event) {
-                    if (((Node)event.getTarget()).getParent() instanceof AbstractPlanElementContainer == false &&
-                            event.getTarget() instanceof StackPane == false) {
-                        event.consume();
-                        endTool();
-                        return;
-                    }
-//                    ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getChildren().remove(visualRepresentation);
-//                    PlanModelVisualisationObject planModelVisualisationObject = ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().getPlanModelVisualisationObject();
-//                    AddSynchronisationToPlan command = new AddSynchronisationToPlan(createNewObject(),
-//                            planModelVisualisationObject);
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(command);
-//                    MainWindowController.getInstance()
-//                            .getCommandStack()
-//                            .storeAndExecute(new ChangePosition(command.getNewlyCreatedPmlUiExtension(), command.getElementToEdit(),
-//                                    (int) (localCoord.getX()),
-//                                    (int) (localCoord.getY()), planModelVisualisationObject.getPlanViewModel()));
-//                    endTool();
-                    initial = true;
-                }
-            });
-        }*/
     }
 }

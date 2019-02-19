@@ -7,7 +7,7 @@ public class Transition extends  PlanElement {
     protected State inState;
     protected State outState;
     protected PreCondition preCondition;
-    protected Synchronization synchronization;
+    protected Synchronisation synchronisation;
 
     public Transition(long id) {
         this.id = id;
@@ -33,12 +33,12 @@ public class Transition extends  PlanElement {
         this.outState = outState;
     }
 
-    public Synchronization getSynchronization() {
-        return synchronization;
+    public Synchronisation getSynchronisation() {
+        return synchronisation;
     }
 
-    public void setSynchronization(Synchronization synchronization) {
-        this.synchronization = synchronization;
+    public void setSynchronisation(Synchronisation synchronisation) {
+        this.synchronisation = synchronisation;
     }
 
     public PreCondition getPreCondition() {
