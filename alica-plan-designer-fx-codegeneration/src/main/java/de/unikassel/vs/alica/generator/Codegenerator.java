@@ -123,7 +123,6 @@ public class Codegenerator {
             generate((Behaviour) abstractPlan);
         } else {
             LOG.error("Nothing to generate for something else than a plan or behaviour!");
-            return;
         }
     }
 

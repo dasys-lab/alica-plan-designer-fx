@@ -5,6 +5,12 @@ import de.unikassel.vs.alica.generator.IGenerator;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+/**
+ * IF the following line is not import de.unikassel.vs.alica.generator.cpp.XtendTemplates;
+ * you messed it up ... great ... you made the plandesigner great again ... huge ...
+ * INSERT IT
+ */
+import de.unikassel.vs.alica.generator.cpp.XtendTemplates;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,14 +33,14 @@ import java.util.function.Function;
 public class CPPGeneratorImpl implements IGenerator {
 
     private static final Logger LOG = LogManager.getLogger(CPPGeneratorImpl.class);
-    private de.unikassel.vs.alica.generator.cpp.XtendTemplates xtendTemplates;
+    private XtendTemplates xtendTemplates;
 
     private GeneratedSourcesManager generatedSourcesManager;
     private String formatter;
 
     public CPPGeneratorImpl(GeneratedSourcesManager generatedSourcesManager) {
         this.generatedSourcesManager = generatedSourcesManager;
-        xtendTemplates = new de.unikassel.vs.alica.generator.cpp.XtendTemplates();
+        xtendTemplates = new XtendTemplates();
     }
 
     /**

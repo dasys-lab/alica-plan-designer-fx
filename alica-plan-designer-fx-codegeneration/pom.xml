@@ -52,7 +52,7 @@
                     </goals>
                     <configuration>
                         <sources>
-                            <source>${project.build.directory}/xtend-gen/main/de/unikassel/vs/alica/generator/cpp</source>
+                            <source>${project.build.directory}/xtend-gen/main/de/unikassel/vs/alica/generator/cpp/</source>
                         </sources>
                     </configuration>
                 </execution>

@@ -1,5 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
@@ -231,11 +233,14 @@ public class MainWindowController implements Initializable {
         });
 
         generateCurrentFile.setOnAction(e -> {
-            long modelElementId = ((AbstractPlanTab) editorTabPane
-                    .getSelectionModel().getSelectedItem()).getSerializableViewModel().getId();
+            ViewModelElement modelElement = ((AbstractPlanTab) editorTabPane
+                    .getSelectionModel().getSelectedItem()).getSerializableViewModel();
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
 //            	waitOnProgressWindow(() -> new Codegenerator().generate(modelElementId));
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ELEMENT, modelElement.getType(), modelElement.getName());
+                event.setElementId(modelElement.getId());
+                this.guiModificationHandler.generateCode(event);
             } catch (RuntimeException ex) {
                 LOG.error("error while generating code", ex);
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
@@ -244,6 +249,8 @@ public class MainWindowController implements Initializable {
         generateItem.setOnAction(e -> {
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, "", "");
+                this.guiModificationHandler.generateCode(event);
 //            	waitOnProgressWindow(() -> new Codegenerator().generate());
             } catch (RuntimeException ex) {
                 LOG.error("error while generating code", ex);

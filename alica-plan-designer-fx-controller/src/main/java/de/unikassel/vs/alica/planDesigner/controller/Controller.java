@@ -1,8 +1,10 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
+import de.unikassel.vs.alica.generator.Codegenerator;
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
+import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
@@ -121,6 +123,32 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     // HANDLER EVENT METHODS
+
+    /**
+     * Handles Codegeneration events
+     *
+     * @param event
+     */
+    public void generateCode(GuiModificationEvent event) {
+        Codegenerator codegenerator = new Codegenerator(
+                modelManager.getPlans(),
+                modelManager.getBehaviours(),
+                modelManager.getConditions(),
+                configurationManager.getClangFormatPath(),
+                generatedSourcesManager.getSrcDir(),
+                generatedSourcesManager);
+        switch (event.getEventType()) {
+            case GENERATE_ELEMENT:
+                codegenerator.generate((AbstractPlan) modelManager.getPlanElement(event.getElementId()));
+                break;
+            case GENERATE_ALL_ELEMENTS:
+                codegenerator.generate();
+                break;
+            default:
+                System.out.println("Controller.generateCode(): Event type " + event.getEventType() + " is not handled.");
+                break;
+        }
+    }
 
     /**
      * Handles events fired by the model manager, when the model has changed.
@@ -345,7 +373,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     uimmq.setName(event.getName());
                     uimmq.setComment(event.getComment());
                     mmq = uimmq;
-                } else if(event instanceof GuiModificationEventExpanded) {
+                } else if (event instanceof GuiModificationEventExpanded) {
                     mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
                     mmq.setElementId(event.getElementId());
                     mmq.setElementType(event.getElementType());
@@ -395,6 +423,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq = new ModelModificationQuery(ModelQueryType.MOVE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
                 mmq.setElementId(event.getElementId());
                 break;
+            case GENERATE_ELEMENT:
+            case GENERATE_ALL_ELEMENTS:
+                mmq = null;
+                break;
             default:
                 mmq = null;
         }
@@ -429,7 +461,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     public void handleFileSystemEvent(WatchEvent event, Path path) {
         // A change in a sub-directory also creates an event for the parent-directory. This event must be ignored,
         // because its filename is only the name of the subdirectory
-        if(!path.toFile().isFile()){
+        if (!path.toFile().isFile()) {
             return;
         }
 

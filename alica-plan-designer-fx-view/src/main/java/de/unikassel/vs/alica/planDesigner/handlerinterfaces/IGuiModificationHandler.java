@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public interface IGuiModificationHandler {
     void handle(GuiModificationEvent event);
+    void generateCode(GuiModificationEvent event);
     ArrayList<ViewModelElement> getUsages(ViewModelElement viewModelElement);
     ViewModelElement getViewModelElement(long id);
     void handleUndo();

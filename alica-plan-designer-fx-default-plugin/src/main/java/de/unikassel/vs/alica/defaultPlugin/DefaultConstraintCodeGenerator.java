@@ -3,17 +3,23 @@ package de.unikassel.vs.alica.defaultPlugin;
 import de.unikassel.vs.alica.generator.IConstraintCodeGenerator;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
+/**
+ * IF the following line is not import de.unikassel.vs.alica.defaultPlugin.DefaultTemplate;
+ * you messed it up ... great ... you made the plandesigner great again ... huge ...
+ * INSERT IT
+ */
+import de.unikassel.vs.alica.defaultPlugin.DefaultTemplate;
 
 import java.util.Map;
 
 /**
- * Glue Code for calling {@link de.unikassel.vs.alica.defaultPlugin.DefaultTemplate}.
+ * Glue Code for calling {@link DefaultTemplate}.
  */
 public class DefaultConstraintCodeGenerator implements IConstraintCodeGenerator {
-    private de.unikassel.vs.alica.defaultPlugin.DefaultTemplate defaultTemplate;
+    private DefaultTemplate defaultTemplate;
 
     public DefaultConstraintCodeGenerator() {
-        defaultTemplate = new de.unikassel.vs.alica.defaultPlugin.DefaultTemplate();
+        defaultTemplate = new DefaultTemplate();
     }
 
     public void setProtectedRegions(Map<String, String> protectedRegions) {

@@ -3,6 +3,8 @@ package de.unikassel.vs.alica.defaultPlugin;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan
 import de.unikassel.vs.alica.planDesigner.alicamodel.State
 import java.util.Map
+import java.util.List
+import de.unikassel.vs.alica.planDesigner.alicamodel.EntryPoint
 
 class DefaultTemplate {
 
@@ -14,7 +16,7 @@ class DefaultTemplate {
 
     def String expressionsStateCheckingMethods(State state) '''
 «FOR transition : state.outTransitions»
-«IF (transition.preCondition.pluginName == "DefaultPlugin")»
+«IF (transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin")»
 			/*
 			*
 			* Transition:
@@ -23,10 +25,12 @@ class DefaultTemplate {
 			* Plans in State: «FOR plan : state.plans»
 			*   - Plan - (Name): «plan.name», (PlanID): «plan.id» «ENDFOR»
 			*
-			* Tasks: «FOR planEntryPoint : state.parentPlan.entryPoints»
+			* Tasks: «var  List<EntryPoint> entryPoints = state.parentPlan.entryPoints»
+			*     «FOR planEntryPoint : entryPoints»
 			*   - «planEntryPoint.task.name» («planEntryPoint.task.id») (Entrypoint: «planEntryPoint.id»)«ENDFOR»
 			*
-			* States:«FOR stateOfInPlan : state.parentPlan.states»
+			* States: «var  List<State> states = state.parentPlan.states»
+			*     «FOR stateOfInPlan : states»
 			*   - «stateOfInPlan.name» («stateOfInPlan.id»)«ENDFOR»
 			*
 			* Vars:«FOR variable : transition.preCondition.variables»
@@ -139,7 +143,7 @@ void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ProblemDescrip
     def String constraintStateCheckingMethods(State state) '''
 // State: «state.name»
 «FOR transition : state.outTransitions»
-«IF (transition.preCondition.pluginName == "DefaultPlugin" && transition.preCondition.variables.size > 0)»
+«IF (transition.preCondition != null && transition.preCondition.pluginName == "DefaultPlugin" && transition.preCondition.variables.size > 0)»
 /*
 * Transition:
 * - Name: «transition.preCondition.name»
