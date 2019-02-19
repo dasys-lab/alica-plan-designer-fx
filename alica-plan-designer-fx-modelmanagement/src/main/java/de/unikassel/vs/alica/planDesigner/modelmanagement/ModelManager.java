@@ -1122,7 +1122,7 @@ public class ModelManager implements Observer {
                         cmd = new CreateTask(this, mmq);
                         break;
                     case Types.VARIABLE:
-                        cmd = new AddNewVariable(this, mmq);
+                        cmd = new AddVariable(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
