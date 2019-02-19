@@ -134,7 +134,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 modelManager.getBehaviours(),
                 modelManager.getConditions(),
                 configurationManager.getClangFormatPath(),
-                generatedSourcesManager.getSrcDir(),
+                configurationManager.getActiveConfiguration().getGenSrcPath(),
                 generatedSourcesManager);
         switch (event.getEventType()) {
             case GENERATE_ELEMENT:
