@@ -1236,6 +1236,7 @@ public class ModelManager implements Observer {
                 break;
             case CHANGE_ELEMENT:
                 switch (mmq.getElementType()) {
+                    // TODO probably does not work, if you change the comment of a sync transition
                     case Types.SYNCTRANSITION:
                         cmd = new ConnectSynchronizationWithTransition(this, mmq);
                         break;
@@ -1350,25 +1351,42 @@ public class ModelManager implements Observer {
         return cmd;
     }
 
-    /**
-     * Creates a path relative to the plansPath
-     *
-     * @param absoluteDirectory
-     * @param fileName
-     * @return
-     */
-    public String makeRelativeDirectory(String absoluteDirectory, String fileName) {
-        String relativeDirectory = absoluteDirectory.replace(plansPath, "");
-        relativeDirectory = relativeDirectory.replace(tasksPath, "");
-        relativeDirectory = relativeDirectory.replace(rolesPath, "");
-        relativeDirectory = relativeDirectory.replace(fileName, "");
-        if (relativeDirectory.startsWith(File.separator)) {
-            relativeDirectory = relativeDirectory.substring(1);
+    private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq) {
+        AbstractCommand cmd;
+        switch (mmq.elementType) {
+            case Types.STATE:
+                cmd = new AddStateInPlan(this, mmq);
+                break;
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                cmd = new AddTerminalStateInPlan(this, mmq);
+                break;
+            case Types.TRANSITION:
+                cmd = new AddTransitionInPlan(this, mmq);
+                break;
+            case Types.INITSTATECONNECTION:
+                cmd = new ConnectEntryPointsWithState(this, mmq);
+                break;
+            case Types.ENTRYPOINT:
+                cmd = new AddEntryPointInPlan(this, mmq);
+                break;
+            case Types.BENDPOINT:
+                cmd = new AddBendpointToPlan(this, mmq);
+                break;
+            case Types.SYNCHRONISATION:
+                cmd = new AddSynchronizationToPlan(this, mmq);
+                break;
+            case Types.PRECONDITION:
+            case Types.RUNTIMECONDITION:
+            case Types.POSTCONDITION:
+            case Types.SYNCTRANSITION:
+                //TODO: Create commands for the other types
+            default:
+                System.err.println("ModelManger: Unknown type to put to plan gets ignored! Type was: " + mmq.elementType);
+                return null;
         }
-        if (relativeDirectory.endsWith(File.separator)) {
-            relativeDirectory = relativeDirectory.substring(0, relativeDirectory.length() - 1);
-        }
-        return relativeDirectory;
+
+        return cmd;
     }
 
     /**
@@ -1463,42 +1481,25 @@ public class ModelManager implements Observer {
         outfile.delete();
     }
 
-    private AbstractCommand handleNewElementInPlanQuery(ModelModificationQuery mmq) {
-        AbstractCommand cmd;
-        switch (mmq.elementType) {
-            case Types.STATE:
-                cmd = new AddStateInPlan(this, mmq);
-                break;
-            case Types.SUCCESSSTATE:
-            case Types.FAILURESTATE:
-                cmd = new AddTerminalStateInPlan(this, mmq);
-                break;
-            case Types.TRANSITION:
-                cmd = new AddTransitionInPlan(this, mmq);
-                break;
-            case Types.INITSTATECONNECTION:
-                cmd = new ConnectEntryPointsWithState(this, mmq);
-                break;
-            case Types.ENTRYPOINT:
-                cmd = new AddEntryPointInPlan(this, mmq);
-                break;
-            case Types.BENDPOINT:
-                cmd = new AddBendpointToPlan(this, mmq);
-                break;
-            case Types.SYNCHRONISATION:
-                cmd = new AddSynchronizationToPlan(this, mmq);
-                break;
-            case Types.PRECONDITION:
-            case Types.RUNTIMECONDITION:
-            case Types.POSTCONDITION:
-            case Types.SYNCTRANSITION:
-                //TODO: Create commands for the other types
-            default:
-                System.err.println("ModelManger: Unknown type to put to plan gets ignored! Type was: " + mmq.elementType);
-                return null;
+    /**
+     * Creates a path relative to the plansPath
+     *
+     * @param absoluteDirectory
+     * @param fileName
+     * @return
+     */
+    public String makeRelativeDirectory(String absoluteDirectory, String fileName) {
+        String relativeDirectory = absoluteDirectory.replace(plansPath, "");
+        relativeDirectory = relativeDirectory.replace(tasksPath, "");
+        relativeDirectory = relativeDirectory.replace(rolesPath, "");
+        relativeDirectory = relativeDirectory.replace(fileName, "");
+        if (relativeDirectory.startsWith(File.separator)) {
+            relativeDirectory = relativeDirectory.substring(1);
         }
-
-        return cmd;
+        if (relativeDirectory.endsWith(File.separator)) {
+            relativeDirectory = relativeDirectory.substring(0, relativeDirectory.length() - 1);
+        }
+        return relativeDirectory;
     }
 
     public String getAbsoluteDirectory(PlanElement element) {
