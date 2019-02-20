@@ -24,7 +24,6 @@ public class JSonSerializer {
         mapper.addMixIn(State.class, StateMixIn.class);
         mapper.addMixIn(Synchronisation.class, SynchronizationMixIn.class);
         mapper.addMixIn(Task.class, TaskMixIn.class);
-        mapper.addMixIn(TaskRepository.class, TaskRepositoryMixIn.class);
         mapper.addMixIn(Transition.class, TransitionMixIn.class);
 
         Plan plan = new Plan();
@@ -88,8 +87,7 @@ public class JSonSerializer {
 
         entryPoint.setTask(task);
         task.setTaskRepository(taskRepository);
-        taskRepository.getTasks().add(task);
-        taskRepository.setDefaultTask(task);
+        taskRepository.addTask(task);
 
         Transition transition = new Transition();
         transition.setInState(state2);

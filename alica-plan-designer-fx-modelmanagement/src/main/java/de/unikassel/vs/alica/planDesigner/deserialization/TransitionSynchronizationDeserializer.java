@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.LongNode;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ParsedModelReferences;
 
 import java.io.IOException;
 
@@ -27,7 +26,6 @@ public Synchronisation deserialize(
         throws IOException, JsonProcessingException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
         Synchronisation synchronisation = new Synchronisation(((LongNode)tree).longValue());
-        ParsedModelReferences.getInstance().addIncompleteSynchronizationInTransition(synchronisation.getId());
         return synchronisation;
         }
 }

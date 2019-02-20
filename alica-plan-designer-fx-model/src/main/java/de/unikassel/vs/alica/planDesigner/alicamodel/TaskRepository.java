@@ -1,41 +1,48 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TaskRepository extends SerializablePlanElement {
 
-    protected ObservableList<Task> tasks;
-    protected Task defaultTask;
+    protected final ArrayList<Task> tasks = new ArrayList<>();
 
-    public TaskRepository() {
-        tasks = FXCollections.observableArrayList();
+    public TaskRepository() {}
+
+    public void addTask(Task task) {
+        if (task.getTaskRepository() != this) {
+            task.setTaskRepository(this);
+        }
+        task.registerDirtyFlag();
+        tasks.add(task);
+        this.setDirty(true);
+    }
+    public void removeTask(Task task) {
+        tasks.remove(task);
+        task.setTaskRepository(null);
+        this.setDirty(true);
+    }
+    public List<Task> getTasks() {
+        return Collections.unmodifiableList(tasks);
     }
 
-    public ObservableList<Task> getTasks() {
-        return tasks;
+    public Task getTask(long taskID) {
+        for (Task task : tasks) {
+            if (taskID == task.getId()) {
+                return task;
+            }
+        }
+        return null;
     }
 
-    public Task getDefaultTask() {
-        return defaultTask;
-    }
-
-    public void setDefaultTask(Task defaultTask) {
-        this.defaultTask = defaultTask;
+    public boolean contains (Task task) {
+        return tasks.contains(task);
     }
 
     @Override
     public void registerDirtyFlag() {
         super.registerDirtyFlag();
-        tasks.addListener(new ListChangeListener<Task>() {
-            @Override
-            public void onChanged(Change<? extends Task> change) {
-                while (change.next()) {
-                    setDirty(true);
-                }
-            }
-        });
         for (Task task : tasks) {
             task.registerDirtyFlag();
         }

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ParsedModelReferences;
 
 import java.io.IOException;
 
@@ -32,7 +31,6 @@ public class ExternalFileDeserializer extends StdDeserializer<AbstractPlan> {
         int idIndex = planElementString.indexOf('#');
         planElementString = planElementString.substring(idIndex + 1);
         AbstractPlan planElement = new AbstractPlan(Long.parseLong(planElementString));
-        ParsedModelReferences.getInstance().addIncompleteAbstractPlanInParametrisations(planElement.getId());
         return planElement;
     }
 }

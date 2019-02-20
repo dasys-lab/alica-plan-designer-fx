@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.planDesigner.alicamodel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class State extends PlanElement {
@@ -10,15 +11,12 @@ public class State extends PlanElement {
     protected EntryPoint entryPoint;
     protected Plan parentPlan;
     protected final ArrayList<AbstractPlan> plans = new ArrayList<>();
-    protected ArrayList<Parametrisation> parametrisations;
-    protected ArrayList<Transition> inTransitions;
-    protected ArrayList<Transition> outTransitions;
+    protected final ArrayList<Parametrisation> parametrisations = new ArrayList<>();
+    protected final ArrayList<Transition> inTransitions = new ArrayList<>();
+    protected final ArrayList<Transition> outTransitions = new ArrayList<>();
 
     public State ()
     {
-        parametrisations = new ArrayList<>();
-        inTransitions = new ArrayList<>();
-        outTransitions = new ArrayList<>();
     }
 
     public State(long id) {
@@ -47,7 +45,7 @@ public class State extends PlanElement {
 
     public void addAbstractPlan(AbstractPlan abstractPlan) {
         plans.add(abstractPlan);
-        
+
         List<Variable> variables = null;
         if (abstractPlan instanceof Plan) {
             variables = ((Plan) abstractPlan).getVariables();
@@ -58,13 +56,13 @@ public class State extends PlanElement {
         }
 
         if (variables != null) {
-            variables.forEach(var -> {
+            for(Variable var : variables) {
                 Parametrisation param = new Parametrisation();
                 param.setSubPlan(abstractPlan);
                 param.setSubVariable(var);
                 param.setVariable(null);
-                this.getParametrisations().add(param);
-            });
+                this.addParametrisation(param);
+            }
         }
         this.parentPlan.setDirty(true);
     }
@@ -72,29 +70,30 @@ public class State extends PlanElement {
     public void removeAbstractPlan(AbstractPlan abstractPlan) {
         plans.remove(abstractPlan);
 
-        for (Parametrisation param : parametrisations) {
+        // iterator in order to avoid concurrent modification exception
+        Iterator<Parametrisation> iterator = parametrisations.iterator();
+        while ((iterator).hasNext()) {
+            Parametrisation param = iterator.next();
             if (param.getSubPlan().getId() == abstractPlan.getId()) {
-                parametrisations.remove(param);
+                iterator.remove();
             }
         }
         this.parentPlan.setDirty(true);
     }
 
-    public void replaceAbstractPlan(AbstractPlan oldAbstractPlan, AbstractPlan newAbstractPlan) {
-        plans.remove(oldAbstractPlan);
-        addAbstractPlan(newAbstractPlan);
+    private void addParametrisation(Parametrisation param) {
+        this.parametrisations.add(param);
+    }
+    public List<Parametrisation> getParametrisations() {
+        return Collections.unmodifiableList(parametrisations);
     }
 
-    public ArrayList<Parametrisation> getParametrisations() {
-        return parametrisations;
+    public List<Transition> getInTransitions() {
+        return Collections.unmodifiableList(inTransitions);
     }
 
-    public ArrayList<Transition> getInTransitions() {
-        return inTransitions;
-    }
-
-    public ArrayList<Transition> getOutTransitions() {
-        return outTransitions;
+    public List<Transition> getOutTransitions() {
+        return Collections.unmodifiableList(outTransitions);
     }
 
 }

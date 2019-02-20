@@ -5,7 +5,6 @@ import de.unikassel.vs.alica.planDesigner.deserialization.SimpleLongPropertyDese
 import javafx.beans.property.SimpleLongProperty;
 
 public abstract class PlanMixIn {
-
     @JsonDeserialize(using = SimpleLongPropertyDeserializer.class)
     protected SimpleLongProperty id;
 }

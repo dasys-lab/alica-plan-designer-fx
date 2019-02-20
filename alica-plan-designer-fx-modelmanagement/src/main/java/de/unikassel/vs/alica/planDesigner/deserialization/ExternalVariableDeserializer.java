@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Variable;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ParsedModelReferences;
 
 import java.io.IOException;
 
@@ -32,7 +31,6 @@ public class ExternalVariableDeserializer extends StdDeserializer<Variable> {
         int idIndex = planElementString.indexOf('#');
         planElementString = planElementString.substring(idIndex + 1);
         Variable var = new Variable(Long.parseLong(planElementString));
-        ParsedModelReferences.getInstance().addIncompleteVariableInParametrisations(var.getId());
         return var;
     }
 }
