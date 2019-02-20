@@ -144,6 +144,7 @@ void Constraint«plan.preCondition.id»::getConstraint(shared_ptr<ProblemDescrip
 
     def String constraintStateCheckingMethods(State state) '''
 // State: «state.name»
+
 «FOR transition : state.outTransitions»
 «IF (transition.preCondition != null && transition.preCondition.pluginName == "DefaultPlugin" && transition.preCondition.variables.size > 0)»
 /*

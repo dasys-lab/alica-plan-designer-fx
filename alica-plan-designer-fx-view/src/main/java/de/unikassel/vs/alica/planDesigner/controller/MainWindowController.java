@@ -278,23 +278,20 @@ public class MainWindowController implements Initializable {
             ViewModelElement modelElement = ((AbstractPlanTab) editorTabPane
                     .getSelectionModel().getSelectedItem()).getSerializableViewModel();
             try {
-                // TODO: couple codegeneration with gui (without dependencies)
-
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ELEMENT, modelElement.getType(), modelElement.getName());
                 event.setElementId(modelElement.getId());
                 waitOnProgressLabel(() -> this.guiModificationHandler.generateCode(event));
             } catch (RuntimeException ex) {
-                LOG.error("error while generating code", ex);
+                LOG.error("MainWindowController: Error while generating code", ex);
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
             }
         });
         generateItem.setOnAction(e -> {
             try {
-                // TODO: couple codegeneration with gui (without dependencies)
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, "", "");
                 waitOnProgressLabel(() -> this.guiModificationHandler.generateCode(event));
             } catch (RuntimeException ex) {
-                LOG.error("error while generating code", ex);
+                LOG.error("MainWindowController: Error while generating code for all elements", ex);
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
             }
 
@@ -365,7 +362,6 @@ public class MainWindowController implements Initializable {
             //Ping
             Platform.runLater(() -> {
                 progressBar.setProgress(-1.0);
-                generatingText.setText(i18NRepo.getString("label.menu.generation.generating"));
                 progressBar.setPrefWidth(this.mainSplitPane.getParent().getScene().getWidth() / 4);
                 progressBar.setPrefHeight(menuBar.getHeight());
                 generatingStackPane.setLayoutX(mainSplitPane.getLayoutX() + this.mainSplitPane.getParent().getScene().getWidth() / 2 - progressBar.getWidth() / 2);
@@ -383,9 +379,8 @@ public class MainWindowController implements Initializable {
                 statusBlob.setHeight(menuBar.getHeight());
                 statusStackPane.setLayoutX(mainSplitPane.getLayoutX() + this.mainSplitPane.getParent().getScene().getWidth() / 2 - statusBlob.getWidth() / 2);
                 statusBlob.setVisible(true);
-                statusText.toFront();
-                statusText.setText(i18NRepo.getString("label.generation.completed"));
                 statusText.setVisible(true);
+
                 FadeTransition fadeTransitionStatusBlob = new FadeTransition();
                 fadeTransitionStatusBlob.setFromValue(1.0);
                 fadeTransitionStatusBlob.setToValue(0.0);
