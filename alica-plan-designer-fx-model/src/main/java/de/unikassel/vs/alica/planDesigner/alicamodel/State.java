@@ -70,6 +70,7 @@ public class State extends PlanElement {
     public void removeAbstractPlan(AbstractPlan abstractPlan) {
         plans.remove(abstractPlan);
 
+        // iterator in order to avoid concurrent modification exception
         Iterator<Parametrisation> iterator = parametrisations.iterator();
         while ((iterator).hasNext()) {
             Parametrisation param = iterator.next();

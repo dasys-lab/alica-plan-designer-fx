@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Task;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ParsedModelReferences;
 
 import java.io.IOException;
 
@@ -27,7 +26,6 @@ public class EntryPointTaskDeserializer extends StdDeserializer<Task> {
         int idIndex = taskString.indexOf('#');
         taskString = taskString.substring(idIndex + 1);
         Task task = new Task(Long.parseLong(taskString));
-        ParsedModelReferences.getInstance().addIncompleteTaskIdOfEntryPoint(task.getId());
         return task;
     }
 }

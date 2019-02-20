@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ParsedModelReferences;
 
 import java.io.IOException;
 
@@ -28,7 +27,6 @@ public class BendPointDeserializer extends StdDeserializer<Transition> {
         int idIndex = transitionString.indexOf('#');
         transitionString = transitionString.substring(idIndex + 1);
         Transition transition = new Transition(Long.parseLong(transitionString));
-        ParsedModelReferences.getInstance().addIncompleteBendPointTransition(transition.getId());
         return transition;
     }
 }

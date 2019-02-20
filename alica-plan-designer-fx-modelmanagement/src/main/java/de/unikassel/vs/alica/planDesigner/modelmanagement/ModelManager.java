@@ -463,24 +463,6 @@ public class ModelManager implements Observer {
         }
     }
 
-    public void replaceIncompleteBendPointTransitions(Plan plan) {
-        PlanUiExtensionPair visualisationObject = getPlanUIExtensionPair(plan.getId());
-        ArrayList<Long> incompleteBendPointTransitions = ParsedModelReferences.getInstance().incompleteBendPointTransitions;
-        for (PlanElement extensionEntry : visualisationObject.getKeys()) {
-            long transitionId = extensionEntry.getId();
-            if (incompleteBendPointTransitions.contains(transitionId)) {
-                for (Transition transition : plan.getTransitions()) {
-                    if (transition.getId() == transitionId) {
-                        for (BendPoint bendPoint : visualisationObject.getUiExtension(extensionEntry).getBendPoints()) {
-                            bendPoint.setTransition(transition);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
     private void replaceIncompleteAbstractPlansInStates(Plan plan) {
         for (State state : plan.getStates()) {
             for (AbstractPlan abstractPlan : state.getPlans()) {
@@ -490,45 +472,48 @@ public class ModelManager implements Observer {
         }
     }
 
+    public void replaceIncompleteBendPointTransitions(Plan plan) {
+        PlanUiExtensionPair visualisationObject = getPlanUIExtensionPair(plan.getId());
+        for (PlanElement extensionEntry : visualisationObject.getKeys()) {
+            long transitionId = extensionEntry.getId();
+            for (Transition transition : plan.getTransitions()) {
+                if (transition.getId() == transitionId) {
+                    for (BendPoint bendPoint : visualisationObject.getUiExtension(extensionEntry).getBendPoints()) {
+                        bendPoint.setTransition(transition);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
     private void replaceIncompleteAbstractPlansInParametrisations(Plan plan) {
-        ParsedModelReferences refs = ParsedModelReferences.getInstance();
         for (State state : plan.getStates()) {
             for (int i = 0; i < state.getParametrisations().size(); i++) {
                 Parametrisation parametrisation = state.getParametrisations().get(i);
-                if (refs.incompleteAbstractPlanInParametrisations.contains(parametrisation.getSubPlan().getId())) {
-                    parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
-                }
+                parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
             }
         }
     }
 
     private void replaceIncompleteVariablesInParametrisations(Plan plan) {
-        ParsedModelReferences refs = ParsedModelReferences.getInstance();
         for (State state : plan.getStates()) {
             for (int i = 0; i < state.getParametrisations().size(); i++) {
                 Parametrisation parametrisation = state.getParametrisations().get(i);
-                if (refs.incompleteVariableInParametrisations.contains(parametrisation.getSubVariable().getId())) {
-                    parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
-                }
+                parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
             }
         }
     }
 
     private void replaceIncompleteStatesAndSynchronizationsInTransitions(Plan plan) {
-        ParsedModelReferences refs = ParsedModelReferences.getInstance();
         for (Transition transition : plan.getTransitions()) {
-            if (refs.incompleteAbstractPlansInStates.contains(transition.getInState().getId())) {
-                transition.setInState((State) planElementMap.get(transition.getInState().getId()));
-            }
-            if (refs.incompleteAbstractPlansInStates.contains(transition.getOutState().getId())) {
-                transition.setOutState((State) planElementMap.get(transition.getOutState().getId()));
-            }
-            if (transition.getSynchronisation() != null && refs.incompleteSynchronizationsInTransitions.contains(transition.getSynchronisation().getId())) {
+            transition.setInState((State) planElementMap.get(transition.getInState().getId()));
+            transition.setOutState((State) planElementMap.get(transition.getOutState().getId()));
+            if (transition.getSynchronisation() != null) {
                 transition.setSynchronisation((Synchronisation) planElementMap.get(transition.getSynchronisation().getId()));
             }
         }
     }
-
 
     /**
      * Replaces all incomplete Plans in given PlanType by already parsed ones
@@ -536,9 +521,7 @@ public class ModelManager implements Observer {
     public void replaceIncompletePlansInPlanType(PlanType planType) {
         List<AnnotatedPlan> annotatedPlans = planType.getPlans();
         for (int i = 0; i < annotatedPlans.size(); i++) {
-            if (ParsedModelReferences.getInstance().incompletePlansInPlanTypes.contains(annotatedPlans.get(i).getPlan().getId())) {
-                annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
-            }
+            annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
         }
     }
 
