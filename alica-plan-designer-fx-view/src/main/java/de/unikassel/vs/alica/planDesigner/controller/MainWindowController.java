@@ -18,6 +18,7 @@ import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -28,8 +29,12 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import org.apache.log4j.LogManager;
@@ -42,7 +47,7 @@ import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
 
-//--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
 //  SINGLETON INSTANCE
 //--------------------------------------------------------------------------------------------
     private static volatile MainWindowController instance;
@@ -63,13 +68,13 @@ public class MainWindowController implements Initializable {
         this.i18NRepo = I18NRepo.getInstance();
     }
 
-//--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
 //  CONSTANTS AND STATICS
 //--------------------------------------------------------------------------------------------
     private static final Logger LOG = LogManager.getLogger(MainWindowController.class);
     public static Cursor FORBIDDEN_CURSOR = new AlicaCursor(AlicaCursor.Type.forbidden);
 
-//--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
 //  FXML INJECTED
 //--------------------------------------------------------------------------------------------
     @FXML
@@ -96,7 +101,19 @@ public class MainWindowController implements Initializable {
     @FXML
     private SplitPane mainSplitPane;
 
-//--------------------------------------------------------------------------------------------
+    @FXML
+    private ProgressBar progressBar;
+
+    @FXML
+    private Text generatingText;
+
+    @FXML
+    private StackPane statusStackPane;
+
+    @FXML
+    private StackPane generatingStackPane;
+
+    //--------------------------------------------------------------------------------------------
 //  FIELDS
 //--------------------------------------------------------------------------------------------
     // ---- GUI STUFF ----
@@ -115,34 +132,43 @@ public class MainWindowController implements Initializable {
     private IGuiStatusHandler guiStatusHandler;
     private IGuiModificationHandler guiModificationHandler;
 
-//--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
 //  GETTER & SETTER
 //--------------------------------------------------------------------------------------------
     // ---- GETTER ----
     public String getPlansPath() {
-    return plansPath;
-}
+        return plansPath;
+    }
+
     public String getTasksPath() {
         return tasksPath;
     }
+
     public String getRolesPath() {
         return rolesPath;
     }
-    public SplitPane getMainSplitPane () {return mainSplitPane; }
+
+    public SplitPane getMainSplitPane() {
+        return mainSplitPane;
+    }
 
     public FileTreeView getFileTreeView() {
         return fileTreeView;
     }
+
     public IGuiModificationHandler getGuiModificationHandler() {
         return guiModificationHandler;
     }
+
     public EditorTabPane getEditorTabPane() {
         return editorTabPane;
     }
+
     public RepositoryTabPane getRepositoryTabPane() {
         return repositoryTabPane;
     }
-    public ConfigurationWindowController getConfigWindowController(){
+
+    public ConfigurationWindowController getConfigWindowController() {
         return configWindowController;
     }
 
@@ -150,14 +176,16 @@ public class MainWindowController implements Initializable {
     public void setConfigWindowController(ConfigurationWindowController configWindowController) {
         this.configWindowController = configWindowController;
     }
+
     public void setGuiStatusHandler(IGuiStatusHandler guiStatusHandler) {
         this.guiStatusHandler = guiStatusHandler;
     }
+
     public void setGuiModificationHandler(IGuiModificationHandler creationHandler) {
         this.guiModificationHandler = creationHandler;
     }
 
-//--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
 //  INTERFACE IMPLEMENTATIONS
 //--------------------------------------------------------------------------------------------
     @Override
@@ -179,11 +207,25 @@ public class MainWindowController implements Initializable {
         statusText.setVisible(false);
         menuBar.getMenus().addAll(createMenus());
         guiStatusHandler.handleGuiInitialized();
+        setUpCodeGenerationProgressIndicator();
+
     }
 
-//--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
 //  SETUP
 //--------------------------------------------------------------------------------------------
+
+    private void setUpCodeGenerationProgressIndicator() {
+            generatingText.setText(i18NRepo.getString("label.menu.generation.generating"));
+            progressBar.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() / 4);
+            progressBar.setPrefHeight(menuBar.getHeight());
+            generatingStackPane.setLayoutX(Screen.getPrimary().getVisualBounds().getWidth() / 2 - progressBar.getWidth() / 2);
+            statusBlob.setWidth(progressBar.getWidth());
+            statusBlob.setHeight(menuBar.getHeight());
+            statusStackPane.setLayoutX(Screen.getPrimary().getVisualBounds().getWidth() / 2 - statusBlob.getWidth() / 2);
+            statusText.setText(i18NRepo.getString("label.generation.completed"));
+    }
+
     private List<Menu> createMenus() {
         List<Menu> menus = new ArrayList<>();
 
@@ -237,10 +279,10 @@ public class MainWindowController implements Initializable {
                     .getSelectionModel().getSelectedItem()).getSerializableViewModel();
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
-//            	waitOnProgressWindow(() -> new Codegenerator().generate(modelElementId));
+
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ELEMENT, modelElement.getType(), modelElement.getName());
                 event.setElementId(modelElement.getId());
-                this.guiModificationHandler.generateCode(event);
+                waitOnProgressLabel(() -> this.guiModificationHandler.generateCode(event));
             } catch (RuntimeException ex) {
                 LOG.error("error while generating code", ex);
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
@@ -250,8 +292,7 @@ public class MainWindowController implements Initializable {
             try {
                 // TODO: couple codegeneration with gui (without dependencies)
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, "", "");
-                this.guiModificationHandler.generateCode(event);
-//            	waitOnProgressWindow(() -> new Codegenerator().generate());
+                waitOnProgressLabel(() -> this.guiModificationHandler.generateCode(event));
             } catch (RuntimeException ex) {
                 LOG.error("error while generating code", ex);
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
@@ -297,6 +338,7 @@ public class MainWindowController implements Initializable {
         codeGenerationMenu.setDisable(false);
         fileMenu.setDisable(false);
     }
+
     public void setDeleteDisabled(boolean disabled) {
         editMenu.setDeleteItemDisabled(disabled);
     }
@@ -318,34 +360,50 @@ public class MainWindowController implements Initializable {
         editorTabPane.openTab(toOpen);
     }
 
-    private void waitOnProgressWindow(Runnable toWaitOn) {
+    private void waitOnProgressLabel(Runnable toWaitOn) {
         new Thread(() -> {
+            //Ping
+            Platform.runLater(() -> {
+                progressBar.setProgress(-1.0);
+                generatingText.setText(i18NRepo.getString("label.menu.generation.generating"));
+                progressBar.setPrefWidth(this.mainSplitPane.getParent().getScene().getWidth() / 4);
+                progressBar.setPrefHeight(menuBar.getHeight());
+                generatingStackPane.setLayoutX(mainSplitPane.getLayoutX() + this.mainSplitPane.getParent().getScene().getWidth() / 2 - progressBar.getWidth() / 2);
+                progressBar.setVisible(true);
+                generatingText.setVisible(true);
+            });
+            //Run generation
             toWaitOn.run();
-            statusText.toFront();
-            statusText.setOpacity(1.0);
-            statusBlob.setOpacity(1.0);
-            statusText.setLayoutY(statusBlob.getLayoutY() + statusText.getFont().getSize() + 2);
-            statusText.setText(i18NRepo.getString("label.generation.completed"));
-            statusText.setLayoutX(statusBlob.getLayoutX() + (statusBlob.getWidth() / 2) - statusText.getBoundsInLocal().getWidth() / 2);
-            statusBlob.setVisible(true);
-            statusText.setVisible(true);
-            FadeTransition fadeTransition = new FadeTransition();
-            fadeTransition.setFromValue(1.0);
-            fadeTransition.setToValue(0.0);
-            fadeTransition.setDelay(Duration.seconds(2.0));
-            fadeTransition.setNode(statusBlob);
+            // Show Message
+            Platform.runLater(() -> {
+                progressBar.setProgress(0.0);
+                progressBar.setVisible(false);
+                generatingText.setVisible(false);
+                statusBlob.setWidth(progressBar.getWidth());
+                statusBlob.setHeight(menuBar.getHeight());
+                statusStackPane.setLayoutX(mainSplitPane.getLayoutX() + this.mainSplitPane.getParent().getScene().getWidth() / 2 - statusBlob.getWidth() / 2);
+                statusBlob.setVisible(true);
+                statusText.toFront();
+                statusText.setText(i18NRepo.getString("label.generation.completed"));
+                statusText.setVisible(true);
+                FadeTransition fadeTransitionStatusBlob = new FadeTransition();
+                fadeTransitionStatusBlob.setFromValue(1.0);
+                fadeTransitionStatusBlob.setToValue(0.0);
+                fadeTransitionStatusBlob.setDelay(Duration.seconds(3.0));
+                fadeTransitionStatusBlob.setNode(statusBlob);
 
-            FadeTransition fadeTransition2 = new FadeTransition();
-            fadeTransition2.setFromValue(1.0);
-            fadeTransition2.setToValue(0.0);
-            fadeTransition2.setDelay(Duration.seconds(2.0));
-            fadeTransition2.setNode(statusText);
+                FadeTransition fadeTransitionStatusText = new FadeTransition();
+                fadeTransitionStatusText.setFromValue(1.0);
+                fadeTransitionStatusText.setToValue(0.0);
+                fadeTransitionStatusText.setDelay(Duration.seconds(3.0));
+                fadeTransitionStatusText.setNode(statusText);
 
-            fadeTransition.play();
-            fadeTransition2.play();
-            fadeTransition.onFinishedProperty().setValue(event -> {
-                statusBlob.setVisible(false);
-                statusText.setVisible(false);
+                fadeTransitionStatusBlob.play();
+                fadeTransitionStatusText.play();
+                fadeTransitionStatusBlob.onFinishedProperty().setValue(event -> {
+                    statusBlob.setVisible(false);
+                    statusText.setVisible(false);
+                });
             });
         }).start();
     }

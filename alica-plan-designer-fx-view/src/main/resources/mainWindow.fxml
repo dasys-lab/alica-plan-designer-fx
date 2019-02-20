@@ -12,7 +12,9 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <SplitPane fx:id="mainSplitPane" dividerPositions="0.01" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+        <MenuBar fx:id="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+        <SplitPane fx:id="mainSplitPane" dividerPositions="0.01" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0"
                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" orientation="HORIZONTAL">
             <items>
                 <SplitPane fx:id="treeRepoSplitPane" dividerPositions="0.8" orientation="VERTICAL">
@@ -44,10 +46,18 @@
                 <EditorTabPane fx:id="editorTabPane" minHeight="100.0" minWidth="100.0" tabClosingPolicy="ALL_TABS"/>
             </items>
         </SplitPane>
-        <MenuBar fx:id="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-        <Rectangle fx:id="statusBlob" arcHeight="20.0" arcWidth="20.0" fill="#b3d9fc" height="20.0" stroke="BLACK"
-                   strokeType="INSIDE" visible="false" width="170.0" AnchorPane.rightAnchor="2.0"
-                   AnchorPane.topAnchor="2.0"/>
-        <Text fx:id="statusText"/>
+        <StackPane fx:id="generatingStackPane">
+            <children>
+                <ProgressBar fx:id="progressBar" progress="0.0" visible="false"/>
+                <Text fx:id="generatingText" visible="false"/>
+            </children>
+        </StackPane>
+        <StackPane fx:id="statusStackPane">
+            <children>
+                <Rectangle fx:id="statusBlob" arcHeight="20.0" arcWidth="20.0" fill="#b3d9fc" stroke="BLACK"
+                           strokeType="INSIDE" visible="false" opacity="1.0"/>
+                <Text fx:id="statusText" opacity="1.0"/>
+            </children>
+        </StackPane>
     </children>
 </AnchorPane>
