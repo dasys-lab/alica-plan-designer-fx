@@ -96,7 +96,6 @@ public class ModelManager implements Observer {
         objectMapper.addMixIn(State.class, StateMixIn.class);
         objectMapper.addMixIn(Synchronisation.class, SynchronizationMixIn.class);
         objectMapper.addMixIn(Task.class, TaskMixIn.class);
-        objectMapper.addMixIn(TaskRepository.class, TaskRepositoryMixIn.class);
         objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
         objectMapper.addMixIn(PlanUiExtensionPair.class, PlanModelVisualizationObjectMixIn.class);
         objectMapper.addMixIn(BendPoint.class, BendPointMixIn.class);
@@ -116,10 +115,6 @@ public class ModelManager implements Observer {
 
     public ArrayList<Plan> getPlans() {
         return new ArrayList<>(planMap.values());
-    }
-
-    public ArrayList<PlanType> getPlanTypes() {
-        return new ArrayList<>(planTypeMap.values());
     }
 
     public ArrayList<Behaviour> getBehaviours() {
@@ -222,33 +217,6 @@ public class ModelManager implements Observer {
         planModelVisualisationObjectMap.clear();
     }
 
-    private void replaceIncompleteReferences() {
-        for (Plan plan : planMap.values()) {
-            replaceIncompleteTasksInEntryPoints(plan);
-            replaceIncompleteAbstractPlansInStates(plan);
-            replaceIncompleteAbstractPlansInParametrisations(plan);
-            replaceIncompleteVariablesInParametrisations(plan);
-            replaceIncompleteStatesAndSynchronizationsInTransitions(plan);
-            replaceIncompleteBendPointTransitions(plan);
-            if (plan.getMasterPlan()) {
-                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
-            } else {
-                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
-            }
-            // replace-Stuff did trigger the flag already, so new stuff will get lost...
-            plan.setDirty(false);
-        }
-        for (PlanType planType : getPlanTypes()) {
-            replaceIncompletePlansInPlanType(planType);
-            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE));
-            // replace-Stuff did trigger the flag already, so new stuff will get lost...
-            planType.setDirty(false);
-        }
-        for (PlanUiExtensionPair planUiExtensionPair : planModelVisualisationObjectMap.values()) {
-            replaceIncompletePlanElementsInPlanModelVisualisationObject(planUiExtensionPair);
-        }
-    }
-
     /**
      * This method could be superfluous, as "loadModelFile" is maybe called by the file watcher.
      * Anyway, temporarily this is a nice method for testing and is therefore called in the constr.
@@ -297,8 +265,7 @@ public class ModelManager implements Observer {
             ending = path.substring(pointIdx + 1, path.length());
         }
 
-        boolean correctTopLevelFolder = correctTopLevelFolder(path);
-        if (!correctTopLevelFolder) {
+        if (!fileMatchesFolder(path)) {
             return;
         }
 
@@ -399,31 +366,11 @@ public class ModelManager implements Observer {
                         this.fireEvent(event);
                     });
                     taskRepository.registerDirtyFlag();
-                    taskRepository.getTasks().addListener(new ListChangeListener<Task>() {
-                        @Override
-                        public void onChanged(Change<? extends Task> change) {
-                            while (change.next()) {
-                                taskRepository.setDirty(true);
-                            }
-                        }
-                    });
-                    for (Task task : taskRepository.getTasks()) {
-                        task.nameProperty().addListener((observable, oldValue, newValue) -> {
-                            taskRepository.setDirty(true);
-                        });
-                        task.commentProperty().addListener((observable, oldValue, newValue) -> {
-                            taskRepository.setDirty(true);
-                        });
-                    }
                     if (planElementMap.containsKey(taskRepository.getId())) {
                         throw new RuntimeException("PlanElement ID duplication found! ID is: " + taskRepository.getId());
                     } else {
-                        long defaultTaskId = ParsedModelReferences.getInstance().defaultTaskId;
                         for (Task task : taskRepository.getTasks()) {
                             task.setTaskRepository(taskRepository);
-                            if (task.getId() == defaultTaskId) {
-                                taskRepository.setDefaultTask(task);
-                            }
                             planElementMap.put(task.getId(), task);
                         }
                         planElementMap.put(taskRepository.getId(), taskRepository);
@@ -455,18 +402,64 @@ public class ModelManager implements Observer {
     }
 
     /**
-     * Replaces all incomplete Tasks attached to the plan's entrypoints by already parsed ones
+     * Helps to ignore, e.g., plans in the task-folder.
+     * @param path
+     * @return
+     */
+    private boolean fileMatchesFolder(String path) {
+        if (path.endsWith(FileSystemUtil.BEHAVIOUR_ENDING) || path.endsWith(FileSystemUtil.PLAN_ENDING) || path.endsWith(FileSystemUtil.PLANTYPE_ENDING)) {
+            if (path.contains(rolesPath) || path.contains(tasksPath)) {
+                return false;
+            }
+        } else if (path.endsWith(FileSystemUtil.TASKREPOSITORY_ENDING)) {
+            if (path.contains(plansPath) || path.contains(rolesPath)) {
+                return false;
+            }
+        } else if (path.endsWith(FileSystemUtil.CAPABILITY_DEFINITION_ENDING) || path.endsWith(FileSystemUtil.ROLES_DEFINITION_ENDING)
+                || path.endsWith(FileSystemUtil.ROLESET_ENDING) || path.endsWith(FileSystemUtil.ROLESET_GRAPH_ENDING)) {
+            if (path.contains(plansPath) || path.contains(tasksPath)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void replaceIncompleteReferences() {
+        for (Plan plan : planMap.values()) {
+            replaceIncompleteTasksInEntryPoints(plan);
+            replaceIncompleteAbstractPlansInStates(plan);
+            replaceIncompleteAbstractPlansInParametrisations(plan);
+            replaceIncompleteVariablesInParametrisations(plan);
+            replaceIncompleteStatesAndSynchronizationsInTransitions(plan);
+            replaceIncompleteBendPointTransitions(plan);
+            if (plan.getMasterPlan()) {
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.MASTERPLAN));
+            } else {
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, plan, Types.PLAN));
+            }
+            /* replace-Stuff did trigger the flag already, so new stuff will get lost if
+             * we don't set the dirty flag back to false again. */
+            plan.setDirty(false);
+        }
+        for (PlanType planType : planTypeMap.values()) {
+            replaceIncompletePlansInPlanType(planType);
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, planType, Types.PLANTYPE));
+            // replace-Stuff did trigger the flag already, so new stuff will get lost...
+            planType.setDirty(false);
+        }
+        for (PlanUiExtensionPair planUiExtensionPair : planModelVisualisationObjectMap.values()) {
+            replaceIncompletePlanElementsInPlanModelVisualisationObject(planUiExtensionPair);
+        }
+    }
+
+    /**
+     * Replaces all incomplete Tasks attached to the plan's EntryPoints by already parsed ones
      *
      * @param plan
      */
     public void replaceIncompleteTasksInEntryPoints(Plan plan) {
         for (EntryPoint ep : plan.getEntryPoints()) {
-            for (Task task : taskRepository.getTasks()) {
-                if (task.getId() == ep.getTask().getId()) {
-                    ep.setTask(task);
-                    break;
-                }
-            }
+            ep.setTask(taskRepository.getTask(ep.getTask().getId()));
         }
     }
 
@@ -494,9 +487,6 @@ public class ModelManager implements Observer {
             for (int i = 0; i < state.getPlans().size(); i++) {
                 if (refs.incompleteAbstractPlansInStates.contains(state.getPlans().get(i).getId())) {
                     state.replaceAbstractPlan(state.getPlans().get(i), (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
-//                    state.removeAbstractPlan();
-//                    state.addAbstractPlan((AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
-//                    state.getPlans().set(i, (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
                 }
             }
         }
@@ -579,26 +569,6 @@ public class ModelManager implements Observer {
             event.setExtension(value);
             fireUiExtensionModelEvent(event);
         }
-    }
-
-    private boolean correctTopLevelFolder(String path) {
-
-        if (path.endsWith(FileSystemUtil.BEHAVIOUR_ENDING) || path.endsWith(FileSystemUtil.PLAN_ENDING) || path.endsWith(FileSystemUtil.PLANTYPE_ENDING)) {
-            if (path.contains(rolesPath) || path.contains(tasksPath)) {
-                return false;
-            }
-        } else if (path.endsWith(FileSystemUtil.TASKREPOSITORY_ENDING)) {
-            if (path.contains(plansPath) || path.contains(rolesPath)) {
-                return false;
-            }
-        } else if (path.endsWith(FileSystemUtil.CAPABILITY_DEFINITION_ENDING) || path.endsWith(FileSystemUtil.ROLES_DEFINITION_ENDING) || path.endsWith
-                (FileSystemUtil.ROLESET_ENDING)
-                || path.endsWith(FileSystemUtil.ROLESET_GRAPH_ENDING)) {
-            if (path.contains(plansPath) || path.contains(tasksPath)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public <T> T parseFile(File modelFile, Class<T> type) throws FileNotFoundException {
@@ -718,14 +688,7 @@ public class ModelManager implements Observer {
                 break;
             case Types.TASK:
                 Task task = (Task) newElement;
-                taskRepository.getTasks().add(task);
-                task.nameProperty().addListener((observable, oldValue, newValue) -> {
-                    taskRepository.setDirty(true);
-                });
-                task.commentProperty().addListener((observable, oldValue, newValue) -> {
-                    taskRepository.setDirty(true);
-                });
-                task.setTaskRepository(taskRepository);
+                taskRepository.addTask(task);
                 break;
             case Types.TASKREPOSITORY:
                 taskRepository = (TaskRepository) newElement;
@@ -850,8 +813,7 @@ public class ModelManager implements Observer {
                 break;
             case Types.TASK:
                 Task task = (Task) removedElement;
-                taskRepository.getTasks().remove(task);
-                task.setTaskRepository(null);
+                taskRepository.removeTask(task);
                 break;
             case Types.TASKREPOSITORY:
                 taskRepository = null;
@@ -1029,7 +991,7 @@ public class ModelManager implements Observer {
         TaskRepository taskRepo = (TaskRepository) planElement;
         for (Plan parent : planMap.values()) {
             for (EntryPoint entryPoint : parent.getEntryPoints()) {
-                if (taskRepo.getTasks().contains(entryPoint.getTask())) {
+                if (taskRepo.contains(entryPoint.getTask())) {
                     usages.add(parent);
                     break;
                 }

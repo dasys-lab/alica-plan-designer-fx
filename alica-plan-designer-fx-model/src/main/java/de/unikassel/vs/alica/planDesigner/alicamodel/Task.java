@@ -2,7 +2,7 @@ package de.unikassel.vs.alica.planDesigner.alicamodel;
 
 public class Task extends PlanElement{
 
-    TaskRepository taskRepository;
+    protected TaskRepository taskRepository;
 
     public Task() {
         super();

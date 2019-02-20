@@ -6,5 +6,5 @@ import de.unikassel.vs.alica.planDesigner.serialization.InternalRefSerializer;
 
 public abstract class TaskMixIn {
     @JsonSerialize(using = InternalRefSerializer.class)
-    TaskRepository taskRepository;
+    protected TaskRepository taskRepository;
 }
