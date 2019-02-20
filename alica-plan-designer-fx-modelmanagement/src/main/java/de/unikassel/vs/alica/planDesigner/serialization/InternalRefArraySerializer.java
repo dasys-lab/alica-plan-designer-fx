@@ -7,19 +7,20 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class InternalRefArraySerializer extends StdSerializer<ArrayList<PlanElement>> {
+public class InternalRefArraySerializer extends StdSerializer<List<PlanElement>> {
 
     public InternalRefArraySerializer() {
         this(null);
     }
 
-    public InternalRefArraySerializer(Class<ArrayList<PlanElement>> t) {
+    public InternalRefArraySerializer(Class<List<PlanElement>> t) {
         super(t);
     }
 
     @Override
-    public void serialize(ArrayList<PlanElement> planElements, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(List<PlanElement> planElements, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         long[] ids = new long[planElements.size()];
         int i = 0;

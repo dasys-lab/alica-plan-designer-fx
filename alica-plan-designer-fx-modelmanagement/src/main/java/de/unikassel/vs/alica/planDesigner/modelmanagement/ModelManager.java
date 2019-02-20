@@ -482,12 +482,10 @@ public class ModelManager implements Observer {
     }
 
     private void replaceIncompleteAbstractPlansInStates(Plan plan) {
-        ParsedModelReferences refs = ParsedModelReferences.getInstance();
         for (State state : plan.getStates()) {
-            for (int i = 0; i < state.getPlans().size(); i++) {
-                if (refs.incompleteAbstractPlansInStates.contains(state.getPlans().get(i).getId())) {
-                    state.replaceAbstractPlan(state.getPlans().get(i), (AbstractPlan) planElementMap.get(state.getPlans().get(i).getId()));
-                }
+            for (AbstractPlan abstractPlan : state.getPlans()) {
+                state.removeAbstractPlan(abstractPlan);
+                state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
             }
         }
     }
