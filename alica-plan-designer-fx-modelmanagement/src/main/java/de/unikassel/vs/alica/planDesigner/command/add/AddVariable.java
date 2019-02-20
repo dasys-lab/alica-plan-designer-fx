@@ -31,7 +31,7 @@ public class AddVariable extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.createdPlanElement(Types.VARIABLE, variable, parentPlanElement, false);
+        modelManager.storePlanElement(Types.VARIABLE, variable, parentPlanElement, false);
     }
 
     @Override

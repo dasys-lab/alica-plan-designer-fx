@@ -29,7 +29,7 @@ public class AddTransitionInPlan extends AbstractCommand {
         this.transition.setInState(this.in);
         this.transition.setOutState(this.out);
         this.newlyCreatedUiExtension = this.parentOfElement.getUiExtension(this.transition);
-        this.modelManager.createdPlanElement(Types.TRANSITION, this.transition,this. parentOfElement.getPlan(), false);
+        this.modelManager.storePlanElement(Types.TRANSITION, this.transition,this. parentOfElement.getPlan(), false);
     }
 
     @Override

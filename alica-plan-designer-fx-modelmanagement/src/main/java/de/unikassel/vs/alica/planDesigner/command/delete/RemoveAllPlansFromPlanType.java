@@ -33,7 +33,7 @@ public class RemoveAllPlansFromPlanType extends AbstractCommand {
     public void undoCommand() {
         for(AnnotatedPlan annotatedPlan : backupPlans) {
             planType.addPlan(annotatedPlan);
-            modelManager.createdPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
+            modelManager.storePlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
         }
     }
 

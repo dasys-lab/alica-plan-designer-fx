@@ -41,19 +41,19 @@ public class ModelModificationQuery {
         this.name = absolutePath.substring(lastSeparatorIdx + 1, lastDotIdx);
         String ending = absolutePath.substring(lastDotIdx + 1, absolutePath.length());
         switch (ending) {
-            case FileSystemUtil.BEHAVIOUR_ENDING:
+            case Extensions.BEHAVIOUR:
                 elementType = Types.BEHAVIOUR;
                 break;
-            case FileSystemUtil.PLAN_ENDING:
+            case Extensions.PLAN:
                 elementType = Types.PLAN;
                 break;
-            case FileSystemUtil.PLANTYPE_ENDING:
+            case Extensions.PLANTYPE:
                 elementType = Types.PLANTYPE;
                 break;
-            case FileSystemUtil.TASKREPOSITORY_ENDING:
+            case Extensions.TASKREPOSITORY:
                 elementType = Types.TASKREPOSITORY;
                 break;
-            case FileSystemUtil.PLAN_EXTENSION_ENDING:
+            case Extensions.PLAN_UI:
                 elementType = Types.PLAN; //TODO: Handle plan-extension-ending - Files
                 break;
             default:

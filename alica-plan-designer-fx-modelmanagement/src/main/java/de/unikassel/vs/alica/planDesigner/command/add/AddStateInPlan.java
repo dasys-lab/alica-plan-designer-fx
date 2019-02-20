@@ -1,11 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.command.add;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.command.AbstractUiPositionCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
@@ -43,7 +41,7 @@ public class AddStateInPlan extends AbstractUiPositionCommand {
         this.newlyCreatedUiExtension = this.parentOfElement.getUiExtension(this.newState);
         this.newlyCreatedUiExtension.setX(x);
         this.newlyCreatedUiExtension.setY(y);
-        modelManager.createdPlanElement(type, newState, newState.getParentPlan(), false);
+        modelManager.storePlanElement(type, newState, newState.getParentPlan(), false);
     }
 
     @Override

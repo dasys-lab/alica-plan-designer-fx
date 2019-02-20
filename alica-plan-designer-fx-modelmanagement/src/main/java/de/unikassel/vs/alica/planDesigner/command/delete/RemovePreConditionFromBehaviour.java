@@ -26,7 +26,7 @@ public class RemovePreConditionFromBehaviour extends AbstractCommand {
     @Override
     public void undoCommand() {
         if(previousPreCondition != null){
-            modelManager.createdPlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
+            modelManager.storePlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
         }
         behaviour.setPreCondition(previousPreCondition);
     }

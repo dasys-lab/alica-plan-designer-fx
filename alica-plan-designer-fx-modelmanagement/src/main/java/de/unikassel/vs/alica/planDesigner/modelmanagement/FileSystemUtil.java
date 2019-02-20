@@ -1,34 +1,24 @@
 package de.unikassel.vs.alica.planDesigner.modelmanagement;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
 
 import java.io.File;
 import java.nio.file.Paths;
 
 public class FileSystemUtil {
 
-    public static final String PLAN_ENDING = "pml";
-    public static final String PLAN_EXTENSION_ENDING = "pmlex";
-    public static final String TASKREPOSITORY_ENDING = "tsk";
-    public static final String BEHAVIOUR_ENDING = "beh";
-    public static final String PLANTYPE_ENDING = "pty";
-    public static final String CAPABILITY_DEFINITION_ENDING = "cdefset";
-    public static final String ROLES_DEFINITION_ENDING = "rdefset";
-    public static final String ROLESET_GRAPH_ENDING = "graph";
-    public static final String ROLESET_ENDING = "rset";
-
-
     public static File getFile(ModelModificationQuery mmq) {
         switch (mmq.getElementType()) {
             case Types.PLAN:
             case Types.MASTERPLAN:
-                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLAN_ENDING).toFile();
+                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + Extensions.PLAN).toFile();
             case Types.PLANTYPE:
-                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + PLANTYPE_ENDING).toFile();
+                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + Extensions.PLANTYPE).toFile();
             case Types.BEHAVIOUR:
-                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + BEHAVIOUR_ENDING).toFile();
+                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + Extensions.BEHAVIOUR).toFile();
             case Types.TASKREPOSITORY:
-                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + TASKREPOSITORY_ENDING).toFile();
+                return Paths.get(mmq.getAbsoluteDirectory(), mmq.getName() + "." + Extensions.TASKREPOSITORY).toFile();
             default:
                 System.err.println("FileSystemUtil: Unknown eventType gets ignored!");
                 return null;
@@ -74,17 +64,60 @@ public class FileSystemUtil {
      * @param planElement whose file ending is to be determined
      * @return file ending of the plan element
      */
-    public static String getFileEnding(SerializablePlanElement planElement) {
+    public static String getExtension(SerializablePlanElement planElement) {
         if (planElement instanceof Plan) {
-            return PLAN_ENDING;
+            return Extensions.PLAN;
         } else if (planElement instanceof Behaviour) {
-            return BEHAVIOUR_ENDING;
+            return Extensions.BEHAVIOUR;
         } else if (planElement instanceof PlanType) {
-            return PLANTYPE_ENDING;
+            return Extensions.PLANTYPE;
         } else if (planElement instanceof TaskRepository) {
-            return TASKREPOSITORY_ENDING;
+            return Extensions.TASKREPOSITORY;
         } else {
             return null;
         }
+    }
+
+    public static String getExtension(File file) {
+        switch (getFileExtensionInternal(file)) {
+            case Extensions.PLAN:
+                return Types.PLAN;
+            case Extensions.BEHAVIOUR:
+                return Types.BEHAVIOUR;
+            case Extensions.PLANTYPE:
+                return Types.PLANTYPE;
+            case Extensions.TASKREPOSITORY:
+                return Types.TASKREPOSITORY;
+            case Extensions.PLAN_UI:
+                return Types.UIEXTENSION;
+            default:
+                return Types.NOTYPE;
+        }
+    }
+
+    public static Class getClassType(File modelFile) {
+        switch (getFileExtensionInternal(modelFile)) {
+            case Extensions.PLAN:
+                return Plan.class;
+            case Extensions.BEHAVIOUR:
+                return Behaviour.class;
+            case Extensions.PLANTYPE:
+                return PlanType.class;
+            case Extensions.TASKREPOSITORY:
+                return TaskRepository.class;
+            case Extensions.PLAN_UI:
+                return PlanUiExtensionPair.class;
+            default:
+                return null;
+        }
+    }
+
+    private static String getFileExtensionInternal(File file) {
+        String fileAsString = file.toString();
+        int pointIdx = fileAsString.lastIndexOf('.');
+        if (pointIdx == -1) {
+            return Extensions.NO;
+        }
+        return fileAsString.substring(pointIdx + 1);
     }
 }

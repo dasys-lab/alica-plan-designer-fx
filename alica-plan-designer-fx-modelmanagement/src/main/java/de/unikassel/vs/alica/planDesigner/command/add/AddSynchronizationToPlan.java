@@ -30,12 +30,12 @@ public class AddSynchronizationToPlan extends AbstractUiPositionCommand {
         this.newlyCreatedUiExtension = this.parentOfElement.getUiExtension(this.synchronisation);
         this.newlyCreatedUiExtension.setX(x);
         this.newlyCreatedUiExtension.setY(y);
-        modelManager.createdPlanElement(Types.SYNCHRONISATION, synchronisation, parentOfElement.getPlan(), false);
+        modelManager.storePlanElement(Types.SYNCHRONISATION, synchronisation, parentOfElement.getPlan(), false);
     }
 
     @Override
     public void undoCommand() {
         parentOfElement.remove(synchronisation);
-        modelManager.createdPlanElement(Types.SYNCHRONISATION, synchronisation, parentOfElement.getPlan(), false);
+        modelManager.storePlanElement(Types.SYNCHRONISATION, synchronisation, parentOfElement.getPlan(), false);
     }
 }

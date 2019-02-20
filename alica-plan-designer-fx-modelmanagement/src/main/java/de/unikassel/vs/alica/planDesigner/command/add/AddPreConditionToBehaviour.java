@@ -21,7 +21,7 @@ public class AddPreConditionToBehaviour extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.createdPlanElement(Types.PRECONDITION, newPreCondition, behaviour, false);
+        modelManager.storePlanElement(Types.PRECONDITION, newPreCondition, behaviour, false);
         behaviour.setPreCondition(newPreCondition);
     }
 
@@ -30,7 +30,7 @@ public class AddPreConditionToBehaviour extends AbstractCommand {
         if(previousPreCondition == null){
             modelManager.removedPlanElement(Types.PRECONDITION, newPreCondition, behaviour, false);
         }else{
-            modelManager.createdPlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
+            modelManager.storePlanElement(Types.PRECONDITION, previousPreCondition, behaviour, false);
         }
         behaviour.setPreCondition(previousPreCondition);
     }

@@ -1,7 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Task;
-import de.unikassel.vs.alica.planDesigner.alicamodel.TaskRepository;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
@@ -25,7 +24,7 @@ public class CreateTask extends AbstractCommand {
     @Override
     public void doCommand() {
         // in case of a task, the model manager is working with its task repo, instead of the parent element
-        modelManager.createdPlanElement(Types.TASK, task, null, false);
+        modelManager.storePlanElement(Types.TASK, task, null, false);
     }
 
     @Override

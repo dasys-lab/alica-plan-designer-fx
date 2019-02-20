@@ -21,7 +21,7 @@ public class AddPostConditionToBehaviour extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.createdPlanElement(Types.POSTCONDITION, newPostCondition, behaviour, false);
+        modelManager.storePlanElement(Types.POSTCONDITION, newPostCondition, behaviour, false);
         behaviour.setPostCondition(newPostCondition);
     }
 
@@ -30,7 +30,7 @@ public class AddPostConditionToBehaviour extends AbstractCommand {
         if(previousPostCondition == null){
             modelManager.removedPlanElement(Types.POSTCONDITION, newPostCondition, behaviour, false);
         }else{
-            modelManager.createdPlanElement(Types.POSTCONDITION, previousPostCondition, behaviour, false);
+            modelManager.storePlanElement(Types.POSTCONDITION, previousPostCondition, behaviour, false);
         }
         behaviour.setPostCondition(previousPostCondition);
     }

@@ -7,8 +7,6 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-import java.util.ArrayList;
-
 public class RemovePlanFromPlanType extends AbstractCommand {
 
     protected PlanType planType;
@@ -29,6 +27,6 @@ public class RemovePlanFromPlanType extends AbstractCommand {
     @Override
     public void undoCommand() {
         planType.addPlan(annotatedPlan);
-        modelManager.createdPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
+        modelManager.storePlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
     }
 }

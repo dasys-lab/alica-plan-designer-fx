@@ -2,10 +2,7 @@ package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.*;
 
 public class CreatePlan extends AbstractCommand {
 
@@ -16,7 +13,7 @@ public class CreatePlan extends AbstractCommand {
         if (mmq.getElementType().equals(Types.PLAN)) {
             this.plan = new Plan();
             this.plan.setName(mmq.getName());
-            this.plan.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), plan.getName() + "." + FileSystemUtil.PLAN_ENDING));
+            this.plan.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), plan.getName() + "." + Extensions.PLAN));
         }
         else
         {
@@ -26,7 +23,7 @@ public class CreatePlan extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.createdPlanElement(Types.PLAN, plan, null, true);
+        modelManager.storePlanElement(Types.PLAN, plan, null, true);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class RemoveRuntimeConditionFromPlan extends AbstractCommand {
     @Override
     public void undoCommand() {
         if (previousRuntimeCondition != null){
-            modelManager.createdPlanElement(Types.RUNTIMECONDITION, previousRuntimeCondition, plan, false);
+            modelManager.storePlanElement(Types.RUNTIMECONDITION, previousRuntimeCondition, plan, false);
         }
         plan.setRuntimeCondition(previousRuntimeCondition);
     }

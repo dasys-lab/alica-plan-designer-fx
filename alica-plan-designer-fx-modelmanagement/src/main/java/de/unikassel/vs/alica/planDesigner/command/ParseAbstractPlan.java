@@ -3,10 +3,7 @@ package de.unikassel.vs.alica.planDesigner.command;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.*;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
 
 import java.io.File;
@@ -31,29 +28,23 @@ public class ParseAbstractPlan extends AbstractCommand {
     public void doCommand() {
         // 1. parse file
         // 2. delete already existing object and put new one
-        try {
-            switch (modelModificationQuery.getElementType()) {
-                case Types.PLAN:
-                case Types.MASTERPLAN:
-                    newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
-                    modelManager.replaceIncompleteTasksInEntryPoints((Plan) newElement);
-                    break;
-                case Types.PLANTYPE:
-                    newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
-                    modelManager.replaceIncompletePlansInPlanType((PlanType) newElement);
-                    break;
-                case Types.BEHAVIOUR:
-                    newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Behaviour.class);
-                    break;
-                case Types.TASKREPOSITORY:
-                    newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), TaskRepository.class);
-                    break;
-                default:
-                    System.err.println("ParseAbstractPlan: Parsing model eventType " + modelModificationQuery.getElementType() + " not implemented, yet!");
-                    return;
-            }
-        }catch (FileNotFoundException e){
-            e.printStackTrace();
+        switch (modelModificationQuery.getElementType()) {
+            case Types.PLAN:
+            case Types.MASTERPLAN:
+                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Plan.class);
+                break;
+            case Types.PLANTYPE:
+                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), PlanType.class);
+                break;
+            case Types.BEHAVIOUR:
+                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), Behaviour.class);
+                break;
+            case Types.TASKREPOSITORY:
+                newElement = modelManager.parseFile(FileSystemUtil.getFile(modelModificationQuery), TaskRepository.class);
+                break;
+            default:
+                System.err.println("ParseAbstractPlan: Parsing model eventType " + modelModificationQuery.getElementType() + " not implemented, yet!");
+                return;
         }
 
         //Add listeners to newElements isDirty-flag
@@ -74,31 +65,22 @@ public class ParseAbstractPlan extends AbstractCommand {
             //If the new element is a Plan, its visualisation has to be loaded as well
             Plan newPlan = (Plan) newElement;
             File uiExtensionFile = FileSystemUtil.getFile(modelModificationQuery.getAbsoluteDirectory()
-                    , modelModificationQuery.getName(), FileSystemUtil.PLAN_EXTENSION_ENDING);
-            PlanUiExtensionPair newPlanUiExtensionPair;
-            try {
-                newPlanUiExtensionPair = modelManager.parseFile(uiExtensionFile, PlanUiExtensionPair.class);
-            } catch (FileNotFoundException e) {
-                // A plan does not necessarily need a PlanUiExtensionPair, this FileNotFoundException therefore
-                // can occur under normal conditions
-                newPlanUiExtensionPair = null;
-            }
-
+                    , modelModificationQuery.getName(), Extensions.PLAN_UI);
+            PlanUiExtensionPair newPlanUiExtensionPair = modelManager.parseFile(uiExtensionFile, PlanUiExtensionPair.class);
             if(newPlanUiExtensionPair != null){
-
                 //If a visualisation was loaded, replace the old one and update the view
-                modelManager.replaceIncompletePlanElementsInPlanModelVisualisationObject(newPlanUiExtensionPair);
+//                modelManager.replaceIncompletePlanElementsInPlanModelVisualisationObject(newPlanUiExtensionPair);
                 modelManager.getPlanModelVisualisationObjectMap().put(modelModificationQuery.getElementId(), newPlanUiExtensionPair);
                 modelManager.updatePlanModelVisualisationObject(newPlanUiExtensionPair);
             }
 
             if(newPlan.getMasterPlan()) {
-                modelManager.createdPlanElement(Types.MASTERPLAN, newElement, null, false);
+                modelManager.storePlanElement(Types.MASTERPLAN, newElement, null, false);
             } else {
-                modelManager.createdPlanElement(Types.PLAN, newElement, null, false);
+                modelManager.storePlanElement(Types.PLAN, newElement, null, false);
             }
         } else {
-            modelManager.createdPlanElement(modelModificationQuery.getElementType(), newElement, null, false);
+            modelManager.storePlanElement(modelModificationQuery.getElementType(), newElement, null, false);
         }
 
     }
@@ -108,9 +90,9 @@ public class ParseAbstractPlan extends AbstractCommand {
         if (oldElement != null) {
             // replace new object with former old one
             if (oldElement instanceof Plan && ((Plan) oldElement).getMasterPlan()) {
-                modelManager.createdPlanElement(Types.MASTERPLAN, oldElement, null, false);
+                modelManager.storePlanElement(Types.MASTERPLAN, oldElement, null, false);
             } else {
-                modelManager.createdPlanElement(modelModificationQuery.getElementType(), oldElement, null, false);
+                modelManager.storePlanElement(modelModificationQuery.getElementType(), oldElement, null, false);
             }
         } else {
             // remove new object

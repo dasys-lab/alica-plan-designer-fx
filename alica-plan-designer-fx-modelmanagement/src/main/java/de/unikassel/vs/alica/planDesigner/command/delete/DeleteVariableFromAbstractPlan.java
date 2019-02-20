@@ -29,7 +29,7 @@ public class DeleteVariableFromAbstractPlan extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        modelManager.createdPlanElement(Types.VARIABLE, variable, abstractPlan, false);
+        modelManager.storePlanElement(Types.VARIABLE, variable, abstractPlan, false);
 //        if (abstractPlan instanceof WithVariables) {
 //            ((Plan) abstractPlan).addVariable(variable);
 //        } else {

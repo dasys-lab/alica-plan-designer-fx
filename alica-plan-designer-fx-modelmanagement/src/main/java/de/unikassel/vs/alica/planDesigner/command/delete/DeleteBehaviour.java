@@ -28,6 +28,6 @@ public class DeleteBehaviour extends AbstractCommand {
         if (behaviour == null) {
             return;
         }
-        modelManager.createdPlanElement(Types.BEHAVIOUR, behaviour, null, true);
+        modelManager.storePlanElement(Types.BEHAVIOUR, behaviour, null, true);
     }
 }

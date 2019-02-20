@@ -26,7 +26,7 @@ public class AddPlanToPlanType extends AbstractCommand {
     @Override
     public void doCommand() {
         planType.addPlan(annotatedPlan);
-        modelManager.createdPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
+        modelManager.storePlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
     }
 
     @Override

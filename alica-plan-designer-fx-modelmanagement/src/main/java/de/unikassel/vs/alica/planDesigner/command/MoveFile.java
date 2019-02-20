@@ -12,11 +12,10 @@ public class MoveFile extends AbstractCommand {
     private String originalRelativeDirectory;
     private String ending;
 
-
     public MoveFile(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager);
         this.elementToMove = (SerializablePlanElement) modelManager.getPlanElement(mmq.getElementId());
-        this.ending = FileSystemUtil.getFileEnding(this.elementToMove);
+        this.ending = FileSystemUtil.getExtension(this.elementToMove);
         this.newAbsoluteDirectory = mmq.getAbsoluteDirectory();
         this.originalRelativeDirectory = this.elementToMove.getRelativeDirectory();
     }
@@ -24,8 +23,6 @@ public class MoveFile extends AbstractCommand {
     @Override
     public void doCommand() {
         this.modelManager.moveFile(elementToMove, newAbsoluteDirectory, ending);
-
-
     }
 
     @Override

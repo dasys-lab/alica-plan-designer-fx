@@ -27,6 +27,6 @@ public class DeleteTaskFromRepository extends AbstractCommand {
 
     @Override
     public void undoCommand() {
-        modelManager.createdPlanElement(Types.TASK, taskToDelete, null, false);
+        modelManager.storePlanElement(Types.TASK, taskToDelete, null, false);
     }
 }

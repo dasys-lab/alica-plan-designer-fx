@@ -32,7 +32,7 @@ public class AddEntryPointInPlan extends AbstractUiPositionCommand {
         this.newlyCreatedUiExtension = this.parentOfElement.getUiExtension(this.entryPoint);
         this.newlyCreatedUiExtension.setX(this.x);
         this.newlyCreatedUiExtension.setY(this.y);
-        this.modelManager.createdPlanElement(Types.ENTRYPOINT, this.entryPoint, this.entryPoint.getPlan(), false);
+        this.modelManager.storePlanElement(Types.ENTRYPOINT, this.entryPoint, this.entryPoint.getPlan(), false);
     }
 
     @Override

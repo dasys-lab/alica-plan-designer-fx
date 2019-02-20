@@ -21,7 +21,7 @@ public class AddRuntimeConditionToPlan extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.createdPlanElement(Types.RUNTIMECONDITION, newRuntimeCondition, plan, false);
+        modelManager.storePlanElement(Types.RUNTIMECONDITION, newRuntimeCondition, plan, false);
         plan.setRuntimeCondition(newRuntimeCondition);
     }
 
@@ -30,7 +30,7 @@ public class AddRuntimeConditionToPlan extends AbstractCommand {
         if(previousRuntimeCondition == null){
             modelManager.removedPlanElement(Types.RUNTIMECONDITION, newRuntimeCondition, plan, false);
         }else {
-            modelManager.createdPlanElement(Types.RUNTIMECONDITION, previousRuntimeCondition, plan, false);
+            modelManager.storePlanElement(Types.RUNTIMECONDITION, previousRuntimeCondition, plan, false);
         }
         plan.setRuntimeCondition(previousRuntimeCondition);
     }

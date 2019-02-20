@@ -26,7 +26,7 @@ public class RemovePostConditionFromBehaviour extends AbstractCommand {
     @Override
     public void undoCommand() {
         if(previousPostCondition != null){
-            modelManager.createdPlanElement(Types.POSTCONDITION, previousPostCondition, behaviour, false);
+            modelManager.storePlanElement(Types.POSTCONDITION, previousPostCondition, behaviour, false);
         }
         behaviour.setPostCondition(previousPostCondition);
     }

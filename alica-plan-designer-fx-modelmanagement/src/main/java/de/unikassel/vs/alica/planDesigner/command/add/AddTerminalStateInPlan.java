@@ -41,7 +41,7 @@ public class AddTerminalStateInPlan extends AbstractUiPositionCommand {
         this.newlyCreatedUiExtension = this.parentOfElement.getUiExtension(this.newState);
         this.newlyCreatedUiExtension.setX(x);
         this.newlyCreatedUiExtension.setY(y);
-        modelManager.createdPlanElement(type, newState, newState.getParentPlan(), false);
+        modelManager.storePlanElement(type, newState, newState.getParentPlan(), false);
     }
 
     @Override

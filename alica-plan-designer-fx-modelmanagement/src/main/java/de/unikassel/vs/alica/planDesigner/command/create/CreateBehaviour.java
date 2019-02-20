@@ -2,10 +2,7 @@ package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.*;
 
 public class CreateBehaviour extends AbstractCommand {
     Behaviour behaviour;
@@ -15,7 +12,7 @@ public class CreateBehaviour extends AbstractCommand {
         if (mmq.getElementType().equals(Types.BEHAVIOUR)) {
             this.behaviour = new Behaviour();
             this.behaviour.setName(mmq.getName());
-            this.behaviour.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), behaviour.getName()+ "." + FileSystemUtil.BEHAVIOUR_ENDING));
+            this.behaviour.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), behaviour.getName()+ "." + Extensions.BEHAVIOUR));
         }
         else
         {
@@ -25,7 +22,7 @@ public class CreateBehaviour extends AbstractCommand {
 
     @Override
     public void doCommand() {
-        modelManager.createdPlanElement(Types.BEHAVIOUR, behaviour, null, true);
+        modelManager.storePlanElement(Types.BEHAVIOUR, behaviour, null, true);
     }
 
     @Override

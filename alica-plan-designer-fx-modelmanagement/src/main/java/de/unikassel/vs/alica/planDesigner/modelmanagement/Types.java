@@ -25,4 +25,6 @@ public class Types {
     public static final String SYNCTRANSITION = "synctransition";
     public static final String BENDPOINT = "bendpoint";
     public static final String ABSTRACTPLAN = "abstractplan";
+    public static final String UIEXTENSION = "uiextension";
+    public static final String NOTYPE = "";
 }

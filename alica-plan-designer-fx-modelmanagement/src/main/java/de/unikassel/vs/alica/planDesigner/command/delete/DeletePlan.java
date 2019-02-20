@@ -29,9 +29,9 @@ public class DeletePlan extends AbstractCommand {
             return;
         }
         if (!plan.getMasterPlan()) {
-            modelManager.createdPlanElement(Types.PLAN, plan, null, true);
+            modelManager.storePlanElement(Types.PLAN, plan, null, true);
         } else {
-            modelManager.createdPlanElement(Types.MASTERPLAN, plan, null, true);
+            modelManager.storePlanElement(Types.MASTERPLAN, plan, null, true);
         }
     }
 }
