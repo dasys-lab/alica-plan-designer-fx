@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.repo;
 
+import de.unikassel.vs.alica.planDesigner.controller.ErrorWindowController;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEventExpanded;
@@ -10,15 +11,14 @@ import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.menu.DeleteElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
-import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
-import javafx.scene.Parent;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
+import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.PickResult;
@@ -80,21 +80,27 @@ public class RepositoryLabel extends Label {
             PickResult pickResult = e.getPickResult();
             Parent parent = pickResult.getIntersectedNode().getParent();
             if(pickResult.getIntersectedNode() instanceof Circle) {
-                if(parent instanceof StateContainer) {
-                    if(viewModelElement instanceof TaskViewModel) { return; }
+                try {
+                    if (parent instanceof StateContainer) {
+                        if (viewModelElement instanceof TaskViewModel) {
+                            return;
+                        }
 
-                    StateContainer stateContainer = (StateContainer) parent;
-                    GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(),stateContainer.getViewModelElement().getId());
-                    guiModificationEventExpanded.setParentId(stateContainer.getState().getParentId());
-                    guiModificationEventExpanded.setElementId(viewModelElement.getId());
-                    guiModificationHandler.handle(guiModificationEventExpanded);
-                }
-                if(parent instanceof EntryPointContainer && viewModelElement instanceof TaskViewModel) {
-                    EntryPointContainer entryPointContainer = (EntryPointContainer) parent;
-                    GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(),entryPointContainer.getViewModelElement().getId());
-                    guiModificationEventExpanded.setParentId(entryPointContainer.getViewModelElement().getParentId());
-                    guiModificationEventExpanded.setElementId(viewModelElement.getId());
-                    guiModificationHandler.handle(guiModificationEventExpanded);
+                        StateContainer stateContainer = (StateContainer) parent;
+                        GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(), stateContainer.getViewModelElement().getId());
+                        guiModificationEventExpanded.setParentId(stateContainer.getState().getParentId());
+                        guiModificationEventExpanded.setElementId(viewModelElement.getId());
+                        guiModificationHandler.handle(guiModificationEventExpanded);
+                    }
+                    if (parent instanceof EntryPointContainer && viewModelElement instanceof TaskViewModel) {
+                        EntryPointContainer entryPointContainer = (EntryPointContainer) parent;
+                        GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(), entryPointContainer.getViewModelElement().getId());
+                        guiModificationEventExpanded.setParentId(entryPointContainer.getViewModelElement().getParentId());
+                        guiModificationEventExpanded.setElementId(viewModelElement.getId());
+                        guiModificationHandler.handle(guiModificationEventExpanded);
+                    }
+                }catch (RuntimeException excp){
+                    ErrorWindowController.createErrorWindow(excp.getMessage(), null);
                 }
             }
             e.consume();
