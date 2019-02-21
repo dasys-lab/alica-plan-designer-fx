@@ -2,38 +2,37 @@ package de.unikassel.vs.alica.planDesigner.command.change;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
-import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
+import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-public class ConnectSynchronizationWithTransition extends AbstractCommand {
+public class ConnectSynchronizationWithTransition extends Command {
 
     private Transition transition;
     private Synchronisation synchronisation;
 
-    public ConnectSynchronizationWithTransition(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
+    public ConnectSynchronizationWithTransition(ModelManager manager, ModelModificationQuery mmq) {
+        super(manager, mmq);
+        // hack to make the fireEvent-Method work
+        mmq.setParentId(mmq.getRelatedObjects().get(Types.TRANSITION));
 
-        synchronisation = (Synchronisation) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.SYNCHRONISATION));
-        transition = (Transition) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
+        synchronisation = (Synchronisation) manager.getPlanElement(mmq.getRelatedObjects().get(Types.SYNCHRONISATION));
+        transition = (Transition) manager.getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
     }
 
     @Override
     public void doCommand() {
         synchronisation.addSyncedTransition(transition);
-        ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CONNECTED, transition, Types.SYNCTRANSITION);
-        modelEvent.setParentId(synchronisation.getId());
-        modelManager.fireEvent(modelEvent);
+        transition.setSynchronisation(synchronisation);
+        this.fireEvent(ModelEventType.ELEMENT_CONNECTED, synchronisation);
     }
 
     @Override
     public void undoCommand() {
         synchronisation.removeSyncedTransition(transition);
-        ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_DISCONNECTED, transition, Types.SYNCTRANSITION);
-        modelEvent.setParentId(synchronisation.getId());
-        modelManager.fireEvent(modelEvent);
+        transition.setSynchronisation(null);
+        this.fireEvent(ModelEventType.ELEMENT_DISCONNECTED, synchronisation);
     }
 }

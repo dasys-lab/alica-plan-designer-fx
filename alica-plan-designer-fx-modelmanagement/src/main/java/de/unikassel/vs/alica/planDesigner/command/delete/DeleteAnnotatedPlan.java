@@ -2,31 +2,34 @@ package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.AnnotatedPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanType;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.Command;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-public class RemovePlanFromPlanType extends AbstractCommand {
+public class DeleteAnnotatedPlan extends Command {
 
     protected PlanType planType;
     protected AnnotatedPlan annotatedPlan;
 
-    public RemovePlanFromPlanType(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
+    public DeleteAnnotatedPlan(ModelManager modelManager, ModelModificationQuery mmq) {
+        super(modelManager, mmq);
         this.planType = (PlanType) modelManager.getPlanElement(mmq.getParentId());
         this.annotatedPlan = (AnnotatedPlan) modelManager.getPlanElement(mmq.getElementId());
     }
 
     @Override
     public void doCommand() {
-        planType.removePlan(annotatedPlan);
-        modelManager.removedPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
+        this.planType.removePlan(this.annotatedPlan);
+        this.modelManager.dropPlanElement(Types.ANNOTATEDPLAN, this.annotatedPlan, false);
+        this.fireEvent(ModelEventType.ELEMENT_DELETED, this.annotatedPlan);
     }
 
     @Override
     public void undoCommand() {
-        planType.addPlan(annotatedPlan);
-        modelManager.storePlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
+        this.planType.addPlan(this.annotatedPlan);
+        this.modelManager.storePlanElement(Types.ANNOTATEDPLAN, this.annotatedPlan, false);
+        this.fireEvent(ModelEventType.ELEMENT_CREATED, this.annotatedPlan);
     }
 }

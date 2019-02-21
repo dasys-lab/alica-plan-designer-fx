@@ -54,7 +54,7 @@ public class ModelModificationQuery {
                 elementType = Types.TASKREPOSITORY;
                 break;
             case Extensions.PLAN_UI:
-                elementType = Types.PLAN; //TODO: Handle plan-extension-ending - Files
+                elementType = Types.PLAN; //TODO: Handle plan-uiElement-ending - Files
                 break;
             default:
                 System.err.println("ModelModificationQuery: Unknown ending of file " + absolutePath);
@@ -81,7 +81,11 @@ public class ModelModificationQuery {
     }
 
     public String getName() {
-        return name;
+        if (name == null) {
+            return "MISSING_NAME";
+        }else {
+            return name;
+        }
     }
 
     public void setName(String name) {
@@ -153,7 +157,11 @@ public class ModelModificationQuery {
     }
 
     public String getComment(){
-        return comment;
+        if (comment == null) {
+            return "MISSING_COMMENT";
+        }else {
+            return comment;
+        }
     }
 
     public void setComment(String comment) {

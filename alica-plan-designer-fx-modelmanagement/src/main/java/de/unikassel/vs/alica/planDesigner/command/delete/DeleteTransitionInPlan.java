@@ -2,16 +2,16 @@ package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
-import de.unikassel.vs.alica.planDesigner.command.AbstractUiPositionCommand;
+import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
-public class DeleteTransitionInPlan extends AbstractUiPositionCommand{
+public class DeleteTransitionInPlan extends UiPositionCommand {
 
-    private final PlanUiExtensionPair parentOfElement;
-    private UiExtension uiExtension;
+    private final UiExtension parentOfElement;
+    private UiElement uiElement;
     private State inState;
     private State outState;
     private Transition transition;
@@ -23,7 +23,7 @@ public class DeleteTransitionInPlan extends AbstractUiPositionCommand{
     }
 
     private void saveForLaterRetrieval() {
-        uiExtension = parentOfElement.getUiExtension(transition);
+        uiElement = parentOfElement.getUiElement(transition);
         outState = transition.getOutState();
         inState = transition.getInState();
     }
@@ -41,9 +41,9 @@ public class DeleteTransitionInPlan extends AbstractUiPositionCommand{
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().getTransitions().add(transition);
-        this.uiExtension = parentOfElement.getUiExtension(this.transition);
-        this.uiExtension.setX(this.x);
-        this.uiExtension.setY(this.y);
+        this.uiElement = parentOfElement.getUiElement(this.transition);
+        this.uiElement.setX(this.x);
+        this.uiElement.setY(this.y);
         transition.setInState(inState);
         transition.setOutState(outState);
     }

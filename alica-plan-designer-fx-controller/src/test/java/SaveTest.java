@@ -61,7 +61,7 @@ public class SaveTest extends ApplicationTest {
 //            PlanTab selectedItem = (PlanTab) MainWindowController.getInstance().getEditorTabPane().getTabs().getPmlUiExtension(0);
 //            State state = new State();
 //            state.setKey("State1");
-//            AddStateInPlan addStateInPlan = new AddStateInPlan(selectedItem.getPlanUIExtensionPair(), state);
+//            CreateState addStateInPlan = new CreateState(selectedItem.getPlanUIExtensionPair(), state);
 //            MainWindowController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
 //            selectedItem.save();
 //            MainWindowController.getInstance().getCommandStack().storeAndExecute(new DeleteAbstractPlan(selectedItem.getEditable()));
@@ -105,7 +105,7 @@ public class SaveTest extends ApplicationTest {
 //            PlanTab selectedItem = (PlanTab) MainWindowController.getInstance().getEditorTabPane().getTabs().getPmlUiExtension(0);
 //            State state = new State();
 //            state.setKey("State2");
-//            AddStateInPlan addStateInPlan = new AddStateInPlan(selectedItem.getPlanUIExtensionPair(), state);
+//            CreateState addStateInPlan = new CreateState(selectedItem.getPlanUIExtensionPair(), state);
 //            MainWindowController.getInstance().getCommandStack().storeAndExecute(addStateInPlan);
 //            selectedItem.save();
 //            MainWindowController.getInstance().getCommandStack().storeAndExecute(new DeleteAbstractPlan(selectedItem.getEditable()));

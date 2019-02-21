@@ -1,32 +1,37 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanType;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.*;
+import de.unikassel.vs.alica.planDesigner.command.Command;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-public class CreatePlanType extends AbstractCommand {
+public class CreatePlanType extends Command {
     private PlanType planType;
 
     public CreatePlanType(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
-        if (mmq.getElementType().equals(Types.PLANTYPE)) {
-            this.planType = new PlanType();
-            this.planType.setName(mmq.getName());
-            this.planType.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), planType.getName()+ "." + Extensions.PLANTYPE));
-        }
-        else
-        {
-            System.err.println("CreatePlanType: Type does not match command!");
-        }
+        super(modelManager, mmq);
+        this.planType = createPlanType();
+    }
+
+    protected PlanType createPlanType() {
+        PlanType planType = new PlanType();
+        planType.setName(mmq.getName());
+        planType.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(),planType.getName()+"."+Extensions.PLANTYPE));
+        return planType;
     }
 
     @Override
     public void doCommand() {
-        modelManager.storePlanElement(Types.PLANTYPE, planType, null, true);
+        this.modelManager.storePlanElement(Types.PLANTYPE, this.planType, true);
+        this.fireEvent(ModelEventType.ELEMENT_CREATED, this.planType);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.removedPlanElement(Types.PLANTYPE, planType, null, true);
+        modelManager.dropPlanElement(Types.PLANTYPE, this.planType, true);
+        this.fireEvent(ModelEventType.ELEMENT_DELETED, this.planType);
     }
 }

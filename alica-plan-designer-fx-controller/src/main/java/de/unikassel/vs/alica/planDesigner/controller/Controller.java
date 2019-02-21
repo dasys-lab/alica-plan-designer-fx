@@ -185,13 +185,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         PlanElement modelElement = event.getElement();
         PlanElementViewModel planElementViewModel = (PlanElementViewModel) viewModelManager.getViewModelElement(modelElement);
 
-        planElementViewModel.setXPosition(event.getExtension().getX());
-        planElementViewModel.setYPosition(event.getExtension().getY());
+        planElementViewModel.setXPosition(event.getUiElement().getX());
+        planElementViewModel.setYPosition(event.getUiElement().getY());
 
-        if (event.getExtension().getBendPoints().size() != 0) {
+        if (event.getUiElement().getBendPoints().size() != 0) {
             TransitionViewModel transition = (TransitionViewModel) planElementViewModel;
             transition.getBendpoints().clear();
-            for (BendPoint bendPoint : event.getExtension().getBendPoints()) {
+            for (BendPoint bendPoint : event.getUiElement().getBendPoints()) {
                 transition.addBendpoint((BendPointViewModel) viewModelManager.getViewModelElement(bendPoint));
             }
             ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, modelElement, Types.BENDPOINT);
@@ -257,7 +257,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case ELEMENT_CREATED:
                 viewModelManager.addElement(this, event);
                 break;
-            case ELEMENT_ADD:
+            case ELEMENT_ADDED:
                 viewModelManager.addElement(this, event);
                 break;
             case ELEMENT_CONNECTED:

@@ -1,18 +1,18 @@
 package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-public class DeletePlan extends AbstractCommand {
+public class DeletePlan extends Command {
 
     protected Plan plan;
 
-    public DeletePlan(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
-        plan = (Plan) modelManager.getPlanElement(mmq.getElementId());
+    public DeletePlan(ModelManager manager, ModelModificationQuery mmq) {
+        super(manager, mmq);
+        plan = (Plan) manager.getPlanElement(mmq.getElementId());
     }
 
     @Override
@@ -20,7 +20,7 @@ public class DeletePlan extends AbstractCommand {
         if (plan == null) {
             return;
         }
-        modelManager.removedPlanElement(Types.PLAN, plan, null, true);
+        modelManager.dropPlanElement(Types.PLAN, plan, true);
     }
 
     @Override
@@ -29,9 +29,9 @@ public class DeletePlan extends AbstractCommand {
             return;
         }
         if (!plan.getMasterPlan()) {
-            modelManager.storePlanElement(Types.PLAN, plan, null, true);
+            modelManager.storePlanElement(Types.PLAN, plan, true);
         } else {
-            modelManager.storePlanElement(Types.MASTERPLAN, plan, null, true);
+            modelManager.storePlanElement(Types.MASTERPLAN, plan, true);
         }
     }
 }

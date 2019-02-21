@@ -10,14 +10,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Behaviour extends AbstractPlan implements HasVariables {
+public class Behaviour extends AbstractPlan {
     protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
     protected final SimpleLongProperty deferring = new SimpleLongProperty();
 
     protected ObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
     protected ObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
     protected ObjectProperty<PostCondition> postCondition = new SimpleObjectProperty<>();
-    protected final ArrayList<Variable> variables= new ArrayList<>();
 
     public PreCondition getPreCondition() {
         return preCondition.get();
@@ -65,28 +64,6 @@ public class Behaviour extends AbstractPlan implements HasVariables {
             postCondition.pluginNameProperty().addListener(dirty);
             postCondition.commentProperty().addListener(dirty);
         }
-    }
-
-    public void addVariable(Variable variable) {
-        variables.add(variable);
-        variable.nameProperty().addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
-        variable.commentProperty().addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
-        variable.variableTypeProperty().addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
-        this.setDirty(true);
-    }
-    public void removeVariable(Variable variable) {
-        // TODO: make listener in put method a local variable that is removed from the list of listeners here...
-        variables.remove(variable);
-        this.setDirty(true);
-    }
-    public List<Variable> getVariables() {
-        return Collections.unmodifiableList(variables);
     }
 
     public int getFrequency() {

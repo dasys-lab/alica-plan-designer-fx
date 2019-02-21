@@ -7,7 +7,7 @@ import de.unikassel.vs.alica.planDesigner.events.UiExtensionModelEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
@@ -492,7 +492,7 @@ public class ViewModelManager {
         int x = 0;
         int y = 0;
         if (event instanceof UiExtensionModelEvent) {
-            UiExtension extension = ((UiExtensionModelEvent) event).getExtension();
+            UiElement extension = ((UiExtensionModelEvent) event).getUiElement();
             x = extension.getX();
             y = extension.getY();
         }

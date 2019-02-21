@@ -1,7 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.modelmanagement;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -106,7 +106,7 @@ public class FileSystemUtil {
             case Extensions.TASKREPOSITORY:
                 return TaskRepository.class;
             case Extensions.PLAN_UI:
-                return PlanUiExtensionPair.class;
+                return UiExtension.class;
             default:
                 return null;
         }

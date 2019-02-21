@@ -1,40 +1,36 @@
 package de.unikassel.vs.alica.planDesigner.command.change;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 
-public class ChangePositionForBendpoint extends AbstractCommand {
+public class ChangePositionForBendpoint extends UiPositionCommand {
 
     protected BendPoint bendPoint;
-    protected Plan plan;
-
-    protected int newX;
-    protected int newY;
-
     protected int oldX;
     protected int oldY;
 
-    public ChangePositionForBendpoint(ModelManager modelManager, Plan plan, BendPoint bendPoint, int newX, int newY) {
-        super(modelManager);
-        this.newX = newX;
-        this.newY = newY;
-
-        // save old position for undo
-        oldX = bendPoint.getX();
-        oldY = bendPoint.getY();
+    public ChangePositionForBendpoint(ModelManager manager, ModelModificationQuery mmq) {
+        super(manager, mmq);
+        //TODO: depending on how the mmq member variables are set, this command probably won't work
+        this.bendPoint = (BendPoint) this.modelManager.getPlanElement(mmq.getElementId());
+        this.oldX = bendPoint.getX();
+        this.oldY = bendPoint.getY();
     }
 
     @Override
     public void doCommand() {
-        bendPoint.setX(newX);
-        bendPoint.setY(newY);
+        bendPoint.setX(x);
+        bendPoint.setY(y);
+        this.fireEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, this.bendPoint);
     }
 
     @Override
     public void undoCommand() {
         bendPoint.setX(oldX);
         bendPoint.setY(oldY);
+        this.fireEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, this.bendPoint);
     }
 }

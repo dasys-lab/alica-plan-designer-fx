@@ -2,23 +2,23 @@ package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
-import de.unikassel.vs.alica.planDesigner.command.AbstractUiPositionCommand;
+import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeleteStateInPlan extends AbstractUiPositionCommand {
+public class DeleteStateInPlan extends UiPositionCommand {
 
-    protected PlanUiExtensionPair parentOfDeleted;
+    protected UiExtension parentOfDeleted;
 
     protected Map<Transition, State> outStatesOfInTransitions = new HashMap<>();
     protected Map<Transition, State> inStatesOfOutTransitions = new HashMap<>();
-    protected Map<Transition , UiExtension> pmlUiExtensionsOfTransitions = new HashMap<>();
-    protected UiExtension uiExtension;
+    protected Map<Transition , UiElement> pmlUiExtensionsOfTransitions = new HashMap<>();
+    protected UiElement uiElement;
     protected State state;
 
     public DeleteStateInPlan(ModelManager modelManager, ModelModificationQuery mmq) {
@@ -83,26 +83,26 @@ public class DeleteStateInPlan extends AbstractUiPositionCommand {
                 .filter(e -> e.getOutState().equals(state))
                 .forEach(t -> inStatesOfOutTransitions.put(t, t.getInState()));
 
-        // save pml view extension of state
-        uiExtension = parentOfDeleted.getUiExtension(state);
+        // save pml view uiElement of state
+        uiElement = parentOfDeleted.getUiElement(state);
 
 
         // save pml view extensions of transitions, if they have any
         outStatesOfInTransitions
                 .keySet()
                 .forEach(k -> {
-                    UiExtension uiExtension = parentOfDeleted.getUiExtension(k);
-                    if (uiExtension != null) {
-                        pmlUiExtensionsOfTransitions.put(k, uiExtension);
+                    UiElement uiElement = parentOfDeleted.getUiElement(k);
+                    if (uiElement != null) {
+                        pmlUiExtensionsOfTransitions.put(k, uiElement);
                     }
                 });
 
         inStatesOfOutTransitions
                 .keySet()
                 .forEach(k -> {
-                    UiExtension uiExtension = parentOfDeleted.getUiExtension(k);
-                    if (uiExtension != null) {
-                        pmlUiExtensionsOfTransitions.put(k, uiExtension);
+                    UiElement uiElement = parentOfDeleted.getUiElement(k);
+                    if (uiElement != null) {
+                        pmlUiExtensionsOfTransitions.put(k, uiElement);
                     }
                 });
     }
@@ -121,11 +121,11 @@ public class DeleteStateInPlan extends AbstractUiPositionCommand {
             inTransition.setOutState(outStatesOfInTransitions.get(inTransition));
         }
 
-        uiExtension = parentOfDeleted.getUiExtension(state);
-        uiExtension.setX(this.x);
-        uiExtension.setY(this.y);
+        uiElement = parentOfDeleted.getUiElement(state);
+        uiElement.setX(this.x);
+        uiElement.setY(this.y);
         pmlUiExtensionsOfTransitions
                 .entrySet()
-                .forEach(e -> parentOfDeleted.getUiExtension(e.getKey()));
+                .forEach(e -> parentOfDeleted.getUiElement(e.getKey()));
     }
 }
