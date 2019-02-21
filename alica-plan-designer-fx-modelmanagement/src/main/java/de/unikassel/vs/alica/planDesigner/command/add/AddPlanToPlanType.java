@@ -21,6 +21,12 @@ public class AddPlanToPlanType extends AbstractCommand {
         this.annotatedPlan = new AnnotatedPlan();
         this.annotatedPlan.setPlan((Plan) modelManager.getPlanElement(mmq.getElementId()));
         this.annotatedPlan.setActivated(true);
+
+        if(this.modelManager.checkForInclusionLoop(planType, Types.PLANTYPE, annotatedPlan, Types.ANNOTATEDPLAN)){
+            throw new RuntimeException(
+                    String.format("Plan \"%s\" can not be added to PlanType \"%s\" because of loop in model"
+                            , annotatedPlan.getPlan().getName(), planType.getName()));
+        }
     }
 
     @Override

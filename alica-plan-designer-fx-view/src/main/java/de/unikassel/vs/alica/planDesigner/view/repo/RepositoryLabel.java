@@ -100,6 +100,8 @@ public class RepositoryLabel extends Label {
                         guiModificationHandler.handle(guiModificationEventExpanded);
                     }
                 }catch (RuntimeException excp){
+                    // Exception might get thrown, because the element can't be added, because this would cause a loop
+                    // in the model
                     ErrorWindowController.createErrorWindow(excp.getMessage(), null);
                 }
             }

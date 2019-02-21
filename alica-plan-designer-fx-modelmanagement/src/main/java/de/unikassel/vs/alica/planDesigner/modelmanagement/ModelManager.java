@@ -1537,6 +1537,7 @@ public class ModelManager implements Observer {
     private boolean checkForInclusionLoop(PlanElement addedTo, String addedToType, PlanElement added, String addedType, Set<PlanElement> previouslyChecked){
 
         // If the element has been checked already, a loop would have been detected
+        // Preventing endless recursion, in case there already is a loop in the model
         if(previouslyChecked.contains(added)){
             return false;
         }
@@ -1581,16 +1582,64 @@ public class ModelManager implements Observer {
                         }
                         return false;
                     case Types.PLANTYPE:
+                        PlanType planType = (PlanType) added;
+                        for(AnnotatedPlan np : planType.getPlans()){
+                            String type = np.getPlan().getMasterPlan() ? Types.MASTERPLAN : Types.PLAN;
+                            if(checkForInclusionLoop(addedTo, addedToType, np.getPlan(), type, previouslyChecked)){
+                                return  true;
+                            }
+                        }
                         return false; // TODO: Check for PlanTypes
                     case Types.BEHAVIOUR:
                         // A Behaviour does not contain plans, so there can't be a loop
                         return false;
-                    default:
-                        System.err.println("ModelManager: Cant't check for loops of " + addedType + " in " + addedToType);
+                }
+            case Types.PLANTYPE:
+                switch(addedType){
+                    case Types.ANNOTATEDPLAN:
+                        AnnotatedPlan annotatedPlan = (AnnotatedPlan) added;
+                        String type = annotatedPlan.getPlan().getMasterPlan() ? Types.MASTERPLAN : Types.PLAN;
+                        return checkForInclusionLoop(addedTo, addedToType, annotatedPlan.getPlan(), type, previouslyChecked);
+                    case Types.MASTERPLAN:
+                    case Types.PLAN:
+                        Plan plan = (Plan) added;
+                        for(State s : plan.getStates()){
+                            for (AbstractPlan ap : s.getPlans()){
+                                if(ap instanceof Plan){
+                                    type = ((Plan) ap).getMasterPlan() ? Types.MASTERPLAN : Types.PLAN;
+                                }else if (ap instanceof PlanType){
+                                    type = Types.PLANTYPE;
+                                }else if (ap instanceof Behaviour){
+                                    type = Types.BEHAVIOUR;
+                                }else {
+                                    // Should not appear
+                                    System.err.println("ModelManager: Unknown type of abstract Plan");
+                                    return false;
+                                }
+                                if(checkForInclusionLoop(addedTo, addedToType, ap, type, previouslyChecked)){
+                                    return true;
+                                }
+                            }
+                        }
                         return false;
+                    case Types.PLANTYPE:
+                        if(addedTo.equals(added)){
+                            return true;
+                        }
+                        PlanType planType = (PlanType) added;
+                        for (AnnotatedPlan np : planType.getPlans()){
+                            type = np.getPlan().getMasterPlan() ? Types.MASTERPLAN : Types.PLAN;
+                            if(checkForInclusionLoop(addedTo, addedToType, np.getPlan(), type, previouslyChecked)){
+                                return true;
+                            }
+                        }
+                        return false;
+                    case Types.BEHAVIOUR:
+                        return false;
+
                 }
             default:
-                System.err.println("ModelManager: Can't check for loops in type " + addedToType);
+                System.err.println("ModelManager: Cant't check for loops of " + addedType + " in " + addedToType);
                 return false;
         }
     }

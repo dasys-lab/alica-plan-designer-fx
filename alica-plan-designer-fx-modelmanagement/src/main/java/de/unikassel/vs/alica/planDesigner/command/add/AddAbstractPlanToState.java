@@ -21,7 +21,7 @@ public class AddAbstractPlanToState extends AbstractCommand {
 
         if(modelManager.checkForInclusionLoop(state, Types.STATE, abstractPlan, mmq.getElementType())){
             throw new RuntimeException(
-                    String.format("AbstractPlan \"%s\" can not be added to State \"%s\" because of loop in Model",
+                    String.format("AbstractPlan \"%s\" can not be added to State \"%s\" because of loop in model",
                     abstractPlan.getName(), state.getName())
             );
         }
