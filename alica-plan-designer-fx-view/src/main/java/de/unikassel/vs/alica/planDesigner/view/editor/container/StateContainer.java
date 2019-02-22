@@ -38,7 +38,6 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         setupContainer();
     }
 
-
     @Override
     public void setupContainer() {
         getChildren().clear();

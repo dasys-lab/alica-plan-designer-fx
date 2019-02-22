@@ -440,9 +440,9 @@ public class ModelManager implements Observer {
         //Set the correct PlanElements the PmlUiExtensionMap
         PlanElement[] keys = uiExtension.getKeys().toArray(new PlanElement[uiExtension.getKeys().size()]);
         for (int i = keys.length - 1; i >= 0; i--) {
-            PlanElement incomplete = keys[i];
-            PlanElement complete = getPlanElement(incomplete.getId());
-            uiExtension.replaceKey(complete);
+            PlanElement complete = this.getPlanElement(keys[i].getId());
+            uiExtension.add(complete, uiExtension.getUiElement((keys[i])));
+//            uiExtension.replaceKey(complete);
         }
     }
 

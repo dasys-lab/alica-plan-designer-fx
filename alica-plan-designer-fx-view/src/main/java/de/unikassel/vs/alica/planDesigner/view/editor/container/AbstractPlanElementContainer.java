@@ -147,7 +147,6 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
                 node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getSceneY() - dragContext.mouseAnchorY);
 
                 planTab.fireChangePositionEvent(this, viewModelElement.getType(), node.getLayoutX(), node.getLayoutY());
-                //getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
                 mouseEvent.consume();
                 redrawElement();
             }
