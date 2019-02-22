@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab;
 
+import de.unikassel.vs.alica.planDesigner.controller.ErrorWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiChangeAttributeEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
@@ -107,7 +108,13 @@ public class PlanTypeTab extends AbstractPlanTab {
 
         addPlanButton.setOnAction(e -> {
             if (!planListView.getSelectionModel().isEmpty()) {
-                fireModificationEvent(GuiEventType.ADD_ELEMENT, planListView.getSelectionModel().getSelectedItem().getViewModelElement());
+                try {
+                    fireModificationEvent(GuiEventType.ADD_ELEMENT, planListView.getSelectionModel().getSelectedItem().getViewModelElement());
+                }catch (RuntimeException excp){
+                    // Exception might be thrown, because the selected element can't be added, because this would cause
+                    // a loop in the model
+                    ErrorWindowController.createErrorWindow(excp.getMessage(), null);
+                }
             }
         });
 

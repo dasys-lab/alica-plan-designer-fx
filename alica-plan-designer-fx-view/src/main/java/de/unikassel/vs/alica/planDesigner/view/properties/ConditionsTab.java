@@ -7,10 +7,7 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
-import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ConditionViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,6 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.util.Callback;
+import javafx.util.converter.DefaultStringConverter;
+import javafx.util.converter.LongStringConverter;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.BeanPropertyUtils;
 
@@ -85,16 +84,26 @@ public class ConditionsTab extends Tab {
         properties = new PropertySheet();
         properties.setModeSwitcherVisible(false);
 
-        TitledPane section0 = new TitledPane();
-        section0.setContent(properties);
-        section0.setText(I18NRepo.getInstance().getString("label.caption.properties"));
+        TitledPane propertySection = new TitledPane();
+        propertySection.setContent(properties);
+        propertySection.setText(I18NRepo.getInstance().getString("label.caption.properties"));
 
-        TitledPane section1 = new TitledPane();
-        section1.setContent(pluginUI);
-        section1.setText(I18NRepo.getInstance().getString("label.caption.pluginui"));
-        section1.setExpanded(false);
+        TitledPane pluginSection = new TitledPane();
+        pluginSection.setContent(pluginUI);
+        pluginSection.setText(I18NRepo.getInstance().getString("label.caption.pluginui"));
+        pluginSection.setExpanded(false);
 
-        VBox vBox = new VBox(section0, section1);
+        TitledPane variablesSection = new TitledPane();
+        variablesSection.setContent(createVariableTable());
+        variablesSection.setText(I18NRepo.getInstance().getString("label.caption.variables"));
+        variablesSection.setExpanded(false);
+
+        TitledPane quantifierSection = new TitledPane();
+        quantifierSection.setContent(createQuantifierTable());
+        quantifierSection.setText(I18NRepo.getInstance().getString("label.caption.quantifiers"));
+        quantifierSection.setExpanded(false);
+
+        VBox vBox = new VBox(propertySection, pluginSection, variablesSection, quantifierSection);
         this.hidableView = new ScrollPane(vBox);
         hidableView.setFitToWidth(true);
 
@@ -250,5 +259,52 @@ public class ConditionsTab extends Tab {
         this.pluginSelection.getSelectionModel().select(pluginName);
         this.hidableView.setVisible(pluginName != null && !pluginName.equals(NONE));
         this.pluginSelection.setOnAction(handler);
+    }
+
+    private VariablesTable<VariableViewModel> createVariableTable(){
+        VariablesTable<VariableViewModel> variablesTable = new VariablesTable<VariableViewModel>() {
+            @Override
+            protected void onAddElement() {
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.VARIABLE, "NEW_VARIABLE");
+                event.setParentId(condition.getId());
+                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+            }
+
+            @Override
+            protected void onRemoveElement() {
+                //TODO
+            }
+        };
+
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+        variablesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
+        variablesTable.addColumn(i18NRepo.getString("label.column.elementType"), "variableType", new DefaultStringConverter(), true);
+        variablesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
+
+        return variablesTable;
+    }
+
+    private VariablesTable<QuantifierViewModel> createQuantifierTable(){
+        VariablesTable<QuantifierViewModel> quantifiersTable = new VariablesTable<QuantifierViewModel>() {
+            @Override
+            protected void onAddElement() {
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.QUANTIFIER, "NEW_QUANTIFIER");
+                event.setParentId(condition.getId());
+                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+            }
+
+            @Override
+            protected void onRemoveElement() {
+                // TODO
+            }
+        };
+
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+        quantifiersTable.addColumn(i18NRepo.getString("label.column.elementType"), "quantifierType", new DefaultStringConverter(), true);
+        quantifiersTable.addColumn(i18NRepo.getString("label.column.scope"), "scope", new LongStringConverter(), true);
+        quantifiersTable.addColumn(i18NRepo.getString("label.column.sorts"), "sorts", new DefaultStringConverter(), true);
+        quantifiersTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
+
+        return quantifiersTable;
     }
 }

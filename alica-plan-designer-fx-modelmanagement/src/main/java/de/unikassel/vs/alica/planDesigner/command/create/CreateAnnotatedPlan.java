@@ -18,6 +18,11 @@ public class CreateAnnotatedPlan extends Command {
         super(modelManager, mmq);
         this.planType = (PlanType) modelManager.getPlanElement(mmq.getParentId());
         this.annotatedPlan = createAnnotatedPlan();
+        if(this.modelManager.checkForInclusionLoop(planType, Types.PLANTYPE, annotatedPlan, Types.ANNOTATEDPLAN)){
+            throw new RuntimeException(
+                    String.format("Plan \"%s\" can not be added to PlanType \"%s\" because of loop in model"
+                            , annotatedPlan.getPlan().getName(), planType.getName()));
+        }
     }
 
     public AnnotatedPlan createAnnotatedPlan() {
