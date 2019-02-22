@@ -39,8 +39,8 @@ public class CreateTransition extends UiPositionCommand {
     @Override
     public void doCommand() {
         this.plan.addTransition(this.transition);
-        this.in.getOutTransitions().add(this.transition);
-        this.out.getInTransitions().add(this.transition);
+        this.in.addOutTransition(this.transition);
+        this.out.addInTransition(this.transition);
         this.modelManager.storePlanElement(Types.TRANSITION, this.transition,false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.transition);
     }

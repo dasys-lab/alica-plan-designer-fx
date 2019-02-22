@@ -3,13 +3,15 @@ package de.unikassel.vs.alica.planDesigner.uiextensionmodel;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class UiExtension {
 
     protected Plan plan;
-    protected HashMap<PlanElement, UiElement> uiElementMap = null;
+    protected HashMap<Long, UiElement> uiElementMap = null;
 
     /**
      * Default-constructor, only necessary for deserialization
@@ -31,27 +33,20 @@ public class UiExtension {
         this.plan = plan;
     }
 
-    public void replaceKey(PlanElement element) {
-        for (PlanElement key : uiElementMap.keySet()) {
-            if (key.getId() == element.getId()) {
-                UiElement extension = uiElementMap.get(element);
-                uiElementMap.remove(key);
-                uiElementMap.put(element, extension);
-                return;
-            }
-        }
-    }
-
-    public Set<PlanElement> getKeys() {
+    public Set<Long> getKeys() {
         return uiElementMap.keySet();
     }
 
-    public void remove(PlanElement key) {
+    public void remove(Long key) {
         this.uiElementMap.remove(key);
     }
 
-    public void add(PlanElement key, UiElement value) {
+    public void add(Long key, UiElement value) {
         this.uiElementMap.put(key, value);
+    }
+
+    public Map<Long, UiElement> getUiElementMap() {
+        return Collections.unmodifiableMap(this.uiElementMap);
     }
 
     /**
@@ -62,17 +57,22 @@ public class UiExtension {
      * may not be required later, when PmlUiExtensions are saved, loaded and created
      * automatically
      *
-     * @param planElement the {@link PlanElement} to find a {@link UiElement} for
+     * @param planElementId the {@link PlanElement} to find a {@link UiElement} for
      * @return the corresponding {@link UiElement} or a new one
      */
-    public UiElement getUiElement(PlanElement planElement) {
-        UiElement uiElement = uiElementMap.get(planElement);
+    public UiElement getUiElement(Long planElementId) {
+        UiElement uiElement = uiElementMap.get(planElementId);
         if (uiElement == null) {
             uiElement = new UiElement();
-            uiElementMap.put(planElement, uiElement);
-            registerDirtyListeners(uiElement);
+            uiElementMap.put(planElementId, uiElement);
         }
         return uiElement;
+    }
+
+    public void registerDirtyListeners() {
+        for (UiElement uiElement : uiElementMap.values()) {
+            registerDirtyListeners(uiElement);
+        }
     }
 
     private void registerDirtyListeners(UiElement extension) {

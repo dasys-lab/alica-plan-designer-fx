@@ -26,7 +26,7 @@ public class ChangePosition extends UiPositionCommand {
         uiElement.setX(x);
         uiElement.setY(y);
 
-        this.fireEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, this.planElement);
+        this.fireEvent(ModelEventType.ELEMENT_CHANGED_POSITION, this.planElement);
     }
 
     @Override
@@ -34,6 +34,6 @@ public class ChangePosition extends UiPositionCommand {
         uiElement.setX(oldX);
         uiElement.setY(oldY);
 
-        this.fireEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, this.planElement);
+        this.fireEvent(ModelEventType.ELEMENT_CHANGED_POSITION, this.planElement);
     }
 }

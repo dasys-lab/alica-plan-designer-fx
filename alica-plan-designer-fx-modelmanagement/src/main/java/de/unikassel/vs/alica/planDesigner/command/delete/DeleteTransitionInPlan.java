@@ -23,7 +23,7 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
     }
 
     private void saveForLaterRetrieval() {
-        uiElement = parentOfElement.getUiElement(transition);
+        uiElement = parentOfElement.getUiElement(transition.getId());
         outState = transition.getOutState();
         inState = transition.getInState();
     }
@@ -33,7 +33,7 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
         saveForLaterRetrieval();
 
         parentOfElement.getPlan().getTransitions().remove(transition);
-        parentOfElement.remove(transition);
+        parentOfElement.remove(transition.getId());
         transition.setInState(null);
         transition.setOutState(null);
     }
@@ -41,7 +41,7 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().getTransitions().add(transition);
-        this.uiElement = parentOfElement.getUiElement(this.transition);
+        this.uiElement = parentOfElement.getUiElement(this.transition.getId());
         this.uiElement.setX(this.x);
         this.uiElement.setY(this.y);
         transition.setInState(inState);

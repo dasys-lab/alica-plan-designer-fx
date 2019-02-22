@@ -22,14 +22,14 @@ public class DeleteSynchronisationFromPlan extends UiPositionCommand {
     @Override
     public void doCommand() {
         parentOfElement.getPlan().getSynchronisations().remove(synchronisation);
-        uiElement = parentOfElement.getUiElement(synchronisation);
-        parentOfElement.remove(uiElement);
+        uiElement = parentOfElement.getUiElement(synchronisation.getId());
+        parentOfElement.remove(synchronisation.getId());
     }
 
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().getSynchronisations().add(synchronisation);
-        this.uiElement = parentOfElement.getUiElement(synchronisation);
+        parentOfElement.add(synchronisation.getId(), this.uiElement);
         this.uiElement.setX(this.x);
         this.uiElement.setY(this.y);
     }

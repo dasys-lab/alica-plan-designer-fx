@@ -1,8 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.command;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
-import de.unikassel.vs.alica.planDesigner.events.UiExtensionModelEvent;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
@@ -23,7 +23,7 @@ public abstract class UiPositionCommand extends Command {
 
     protected UiElement createUiElement(long planId, PlanElement planElement) {
         this.uiExtension =  this.modelManager.getPlanUIExtensionPair(planId);
-        UiElement uiElement = this.uiExtension.getUiElement(planElement);
+        UiElement uiElement = this.uiExtension.getUiElement(planElement.getId());
         uiElement.setX(this.x);
         uiElement.setY(this.y);
         return uiElement;
@@ -31,10 +31,10 @@ public abstract class UiPositionCommand extends Command {
 
     @Override
     protected void fireEvent(ModelEventType eventType, PlanElement planElement) {
-        UiExtensionModelEvent event = new UiExtensionModelEvent(eventType, planElement, mmq.getElementType());
+        ModelEvent event = new ModelEvent(eventType, planElement, mmq.getElementType());
         event.setUiElement(this.uiElement);
         event.setParentId(mmq.getParentId());
-        this.modelManager.fireUiExtensionModelEvent(event);
+        this.modelManager.fireEvent(event);
     }
 }
 

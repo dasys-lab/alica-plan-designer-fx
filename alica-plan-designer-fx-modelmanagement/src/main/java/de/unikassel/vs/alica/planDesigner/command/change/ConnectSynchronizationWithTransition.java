@@ -16,7 +16,7 @@ public class ConnectSynchronizationWithTransition extends Command {
     public ConnectSynchronizationWithTransition(ModelManager manager, ModelModificationQuery mmq) {
         super(manager, mmq);
         // hack to make the fireEvent-Method work
-        mmq.setParentId(mmq.getRelatedObjects().get(Types.TRANSITION));
+        mmq.setParentId(mmq.getRelatedObjects().get(Types.SYNCHRONISATION));
 
         synchronisation = (Synchronisation) manager.getPlanElement(mmq.getRelatedObjects().get(Types.SYNCHRONISATION));
         transition = (Transition) manager.getPlanElement(mmq.getRelatedObjects().get(Types.TRANSITION));
@@ -26,13 +26,13 @@ public class ConnectSynchronizationWithTransition extends Command {
     public void doCommand() {
         synchronisation.addSyncedTransition(transition);
         transition.setSynchronisation(synchronisation);
-        this.fireEvent(ModelEventType.ELEMENT_CONNECTED, synchronisation);
+        this.fireEvent(ModelEventType.ELEMENT_CONNECTED, transition);
     }
 
     @Override
     public void undoCommand() {
         synchronisation.removeSyncedTransition(transition);
         transition.setSynchronisation(null);
-        this.fireEvent(ModelEventType.ELEMENT_DISCONNECTED, synchronisation);
+        this.fireEvent(ModelEventType.ELEMENT_DISCONNECTED, transition);
     }
 }

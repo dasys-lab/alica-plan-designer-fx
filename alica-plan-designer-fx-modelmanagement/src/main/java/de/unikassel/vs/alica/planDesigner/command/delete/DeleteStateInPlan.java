@@ -58,11 +58,11 @@ public class DeleteStateInPlan extends UiPositionCommand {
             inTransition.setOutState(null);
         }
         
-        parentOfDeleted.remove(state);
+        parentOfDeleted.remove(state.getId());
 
         pmlUiExtensionsOfTransitions
                 .keySet()
-                .forEach(k -> parentOfDeleted.remove(k));
+                .forEach(k -> parentOfDeleted.remove(k.getId()));
         }
 
     /**
@@ -84,14 +84,14 @@ public class DeleteStateInPlan extends UiPositionCommand {
                 .forEach(t -> inStatesOfOutTransitions.put(t, t.getInState()));
 
         // save pml view uiElement of state
-        uiElement = parentOfDeleted.getUiElement(state);
+        uiElement = parentOfDeleted.getUiElement(state.getId());
 
 
         // save pml view extensions of transitions, if they have any
         outStatesOfInTransitions
                 .keySet()
                 .forEach(k -> {
-                    UiElement uiElement = parentOfDeleted.getUiElement(k);
+                    UiElement uiElement = parentOfDeleted.getUiElement(k.getId());
                     if (uiElement != null) {
                         pmlUiExtensionsOfTransitions.put(k, uiElement);
                     }
@@ -100,7 +100,7 @@ public class DeleteStateInPlan extends UiPositionCommand {
         inStatesOfOutTransitions
                 .keySet()
                 .forEach(k -> {
-                    UiElement uiElement = parentOfDeleted.getUiElement(k);
+                    UiElement uiElement = parentOfDeleted.getUiElement(k.getId());
                     if (uiElement != null) {
                         pmlUiExtensionsOfTransitions.put(k, uiElement);
                     }
@@ -121,11 +121,11 @@ public class DeleteStateInPlan extends UiPositionCommand {
             inTransition.setOutState(outStatesOfInTransitions.get(inTransition));
         }
 
-        uiElement = parentOfDeleted.getUiElement(state);
+        uiElement = parentOfDeleted.getUiElement(state.getId());
         uiElement.setX(this.x);
         uiElement.setY(this.y);
         pmlUiExtensionsOfTransitions
                 .entrySet()
-                .forEach(e -> parentOfDeleted.getUiElement(e.getKey()));
+                .forEach(e -> parentOfDeleted.getUiElement(e.getKey().getId()));
     }
 }

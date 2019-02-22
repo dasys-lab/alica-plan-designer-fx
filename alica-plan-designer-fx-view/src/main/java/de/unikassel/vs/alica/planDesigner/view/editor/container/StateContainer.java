@@ -71,7 +71,6 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
 
     @Override
     public void redrawElement() {
-//        ((PlanEditorGroup) getParent()).setupPlanVisualisation();
         setupContainer();
         invalidationListeners.forEach(listener -> listener.invalidated(this));
     }

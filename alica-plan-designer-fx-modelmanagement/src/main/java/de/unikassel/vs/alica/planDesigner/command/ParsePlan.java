@@ -68,7 +68,6 @@ public class ParsePlan extends Command {
                 //If a visualisation was loaded, replace the old one and update the view
 //                modelManager.replaceIncompletePlanElementsInPlanModelVisualisationObject(newUiExtension);
                 modelManager.getUiExtensionMap().put(mmq.getElementId(), newUiExtension);
-                modelManager.updatePlanModelVisualisationObject(newUiExtension);
             }
 
             if(newPlan.getMasterPlan()) {

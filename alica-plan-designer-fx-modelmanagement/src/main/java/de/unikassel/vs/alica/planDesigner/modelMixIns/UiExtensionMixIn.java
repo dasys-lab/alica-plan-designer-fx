@@ -20,9 +20,7 @@ public abstract class UiExtensionMixIn {
     @JsonDeserialize(using = PlanDeserializer.class)
     public abstract Plan getPlan();
 
-    @JsonSerialize(keyUsing = InternalRefKeySerializer.class)
-    @JsonDeserialize(keyUsing = PlanElementKeyDeserializer.class)
-    protected HashMap<PlanElement, UiElement> uiElementMap;
+    protected HashMap<Long, UiElement> uiElementMap;
 
     /**
      * Ignore this method during serialization, because the protected field extensionHashMap is serialized instead

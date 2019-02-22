@@ -16,6 +16,7 @@ public class Synchronisation extends PlanElement{
     protected final SimpleIntegerProperty syncTimeout = new SimpleIntegerProperty();
     protected final SimpleBooleanProperty failOnSyncTimeout = new SimpleBooleanProperty();
     protected final ArrayList<Transition> syncedTransitions = new ArrayList<>();
+    protected Plan plan;
 
     public Synchronisation(){}
     public Synchronisation(long id) {
@@ -72,5 +73,13 @@ public class Synchronisation extends PlanElement{
     }
     public List<Transition> getSyncedTransitions() {
         return Collections.unmodifiableList(syncedTransitions);
+    }
+
+    public void setPlan(Plan plan) {
+        this.plan = plan;
+    }
+
+    public Plan getPlan() {
+        return plan;
     }
 }

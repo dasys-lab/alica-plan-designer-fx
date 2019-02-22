@@ -16,10 +16,8 @@ import de.unikassel.vs.alica.planDesigner.command.delete.*;
 import de.unikassel.vs.alica.planDesigner.events.IModelEventHandler;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
-import de.unikassel.vs.alica.planDesigner.events.UiExtensionModelEvent;
 import de.unikassel.vs.alica.planDesigner.modelMixIns.*;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -215,11 +213,7 @@ public class ModelManager implements Observer {
         }
 
         for (UiExtension uiExtension : uiExtensionMap.values()) {
-            for (PlanElement planElement: uiExtension.getKeys()) {
-                UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_PARSED, planElement, null);
-                event.setUiElement(uiExtension.getUiElement(planElement));
-                fireUiExtensionModelEvent(event);
-            }
+            uiExtension.registerDirtyListeners();
         }
 
         if (taskRepository != null) {
@@ -281,7 +275,7 @@ public class ModelManager implements Observer {
             UiExtension uiExtension = (UiExtension) parsedObject;
             uiExtensionMap.put(uiExtension.getPlan().getId(), uiExtension);
             if (resolveReferences) {
-                resolveReferences(uiExtension);
+                uiExtension.setPlan(planMap.get(uiExtension.getPlan().getId()));
             }
             return;
         }
@@ -377,7 +371,7 @@ public class ModelManager implements Observer {
             resolveReferences(planType);
         }
         for (UiExtension uiExtension : uiExtensionMap.values()) {
-            resolveReferences(uiExtension);
+            uiExtension.setPlan(planMap.get(uiExtension.getPlan().getId()));
         }
     }
 
@@ -405,15 +399,16 @@ public class ModelManager implements Observer {
                 transition.setSynchronisation((Synchronisation) planElementMap.get(transition.getSynchronisation().getId()));
             }
             UiExtension visualisationObject = getPlanUIExtensionPair(plan.getId());
-            for (PlanElement extensionEntry : visualisationObject.getKeys()) {
-                if (transition.getId() == extensionEntry.getId()) {
-                    for (BendPoint bendPoint : visualisationObject.getUiElement(extensionEntry).getBendPoints()) {
+            for (Long planElementId : visualisationObject.getKeys()) {
+                if (transition.getId() == planElementId) {
+                    for (BendPoint bendPoint : visualisationObject.getUiElement(planElementId).getBendPoints()) {
                         bendPoint.setTransition(transition);
                     }
                     break;
                 }
             }
         }
+        plan.setDirty(false);
     }
 
     /**
@@ -423,44 +418,6 @@ public class ModelManager implements Observer {
         List<AnnotatedPlan> annotatedPlans = planType.getPlans();
         for (int i = 0; i < annotatedPlans.size(); i++) {
             annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
-        }
-    }
-
-    /**
-     * Replace all incomplete {@link PlanElement}s in given {@link UiExtension} with already parsed ones.
-     * <p>
-     * These contain the {@link Plan} and the {@link PlanElement}s, that are used as keys in the PmlUiExtensionMap
-     *
-     * @param uiExtension the {@link UiExtension} with incomplete references
-     */
-    public void resolveReferences(UiExtension uiExtension) {
-        //Set the correct Plan
-        uiExtension.setPlan(planMap.get(uiExtension.getPlan().getId()));
-
-        //Set the correct PlanElements the PmlUiExtensionMap
-        PlanElement[] keys = uiExtension.getKeys().toArray(new PlanElement[uiExtension.getKeys().size()]);
-        for (int i = keys.length - 1; i >= 0; i--) {
-            PlanElement complete = this.getPlanElement(keys[i].getId());
-            uiExtension.add(complete, uiExtension.getUiElement((keys[i])));
-//            uiExtension.replaceKey(complete);
-        }
-    }
-
-    /**
-     * Update every element that is part of the given {@link UiExtension}.
-     * <p>
-     * This method iterates over all {@link PlanElement}s in the given {@link UiExtension} and calls
-     * the fireUiExtensionModelEvent method for every one of them with the coordinates found in their {@link UiElement}.
-     * This is necessary to update the view model when the {@link UiExtension} has been reloaded.
-     *
-     * @param uiExtension the {@link UiExtension} to update
-     */
-    public void updatePlanModelVisualisationObject(UiExtension uiExtension) {
-        for (PlanElement planElement : uiExtension.getKeys()) {
-            UiElement uiElement = uiExtension.getUiElement(planElement);
-            UiExtensionModelEvent event = new UiExtensionModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, null);
-            event.setUiElement(uiElement);
-            fireUiExtensionModelEvent(event);
         }
     }
 
@@ -1189,19 +1146,6 @@ public class ModelManager implements Observer {
         if (event != null) {
             for (IModelEventHandler eventHandler : eventHandlerList) {
                 eventHandler.handleModelEvent(event);
-            }
-        }
-    }
-
-    /**
-     * Fire an {@link UiExtensionModelEvent} to the {@link IModelEventHandler}.
-     *
-     * @param event the {@link UiExtensionModelEvent} to fire
-     */
-    public void fireUiExtensionModelEvent(UiExtensionModelEvent event) {
-        if (event != null) {
-            for (IModelEventHandler eventHandler : eventHandlerList) {
-                eventHandler.handleUiExtensionModelEvent(event);
             }
         }
     }

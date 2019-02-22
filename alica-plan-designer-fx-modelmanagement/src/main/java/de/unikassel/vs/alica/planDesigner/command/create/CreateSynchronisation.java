@@ -22,6 +22,7 @@ public class CreateSynchronisation extends UiPositionCommand {
 
     protected Synchronisation createSynchronisation() {
         Synchronisation synchronisation = new Synchronisation();
+        synchronisation.setPlan((Plan) this.modelManager.getPlanElement(mmq.getParentId()));
         synchronisation.setName(mmq.getName());
         synchronisation.setComment(mmq.getComment());
         return synchronisation;
@@ -30,7 +31,7 @@ public class CreateSynchronisation extends UiPositionCommand {
     @Override
     public void doCommand() {
         this.plan.addSynchronisation(this.synchronisation);
-        this.uiExtension.add(this.synchronisation, this.uiElement);
+        this.uiExtension.add(this.synchronisation.getId(), this.uiElement);
         this.modelManager.storePlanElement(Types.SYNCHRONISATION, synchronisation,false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, synchronisation);
     }
@@ -38,7 +39,7 @@ public class CreateSynchronisation extends UiPositionCommand {
     @Override
     public void undoCommand() {
         this.plan.removeSynchronisation(synchronisation);
-        this.uiExtension.remove(this.synchronisation);
+        this.uiExtension.remove(this.synchronisation.getId());
         modelManager.dropPlanElement(Types.SYNCHRONISATION, synchronisation, false);
         this.fireEvent(ModelEventType.ELEMENT_DELETED, synchronisation);
     }

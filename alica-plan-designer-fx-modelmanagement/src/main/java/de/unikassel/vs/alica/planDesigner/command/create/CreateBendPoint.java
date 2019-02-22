@@ -4,7 +4,6 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 
 import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
-import de.unikassel.vs.alica.planDesigner.events.UiExtensionModelEvent;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
@@ -17,7 +16,7 @@ public class CreateBendPoint extends UiPositionCommand {
     public CreateBendPoint(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
         this.bendPoint = createBendPoint();
-        this.uiElement = modelManager.getPlanUIExtensionPair(mmq.getParentId()).getUiElement(this.bendPoint.getTransition());
+        this.uiElement = modelManager.getPlanUIExtensionPair(mmq.getParentId()).getUiElement(this.bendPoint.getTransition().getId());
     }
 
     protected BendPoint createBendPoint() {

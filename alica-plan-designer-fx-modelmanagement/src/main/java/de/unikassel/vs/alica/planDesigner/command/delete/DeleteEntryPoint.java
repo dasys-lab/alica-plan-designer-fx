@@ -19,14 +19,14 @@ public class DeleteEntryPoint extends UiPositionCommand {
         super(modelManager, mmq);
         this.entryPoint = (EntryPoint) modelManager.getPlanElement(mmq.getElementId());
         this.parentOfElement = modelManager.getPlanUIExtensionPair(mmq.getParentId());
-        this.uiElement = parentOfElement.getUiElement(entryPoint);
+        this.uiElement = parentOfElement.getUiElement(entryPoint.getId());
         this.associatedState = entryPoint.getState();
     }
 
     @Override
     public void doCommand() {
         parentOfElement.getPlan().getEntryPoints().remove(entryPoint);
-        parentOfElement.remove(entryPoint);
+        parentOfElement.remove(entryPoint.getId());
         if (associatedState != null) {
             associatedState.setEntryPoint(null);
         }
@@ -35,7 +35,7 @@ public class DeleteEntryPoint extends UiPositionCommand {
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().getEntryPoints().add(entryPoint);
-        uiElement = parentOfElement.getUiElement(entryPoint);
+        uiElement = parentOfElement.getUiElement(entryPoint.getId());
         uiElement.setX(this.x);
         uiElement.setY(this.y);
         if (associatedState != null) {

@@ -26,6 +26,7 @@ import java.util.ArrayList;
  */
 public class EntryPointContainer extends AbstractPlanElementContainer {
 
+    public static final double ENTRYPOINT_RADIUS = 10.0;
     private StateContainer stateContainer;
     private boolean dragged;
     private ImageView taskIcon;
@@ -63,7 +64,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
         getChildren().clear();
 //        setLayoutX(getPmlUiExtension().getXPos());
 //        setLayoutY(getPmlUiExtension().getYPos());
-        visualRepresentation = new Circle(StateContainer.STATE_RADIUS,
+        visualRepresentation = new Circle(EntryPointContainer.ENTRYPOINT_RADIUS,
                 getVisualisationColor());
         setEffectToStandard();
 
@@ -74,7 +75,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
             Point2D localXY = parentToLocal(planXY);
 
             Point2D vec = new Point2D(localXY.getX() - visualRepresentation.getLayoutX(), localXY.getY() - visualRepresentation.getLayoutY());
-            double len = vec.magnitude() - StateContainer.STATE_RADIUS;
+            double len = vec.magnitude() - EntryPointContainer.ENTRYPOINT_RADIUS;
             vec = vec.normalize().multiply(len);
 
             Line line = new Line(visualRepresentation.getLayoutX(),
@@ -89,8 +90,8 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
         Text taskName = new Text(containedElement.getTask().getName());
         HBox hBox = new HBox();
         hBox.getChildren().addAll(taskIcon, taskName);
-        hBox.setLayoutX(visualRepresentation.getLayoutX() - taskName.getLayoutBounds().getWidth() / 2.0 - taskIcon.getFitWidth() / 2.0 - StateContainer.STATE_RADIUS / 2.0);
-        hBox.setLayoutY(visualRepresentation.getLayoutY() - StateContainer.STATE_RADIUS * 1.2 - taskName.getFont().getSize());
+        hBox.setLayoutX(visualRepresentation.getLayoutX() - taskName.getLayoutBounds().getWidth() / 2.0 - taskIcon.getFitWidth() / 2.0 - EntryPointContainer.ENTRYPOINT_RADIUS / 2.0);
+        hBox.setLayoutY(visualRepresentation.getLayoutY() - EntryPointContainer.ENTRYPOINT_RADIUS * 1.2 - taskName.getFont().getSize());
         getChildren().add(hBox);
     }
 

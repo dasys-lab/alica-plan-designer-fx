@@ -41,7 +41,7 @@ public class CreateState extends UiPositionCommand {
     @Override
     public void doCommand() {
         this.plan.addState(state);
-        this.uiExtension.add(state, uiElement);
+        this.uiExtension.add(state.getId(), uiElement);
         modelManager.storePlanElement(mmq.getElementType(), state,false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, state);
     }
@@ -49,7 +49,7 @@ public class CreateState extends UiPositionCommand {
     @Override
     public void undoCommand() {
         this.plan.removeState(state);
-        this.uiExtension.remove(state);
+        this.uiExtension.remove(state.getId());
         modelManager.dropPlanElement(mmq.getElementType(), state,false);
         this.fireEvent(ModelEventType.ELEMENT_DELETED, state);
     }
