@@ -1,6 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -47,7 +46,7 @@ public class PlanTypeViewModel extends SerializableViewModel {
     }
 
     /**
-     * Checks whether the plan is alread in the plantype as annotated plan.
+     * Checks whether the plan is already in the plantype as annotated plan.
      * @param id
      * @return
      */

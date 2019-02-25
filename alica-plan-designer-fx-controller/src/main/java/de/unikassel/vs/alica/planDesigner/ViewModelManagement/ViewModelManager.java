@@ -186,20 +186,26 @@ public class ViewModelManager {
         planTypeViewModel.setRelativeDirectory(planType.getRelativeDirectory());
         planTypeViewModel.setComment(planType.getComment());
 
+        // Putting the PlanType into the map, before all fields and related elements are set, prevents an endless
+        // recursion, which would otherwise occur, whenever any plan (or, to be precise, a plans state) contains the
+        // PlanType, because each PlanType contains all Plans in a list
+        viewModelElements.put(planTypeViewModel.getId(), planTypeViewModel);
+
         for (Plan plan : modelManager.getPlans()) {
             planTypeViewModel.addPlanToAllPlans((PlanViewModel) getViewModelElement(plan));
         }
 
         for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
-            Plan plan = annotatedPlan.getPlan();
-            planTypeViewModel.removePlanFromAllPlans(plan.getId());
+            planTypeViewModel.removePlanFromAllPlans(annotatedPlan.getPlan().getId());
             planTypeViewModel.getPlansInPlanType().add((AnnotatedPlanView) getViewModelElement(annotatedPlan));
         }
         return planTypeViewModel;
     }
 
     private AnnotatedPlanView createAnnotatedPlanViewModel(AnnotatedPlan annotatedPlan) {
-        Plan plan = annotatedPlan.getPlan();
+        // The AnnotatedPlan may still be holding a place-holder-plan, that was created during deserialization, to get
+        // the actual plan the place-holders id can be used
+        Plan plan = (Plan) modelManager.getPlanElement(annotatedPlan.getPlan().getId());
         return new AnnotatedPlanView(annotatedPlan.getId(), plan.getName(), Types.ANNOTATEDPLAN, annotatedPlan
                 .isActivated(), plan.getId());
     }
