@@ -439,6 +439,18 @@ public class ModelManager implements Observer {
         PlanElement oldElement = planElementMap.get(planElement.getId());
         planElementMap.put(planElement.getId(), planElement);
 
+        // Conditions treated separately to prevent code-duplication
+        if(type.equals(Types.PRECONDITION) || type.equals(Types.RUNTIMECONDITION) || type.equals(Types.POSTCONDITION)){
+            Condition condition = (Condition) planElement;
+            planElementMap.put(condition.getId(), condition);
+            for(Variable variable : condition.getVariables()){
+                planElementMap.put(variable.getId(), variable);
+            }
+            for(Quantifier quantifier : condition.getQuantifiers()){
+                planElementMap.put(quantifier.getId(), quantifier);
+            }
+        }
+
         // early return in case of a non-serializable plan element
         if (!(planElement instanceof SerializablePlanElement)) {
             return oldElement;
@@ -456,9 +468,7 @@ public class ModelManager implements Observer {
                 planMap.put(planElement.getId(), plan);
                 for(Transition transition : plan.getTransitions()) {
                     planElementMap.put(transition.getId(), transition);
-                    if (transition.getPreCondition() != null) {
-                        planElementMap.put(transition.getPreCondition().getId(), transition.getPreCondition());
-                    }
+                    storePlanElement(Types.PRECONDITION, transition.getPreCondition(), serializeToDisk);
                 }
                 for(EntryPoint entryPoint: plan.getEntryPoints()) {
                     planElementMap.put(entryPoint.getId(), entryPoint);
@@ -468,6 +478,10 @@ public class ModelManager implements Observer {
                     for (Parametrisation parametrisation : state.getParametrisations()) {
                         planElementMap.put(parametrisation.getId(), parametrisation);
                     }
+                    if(state instanceof TerminalState){
+                        TerminalState terminalState = (TerminalState) state;
+                        storePlanElement(Types.POSTCONDITION, terminalState.getPostCondition(), serializeToDisk);
+                    }
                 }
                 for(Variable variable: plan.getVariables()) {
                     planElementMap.put(variable.getId(), variable);
@@ -475,12 +489,8 @@ public class ModelManager implements Observer {
                 for(Synchronisation synchronisation: plan.getSynchronisations()) {
                     planElementMap.put(synchronisation.getId(), synchronisation);
                 }
-                if (plan.getPreCondition() != null) {
-                    planElementMap.put(plan.getPreCondition().getId(), plan.getPreCondition());
-                }
-                if (plan.getRuntimeCondition() != null) {
-                    planElementMap.put(plan.getRuntimeCondition().getId(), plan.getRuntimeCondition());
-                }
+                storePlanElement(Types.PRECONDITION, plan.getPreCondition(), serializeToDisk);
+                storePlanElement(Types.RUNTIMECONDITION, plan.getRuntimeCondition(), serializeToDisk);
                 break;
             case Types.PLANTYPE:
                 PlanType planType = (PlanType) planElement;
@@ -501,15 +511,10 @@ public class ModelManager implements Observer {
                 for(Variable variable: behaviour.getVariables()) {
                     planElementMap.put(variable.getId(), variable);
                 }
-                if (behaviour.getPreCondition() != null) {
-                    planElementMap.put(behaviour.getPreCondition().getId(), behaviour.getPreCondition());
-                }
-                if (behaviour.getRuntimeCondition() != null) {
-                    planElementMap.put(behaviour.getRuntimeCondition().getId(), behaviour.getRuntimeCondition());
-                }
-                if (behaviour.getPostCondition() != null) {
-                    planElementMap.put(behaviour.getRuntimeCondition().getId(), behaviour.getRuntimeCondition());
-                }
+                storePlanElement(Types.PRECONDITION, behaviour.getPreCondition(), serializeToDisk);
+                storePlanElement(Types.RUNTIMECONDITION, behaviour.getPreCondition(), serializeToDisk);
+                storePlanElement(Types.POSTCONDITION, behaviour.getPreCondition(), serializeToDisk);
+
                 break;
             case Types.TASKREPOSITORY:
                 taskRepository = (TaskRepository) planElement;

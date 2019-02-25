@@ -11,26 +11,21 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Variable;
 import java.io.IOException;
 
 
-public class ExternalVariableDeserializer extends StdDeserializer<Variable> {
+public class VariableDeserializer extends StdDeserializer<Variable> {
 
-    public ExternalVariableDeserializer() {
+    public VariableDeserializer() {
         this(null);
     }
 
-    public ExternalVariableDeserializer(Class<?> vc) {
+    public VariableDeserializer(Class<?> vc) {
         super(vc);
     }
 
     @Override
-    public Variable deserialize(
-            JsonParser jsonparser,
-            DeserializationContext context)
+    public Variable deserialize(JsonParser jsonparser, DeserializationContext context)
             throws IOException, JsonProcessingException {
         TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
-        String planElementString = ((ValueNode) tree).asText().trim();
-        int idIndex = planElementString.indexOf('#');
-        planElementString = planElementString.substring(idIndex + 1);
-        Variable var = new Variable(Long.parseLong(planElementString));
-        return var;
+        long id = ((ValueNode) tree).asLong();
+        return new Variable(id);
     }
 }

@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class Variable extends PlanElement {
 
     protected final SimpleStringProperty variableType = new SimpleStringProperty();
-    protected AbstractPlan parentPlan;
+    protected  PlanElement parentElement;
 
     /**
      * Need to be explicitly written, because the constructor Variable(AbstractPlan parentPlan)
@@ -25,8 +25,8 @@ public class Variable extends PlanElement {
     }
 
 
-    public Variable(AbstractPlan parentPlan) {
-        this.parentPlan = parentPlan;
+    public Variable(PlanElement parentElement){
+        this.parentElement = parentElement;
     }
 
     public String getVariableType() { return variableType.get(); }
@@ -35,7 +35,7 @@ public class Variable extends PlanElement {
         return variableType;
     }
 
-    public AbstractPlan getParentPlan() {
-        return parentPlan;
+    public PlanElement getParentElement() {
+        return parentElement;
     }
 }

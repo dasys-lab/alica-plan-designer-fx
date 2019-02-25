@@ -5,21 +5,23 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class ConditionViewModel extends PlanElementViewModel {
+public class ConditionViewModel extends PlanElementViewModel implements HasVariablesView{
 
     protected StringProperty conditionString = new SimpleStringProperty(this, "conditionString", null);
     protected StringProperty pluginName = new SimpleStringProperty(this, "pluginName", null);
     protected BooleanProperty enabled = new SimpleBooleanProperty(this, "enabled", false);
-    protected ArrayList<VariableViewModel> vars;
-    protected ArrayList<QuantifierViewModel> quantifier;
+    protected final ObservableList<VariableViewModel> variables;
+    protected final ObservableList<QuantifierViewModel> quantifier;
 
     public ConditionViewModel(long id, String name, String type) {
         super(id, name, type);
-        this.vars = new ArrayList<>();
-        this.quantifier = new ArrayList<>();
+        this.variables = FXCollections.observableArrayList(new ArrayList<>());
+        this.quantifier = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public String getConditionString() {
@@ -58,11 +60,11 @@ public class ConditionViewModel extends PlanElementViewModel {
         this.enabled.set(enabled);
     }
 
-    public ArrayList<VariableViewModel> getVars() {
-        return vars;
+    public ObservableList<VariableViewModel> getVariables() {
+        return variables;
     }
 
-    public ArrayList<QuantifierViewModel> getQuantifier() {
+    public ObservableList<QuantifierViewModel> getQuantifier() {
         return quantifier;
     }
 

@@ -1,9 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
-import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.command.ConditionCommand;
-import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
@@ -67,10 +65,10 @@ public class CreateCondition extends ConditionCommand {
                 condition = new PreCondition();
                 break;
             case Types.RUNTIMECONDITION:
-                condition = new PreCondition();
+                condition = new RuntimeCondition();
                 break;
             case Types.POSTCONDITION:
-                condition = new PreCondition();
+                condition = new PostCondition();
                 break;
             default:
                 throw new RuntimeException("CreateCondition: Condition type " + mmq.getElementType() + " does not exist!");
@@ -83,8 +81,10 @@ public class CreateCondition extends ConditionCommand {
     public void doCommand() {
         setCondition(newCondition, planElement);
 
-        modelManager.dropPlanElement(mmq.getElementType(), oldCondition, false);
-        this.fireEvent(ModelEventType.ELEMENT_DELETED, oldCondition);
+        if (oldCondition != null){
+            modelManager.dropPlanElement(mmq.getElementType(), oldCondition, false);
+            this.fireEvent(ModelEventType.ELEMENT_DELETED, oldCondition);
+        }
 
         modelManager.storePlanElement(mmq.getElementType(), newCondition, false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, newCondition);
@@ -97,7 +97,9 @@ public class CreateCondition extends ConditionCommand {
         modelManager.dropPlanElement(mmq.getElementType(), newCondition, false);
         this.fireEvent(ModelEventType.ELEMENT_DELETED, newCondition);
 
-        modelManager.storePlanElement(mmq.getElementType(), oldCondition, false);
-        this.fireEvent(ModelEventType.ELEMENT_CREATED, oldCondition);
+        if (oldCondition != null){
+            modelManager.storePlanElement(mmq.getElementType(), oldCondition, false);
+            this.fireEvent(ModelEventType.ELEMENT_CREATED, oldCondition);
+        }
     }
 }

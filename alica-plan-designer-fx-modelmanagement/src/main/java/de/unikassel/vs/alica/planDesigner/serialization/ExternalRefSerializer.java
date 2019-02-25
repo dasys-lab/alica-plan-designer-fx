@@ -31,9 +31,6 @@ public class ExternalRefSerializer extends StdSerializer<PlanElement> {
         } else if (planElement instanceof Task) {
             TaskRepository taskRepository = ((Task) planElement).getTaskRepository();
             jsonGenerator.writeString(Paths.get(taskRepository.getRelativeDirectory(), taskRepository.getName() + ".tsk#" + planElement.getId()).toString());
-        } else if (planElement instanceof Variable) {
-            AbstractPlan variableContainingAbstractPlan = ((Variable) planElement).getParentPlan();
-            jsonGenerator.writeString(Paths.get(variableContainingAbstractPlan.getRelativeDirectory(), variableContainingAbstractPlan.getName() + ".pml#" + planElement.getId()).toString());
         }
         else {
             throw new RuntimeException("ExternalRefSerializer: Unkown type to serialize... :D");

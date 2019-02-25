@@ -9,17 +9,17 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class CreateVariable extends Command {
 
-    private final AbstractPlan abstractPlan;
+    private final PlanElement parentElement;
     private final Variable variable;
 
     public CreateVariable(ModelManager manager, ModelModificationQuery mmq) {
         super(manager, mmq);
-        this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getParentId());
-        this.variable = createVariable(this.abstractPlan);
+        this.parentElement = modelManager.getPlanElement(mmq.getParentId());
+        this.variable = createVariable(this.parentElement);
     }
 
-    protected Variable createVariable(AbstractPlan abstractPlan) {
-        Variable variable = new Variable(abstractPlan);
+    protected Variable createVariable(PlanElement parentElement) {
+        Variable variable = new Variable(parentElement);
         variable.setName(mmq.getName());
         variable.setComment(mmq.getComment());
         return variable;
@@ -27,14 +27,22 @@ public class CreateVariable extends Command {
 
     @Override
     public void doCommand() {
-        abstractPlan.addVariable(this.variable);
+        if(parentElement instanceof Condition){
+            ((Condition) parentElement).addVariable(this.variable);
+        }else{
+            ((AbstractPlan) parentElement).addVariable(this.variable);
+        }
         this.modelManager.storePlanElement(Types.VARIABLE, variable, false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.variable);
     }
 
     @Override
     public void undoCommand() {
-        abstractPlan.removeVariable(this.variable);
+        if(parentElement instanceof Condition){
+            ((Condition) parentElement).removeVariable(this.variable);
+        }else {
+            ((AbstractPlan) parentElement).removeVariable(this.variable);
+        }
         modelManager.getUsages(this.variable.getId());
         modelManager.dropPlanElement(Types.VARIABLE, variable,false);
         this.fireEvent(ModelEventType.ELEMENT_DELETED, this.variable);

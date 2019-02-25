@@ -166,7 +166,7 @@ public class ViewModelManager {
         conditionViewModel.setPluginName(condition.getPluginName());
         conditionViewModel.setComment(condition.getComment());
         for (Variable var : condition.getVariables()) {
-            conditionViewModel.getVars().add((VariableViewModel) getViewModelElement(var));
+            conditionViewModel.getVariables().add((VariableViewModel) getViewModelElement(var));
         }
         for (Quantifier quantifier : condition.getQuantifiers()) {
             // TODO: Quantifier is not very clean or fully implemented, yet.
@@ -445,8 +445,7 @@ public class ViewModelManager {
                 }
                 break;
             case Types.VARIABLE:
-                // it must be a behaviour, because plans are handled in "addToPlan".
-                ((BehaviourViewModel) parentViewModel).getVariables().add((VariableViewModel)viewModelElement);
+                ((HasVariablesView) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
                 break;
             case Types.ABSTRACTPLAN:
                 planViewModel = (PlanViewModel) viewModelElement;

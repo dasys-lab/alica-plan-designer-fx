@@ -11,7 +11,7 @@ public class Condition extends PlanElement {
     protected final SimpleStringProperty pluginName = new SimpleStringProperty();
     protected final SimpleBooleanProperty enabled = new SimpleBooleanProperty();
 
-    protected ArrayList<Variable> vars = new ArrayList<>();
+    protected ArrayList<Variable> variables = new ArrayList<>();
     protected ArrayList<Quantifier> quantifier = new ArrayList<>();
 
     public boolean getEnabled () {
@@ -51,10 +51,18 @@ public class Condition extends PlanElement {
     }
 
     public ArrayList<Variable> getVariables() {
-        return vars;
+        return variables;
     }
 
     public ArrayList<Quantifier> getQuantifiers() {
         return quantifier;
+    }
+
+    public void addVariable(Variable variable){
+       variables.add(variable);
+    }
+
+    public void removeVariable(Variable variable){
+        variables.remove(variable);
     }
 }

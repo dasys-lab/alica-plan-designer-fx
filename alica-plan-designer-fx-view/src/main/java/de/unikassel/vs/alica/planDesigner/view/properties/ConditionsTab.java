@@ -9,6 +9,7 @@ import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -40,6 +41,8 @@ public class ConditionsTab extends Tab {
 
     private final  ComboBox<String> pluginSelection;
     private final PropertySheet properties;
+    private final VariablesTable<VariableViewModel> variables;
+    private final VariablesTable<QuantifierViewModel> quantifiers;
     private final Pane pluginUI;
 
     private ViewModelElement parentElement;
@@ -94,12 +97,14 @@ public class ConditionsTab extends Tab {
         pluginSection.setExpanded(false);
 
         TitledPane variablesSection = new TitledPane();
-        variablesSection.setContent(createVariableTable());
+        variables = createVariableTable();
+        variablesSection.setContent(variables);
         variablesSection.setText(I18NRepo.getInstance().getString("label.caption.variables"));
         variablesSection.setExpanded(false);
 
         TitledPane quantifierSection = new TitledPane();
-        quantifierSection.setContent(createQuantifierTable());
+        quantifiers = createQuantifierTable();
+        quantifierSection.setContent(quantifiers);
         quantifierSection.setText(I18NRepo.getInstance().getString("label.caption.quantifiers"));
         quantifierSection.setExpanded(false);
 
@@ -152,7 +157,7 @@ public class ConditionsTab extends Tab {
 
             case Types.POSTCONDITION:
                 switch (parentElement.getType()){
-                    // TODO: Find a way to get the postconditions of success- and failurestates from the viewmodel
+// TODO: Find a way to get the postconditions of success- and failurestates from the viewmodel
 //                    case Types.SUCCESSSTATE:
 //                    case Types.FAILURESTATE:
 //                        StateViewModel state = (StateViewModel) viewModelElement;
@@ -224,33 +229,44 @@ public class ConditionsTab extends Tab {
     }
 
     private void setConditionAndListener(ObjectProperty<ConditionViewModel> property){
-        Predicate<PropertyDescriptor> relevantProperties
-                = desc -> Arrays.asList("id", "name", "comment", "enabled", "conditionString").contains(desc.getName());
 
         // Set the current value
-        this.condition = property.get();
+        setCondition(property.get());
+
+        // Update for new values
+        property.addListener((observable, oldValue, newValue) -> setCondition(newValue));
+    }
+
+    private void setCondition(ConditionViewModel condition){
+        Predicate<PropertyDescriptor> relevantProperties
+                = desc -> Arrays.asList("id", "name", "comment", "enabled", "conditionString").contains(desc.getName());
+        this.condition = condition;
 
         this.properties.getItems().clear();
+        this.variables.clear();
+        this.quantifiers.clear();
         if(condition != null) {
             this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
+            for(VariableViewModel variable : condition.getVariables()){
+                variables.addItem(variable);
+            }
+            condition.getVariables().addListener((ListChangeListener<VariableViewModel>) c -> {
+                while(c.next()) {
+                    for (VariableViewModel rem : c.getRemoved()) {
+                        variables.removeItem(rem);
+                    }
+                    for (VariableViewModel add : c.getAddedSubList()) {
+                        variables.addItem(add);
+                    }
+                }
+            });
+            for(QuantifierViewModel quantifier : condition.getQuantifier()){
+                quantifiers.addItem(quantifier);
+            }
             setPluginSelection(condition.getPluginName());
         }else {
             setPluginSelection(NONE);
         }
-
-        // Update for new values
-        property.addListener((observable, oldValue, newValue) -> {
-
-            this.condition = newValue;
-
-            this.properties.getItems().clear();
-            if(condition != null) {
-                this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
-                setPluginSelection(condition.getPluginName());
-            }else {
-                setPluginSelection(NONE);
-            }
-        });
     }
 
     private void setPluginSelection(String pluginName){
@@ -272,7 +288,15 @@ public class ConditionsTab extends Tab {
 
             @Override
             protected void onRemoveElement() {
-                //TODO
+                VariableViewModel selected = variables.getSelectedItem();
+                if(selected == null){
+                    return;
+                }
+
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.VARIABLE, selected.getName());
+                event.setParentId(condition.getId());
+                event.setElementId(selected.getId());
+                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
             }
         };
 
