@@ -2,7 +2,8 @@ package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.AnnotatedPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanType;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.Command;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
@@ -10,22 +11,23 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemoveAllPlansFromPlanType extends AbstractCommand {
+public class DeleteAllAnnotatedPlans extends Command {
 
     private List<AnnotatedPlan> backupPlans;
     private PlanType planType;
 
-    public RemoveAllPlansFromPlanType(ModelManager manager, ModelModificationQuery mmq) {
-        super(manager);
+    public DeleteAllAnnotatedPlans(ModelManager manager, ModelModificationQuery mmq) {
+        super(manager, mmq);
         this.planType = (PlanType) modelManager.getPlanElement(mmq.getElementId());
-        backupPlans = new ArrayList<>(planType.getPlans());
+        this.backupPlans = new ArrayList<>(planType.getPlans());
     }
 
     @Override
     public void doCommand() {
         for(AnnotatedPlan annotatedPlan : backupPlans) {
             planType.removePlan(annotatedPlan);
-            modelManager.removedPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
+            modelManager.dropPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, false);
+            this.fireEvent(ModelEventType.ELEMENT_DELETED, annotatedPlan);
         }
     }
 
@@ -33,7 +35,8 @@ public class RemoveAllPlansFromPlanType extends AbstractCommand {
     public void undoCommand() {
         for(AnnotatedPlan annotatedPlan : backupPlans) {
             planType.addPlan(annotatedPlan);
-            modelManager.createdPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, planType, false);
+            modelManager.storePlanElement(Types.ANNOTATEDPLAN, annotatedPlan, false);
+            this.fireEvent(ModelEventType.ELEMENT_CREATED, annotatedPlan);
         }
     }
 

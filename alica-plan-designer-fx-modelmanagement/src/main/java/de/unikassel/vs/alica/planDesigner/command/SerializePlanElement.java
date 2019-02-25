@@ -1,20 +1,16 @@
 package de.unikassel.vs.alica.planDesigner.command;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.SerializablePlanElement;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-public class SerializePlanElement extends AbstractCommand {
-    ModelModificationQuery mmq;
+public class SerializePlanElement extends Command {
     SerializablePlanElement planElement;
 
     private boolean hasBeenSaved;
 
     public SerializePlanElement (ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
-        this.mmq = mmq;
+        super(modelManager, mmq);
         this.planElement = (SerializablePlanElement) modelManager.getPlanElement(mmq.getElementId());
         hasBeenSaved = false;
     }

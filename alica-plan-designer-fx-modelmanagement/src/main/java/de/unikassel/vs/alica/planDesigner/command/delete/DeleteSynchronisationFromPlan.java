@@ -1,17 +1,16 @@
 package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
-import de.unikassel.vs.alica.planDesigner.command.AbstractUiPositionCommand;
+import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 
-public class DeleteSynchronisationFromPlan extends AbstractUiPositionCommand {
+public class DeleteSynchronisationFromPlan extends UiPositionCommand {
 
-    protected PlanUiExtensionPair parentOfElement;
-    protected UiExtension uiExtension;
+    protected UiExtension parentOfElement;
+    protected UiElement uiElement;
     protected Synchronisation synchronisation;
 
     public DeleteSynchronisationFromPlan(ModelManager modelManager, ModelModificationQuery mmq) {
@@ -23,15 +22,15 @@ public class DeleteSynchronisationFromPlan extends AbstractUiPositionCommand {
     @Override
     public void doCommand() {
         parentOfElement.getPlan().getSynchronisations().remove(synchronisation);
-        uiExtension = parentOfElement.getUiExtension(synchronisation);
-        parentOfElement.remove(uiExtension);
+        uiElement = parentOfElement.getUiElement(synchronisation.getId());
+        parentOfElement.remove(synchronisation.getId());
     }
 
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().getSynchronisations().add(synchronisation);
-        this.uiExtension = parentOfElement.getUiExtension(synchronisation);
-        this.uiExtension.setX(this.x);
-        this.uiExtension.setY(this.y);
+        parentOfElement.add(synchronisation.getId(), this.uiElement);
+        this.uiElement.setX(this.x);
+        this.uiElement.setY(this.y);
     }
 }

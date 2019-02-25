@@ -322,7 +322,7 @@ public class CPPGeneratorImpl implements IGenerator {
     }
 
     /**
-     * This returns the {@link IConstraintCodeGenerator} of the active condition plugin.
+     * This returns the {@link IConstraintCodeGenerator} of the active newCondition plugin.
      * TODO This maybe a candidate for a default method.
      *
      * @return

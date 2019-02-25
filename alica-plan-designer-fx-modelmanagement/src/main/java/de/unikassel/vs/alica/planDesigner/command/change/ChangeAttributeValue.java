@@ -1,22 +1,14 @@
 package de.unikassel.vs.alica.planDesigner.command.change;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
-import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
-import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
+import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import org.apache.commons.beanutils.BeanUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 
-public class ChangeAttributeValue extends AbstractCommand {
+public class ChangeAttributeValue extends Command {
 
     private String attribute;
     private PlanElement planElement;
@@ -25,7 +17,7 @@ public class ChangeAttributeValue extends AbstractCommand {
     private String oldValue;
 
     public ChangeAttributeValue(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
+        super(modelManager, mmq);
         this.elementType = mmq.getElementType();
         this.planElement = modelManager.getPlanElement(mmq.getElementId());
         this.attribute = mmq.getAttributeName();

@@ -32,7 +32,6 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
     private ViewModelElement viewModelElement;
     private IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler;
     protected Node visualRepresentation;
-    protected Node wrapper;
     private PlanTab planTab;
 
     /**
@@ -46,7 +45,6 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
         setBackground(Background.EMPTY);
         setPickOnBounds(false);
         addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler(viewModelElement));
-        wrapper = this;
         setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
             public void handle(ContextMenuEvent e) {
@@ -97,10 +95,6 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
         return viewModelElement;
     }
 
-    public Node getWrapper() {
-        return wrapper;
-    }
-
     public abstract void setupContainer();
 
     @Override
@@ -147,7 +141,6 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
                 node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getSceneY() - dragContext.mouseAnchorY);
 
                 planTab.fireChangePositionEvent(this, viewModelElement.getType(), node.getLayoutX(), node.getLayoutY());
-                //getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
                 mouseEvent.consume();
                 redrawElement();
             }

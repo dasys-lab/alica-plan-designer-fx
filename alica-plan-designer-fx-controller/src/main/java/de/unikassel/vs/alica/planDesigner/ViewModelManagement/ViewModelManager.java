@@ -3,11 +3,10 @@ package de.unikassel.vs.alica.planDesigner.ViewModelManagement;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.controller.Controller;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
-import de.unikassel.vs.alica.planDesigner.events.UiExtensionModelEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
@@ -220,6 +219,9 @@ public class ViewModelManager {
         StateViewModel stateViewModel = new StateViewModel(state.getId(), state.getName(), type);
         stateViewModel.setComment(state.getComment());
         stateViewModel.setParentId(state.getParentPlan().getId());
+        UiElement uiElement = modelManager.getPlanUIExtensionPair(state.getParentPlan().getId()).getUiElement(state.getId());
+        stateViewModel.setXPosition(uiElement.getX());
+        stateViewModel.setYPosition(uiElement.getY());
 
         for (AbstractPlan abstractPlan : state.getPlans()) {
             stateViewModel.getPlanElements().add((PlanElementViewModel) getViewModelElement(modelManager.getPlanElement(abstractPlan.getId())));
@@ -243,6 +245,9 @@ public class ViewModelManager {
             entryPointViewModel.setTask((TaskViewModel) getViewModelElement(ep.getTask()));
         }
         entryPointViewModel.setParentId(ep.getPlan().getId());
+        UiElement uiElement = modelManager.getPlanUIExtensionPair(ep.getPlan().getId()).getUiElement(ep.getId());
+        entryPointViewModel.setXPosition(uiElement.getX());
+        entryPointViewModel.setYPosition(uiElement.getY());
         return entryPointViewModel;
     }
 
@@ -264,6 +269,9 @@ public class ViewModelManager {
         for (Transition transition : synchronisation.getSyncedTransitions()) {
             synchronizationViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
         }
+        UiElement uiElement = modelManager.getPlanUIExtensionPair(synchronisation.getPlan().getId()).getUiElement(synchronisation.getId());
+        synchronizationViewModel.setXPosition(uiElement.getX());
+        synchronizationViewModel.setYPosition(uiElement.getY());
         return synchronizationViewModel;
     }
 
@@ -495,21 +503,13 @@ public class ViewModelManager {
     }
 
     private void addToPlan(PlanViewModel parentPlan, ViewModelElement element, ModelEvent event) {
-        int x = 0;
-        int y = 0;
-        if (event instanceof UiExtensionModelEvent) {
-            UiExtension extension = ((UiExtensionModelEvent) event).getExtension();
-            x = extension.getX();
-            y = extension.getY();
-        }
-
         switch (event.getElementType()) {
             case Types.STATE:
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
                 StateViewModel stateViewModel = (StateViewModel) element;
-                stateViewModel.setXPosition(x);
-                stateViewModel.setYPosition(y);
+                stateViewModel.setXPosition(event.getUiElement().getX());
+                stateViewModel.setYPosition(event.getUiElement().getY());
                 parentPlan.getStates().add(stateViewModel);
                 break;
             case Types.TRANSITION:
@@ -521,8 +521,8 @@ public class ViewModelManager {
                 break;
             case Types.ENTRYPOINT:
                 EntryPointViewModel entryPointViewModel = (EntryPointViewModel) element;
-                entryPointViewModel.setXPosition(x);
-                entryPointViewModel.setYPosition(y);
+                entryPointViewModel.setXPosition(event.getUiElement().getX());
+                entryPointViewModel.setYPosition(event.getUiElement().getY());
                 parentPlan.getEntryPoints().add((EntryPointViewModel) element);
                 break;
             case Types.BENDPOINT:
@@ -533,8 +533,8 @@ public class ViewModelManager {
                 break;
             case Types.SYNCHRONISATION: {
                 SynchronizationViewModel syncViewModel = (SynchronizationViewModel) element;
-                syncViewModel.setXPosition(x);
-                syncViewModel.setYPosition(y);
+                syncViewModel.setXPosition(event.getUiElement().getX());
+                syncViewModel.setYPosition(event.getUiElement().getY());
                 parentPlan.getSynchronisations().add(syncViewModel);
             } break;
             case Types.INITSTATECONNECTION:
@@ -612,5 +612,10 @@ public class ViewModelManager {
                 System.err.println("ViewModelManager: Disconnect Element not supported for type: " + event.getElementType());
                 break;
         }
+    }
+
+    public void changePosition(PlanElementViewModel planElementViewModel, ModelEvent event) {
+        planElementViewModel.setXPosition(event.getUiElement().getX());
+        planElementViewModel.setYPosition(event.getUiElement().getY());
     }
 }

@@ -1,29 +1,27 @@
 package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 
 import java.nio.file.Path;
 import java.util.*;
 
-public class DeleteAbstractPlan extends AbstractCommand {
+public class DeleteAbstractPlan extends Command {
 
     private String type;
     private Map<Plan, List<State>> referencedStateListForBackup;
-    private Map<HashMap<PlanElement, UiExtension>, List<UiExtension>> referencesInStyleFiles;
+    private Map<HashMap<PlanElement, UiElement>, List<UiElement>> referencesInStyleFiles;
     private Map<PlanType, AnnotatedPlan> referencedAnnotatedPlansForBackup;
     private Map<Parametrisation, Variable> referencedParametrisationForBackup;
     private Path path;
     private AbstractPlan abstractPlan;
 
-    // not always used
-    //private PmlUiExtensionMap pmlUiExtensionMap;
-
-    public DeleteAbstractPlan(ModelManager manager, AbstractPlan abstractPlan) {
-        super(manager);
+    public DeleteAbstractPlan(ModelManager manager, ModelModificationQuery mmq) {
+        super(manager, mmq);
         if (abstractPlan instanceof Behaviour) {
             type = "behaviour";
         }
@@ -105,8 +103,8 @@ public class DeleteAbstractPlan extends AbstractCommand {
             //TODO handle PmlUiExtentions in modelmanager?
 //            if (element instanceof PmlUiExtensionMap) {
 //                PmlUiExtensionMap pmlUiExtensionMap = (PmlUiExtensionMap) element;
-//                List<UiExtension> pmlUiExtensions = pmlUiExtensionMap
-//                        .getExtension()
+//                List<UiElement> pmlUiExtensions = pmlUiExtensionMap
+//                        .getUiElement()
 //                        .entrySet()
 //                        .stream()
 //                        .filter(f -> f.getKey().equals(plan))
@@ -117,8 +115,8 @@ public class DeleteAbstractPlan extends AbstractCommand {
 //                    // The pmluiextensionmap is more of a list of pairs,
 //                    // which means removing a key removes only one entry with the named key.
 //                    // The EMF documentation hints at this with the description of removeKey() which says it removes an entry.
-//                    while (pmlUiExtensionMap.getExtension().containsKey(plan)) {
-//                        pmlUiExtensionMap.getExtension().remove(plan);
+//                    while (pmlUiExtensionMap.getUiElement().containsKey(plan)) {
+//                        pmlUiExtensionMap.getUiElement().remove(plan);
 //                    }
 //                    saveForDeletionConfirmation[0] = true;
 //                }
@@ -134,7 +132,7 @@ public class DeleteAbstractPlan extends AbstractCommand {
             }
         });
 
-        modelManager.removedPlanElement(Types.PLAN, abstractPlan, null, false);
+        modelManager.dropPlanElement(Types.PLAN, abstractPlan, false);
 
         //TODO commads for file deletion
 //        GeneratedSourcesManager generatedSourcesManager = GeneratedSourcesManager.getPmlUiExtension();

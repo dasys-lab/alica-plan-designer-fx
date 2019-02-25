@@ -1,38 +1,34 @@
 package de.unikassel.vs.alica.planDesigner.command.add;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.EntryPoint;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Task;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
-import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
+import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-public class AddTaskToEntryPoint extends AbstractCommand {
+public class AddTaskToEntryPoint extends Command {
     protected EntryPoint entryPoint;
-    protected Task task;
+    protected Task newTask;
+    protected Task oldTask;
 
     public AddTaskToEntryPoint(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
-        this.task = (Task) modelManager.getPlanElement(mmq.getElementId());
-        this.entryPoint = (EntryPoint) modelManager.getPlanElement(mmq.getTargetID());
+        super(modelManager, mmq);
+        this.entryPoint = (EntryPoint) modelManager.getPlanElement(mmq.getParentId());
+        this.oldTask = this.entryPoint.getTask();
+        this.newTask = (Task) modelManager.getPlanElement(mmq.getElementId());
     }
 
     @Override
     public void doCommand() {
-        entryPoint.setTask(task);
-        entryPoint.getPlan().setDirty(true);
-        //event for updateView
-        Plan plan = (Plan) entryPoint.getPlan();
-        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ADD, plan, Types.TASK);
-        event.setParentId(task.getId());
-        event.setNewValue(entryPoint);
-        modelManager.fireEvent(event);
+        entryPoint.setTask(newTask);
+        this.fireEvent(ModelEventType.ELEMENT_REMOVED, oldTask);
+        this.fireEvent(ModelEventType.ELEMENT_ADDED, newTask);
     }
 
     @Override
-    public void undoCommand() { entryPoint.setTask(null); }
+    public void undoCommand() {
+        this.entryPoint.setTask(oldTask);
+        this.fireEvent(ModelEventType.ELEMENT_REMOVED, newTask);
+        this.fireEvent(ModelEventType.ELEMENT_ADDED, oldTask);}
 }

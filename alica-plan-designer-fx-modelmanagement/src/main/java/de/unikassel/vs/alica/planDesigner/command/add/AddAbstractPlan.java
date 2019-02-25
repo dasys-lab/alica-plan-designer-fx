@@ -3,21 +3,21 @@ package de.unikassel.vs.alica.planDesigner.command.add;
 import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-public class AddAbstractPlanToState extends AbstractCommand {
+public class AddAbstractPlan extends Command {
     protected State state;
     protected AbstractPlan abstractPlan;
 
-    public AddAbstractPlanToState(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
-        this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getElementId());
+    public AddAbstractPlan(ModelManager modelManager, ModelModificationQuery mmq) {
+        super(modelManager, mmq);
         this.state = (State) modelManager.getPlanElement(mmq.getTargetID());
+        this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getElementId());
 
         if(modelManager.checkForInclusionLoop(state, Types.STATE, abstractPlan, mmq.getElementType())){
             throw new RuntimeException(
@@ -30,22 +30,17 @@ public class AddAbstractPlanToState extends AbstractCommand {
     @Override
     public void doCommand() {
         //Don't put AbstractPlan, if the same existing
-        for (AbstractPlan existingAbstractPlan: state.getPlans()) {
-            if (existingAbstractPlan.getId() == abstractPlan.getId()) {
-                return;
-            }
+        if (state.getPlans().contains(abstractPlan)) {
+            return;
         }
-        state.addAbstractPlan(abstractPlan);
 
-        //event for updateView
-        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ADD, (Plan) state.getParentPlan(), Types.ABSTRACTPLAN);
-        event.setParentId(abstractPlan.getId());
-        event.setNewValue(state);
-        modelManager.fireEvent(event);
+        this.state.addAbstractPlan(abstractPlan);
+        this.fireEvent(ModelEventType.ELEMENT_ADDED, abstractPlan);
     }
 
     @Override
     public void undoCommand() {
-        state.removeAbstractPlan(abstractPlan);
+        this.state.removeAbstractPlan(abstractPlan);
+        this.fireEvent(ModelEventType.ELEMENT_REMOVED, abstractPlan);
     }
 }

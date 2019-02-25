@@ -1,17 +1,17 @@
 package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-public class DeleteBehaviour extends AbstractCommand {
+public class DeleteBehaviour extends Command {
 
     protected Behaviour behaviour;
 
     public DeleteBehaviour(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
+        super(modelManager, mmq);
         behaviour = (Behaviour) modelManager.getPlanElement(mmq.getElementId());
     }
 
@@ -20,7 +20,7 @@ public class DeleteBehaviour extends AbstractCommand {
         if (behaviour == null) {
             return;
         }
-        modelManager.removedPlanElement(Types.BEHAVIOUR, behaviour, null, true);
+        modelManager.dropPlanElement(Types.BEHAVIOUR, behaviour, true);
     }
 
     @Override
@@ -28,6 +28,6 @@ public class DeleteBehaviour extends AbstractCommand {
         if (behaviour == null) {
             return;
         }
-        modelManager.createdPlanElement(Types.BEHAVIOUR, behaviour, null, true);
+        modelManager.storePlanElement(Types.BEHAVIOUR, behaviour,true);
     }
 }

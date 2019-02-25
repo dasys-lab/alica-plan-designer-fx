@@ -41,20 +41,20 @@ public class ModelModificationQuery {
         this.name = absolutePath.substring(lastSeparatorIdx + 1, lastDotIdx);
         String ending = absolutePath.substring(lastDotIdx + 1, absolutePath.length());
         switch (ending) {
-            case FileSystemUtil.BEHAVIOUR_ENDING:
+            case Extensions.BEHAVIOUR:
                 elementType = Types.BEHAVIOUR;
                 break;
-            case FileSystemUtil.PLAN_ENDING:
+            case Extensions.PLAN:
                 elementType = Types.PLAN;
                 break;
-            case FileSystemUtil.PLANTYPE_ENDING:
+            case Extensions.PLANTYPE:
                 elementType = Types.PLANTYPE;
                 break;
-            case FileSystemUtil.TASKREPOSITORY_ENDING:
+            case Extensions.TASKREPOSITORY:
                 elementType = Types.TASKREPOSITORY;
                 break;
-            case FileSystemUtil.PLAN_EXTENSION_ENDING:
-                elementType = Types.PLAN; //TODO: Handle plan-extension-ending - Files
+            case Extensions.PLAN_UI:
+                elementType = Types.PLAN; //TODO: Handle plan-uiElement-ending - Files
                 break;
             default:
                 System.err.println("ModelModificationQuery: Unknown ending of file " + absolutePath);
@@ -81,7 +81,11 @@ public class ModelModificationQuery {
     }
 
     public String getName() {
-        return name;
+        if (name == null) {
+            return "MISSING_NAME";
+        }else {
+            return name;
+        }
     }
 
     public void setName(String name) {
@@ -153,7 +157,11 @@ public class ModelModificationQuery {
     }
 
     public String getComment(){
-        return comment;
+        if (comment == null) {
+            return "MISSING_COMMENT";
+        }else {
+            return comment;
+        }
     }
 
     public void setComment(String comment) {

@@ -176,30 +176,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     /**
-     * Handles events fired by the {@link ModelManager}, when the UiExtensionModel has changed.
-     *
-     * @param event contains all information about the changes in the UiExtensionModel
-     */
-    @Override
-    public void handleUiExtensionModelEvent(UiExtensionModelEvent event) {
-        PlanElement modelElement = event.getElement();
-        PlanElementViewModel planElementViewModel = (PlanElementViewModel) viewModelManager.getViewModelElement(modelElement);
-
-        planElementViewModel.setXPosition(event.getExtension().getX());
-        planElementViewModel.setYPosition(event.getExtension().getY());
-
-        if (event.getExtension().getBendPoints().size() != 0) {
-            TransitionViewModel transition = (TransitionViewModel) planElementViewModel;
-            transition.getBendpoints().clear();
-            for (BendPoint bendPoint : event.getExtension().getBendPoints()) {
-                transition.addBendpoint((BendPointViewModel) viewModelManager.getViewModelElement(bendPoint));
-            }
-            ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, modelElement, Types.BENDPOINT);
-            updateViewModel(modelEvent, planElementViewModel, modelElement);
-        }
-    }
-
-    /**
      * Handles the model event for the repository view.
      *
      * @param eventType
@@ -254,10 +230,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     throw new RuntimeException(e);
                 }
                 break;
+            case ELEMENT_PARSED:
             case ELEMENT_CREATED:
-                viewModelManager.addElement(this, event);
-                break;
-            case ELEMENT_ADD:
+            case ELEMENT_ADDED:
                 viewModelManager.addElement(this, event);
                 break;
             case ELEMENT_CONNECTED:
@@ -265,9 +240,21 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ELEMENT_DISCONNECTED:
                 viewModelManager.disconnectElement(event);
+            case ELEMENT_CHANGED_POSITION:
+                viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
             default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
                 break;
+        }
+
+        if (event.getUiElement() != null && event.getUiElement().getBendPoints().size() != 0) {
+            TransitionViewModel transition = (TransitionViewModel) viewModelElement;
+            transition.getBendpoints().clear();
+            for (BendPoint bendPoint : event.getUiElement().getBendPoints()) {
+                transition.addBendpoint((BendPointViewModel) viewModelManager.getViewModelElement(bendPoint));
+            }
+            ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, planElement, Types.BENDPOINT);
+            updateViewModel(modelEvent, viewModelElement, planElement);
         }
     }
 
@@ -325,6 +312,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     @Override
     public void handleGuiInitialized() {
         mainWindowController.enableMenuBar();
+        editorTabPane = mainWindowController.getEditorTabPane();
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
             mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
@@ -335,7 +323,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         repoViewModel.setRepositoryTabPane(repoTabPane);
         repoViewModel.initGuiContent();
 
-        editorTabPane = mainWindowController.getEditorTabPane();
         editorTabPane.setGuiModificationHandler(this);
     }
 

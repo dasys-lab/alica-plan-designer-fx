@@ -1,76 +1,87 @@
 package de.unikassel.vs.alica.planDesigner.uiextensionmodel;
 
-import javafx.beans.property.*;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-public class UiExtension extends PositionedElement {
+public class UiExtension {
 
-    // ID of the plan, this pmlUIExtension object helps to layout its elements in the Plan Designer
-    protected final SimpleLongProperty layoutedModelElementId = new SimpleLongProperty();
-    protected final SimpleIntegerProperty height = new SimpleIntegerProperty();
-    protected final SimpleIntegerProperty width = new SimpleIntegerProperty();
-    protected final SimpleBooleanProperty collapsed = new SimpleBooleanProperty();
-    protected final SimpleBooleanProperty visible = new SimpleBooleanProperty();
+    protected Plan plan;
+    protected HashMap<Long, UiElement> uiElementMap = null;
 
-    protected LinkedList<BendPoint> bendPoints;
-
-    public UiExtension() {
-        bendPoints = new LinkedList<>();
+    /**
+     * Default-constructor, only necessary for deserialization
+     */
+    private UiExtension() {
+        this(null);
     }
 
-    public long getLayoutedModelElementId() {
-        return layoutedModelElementId.get();
+    public UiExtension(Plan plan) {
+        this.plan = plan;
+        this.uiElementMap = new HashMap<>();
     }
 
-    public void setLayoutedModelElementId(long layoutedModelElementId) {
-        this.layoutedModelElementId.set(layoutedModelElementId);
+    public Plan getPlan() {
+        return plan;
     }
 
-    public SimpleLongProperty layoutedModelElementIdProperty() {
-        return layoutedModelElementId;
+    public void setPlan(Plan plan) {
+        this.plan = plan;
     }
 
-    public int getWidth() {return this.width.get();}
-
-    public void setWidth(int width) {this.width.set(width);}
-
-    public SimpleIntegerProperty widthProperty() {
-        return width;
+    public Set<Long> getKeys() {
+        return uiElementMap.keySet();
     }
 
-    public int getHeight() {return this.height.get();}
-
-    public void setHeight(int height) {this.height.set(height);}
-
-    public SimpleIntegerProperty heightProperty() {
-        return height;
+    public void remove(Long key) {
+        this.uiElementMap.remove(key);
     }
 
-    public boolean isCollapsed() {return this.collapsed.get();}
-
-    public void setCollapsed(boolean collapsed) {this.collapsed.set(collapsed);}
-
-    public SimpleBooleanProperty collapsedProperty() {
-        return collapsed;
+    public void add(Long key, UiElement value) {
+        this.uiElementMap.put(key, value);
     }
 
-    public LinkedList<BendPoint> getBendPoints() {return this.bendPoints;}
-
-    public boolean isVisible() {return this.visible.get();}
-
-    public void setVisible(boolean visible) {this.visible.set(visible);}
-
-    public SimpleBooleanProperty visibleProperty() {
-        return visible;
+    public Map<Long, UiElement> getUiElementMap() {
+        return Collections.unmodifiableMap(this.uiElementMap);
     }
 
-    public void addBendpoint(BendPoint bendPoint) {
-        bendPoints.add(bendPoint);
+    /**
+     * Method for simplifying the access to the {@link UiElement}-objects.
+     * <p>
+     * Whenever a {@link PlanElement}, which has no UiElement, is
+     * requested, a  UiElement is created and put into the map. This Method
+     * may not be required later, when PmlUiExtensions are saved, loaded and created
+     * automatically
+     *
+     * @param planElementId the {@link PlanElement} to find a {@link UiElement} for
+     * @return the corresponding {@link UiElement} or a new one
+     */
+    public UiElement getUiElement(Long planElementId) {
+        UiElement uiElement = uiElementMap.get(planElementId);
+        if (uiElement == null) {
+            uiElement = new UiElement();
+            uiElementMap.put(planElementId, uiElement);
+        }
+        return uiElement;
     }
 
-    public void removeBendpoint(BendPoint bendPoint) {
-        bendPoints.remove(bendPoint);
+    public void registerDirtyListeners() {
+        for (UiElement uiElement : uiElementMap.values()) {
+            registerDirtyListeners(uiElement);
+        }
     }
+
+    private void registerDirtyListeners(UiElement extension) {
+        extension.xProperty().addListener((observable, oldValue, newValue) ->
+                plan.setDirty(true)
+        );
+        extension.yProperty().addListener((observable, oldValue, newValue) ->
+                plan.setDirty(true)
+        );
+    }
+
 }

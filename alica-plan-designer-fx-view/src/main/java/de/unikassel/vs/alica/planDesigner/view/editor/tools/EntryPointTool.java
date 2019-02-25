@@ -95,9 +95,7 @@ public class EntryPointTool extends AbstractTool {
                     HashMap<String, Long> related = new HashMap<>();
                     related.put(Types.TASK, task.getId());
                     guiEvent.setRelatedObjects(related);
-
-                    IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
-                    handler.handle(guiEvent);
+                    MainWindowController.getInstance().getGuiModificationHandler().handle(guiEvent);
                 }
             });
         }

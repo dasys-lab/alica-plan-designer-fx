@@ -23,20 +23,20 @@ public interface IPlugin<T> {
     IConstraintCodeGenerator getConstraintCodeGenerator();
 
     /**
-     * Returns the plugin view that will be embedded into the properties view of the condition
+     * Returns the plugin view that will be embedded into the properties view of the newCondition
      * @return
      */
     Parent getPluginUI() throws IOException;
 
     /**
-     * Writes into the attributes of the given condition.
-     * Do NOT write data into the hierarchy above the given condition.
+     * Writes into the attributes of the given newCondition.
+     * Do NOT write data into the hierarchy above the given newCondition.
      * @param condition
      */
     void writePluginValuesToCondition(Condition condition);
 
     /**
-     * Reads necessary data for the plugin out of the condition.
+     * Reads necessary data for the plugin out of the newCondition.
      * @param condition
      * @return
      */

@@ -88,12 +88,25 @@ public class State extends PlanElement {
         return Collections.unmodifiableList(parametrisations);
     }
 
-    public List<Transition> getInTransitions() {
-        return Collections.unmodifiableList(inTransitions);
-    }
+
 
     public List<Transition> getOutTransitions() {
         return Collections.unmodifiableList(outTransitions);
     }
+    public void addOutTransition(Transition transition) {
+        this.outTransitions.add(transition);
+    }
+    public void removeOutTransition(Transition transition) {
+        this.outTransitions.remove(transition);
+    }
 
+    public List<Transition> getInTransitions() {
+        return Collections.unmodifiableList(inTransitions);
+    }
+    public void addInTransition(Transition transition) {
+        this.inTransitions.add(transition);
+    }
+    public void removeInTransition(Transition transition) {
+        this.inTransitions.remove(transition);
+    }
 }
