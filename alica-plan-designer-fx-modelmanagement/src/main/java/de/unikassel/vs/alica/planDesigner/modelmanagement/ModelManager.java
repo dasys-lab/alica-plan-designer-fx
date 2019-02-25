@@ -381,7 +381,9 @@ public class ModelManager implements Observer {
         }
 
         for (State state : plan.getStates()) {
-            for (AbstractPlan abstractPlan : state.getPlans()) {
+            // Iterating over a List while modifying it results in an IllegalAccessException. By copying the list
+            // beforehand this can be prevented
+            for (AbstractPlan abstractPlan : new ArrayList<>(state.getPlans())) {
                 state.removeAbstractPlan(abstractPlan);
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
             }
@@ -584,7 +586,7 @@ public class ModelManager implements Observer {
                         break;
                 }
 
-                if (ending != "") {
+                if (!ending.equals("")) {
                     renameFile(getAbsoluteDirectory(planElement), (String) newValue, (String) oldValue, ending);
                     serializeToDisk((SerializablePlanElement) planElement, false);
                 }
@@ -866,6 +868,9 @@ public class ModelManager implements Observer {
                         if (mmq.getTargetID() != null) {
                             cmd = new AddAbstractPlan(this, mmq);
                         } else {
+                            // The plan needs to be wrapped in an AnnotatedPlan, therefore the Type
+                            // should be Types.ANNOTATEDPLAN
+                            mmq.setElementType(Types.ANNOTATEDPLAN);
                             cmd = new CreateAnnotatedPlan(this, mmq);
                         }
                         break;
