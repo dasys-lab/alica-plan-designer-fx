@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.util.StringConverter;
 
 public abstract class VariablesTable<S extends ViewModelElement> extends VBox {
@@ -45,17 +46,17 @@ public abstract class VariablesTable<S extends ViewModelElement> extends VBox {
 
     public void addItem(S viewModel) {
         table.addItem(viewModel);
-        table.setMaxHeight(24*(table.getItems().size()+1)+2);
+        resizeTable();
     }
 
     public void removeItem(S viewModel) {
         table.removeItem(viewModel);
-        table.setMaxHeight(24*(table.getItems().size()+1)+2);
+        resizeTable();
     }
 
     public void clear() {
         table.clear();
-        table.setMaxHeight(24*(table.getItems().size()+1)+2);
+        resizeTable();
     }
 
     public S getSelectedItem() {
@@ -65,4 +66,10 @@ public abstract class VariablesTable<S extends ViewModelElement> extends VBox {
     protected abstract void onAddElement();
 
     protected abstract void onRemoveElement();
+
+    private void resizeTable(){
+        int elements = table.getItems().size();
+        double fontSize = Font.getDefault().getSize() * 2;
+        table.setPrefHeight(fontSize * (elements + 1) + 2);
+    }
 }

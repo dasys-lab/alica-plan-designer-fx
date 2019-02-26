@@ -86,26 +86,22 @@ public class ConditionsTab extends Tab {
 
         properties = new PropertySheet();
         properties.setModeSwitcherVisible(false);
+        String propertiesTitle = I18NRepo.getInstance().getString("label.caption.properties");
+        TitledPane propertySection = new TitledPane(propertiesTitle, properties);
 
-        TitledPane propertySection = new TitledPane();
-        propertySection.setContent(properties);
-        propertySection.setText(I18NRepo.getInstance().getString("label.caption.properties"));
-
-        TitledPane pluginSection = new TitledPane();
-        pluginSection.setContent(pluginUI);
-        pluginSection.setText(I18NRepo.getInstance().getString("label.caption.pluginui"));
+        String pluginTitle = I18NRepo.getInstance().getString("label.caption.pluginui");
+        TitledPane pluginSection = new TitledPane(pluginTitle, pluginUI);
         pluginSection.setExpanded(false);
 
-        TitledPane variablesSection = new TitledPane();
+        String variablesTitle = I18NRepo.getInstance().getString("label.caption.variables");
         variables = createVariableTable();
-        variablesSection.setContent(variables);
-        variablesSection.setText(I18NRepo.getInstance().getString("label.caption.variables"));
+        variables.setMinHeight(100);
+        TitledPane variablesSection = new TitledPane(variablesTitle, variables);
         variablesSection.setExpanded(false);
 
-        TitledPane quantifierSection = new TitledPane();
+        String quantifiersTitle = I18NRepo.getInstance().getString("label.caption.quantifiers");
         quantifiers = createQuantifierTable();
-        quantifierSection.setContent(quantifiers);
-        quantifierSection.setText(I18NRepo.getInstance().getString("label.caption.quantifiers"));
+        TitledPane quantifierSection = new TitledPane(quantifiersTitle, quantifiers);
         quantifierSection.setExpanded(false);
 
         VBox vBox = new VBox(propertySection, pluginSection, variablesSection, quantifierSection);

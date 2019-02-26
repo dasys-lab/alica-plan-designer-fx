@@ -65,12 +65,7 @@ public class Plan extends AbstractPlan {
     public void setPreCondition(PreCondition preCondition) {
         this.preCondition.set(preCondition);
         if(preCondition != null){
-            InvalidationListener dirty = obs -> this.setDirty(true);
-            preCondition.nameProperty().addListener(dirty);
-            preCondition.conditionStringProperty().addListener(dirty);
-            preCondition.enabledProperty().addListener(dirty);
-            preCondition.pluginNameProperty().addListener(dirty);
-            preCondition.commentProperty().addListener(dirty);
+            preCondition.addListenerToAllProperties(obs -> this.setDirty(true));
         }
     }
     public ObjectProperty<PreCondition> preConditionProperty(){
@@ -83,12 +78,7 @@ public class Plan extends AbstractPlan {
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
         this.runtimeCondition.set(runtimeCondition);
         if(runtimeCondition != null){
-            InvalidationListener dirty = obs -> this.setDirty(true);
-            runtimeCondition.nameProperty().addListener(dirty);
-            runtimeCondition.conditionStringProperty().addListener(dirty);
-            runtimeCondition.enabledProperty().addListener(dirty);
-            runtimeCondition.pluginNameProperty().addListener(dirty);
-            runtimeCondition.commentProperty().addListener(dirty);
+            runtimeCondition.addListenerToAllProperties(obs -> this.setDirty(true));
         }
     }
     public ObjectProperty<RuntimeCondition> runtimeConditionProperty(){
@@ -149,27 +139,20 @@ public class Plan extends AbstractPlan {
     @Override
     public void registerDirtyFlag() {
         super.registerDirtyFlag();
-        masterPlan.addListener(         (observable, oldValue, newValue) -> this.setDirty(true));
-        utilityThreshold.addListener(   (observable, oldValue, newValue) -> this.setDirty(true));
-        preCondition.addListener(       (observable, oldValue, newValue) -> this.setDirty(true));
-        runtimeCondition.addListener(   (observable, oldValue, newValue) -> this.setDirty(true));
+        InvalidationListener dirty = obs -> this.setDirty(true);
+        masterPlan.addListener(dirty);
+        utilityThreshold.addListener(dirty);
+        preCondition.addListener(dirty);
+        runtimeCondition.addListener(dirty);
 
         for (Synchronisation synchronisation : synchronisations) {
-            synchronisation.dirtyProperty().addListener((observable, oldValue, newValue) -> {
-                this.setDirty(true);
-            });
+            synchronisation.dirtyProperty().addListener(dirty);
         }
 
         for (Variable variable : variables) {
-            variable.nameProperty().addListener((observable, oldValue, newValue) -> {
-                this.setDirty(true);
-            });
-            variable.commentProperty().addListener((observable, oldValue, newValue) -> {
-                this.setDirty(true);
-            });
-            variable.variableTypeProperty().addListener((observable, oldValue, newValue) -> {
-                this.setDirty(true);
-            });
+            variable.nameProperty().addListener(dirty);
+            variable.commentProperty().addListener(dirty);
+            variable.variableTypeProperty().addListener(dirty);
         }
 
         this.setDirty(false);

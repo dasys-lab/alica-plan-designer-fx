@@ -1,14 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class Behaviour extends AbstractPlan {
     protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
@@ -25,12 +20,7 @@ public class Behaviour extends AbstractPlan {
     public void setPreCondition(PreCondition preCondition) {
         this.preCondition.set(preCondition);
         if (preCondition != null) {
-            InvalidationListener dirty = obs -> this.setDirty(true);
-            preCondition.nameProperty().addListener(dirty);
-            preCondition.conditionStringProperty().addListener(dirty);
-            preCondition.enabledProperty().addListener(dirty);
-            preCondition.pluginNameProperty().addListener(dirty);
-            preCondition.commentProperty().addListener(dirty);
+            preCondition.addListenerToAllProperties(obs -> this.setDirty(true));
         }
     }
 
@@ -41,12 +31,7 @@ public class Behaviour extends AbstractPlan {
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
         this.runtimeCondition.set(runtimeCondition);
         if (runtimeCondition != null) {
-            InvalidationListener dirty = ons -> this.setDirty(true);
-            runtimeCondition.nameProperty().addListener(dirty);
-            runtimeCondition.conditionStringProperty().addListener(dirty);
-            runtimeCondition.enabledProperty().addListener(dirty);
-            runtimeCondition.pluginNameProperty().addListener(dirty);
-            runtimeCondition.commentProperty().addListener(dirty);
+            runtimeCondition.addListenerToAllProperties(obs -> this.setDirty(true));
         }
     }
 
@@ -57,12 +42,7 @@ public class Behaviour extends AbstractPlan {
     public void setPostCondition(PostCondition postCondition) {
         this.postCondition.set(postCondition);
         if (postCondition != null) {
-            InvalidationListener dirty = obs -> this.setDirty(true);
-            postCondition.nameProperty().addListener(dirty);
-            postCondition.conditionStringProperty().addListener(dirty);
-            postCondition.enabledProperty().addListener(dirty);
-            postCondition.pluginNameProperty().addListener(dirty);
-            postCondition.commentProperty().addListener(dirty);
+            postCondition.addListenerToAllProperties(obs -> this.setDirty(true));
         }
     }
 

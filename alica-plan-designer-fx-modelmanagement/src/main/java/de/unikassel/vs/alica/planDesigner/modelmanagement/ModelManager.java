@@ -691,11 +691,11 @@ public class ModelManager implements Observer {
                 usages.add(parent);
                 continue;
             }
-            if (parent.getPreCondition().getVariables().contains(planElement)) {
+            if (parent.getPreCondition() != null && parent.getPreCondition().getVariables().contains(planElement)) {
                 usages.add(parent);
                 continue;
             }
-            if (parent.getRuntimeCondition().getVariables().contains(planElement)) {
+            if (parent.getRuntimeCondition() != null && parent.getRuntimeCondition().getVariables().contains(planElement)) {
                 usages.add(parent);
                 continue;
             }
@@ -713,7 +713,7 @@ public class ModelManager implements Observer {
                 }
             }
             for (Transition transition : parent.getTransitions()) {
-                if (transition.getPreCondition().getVariables().contains(planElement)) {
+                if (transition.getPreCondition() != null && transition.getPreCondition().getVariables().contains(planElement)) {
                     usages.add(parent);
                     break;
                 }
@@ -740,15 +740,15 @@ public class ModelManager implements Observer {
                 usages.add(behaviour);
                 continue;
             }
-            if (behaviour.getPreCondition().getVariables().contains(planElement)) {
+            if (behaviour.getPreCondition() != null && behaviour.getPreCondition().getVariables().contains(planElement)) {
                 usages.add(behaviour);
                 continue;
             }
-            if (behaviour.getRuntimeCondition().getVariables().contains(planElement)) {
+            if (behaviour.getRuntimeCondition() != null && behaviour.getRuntimeCondition().getVariables().contains(planElement)) {
                 usages.add(behaviour);
                 continue;
             }
-            if (behaviour.getPostCondition().getVariables().contains(planElement)) {
+            if (behaviour.getPostCondition() != null && behaviour.getPostCondition().getVariables().contains(planElement)) {
                 usages.add(behaviour);
                 continue;
             }

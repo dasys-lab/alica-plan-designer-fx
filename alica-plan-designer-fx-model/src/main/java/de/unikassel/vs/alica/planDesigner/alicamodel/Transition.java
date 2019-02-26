@@ -47,5 +47,8 @@ public class Transition extends  PlanElement {
 
     public void setPreCondition(PreCondition preCondition) {
         this.preCondition = preCondition;
+        if(preCondition != null){
+            preCondition.addListenerToAllProperties(obs -> this.inState.parentPlan.setDirty(true));
+        }
     }
 }
