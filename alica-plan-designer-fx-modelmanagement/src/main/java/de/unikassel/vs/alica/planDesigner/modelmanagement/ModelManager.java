@@ -439,18 +439,6 @@ public class ModelManager implements Observer {
         PlanElement oldElement = planElementMap.get(planElement.getId());
         planElementMap.put(planElement.getId(), planElement);
 
-        // Conditions treated separately to prevent code-duplication
-        if(type.equals(Types.PRECONDITION) || type.equals(Types.RUNTIMECONDITION) || type.equals(Types.POSTCONDITION)){
-            Condition condition = (Condition) planElement;
-            planElementMap.put(condition.getId(), condition);
-            for(Variable variable : condition.getVariables()){
-                planElementMap.put(variable.getId(), variable);
-            }
-            for(Quantifier quantifier : condition.getQuantifiers()){
-                planElementMap.put(quantifier.getId(), quantifier);
-            }
-        }
-
         // early return in case of a non-serializable plan element
         if (!(planElement instanceof SerializablePlanElement)) {
             return oldElement;
@@ -468,7 +456,7 @@ public class ModelManager implements Observer {
                 planMap.put(planElement.getId(), plan);
                 for(Transition transition : plan.getTransitions()) {
                     planElementMap.put(transition.getId(), transition);
-                    storePlanElement(Types.PRECONDITION, transition.getPreCondition(), serializeToDisk);
+                    storeCondition(transition.getPreCondition());
                 }
                 for(EntryPoint entryPoint: plan.getEntryPoints()) {
                     planElementMap.put(entryPoint.getId(), entryPoint);
@@ -480,7 +468,7 @@ public class ModelManager implements Observer {
                     }
                     if(state instanceof TerminalState){
                         TerminalState terminalState = (TerminalState) state;
-                        storePlanElement(Types.POSTCONDITION, terminalState.getPostCondition(), serializeToDisk);
+                        storeCondition(terminalState.getPostCondition());
                     }
                 }
                 for(Variable variable: plan.getVariables()) {
@@ -489,8 +477,8 @@ public class ModelManager implements Observer {
                 for(Synchronisation synchronisation: plan.getSynchronisations()) {
                     planElementMap.put(synchronisation.getId(), synchronisation);
                 }
-                storePlanElement(Types.PRECONDITION, plan.getPreCondition(), serializeToDisk);
-                storePlanElement(Types.RUNTIMECONDITION, plan.getRuntimeCondition(), serializeToDisk);
+                storeCondition(plan.getPreCondition());
+                storeCondition(plan.getRuntimeCondition());
                 break;
             case Types.PLANTYPE:
                 PlanType planType = (PlanType) planElement;
@@ -511,9 +499,9 @@ public class ModelManager implements Observer {
                 for(Variable variable: behaviour.getVariables()) {
                     planElementMap.put(variable.getId(), variable);
                 }
-                storePlanElement(Types.PRECONDITION, behaviour.getPreCondition(), serializeToDisk);
-                storePlanElement(Types.RUNTIMECONDITION, behaviour.getPreCondition(), serializeToDisk);
-                storePlanElement(Types.POSTCONDITION, behaviour.getPreCondition(), serializeToDisk);
+                storeCondition(behaviour.getPreCondition());
+                storeCondition(behaviour.getPreCondition());
+                storeCondition(behaviour.getPreCondition());
 
                 break;
             case Types.TASKREPOSITORY:
@@ -526,6 +514,15 @@ public class ModelManager implements Observer {
                 throw new RuntimeException("ModelManager: Storing " + type + " not implemented, yet!");
         }
         return oldElement;
+    }
+
+    private void storeCondition (Condition condition) {
+        if(condition != null) {
+            planElementMap.put(condition.getId(), condition);
+            for (Quantifier quantifier : condition.getQuantifiers()) {
+                planElementMap.put(quantifier.getId(), quantifier);
+            }
+        }
     }
 
     /**

@@ -286,22 +286,12 @@ public class ConditionsTab extends Tab {
         VariablesTable<VariableViewModel> variablesTable = new VariablesTable<VariableViewModel>() {
             @Override
             protected void onAddElement() {
-                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.VARIABLE, "NEW_VARIABLE");
-                event.setParentId(condition.getId());
-                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+                // TODO: Choose an existing Variable
             }
 
             @Override
             protected void onRemoveElement() {
-                VariableViewModel selected = variables.getSelectedItem();
-                if(selected == null){
-                    return;
-                }
-
-                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.VARIABLE, selected.getName());
-                event.setParentId(condition.getId());
-                event.setElementId(selected.getId());
-                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+                // TODO: Choose an existing Variable
             }
         };
 
