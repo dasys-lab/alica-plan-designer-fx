@@ -64,7 +64,7 @@ public class ConditionViewModel extends PlanElementViewModel implements HasVaria
         return variables;
     }
 
-    public ObservableList<QuantifierViewModel> getQuantifier() {
+    public ObservableList<QuantifierViewModel> getQuantifiers() {
         return quantifier;
     }
 

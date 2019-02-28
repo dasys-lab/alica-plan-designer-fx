@@ -820,6 +820,9 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new CreateVariable(this, mmq);
                         break;
+                    case Types.QUANTIFIER:
+                        cmd = new CreateQuantifier(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
                         return;
@@ -857,6 +860,9 @@ public class ModelManager implements Observer {
                         break;
                     case Types.VARIABLE:
                         cmd = new DeleteVariableFromPlan(this, mmq);
+                        break;
+                    case Types.QUANTIFIER:
+                        cmd = new DeleteQuantifier(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");

@@ -170,13 +170,22 @@ public class ViewModelManager {
         }
         for (Quantifier quantifier : condition.getQuantifiers()) {
             // TODO: Quantifier is not very clean or fully implemented, yet.
-            conditionViewModel.getQuantifier().add((QuantifierViewModel) getViewModelElement(quantifier));
+            conditionViewModel.getQuantifiers().add((QuantifierViewModel) getViewModelElement(quantifier));
         }
         return conditionViewModel;
     }
 
     private QuantifierViewModel createQuantifierViewModel(Quantifier quantifier) {
-        return new QuantifierViewModel(quantifier.getId(), quantifier.getName(), Types.QUANTIFIER);
+        QuantifierViewModel viewModel = new QuantifierViewModel(quantifier.getId(), quantifier.getName(), Types.QUANTIFIER);
+        if(quantifier.getScope() != null){
+            viewModel.setScope(quantifier.getScope().getId());
+        }
+        viewModel.setQuantifierType(quantifier.getQuantifierType());
+        viewModel.setComment(quantifier.getComment());
+        if(quantifier.getSorts() != null) {
+            viewModel.setSorts(String.join(" ", quantifier.getSorts()));
+        }
+        return  viewModel;
     }
 
     private PlanTypeViewModel createPlanTypeViewModel(PlanType planType) {
@@ -356,7 +365,7 @@ public class ViewModelManager {
                 if ( parentViewModel instanceof HasVariablesView) {
                     ((HasVariablesView) parentViewModel).getVariables().remove(viewModelElement);
                 } else {
-                    throw new RuntimeException(getClass().getName() + ": Parent ViewModel object has no variables");
+                    throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no variables");
                 }
                 break;
             case Types.PRECONDITION:
@@ -398,6 +407,18 @@ public class ViewModelManager {
                     default:
                 }
 
+                break;
+            case Types.QUANTIFIER:
+                parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                switch (parentViewModel.getType()){
+                    case Types.PRECONDITION:
+                    case Types.RUNTIMECONDITION:
+                    case Types.POSTCONDITION:
+                        ((ConditionViewModel) parentViewModel).getQuantifiers().remove(viewModelElement);
+                        break;
+                    default:
+                        throw new RuntimeException(getClass().getSimpleName() + ": ParentViewModel has no Quantifiers");
+                }
                 break;
             default:
                 System.err.println("ViewModelManager: Remove Element not supported for type: " + viewModelElement.getType());
@@ -494,6 +515,10 @@ public class ViewModelManager {
                     default:
                         System.err.println("ViewModelManager: Add Element not supported for postCondition and " + parentViewModel.getType());
                 }
+                break;
+            case Types.QUANTIFIER:
+                ConditionViewModel conditionViewModel = (ConditionViewModel) parentViewModel;
+                conditionViewModel.getQuantifiers().add((QuantifierViewModel) viewModelElement);
                 break;
             default:
                 System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());

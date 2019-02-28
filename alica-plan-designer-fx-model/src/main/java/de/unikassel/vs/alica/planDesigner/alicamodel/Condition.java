@@ -14,7 +14,7 @@ public class Condition extends PlanElement {
     protected final SimpleBooleanProperty enabled = new SimpleBooleanProperty();
 
     protected ArrayList<Variable> variables = new ArrayList<>();
-    protected ArrayList<Quantifier> quantifier = new ArrayList<>();
+    protected ArrayList<Quantifier> quantifiers = new ArrayList<>();
 
     @JsonIgnore
     private ArrayList<InvalidationListener> listeners = new ArrayList<>();
@@ -59,10 +59,6 @@ public class Condition extends PlanElement {
         return variables;
     }
 
-    public ArrayList<Quantifier> getQuantifiers() {
-        return quantifier;
-    }
-
     public void addVariable(Variable variable){
        variables.add(variable);
 
@@ -87,6 +83,34 @@ public class Condition extends PlanElement {
         }
     }
 
+    public ArrayList<Quantifier> getQuantifiers() {
+        return quantifiers;
+    }
+
+    public void addQuantifier(Quantifier quantifier){
+        quantifiers.add(quantifier);
+
+        for(InvalidationListener listener : listeners){
+            quantifier.nameProperty().addListener(listener);
+            quantifier.quantifierTypeProperty().addListener(listener);
+            quantifier.commentProperty().addListener(listener);
+
+            listener.invalidated(null);
+        }
+    }
+
+    public void removeQuantifier(Quantifier quantifier){
+        quantifiers.remove(quantifier);
+
+        for(InvalidationListener listener : listeners){
+            quantifier.nameProperty().removeListener(listener);
+            quantifier.quantifierTypeProperty().removeListener(listener);
+            quantifier.commentProperty().removeListener(listener);
+
+            listener.invalidated(null);
+        }
+    }
+
     public void addListenerToAllProperties(InvalidationListener listener){
         listeners.add(listener);
 
@@ -100,6 +124,12 @@ public class Condition extends PlanElement {
             variable.nameProperty().addListener(listener);
             variable.variableTypeProperty().addListener(listener);
             variable.commentProperty().addListener(listener);
+        }
+
+        for(Quantifier quantifier :quantifiers){
+            quantifier.nameProperty().addListener(listener);
+            quantifier.quantifierTypeProperty().addListener(listener);
+            quantifier.commentProperty().addListener(listener);
         }
     }
 }

@@ -95,7 +95,6 @@ public class ConditionsTab extends Tab {
 
         String variablesTitle = I18NRepo.getInstance().getString("label.caption.variables");
         variables = createVariableTable();
-        variables.setMinHeight(100);
         TitledPane variablesSection = new TitledPane(variablesTitle, variables);
         variablesSection.setExpanded(false);
 
@@ -256,9 +255,19 @@ public class ConditionsTab extends Tab {
                     }
                 }
             });
-            for(QuantifierViewModel quantifier : condition.getQuantifier()){
+            for(QuantifierViewModel quantifier : condition.getQuantifiers()){
                 quantifiers.addItem(quantifier);
             }
+            condition.getQuantifiers().addListener((ListChangeListener<QuantifierViewModel>) c -> {
+                while (c.next()){
+                    for (QuantifierViewModel rem : c.getRemoved()){
+                        quantifiers.removeItem(rem);
+                    }
+                    for (QuantifierViewModel add : c.getAddedSubList()){
+                        quantifiers.addItem(add);
+                    }
+                }
+            });
             setPluginSelection(condition.getPluginName());
         }else {
             setPluginSelection(NONE);
@@ -315,7 +324,15 @@ public class ConditionsTab extends Tab {
 
             @Override
             protected void onRemoveElement() {
-                // TODO
+                QuantifierViewModel selected = quantifiers.getSelectedItem();
+                if(selected == null){
+                    return;
+                }
+
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.QUANTIFIER, selected.getName());
+                event.setParentId(condition.getId());
+                event.setElementId(selected.getId());
+                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
             }
         };
 
