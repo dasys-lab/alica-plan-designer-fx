@@ -7,12 +7,14 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.AddAbstractPlan;
 import de.unikassel.vs.alica.planDesigner.command.add.AddTaskToEntryPoint;
+import de.unikassel.vs.alica.planDesigner.command.add.AddVariableToCondition;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
 import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
 import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
 import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
 import de.unikassel.vs.alica.planDesigner.command.create.*;
 import de.unikassel.vs.alica.planDesigner.command.delete.*;
+import de.unikassel.vs.alica.planDesigner.command.remove.RemoveVariableFromCondition;
 import de.unikassel.vs.alica.planDesigner.events.IModelEventHandler;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
@@ -917,6 +919,9 @@ public class ModelManager implements Observer {
                     case Types.POSTCONDITION:
                         cmd = new CreateCondition(this, mmq);
                         break;
+                    case Types.VARIABLE:
+                        cmd = new AddVariableToCondition(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");
                         return;
@@ -931,6 +936,9 @@ public class ModelManager implements Observer {
                     case Types.RUNTIMECONDITION:
                     case Types.POSTCONDITION:
                         cmd = new DeleteCondition(this, mmq);
+                        break;
+                    case Types.VARIABLE:
+                        cmd = new RemoveVariableFromCondition(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query element gets ignored!");

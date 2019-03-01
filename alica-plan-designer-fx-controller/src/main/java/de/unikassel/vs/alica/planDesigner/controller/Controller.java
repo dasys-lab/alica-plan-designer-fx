@@ -221,6 +221,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private void updateViewModel(ModelEvent event, ViewModelElement viewModelElement, PlanElement planElement) {
         switch (event.getEventType()) {
             case ELEMENT_DELETED:
+            case ELEMENT_REMOVED:
                 viewModelManager.removeElement(event.getParentId(), viewModelElement);
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:

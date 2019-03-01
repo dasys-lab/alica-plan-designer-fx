@@ -6,7 +6,7 @@ import java.util.List;
 
 public class AbstractPlan extends SerializablePlanElement {
 
-    protected final ArrayList<Variable> variables= new ArrayList<>();
+    protected final ArrayList<Variable> variables = new ArrayList<>();
 
     public AbstractPlan () {
         super();

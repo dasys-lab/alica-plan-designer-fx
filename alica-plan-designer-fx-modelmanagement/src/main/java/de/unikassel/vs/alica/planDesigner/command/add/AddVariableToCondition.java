@@ -14,7 +14,7 @@ public class AddVariableToCondition extends Command {
     public  AddVariableToCondition(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
         this.condition = (Condition) modelManager.getPlanElement(mmq.getParentId());
-        this.variable = (Variable) modelManager.getPlanElement(variable.getId());
+        this.variable = (Variable) modelManager.getPlanElement(mmq.getElementId());
     }
 
     @Override

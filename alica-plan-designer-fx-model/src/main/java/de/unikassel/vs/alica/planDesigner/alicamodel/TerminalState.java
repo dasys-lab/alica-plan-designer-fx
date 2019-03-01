@@ -18,9 +18,6 @@ public class TerminalState extends State {
 
     public void setPostCondition(PostCondition postCondition) {
         this.postCondition = postCondition;
-        if (postCondition != null) {
-            postCondition.addListenerToAllProperties(obs -> this.getParentPlan().setDirty(true));
-        }
     }
 
     public boolean isSuccess(){

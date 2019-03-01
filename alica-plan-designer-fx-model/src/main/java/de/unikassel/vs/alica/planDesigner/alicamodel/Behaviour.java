@@ -19,9 +19,6 @@ public class Behaviour extends AbstractPlan {
 
     public void setPreCondition(PreCondition preCondition) {
         this.preCondition.set(preCondition);
-        if (preCondition != null) {
-            preCondition.addListenerToAllProperties(obs -> this.setDirty(true));
-        }
     }
 
     public RuntimeCondition getRuntimeCondition() {
@@ -30,9 +27,6 @@ public class Behaviour extends AbstractPlan {
 
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
         this.runtimeCondition.set(runtimeCondition);
-        if (runtimeCondition != null) {
-            runtimeCondition.addListenerToAllProperties(obs -> this.setDirty(true));
-        }
     }
 
     public PostCondition getPostCondition() {
@@ -41,9 +35,6 @@ public class Behaviour extends AbstractPlan {
 
     public void setPostCondition(PostCondition postCondition) {
         this.postCondition.set(postCondition);
-        if (postCondition != null) {
-            postCondition.addListenerToAllProperties(obs -> this.setDirty(true));
-        }
     }
 
     public int getFrequency() {

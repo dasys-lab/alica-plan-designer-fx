@@ -46,6 +46,7 @@ public class ConditionsTab extends Tab {
     private final Pane pluginUI;
 
     private ViewModelElement parentElement;
+    private HasVariablesView variablesHoldingParent;
     private ConditionViewModel condition;
 
     private final ScrollPane hidableView;
@@ -123,11 +124,20 @@ public class ConditionsTab extends Tab {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
                         PlanViewModel plan = (PlanViewModel) parentElement;
-                        setConditionAndListener(plan.preConditionProperty());
+                        this.variablesHoldingParent = plan;
+                        this.setConditionAndListener(plan.preConditionProperty());
                         break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
-                        setConditionAndListener(behaviour.preConditionProperty());
+                        this.variablesHoldingParent = behaviour;
+                        this.setConditionAndListener(behaviour.preConditionProperty());
+                        break;
+
+                    case Types.TRANSITION:
+                        TransitionViewModel transition = (TransitionViewModel) parentElement;
+                        this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
+                                .getGuiModificationHandler().getViewModelElement(transition.getParentId());
+                        this.setConditionAndListener(transition.preConditionProperty());
                         break;
                     default:
                         condition = null;
@@ -139,11 +149,13 @@ public class ConditionsTab extends Tab {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
                         PlanViewModel plan = (PlanViewModel) parentElement;
-                        setConditionAndListener(plan.runtimeConditionProperty());
+                        this.variablesHoldingParent = plan;
+                        this.setConditionAndListener(plan.runtimeConditionProperty());
                         break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
-                        setConditionAndListener(behaviour.runtimeConditionProperty());
+                        this.variablesHoldingParent = behaviour;
+                        this.setConditionAndListener(behaviour.runtimeConditionProperty());
                         break;
                     default:
                         condition = null;
@@ -153,14 +165,18 @@ public class ConditionsTab extends Tab {
             case Types.POSTCONDITION:
                 switch (parentElement.getType()){
 // TODO: Find a way to get the postconditions of success- and failurestates from the viewmodel
+
 //                    case Types.SUCCESSSTATE:
 //                    case Types.FAILURESTATE:
 //                        StateViewModel state = (StateViewModel) viewModelElement;
-//                        condition = state.???
+//                        this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
+//                                .getGuiModificationHandler().getViewModelElement(state.getParentId());
+//                        this.condition = state.???
 //                        break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
-                        setConditionAndListener(behaviour.posConditionProperty());
+                        this.variablesHoldingParent = behaviour;
+                        this.setConditionAndListener(behaviour.posConditionProperty());
                         break;
                     default:
                         condition = null;
@@ -242,10 +258,10 @@ public class ConditionsTab extends Tab {
         this.quantifiers.clear();
         if(condition != null) {
             this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
-            for(VariableViewModel variable : condition.getVariables()){
+            for(VariableViewModel variable : variablesHoldingParent.getVariables()){
                 variables.addItem(variable);
             }
-            condition.getVariables().addListener((ListChangeListener<VariableViewModel>) c -> {
+            variablesHoldingParent.getVariables().addListener((ListChangeListener<VariableViewModel>) c -> {
                 while(c.next()) {
                     for (VariableViewModel rem : c.getRemoved()) {
                         variables.removeItem(rem);
@@ -255,6 +271,20 @@ public class ConditionsTab extends Tab {
                     }
                 }
             });
+
+            condition.getVariables().addListener((ListChangeListener<VariableViewModel>) c -> {
+                while(c.next()){
+                    for(VariableViewModel rem : c.getRemoved()){
+                        // TODO: visualise
+                        System.out.println("Removed var");
+                    }
+                    for(VariableViewModel add : c.getAddedSubList()){
+                        // TODO: visualise
+                        System.out.println("Added var");
+                    }
+                }
+            });
+
             for(QuantifierViewModel quantifier : condition.getQuantifiers()){
                 quantifiers.addItem(quantifier);
             }
@@ -286,20 +316,31 @@ public class ConditionsTab extends Tab {
         VariablesTable<VariableViewModel> variablesTable = new VariablesTable<VariableViewModel>() {
             @Override
             protected void onAddElement() {
-                // TODO: Choose an existing Variable
+                VariableViewModel sel = variables.getSelectedItem();
+                if(sel != null && !condition.getVariables().contains(sel)){
+                    GuiModificationEvent event = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.VARIABLE, sel.getName());
+                    event.setElementId(sel.getId());
+                    event.setParentId(condition.getId());
+                    MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+                }
             }
 
             @Override
             protected void onRemoveElement() {
-                // TODO: Choose an existing Variable
+                VariableViewModel sel = variables.getSelectedItem();
+                if(sel != null && condition.getVariables().contains(sel)){
+                    GuiModificationEvent event = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT, Types.VARIABLE, sel.getName());
+                    event.setElementId(sel.getId());
+                    event.setParentId(condition.getId());
+                    MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+                    // TODO: Remove sel from condition and show this visually
+                }
             }
         };
-
         I18NRepo i18NRepo = I18NRepo.getInstance();
         variablesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
         variablesTable.addColumn(i18NRepo.getString("label.column.elementType"), "variableType", new DefaultStringConverter(), true);
         variablesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
-
         return variablesTable;
     }
 

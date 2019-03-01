@@ -1,5 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -13,7 +15,7 @@ public class TransitionViewModel extends PlanElementViewModel {
 
     protected StateViewModel inState;
     protected StateViewModel outState;
-    protected ConditionViewModel preCondition;
+    protected ObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, "preCondition", null);
     private ObservableList<BendPointViewModel> bendpoints;
 
     public TransitionViewModel(long id, String name, String type) {
@@ -38,11 +40,15 @@ public class TransitionViewModel extends PlanElementViewModel {
     }
 
     public ConditionViewModel getPreCondition() {
-        return preCondition;
+        return preCondition.get();
     }
 
     public void setPreCondition(ConditionViewModel preCondition) {
-        this.preCondition = preCondition;
+        this.preCondition.set(preCondition);
+    }
+
+    public ObjectProperty<ConditionViewModel> preConditionProperty(){
+        return preCondition;
     }
 
     public ObservableList<BendPointViewModel> getBendpoints() {
