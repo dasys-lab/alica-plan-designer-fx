@@ -185,7 +185,6 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
 
                 transitionToLineMap.put(transContainer, line);
             }
-
         }
         getChildren().add(visualRepresentation);
     }

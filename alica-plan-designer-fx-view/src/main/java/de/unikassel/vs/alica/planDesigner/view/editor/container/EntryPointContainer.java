@@ -62,8 +62,6 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
     @Override
     public void setupContainer() {
         getChildren().clear();
-//        setLayoutX(getPmlUiExtension().getXPos());
-//        setLayoutY(getPmlUiExtension().getYPos());
         visualRepresentation = new Circle(EntryPointContainer.ENTRYPOINT_RADIUS,
                 getVisualisationColor());
         setEffectToStandard();
