@@ -1,15 +1,20 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class QuantifierViewModel extends PlanElementViewModel{
 
-    protected StringProperty quantifierType = new SimpleStringProperty();
-    protected LongProperty scope = new SimpleLongProperty();
-    protected StringProperty sorts = new SimpleStringProperty();
+    protected StringProperty quantifierType = new SimpleStringProperty(this, "quantifierType", "");
+    protected LongProperty scope = new SimpleLongProperty(this, "scope", 0L);
+    protected StringProperty sorts = new SimpleStringProperty(this, "sorts", "");
 
     public QuantifierViewModel(long id, String name, String quantifierType) {
         super(id, name, quantifierType);
@@ -23,7 +28,7 @@ public class QuantifierViewModel extends PlanElementViewModel{
         this.quantifierType.set(quantifierType);
     }
 
-    public StringProperty quantifierType() {
+    public StringProperty quantifierTypeProperty() {
         return quantifierType;
     }
 
@@ -36,7 +41,7 @@ public class QuantifierViewModel extends PlanElementViewModel{
         this.scope.set(scope);
     }
 
-    public LongProperty scope() {
+    public LongProperty scopeProperty() {
         return scope;
     }
 
@@ -45,11 +50,31 @@ public class QuantifierViewModel extends PlanElementViewModel{
         return sorts.get();
     }
 
-    public void setSorts(String sorts) {
-        this.sorts.set(sorts);
+//    public void setSorts(String sorts) {
+//        this.sorts.set(sorts);
+//    }
+
+    public void setSorts(List<String> sorts) {
+        this.sorts.set(String.join(" ", sorts));
     }
 
-    public StringProperty sorts() {
+    public StringProperty sortsProperty() {
         return sorts;
+    }
+
+    @Override
+    public void registerListener(IGuiModificationHandler handler) {
+        super.registerListener(handler);
+        quantifierType.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, quantifierType.getClass().getSimpleName(), quantifierType.getName());
+        });
+        scope.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, scope.getClass().getSimpleName(), scope.getName());
+        });
+        sorts.addListener((observable, oldValue, newValue) -> {
+            List<String> newValues = new ArrayList<>(Arrays.asList(newValue.split(" ")));
+            newValues.removeIf(String::isEmpty);
+            fireGUIAttributeChangeEvent(handler, newValues, sorts.getClass().getSimpleName(), sorts.getName());
+        });
     }
 }

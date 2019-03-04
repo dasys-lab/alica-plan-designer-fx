@@ -8,10 +8,7 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.AddAbstractPlan;
 import de.unikassel.vs.alica.planDesigner.command.add.AddTaskToEntryPoint;
 import de.unikassel.vs.alica.planDesigner.command.add.AddVariableToCondition;
-import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
-import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
+import de.unikassel.vs.alica.planDesigner.command.change.*;
 import de.unikassel.vs.alica.planDesigner.command.create.*;
 import de.unikassel.vs.alica.planDesigner.command.delete.*;
 import de.unikassel.vs.alica.planDesigner.command.remove.RemoveVariableFromCondition;
@@ -608,7 +605,11 @@ public class ModelManager implements Observer {
 
         ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, elementType);
         event.setChangedAttribute(attribute);
-        event.setNewValue(newValue);
+        if(newValue instanceof PlanElement){
+            event.setNewValue(((PlanElement) newValue).getId());
+        }else {
+            event.setNewValue(newValue);
+        }
         fireEvent(event);
     }
 
@@ -889,7 +890,7 @@ public class ModelManager implements Observer {
                         cmd = new AddAbstractPlan(this, mmq);
                         break;
                     case Types.TASK:
-                        cmd =  new AddTaskToEntryPoint(this, mmq);;
+                        cmd =  new AddTaskToEntryPoint(this, mmq);
                         break;
                     case Types.STATE:
                     case Types.SUCCESSSTATE:

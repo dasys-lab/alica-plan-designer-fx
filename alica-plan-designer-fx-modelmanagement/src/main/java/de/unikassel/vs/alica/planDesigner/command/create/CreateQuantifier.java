@@ -34,6 +34,9 @@ public class CreateQuantifier extends Command {
     }
 
     private Quantifier createQuantifier() {
-        return new Quantifier();
+        Quantifier quantifier = new Quantifier();
+        quantifier.setName(mmq.getName());
+        quantifier.setComment(mmq.getComment());
+        return quantifier;
     }
 }

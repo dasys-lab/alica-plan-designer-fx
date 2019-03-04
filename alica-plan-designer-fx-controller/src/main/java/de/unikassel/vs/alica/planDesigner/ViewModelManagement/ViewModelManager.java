@@ -183,7 +183,7 @@ public class ViewModelManager {
         viewModel.setQuantifierType(quantifier.getQuantifierType());
         viewModel.setComment(quantifier.getComment());
         if(quantifier.getSorts() != null) {
-            viewModel.setSorts(String.join(" ", quantifier.getSorts()));
+            viewModel.setSorts(quantifier.getSorts());
         }
         return  viewModel;
     }

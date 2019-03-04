@@ -226,8 +226,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 try {
-                    BeanUtils.setProperty(viewModelElement, event.getChangedAttribute(), BeanUtils.getProperty(planElement, event.getChangedAttribute()));
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    BeanUtils.setProperty(viewModelElement, event.getChangedAttribute(), event.getNewValue());
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
                 break;
