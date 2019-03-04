@@ -8,6 +8,7 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -271,20 +272,6 @@ public class ConditionsTab extends Tab {
                     }
                 }
             });
-
-            condition.getVariables().addListener((ListChangeListener<VariableViewModel>) c -> {
-                while(c.next()){
-                    for(VariableViewModel rem : c.getRemoved()){
-                        // TODO: visualise
-                        System.out.println("Removed var");
-                    }
-                    for(VariableViewModel add : c.getAddedSubList()){
-                        // TODO: visualise
-                        System.out.println("Added var");
-                    }
-                }
-            });
-
             for(QuantifierViewModel quantifier : condition.getQuantifiers()){
                 quantifiers.addItem(quantifier);
             }
@@ -337,6 +324,26 @@ public class ConditionsTab extends Tab {
                 }
             }
         };
+
+        variablesTable.table.setRowFactory(param -> new TableRow<VariableViewModel>(){
+            @Override
+            public void updateItem(VariableViewModel item, boolean empty){
+                if(condition.getVariables().contains(item)){
+                    setStyle("-fx-font-weight: bold;");
+                }
+                else{
+                    setStyle("");
+                }
+                condition.getVariables().addListener((InvalidationListener) observable -> {
+                    if(condition.getVariables().contains(item)){
+                        setStyle("-fx-font-weight: bold;");
+                    }else {
+                        setStyle("");
+                    }
+                });
+            }
+        });
+
         I18NRepo i18NRepo = I18NRepo.getInstance();
         variablesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
         variablesTable.addColumn(i18NRepo.getString("label.column.elementType"), "variableType", new DefaultStringConverter(), true);

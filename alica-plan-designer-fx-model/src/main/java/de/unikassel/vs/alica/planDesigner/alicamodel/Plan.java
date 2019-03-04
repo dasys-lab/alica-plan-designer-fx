@@ -151,4 +151,27 @@ public class Plan extends AbstractPlan {
 
         this.setDirty(false);
     }
+
+    @Override
+    public void removeVariable(Variable variable) {
+        super.removeVariable(variable);
+
+        // Remove the Variable from all child-elements
+        if(getPreCondition() != null) {
+            getPreCondition().removeVariable(variable);
+        }
+        if(getRuntimeCondition() != null) {
+            getRuntimeCondition().removeVariable(variable);
+        }
+        for(State state : getStates()) {
+            if(state instanceof TerminalState && ((TerminalState) state).getPostCondition() != null) {
+                ((TerminalState) state).getPostCondition().removeVariable(variable);
+            }
+        }
+        for(Transition transition : getTransitions()) {
+            if(transition.getPreCondition() != null) {
+                transition.getPreCondition().removeVariable(variable);
+            }
+        }
+    }
 }

@@ -69,4 +69,20 @@ public class Behaviour extends AbstractPlan {
         runtimeCondition.addListener((observable, oldValue, newValue) -> this.setDirty(true));
         postCondition   .addListener((observable, oldValue, newValue) -> this.setDirty(true));
     }
+
+    @Override
+    public void removeVariable(Variable variable) {
+        super.removeVariable(variable);
+
+        // Remove the Variable from all child-elements
+        if(getPreCondition() != null) {
+            getPreCondition().removeVariable(variable);
+        }
+        if(getRuntimeCondition() != null) {
+            getRuntimeCondition().removeVariable(variable);
+        }
+        if(getPostCondition() != null) {
+            getPostCondition().removeVariable(variable);
+        }
+    }
 }
