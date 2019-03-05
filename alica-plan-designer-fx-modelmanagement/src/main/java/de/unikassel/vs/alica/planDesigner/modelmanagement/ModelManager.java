@@ -19,6 +19,7 @@ import de.unikassel.vs.alica.planDesigner.modelMixIns.*;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -605,10 +606,11 @@ public class ModelManager implements Observer {
 
         ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, elementType);
         event.setChangedAttribute(attribute);
-        if(newValue instanceof PlanElement){
-            event.setNewValue(((PlanElement) newValue).getId());
-        }else {
-            event.setNewValue(newValue);
+        try {
+            // Using PropertyUtils instead of BeanUtils to get the actual Object and not just its String-representation
+            event.setNewValue(PropertyUtils.getProperty(planElement, attribute));
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
         }
         fireEvent(event);
     }

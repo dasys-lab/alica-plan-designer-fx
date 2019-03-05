@@ -9,6 +9,9 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
+import de.unikassel.vs.alica.planDesigner.converter.CustomLongConverter;
+import de.unikassel.vs.alica.planDesigner.converter.CustomPlanElementConverter;
+import de.unikassel.vs.alica.planDesigner.converter.CustomStringConverter;
 import de.unikassel.vs.alica.planDesigner.events.*;
 import de.unikassel.vs.alica.planDesigner.filebrowser.FileSystemEventHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -30,9 +33,10 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -87,6 +91,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         viewModelManager = new ViewModelManager(modelManager, this);
 
         repoViewModel = viewModelManager.createRepositoryViewModel();
+
+        setupBeanConverters();
     }
 
     protected void setupGeneratedSourcesManager() {
@@ -119,6 +125,23 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         configWindowController.setPluginEventHandler(pluginEventHandler);
 
         mainWindowController.setConfigWindowController(configWindowController);
+    }
+
+    private void setupBeanConverters(){
+        CustomStringConverter customStringConverter = new CustomStringConverter();
+        CustomLongConverter customLongConverter = new CustomLongConverter();
+        CustomPlanElementConverter customPlanElementConverter = new CustomPlanElementConverter(this.modelManager);
+
+        // Temporarily setting the log-level to prevent unnecessary output
+        Level logLevel = Logger.getRootLogger().getLevel();
+        Logger.getRootLogger().setLevel(Level.WARN);
+
+        ConvertUtils.register(customStringConverter, String.class);
+        ConvertUtils.register(customLongConverter, Long.class);
+        ConvertUtils.register(customPlanElementConverter, PlanElement.class);
+
+        // Setting the log-level to its previous level
+        Logger.getRootLogger().setLevel(logLevel);
     }
 
     // HANDLER EVENT METHODS
@@ -225,11 +248,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.removeElement(event.getParentId(), viewModelElement);
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
-                try {
-                    BeanUtils.setProperty(viewModelElement, event.getChangedAttribute(), event.getNewValue());
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
+                viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue());
                 break;
             case ELEMENT_PARSED:
             case ELEMENT_CREATED:

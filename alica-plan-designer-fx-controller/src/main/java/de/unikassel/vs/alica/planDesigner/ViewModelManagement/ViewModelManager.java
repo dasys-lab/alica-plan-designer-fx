@@ -11,7 +11,9 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import javafx.collections.ObservableList;
+import org.apache.commons.beanutils.BeanUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -183,7 +185,7 @@ public class ViewModelManager {
         viewModel.setQuantifierType(quantifier.getQuantifierType());
         viewModel.setComment(quantifier.getComment());
         if(quantifier.getSorts() != null) {
-            viewModel.setSorts(quantifier.getSorts());
+            viewModel.setSorts(String.join(" ", quantifier.getSorts()));
         }
         return  viewModel;
     }
@@ -641,5 +643,13 @@ public class ViewModelManager {
     public void changePosition(PlanElementViewModel planElementViewModel, ModelEvent event) {
         planElementViewModel.setXPosition(event.getUiElement().getX());
         planElementViewModel.setYPosition(event.getUiElement().getY());
+    }
+
+    public void changeElementAttribute(ViewModelElement viewModelElement, String changedAttribute, Object newValue) {
+        try {
+            BeanUtils.setProperty(viewModelElement, changedAttribute,newValue);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

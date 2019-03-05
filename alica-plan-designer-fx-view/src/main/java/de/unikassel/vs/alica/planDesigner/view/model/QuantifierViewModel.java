@@ -33,11 +33,23 @@ public class QuantifierViewModel extends PlanElementViewModel{
     }
 
 
-    public long getScope() {
+    /**
+     * Get the scope.
+     *
+     * @return  the scope (is {@link Long} instead of long because of problems with
+     *                {@link javafx.beans.property.Property}s and primitives)
+     */
+    public Long getScope() {
         return scope.get();
     }
 
-    public void setScope(long scope) {
+    /**
+     * Set the scope.
+     *
+     * @param scope  scope (is {@link Long} instead of long because of problems with
+     *                {@link javafx.beans.property.Property}s and primitives)
+     */
+    public void setScope(Long scope) {
         this.scope.set(scope);
     }
 
@@ -50,12 +62,8 @@ public class QuantifierViewModel extends PlanElementViewModel{
         return sorts.get();
     }
 
-//    public void setSorts(String sorts) {
-//        this.sorts.set(sorts);
-//    }
-
-    public void setSorts(List<String> sorts) {
-        this.sorts.set(String.join(" ", sorts));
+    public void setSorts(String sorts) {
+        this.sorts.set(sorts);
     }
 
     public StringProperty sortsProperty() {
@@ -72,8 +80,7 @@ public class QuantifierViewModel extends PlanElementViewModel{
             fireGUIAttributeChangeEvent(handler, newValue, scope.getClass().getSimpleName(), scope.getName());
         });
         sorts.addListener((observable, oldValue, newValue) -> {
-            List<String> newValues = new ArrayList<>(Arrays.asList(newValue.split(" ")));
-            newValues.removeIf(String::isEmpty);
+            List<String> newValues = new ArrayList<>(Arrays.asList(newValue.split("\\s+")));
             fireGUIAttributeChangeEvent(handler, newValues, sorts.getClass().getSimpleName(), sorts.getName());
         });
     }

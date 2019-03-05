@@ -320,7 +320,6 @@ public class ConditionsTab extends Tab {
                     event.setElementId(sel.getId());
                     event.setParentId(condition.getId());
                     MainWindowController.getInstance().getGuiModificationHandler().handle(event);
-                    // TODO: Remove sel from condition and show this visually
                 }
             }
         };
@@ -328,7 +327,7 @@ public class ConditionsTab extends Tab {
         variablesTable.table.setRowFactory(param -> new TableRow<VariableViewModel>(){
             @Override
             public void updateItem(VariableViewModel item, boolean empty){
-                if(condition.getVariables().contains(item)){
+                if(condition.getVariables().contains(item)){ // TODO: Fix NullPointerException after changing plugin
                     setStyle("-fx-font-weight: bold;");
                 }
                 else{
