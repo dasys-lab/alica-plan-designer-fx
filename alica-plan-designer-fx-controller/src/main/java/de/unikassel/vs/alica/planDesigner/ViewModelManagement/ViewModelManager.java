@@ -365,6 +365,7 @@ public class ViewModelManager {
             case Types.BEHAVIOUR:
             case Types.PLAN:
             case Types.PLANTYPE:
+            case Types.MASTERPLAN:
                 PlanElement parentPlanElement = modelManager.getPlanElement(parentId);
                 ViewModelElement parentViewModel = null;
                 if(parentPlanElement != null) {
