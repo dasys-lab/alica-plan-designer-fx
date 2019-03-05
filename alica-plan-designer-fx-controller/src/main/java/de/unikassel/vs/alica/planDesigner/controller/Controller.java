@@ -390,10 +390,20 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
             case REMOVE_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ELEMENT);
-                mmq.setElementId(event.getElementId());
-                mmq.setElementType(event.getElementType());
-                mmq.setParentId(event.getParentId());
+                if(event instanceof GuiModificationEventExpanded) {
+                    mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ELEMENT);
+                    mmq.setElementId(event.getElementId());
+                    mmq.setElementType(event.getElementType());
+                    mmq.setParentId(event.getParentId());
+                    mmq.setName(event.getName());
+                    mmq.setComment(event.getComment());
+                    mmq.setTargetID(((GuiModificationEventExpanded) event).getTargetID());
+                } else {
+                    mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ELEMENT);
+                    mmq.setElementId(event.getElementId());
+                    mmq.setElementType(event.getElementType());
+                    mmq.setParentId(event.getParentId());
+                }
                 break;
             case REMOVE_ALL_ELEMENTS:
                 mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ALL_ELEMENTS);

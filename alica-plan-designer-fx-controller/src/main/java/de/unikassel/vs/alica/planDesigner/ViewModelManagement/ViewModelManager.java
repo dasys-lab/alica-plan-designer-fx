@@ -362,8 +362,25 @@ public class ViewModelManager {
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
                 planTypeViewModel.getPlansInPlanType().remove(annotatedPlanView);
                 break;
+            case Types.BEHAVIOUR:
+            case Types.PLAN:
+            case Types.PLANTYPE:
+                PlanElement parentPlanElement = modelManager.getPlanElement(parentId);
+                ViewModelElement parentViewModel = null;
+                if(parentPlanElement != null) {
+                    parentViewModel = getViewModelElement(parentPlanElement);
+                }
+                stateViewModel = (StateViewModel) parentViewModel;
+                PlanElementViewModel viewModel = (PlanElementViewModel) viewModelElement;
+                stateViewModel.getPlanElements().remove(viewModel);
+                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
+
+                // you have duplicates if don't remove and add
+                planViewModel.getStates().remove(stateViewModel);
+                planViewModel.getStates().add(stateViewModel);
+                break;
             case Types.VARIABLE:
-                ViewModelElement parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
                 if ( parentViewModel instanceof HasVariablesView) {
                     ((HasVariablesView) parentViewModel).getVariables().remove(viewModelElement);
                 } else {
@@ -451,27 +468,26 @@ public class ViewModelManager {
                 planTypeViewModel.getPlansInPlanType().add(annotatedPlanView);
                 break;
             case Types.TASK:
-                PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
-                EntryPoint entryPoint = (EntryPoint) event.getNewValue();
-                for(EntryPointViewModel entryPointViewModel : planViewModel.getEntryPoints()){
-                    if(entryPointViewModel.getId() == entryPoint.getId()){
-                        entryPointViewModel.setTask((PlanElementViewModel) parentViewModel);
-                    }
-                }
+                PlanElementViewModel planElementViewModel = (PlanElementViewModel) viewModelElement;
+                EntryPointViewModel entryPointViewModel = (EntryPointViewModel) parentViewModel;
+                entryPointViewModel.setTask(planElementViewModel);
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
                 controller.updatePlansInPlanTypeTabs((PlanViewModel) viewModelElement);
+            case Types.BEHAVIOUR:
+            case Types.PLANTYPE:
                 if (parentPlanElement != null) {
-                    // TODO: plan is added into state
-                    return;
+                    planElementViewModel = (PlanElementViewModel) viewModelElement;
+                    StateViewModel stateViewModel = (StateViewModel) parentViewModel;
+                    stateViewModel.getPlanElements().add(planElementViewModel);
                 }
                 break;
             case Types.VARIABLE:
                 ((HasVariablesView) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
                 break;
             case Types.ABSTRACTPLAN:
-                planViewModel = (PlanViewModel) viewModelElement;
+                PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
                 State state = (State) event.getNewValue();
                 for (StateViewModel stateViewModel: planViewModel.getStates()) {
                     if(stateViewModel.getId() == state.getId()){

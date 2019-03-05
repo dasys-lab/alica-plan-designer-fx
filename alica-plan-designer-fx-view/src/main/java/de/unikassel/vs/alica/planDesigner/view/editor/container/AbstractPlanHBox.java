@@ -18,6 +18,7 @@ import javafx.util.Pair;
 
 public class AbstractPlanHBox extends HBox {
     private ViewModelElement abstractPlan;
+    private boolean selected;
 
     public AbstractPlanHBox(ViewModelElement p, StateContainer stateContainer) {
         super();
@@ -41,4 +42,6 @@ public class AbstractPlanHBox extends HBox {
     public ViewModelElement getAbstractPlan() {
         return abstractPlan;
     }
+    public boolean isSelected() { return selected; }
+    public void setSelected(boolean selected) { this.selected = selected; }
 }

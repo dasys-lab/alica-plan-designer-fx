@@ -2,6 +2,9 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEventExpanded;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IShowGeneratedSourcesEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
@@ -14,14 +17,13 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@link AbstractPlanElementContainer} is a base class for visual representations, with a alicamodel object to hold changes from the visualisation
@@ -96,6 +98,51 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
     }
 
     public abstract void setupContainer();
+
+    public void deleteAbstractPlansFromState(Node node) {
+        node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            PickResult pickResult = mouseEvent.getPickResult();
+            List<StateContainer> stateContainerList = new ArrayList<StateContainer>(getPlanEditorGroup().getStateContainers().values());
+
+            for(StateContainer stateContainers : stateContainerList){
+                for (AbstractPlanHBox ab : stateContainers.getStatePlans()) {
+                    ab.setBorder(Border.EMPTY);
+                    ab.setSelected(false);
+                }
+            }
+
+            if(pickResult.getIntersectedNode().getParent() instanceof StateContainer) { return; }
+
+            AbstractPlanHBox abstractPlanHBox = (AbstractPlanHBox) pickResult.getIntersectedNode().getParent();
+            if (abstractPlanHBox.getAbstractPlan() instanceof BehaviourViewModel ||
+                    abstractPlanHBox.getAbstractPlan() instanceof PlanTypeViewModel ||
+                    abstractPlanHBox.getAbstractPlan() instanceof PlanViewModel) {
+
+                abstractPlanHBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0.2), BorderStroke.THIN)));
+                StateContainer  stateContainer = (StateContainer) mouseEvent.getSource();
+                abstractPlanHBox.setSelected(true);
+                newKeyEvent(stateContainer, abstractPlanHBox);
+            }
+            mouseEvent.consume();
+        });
+    }
+
+    private void newKeyEvent(StateContainer stateContainer, AbstractPlanHBox abstractPlanHBox){
+        abstractPlanHBox.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.DELETE && abstractPlanHBox.isSelected()) {
+                GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.REMOVE_ELEMENT,
+                        abstractPlanHBox.getAbstractPlan().getType(),
+                        viewModelElement.getName(),
+                        abstractPlanHBox.getAbstractPlan().getId());
+                guiModificationEventExpanded.setParentId(stateContainer.getState().getId());
+                guiModificationEventExpanded.setElementId(viewModelElement.getId());
+                IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
+                guiModificationHandler.handle(guiModificationEventExpanded);
+                abstractPlanHBox.setBorder(Border.EMPTY);
+                keyEvent.consume();
+            }});
+    }
+
 
     @Override
     public void makeDraggable(Node node) {
@@ -173,7 +220,7 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
         });
     }
 
-    public void createAbstractPlanToStateListeners(Node node, StateViewModel state) {
+    public void createAbstractPlanToStateListeners(StateViewModel state) {
         state.getPlanElements().addListener(new ListChangeListener<PlanElementViewModel>() {
             @Override
             public void onChanged(Change<? extends PlanElementViewModel> c) {

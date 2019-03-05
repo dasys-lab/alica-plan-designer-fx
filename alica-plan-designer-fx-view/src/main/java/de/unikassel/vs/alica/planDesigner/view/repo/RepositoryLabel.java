@@ -82,20 +82,17 @@ public class RepositoryLabel extends Label {
             if(pickResult.getIntersectedNode() instanceof Circle) {
                 try {
                     if (parent instanceof StateContainer) {
-                        if (viewModelElement instanceof TaskViewModel) {
-                            return;
-                        }
-
+                        if (viewModelElement instanceof TaskViewModel) { return; }
                         StateContainer stateContainer = (StateContainer) parent;
                         GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(), stateContainer.getViewModelElement().getId());
-                        guiModificationEventExpanded.setParentId(stateContainer.getState().getParentId());
+                        guiModificationEventExpanded.setParentId(stateContainer.getState().getId());
                         guiModificationEventExpanded.setElementId(viewModelElement.getId());
                         guiModificationHandler.handle(guiModificationEventExpanded);
                     }
                     if (parent instanceof EntryPointContainer && viewModelElement instanceof TaskViewModel) {
                         EntryPointContainer entryPointContainer = (EntryPointContainer) parent;
                         GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(), entryPointContainer.getViewModelElement().getId());
-                        guiModificationEventExpanded.setParentId(entryPointContainer.getViewModelElement().getParentId());
+                        guiModificationEventExpanded.setParentId(entryPointContainer.getViewModelElement().getId());
                         guiModificationEventExpanded.setElementId(viewModelElement.getId());
                         guiModificationHandler.handle(guiModificationEventExpanded);
                     }

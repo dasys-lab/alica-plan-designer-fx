@@ -11,6 +11,7 @@ import de.unikassel.vs.alica.planDesigner.command.add.AddVariableToCondition;
 import de.unikassel.vs.alica.planDesigner.command.change.*;
 import de.unikassel.vs.alica.planDesigner.command.create.*;
 import de.unikassel.vs.alica.planDesigner.command.delete.*;
+import de.unikassel.vs.alica.planDesigner.command.remove.RemoveAbstractPlanFromState;
 import de.unikassel.vs.alica.planDesigner.command.remove.RemoveVariableFromCondition;
 import de.unikassel.vs.alica.planDesigner.events.IModelEventHandler;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
@@ -942,6 +943,12 @@ public class ModelManager implements Observer {
                         break;
                     case Types.VARIABLE:
                         cmd = new RemoveVariableFromCondition(this, mmq);
+                        break;
+                    case Types.BEHAVIOUR:
+                    case Types.MASTERPLAN:
+                    case Types.PLAN:
+                    case Types.PLANTYPE:
+                        cmd = new RemoveAbstractPlanFromState(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query element gets ignored!");
