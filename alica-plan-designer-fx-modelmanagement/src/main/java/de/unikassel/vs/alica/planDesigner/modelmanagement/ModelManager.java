@@ -879,7 +879,7 @@ public class ModelManager implements Observer {
                 switch (mmq.getElementType()) {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
-                        if (mmq.getTargetID() != null) {
+                        if(this.getPlanElement(mmq.getParentId()) instanceof State) {
                             cmd = new AddAbstractPlan(this, mmq);
                         } else {
                             // The plan needs to be wrapped in an AnnotatedPlan, therefore the Type
@@ -1189,7 +1189,7 @@ public class ModelManager implements Observer {
      * @return
      */
     public boolean checkForInclusionLoop(PlanElement addedTo, String addedToType, PlanElement added, String addedType){
-       return checkForInclusionLoop(addedTo, addedToType, added, addedType, new HashSet<>());
+        return checkForInclusionLoop(addedTo, addedToType, added, addedType, new HashSet<>());
     }
 
     private boolean checkForInclusionLoop(PlanElement addedTo, String addedToType, PlanElement added, String addedType, Set<PlanElement> previouslyChecked){

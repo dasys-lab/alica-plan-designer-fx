@@ -13,8 +13,8 @@ public class RemoveAbstractPlanFromState extends Command {
 
     public RemoveAbstractPlanFromState(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
-        this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getTargetID());
-        this.state = (State) modelManager.getPlanElement(mmq.getElementId());
+        this.state = (State) modelManager.getPlanElement(mmq.getParentId());
+        this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getElementId());
     }
 
     @Override

@@ -14,8 +14,6 @@ public class ModelModificationQuery {
     protected long elementId;
     protected String name;
 
-    protected Long targetID;
-
     protected long parentId;
 
     protected String attributeName;
@@ -95,10 +93,6 @@ public class ModelModificationQuery {
     public String getElementType() {
         return elementType;
     }
-
-    public Long getTargetID() { return targetID; }
-
-    public void setTargetID(Long targetID) { this.targetID = targetID; }
 
     public ModelQueryType getQueryType() {
         return queryType;

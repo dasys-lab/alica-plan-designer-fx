@@ -3,7 +3,7 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
-import de.unikassel.vs.alica.planDesigner.events.GuiModificationEventExpanded;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IShowGeneratedSourcesEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
@@ -130,15 +130,15 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
     private void newKeyEvent(StateContainer stateContainer, AbstractPlanHBox abstractPlanHBox){
         abstractPlanHBox.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             if(keyEvent.getCode() == KeyCode.DELETE && abstractPlanHBox.isSelected()) {
-                GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.REMOVE_ELEMENT,
+                GuiModificationEvent guiModificationEvent = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT,
                         abstractPlanHBox.getAbstractPlan().getType(),
-                        viewModelElement.getName(),
-                        abstractPlanHBox.getAbstractPlan().getId());
-                guiModificationEventExpanded.setParentId(stateContainer.getState().getId());
-                guiModificationEventExpanded.setElementId(viewModelElement.getId());
+                        viewModelElement.getName());
+                guiModificationEvent.setParentId(stateContainer.getState().getId());
+                guiModificationEvent.setElementId(abstractPlanHBox.getAbstractPlan().getId());
                 IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
-                guiModificationHandler.handle(guiModificationEventExpanded);
+                guiModificationHandler.handle(guiModificationEvent);
                 abstractPlanHBox.setBorder(Border.EMPTY);
+                abstractPlanHBox.setSelected(false);
                 keyEvent.consume();
             }});
     }

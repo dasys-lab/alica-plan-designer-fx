@@ -16,7 +16,7 @@ public class AddAbstractPlan extends Command {
 
     public AddAbstractPlan(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
-        this.state = (State) modelManager.getPlanElement(mmq.getTargetID());
+        this.state = (State) modelManager.getPlanElement(mmq.getParentId());
         this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getElementId());
 
         if(modelManager.checkForInclusionLoop(state, Types.STATE, abstractPlan, mmq.getElementType())){

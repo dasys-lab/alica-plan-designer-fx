@@ -3,7 +3,7 @@ package de.unikassel.vs.alica.planDesigner.view.repo;
 import de.unikassel.vs.alica.planDesigner.controller.ErrorWindowController;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
-import de.unikassel.vs.alica.planDesigner.events.GuiModificationEventExpanded;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
@@ -84,17 +84,17 @@ public class RepositoryLabel extends Label {
                     if (parent instanceof StateContainer) {
                         if (viewModelElement instanceof TaskViewModel) { return; }
                         StateContainer stateContainer = (StateContainer) parent;
-                        GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(), stateContainer.getViewModelElement().getId());
-                        guiModificationEventExpanded.setParentId(stateContainer.getState().getId());
-                        guiModificationEventExpanded.setElementId(viewModelElement.getId());
-                        guiModificationHandler.handle(guiModificationEventExpanded);
+                        GuiModificationEvent guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT,viewModelElement.getType(), viewModelElement.getName());
+                        guiModificationEvent.setParentId(stateContainer.getState().getId());
+                        guiModificationEvent.setElementId(viewModelElement.getId());
+                        guiModificationHandler.handle(guiModificationEvent);
                     }
                     if (parent instanceof EntryPointContainer && viewModelElement instanceof TaskViewModel) {
                         EntryPointContainer entryPointContainer = (EntryPointContainer) parent;
-                        GuiModificationEventExpanded guiModificationEventExpanded = new GuiModificationEventExpanded(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName(), entryPointContainer.getViewModelElement().getId());
-                        guiModificationEventExpanded.setParentId(entryPointContainer.getViewModelElement().getId());
-                        guiModificationEventExpanded.setElementId(viewModelElement.getId());
-                        guiModificationHandler.handle(guiModificationEventExpanded);
+                        GuiModificationEvent guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName());
+                        guiModificationEvent.setParentId(entryPointContainer.getViewModelElement().getId());
+                        guiModificationEvent.setElementId(viewModelElement.getId());
+                        guiModificationHandler.handle(guiModificationEvent);
                     }
                 }catch (RuntimeException excp){
                     // Exception might get thrown, because the element can't be added, because this would cause a loop
