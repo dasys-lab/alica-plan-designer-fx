@@ -18,7 +18,7 @@ public class EntryPoint extends PlanElement {
         return task.get();
     }
     public void setTask(Task task) {
-        if(this.plan != null && this.plan.getEntryPoints() != null) {
+        if(this.getTask() != null) {
             if (this.getTask().getId() != task.getId()) {
                 this.plan.setDirty(true);
             }
