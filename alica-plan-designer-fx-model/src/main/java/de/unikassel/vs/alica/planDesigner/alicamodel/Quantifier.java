@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,14 +14,22 @@ public class Quantifier extends PlanElement {
     protected final SimpleStringProperty quantifierType = new SimpleStringProperty(this, "quantifierType", "");
 
     protected ObjectProperty<PlanElement> scope = new SimpleObjectProperty<>(this, "scope", null);
-    protected List<String> sorts;
+    protected ObjectProperty<List<String>> sorts = new SimpleObjectProperty<>();
 
     public List<String> getSorts() {
-        return sorts;
+        return sorts.get();
     }
 
     public void setSorts(List<String> sorts) {
-        this.sorts = new ArrayList<>(sorts);
+        if(sorts == null){
+            this.sorts.set(new ArrayList<>());
+        }else {
+            this.sorts.set(new ArrayList<>(sorts));
+        }
+    }
+
+    public ObjectProperty<List<String>> sortsProperty() {
+        return sorts;
     }
 
     public PlanElement getScope() {
@@ -45,5 +54,15 @@ public class Quantifier extends PlanElement {
 
     public SimpleStringProperty quantifierTypeProperty() {
         return quantifierType;
+    }
+
+    public void registerListenerToAbstractPlan(AbstractPlan abstractPlan) {
+        InvalidationListener dirty = obs -> abstractPlan.setDirty(true);
+
+        this.nameProperty().addListener(dirty);
+        this.commentProperty().addListener(dirty);
+        this.scopeProperty().addListener(dirty);
+        this.quantifierTypeProperty().addListener(dirty);
+        this.sortsProperty().addListener(dirty);
     }
 }

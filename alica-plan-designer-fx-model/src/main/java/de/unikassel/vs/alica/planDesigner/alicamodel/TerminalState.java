@@ -18,6 +18,9 @@ public class TerminalState extends State {
 
     public void setPostCondition(PostCondition postCondition) {
         this.postCondition = postCondition;
+        if(postCondition != null){
+            postCondition.registerDirtyFlagToAbstractPlan(getParentPlan());
+        }
     }
 
     public boolean isSuccess(){

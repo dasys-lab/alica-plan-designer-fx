@@ -501,8 +501,8 @@ public class ModelManager implements Observer {
                     planElementMap.put(variable.getId(), variable);
                 }
                 storeCondition(behaviour.getPreCondition());
-                storeCondition(behaviour.getPreCondition());
-                storeCondition(behaviour.getPreCondition());
+                storeCondition(behaviour.getRuntimeCondition());
+                storeCondition(behaviour.getPostCondition());
 
                 break;
             case Types.TASKREPOSITORY:

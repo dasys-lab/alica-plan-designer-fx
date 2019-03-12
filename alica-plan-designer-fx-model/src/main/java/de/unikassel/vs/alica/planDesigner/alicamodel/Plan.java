@@ -64,6 +64,9 @@ public class Plan extends AbstractPlan {
     }
     public void setPreCondition(PreCondition preCondition) {
         this.preCondition.set(preCondition);
+        if(preCondition != null) {
+            preCondition.registerDirtyFlagToAbstractPlan(this);
+        }
     }
     public ObjectProperty<PreCondition> preConditionProperty(){
         return preCondition;
@@ -74,6 +77,9 @@ public class Plan extends AbstractPlan {
     }
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
         this.runtimeCondition.set(runtimeCondition);
+        if(runtimeCondition != null) {
+            runtimeCondition.registerDirtyFlagToAbstractPlan(this);
+        }
     }
     public ObjectProperty<RuntimeCondition> runtimeConditionProperty(){
         return runtimeCondition;

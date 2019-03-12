@@ -19,13 +19,13 @@ public class AddVariableToCondition extends Command {
 
     @Override
     public void doCommand() {
-        condition.getVariables().add(variable);
+        condition.addVariable(variable);
         this.fireEvent(ModelEventType.ELEMENT_ADDED, this.variable);
     }
 
     @Override
     public void undoCommand() {
-        condition.getVariables().remove(variable);
+        condition.removeVariable(variable);
         this.fireEvent(ModelEventType.ELEMENT_REMOVED, this.variable);
     }
 }

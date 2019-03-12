@@ -19,6 +19,13 @@ public class Behaviour extends AbstractPlan {
 
     public void setPreCondition(PreCondition preCondition) {
         this.preCondition.set(preCondition);
+        if(preCondition != null) {
+            preCondition.registerDirtyFlagToAbstractPlan(this);
+        }
+    }
+
+    public ObjectProperty<PreCondition> preConditionProperty() {
+        return preCondition;
     }
 
     public RuntimeCondition getRuntimeCondition() {
@@ -27,6 +34,13 @@ public class Behaviour extends AbstractPlan {
 
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
         this.runtimeCondition.set(runtimeCondition);
+        if(runtimeCondition != null) {
+            runtimeCondition.registerDirtyFlagToAbstractPlan(this);
+        }
+    }
+
+    public ObjectProperty<RuntimeCondition> runtimeConditionProperty() {
+        return runtimeCondition;
     }
 
     public PostCondition getPostCondition() {
@@ -35,6 +49,13 @@ public class Behaviour extends AbstractPlan {
 
     public void setPostCondition(PostCondition postCondition) {
         this.postCondition.set(postCondition);
+        if(postCondition != null) {
+            postCondition.registerDirtyFlagToAbstractPlan(this);
+        }
+    }
+
+    public ObjectProperty<PostCondition> postConditionProperty() {
+        return postCondition;
     }
 
     public int getFrequency() {
