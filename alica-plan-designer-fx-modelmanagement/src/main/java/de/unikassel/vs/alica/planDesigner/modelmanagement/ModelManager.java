@@ -667,6 +667,8 @@ public class ModelManager implements Observer {
             usages.addAll(getVariableUsages(planElement));
         } else if (planElement instanceof TaskRepository) {
             usages.addAll(getTaskRepoUsages(planElement));
+        } else if (planElement instanceof State) {
+            usages.add(((State) planElement).getParentPlan()); // A State is always used in exactly one Plan
         } else {
             throw new RuntimeException("Usages requested for unhandled elementType of element with id  " + modelElementId);
         }
@@ -1194,119 +1196,30 @@ public class ModelManager implements Observer {
      *
      * @param addedTo  the {@link PlanElement} to which the other element should be added
      * @param added  the {@link PlanElement} which should be added
-     * @return
+     * @return  true, if the added {@link PlanElement} is using the {@link PlanElement} it is added to
+     *          (directly or indirectly), false otherwise
      */
-    public boolean checkForInclusionLoop(PlanElement addedTo, String addedToType, PlanElement added, String addedType){
-        return checkForInclusionLoop(addedTo, addedToType, added, addedType, new HashSet<>());
-    }
+    public boolean checkForInclusionLoop(PlanElement addedTo, PlanElement added){
+        List<PlanElement> elementsToCheck = new ArrayList<>();
+        Set<PlanElement> checkedElements = new HashSet<>();
 
-    private boolean checkForInclusionLoop(PlanElement addedTo, String addedToType, PlanElement added, String addedType, Set<PlanElement> previouslyChecked){
+        elementsToCheck.add(addedTo);
+        while(!elementsToCheck.isEmpty()) {
+            // Using the first element, therefore it's a Breadth-first search
+            PlanElement current = elementsToCheck.get(0);
+            elementsToCheck.remove(current);
+            checkedElements.add(current);
 
-        // If the element has been checked already, a loop would have been detected
-        // Preventing endless recursion, in case there already is a loop in the model
-        if(previouslyChecked.contains(added)){
-            return false;
+            List<PlanElement> usages = getUsages(current.getId());
+            if(usages.contains(added)) {
+                // The element is used in the added element => there is a loop
+                return true;
+            }
+
+            // Add all elements that have not been checked already to be checked
+            usages.removeAll(checkedElements);
+            elementsToCheck.addAll(usages);
         }
-        // Mark the element as checked
-        previouslyChecked.add(added);
-
-        switch(addedToType){
-            case Types.SUCCESSSTATE:
-            case Types.FAILURESTATE:
-            case Types.STATE:
-                State state = (State) addedTo;
-                switch(addedType){
-                    case Types.MASTERPLAN:
-                    case Types.PLAN:
-
-                        Plan plan = (Plan) added;
-
-                        if(state.getParentPlan().equals(plan)){
-                            return true;
-                        }
-
-                        for(State s : plan.getStates()){
-                            for(AbstractPlan ap : s.getPlans()){
-                                String type;
-                                if(ap instanceof Plan){
-                                    type = Types.PLAN;
-                                }else if(ap instanceof PlanType){
-                                    type = Types.PLANTYPE;
-                                }else if(ap instanceof Behaviour){
-                                    type = Types.BEHAVIOUR;
-                                }else{
-                                    // Should not appear
-                                    System.err.println("ModelManager: Unknown type of abstract Plan");
-                                    return false;
-                                }
-
-                                // Recursive call to check for loops with other elements
-                                if(checkForInclusionLoop(addedTo, addedToType, ap, type, previouslyChecked)){
-                                    return true;
-                                }
-                            }
-                        }
-                        return false;
-                    case Types.PLANTYPE:
-                        PlanType planType = (PlanType) added;
-                        for(AnnotatedPlan np : planType.getPlans()){
-                            String type = np.getPlan().getMasterPlan() ? Types.MASTERPLAN : Types.PLAN;
-                            if(checkForInclusionLoop(addedTo, addedToType, np.getPlan(), type, previouslyChecked)){
-                                return  true;
-                            }
-                        }
-                        return false; // TODO: Check for PlanTypes
-                    case Types.BEHAVIOUR:
-                        // A Behaviour does not contain plans, so there can't be a loop
-                        return false;
-                }
-            case Types.PLANTYPE:
-                switch(addedType){
-                    case Types.ANNOTATEDPLAN:
-                        AnnotatedPlan annotatedPlan = (AnnotatedPlan) added;
-                        String type = annotatedPlan.getPlan().getMasterPlan() ? Types.MASTERPLAN : Types.PLAN;
-                        return checkForInclusionLoop(addedTo, addedToType, annotatedPlan.getPlan(), type, previouslyChecked);
-                    case Types.MASTERPLAN:
-                    case Types.PLAN:
-                        Plan plan = (Plan) added;
-                        for(State s : plan.getStates()){
-                            for (AbstractPlan ap : s.getPlans()){
-                                if(ap instanceof Plan){
-                                    type = ((Plan) ap).getMasterPlan() ? Types.MASTERPLAN : Types.PLAN;
-                                }else if (ap instanceof PlanType){
-                                    type = Types.PLANTYPE;
-                                }else if (ap instanceof Behaviour){
-                                    type = Types.BEHAVIOUR;
-                                }else {
-                                    // Should not appear
-                                    System.err.println("ModelManager: Unknown type of abstract Plan");
-                                    return false;
-                                }
-                                if(checkForInclusionLoop(addedTo, addedToType, ap, type, previouslyChecked)){
-                                    return true;
-                                }
-                            }
-                        }
-                        return false;
-                    case Types.PLANTYPE:
-                        if(addedTo.equals(added)){
-                            return true;
-                        }
-                        PlanType planType = (PlanType) added;
-                        for (AnnotatedPlan np : planType.getPlans()){
-                            type = np.getPlan().getMasterPlan() ? Types.MASTERPLAN : Types.PLAN;
-                            if(checkForInclusionLoop(addedTo, addedToType, np.getPlan(), type, previouslyChecked)){
-                                return true;
-                            }
-                        }
-                        return false;
-                    case Types.BEHAVIOUR:
-                        return false;
-
-                }
-            default:
-                System.err.println("ModelManager: Cant't check for loops of " + addedType + " in " + addedToType);
-                return false;
-        }
+        return false;
     }
 }

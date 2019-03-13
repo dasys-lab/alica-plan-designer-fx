@@ -1,14 +1,11 @@
 package de.unikassel.vs.alica.planDesigner.command.add;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.command.Command;
-import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class AddAbstractPlan extends Command {
     protected State state;
@@ -19,7 +16,7 @@ public class AddAbstractPlan extends Command {
         this.state = (State) modelManager.getPlanElement(mmq.getParentId());
         this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getElementId());
 
-        if(modelManager.checkForInclusionLoop(state, Types.STATE, abstractPlan, mmq.getElementType())){
+        if(modelManager.checkForInclusionLoop(state, abstractPlan)){
             throw new RuntimeException(
                     String.format("AbstractPlan \"%s\" can not be added to State \"%s\" because of loop in model",
                     abstractPlan.getName(), state.getName())
