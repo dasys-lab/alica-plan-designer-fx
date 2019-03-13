@@ -367,21 +367,20 @@ public class ViewModelManager {
             case Types.PLANTYPE:
             case Types.MASTERPLAN:
                 PlanElement parentPlanElement = modelManager.getPlanElement(parentId);
-                ViewModelElement parentViewModel = null;
                 if(parentPlanElement != null) {
-                    parentViewModel = getViewModelElement(parentPlanElement);
-                }
-                stateViewModel = (StateViewModel) parentViewModel;
-                PlanElementViewModel viewModel = (PlanElementViewModel) viewModelElement;
-                stateViewModel.getPlanElements().remove(viewModel);
-                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
+                    ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
+                    stateViewModel = (StateViewModel) parentViewModel;
+                    PlanElementViewModel viewModel = (PlanElementViewModel) viewModelElement;
+                    stateViewModel.getPlanElements().remove(viewModel);
+                    planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
 
-                // you have duplicates if don't remove and add
-                planViewModel.getStates().remove(stateViewModel);
-                planViewModel.getStates().add(stateViewModel);
+                    // you have duplicates if don't remove and add
+                    planViewModel.getStates().remove(stateViewModel);
+                    planViewModel.getStates().add(stateViewModel);
+                }
                 break;
             case Types.VARIABLE:
-                parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                ViewModelElement parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
                 if ( parentViewModel instanceof HasVariablesView) {
                     ((HasVariablesView) parentViewModel).getVariables().remove(viewModelElement);
                 } else {

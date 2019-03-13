@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.planDesigner.command.delete;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.command.Command;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
@@ -21,6 +22,7 @@ public class DeleteBehaviour extends Command {
             return;
         }
         modelManager.dropPlanElement(Types.BEHAVIOUR, behaviour, true);
+        this.fireEvent(ModelEventType.ELEMENT_DELETED, this.behaviour);
     }
 
     @Override
@@ -29,5 +31,6 @@ public class DeleteBehaviour extends Command {
             return;
         }
         modelManager.storePlanElement(Types.BEHAVIOUR, behaviour,true);
+        this.fireEvent(ModelEventType.ELEMENT_CREATED, this.behaviour);
     }
 }

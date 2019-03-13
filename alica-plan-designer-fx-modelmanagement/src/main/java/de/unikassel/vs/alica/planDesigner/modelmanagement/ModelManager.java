@@ -552,7 +552,7 @@ public class ModelManager implements Observer {
             case Types.PLAN:
             case Types.MASTERPLAN:
                 planMap.remove(planElement.getId());
-
+                uiExtensionMap.remove(planElement.getId());
                 break;
             case Types.PLANTYPE:
                 planTypeMap.remove(planElement.getId());
@@ -834,7 +834,8 @@ public class ModelManager implements Observer {
                 break;
             case PARSE_ELEMENT:
                 File f = FileSystemUtil.getFile(mmq);
-                if (f != null && ignoreModifiedEvent(getPlanElement(f.toString()))) {
+                PlanElement element = getPlanElement(f.toString());
+                if (!f.exists() || element == null || ignoreModifiedEvent(element)) {
                     return;
                 }
                 cmd = new ParsePlan(this, mmq);
@@ -1079,6 +1080,13 @@ public class ModelManager implements Observer {
         }
         File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + extension).toFile();
         outfile.delete();
+
+        // A plans uiExtension has to be deleted as well
+        if(planElement instanceof Plan) {
+            File extensionFile = Paths.get(plansPath, planElement.getRelativeDirectory()
+                    , planElement.getName() + "." + Extensions.PLAN_UI).toFile();
+            extensionFile.delete();
+        }
     }
 
     /**

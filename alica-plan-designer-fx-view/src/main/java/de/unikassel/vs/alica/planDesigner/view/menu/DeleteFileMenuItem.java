@@ -73,9 +73,10 @@ public class DeleteFileMenuItem extends MenuItem {
             stage.initOwner(PlanDesignerApplication.getPrimaryStage());
             stage.showAndWait();
         } catch (IOException ignored) {
-        } finally {
-            return true;
+            System.err.println("DeleteFileMenuItem: Could not show UsagesWindow");
         }
+        return true;
+
     }
 
     public void setTreeCell(TreeCell toDelete) {

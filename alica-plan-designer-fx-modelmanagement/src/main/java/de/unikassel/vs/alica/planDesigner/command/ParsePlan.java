@@ -63,11 +63,15 @@ public class ParsePlan extends Command {
             Plan newPlan = (Plan) newElement;
             File uiExtensionFile = FileSystemUtil.getFile(mmq.getAbsoluteDirectory()
                     , mmq.getName(), Extensions.PLAN_UI);
-            UiExtension newUiExtension = modelManager.parseFile(uiExtensionFile, UiExtension.class);
-            if(newUiExtension != null){
-                //If a visualisation was loaded, replace the old one and update the view
+            try {
+                UiExtension newUiExtension = modelManager.parseFile(uiExtensionFile, UiExtension.class);
+                if (newUiExtension != null) {
+                    //If a visualisation was loaded, replace the old one and update the view
 //                modelManager.replaceIncompletePlanElementsInPlanModelVisualisationObject(newUiExtension);
-                modelManager.getUiExtensionMap().put(mmq.getElementId(), newUiExtension);
+                    modelManager.getUiExtensionMap().put(mmq.getElementId(), newUiExtension);
+                }
+            }catch (RuntimeException e) {
+                System.err.println("ParsePlan: " + e.getMessage());
             }
 
             if(newPlan.getMasterPlan()) {
@@ -78,7 +82,6 @@ public class ParsePlan extends Command {
         } else {
             modelManager.storePlanElement(mmq.getElementType(), newElement, false);
         }
-
     }
 
     @Override
