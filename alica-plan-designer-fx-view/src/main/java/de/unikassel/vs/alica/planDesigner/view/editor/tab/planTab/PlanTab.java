@@ -9,10 +9,8 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorE
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -41,6 +39,18 @@ public class PlanTab extends AbstractPlanTab {
                     viewModelElement.setParentId(this.getSerializableViewModel().getId());
                 }
                 this.propertiesConditionsVariablesPane.setViewModelElement(viewModelElement);
+
+                //Listener if AbstractPlan from State is deleted, update properties table
+                if(viewModelElement instanceof BehaviourViewModel ||
+                        viewModelElement instanceof PlanTypeViewModel ||
+                        viewModelElement instanceof PlanViewModel) {
+                    if(oldValue.get(0).getKey() instanceof StateViewModel) {
+                        StateViewModel stateViewModel = (StateViewModel) oldValue.get(0).getKey();
+                        stateViewModel.getPlanElements().addListener((ListChangeListener<? super PlanElementViewModel>) c -> {
+                            this.propertiesConditionsVariablesPane.setViewModelElement(this.getSerializableViewModel());
+                        });
+                    }
+                }
             }
         });
     }
