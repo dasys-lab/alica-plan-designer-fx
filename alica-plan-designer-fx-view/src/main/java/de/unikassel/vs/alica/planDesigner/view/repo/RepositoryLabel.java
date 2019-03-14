@@ -6,7 +6,9 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.FailureStateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.SuccessStateContainer;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.menu.DeleteElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
@@ -75,10 +77,14 @@ public class RepositoryLabel extends Label {
             getScene().setCursor(cursor);
          });
 
+        //Drag from RepositoryList to add a AbstractPlan to State or Task to EntryPoint
         setOnMouseReleased(e ->{
             getScene().setCursor(Cursor.DEFAULT);
             PickResult pickResult = e.getPickResult();
             Parent parent = pickResult.getIntersectedNode().getParent();
+
+            if(parent instanceof FailureStateContainer || parent instanceof SuccessStateContainer) { return; }
+
             if(pickResult.getIntersectedNode() instanceof Circle) {
                 try {
                     if (parent instanceof StateContainer) {
