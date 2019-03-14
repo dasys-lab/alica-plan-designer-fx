@@ -4,6 +4,9 @@ import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
 import de.unikassel.vs.alica.planDesigner.controller.Controller;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 
 import java.io.File;
 import java.io.IOException;
@@ -128,7 +131,9 @@ public class FileSystemEventHandler implements Runnable  {
                             throw new RuntimeException(x);
                         }
                     }
-                    controller.handleFileSystemEvent(event, child);
+                    if(FileSystemUtil.getExtension(child.toFile()) != Types.NOTYPE) {
+                        controller.handleFileSystemEvent(event, child);
+                    }
                 }
 
                 // reset key and remove from set if directory no longer accessible
