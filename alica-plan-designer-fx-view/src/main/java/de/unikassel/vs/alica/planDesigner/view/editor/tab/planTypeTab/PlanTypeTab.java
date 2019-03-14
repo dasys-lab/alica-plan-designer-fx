@@ -212,9 +212,7 @@ public class PlanTypeTab extends AbstractPlanTab {
                     for (ViewModelElement element : c.getRemoved()) {
                         for (RepositoryLabel plan : planListView.getItems()) {
                             if (plan.getViewModelId() == element.getId()) {
-                                Platform.runLater(() -> {
-                                    planListView.getItems().remove(plan);
-                                });
+                                Platform.runLater(() -> planListView.getItems().remove(plan));
                                 break;
                             }
                         }
@@ -302,9 +300,5 @@ public class PlanTypeTab extends AbstractPlanTab {
             event.setElementId(serializableViewModel.getId());
             guiModificationHandler.handle(event);
         }
-    }
-
-    public void addPlanToAllPlans (PlanViewModel planViewModel) {
-        ((PlanTypeViewModel) serializableViewModel).addPlanToAllPlans(planViewModel);
     }
 }

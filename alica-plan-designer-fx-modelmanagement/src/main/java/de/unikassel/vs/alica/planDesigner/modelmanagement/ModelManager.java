@@ -114,6 +114,10 @@ public class ModelManager implements Observer {
         return new ArrayList<>(behaviourMap.values());
     }
 
+    public ArrayList<PlanType> getPlanTypes() {
+        return new ArrayList<>(planTypeMap.values());
+    }
+
     public ArrayList<PlanElement> getPlanElements() {
         return new ArrayList<>(planElementMap.values());
     }

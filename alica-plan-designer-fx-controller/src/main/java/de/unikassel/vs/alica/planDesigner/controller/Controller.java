@@ -23,13 +23,14 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
-import de.unikassel.vs.alica.planDesigner.view.model.*;
+import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
@@ -253,7 +254,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case ELEMENT_PARSED:
             case ELEMENT_CREATED:
             case ELEMENT_ADDED:
-                viewModelManager.addElement(this, event);
+                viewModelManager.addElement(event);
                 break;
             case ELEMENT_CONNECTED:
                 viewModelManager.connectElement(event);
@@ -471,16 +472,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     @Override
     public ViewModelElement getViewModelElement(long id) {
         return viewModelManager.getViewModelElement(modelManager.getPlanElement(id));
-    }
-
-    public void updatePlansInPlanTypeTabs(PlanViewModel planViewModel) {
-        ObservableList<Tab> tabs = editorTabPane.getTabs();
-        for (Tab tab : tabs) {
-            if (tab instanceof PlanTypeTab) {
-                PlanTypeTab planTypeTab = (PlanTypeTab) tab;
-                planTypeTab.addPlanToAllPlans(planViewModel);
-            }
-        }
     }
 
     @Override

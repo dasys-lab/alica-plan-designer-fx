@@ -1,8 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.ViewModelManagement;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
-import de.unikassel.vs.alica.planDesigner.controller.Controller;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
@@ -362,10 +362,10 @@ public class ViewModelManager {
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
                 planTypeViewModel.getPlansInPlanType().remove(annotatedPlanView);
                 break;
-            case Types.BEHAVIOUR:
             case Types.PLAN:
-            case Types.PLANTYPE:
             case Types.MASTERPLAN:
+            case Types.PLANTYPE:
+            case Types.BEHAVIOUR:
                 PlanElement parentPlanElement = modelManager.getPlanElement(parentId);
                 if(parentPlanElement != null) {
                     ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
@@ -377,6 +377,8 @@ public class ViewModelManager {
                     // you have duplicates if don't remove and add
                     planViewModel.getStates().remove(stateViewModel);
                     planViewModel.getStates().add(stateViewModel);
+                }else if(viewModelElement.getType().equals(Types.PLAN) || viewModelElement.getType().equals(Types.MASTERPLAN)) {
+                    updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
                 }
                 break;
             case Types.VARIABLE:
@@ -447,7 +449,7 @@ public class ViewModelManager {
         viewModelElements.remove(viewModelElement.getId());
     }
 
-    public void addElement(Controller controller, ModelEvent event) {
+    public void addElement(ModelEvent event) {
         PlanElement parentPlanElement = modelManager.getPlanElement(event.getParentId());
         ViewModelElement parentViewModel = null;
         if(parentPlanElement != null) {
@@ -474,13 +476,14 @@ public class ViewModelManager {
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
-                controller.updatePlansInPlanTypeTabs((PlanViewModel) viewModelElement);
             case Types.BEHAVIOUR:
             case Types.PLANTYPE:
                 if (parentPlanElement != null) {
                     planElementViewModel = (PlanElementViewModel) viewModelElement;
                     StateViewModel stateViewModel = (StateViewModel) parentViewModel;
                     stateViewModel.getPlanElements().add(planElementViewModel);
+                }else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
+                    updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
                 }
                 break;
             case Types.VARIABLE:
@@ -666,6 +669,22 @@ public class ViewModelManager {
             BeanUtils.setProperty(viewModelElement, changedAttribute,newValue);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public void updatePlansInPlanViewModels(PlanViewModel planViewModel, ModelEventType type) {
+        for(PlanType planType : modelManager.getPlanTypes()) {
+            // Just updating the already existing PlanTypeViewModels and not creating new ones
+            if(viewModelElements.containsKey(planType.getId())) {
+                PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) viewModelElements.get(planType.getId());
+                if (type == ModelEventType.ELEMENT_ADDED) {
+                    planTypeViewModel.addPlanToAllPlans(planViewModel);
+                }else if(type == ModelEventType.ELEMENT_REMOVED) {
+                    planTypeViewModel.removePlanFromAllPlans(planViewModel.getId());
+                }
+            }
         }
     }
 }
