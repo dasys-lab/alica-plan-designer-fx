@@ -11,6 +11,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
@@ -19,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
+
 
 public class PlanTab extends AbstractPlanTab {
 
@@ -29,8 +31,18 @@ public class PlanTab extends AbstractPlanTab {
 
     public PlanTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
-
         draw();
+
+        //Listener for update properties table inside a Plan
+        this.getSelectedPlanElements().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                ViewModelElement viewModelElement = (ViewModelElement) newValue.get(0).getKey();
+                if(viewModelElement instanceof TransitionViewModel){
+                    viewModelElement.setParentId(this.getSerializableViewModel().getId());
+                }
+                this.propertiesConditionsVariablesPane.setViewModelElement(viewModelElement);
+            }
+        });
     }
 
     private void draw() {
