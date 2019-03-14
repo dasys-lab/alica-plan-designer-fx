@@ -1,10 +1,14 @@
 package de.unikassel.vs.alica.planDesigner.view.repo;
 
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
+import de.unikassel.vs.alica.planDesigner.controller.UsagesWindowController;
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.RepositoryTool;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.scene.control.TabPane;
 
 import java.util.List;
@@ -98,44 +102,28 @@ public class RepositoryTabPane extends TabPane {
     }
 
     public GuiModificationEvent handleDelete() {
-        // TODO: rework
-        return null;
+        RepositoryTab selectedTab = (RepositoryTab) this.getSelectionModel().getSelectedItem();
+        boolean focused = this.isFocused()
+                || selectedTab.getContent().isFocused();
+        if(!focused) {
+            return null;
+        }
 
-        // RepositoryView selected
-//        boolean isRepoFocused = getTabs().stream()
-//                .anyMatch(e -> ((RepositoryTab) e).getRepositoryListView().focusedProperty().get());
-
-//        if (isRepoFocused) {
-//            int selectedTabIndex = getSelectionModel().getSelectedIndex();
-//            PlanElement selectedPlanElement = ((RepositoryTab) repositoryTabPane
-//                    .getSelectionModel()
-//                    .getSelectedItem())
-//                    .getRepositoryListView()
-//                    .getSelectionModel().getSelectedItem().getObject();
-//            editorTabPane.getTabs()
-//                    .stream()
-//                    .filter(e -> ((AbstractPlanTab<PlanElement>) e).getEditable().equals(selectedPlanElement))
-//                    .forEach(e -> editorTabPane.getTabs().remove(e));
-//            if (selectedPlanElement instanceof AbstractPlan) {
-//                checkAbstractPlanUsage(commandStack, (AbstractPlan) selectedPlanElement);
-//            } else if (selectedPlanElement instanceof Task) {
-//                List<Pair<TaskRepository, Path>> taskRepositories = RepositoryViewModel.getInstance().getTaskRepository();
-//                TaskRepository taskRepository = null;
-//                for (Pair<TaskRepository, Path> pair : taskRepositories) {
-//                    if (pair.getKey().getTasks().containsPlan((Task) selectedPlanElement)) {
-//                        taskRepository = pair.getKey();
-//                        break;
-//                    }
-//                }
-//                if (taskRepository != null) {
-//                    isTaskUsed(commandStack, taskRepository, (Task) selectedPlanElement);
-//                }
-//            }
-//            repositoryTabPane.init();
-//            repositoryTabPane.getSelectionModel().select(selectedTabIndex);
-//            return null;
-//        }
-//
-//        return null;
+        ViewModelElement selectedItem = selectedTab.getSelectedItem();
+        if(selectedItem.getType().equals(Types.TASK)) {
+            // TODO: Implement deletion of Tasks
+            return null;
+        }else {
+            IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
+            List<ViewModelElement> usages = guiModificationHandler.getUsages(selectedItem);
+            if(!usages.isEmpty()) {
+                UsagesWindowController.createUsagesWindow(usages
+                        , I18NRepo.getInstance().getString("label.usage.nodelete"), guiModificationHandler);
+                return null;
+            }
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, selectedItem.getType(), selectedItem.getName());
+            event.setElementId(selectedItem.getId());
+            return event;
+        }
     }
 }

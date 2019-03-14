@@ -114,7 +114,7 @@ public class EditMenu extends Menu {
      * Overwrites the deleteMenuItem's onRemoveElement method.
      */
     private void delete() {
-        GuiModificationEvent event = null;
+        GuiModificationEvent event;
 
         event = editorTabPane.handleDelete();
         if (event == null) {

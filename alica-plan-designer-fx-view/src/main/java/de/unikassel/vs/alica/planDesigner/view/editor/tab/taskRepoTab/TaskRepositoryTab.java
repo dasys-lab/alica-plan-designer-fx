@@ -1,33 +1,24 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab;
 
-import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.controller.UsagesWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
-import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskRepositoryViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryListView;
 import javafx.collections.ListChangeListener;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class TaskRepositoryTab extends EditorTab {
@@ -142,21 +133,7 @@ public class TaskRepositoryTab extends EditorTab {
         if (usages.isEmpty()) {
             return false;
         }
-
-        FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
-        try {
-            Parent infoWindow = fxmlLoader.load();
-            UsagesWindowController controller = fxmlLoader.getController();
-            controller.createReferencesList(usages, guiModificationHandler);
-            Stage stage = new Stage();
-            stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
-            stage.setScene(new Scene(infoWindow));
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(PlanDesignerApplication.getPrimaryStage());
-            stage.showAndWait();
-        } catch (IOException ignored) {
-        } finally {
-            return true;
-        }
+        UsagesWindowController.createUsagesWindow(usages, i18NRepo.getString("label.usage.nodelete"), guiModificationHandler);
+        return true;
     }
 }

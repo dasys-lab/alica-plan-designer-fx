@@ -1,13 +1,15 @@
 package de.unikassel.vs.alica.planDesigner.view.filebrowser;
 
+import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
+import de.unikassel.vs.alica.planDesigner.controller.UsagesWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
+import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
-import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.List;
 
 public final class FileTreeView extends TreeView<File> {
 
@@ -277,15 +280,24 @@ public final class FileTreeView extends TreeView<File> {
     }
 
     public GuiModificationEvent handleDelete() {
-        //TODO: rework
-        return null;
-//        if (focusedProperty().get()) {
-//            DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(getSelectionModel()
-//                    .getSelectedItem()
-//                    .getValue());
-//            deleteFileMenuItem.deleteFile();
-//            return null;
-//        }
+        if(!this.isFocused()) {
+            return null;
+        }
+        FileTreeItem focused = (FileTreeItem) getFocusModel().getFocusedItem();
+        ViewModelElement toDelete = focused.getViewModelElement();
+        if (toDelete == null) {
+            // TODO: Implement deletion of folders
+            return null;
+        }
+        List<ViewModelElement> usages = controller.getGuiModificationHandler().getUsages(toDelete);
+        if(!usages.isEmpty()) {
+            UsagesWindowController.createUsagesWindow(usages
+                    , I18NRepo.getInstance().getString("label.usage.nodelete"), controller.getGuiModificationHandler());
+            return null;
+        }
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, toDelete.getType(), toDelete.getName());
+        event.setElementId(toDelete.getId());
+        return event;
     }
 
     public class MouseDraggedEventHandler implements EventHandler<MouseEvent> {
