@@ -30,6 +30,20 @@ public class PlanTab extends AbstractPlanTab {
     public PlanTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
         draw();
+        propertiesTableUpdater();
+    }
+
+    private void propertiesTableUpdater() {
+        //Set properties table on default, if StackPane is selected
+        this.getPlanContent().setOnMouseClicked(event -> {
+            if(this.selectedPlanElements.getValue().get(0).getKey() instanceof TransitionViewModel ||
+                    this.selectedPlanElements.getValue().get(0).getKey() instanceof SynchronizationViewModel) {
+                event.consume();
+                return;
+            }
+            this.propertiesConditionsVariablesPane.setViewModelElement(this.getSerializableViewModel());
+            event.consume();
+        });
 
         //Listener for update properties table inside a Plan
         this.getSelectedPlanElements().addListener((observable, oldValue, newValue) -> {
@@ -40,7 +54,7 @@ public class PlanTab extends AbstractPlanTab {
                 }
                 this.propertiesConditionsVariablesPane.setViewModelElement(viewModelElement);
 
-                //Listener if AbstractPlan from State is deleted, update properties table
+                //Listener if AbstractPlan from State is deleted, set properties table to default
                 if(viewModelElement instanceof BehaviourViewModel ||
                         viewModelElement instanceof PlanTypeViewModel ||
                         viewModelElement instanceof PlanViewModel) {
