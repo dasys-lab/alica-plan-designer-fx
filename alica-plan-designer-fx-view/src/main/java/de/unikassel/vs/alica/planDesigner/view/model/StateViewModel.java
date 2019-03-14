@@ -1,5 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -11,6 +13,7 @@ public class StateViewModel extends PlanElementViewModel {
     protected ObservableList<PlanElementViewModel> planElements;
     protected ObservableList<TransitionViewModel> inTransitions;
     protected ObservableList<TransitionViewModel> outTransitions;
+    protected ObjectProperty<ConditionViewModel> postCondition;
     protected EntryPointViewModel entryPoint;
 
     public StateViewModel(long id, String name, String type) {
@@ -18,6 +21,7 @@ public class StateViewModel extends PlanElementViewModel {
         this.planElements =  FXCollections.observableArrayList(new ArrayList<>());
         this.inTransitions =  FXCollections.observableArrayList(new ArrayList<>());
         this.outTransitions =  FXCollections.observableArrayList(new ArrayList<>());
+        this.postCondition = new SimpleObjectProperty<>();
     }
 
     public ObservableList<PlanElementViewModel> getPlanElements() {
@@ -50,5 +54,15 @@ public class StateViewModel extends PlanElementViewModel {
 
     public void setEntryPoint(EntryPointViewModel entryPoint) {
         this.entryPoint = entryPoint;
+    }
+
+    public ConditionViewModel getPostConditionViewModel() {
+        return postCondition.get();
+    }
+    public void setPostCondition(ConditionViewModel postCondition) {
+        this.postCondition.set(postCondition);
+    }
+    public ObjectProperty<ConditionViewModel> postConditionProperty() {
+        return postCondition;
     }
 }

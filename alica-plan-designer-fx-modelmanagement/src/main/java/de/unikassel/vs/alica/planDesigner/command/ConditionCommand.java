@@ -40,6 +40,8 @@ public abstract class ConditionCommand extends Command {
             }
         } else if (planElement instanceof TerminalState) {
             ((TerminalState) planElement).setPostCondition((PostCondition) condition);
+        } else if (planElement instanceof Transition) {
+            ((Transition) planElement).setPreCondition((PreCondition) condition);
         } else {
             throw new RuntimeException("CreateCondition: Element type of element with id " + planElement.getId() + " does not have conditions!");
         }

@@ -165,15 +165,14 @@ public class ConditionsTab extends Tab {
 
             case Types.POSTCONDITION:
                 switch (parentElement.getType()){
-// TODO: Find a way to get the postconditions of success- and failurestates from the viewmodel
 
-//                    case Types.SUCCESSSTATE:
-//                    case Types.FAILURESTATE:
-//                        StateViewModel state = (StateViewModel) viewModelElement;
-//                        this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
-//                                .getGuiModificationHandler().getViewModelElement(state.getParentId());
-//                        this.condition = state.???
-//                        break;
+                    case Types.SUCCESSSTATE:
+                    case Types.FAILURESTATE:
+                        StateViewModel state = (StateViewModel) viewModelElement;
+                        this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
+                                .getGuiModificationHandler().getViewModelElement(state.getParentId());
+                        this.setConditionAndListener(state.postConditionProperty());
+                        break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
                         this.variablesHoldingParent = behaviour;

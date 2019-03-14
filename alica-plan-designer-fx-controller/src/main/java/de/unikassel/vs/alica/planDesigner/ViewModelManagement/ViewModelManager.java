@@ -399,6 +399,8 @@ public class ViewModelManager {
                     case Types.BEHAVIOUR:
                         ((BehaviourViewModel) parentViewModel).setPreCondition(null);
                         break;
+                    case Types.TRANSITION:
+                        ((TransitionViewModel) parentViewModel).setPreCondition(null);
                     default:
                 }
                 break;
@@ -418,10 +420,10 @@ public class ViewModelManager {
             case Types.POSTCONDITION:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
                 switch (parentViewModel.getType()) {
-//                    case Types.SUCCESSSTATE:
-//                    case Types.FAILURESTATE:
-//
-//                        break;
+                    case Types.SUCCESSSTATE:
+                    case Types.FAILURESTATE:
+                        ((StateViewModel)parentViewModel).setPostCondition(null);
+                        break;
                     case Types.BEHAVIOUR:
                         ((BehaviourViewModel)parentViewModel).setPostCondition(null);
                         break;
@@ -507,6 +509,9 @@ public class ViewModelManager {
                     case Types.BEHAVIOUR:
                         ((BehaviourViewModel)parentViewModel).setPreCondition((ConditionViewModel) viewModelElement);
                         break;
+                    case Types.TRANSITION:
+                        ((TransitionViewModel)parentViewModel).setPreCondition((ConditionViewModel) viewModelElement);
+                        break;
                     default:
                         System.err.println("ViewModelManager: Add Element not supported for preCondition and " + parentViewModel.getType());
                 }
@@ -529,10 +534,10 @@ public class ViewModelManager {
                     case Types.BEHAVIOUR:
                         ((BehaviourViewModel)parentViewModel).setPostCondition((ConditionViewModel) viewModelElement);
                         break;
-//                    case Types.SUCCESSSTATE:
-//                    case Types.FAILURESTATE:
-//
-//                        break;
+                    case Types.SUCCESSSTATE:
+                    case Types.FAILURESTATE:
+                        ((StateViewModel)parentViewModel).setPostCondition((ConditionViewModel) viewModelElement);
+                        break;
                     default:
                         System.err.println("ViewModelManager: Add Element not supported for postCondition and " + parentViewModel.getType());
                 }

@@ -52,6 +52,8 @@ public class CreateCondition extends ConditionCommand {
             }
         } else if (planElement instanceof TerminalState) {
             oldCondition = ((TerminalState) planElement).getPostCondition();
+        } else if (planElement instanceof Transition) {
+            oldCondition = ((Transition) planElement).getPreCondition();
         } else {
             throw new RuntimeException("CreateCondition: Element type of element with id " + planElement.getId() + " does not have conditions!");
         }
