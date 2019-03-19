@@ -24,7 +24,6 @@ public class Variable extends PlanElement {
         this.id = id ;
     }
 
-
     public Variable(AbstractPlan parentPlan){
         this.parentPlan = parentPlan;
     }
@@ -37,5 +36,11 @@ public class Variable extends PlanElement {
 
     public PlanElement getParentPlan(){
         return parentPlan;
+    }
+
+    public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
+        this.nameProperty().addListener(listener);
+        this.commentProperty().addListener(listener);
+        this.variableTypeProperty().addListener(listener);
     }
 }

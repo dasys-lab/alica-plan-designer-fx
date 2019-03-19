@@ -8,6 +8,8 @@ public class SerializablePlanElement extends PlanElement {
 
     @JsonIgnore
     protected final SimpleBooleanProperty dirty = new SimpleBooleanProperty();
+    @JsonIgnore
+    protected final ChangeListenerForDirtyFlag changeListenerForDirtyFlag = new ChangeListenerForDirtyFlag(this);
     protected final SimpleStringProperty relativeDirectory = new SimpleStringProperty();
 
     public boolean getDirty() {
@@ -31,16 +33,8 @@ public class SerializablePlanElement extends PlanElement {
     }
 
     public void registerDirtyFlag() {
-        name.addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
-
-        comment.addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
-
-        relativeDirectory.addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
+        name.addListener(changeListenerForDirtyFlag);
+        comment.addListener(changeListenerForDirtyFlag);
+        relativeDirectory.addListener(changeListenerForDirtyFlag);
     }
 }

@@ -1,45 +1,39 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Quantifier extends PlanElement {
 
     protected final SimpleStringProperty quantifierType = new SimpleStringProperty(this, "quantifierType", "");
+    protected final SimpleObjectProperty<PlanElement> scope = new SimpleObjectProperty<>(this, "scope", null);
+    protected final ArrayList<String> sorts = new ArrayList<>();
 
-    protected ObjectProperty<PlanElement> scope = new SimpleObjectProperty<>(this, "scope", null);
-    protected ObjectProperty<List<String>> sorts = new SimpleObjectProperty<>();
+    private ChangeListenerForDirtyFlag changeListenerForDirtyFlag;
 
     public List<String> getSorts() {
-        return sorts.get();
+        return Collections.unmodifiableList(sorts);
     }
-
-    public void setSorts(List<String> sorts) {
-        if(sorts == null){
-            this.sorts.set(new ArrayList<>());
-        }else {
-            this.sorts.set(new ArrayList<>(sorts));
-        }
+    public void addSort(String sort) {
+        sorts.add(sort);
+        changeListenerForDirtyFlag.setDirty();
     }
-
-    public ObjectProperty<List<String>> sortsProperty() {
-        return sorts;
+    public void removeSort(String sort) {
+        sorts.remove(sort);
+        changeListenerForDirtyFlag.setDirty();
     }
 
     public PlanElement getScope() {
         return this.scope.getValue();
     }
-
     public void setScope(PlanElement scope) {
         this.scope.setValue(scope);
     }
-
     public ObjectProperty<PlanElement> scopeProperty() {
         return scope;
     }
@@ -47,22 +41,19 @@ public class Quantifier extends PlanElement {
     public String getQuantifierType() {
         return quantifierType.get();
     }
-
     public void setQuantifierType(String quantifierType) {
         this.quantifierType.set(quantifierType);
     }
-
     public SimpleStringProperty quantifierTypeProperty() {
         return quantifierType;
     }
 
-    public void registerListenerToAbstractPlan(AbstractPlan abstractPlan) {
-        InvalidationListener dirty = obs -> abstractPlan.setDirty(true);
+    public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
+        this.changeListenerForDirtyFlag = listener;
+        this.name.addListener(listener);
+        this.comment.addListener(listener);
 
-        this.nameProperty().addListener(dirty);
-        this.commentProperty().addListener(dirty);
-        this.scopeProperty().addListener(dirty);
-        this.quantifierTypeProperty().addListener(dirty);
-        this.sortsProperty().addListener(dirty);
+        this.scope.addListener(listener);
+        this.quantifierType.addListener(listener);
     }
 }

@@ -19,7 +19,8 @@ class DefaultTemplate {
     }
 
     def String expressionsStateCheckingMethods(State state) '''
-        «FOR transition : state.outTransitions»
+        «var  List<Transition> outTransitions = state.outTransitions»
+        «FOR transition : outTransitions»
             «IF (transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin")»
                 /*
                 *
