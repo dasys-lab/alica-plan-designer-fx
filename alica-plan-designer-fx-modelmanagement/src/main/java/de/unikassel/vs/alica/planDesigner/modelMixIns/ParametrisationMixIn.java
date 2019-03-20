@@ -7,18 +7,18 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Variable;
 import de.unikassel.vs.alica.planDesigner.deserialization.ExternalFileDeserializer;
 import de.unikassel.vs.alica.planDesigner.deserialization.VariableDeserializer;
 import de.unikassel.vs.alica.planDesigner.serialization.ExternalRefSerializer;
-import de.unikassel.vs.alica.planDesigner.serialization.InternalRefKeySerializer;
+import de.unikassel.vs.alica.planDesigner.serialization.InternalRefSerializer;
 
 public abstract class ParametrisationMixIn {
     @JsonSerialize(using = ExternalRefSerializer.class)
     @JsonDeserialize(using = ExternalFileDeserializer.class)
     protected AbstractPlan subPlan;
 
-    @JsonSerialize(using = InternalRefKeySerializer.class)
+    @JsonSerialize(using = ExternalRefSerializer.class)
     @JsonDeserialize(using = VariableDeserializer.class)
     protected Variable subVariable;
 
-    @JsonSerialize(using = InternalRefKeySerializer.class)
+    @JsonSerialize(using = InternalRefSerializer.class)
     @JsonDeserialize(using = VariableDeserializer.class)
     protected Variable variable;
 }

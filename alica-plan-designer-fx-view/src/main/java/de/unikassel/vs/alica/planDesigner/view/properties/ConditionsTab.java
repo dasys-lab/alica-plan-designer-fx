@@ -154,9 +154,8 @@ public class ConditionsTab extends Tab {
             variablesHoldingParent.getVariables().removeListener(allVariablesListener);
         }
 
-        createGui();
-
         this.parentElement = viewModelElement;
+        ObjectProperty<ConditionViewModel> conditionProperty;
 
         switch(this.type){
             case Types.PRECONDITION:
@@ -165,24 +164,25 @@ public class ConditionsTab extends Tab {
                     case Types.MASTERPLAN:
                         PlanViewModel plan = (PlanViewModel) parentElement;
                         this.variablesHoldingParent = plan;
-                        this.setConditionAndListener(plan.preConditionProperty());
+                        conditionProperty = plan.preConditionProperty();
                         break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
                         this.variablesHoldingParent = behaviour;
-                        this.setConditionAndListener(behaviour.preConditionProperty());
+                        conditionProperty = behaviour.preConditionProperty();
                         break;
 
                     case Types.TRANSITION:
                         TransitionViewModel transition = (TransitionViewModel) parentElement;
                         this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
                                 .getGuiModificationHandler().getViewModelElement(transition.getParentId());
-                        this.setConditionAndListener(transition.preConditionProperty());
+                        conditionProperty = transition.preConditionProperty();
                         break;
                     default:
                         condition = null;
                         this.parentElement = null;
                         this.variablesHoldingParent = null;
+                        conditionProperty = null;
                 }
                 break;
 
@@ -192,17 +192,18 @@ public class ConditionsTab extends Tab {
                     case Types.MASTERPLAN:
                         PlanViewModel plan = (PlanViewModel) parentElement;
                         this.variablesHoldingParent = plan;
-                        this.setConditionAndListener(plan.runtimeConditionProperty());
+                        conditionProperty = plan.runtimeConditionProperty();
                         break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
                         this.variablesHoldingParent = behaviour;
-                        this.setConditionAndListener(behaviour.runtimeConditionProperty());
+                        conditionProperty = behaviour.runtimeConditionProperty();
                         break;
                     default:
                         condition = null;
                         this.parentElement = null;
                         this.variablesHoldingParent = null;
+                        conditionProperty = null;
                 }
                 break;
 
@@ -214,17 +215,18 @@ public class ConditionsTab extends Tab {
                         StateViewModel state = (StateViewModel) viewModelElement;
                         this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
                                 .getGuiModificationHandler().getViewModelElement(state.getParentId());
-                        this.setConditionAndListener(state.postConditionProperty());
+                        conditionProperty = state.postConditionProperty();
                         break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
                         this.variablesHoldingParent = behaviour;
-                        this.setConditionAndListener(behaviour.posConditionProperty());
+                        conditionProperty = behaviour.posConditionProperty();
                         break;
                     default:
                         condition = null;
                         this.parentElement = null;
                         this.variablesHoldingParent = null;
+                        conditionProperty = null;
                 }
                 break;
 
@@ -232,6 +234,13 @@ public class ConditionsTab extends Tab {
                 condition = null;
                 this.parentElement = null;
                 this.variablesHoldingParent = null;
+                conditionProperty = null;
+        }
+
+
+        createGui();
+        if(conditionProperty != null) {
+            setConditionAndListener(conditionProperty);
         }
 
         // Setup gui and listeners
