@@ -1,5 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.property.SimpleObjectProperty;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -8,12 +10,15 @@ import java.util.List;
 public class State extends PlanElement {
 
     public static final String ENTRYPOINT = "entryPoint";
-    protected EntryPoint entryPoint;
-    protected Plan parentPlan;
-    protected final ArrayList<AbstractPlan> plans = new ArrayList<>();
+    protected final SimpleObjectProperty<EntryPoint> entryPoint = new SimpleObjectProperty<>();
+    protected final SimpleObjectProperty<Plan> parentPlan = new SimpleObjectProperty<>();
+
+    protected final ArrayList<AbstractPlan> abstractPlans = new ArrayList<>();
     protected final ArrayList<Parametrisation> parametrisations = new ArrayList<>();
-    protected final ArrayList<Transition> inTransitions = new ArrayList<>();
     protected final ArrayList<Transition> outTransitions = new ArrayList<>();
+    protected final ArrayList<Transition> inTransitions = new ArrayList<>();
+
+    private ChangeListenerForDirtyFlag changeListener;
 
     public State ()
     {
@@ -24,51 +29,32 @@ public class State extends PlanElement {
     }
 
     public EntryPoint getEntryPoint() {
-        return entryPoint;
+        return entryPoint.get();
     }
+    public void setEntryPoint(EntryPoint entryPoint) {
+        this.entryPoint.set(entryPoint);
+    }
+    public SimpleObjectProperty<EntryPoint> entryPointProperty() { return entryPoint; }
 
     public Plan getParentPlan() {
-        return parentPlan;
+        return parentPlan.get();
     }
-
     public void setParentPlan(Plan parentPlan) {
-        this.parentPlan = parentPlan;
+        this.parentPlan.set(parentPlan);
     }
+    public SimpleObjectProperty<Plan> parentPlanProperty() { return parentPlan; }
 
-    public void setEntryPoint(EntryPoint entryPoint) {
-        this.entryPoint = entryPoint;
+    public List<AbstractPlan> getAbstractPlans() {
+        return Collections.unmodifiableList(abstractPlans);
     }
-
-    public List<AbstractPlan> getPlans() {
-        return Collections.unmodifiableList(plans);
-    }
-
     public void addAbstractPlan(AbstractPlan abstractPlan) {
-        plans.add(abstractPlan);
-
-        List<Variable> variables = null;
-        if (abstractPlan instanceof Plan) {
-            variables = ((Plan) abstractPlan).getVariables();
-        }
-
-        if (abstractPlan instanceof Behaviour) {
-            variables = ((Behaviour)abstractPlan).getVariables();
-        }
-
-        if (variables != null) {
-            for(Variable var : variables) {
-                Parametrisation param = new Parametrisation();
-                param.setSubPlan(abstractPlan);
-                param.setSubVariable(var);
-                param.setVariable(null);
-                this.addParametrisation(param);
-            }
-        }
-        this.parentPlan.setDirty(true);
+        abstractPlans.add(abstractPlan);
+        // TODO Issue #53 on Github
+        this.changeListener.setDirty();
     }
-
     public void removeAbstractPlan(AbstractPlan abstractPlan) {
-        plans.remove(abstractPlan);
+        abstractPlans.remove(abstractPlan);
+        // TODO Issue #53 on Github
 
         // iterator in order to avoid concurrent modification exception
         Iterator<Parametrisation> iterator = parametrisations.iterator();
@@ -78,17 +64,21 @@ public class State extends PlanElement {
                 iterator.remove();
             }
         }
-        this.parentPlan.setDirty(true);
+        this.changeListener.setDirty();
     }
 
-    private void addParametrisation(Parametrisation param) {
-        this.parametrisations.add(param);
-    }
     public List<Parametrisation> getParametrisations() {
         return Collections.unmodifiableList(parametrisations);
     }
-
-
+    public void addParametrisation(Parametrisation param) {
+        this.parametrisations.add(param);
+        param.registerDirtyFlag(this.changeListener);
+        this.changeListener.setDirty();
+    }
+    public void removeParametrisation(Parametrisation param) {
+        this.parametrisations.remove(param);
+        this.changeListener.setDirty();
+    }
 
     public List<Transition> getOutTransitions() {
         return Collections.unmodifiableList(outTransitions);
@@ -108,5 +98,15 @@ public class State extends PlanElement {
     }
     public void removeInTransition(Transition transition) {
         this.inTransitions.remove(transition);
+    }
+
+    public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
+        this.changeListener = listener;
+        this.name.addListener(listener);
+        this.comment.addListener(listener);
+
+        for (Parametrisation param : parametrisations) {
+            param.registerDirtyFlag(listener);
+        }
     }
 }

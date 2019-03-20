@@ -21,14 +21,14 @@ public class DeleteAnnotatedPlan extends Command {
 
     @Override
     public void doCommand() {
-        this.planType.removePlan(this.annotatedPlan);
+        this.planType.removeAnnotatedPlan(this.annotatedPlan);
         this.modelManager.dropPlanElement(Types.ANNOTATEDPLAN, this.annotatedPlan, false);
         this.fireEvent(ModelEventType.ELEMENT_DELETED, this.annotatedPlan);
     }
 
     @Override
     public void undoCommand() {
-        this.planType.addPlan(this.annotatedPlan);
+        this.planType.addAnnotatedPlan(this.annotatedPlan);
         this.modelManager.storePlanElement(Types.ANNOTATEDPLAN, this.annotatedPlan, false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.annotatedPlan);
     }

@@ -19,13 +19,13 @@ public class DeleteAllAnnotatedPlans extends Command {
     public DeleteAllAnnotatedPlans(ModelManager manager, ModelModificationQuery mmq) {
         super(manager, mmq);
         this.planType = (PlanType) modelManager.getPlanElement(mmq.getElementId());
-        this.backupPlans = new ArrayList<>(planType.getPlans());
+        this.backupPlans = new ArrayList<>(planType.getAnnotatedPlans());
     }
 
     @Override
     public void doCommand() {
         for(AnnotatedPlan annotatedPlan : backupPlans) {
-            planType.removePlan(annotatedPlan);
+            planType.removeAnnotatedPlan(annotatedPlan);
             modelManager.dropPlanElement(Types.ANNOTATEDPLAN, annotatedPlan, false);
             this.fireEvent(ModelEventType.ELEMENT_DELETED, annotatedPlan);
         }
@@ -34,7 +34,7 @@ public class DeleteAllAnnotatedPlans extends Command {
     @Override
     public void undoCommand() {
         for(AnnotatedPlan annotatedPlan : backupPlans) {
-            planType.addPlan(annotatedPlan);
+            planType.addAnnotatedPlan(annotatedPlan);
             modelManager.storePlanElement(Types.ANNOTATEDPLAN, annotatedPlan, false);
             this.fireEvent(ModelEventType.ELEMENT_CREATED, annotatedPlan);
         }

@@ -51,7 +51,7 @@ public class DeleteAbstractPlan extends Command {
                 Plan plan = (Plan) element;
                 referencedStateListForBackup.put(plan, states);
                 plan.getStates().forEach(state -> {
-                    if (state.getPlans().remove(abstractPlan)) {
+                    if (state.getAbstractPlans().remove(abstractPlan)) {
                         states.add(state);
                         saveForDeletionConfirmation[0] = true;
                     }
@@ -88,14 +88,14 @@ public class DeleteAbstractPlan extends Command {
 
             if (element instanceof PlanType) {
                 PlanType planType = (PlanType) element;
-                Optional<AnnotatedPlan> annotatedPlan = planType.getPlans()
+                Optional<AnnotatedPlan> annotatedPlan = planType.getAnnotatedPlans()
                         .stream()
                         .filter(ap -> ap.getPlan().equals(abstractPlan))
                         .findFirst();
 
                 if (annotatedPlan.isPresent()) {
                     referencedAnnotatedPlansForBackup.put(planType, annotatedPlan.get());
-                    planType.getPlans().remove(annotatedPlan);
+                    planType.removeAnnotatedPlan(annotatedPlan.get());
                     saveForDeletionConfirmation[0] = true;
                 }
             }
@@ -212,7 +212,7 @@ public class DeleteAbstractPlan extends Command {
                                 .getStates()
                                 .stream()
                                 .filter(f -> e.getValue().contains(f))
-                                .forEach(f -> f.getPlans().add(abstractPlan));
+                                .forEach(f -> f.getAbstractPlans().add(abstractPlan));
                         // TODO introduce save command
 //                        try {
 //                            EMFModelUtils.saveAlicaFile(key);
@@ -224,7 +224,7 @@ public class DeleteAbstractPlan extends Command {
                     .entrySet()
                     .forEach(e -> {
                         PlanType key = e.getKey();
-                        key.getPlans().add(e.getValue());
+                        key.getAnnotatedPlans().add(e.getValue());
                         // TODO introduce save command
 //                        try {
 //                            EMFModelUtils.saveAlicaFile(key);

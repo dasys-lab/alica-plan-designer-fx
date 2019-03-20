@@ -20,18 +20,8 @@ public class Task extends PlanElement{
         this.taskRepository = taskRepository;
     }
 
-    public void registerDirtyFlag() {
-        comment.addListener((observable, oldValue, newValue) -> {
-            // catches the construction of a new task
-            if (taskRepository != null) {
-                taskRepository.setDirty(true);
-            }
-        });
-        name.addListener((observable, oldValue, newValue) -> {
-            // catches the construction of a new task
-            if (taskRepository != null) {
-                taskRepository.setDirty(true);
-            }
-        });
+    public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
+        comment.addListener(listener);
+        name.addListener(listener);
     }
 }

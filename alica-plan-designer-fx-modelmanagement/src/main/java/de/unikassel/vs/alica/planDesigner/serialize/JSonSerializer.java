@@ -64,7 +64,7 @@ public class JSonSerializer {
         state2.setComment("Stops the robot too");
         state2.setParentPlan(plan);
 
-        state2.getPlans().add(plan2);
+        state2.addAbstractPlan(plan2);
 
         plan.getStates().add(state2);
 

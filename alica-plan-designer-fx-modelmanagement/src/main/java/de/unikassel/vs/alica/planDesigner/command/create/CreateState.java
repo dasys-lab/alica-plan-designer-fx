@@ -26,9 +26,9 @@ public class CreateState extends UiPositionCommand {
         if (mmq.getElementType() == Types.STATE) {
             state = new State();
         } else if (mmq.getElementType() == Types.SUCCESSSTATE) {
-            state = new TerminalState(true, null);
+            state = new TerminalState(true);
         } else if (mmq.getElementType() == Types.FAILURESTATE) {
-            state = new TerminalState(false, null);
+            state = new TerminalState(false);
         } else {
             throw new RuntimeException("CreateState: Unknown type of state " + mmq.getElementType() + " requested!");
         }

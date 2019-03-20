@@ -14,8 +14,8 @@ public class Plan extends AbstractPlan {
 
     protected final SimpleBooleanProperty masterPlan = new SimpleBooleanProperty();
     protected final SimpleDoubleProperty utilityThreshold = new SimpleDoubleProperty();
-    protected final ObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
-    protected final ObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
+    protected final SimpleObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
+    protected final SimpleObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
 
     protected final ArrayList<EntryPoint> entryPoints = new ArrayList<>();
     protected final ArrayList<State> states = new ArrayList<>();
@@ -39,16 +39,6 @@ public class Plan extends AbstractPlan {
         this.id = id ;
     }
 
-    public double getUtilityThreshold() {
-        return utilityThreshold.get();
-    }
-    public void setUtilityThreshold(double utilityThreshold) {
-        this.utilityThreshold.set(utilityThreshold);
-    }
-    public SimpleDoubleProperty utilityThreshold() {
-        return utilityThreshold;
-    }
-
     public boolean getMasterPlan() {
         return masterPlan.get();
     }
@@ -59,16 +49,26 @@ public class Plan extends AbstractPlan {
         return masterPlan;
     }
 
+    public double getUtilityThreshold() {
+        return utilityThreshold.get();
+    }
+    public void setUtilityThreshold(double utilityThreshold) {
+        this.utilityThreshold.set(utilityThreshold);
+    }
+    public SimpleDoubleProperty utilityThreshold() {
+        return utilityThreshold;
+    }
+
     public PreCondition getPreCondition() {
         return preCondition.get();
     }
     public void setPreCondition(PreCondition preCondition) {
         this.preCondition.set(preCondition);
         if(preCondition != null) {
-            preCondition.registerDirtyFlagToAbstractPlan(this);
+            preCondition.registerDirtyFlag(this.changeListenerForDirtyFlag);
         }
     }
-    public ObjectProperty<PreCondition> preConditionProperty(){
+    public SimpleObjectProperty<PreCondition> preConditionProperty(){
         return preCondition;
     }
 
@@ -78,20 +78,21 @@ public class Plan extends AbstractPlan {
     public void setRuntimeCondition(RuntimeCondition runtimeCondition) {
         this.runtimeCondition.set(runtimeCondition);
         if(runtimeCondition != null) {
-            runtimeCondition.registerDirtyFlagToAbstractPlan(this);
+            runtimeCondition.registerDirtyFlag(this.changeListenerForDirtyFlag);
         }
     }
-    public ObjectProperty<RuntimeCondition> runtimeConditionProperty(){
+    public SimpleObjectProperty<RuntimeCondition> runtimeConditionProperty(){
         return runtimeCondition;
     }
 
     public void addTransition(Transition transition) {
         transitions.add(transition);
-        this.setDirty(true);
+        transition.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public void removeTransition(Transition transition) {
         transitions.remove(transition);
-        this.setDirty(true);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public List<Transition> getTransitions() {
         return Collections.unmodifiableList(transitions);
@@ -99,11 +100,12 @@ public class Plan extends AbstractPlan {
 
     public void addState(State state) {
         states.add(state);
-        this.setDirty(true);
+        state.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public void removeState(State state) {
         states.remove(state);
-        this.setDirty(true);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public List<State> getStates() {
         return Collections.unmodifiableList(states);
@@ -111,14 +113,12 @@ public class Plan extends AbstractPlan {
 
     public void addSynchronisation(Synchronisation synchronisation) {
         synchronisations.add(synchronisation);
-        synchronisation.dirtyProperty().addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
-        this.setDirty(true);
+        synchronisation.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public void removeSynchronisation(Synchronisation synchronisation) {
         synchronisations.remove(synchronisation);
-        this.setDirty(true);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public List<Synchronisation> getSynchronisations() {
         return Collections.unmodifiableList(synchronisations);
@@ -126,11 +126,12 @@ public class Plan extends AbstractPlan {
 
     public void addEntryPoint(EntryPoint entryPoint) {
         entryPoints.add(entryPoint);
-        this.setDirty(true);
+        entryPoint.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public void removeEntryPoint(EntryPoint entryPoint) {
         entryPoints.remove(entryPoint);
-        this.setDirty(true);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public List<EntryPoint> getEntryPoints() {
         return Collections.unmodifiableList(entryPoints);
@@ -139,20 +140,25 @@ public class Plan extends AbstractPlan {
     @Override
     public void registerDirtyFlag() {
         super.registerDirtyFlag();
-        InvalidationListener dirty = obs -> this.setDirty(true);
-        masterPlan.addListener(dirty);
-        utilityThreshold.addListener(dirty);
-        preCondition.addListener(dirty);
-        runtimeCondition.addListener(dirty);
+        this.masterPlan.addListener(this.changeListenerForDirtyFlag);
+        this.utilityThreshold.addListener(this.changeListenerForDirtyFlag);
+        this.preCondition.addListener(this.changeListenerForDirtyFlag);
+        this.runtimeCondition.addListener(this.changeListenerForDirtyFlag);
 
-        for (Synchronisation synchronisation : synchronisations) {
-            synchronisation.dirtyProperty().addListener(dirty);
+        for (EntryPoint ep : this.entryPoints) {
+            ep.registerDirtyFlag(this.changeListenerForDirtyFlag);
         }
 
-        for (Variable variable : variables) {
-            variable.nameProperty().addListener(dirty);
-            variable.commentProperty().addListener(dirty);
-            variable.variableTypeProperty().addListener(dirty);
+        for (State state : states) {
+            state.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
+
+        for (Transition transition : transitions) {
+            transition.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
+
+        for (Synchronisation synchronisation : synchronisations) {
+            synchronisation.registerDirtyFlag(this.changeListenerForDirtyFlag);
         }
 
         this.setDirty(false);

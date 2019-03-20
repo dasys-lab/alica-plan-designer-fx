@@ -14,14 +14,14 @@ public class TaskRepository extends SerializablePlanElement {
         if (task.getTaskRepository() != this) {
             task.setTaskRepository(this);
         }
-        task.registerDirtyFlag();
+        task.registerDirtyFlag(this.changeListenerForDirtyFlag);
         tasks.add(task);
-        this.setDirty(true);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public void removeTask(Task task) {
         tasks.remove(task);
         task.setTaskRepository(null);
-        this.setDirty(true);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public List<Task> getTasks() {
         return Collections.unmodifiableList(tasks);
@@ -44,7 +44,7 @@ public class TaskRepository extends SerializablePlanElement {
     public void registerDirtyFlag() {
         super.registerDirtyFlag();
         for (Task task : tasks) {
-            task.registerDirtyFlag();
+            task.registerDirtyFlag(this.changeListenerForDirtyFlag);
         }
     }
 }
