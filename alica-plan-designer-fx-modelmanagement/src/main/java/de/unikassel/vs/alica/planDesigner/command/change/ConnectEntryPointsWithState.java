@@ -20,7 +20,7 @@ public class ConnectEntryPointsWithState extends Command {
 
     public ConnectEntryPointsWithState(ModelManager manager, ModelModificationQuery mmq) {
         super(manager, mmq);
-        this.entryPoint = (EntryPoint) manager.getPlanElement((mmq.getRelatedObjects().get(State.ENTRYPOINT)));
+        this.entryPoint = (EntryPoint) manager.getPlanElement((mmq.getRelatedObjects().get(Types.ENTRYPOINT)));
         this.previousState = entryPoint.getState();
         this.newState = (State) manager.getPlanElement(mmq.getRelatedObjects().get(Types.STATE));
         this.parentOfElement = manager.getPlanUIExtensionPair(mmq.getParentId());

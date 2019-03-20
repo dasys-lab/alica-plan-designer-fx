@@ -3,11 +3,8 @@ package de.unikassel.vs.alica.planDesigner.alicamodel;
 import javafx.beans.property.SimpleObjectProperty;
 
 public class Transition extends  PlanElement {
-    public static final String INSTATE = "inState";
-    public static final String OUTSTATE = "outState";
-
-    protected final SimpleObjectProperty<State> inState = new SimpleObjectProperty<>();
-    protected final SimpleObjectProperty<State> outState = new SimpleObjectProperty<>();
+    protected final SimpleObjectProperty<State> inState = new SimpleObjectProperty<>(this, "inState", null);
+    protected final SimpleObjectProperty<State> outState = new SimpleObjectProperty<>(this, "outState", null);
     protected final SimpleObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
     protected final SimpleObjectProperty<Synchronisation> synchronisation = new SimpleObjectProperty<>();
 

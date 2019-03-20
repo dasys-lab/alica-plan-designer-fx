@@ -8,8 +8,6 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 
 public class StateViewModel extends PlanElementViewModel {
-    public static final String ENTRYPOINT = "entryPoint";
-
     protected ObservableList<PlanElementViewModel> planElements;
     protected ObservableList<TransitionViewModel> inTransitions;
     protected ObservableList<TransitionViewModel> outTransitions;

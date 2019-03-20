@@ -628,15 +628,14 @@ public class ModelManager implements Observer {
                 if (!ending.equals("")) {
                     renameFile(getAbsoluteDirectory(planElement), (String) newValue, (String) oldValue, ending);
                     serializeToDisk((SerializablePlanElement) planElement, false);
-                }
-                ArrayList<PlanElement> usages = getUsages(planElement.getId());
-                if (usages != null) {
-                    for (PlanElement element : usages) {
-                        serializeToDisk((SerializablePlanElement) element,false);
+                    ArrayList<PlanElement> usages = getUsages(planElement.getId());
+                    if (usages != null) {
+                        for (PlanElement element : usages) {
+                            serializeToDisk((SerializablePlanElement) element,false);
+                        }
                     }
                 }
             }
-
         } catch (IllegalAccessException | InvocationTargetException | IOException e) {
             throw new RuntimeException(e);
         }

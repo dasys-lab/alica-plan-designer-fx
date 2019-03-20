@@ -9,10 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TransitionViewModel extends PlanElementViewModel {
-
-    public static final String INSTATE = "inState";
-    public static final String OUTSTATE = "outState";
-
     protected StateViewModel inState;
     protected StateViewModel outState;
     protected ObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, "preCondition", null);

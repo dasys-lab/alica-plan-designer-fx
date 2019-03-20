@@ -21,8 +21,8 @@ public class CreateTransition extends UiPositionCommand {
     public CreateTransition(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
         this.plan = (Plan) modelManager.getPlanElement(mmq.getParentId());
-        this.in = (State) modelManager.getPlanElement(mmq.getRelatedObjects().get(Transition.INSTATE));
-        this.out = (State) modelManager.getPlanElement(mmq.getRelatedObjects().get(Transition.OUTSTATE));
+        this.in = (State) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.INSTATE));
+        this.out = (State) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.OUTSTATE));
         this.transition = createTransition();
         this.uiElement = this.createUiElement(plan.getId(), this.transition);
     }
@@ -32,7 +32,7 @@ public class CreateTransition extends UiPositionCommand {
         transition.setInState(this.in);
         transition.setOutState(this.out);
         transition.setName(mmq.getName());
-        transition.setName(mmq.getComment());
+        transition.setComment(mmq.getComment());
         return transition;
     }
 

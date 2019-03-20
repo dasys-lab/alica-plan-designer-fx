@@ -81,8 +81,8 @@ public class TransitionTool extends AbstractTool {
                             GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.TRANSITION, null);
 
                             HashMap<String, Long> relatedObjects = new HashMap<>();
-                            relatedObjects.put(TransitionViewModel.INSTATE, inState.getId());
-                            relatedObjects.put(TransitionViewModel.OUTSTATE, outState.getId());
+                            relatedObjects.put(Types.INSTATE, inState.getId());
+                            relatedObjects.put(Types.OUTSTATE, outState.getId());
 
                             guiEvent.setRelatedObjects(relatedObjects);
                             guiEvent.setParentId(TransitionTool.this.planTab.getSerializableViewModel().getId());

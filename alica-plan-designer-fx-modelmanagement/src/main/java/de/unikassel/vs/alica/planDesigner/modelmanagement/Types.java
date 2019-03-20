@@ -16,6 +16,8 @@ public class Types {
     public static final String RUNTIMECONDITION = "runtimeCondition";
     public static final String POSTCONDITION = "postCondition";
     public static final String STATE = "state";
+    public static final String INSTATE = "inState";
+    public static final String OUTSTATE = "outState";
     public static final String SUCCESSSTATE = "successstate";
     public static final String FAILURESTATE = "failurestate";
     public static final String INITSTATECONNECTION = "initstateconnection";

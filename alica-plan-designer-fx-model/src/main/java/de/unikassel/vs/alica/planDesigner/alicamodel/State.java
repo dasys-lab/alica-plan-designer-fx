@@ -9,7 +9,6 @@ import java.util.List;
 
 public class State extends PlanElement {
 
-    public static final String ENTRYPOINT = "entryPoint";
     protected final SimpleObjectProperty<EntryPoint> entryPoint = new SimpleObjectProperty<>();
     protected final SimpleObjectProperty<Plan> parentPlan = new SimpleObjectProperty<>();
 
