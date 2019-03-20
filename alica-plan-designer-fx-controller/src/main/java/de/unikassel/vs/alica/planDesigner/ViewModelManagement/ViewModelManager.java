@@ -240,6 +240,9 @@ public class ViewModelManager {
         if (state.getEntryPoint() != null) {
             stateViewModel.setEntryPoint((EntryPointViewModel) getViewModelElement(modelManager.getPlanElement(state.getEntryPoint().getId())));
         }
+        if(state instanceof TerminalState && ((TerminalState) state).getPostCondition() != null) {
+            stateViewModel.setPostCondition((ConditionViewModel) getViewModelElement(((TerminalState) state).getPostCondition()));
+        }
         return stateViewModel;
     }
 

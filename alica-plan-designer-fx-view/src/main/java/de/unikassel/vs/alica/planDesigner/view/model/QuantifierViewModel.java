@@ -12,6 +12,8 @@ import java.util.List;
 
 public class QuantifierViewModel extends PlanElementViewModel{
 
+    public static final String[] QUANTIFIER_TYPES = {"ALL"};
+
     protected StringProperty quantifierType = new SimpleStringProperty(this, "quantifierType", "");
     protected LongProperty scope = new SimpleLongProperty(this, "scope", 0L);
     protected StringProperty sorts = new SimpleStringProperty(this, "sorts", "");

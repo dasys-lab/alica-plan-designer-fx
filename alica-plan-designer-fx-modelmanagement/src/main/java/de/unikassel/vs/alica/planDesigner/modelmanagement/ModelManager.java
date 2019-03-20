@@ -333,7 +333,8 @@ public class ModelManager implements Observer {
                 Thread.sleep(1000);
             }
             planElement = objectMapper.readValue(modelFile, type);
-        } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException e) {
+        } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException
+                | com.fasterxml.jackson.databind.deser.UnresolvedForwardReference e) {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
             System.err.println(e.getMessage());
             return null;
@@ -375,6 +376,9 @@ public class ModelManager implements Observer {
         for (PlanType planType : planTypeMap.values()) {
             resolveReferences(planType);
         }
+        for (Behaviour behaviour : behaviourMap.values()) {
+            resolveReferences(behaviour);
+        }
         for (UiExtension uiExtension : uiExtensionMap.values()) {
             uiExtension.setPlan(planMap.get(uiExtension.getPlan().getId()));
         }
@@ -397,6 +401,10 @@ public class ModelManager implements Observer {
                 parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
                 parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
             }
+
+            if(state instanceof TerminalState) {
+                resolveQuantifierScopes(((TerminalState) state).getPostCondition());
+            }
         }
 
         for (Transition transition : plan.getTransitions()) {
@@ -414,7 +422,13 @@ public class ModelManager implements Observer {
                     break;
                 }
             }
+
+            resolveQuantifierScopes(transition.getPreCondition());
         }
+
+        resolveQuantifierScopes(plan.getPreCondition());
+        resolveQuantifierScopes(plan.getRuntimeCondition());
+
         plan.setDirty(false);
     }
 
@@ -425,6 +439,24 @@ public class ModelManager implements Observer {
         List<AnnotatedPlan> annotatedPlans = planType.getPlans();
         for (int i = 0; i < annotatedPlans.size(); i++) {
             annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
+        }
+    }
+
+    private void resolveReferences(Behaviour behaviour) {
+        resolveQuantifierScopes(behaviour.getPreCondition());
+        resolveQuantifierScopes(behaviour.getRuntimeCondition());
+        resolveQuantifierScopes(behaviour.getPostCondition());
+
+        behaviour.setDirty(false);
+    }
+
+    private void resolveQuantifierScopes(Condition condition) {
+        if(condition != null) {
+            for(Quantifier quantifier : condition.getQuantifiers()) {
+                if(quantifier.getScope() != null) {
+                    quantifier.setScope(getPlanElement(quantifier.getScope().getId()));
+                }
+            }
         }
     }
 
