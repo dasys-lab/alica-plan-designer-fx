@@ -205,7 +205,7 @@ public class ViewModelManager {
             planTypeViewModel.addPlanToAllPlans((PlanViewModel) getViewModelElement(plan));
         }
 
-        for (AnnotatedPlan annotatedPlan : planType.getPlans()) {
+        for (AnnotatedPlan annotatedPlan : planType.getAnnotatedPlans()) {
             planTypeViewModel.removePlanFromAllPlans(annotatedPlan.getPlan().getId());
             planTypeViewModel.getPlansInPlanType().add((AnnotatedPlanView) getViewModelElement(annotatedPlan));
         }
@@ -234,7 +234,7 @@ public class ViewModelManager {
         stateViewModel.setXPosition(uiElement.getX());
         stateViewModel.setYPosition(uiElement.getY());
 
-        for (AbstractPlan abstractPlan : state.getPlans()) {
+        for (AbstractPlan abstractPlan : state.getAbstractPlans()) {
             stateViewModel.getPlanElements().add((PlanElementViewModel) getViewModelElement(modelManager.getPlanElement(abstractPlan.getId())));
         }
         if (state.getEntryPoint() != null) {

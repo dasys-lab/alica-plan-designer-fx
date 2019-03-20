@@ -15,11 +15,11 @@ public class CreateVariable extends Command {
     public CreateVariable(ModelManager manager, ModelModificationQuery mmq) {
         super(manager, mmq);
         this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getParentId());
-        this.variable = createVariable(this.abstractPlan);
+        this.variable = createVariable();
     }
 
-    protected Variable createVariable(AbstractPlan abstractPlan) {
-        Variable variable = new Variable(abstractPlan);
+    protected Variable createVariable() {
+        Variable variable = new Variable();
         variable.setName(mmq.getName());
         variable.setComment(mmq.getComment());
         return variable;

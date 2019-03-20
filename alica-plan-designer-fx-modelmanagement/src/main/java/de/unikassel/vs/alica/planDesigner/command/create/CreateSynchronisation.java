@@ -22,9 +22,9 @@ public class CreateSynchronisation extends UiPositionCommand {
 
     protected Synchronisation createSynchronisation() {
         Synchronisation synchronisation = new Synchronisation();
-        synchronisation.setPlan((Plan) this.modelManager.getPlanElement(mmq.getParentId()));
         synchronisation.setName(mmq.getName());
         synchronisation.setComment(mmq.getComment());
+        synchronisation.setPlan(this.plan);
         return synchronisation;
     }
 

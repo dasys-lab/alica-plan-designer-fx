@@ -1,29 +1,40 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-public class TerminalState extends State {
-    protected PostCondition postCondition;
+import javafx.beans.property.SimpleObjectProperty;
 
+public class TerminalState extends State {
+
+    // whether it is a success state or failure state (not editable, so no dirty flag necessary)
     private boolean success;
+    protected final SimpleObjectProperty<PostCondition> postCondition = new SimpleObjectProperty<>();
+
+    private ChangeListenerForDirtyFlag changeListener;
 
     public TerminalState(){}
 
-    public TerminalState(boolean success, PostCondition postCondition) {
+    public TerminalState(boolean success) {
         this.success = success;
-        this.postCondition = postCondition;
-    }
-
-    public PostCondition getPostCondition() {
-        return postCondition;
-    }
-
-    public void setPostCondition(PostCondition postCondition) {
-        this.postCondition = postCondition;
-        if(postCondition != null){
-            postCondition.registerDirtyFlagToAbstractPlan(getParentPlan());
-        }
     }
 
     public boolean isSuccess(){
         return success;
+    }
+
+    public PostCondition getPostCondition() {
+        return postCondition.get();
+    }
+    public void setPostCondition(PostCondition postCondition) {
+        this.postCondition.set(postCondition);
+        if(postCondition != null){
+            postCondition.registerDirtyFlag(this.changeListener);
+        }
+    }
+    public SimpleObjectProperty<PostCondition> postConditionProperty() {
+        return postCondition;
+    }
+
+    public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
+        this.changeListener = listener;
+        this.getPostCondition().registerDirtyFlag(listener);
     }
 }

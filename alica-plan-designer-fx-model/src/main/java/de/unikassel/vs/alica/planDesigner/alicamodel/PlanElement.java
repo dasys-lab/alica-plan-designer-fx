@@ -12,19 +12,15 @@ public class PlanElement {
     public static final String forbiddenCharacters = ".*[\\./\\*\\\\$§?\\[\\]!{}\\-äüö#\"%~'ÄÖÜß@,]+.*";
     protected static int PLAN_ELEMENT_COUNTER = 0;
     protected  long id;
-    protected  SimpleStringProperty name;
-    protected  SimpleStringProperty comment;
+    protected final SimpleStringProperty name = new SimpleStringProperty();
+    protected final SimpleStringProperty comment = new SimpleStringProperty();
 
     public PlanElement() {
         this.id = generateId();
-        this.name = new SimpleStringProperty();
-        this.comment = new SimpleStringProperty();
     }
 
     public PlanElement(long id) {
         this.id = id;
-        this.name = new SimpleStringProperty();
-        this.comment = new SimpleStringProperty();
     }
 
     public long getId() {

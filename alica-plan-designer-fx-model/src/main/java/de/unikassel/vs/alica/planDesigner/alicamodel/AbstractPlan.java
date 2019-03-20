@@ -11,16 +11,8 @@ public class AbstractPlan extends SerializablePlanElement {
     public AbstractPlan () {
         super();
     }
-
     public AbstractPlan (long id) {
         this.id = id;
-    }
-
-    public void registerDirtyFlag() {
-        super.registerDirtyFlag();
-        for (Variable var : variables) {
-            var.registerDirtyFlag(this.changeListenerForDirtyFlag);
-        }
     }
 
     public void addVariable(Variable variable) {
@@ -34,5 +26,12 @@ public class AbstractPlan extends SerializablePlanElement {
     }
     public List<Variable> getVariables() {
         return Collections.unmodifiableList(variables);
+    }
+
+    public void registerDirtyFlag() {
+        super.registerDirtyFlag();
+        for (Variable var : variables) {
+            var.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
     }
 }

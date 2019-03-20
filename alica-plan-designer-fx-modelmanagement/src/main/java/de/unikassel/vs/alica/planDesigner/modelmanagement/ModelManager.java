@@ -388,7 +388,7 @@ public class ModelManager implements Observer {
         for (State state : plan.getStates()) {
             // Iterating over a List while modifying it results in an IllegalAccessException. By copying the list
             // beforehand this can be prevented
-            for (AbstractPlan abstractPlan : new ArrayList<>(state.getPlans())) {
+            for (AbstractPlan abstractPlan : new ArrayList<>(state.getAbstractPlans())) {
                 state.removeAbstractPlan(abstractPlan);
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
             }
@@ -422,7 +422,7 @@ public class ModelManager implements Observer {
      * Replaces all incomplete Plans in given PlanType by already parsed ones
      */
     public void resolveReferences(PlanType planType) {
-        List<AnnotatedPlan> annotatedPlans = planType.getPlans();
+        List<AnnotatedPlan> annotatedPlans = planType.getAnnotatedPlans();
         for (int i = 0; i < annotatedPlans.size(); i++) {
             annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
         }
@@ -491,7 +491,7 @@ public class ModelManager implements Observer {
                 for(Variable variable: planType.getVariables()) {
                     planElementMap.put(variable.getId(), variable);
                 }
-                for(AnnotatedPlan annotatedPlan: planType.getPlans()) {
+                for(AnnotatedPlan annotatedPlan: planType.getAnnotatedPlans()) {
                     planElementMap.put(annotatedPlan.getId(), annotatedPlan);
                 }
                 for(Parametrisation parametrisation: planType.getParametrisations()) {
@@ -790,7 +790,7 @@ public class ModelManager implements Observer {
         for (Plan parentPlan : planMap.values()) {
             stateLoop:
             for (State state : parentPlan.getStates()) {
-                for (AbstractPlan child : state.getPlans()) {
+                for (AbstractPlan child : state.getAbstractPlans()) {
                     if (child.getId() == planElement.getId()) {
                         usages.add(parentPlan);
                         break stateLoop;
@@ -799,7 +799,7 @@ public class ModelManager implements Observer {
             }
         }
         for (PlanType parentPlanType : planTypeMap.values()) {
-            for (AnnotatedPlan child : parentPlanType.getPlans()) {
+            for (AnnotatedPlan child : parentPlanType.getAnnotatedPlans()) {
                 if (child.getPlan().getId() == planElement.getId()) {
                     usages.add(parentPlanType);
                     break;

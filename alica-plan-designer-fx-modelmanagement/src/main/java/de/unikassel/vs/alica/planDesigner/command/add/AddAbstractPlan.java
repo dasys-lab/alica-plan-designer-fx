@@ -27,7 +27,7 @@ public class AddAbstractPlan extends Command {
     @Override
     public void doCommand() {
         //Don't put AbstractPlan, if the same existing
-        if (state.getPlans().contains(abstractPlan)) {
+        if (state.getAbstractPlans().contains(abstractPlan)) {
             return;
         }
 

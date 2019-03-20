@@ -77,11 +77,17 @@ public class Behaviour extends AbstractPlan {
         this.frequency.addListener(this.changeListenerForDirtyFlag);
         this.deferring.addListener(this.changeListenerForDirtyFlag);
         this.preCondition.addListener(this.changeListenerForDirtyFlag);
-        this.preCondition.get().registerDirtyFlag(this.changeListenerForDirtyFlag);
+        if (this.preCondition.get() != null) {
+            this.preCondition.get().registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
         this.runtimeCondition.addListener(this.changeListenerForDirtyFlag);
-        this.runtimeCondition.get().registerDirtyFlag(this.changeListenerForDirtyFlag);
+        if (this.runtimeCondition.get() != null) {
+            this.runtimeCondition.get().registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
         this.postCondition.addListener(this.changeListenerForDirtyFlag);
-        this.postCondition.get().registerDirtyFlag(this.changeListenerForDirtyFlag);
+        if (this.postCondition.get() != null) {
+            this.postCondition.get().registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
     }
 
     @Override

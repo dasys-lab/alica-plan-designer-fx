@@ -76,6 +76,9 @@ public class Condition extends PlanElement {
     }
 
     public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
+        if (listener == null) {
+            return;
+        }
         this.listenerForDirtyFlag = listener;
 
         this.name.addListener(listener);

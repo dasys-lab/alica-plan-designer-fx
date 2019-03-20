@@ -7,37 +7,35 @@ import java.util.List;
 public class PlanType extends AbstractPlan {
 
     protected final ArrayList<Parametrisation> parametrisations = new ArrayList<>();
-    protected final ArrayList<AnnotatedPlan> plans = new ArrayList<>();
-
-    public void registerDirtyFlag() {
-        super.registerDirtyFlag();
-    }
+    protected final ArrayList<AnnotatedPlan> annotatedPlans = new ArrayList<>();
 
     public void addParametrisation(Parametrisation parametrisation) {
         parametrisations.add(parametrisation);
-        this.setDirty(true);
+        parametrisation.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        this.changeListenerForDirtyFlag.setDirty();
     }
-
     public void removeParametrisation(Parametrisation parametrisation) {
         parametrisations.remove(parametrisation);
-        this.setDirty(true);
+        this.changeListenerForDirtyFlag.setDirty();
     }
-
     public List<Parametrisation> getParametrisations() {
         return Collections.unmodifiableList(parametrisations);
     }
 
-    public void addPlan(AnnotatedPlan annotatedPlan) {
-        plans.add(annotatedPlan);
-        this.setDirty(true);
+    public void addAnnotatedPlan(AnnotatedPlan annotatedPlan) {
+        annotatedPlans.add(annotatedPlan);
+        annotatedPlan.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        this.changeListenerForDirtyFlag.setDirty();
+    }
+    public void removeAnnotatedPlan(AnnotatedPlan annotatedPlan) {
+        annotatedPlans.remove(annotatedPlan);
+        this.changeListenerForDirtyFlag.setDirty();
+    }
+    public List<AnnotatedPlan> getAnnotatedPlans() {
+        return Collections.unmodifiableList(annotatedPlans);
     }
 
-    public void removePlan(AnnotatedPlan annotatedPlan) {
-        plans.remove(annotatedPlan);
-        this.setDirty(true);
-    }
-
-    public List<AnnotatedPlan> getPlans() {
-        return Collections.unmodifiableList(plans);
+    public void registerDirtyFlag() {
+        super.registerDirtyFlag();
     }
 }
