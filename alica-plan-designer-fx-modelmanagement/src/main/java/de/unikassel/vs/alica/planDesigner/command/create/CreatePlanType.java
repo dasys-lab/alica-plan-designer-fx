@@ -20,6 +20,7 @@ public class CreatePlanType extends Command {
         PlanType planType = new PlanType();
         planType.setName(mmq.getName());
         planType.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(),planType.getName()+"."+Extensions.PLANTYPE));
+        planType.registerDirtyFlag();
         return planType;
     }
 

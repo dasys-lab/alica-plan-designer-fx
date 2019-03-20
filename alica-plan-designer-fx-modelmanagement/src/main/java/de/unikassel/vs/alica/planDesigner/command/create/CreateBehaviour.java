@@ -17,6 +17,7 @@ public class CreateBehaviour extends Command {
         Behaviour behaviour = new Behaviour();
         behaviour.setName(mmq.getName());
         behaviour.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), behaviour.getName()+ "." + Extensions.BEHAVIOUR));
+        behaviour.registerDirtyFlag();
         return behaviour;
     }
 

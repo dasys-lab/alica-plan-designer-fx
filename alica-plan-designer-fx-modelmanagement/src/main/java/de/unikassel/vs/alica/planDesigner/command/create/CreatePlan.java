@@ -21,6 +21,7 @@ public class CreatePlan extends Command {
         Plan plan = new Plan();
         plan.setName(mmq.getName());
         plan.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), plan.getName() + "." + Extensions.PLAN));
+        plan.registerDirtyFlag();
         return plan;
     }
 
