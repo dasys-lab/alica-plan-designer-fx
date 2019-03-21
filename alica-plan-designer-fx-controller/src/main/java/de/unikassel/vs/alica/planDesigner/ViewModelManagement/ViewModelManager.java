@@ -549,6 +549,9 @@ public class ViewModelManager {
                 ConditionViewModel conditionViewModel = (ConditionViewModel) parentViewModel;
                 conditionViewModel.getQuantifiers().add((QuantifierViewModel) viewModelElement);
                 break;
+            case Types.TASKREPOSITORY:
+                //No-OP
+                break;
             default:
                 System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());
                 //TODO: maybe handle other types

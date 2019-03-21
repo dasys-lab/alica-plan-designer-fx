@@ -343,7 +343,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         repoTabPane = mainWindowController.getRepositoryTabPane();
         repoViewModel.setRepositoryTabPane(repoTabPane);
         repoViewModel.initGuiContent();
-
         editorTabPane.setGuiModificationHandler(this);
     }
 

@@ -62,7 +62,7 @@ public final class FileTreeView extends TreeView<File> {
             @Override
             public TreeCell<File> call(TreeView<File> param) {
                 TreeCell<File> fileWrapperTreeCell = new FileTreeCell(controller);
-                fileWrapperTreeCell.setContextMenu(new FileTreeViewContextMenu());
+                fileWrapperTreeCell.setContextMenu(param.getContextMenu());
                 fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -107,6 +107,9 @@ public final class FileTreeView extends TreeView<File> {
         if (topLevelFolder == null) {
             return;
         }
+        if(viewModelElement.getType() == Types.TASKREPOSITORY) {
+            ((FileTreeViewContextMenu)this.getContextMenu()).showTaskrepositoryItem(false);
+        }
 
         FileTreeItem folder = findFolder(viewModelElement, topLevelFolder, 0);
 //        boolean deleted = false;
@@ -142,6 +145,9 @@ public final class FileTreeView extends TreeView<File> {
         FileTreeItem topLevelFolder = findTopLevelFolder(viewModelElement);
         if (topLevelFolder == null) {
             return;
+        }
+        if(viewModelElement.getType() == Types.TASKREPOSITORY) {
+            ((FileTreeViewContextMenu)this.getContextMenu()).showTaskrepositoryItem(true);
         }
         removeFromFolder(viewModelElement, topLevelFolder);
     }

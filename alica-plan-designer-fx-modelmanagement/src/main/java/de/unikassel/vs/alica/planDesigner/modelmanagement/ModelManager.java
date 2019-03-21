@@ -354,16 +354,16 @@ public class ModelManager implements Observer {
         String path = file.toString();
         if (path.endsWith(Extensions.BEHAVIOUR) || path.endsWith(Extensions.PLAN) || path.endsWith(Extensions.PLANTYPE)) {
             if (path.contains(rolesPath) || path.contains(tasksPath)) {
-                return false;
+                throw new RuntimeException("ModelManager: The file " + file + " is located in the wrong directory!");
             }
         } else if (path.endsWith(Extensions.TASKREPOSITORY)) {
             if (path.contains(plansPath) || path.contains(rolesPath)) {
-                return false;
+                throw new RuntimeException("ModelManager: The file " + file + " is located in the wrong directory!");
             }
         } else if (path.endsWith(Extensions.CAPABILITY_DEFINITION) || path.endsWith(Extensions.ROLES_DEFINITION)
                 || path.endsWith(Extensions.ROLESET) || path.endsWith(Extensions.ROLESET_GRAPH)) {
             if (path.contains(plansPath) || path.contains(tasksPath)) {
-                return false;
+                throw new RuntimeException("ModelManager: The file " + file + " is located in the wrong directory!");
             }
         }
         return true;
@@ -481,11 +481,6 @@ public class ModelManager implements Observer {
             return oldElement;
         }
 
-        SerializablePlanElement serializablePlanElement = (SerializablePlanElement) planElement;
-        if (serializeToDisk) {
-            serializeToDisk(serializablePlanElement,true);
-        }
-
         switch (type) {
             case Types.PLAN:
             case Types.MASTERPLAN:
@@ -550,6 +545,12 @@ public class ModelManager implements Observer {
             default:
                 throw new RuntimeException("ModelManager: Storing " + type + " not implemented, yet!");
         }
+
+        SerializablePlanElement serializablePlanElement = (SerializablePlanElement) planElement;
+        if (serializeToDisk) {
+            serializeToDisk(serializablePlanElement,true);
+        }
+
         return oldElement;
     }
 
@@ -862,6 +863,9 @@ public class ModelManager implements Observer {
                         break;
                     case Types.QUANTIFIER:
                         cmd = new CreateQuantifier(this, mmq);
+                        break;
+                    case Types.TASKREPOSITORY:
+                        cmd = new CreateTaskRepository(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
@@ -1256,5 +1260,9 @@ public class ModelManager implements Observer {
             elementsToCheck.addAll(usages);
         }
         return false;
+    }
+
+    public boolean hasTaskRepository() {
+        return taskRepository != null;
     }
 }
