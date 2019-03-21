@@ -112,20 +112,11 @@ public final class FileTreeView extends TreeView<File> {
         }
 
         FileTreeItem folder = findFolder(viewModelElement, topLevelFolder, 0);
-//        boolean deleted = false;
         if (folder != null) {
-            // TODO: maybe unnecessary if complete view model elements are used.
-//            if (folderContainsViewModelElement(serializableViewModel, folder)) {
-//                removeFromFolder(serializableViewModel, folder);
-//                deleted = true;
-//            }
             FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(new AlicaIcon(viewModelElement.getType
                     (), AlicaIcon.Size.BIG)), viewModelElement);
             folder.getChildren().add(newItem);
             folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
-//            if (deleted) {
-//                this.getSelectionModel().select(newItem);
-//            }
         } else {
             throw new RuntimeException("Destination folder for PlanElement " + viewModelElement.getName() + " does not exist!");
         }
@@ -235,7 +226,7 @@ public final class FileTreeView extends TreeView<File> {
      */
     private FileTreeItem findFolder(ViewModelElement modelElement, FileTreeItem treeItem, int index) {
         String relativePath = modelElement.getRelativeDirectory();
-        String[] folders = relativePath.split(File.pathSeparator);
+        String[] folders = relativePath.split(File.separator);
         if (folders.length == 1 && folders[0].isEmpty()) {
             return treeItem;
         }

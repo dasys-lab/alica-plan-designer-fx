@@ -158,7 +158,7 @@ class DefaultTemplate {
         «var  List<Transition> outTransitions = state.outTransitions»
         «FOR transition : outTransitions»
             «var  List<Variable> variables = transition.preCondition.variables»
-            «IF (transition.preCondition != null && transition.preCondition.pluginName == "DefaultPlugin" && variables.size > 0)»
+            «IF (transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin" && variables.size > 0)»
                 /*
                  * Transition:
                  * - Name: «transition.preCondition.name»
