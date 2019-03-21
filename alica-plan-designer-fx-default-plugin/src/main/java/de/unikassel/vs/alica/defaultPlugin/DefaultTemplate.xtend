@@ -27,7 +27,7 @@ class DefaultTemplate {
                 * Transition:
                 *   - Name: «transition.preCondition.name», ConditionString: «transition.preCondition.conditionString», Comment : «transition.comment»
                 *
-                * Plans in State: «var  List<AbstractPlan> plans = state.plans»
+                * Plans in State: «var  List<AbstractPlan> plans = state.abstractPlans»
                 *     «FOR plan : plans»
                 *   - Plan - (Name): «plan.name», (PlanID): «plan.id» «ENDFOR»
                 *
@@ -165,7 +165,7 @@ class DefaultTemplate {
                  * - Comment: «transition.preCondition.comment»
                  * - ConditionString: «transition.preCondition.conditionString»
                  *
-                 * «var  List<AbstractPlan> plans = state.plans»
+                 * «var  List<AbstractPlan> plans = state.abstractPlans»
                  * Plans in State: «FOR plan : plans»
                  * - Plan Name: «plan.name», PlanID: «plan.id» «ENDFOR»
                  * Static Variables: «FOR variable : variables»«variable.name» «ENDFOR»
