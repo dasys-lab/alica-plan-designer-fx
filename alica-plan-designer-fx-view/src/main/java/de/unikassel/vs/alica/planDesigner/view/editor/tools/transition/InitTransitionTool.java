@@ -87,7 +87,10 @@ public class InitTransitionTool extends AbstractTool {
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-
+                    if (!(event.getTarget() instanceof  Node)) {
+                        System.err.println("InitTransitionTool: Type clicked on does not match tool!");
+                        return;
+                    }
                     Node target = (Node) event.getTarget();
                     Parent parent = target.getParent();
 

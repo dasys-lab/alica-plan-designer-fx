@@ -66,15 +66,17 @@ public class TransitionTool extends AbstractTool {
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (event.getTarget() instanceof ToolButton) {
+                    if (event.getTarget() instanceof ToolButton || !(event.getTarget() instanceof Node)) {
                         return;
                     }
+
+                    Node target = (Node) event.getTarget();
+                    Node parent = target.getParent();
+
                     if (initial > 1) {
-                        Node target = (Node) event.getTarget();
-                        Node parent = target.getParent();
                         if (parent instanceof StateContainer) {
                             // SET ENDPOINT
-                            StateViewModel outState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+                            StateViewModel outState = ((StateContainer) target.getParent()).getState();
 
                             IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
@@ -118,19 +120,14 @@ public class TransitionTool extends AbstractTool {
                             bendPoints.add(eventTargetCoordinates);
                         }
                     } else {
-                        Node target = (Node) event.getTarget();
-                        Node parent = target.getParent();
-                        if (!(target instanceof ToolButton)){
-                            initial = 1;
-                            try {
-                                target = (Node) event.getTarget();
-                                if (parent instanceof StateContainer) {
-                                    // SET STARTPOINT
-                                    inState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
-                                }
-                            } catch (ClassCastException e) {
-                                e.printStackTrace();
+                        initial = 1;
+                        try {
+                            if (parent instanceof StateContainer) {
+                                // SET STARTPOINT
+                                inState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
                             }
+                        } catch (ClassCastException e) {
+                            e.printStackTrace();
                         }
                     }
                     initial++;
