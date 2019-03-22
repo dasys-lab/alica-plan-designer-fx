@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.modelmanagement;
 
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.events.ModelQueryType;
 
 import java.io.File;
@@ -80,7 +81,7 @@ public class ModelModificationQuery {
 
     public String getName() {
         if (name == null) {
-            return "MISSING_NAME";
+            return PlanElement.NO_NAME;
         }else {
             return name;
         }

@@ -122,16 +122,6 @@ public final class FileTreeView extends TreeView<File> {
         }
     }
 
-    private boolean folderContainsViewModelElement(ViewModelElement viewModelElement, FileTreeItem folder) {
-        for (TreeItem item : folder.getChildren()) {
-            FileTreeItem fileTreeItem = (FileTreeItem) item;
-            if (!fileTreeItem.getValue().isDirectory() && fileTreeItem.getViewModelElement().getId() == viewModelElement.getId()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void removeViewModelElement(ViewModelElement viewModelElement) {
         FileTreeItem topLevelFolder = findTopLevelFolder(viewModelElement);
         if (topLevelFolder == null) {

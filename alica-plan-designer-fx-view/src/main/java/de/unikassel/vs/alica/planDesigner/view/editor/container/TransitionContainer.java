@@ -16,7 +16,6 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class TransitionContainer extends AbstractPlanElementContainer implements Observable {
     private StateContainer fromState;
     private StateContainer toState;
@@ -24,7 +23,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
     private List<Node> potentialDraggableNodes;
     private List<InvalidationListener> invalidationListeners = new ArrayList<>();
 
-    public TransitionContainer(TransitionViewModel transition/*, PmlUiExtension pmlUiExtension*/,
+    public TransitionContainer(TransitionViewModel transition,
                                StateContainer fromState, StateContainer toState, PlanTab planTab) {
         super(transition, null, planTab);
         this.fromState = fromState;

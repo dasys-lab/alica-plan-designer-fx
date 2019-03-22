@@ -89,6 +89,7 @@ public class ViewModelManager {
 
     private BendPointViewModel createBendPointViewModel(BendPoint bendPoint) {
         BendPointViewModel bendPointViewModel = new BendPointViewModel(bendPoint.getId(), bendPoint.getName(), Types.BENDPOINT);
+        bendPointViewModel.setComment(bendPoint.getComment());
         bendPointViewModel.setX(bendPoint.getX());
         bendPointViewModel.setY(bendPoint.getY());
         bendPointViewModel.setTransition((TransitionViewModel) getViewModelElement(bendPoint.getTransition()));
@@ -273,6 +274,11 @@ public class ViewModelManager {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(transition.getPreCondition());
             conditionViewModel.setParentId(transition.getId());
             transitionViewModel.setPreCondition(conditionViewModel);
+        }
+        // we need to put the transition before creating bendpoints, in order to avoid circles (Transition <-> BendPoint)
+        this.viewModelElements.put(transitionViewModel.getId(), transitionViewModel);
+        for (BendPoint  bendPoint : modelManager.getPlanUIExtensionPair(transition.getInState().getParentPlan().getId()).getUiElement(transition.getId()).getBendPoints()) {
+            transitionViewModel.addBendpoint((BendPointViewModel) getViewModelElement(bendPoint));
         }
         return transitionViewModel;
     }

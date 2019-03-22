@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 import de.unikassel.vs.alica.planDesigner.command.Command;
@@ -31,7 +32,11 @@ public class CreateTransition extends UiPositionCommand {
         Transition transition = new Transition();
         transition.setInState(this.in);
         transition.setOutState(this.out);
-        transition.setName(mmq.getName());
+        if (mmq.getName() == PlanElement.NO_NAME) {
+            transition.setName("From" + this.in.getName() + "To" + this.out.getName());
+        } else {
+            transition.setName(mmq.getName());
+        }
         transition.setComment(mmq.getComment());
         return transition;
     }
