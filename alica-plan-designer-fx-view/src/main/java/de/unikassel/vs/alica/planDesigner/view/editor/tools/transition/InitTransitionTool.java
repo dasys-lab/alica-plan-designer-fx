@@ -11,7 +11,6 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
-import de.unikassel.vs.alica.planDesigner.view.model.EntryPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -29,17 +28,12 @@ import java.util.HashMap;
 
 public class InitTransitionTool extends AbstractTool {
 
-    private boolean initial = true;
-    private EntryPointContainer inEntryPoint;
+    private EntryPointContainer entryPoint;
     private StateViewModel state;
 
     public InitTransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
     }
-
-//    public InitStateConnection createNewObject() {
-//        return new InitStateConnection();
-//    }
 
     @Override
     public ToolButton createToolUI() {
@@ -52,34 +46,27 @@ public class InitTransitionTool extends AbstractTool {
         return toolButton;
     }
 
-    public void draw() {
-        // ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
-    }
-
     @Override
     protected void initHandlerMap() {
         if (customHandlerMap.isEmpty()) {
             customHandlerMap.put(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    Node target = (Node) event.getTarget();
-                    Parent parent = target.getParent();
-                    if(initial){
-                        if (parent instanceof EntryPointContainer) {
+                    Parent parent = ((Node) event.getTarget()).getParent();
+                    if (parent instanceof EntryPointContainer ) {
+                        setCursor(addCursor);
+                    } else if (parent instanceof  StateContainer) {
+                        if (((StateContainer) parent).getState().getType() == Types.STATE) {
+                            // Normal States
                             setCursor(addCursor);
                         } else {
+                            // Terminal States
                             setCursor(forbiddenCursor);
                         }
-                    } else {
-                        if (parent instanceof StateContainer) {
-                            setCursor(addCursor);
-                        } else {
-                            setCursor(forbiddenCursor);
-                        }
-                    }
-
-                    if (parent instanceof ToggleButton || parent instanceof EditorToolBar || parent instanceof VBox) {
+                    } else if (parent instanceof ToggleButton || parent instanceof EditorToolBar || parent instanceof VBox) {
                         setCursor(Cursor.DEFAULT);
+                    } else {
+                        setCursor(forbiddenCursor);
                     }
                 }
             });
@@ -87,52 +74,54 @@ public class InitTransitionTool extends AbstractTool {
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (!(event.getTarget() instanceof  Node)) {
-                        System.err.println("InitTransitionTool: Type clicked on does not match tool!");
-                        return;
-                    }
-                    Node target = (Node) event.getTarget();
-                    Parent parent = target.getParent();
-
-                    if (parent instanceof ToggleButton) {
-                        endTool();
-                    }
-
-                    if (handleNonPrimaryButtonEvent(event)) {
+                    if (!isClickValid(event)) {
                         return;
                     }
 
-                    if (((Node) event.getTarget()).getParent() instanceof EntryPointContainer) {
-                        if (initial) {
-                            inEntryPoint =  ((EntryPointContainer) ((Node) event.getTarget()).getParent());
-                            initial = false;
+                    Parent parent = ((Node) event.getTarget()).getParent();
+                    if (parent instanceof EntryPointContainer) {
+                        entryPoint =  (EntryPointContainer) parent;
+                    } else if (parent instanceof StateContainer) {
+                        if (((StateContainer) parent).getState().getType() == Types.STATE) {
+                            // Only Normal States allowed
+                            state = ((StateContainer) parent).getState();
                         }
-                    } else if (((Node) event.getTarget()).getParent() instanceof StateContainer && initial == false) {
-                        state = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
-                        initial = true;
+                    }
 
+                    // ep and state selected, so send event and reset ep and state for further use of the tool
+                    if (entryPoint != null && state != null) {
                         IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
-
                         GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.INITSTATECONNECTION, null);
-
                         HashMap<String, Long> relatedObjects = new HashMap<>();
-                        relatedObjects.put(Types.ENTRYPOINT, inEntryPoint.getViewModelElement().getId());
+                        relatedObjects.put(Types.ENTRYPOINT, entryPoint.getViewModelElement().getId());
                         relatedObjects.put(Types.STATE, state.getId());
                         guiEvent.setRelatedObjects(relatedObjects);
                         guiEvent.setParentId(InitTransitionTool.this.planTab.getSerializableViewModel().getId());
                         guiModificationHandler.handle(guiEvent);
+                        entryPoint = null;
+                        state = null;
                     }
                 }
             });
         }
     }
 
+    private boolean isClickValid(MouseEvent event) {
+        if (!(event.getTarget() instanceof  Node)) {
+            System.err.println("InitTransitionTool: Type clicked on does not match tool!");
+            return false;
+        }
 
+        Parent parent = ((Node) event.getTarget()).getParent();
+        if (parent instanceof ToggleButton) {
+            endTool();
+            return false;
+        }
 
-//    /**
-//     * This is a pseudo class because init transitions are no real objects.
-//     */
-//    static final class InitStateConnection extends PlanElementImpl {
-//
-//    }
+        if (handleNonPrimaryButtonEvent(event)) {
+            return false;
+        }
+
+        return true;
+    }
 }

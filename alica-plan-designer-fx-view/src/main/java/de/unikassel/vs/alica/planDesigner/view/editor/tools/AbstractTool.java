@@ -40,7 +40,6 @@ public abstract class AbstractTool {
 
     private HashMap<EventType, EventHandler> defaultHandlerMap;
     protected HashMap<EventType, EventHandler> customHandlerMap;
-    protected Cursor previousCursor;
 
     private boolean recentlyDone;
 
@@ -121,8 +120,6 @@ public abstract class AbstractTool {
         for (Map.Entry<EventType, EventHandler> entry : defaultHandlers().entrySet()) {
             planEditorTabPane.getScene().addEventFilter(entry.getKey(), entry.getValue());
         }
-
-        previousCursor = getCursor();
     }
 
     public void endTool() {
