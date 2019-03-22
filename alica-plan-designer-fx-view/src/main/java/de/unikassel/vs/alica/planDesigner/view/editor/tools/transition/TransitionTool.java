@@ -28,10 +28,9 @@ import java.util.LinkedList;
 
 public class TransitionTool extends AbstractTool {
 
-    private int initial = 0;
     private LinkedList<Point2D> bendPoints = new LinkedList<>();
 
-    private StateViewModel inState;
+    private StateViewModel inState = null;
     private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition);
 
     public TransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
@@ -50,7 +49,7 @@ public class TransitionTool extends AbstractTool {
                     if (parent instanceof StateContainer) {
                         setCursor(addCursor);
                     } else if (target instanceof StackPane){
-                        if (initial > 1) {
+                        if (inState != null) {
                             setCursor(bendPointCursor);
                         }
                         else {
@@ -73,10 +72,10 @@ public class TransitionTool extends AbstractTool {
                     Node target = (Node) event.getTarget();
                     Node parent = target.getParent();
 
-                    if (initial > 1) {
+                    if (inState != null) {
                         if (parent instanceof StateContainer) {
                             // SET ENDPOINT
-                            StateViewModel outState = ((StateContainer) target.getParent()).getState();
+                            StateViewModel outState = ((StateContainer) parent).getState();
 
                             IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
@@ -113,24 +112,21 @@ public class TransitionTool extends AbstractTool {
                         } else {
                             // ADD BENDPOINT
                             Point2D eventTargetCoordinates = TransitionTool.this.getLocalCoordinatesFromEvent(event);
-
                             if (eventTargetCoordinates == null) {
                                 event.consume();
                             }
                             bendPoints.add(eventTargetCoordinates);
                         }
                     } else {
-                        initial = 1;
                         try {
                             if (parent instanceof StateContainer) {
                                 // SET STARTPOINT
-                                inState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+                                inState = ((StateContainer) parent).getState();
                             }
                         } catch (ClassCastException e) {
                             e.printStackTrace();
                         }
                     }
-                    initial++;
                 }
             });
         }
@@ -143,7 +139,6 @@ public class TransitionTool extends AbstractTool {
     }
 
     private void reset() {
-        initial = 0;
         inState = null;
         bendPoints.clear();
     }
