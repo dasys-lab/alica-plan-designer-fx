@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * The {@link PlanEditorGroup} is the surrounding body for plan visualisation.
  * It expands automatically if new or existing plan elements are brought to the edge of the plan.
- * The visualisation of certain elements is realised through {@link AbstractPlanElementContainer}.
+ * The visualisation of certain elements is realised through {@link Container}.
  */
 public class PlanEditorGroup extends Group {
     private PlanTab planEditorTab;

@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 
 public class StateViewModel extends PlanElementViewModel {
-    protected ObservableList<PlanElementViewModel> planElements;
+    protected ObservableList<PlanElementViewModel> abstractPlans;
     protected ObservableList<TransitionViewModel> inTransitions;
     protected ObservableList<TransitionViewModel> outTransitions;
     protected ObjectProperty<ConditionViewModel> postCondition;
@@ -16,18 +16,17 @@ public class StateViewModel extends PlanElementViewModel {
 
     public StateViewModel(long id, String name, String type) {
         super(id, name, type);
-        this.planElements =  FXCollections.observableArrayList(new ArrayList<>());
+        this.abstractPlans =  FXCollections.observableArrayList(new ArrayList<>());
         this.inTransitions =  FXCollections.observableArrayList(new ArrayList<>());
         this.outTransitions =  FXCollections.observableArrayList(new ArrayList<>());
         this.postCondition = new SimpleObjectProperty<>();
     }
 
-    public ObservableList<PlanElementViewModel> getPlanElements() {
-        return planElements;
+    public ObservableList<PlanElementViewModel> getAbstractPlans() {
+        return abstractPlans;
     }
-
-    public void setPlanElements(ObservableList<PlanElementViewModel> planElements) {
-        this.planElements = planElements;
+    public void setAbstractPlans(ObservableList<PlanElementViewModel> abstractPlans) {
+        this.abstractPlans = abstractPlans;
     }
 
     public ObservableList<TransitionViewModel> getInTransitions() {

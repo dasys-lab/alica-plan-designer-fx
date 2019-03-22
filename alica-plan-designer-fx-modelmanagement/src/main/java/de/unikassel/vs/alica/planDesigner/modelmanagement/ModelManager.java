@@ -909,6 +909,11 @@ public class ModelManager implements Observer {
                     case Types.QUANTIFIER:
                         cmd = new DeleteQuantifier(this, mmq);
                         break;
+                    case Types.STATE:
+                    case Types.SUCCESSSTATE:
+                    case Types.FAILURESTATE:
+                        cmd = new DeleteStateInPlan(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
                         return;
@@ -1071,7 +1076,7 @@ public class ModelManager implements Observer {
             if (!movedOrCreated) {
                 // the counter is set to 2 because, saving an element always creates two filesystem modified events
                 int counter = 2;
-                // when a plan is saved it needs to be 4 however, because the uiElement is saved as well
+                // when a plan is saved it needs to be 4 however, because the stateUiElement is saved as well
                 if (fileExtension.equals(Extensions.PLAN)) {
                     counter = 4;
                 }

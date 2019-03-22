@@ -53,7 +53,7 @@ public class ModelModificationQuery {
                 elementType = Types.TASKREPOSITORY;
                 break;
             case Extensions.PLAN_UI:
-                elementType = Types.PLAN; //TODO: Handle plan-uiElement-ending - Files
+                elementType = Types.PLAN; //TODO: Handle plan-stateUiElement-ending - Files
                 break;
             default:
                 System.err.println("ModelModificationQuery: Unknown ending of file " + absolutePath);

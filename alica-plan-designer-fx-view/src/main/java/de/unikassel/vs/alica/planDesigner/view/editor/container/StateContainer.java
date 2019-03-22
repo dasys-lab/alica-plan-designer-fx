@@ -5,12 +5,8 @@ import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.geometry.Insets;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -18,12 +14,12 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StateContainer extends AbstractPlanElementContainer implements Observable {
+public class StateContainer extends Container implements Observable {
 
     public static final double STATE_RADIUS = 20.0;
     private boolean dragged;
     private List<InvalidationListener> invalidationListeners;
-    private List<AbstractPlanHBox> statePlans;
+    private List<AbstractPlanContainer> statePlans;
     private StateViewModel state;
 
     public StateContainer(StateViewModel state, PlanTab planTab) {
@@ -33,11 +29,53 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         invalidationListeners = new ArrayList<>();
         makeDraggable(this);
         createPositionListeners(this, state);
-        deleteAbstractPlansFromState(this);
+//        deleteAbstractPlansFromState(this);
         createAbstractPlanToStateListeners( state);
-        setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
+//        setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
         setupContainer();
     }
+
+//    public void deleteAbstractPlansFromState(Node node) {
+//        node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+//            Parent parent = mouseEvent.getPickResult().getIntersectedNode().getParent();
+//            if(parent instanceof StateContainer) {
+//                return;
+//            }
+//
+//            AbstractPlanContainer abstractPlanContainer;
+//            if (parent instanceof AbstractPlanContainer) {
+//                abstractPlanContainer = (AbstractPlanContainer) parent;
+//            } else if (parent instanceof Label) {
+//                abstractPlanContainer = (AbstractPlanContainer) parent.getParent();
+//            } else {
+//                return;
+//            }
+//            if (abstractPlanContainer.getPlanElementViewModel() instanceof BehaviourViewModel ||
+//                    abstractPlanContainer.getPlanElementViewModel() instanceof PlanTypeViewModel ||
+//                    abstractPlanContainer.getPlanElementViewModel() instanceof PlanViewModel) {
+//                // set border
+//                abstractPlanContainer.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0.2), BorderStroke.THIN)));
+//                // register delete key event handler
+//                newKeyEvent((StateContainer) mouseEvent.getSource(), abstractPlanContainer);
+//            }
+//            mouseEvent.consume();
+//        });
+//    }
+
+//    private void newKeyEvent(StateContainer stateContainer, AbstractPlanContainer abstractPlanContainer){
+//        abstractPlanContainer.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+//            if(keyEvent.getCode() == KeyCode.DELETE) {
+//                GuiModificationEvent guiModificationEvent = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT,
+//                        abstractPlanContainer.getPlanElementViewModel().getType(),
+//                        planElementViewModel.getName());
+//                guiModificationEvent.setParentId(stateContainer.getState().getId());
+//                guiModificationEvent.setElementId(abstractPlanContainer.getPlanElementViewModel().getId());
+//                IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
+//                guiModificationHandler.handle(guiModificationEvent);
+//                abstractPlanContainer.setBorder(Border.EMPTY);
+//                keyEvent.consume();
+//            }});
+//    }
 
     @Override
     public void setupContainer() {
@@ -50,19 +88,13 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         elementName.setLayoutX(elementName.getLayoutX() - elementName.getLayoutBounds().getWidth() / 2);
         elementName.setLayoutY(elementName.getLayoutY() - STATE_RADIUS * 1.3);
 
-        for (PlanElementViewModel plan : state.getPlanElements()) {
-            statePlans.add(new AbstractPlanHBox(plan, this));
+        for (PlanElementViewModel plan : state.getAbstractPlans()) {
+            statePlans.add(new AbstractPlanContainer(this, plan, this.planTab));
         }
 
         if(statePlans != null && !statePlans.isEmpty()) {
             getChildren().addAll(statePlans);
         }
-    }
-
-    @Override
-    public void setEffectToStandard() {
-        visualRepresentation.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,
-                new Color(0,0,0,0.8), 10, 0, 0, 0));
     }
 
     @Override
@@ -96,11 +128,17 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         invalidationListeners.remove(listener);
     }
 
-    public List<AbstractPlanHBox> getStatePlans() {
+    public List<AbstractPlanContainer> getStatePlans() {
         return statePlans;
     }
 
     public StateViewModel getState() {
         return state;
+    }
+
+    @Override
+    public void setEffectToStandard() {
+        this.setEffect(null);
+        this.visualRepresentation.setEffect(Container.standardEffect);
     }
 }

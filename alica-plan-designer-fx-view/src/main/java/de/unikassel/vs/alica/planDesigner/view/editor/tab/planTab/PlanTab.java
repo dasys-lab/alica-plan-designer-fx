@@ -5,20 +5,19 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.Container;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorElement;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
-
 
 public class PlanTab extends AbstractPlanTab {
 
@@ -30,43 +29,6 @@ public class PlanTab extends AbstractPlanTab {
     public PlanTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
         draw();
-        propertiesTableUpdater();
-    }
-
-    private void propertiesTableUpdater() {
-        //Set properties table on default, if StackPane is selected
-        this.getPlanContent().setOnMouseClicked(event -> {
-            if(this.selectedPlanElements.getValue().get(0).getKey() instanceof TransitionViewModel ||
-                    this.selectedPlanElements.getValue().get(0).getKey() instanceof SynchronizationViewModel) {
-                event.consume();
-                return;
-            }
-            this.propertiesConditionsVariablesPane.setViewModelElement(this.getSerializableViewModel());
-            event.consume();
-        });
-
-        //Listener for update properties table inside a Plan
-        this.getSelectedPlanElements().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                ViewModelElement viewModelElement = (ViewModelElement) newValue.get(0).getKey();
-                if(viewModelElement instanceof TransitionViewModel){
-                    viewModelElement.setParentId(this.getSerializableViewModel().getId());
-                }
-                this.propertiesConditionsVariablesPane.setViewModelElement(viewModelElement);
-
-                //Listener if AbstractPlan from State is deleted, set properties table to default
-                if(viewModelElement instanceof BehaviourViewModel ||
-                        viewModelElement instanceof PlanTypeViewModel ||
-                        viewModelElement instanceof PlanViewModel) {
-                    if(oldValue.get(0).getKey() instanceof StateViewModel) {
-                        StateViewModel stateViewModel = (StateViewModel) oldValue.get(0).getKey();
-                        stateViewModel.getPlanElements().addListener((ListChangeListener<? super PlanElementViewModel>) c -> {
-                            this.propertiesConditionsVariablesPane.setViewModelElement(this.getSerializableViewModel());
-                        });
-                    }
-                }
-            }
-        });
     }
 
     private void draw() {
@@ -101,8 +63,8 @@ public class PlanTab extends AbstractPlanTab {
      * @param newY  the new y-coordinate
      */
     public void fireChangePositionEvent(DraggableEditorElement planElementContainer, String type, double newX, double newY) {
-        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_POSITION, type, planElementContainer.getViewModelElement().getName());
-        event.setElementId(planElementContainer.getViewModelElement().getId());
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_POSITION, type, planElementContainer.getPlanElementViewModel().getName());
+        event.setElementId(planElementContainer.getPlanElementViewModel().getId());
         event.setParentId(serializableViewModel.getId());
         event.setX((int) newX);
         event.setY((int) newY);
@@ -121,26 +83,34 @@ public class PlanTab extends AbstractPlanTab {
     }
 
     public GuiModificationEvent handleDelete() {
-        return null;
+        Container selectedContainer = this.selectedContainer.get();
+        if (selectedContainer == null) {
+            return null;
+        }
+        PlanElementViewModel planElementViewModel = selectedContainer.getPlanElementViewModel();
+        switch(planElementViewModel.getType()) {
+            case Types.BEHAVIOUR:
+            case Types.PLAN:
+            case Types.PLANTYPE:
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT, planElementViewModel.getType(), planElementViewModel.getName());
+                event.setParentId(((AbstractPlanContainer)selectedContainer).getParentStateContainer().getState().getId());
+                event.setElementId(planElementViewModel.getId());
+                return event;
+            case Types.STATE:
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, planElementViewModel.getType(), planElementViewModel.getName());
+                event.setParentId(planElementViewModel.getParentId());
+                event.setElementId(planElementViewModel.getId());
+                return event;
+            default:
+                System.err.println("PlanTab: Selected element type " + planElementViewModel.getType() + " is not handled!");
+                return null;
+        }
     }
 
     public void save() {
         save(Types.PLAN);
-    }
-
-    protected void initSelectedPlanElement(ViewModelElement viewModelElement) {
-        super.initSelectedPlanElements(viewModelElement);
-        contentProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-//                    if (event.getTarget() == planContent) {
-//                        List<Pair<PlanElement, AbstractPlanElementContainer>> planViewModel = new ArrayList<>();
-//                        planViewModel.add(new Pair<>(getEditable(), null));
-//                        getSelectedPlanElements().set(planViewModel);
-//                    }
-                });
-            }
-        });
     }
 
     public StackPane getPlanContent() {

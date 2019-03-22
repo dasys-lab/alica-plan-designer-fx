@@ -6,7 +6,6 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
-import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
@@ -14,7 +13,6 @@ import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.menu.EditMenu;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
-import de.unikassel.vs.alica.planDesigner.view.menu.NewResourceMenu;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
@@ -25,19 +23,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
-import javafx.util.Pair;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -312,20 +306,6 @@ public class MainWindowController implements Initializable {
         fileTreeView.setupRolesPath(this.rolesPath);
         this.tasksPath = tasksPath;
         fileTreeView.setupTaskPath(this.tasksPath);
-    }
-
-    public boolean isSelectedPlanElement(Node node) {
-        Tab selectedItem = getEditorTabPane().getSelectionModel().getSelectedItem();
-        if (selectedItem == null || ((AbstractPlanTab) selectedItem).getSelectedPlanElements() == null) {
-            return false;
-        }
-
-        Pair<ViewModelElement, AbstractPlanElementContainer> o = ((AbstractPlanTab) selectedItem).getSelectedPlanElements().getValue().get(0);
-        if (o != null && o.getValue() != null) {
-            return o.getValue().equals(node) || o.getValue().getChildren().contains(node);
-        } else {
-            return false;
-        }
     }
 
 //--------------------------------------------------------------------------------------------

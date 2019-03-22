@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.command.delete;
 
+import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
@@ -13,119 +14,42 @@ import java.util.Map;
 
 public class DeleteStateInPlan extends UiPositionCommand {
 
-    protected UiExtension parentOfDeleted;
-
-    protected Map<Transition, State> outStatesOfInTransitions = new HashMap<>();
-    protected Map<Transition, State> inStatesOfOutTransitions = new HashMap<>();
-    protected Map<Transition , UiElement> pmlUiExtensionsOfTransitions = new HashMap<>();
-    protected UiElement uiElement;
     protected State state;
+    protected Plan plan;
 
     public DeleteStateInPlan(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
-        this.parentOfDeleted = modelManager.getPlanUIExtensionPair(mmq.getParentId());
         this.state = (State) modelManager.getPlanElement(mmq.getElementId());
+        if (!isSafeToDelete(this.state)) {
+            state = null;
+            return;
+        }
+        this.plan = (Plan) modelManager.getPlanElement(mmq.getParentId());
+        createUiElement(mmq.getParentId(), this.state);
+    }
+
+    private boolean isSafeToDelete(State state) {
+        if (state.getOutTransitions().isEmpty()
+                && state.getInTransitions().isEmpty()
+                && state.getAbstractPlans().isEmpty())  {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void doCommand() {
-        outStatesOfInTransitions.clear();
-        inStatesOfOutTransitions.clear();
-        pmlUiExtensionsOfTransitions.clear();
-
-        // save for later retrieval if needed
-        saveForLaterRetrieval();
-
-        // Delete
-        delete();
-    }
-
-    /**
-     * The actual deletion of the state and its associated transitions
-     * <p></p>
-     * IMPORTANT this also includes pml view extensions
-     */
-    private void delete() {
-        parentOfDeleted.getPlan().getStates().remove(state);
-        parentOfDeleted.getPlan().getTransitions().removeAll(inStatesOfOutTransitions.keySet());
-        parentOfDeleted.getPlan().getTransitions().removeAll(outStatesOfInTransitions.keySet());
-
-        for (Transition outTransition : inStatesOfOutTransitions.keySet()) {
-            outTransition.setInState(null);
+        if (state == null) {
+            return;
         }
-
-        for (Transition inTransition : outStatesOfInTransitions.keySet()) {
-            inTransition.setOutState(null);
-        }
-        
-        parentOfDeleted.remove(state.getId());
-
-        pmlUiExtensionsOfTransitions
-                .keySet()
-                .forEach(k -> parentOfDeleted.remove(k.getId()));
-        }
-
-    /**
-     * This method ensures the deleted data can be retrieved if this command is undone
-     */
-    private void saveForLaterRetrieval() {
-        // save in transitions and their out states
-        parentOfDeleted.getPlan()
-                .getTransitions()
-                .stream()
-                .filter(e -> e.getInState().equals(state))
-                .forEach(t -> outStatesOfInTransitions.put(t, t.getOutState()));
-
-        // save out transitions and their in states
-        parentOfDeleted.getPlan()
-                .getTransitions()
-                .stream()
-                .filter(e -> e.getOutState().equals(state))
-                .forEach(t -> inStatesOfOutTransitions.put(t, t.getInState()));
-
-        // save pml view uiElement of state
-        uiElement = parentOfDeleted.getUiElement(state.getId());
-
-
-        // save pml view extensions of transitions, if they have any
-        outStatesOfInTransitions
-                .keySet()
-                .forEach(k -> {
-                    UiElement uiElement = parentOfDeleted.getUiElement(k.getId());
-                    if (uiElement != null) {
-                        pmlUiExtensionsOfTransitions.put(k, uiElement);
-                    }
-                });
-
-        inStatesOfOutTransitions
-                .keySet()
-                .forEach(k -> {
-                    UiElement uiElement = parentOfDeleted.getUiElement(k.getId());
-                    if (uiElement != null) {
-                        pmlUiExtensionsOfTransitions.put(k, uiElement);
-                    }
-                });
+        plan.removeState(state);
     }
 
     @Override
     public void undoCommand() {
-        parentOfDeleted.getPlan().getStates().add(state);
-        parentOfDeleted.getPlan().getTransitions().addAll(outStatesOfInTransitions.keySet());
-        parentOfDeleted.getPlan().getTransitions().addAll(inStatesOfOutTransitions.keySet());
-
-        for (Transition outTransition : inStatesOfOutTransitions.keySet()) {
-            outTransition.setInState(inStatesOfOutTransitions.get(outTransition));
+        if (state == null) {
+            return;
         }
-
-        for (Transition inTransition : outStatesOfInTransitions.keySet()) {
-            inTransition.setOutState(outStatesOfInTransitions.get(inTransition));
-        }
-
-        uiElement = parentOfDeleted.getUiElement(state.getId());
-        uiElement.setX(this.x);
-        uiElement.setY(this.y);
-        pmlUiExtensionsOfTransitions
-                .entrySet()
-                .forEach(e -> parentOfDeleted.getUiElement(e.getKey().getId()));
+        plan.addState(state);
     }
 }

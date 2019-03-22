@@ -236,7 +236,7 @@ public class ViewModelManager {
         stateViewModel.setYPosition(uiElement.getY());
 
         for (AbstractPlan abstractPlan : state.getAbstractPlans()) {
-            stateViewModel.getPlanElements().add((PlanElementViewModel) getViewModelElement(modelManager.getPlanElement(abstractPlan.getId())));
+            stateViewModel.getAbstractPlans().add((PlanElementViewModel) getViewModelElement(modelManager.getPlanElement(abstractPlan.getId())));
         }
         if (state.getEntryPoint() != null) {
             stateViewModel.setEntryPoint((EntryPointViewModel) getViewModelElement(modelManager.getPlanElement(state.getEntryPoint().getId())));
@@ -270,6 +270,7 @@ public class ViewModelManager {
         TransitionViewModel transitionViewModel = new TransitionViewModel(transition.getId(), transition.getName(), Types.TRANSITION);
         transitionViewModel.setInState((StateViewModel) getViewModelElement(transition.getInState()));
         transitionViewModel.setOutState((StateViewModel) getViewModelElement(transition.getOutState()));
+        transitionViewModel.setParentId(transition.getInState().getParentPlan().getId());
         if (transition.getPreCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(transition.getPreCondition());
             conditionViewModel.setParentId(transition.getId());
@@ -340,7 +341,7 @@ public class ViewModelManager {
     public void removeElement(long parentId, ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {
             case Types.TASK:
-                ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(parentId);
+                ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
                 break;
             case Types.STATE:
             case Types.SUCCESSSTATE:
@@ -380,7 +381,7 @@ public class ViewModelManager {
                     ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
                     stateViewModel = (StateViewModel) parentViewModel;
                     PlanElementViewModel viewModel = (PlanElementViewModel) viewModelElement;
-                    stateViewModel.getPlanElements().remove(viewModel);
+                    stateViewModel.getAbstractPlans().remove(viewModel);
                     planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
 
                     // you have duplicates if don't remove and add
@@ -481,18 +482,23 @@ public class ViewModelManager {
                 planTypeViewModel.getPlansInPlanType().add(annotatedPlanView);
                 break;
             case Types.TASK:
-                PlanElementViewModel planElementViewModel = (PlanElementViewModel) viewModelElement;
-                EntryPointViewModel entryPointViewModel = (EntryPointViewModel) parentViewModel;
-                entryPointViewModel.setTask(planElementViewModel);
+                TaskViewModel taskViewModel = (TaskViewModel) viewModelElement;
+                if (event.getEventType() == ModelEventType.ELEMENT_ADDED) {
+                    EntryPointViewModel entryPointViewModel = (EntryPointViewModel) parentViewModel;
+                    entryPointViewModel.setTask(taskViewModel);
+                } else if (event.getEventType() == ModelEventType.ELEMENT_ADDED) {
+                    TaskRepositoryViewModel taskRepositoryViewModel = (TaskRepositoryViewModel) parentViewModel;
+                    taskRepositoryViewModel.addTask(taskViewModel);
+                }
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
             case Types.BEHAVIOUR:
             case Types.PLANTYPE:
                 if (parentPlanElement != null) {
-                    planElementViewModel = (PlanElementViewModel) viewModelElement;
+                    SerializableViewModel abstractPlanViewModel = (SerializableViewModel) viewModelElement;
                     StateViewModel stateViewModel = (StateViewModel) parentViewModel;
-                    stateViewModel.getPlanElements().add(planElementViewModel);
+                    stateViewModel.getAbstractPlans().add(abstractPlanViewModel);
                 }else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
                 }
@@ -505,7 +511,7 @@ public class ViewModelManager {
                 State state = (State) event.getNewValue();
                 for (StateViewModel stateViewModel: planViewModel.getStates()) {
                     if(stateViewModel.getId() == state.getId()){
-                       stateViewModel.getPlanElements().add((PlanElementViewModel) parentViewModel);
+                       stateViewModel.getAbstractPlans().add((PlanElementViewModel) parentViewModel);
                     }
                 }
                 break;

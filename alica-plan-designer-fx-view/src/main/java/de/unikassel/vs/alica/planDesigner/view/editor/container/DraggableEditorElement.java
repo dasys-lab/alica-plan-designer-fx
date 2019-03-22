@@ -12,7 +12,7 @@ public interface DraggableEditorElement {
     boolean wasDragged();
     void makeDraggable(Node node);
 
-    ViewModelElement getViewModelElement();
+    ViewModelElement getPlanElementViewModel();
 
     final class DragContext {
         public double mouseAnchorX;

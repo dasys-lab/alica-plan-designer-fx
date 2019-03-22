@@ -98,7 +98,7 @@ public class RepositoryLabel extends Label {
                     if (parent instanceof EntryPointContainer && viewModelElement instanceof TaskViewModel) {
                         EntryPointContainer entryPointContainer = (EntryPointContainer) parent;
                         GuiModificationEvent guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName());
-                        guiModificationEvent.setParentId(entryPointContainer.getViewModelElement().getId());
+                        guiModificationEvent.setParentId(entryPointContainer.getPlanElementViewModel().getId());
                         guiModificationEvent.setElementId(viewModelElement.getId());
                         guiModificationHandler.handle(guiModificationEvent);
                     }

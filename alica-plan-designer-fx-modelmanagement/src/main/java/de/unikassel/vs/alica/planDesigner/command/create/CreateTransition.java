@@ -53,8 +53,8 @@ public class CreateTransition extends UiPositionCommand {
     @Override
     public void undoCommand() {
         this.plan.removeTransition(this.transition);
-        this.in.getOutTransitions().remove(this.transition);
-        this.out.getInTransitions().remove(this.transition);
+        this.in.removeOutTransition(this.transition);
+        this.out.removeInTransition(this.transition);
         this.modelManager.dropPlanElement(Types.TRANSITION, this.transition, false);
         this.fireEvent(ModelEventType.ELEMENT_DELETED, this.transition);
     }

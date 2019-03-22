@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class SynchronizationContainer extends AbstractPlanElementContainer implements Observable {
+public class SynchronizationContainer extends Container implements Observable {
     private boolean dragged;
     private List<InvalidationListener> invalidationListeners;
     private List<TransitionContainer> transitionContainers;
@@ -64,7 +64,7 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
                     if(c.wasAdded()) {
                         for(TransitionViewModel transitionViewModel : c.getAddedSubList()){
                             for (TransitionContainer transitionContainer : SynchronizationContainer.this.getPlanEditorGroup().getTransitionContainers().values()) {
-                                if (transitionContainer.getViewModelElement() == transitionViewModel) {
+                                if (transitionContainer.getPlanElementViewModel() == transitionViewModel) {
                                     transitionContainers.add(transitionContainer);
                                     transitionContainer.addListener(new InvalidationListener() {
                                         @Override
@@ -78,7 +78,7 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
                     } else if(c.wasRemoved()){
                         for(TransitionViewModel transitionViewModel : c.getRemoved()){
                             for (TransitionContainer transitionContainer : transitionContainers) {
-                                if (transitionContainer.getViewModelElement() == transitionViewModel) {
+                                if (transitionContainer.getPlanElementViewModel() == transitionViewModel) {
                                     transitionContainers.remove(transitionContainer);
                                 }
                             }
@@ -94,7 +94,7 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
     public void setupContainer() {
         getChildren().clear();
 
-        SynchronizationViewModel syncViewModel = (SynchronizationViewModel) getViewModelElement();
+        SynchronizationViewModel syncViewModel = (SynchronizationViewModel) getPlanElementViewModel();
 
         // POSITION
         setLayoutX(syncViewModel.getXPosition());
@@ -187,12 +187,6 @@ public class SynchronizationContainer extends AbstractPlanElementContainer imple
             }
         }
         getChildren().add(visualRepresentation);
-    }
-
-    @Override
-    public void setEffectToStandard() {
-        visualRepresentation.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,
-                new Color(0, 0, 0, 0.8), 10, 0, 0, 0));
     }
 
     @Override

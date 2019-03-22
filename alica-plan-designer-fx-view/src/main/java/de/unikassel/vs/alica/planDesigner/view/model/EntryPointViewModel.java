@@ -23,5 +23,5 @@ public class EntryPointViewModel extends PlanElementViewModel {
 
     public SimpleObjectProperty<TaskViewModel> taskProperty() { return task; }
 
-    public void setTask(PlanElementViewModel task) { this.task.set((TaskViewModel) task); }
+    public void setTask(TaskViewModel task) { this.task.set(task); }
 }

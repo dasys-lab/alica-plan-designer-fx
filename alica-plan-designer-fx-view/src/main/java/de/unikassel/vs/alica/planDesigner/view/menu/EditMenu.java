@@ -50,16 +50,17 @@ public class EditMenu extends Menu {
         undoItem = new MenuItem(i18NRepo.getString("label.menu.edit.undo"));
         undoItem.setDisable(true);
         undoItem.setOnAction(event -> undo());
+        undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
 
         redoItem = new MenuItem(i18NRepo.getString("label.menu.edit.redo"));
         redoItem.setDisable(true);
         redoItem.setOnAction(event -> redo());
+        redoItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
 
         configItem = new MenuItem(i18NRepo.getString("label.menu.edit.config"));
         configItem.setOnAction(event -> openConfigMenu());
 
         getItems().addAll(undoItem, redoItem, deleteMenuItem, configItem);
-        defineAccelerator();
     }
 
     // TODO: call this methods from the controller - reacting to changes in the commandstack
@@ -125,16 +126,8 @@ public class EditMenu extends Menu {
             event = fileTreeView.handleDelete();
         }
 
-        if (event != null)
-        {
+        if (event != null) {
             guiModificationHandler.handle(event);
         }
-    }
-
-    private void defineAccelerator() {
-        // TODO: Delete Short Cut should be made working again
-//        this.deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
-        this.undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
-        this.redoItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
     }
 }
