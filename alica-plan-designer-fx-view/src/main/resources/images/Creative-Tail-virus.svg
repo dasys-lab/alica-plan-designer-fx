@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="128px" height="128px" viewBox="0 0 128 128" style="enable-background:new 0 0 128 128;" xml:space="preserve">
+<g>
+	<g>
+		<circle style="fill:#C2D5D8;" cx="64" cy="64" r="64"/>
+	</g>
+	<g>
+		<circle style="fill:#2D4452;" cx="78" cy="99" r="8"/>
+	</g>
+	<g>
+		<circle style="fill:#2D4452;" cx="96" cy="78" r="3"/>
+	</g>
+	<g>
+		
+			<rect x="29.001" y="45.504" transform="matrix(0.7071 0.7071 -0.7071 0.7071 48.7969 -20.7998)" style="fill:#2D4452;" width="41.011" height="6"/>
+	</g>
+	<g>
+		
+			<rect x="76.011" y="33.384" transform="matrix(0.6346 0.7728 -0.7728 0.6346 68.302 -41.4716)" style="fill:#2D4452;" width="4.001" height="36.233"/>
+	</g>
+	<g>
+		
+			<rect x="49.511" y="58.492" transform="matrix(0.7682 0.6402 -0.6402 0.7682 61.8831 -14.8941)" style="fill:#2D4452;" width="4" height="39.051"/>
+	</g>
+	<g>
+		<circle style="fill:#2D4452;" cx="64" cy="64" r="15"/>
+	</g>
+	<path style="fill:#233540;" d="M64,49c-0.68,0-1.344,0.061-2,0.148C69.336,50.127,75,56.394,75,64s-5.664,13.871-13,14.852   C62.656,78.941,63.32,79,64,79c8.284,0,15-6.716,15-15S72.284,49,64,49z"/>
+	<g>
+		<circle style="fill:#2D4452;" cx="35" cy="34" r="10"/>
+	</g>
+	<path style="fill:#233540;" d="M35,24c-0.337,0-0.671,0.018-1,0.051c5.053,0.502,9,4.766,9,9.949s-3.947,9.447-9,9.949   C34.329,43.982,34.663,44,35,44c5.523,0,10-4.479,10-10S40.523,24,35,24z"/>
+	<g>
+		<circle style="fill:#2D4452;" cx="92" cy="40" r="5"/>
+	</g>
+	<path style="fill:#233540;" d="M92,35c-0.343,0-0.677,0.035-1,0.102c2.282,0.463,4,2.479,4,4.898s-1.718,4.436-4,4.898   C91.323,44.963,91.657,45,92,45c2.762,0,5-2.238,5-5S94.762,35,92,35z"/>
+	<g>
+		<circle style="fill:#2D4452;" cx="38.5" cy="93.5" r="5"/>
+	</g>
+	<path style="fill:#233540;" d="M38.5,88.5c-0.257,0-0.503,0.038-0.75,0.075C40.153,88.939,42,90.995,42,93.5   s-1.847,4.561-4.25,4.925c0.247,0.037,0.493,0.075,0.75,0.075c2.762,0,5-2.238,5-5S41.262,88.5,38.5,88.5z"/>
+</g>
+</svg>

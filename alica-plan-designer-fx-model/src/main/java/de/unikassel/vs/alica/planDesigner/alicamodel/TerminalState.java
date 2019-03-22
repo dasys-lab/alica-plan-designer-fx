@@ -35,6 +35,8 @@ public class TerminalState extends State {
 
     public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
         this.changeListener = listener;
-        this.getPostCondition().registerDirtyFlag(listener);
+        if (this.getPostCondition() != null) {
+            this.getPostCondition().registerDirtyFlag(listener);
+        }
     }
 }
