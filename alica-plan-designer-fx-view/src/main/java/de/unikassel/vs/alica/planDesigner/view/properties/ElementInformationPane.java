@@ -79,7 +79,7 @@ public class ElementInformationPane extends TitledPane {
     }
 
     private void adaptUI(String type) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab);
+        tabPane.getTabs().removeAll(propertiesTab, preConditionTab, runtimeConditionTab, postConditionTab, parametrizationTab, variablesTab);
         switch (type) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
