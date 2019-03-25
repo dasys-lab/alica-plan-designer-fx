@@ -231,6 +231,7 @@ public class ModelManager implements Observer {
         planMap.clear();
         behaviourMap.clear();
         planTypeMap.clear();
+        taskRepository = null;
         commandStack.getRedoStack().clear();
         commandStack.getUndoStack().clear();
         elementsSavedMap.clear();
