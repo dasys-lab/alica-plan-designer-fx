@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.Container;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.effect.BlurType;
@@ -14,6 +15,17 @@ public abstract class AbstractPlanTab extends EditorTab {
 
     public AbstractPlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         super(serializableViewModel, handler);
+    }
+
+    public void selectPlan(PlanViewModel plan) {
+        Container container = this.selectedContainer.get();
+        if (container != null) {
+            container.setEffectToStandard();
+        }
+        selectedContainer.set(null);
+        if (plan != null) {
+            this.propertiesConditionsVariablesPane.setViewModelElement(plan);
+        }
     }
 
     public void setSelectedContainer(Container containerToSelect) {

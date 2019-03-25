@@ -11,9 +11,13 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorE
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
-import de.unikassel.vs.alica.planDesigner.view.model.*;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -29,6 +33,16 @@ public class PlanTab extends AbstractPlanTab {
     public PlanTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
         draw();
+        this.planContent.addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler());
+    }
+
+    /**
+     * Allows to select the plan itself by clicking on the scene and not on some container element.
+     */
+    private EventHandler<MouseEvent> getMouseClickedEventHandler() {
+        return event -> {
+            this.planEditorGroup.getPlanEditorTab().selectPlan((PlanViewModel)this.getSerializableViewModel());
+        };
     }
 
     private void draw() {
