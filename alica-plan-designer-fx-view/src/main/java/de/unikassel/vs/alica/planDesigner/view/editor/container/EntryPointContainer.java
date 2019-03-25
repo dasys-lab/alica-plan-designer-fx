@@ -5,14 +5,13 @@ import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.EntryPointViewModel;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 
 /**
@@ -53,6 +52,27 @@ public class EntryPointContainer extends Container {
         setupContainer();
     }
 
+    public Polygon createArrowHead(double _toX, double _toY, double _fromX, double _fromY) {
+        double vecX = _toX - _fromX;
+        double vecY = _toY - _fromY;
+        double vecLen = Math.sqrt(vecX*vecX + vecY*vecY);
+
+        double triangleSpanVecX = vecY;
+        double triangleSpanVecY = -vecX;
+        double triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
+        Polygon polygon = new Polygon(_toX - 5 * (vecX / vecLen) + 5 * (triangleSpanVecX / triangleSpanLen),
+                _toY - 5 * (vecY / vecLen) + 5 * triangleSpanVecY / triangleSpanLen,
+                _toX,
+                _toY,
+                _toX - 5 * (vecX / vecLen) - 5 * (triangleSpanVecX / triangleSpanLen),
+                _toY - 5 * (vecY / vecLen) - 5 * triangleSpanVecY / triangleSpanLen);
+        polygon.setFill(getVisualisationColor());
+        polygon.setStroke(getVisualisationColor());
+        polygon.setStrokeWidth(1);
+        polygon.setVisible(true);
+        return polygon;
+    }
+
     @Override
     public void setupContainer() {
         getChildren().clear();
@@ -67,15 +87,18 @@ public class EntryPointContainer extends Container {
             Point2D localXY = parentToLocal(planXY);
 
             Point2D vec = new Point2D(localXY.getX() - visualRepresentation.getLayoutX(), localXY.getY() - visualRepresentation.getLayoutY());
-            double len = vec.magnitude() - EntryPointContainer.ENTRYPOINT_RADIUS;
+            double len = vec.magnitude() - StateContainer.STATE_RADIUS;
             vec = vec.normalize().multiply(len);
 
             Line line = new Line(visualRepresentation.getLayoutX(),
                     visualRepresentation.getLayoutY(),
                     vec.getX(),
                     vec.getY());
-            line.getStrokeDashArray().addAll(2d, 10d);
+            line.getStrokeDashArray().addAll(25d, 10d);
+            line.setStroke(getVisualisationColor());
             getChildren().add(line);
+            getChildren().add(createArrowHead(vec.getX(), vec.getY(), visualRepresentation.getLayoutX(),
+                    visualRepresentation.getLayoutY()));
         }
 
         getChildren().add(visualRepresentation);
