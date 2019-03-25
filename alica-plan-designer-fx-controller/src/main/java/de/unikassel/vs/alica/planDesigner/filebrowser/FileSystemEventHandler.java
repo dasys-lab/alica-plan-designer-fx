@@ -131,9 +131,7 @@ public class FileSystemEventHandler implements Runnable  {
                             throw new RuntimeException(x);
                         }
                     }
-                    if(FileSystemUtil.getExtension(child.toFile()) != Types.NOTYPE) {
-                        controller.handleFileSystemEvent(event, child);
-                    }
+                    controller.handleFileSystemEvent(event, child);
                 }
 
                 // reset key and remove from set if directory no longer accessible
