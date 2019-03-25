@@ -23,9 +23,7 @@ public abstract class AbstractPlanTab extends EditorTab {
             container.setEffectToStandard();
         }
         selectedContainer.set(null);
-        if (plan != null) {
-            this.elementInformationPane.setViewModelElement(plan);
-        }
+        this.elementInformationPane.setViewModelElement(plan);
     }
 
     public void setSelectedContainer(Container containerToSelect) {
@@ -39,9 +37,10 @@ public abstract class AbstractPlanTab extends EditorTab {
         if (containerToSelect != null) {
             // set selected effect on new selected container
             containerToSelect.setCustomEffect(createSelectedEffect());
-            // update properties gui
-            this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
         }
+
+        // update properties gui
+        this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
     }
 
     private DropShadow createSelectedEffect() {
