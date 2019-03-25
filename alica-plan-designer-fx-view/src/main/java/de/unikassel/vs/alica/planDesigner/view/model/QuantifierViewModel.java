@@ -83,7 +83,7 @@ public class QuantifierViewModel extends PlanElementViewModel{
         });
         sorts.addListener((observable, oldValue, newValue) -> {
             List<String> newValues = new ArrayList<>(Arrays.asList(newValue.split("\\s+")));
-            fireGUIAttributeChangeEvent(handler, newValues, sorts.getClass().getSimpleName(), sorts.getName());
+            fireGUIAttributeChangeEvent(handler, newValues, String.class.getSimpleName(), sorts.getName());
         });
     }
 }

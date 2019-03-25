@@ -370,7 +370,7 @@ public class ConditionsTab extends Tab {
             @Override
             public void updateItem(VariableViewModel item, boolean empty){
                 if(condition != null) {
-                    if (condition.getVariables().contains(item)) { // TODO: Fix NullPointerException after changing plugin
+                    if (condition.getVariables().contains(item)) {
                         setStyle("-fx-font-weight: bold;");
                     } else {
                         setStyle("");

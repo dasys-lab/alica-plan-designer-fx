@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public final class FileTreeView extends TreeView<File> {
 
@@ -216,7 +217,9 @@ public final class FileTreeView extends TreeView<File> {
      */
     private FileTreeItem findFolder(ViewModelElement modelElement, FileTreeItem treeItem, int index) {
         String relativePath = modelElement.getRelativeDirectory();
-        String[] folders = relativePath.split(File.separator);
+        // The value of File.separator under Windows is "\", which doesn't work here, because split requires a regex and
+        // "\" is not a valid regex. Patten.quote() allows to fit the input exactly (ignoring regex-like syntax)
+        String[] folders = relativePath.split(Pattern.quote(File.separator));
         if (folders.length == 1 && folders[0].isEmpty()) {
             return treeItem;
         }

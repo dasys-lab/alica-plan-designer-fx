@@ -19,6 +19,13 @@ public class Quantifier extends PlanElement {
     public List<String> getSorts() {
         return Collections.unmodifiableList(sorts);
     }
+    public void setSorts(List<String> sorts) {
+        this.sorts.removeAll(this.getSorts());
+            this.sorts.addAll(sorts);
+            if(changeListenerForDirtyFlag != null) {
+                changeListenerForDirtyFlag.setDirty();
+            }
+    }
     public void addSort(String sort) {
         sorts.add(sort);
         changeListenerForDirtyFlag.setDirty();
