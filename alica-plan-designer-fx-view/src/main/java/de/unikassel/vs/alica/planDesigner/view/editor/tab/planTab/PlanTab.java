@@ -15,6 +15,7 @@ import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -41,7 +42,10 @@ public class PlanTab extends AbstractPlanTab {
      */
     private EventHandler<MouseEvent> getMouseClickedEventHandler() {
         return event -> {
-            this.planEditorGroup.getPlanEditorTab().selectPlan((PlanViewModel)this.getSerializableViewModel());
+            if (event.getTarget() == planContent) {
+                this.planEditorGroup.getPlanEditorTab().selectPlan((PlanViewModel) this.getSerializableViewModel());
+                event.consume();
+            }
         };
     }
 
@@ -50,7 +54,6 @@ public class PlanTab extends AbstractPlanTab {
         planContent = new StackPane(planEditorGroup);
         planContent.setPadding(new Insets(50, 50, 50, 50));
         planContent.setManaged(true);
-
         planEditorGroup.setManaged(true);
 
         scrollPane = new ScrollPane(planContent);

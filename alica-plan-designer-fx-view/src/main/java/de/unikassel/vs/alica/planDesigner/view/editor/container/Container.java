@@ -80,6 +80,7 @@ public abstract class Container extends Pane implements DraggableEditorElement {
             } else {
                 Container.this.planTab.setSelectedContainer(Container.this);
             }
+            event.consume();
         };
     }
 
