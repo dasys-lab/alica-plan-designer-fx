@@ -236,7 +236,7 @@ public class ViewModelManager {
         stateViewModel.setYPosition(uiElement.getY());
 
         for (AbstractPlan abstractPlan : state.getAbstractPlans()) {
-            stateViewModel.getAbstractPlans().add((PlanElementViewModel) getViewModelElement(modelManager.getPlanElement(abstractPlan.getId())));
+            stateViewModel.addAbstractPlan((PlanElementViewModel) getViewModelElement(modelManager.getPlanElement(abstractPlan.getId())));
         }
         if (state.getEntryPoint() != null) {
             stateViewModel.setEntryPoint((EntryPointViewModel) getViewModelElement(modelManager.getPlanElement(state.getEntryPoint().getId())));
@@ -381,7 +381,7 @@ public class ViewModelManager {
                     ViewModelElement parentViewModel = getViewModelElement(parentPlanElement);
                     stateViewModel = (StateViewModel) parentViewModel;
                     PlanElementViewModel viewModel = (PlanElementViewModel) viewModelElement;
-                    stateViewModel.getAbstractPlans().remove(viewModel);
+                    stateViewModel.removeAbstractPlan(viewModel);
                     planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(stateViewModel.getParentId()));
 
                     // you have duplicates if don't remove and add
@@ -498,7 +498,7 @@ public class ViewModelManager {
                 if (parentPlanElement != null) {
                     SerializableViewModel abstractPlanViewModel = (SerializableViewModel) viewModelElement;
                     StateViewModel stateViewModel = (StateViewModel) parentViewModel;
-                    stateViewModel.getAbstractPlans().add(abstractPlanViewModel);
+                    stateViewModel.addAbstractPlan(abstractPlanViewModel);
                 }else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
                 }
@@ -511,7 +511,7 @@ public class ViewModelManager {
                 State state = (State) event.getNewValue();
                 for (StateViewModel stateViewModel: planViewModel.getStates()) {
                     if(stateViewModel.getId() == state.getId()){
-                       stateViewModel.getAbstractPlans().add((PlanElementViewModel) parentViewModel);
+                       stateViewModel.addAbstractPlan((PlanElementViewModel) parentViewModel);
                     }
                 }
                 break;
@@ -697,12 +697,13 @@ public class ViewModelManager {
 
 
 
-    public void updatePlansInPlanViewModels(PlanViewModel planViewModel, ModelEventType type) {
+    private void updatePlansInPlanViewModels(PlanViewModel planViewModel, ModelEventType type) {
         for(PlanType planType : modelManager.getPlanTypes()) {
             // Just updating the already existing PlanTypeViewModels and not creating new ones
             if(viewModelElements.containsKey(planType.getId())) {
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) viewModelElements.get(planType.getId());
-                if (type == ModelEventType.ELEMENT_ADDED) {
+                // Prevent double inclusions
+                if (type == ModelEventType.ELEMENT_ADDED && !planTypeViewModel.getAllPlans().contains(planViewModel)) {
                     planTypeViewModel.addPlanToAllPlans(planViewModel);
                 }else if(type == ModelEventType.ELEMENT_REMOVED) {
                     planTypeViewModel.removePlanFromAllPlans(planViewModel.getId());
