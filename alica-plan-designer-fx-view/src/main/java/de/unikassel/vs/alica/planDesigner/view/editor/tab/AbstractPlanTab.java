@@ -24,7 +24,7 @@ public abstract class AbstractPlanTab extends EditorTab {
         }
         selectedContainer.set(null);
         if (plan != null) {
-            this.propertiesConditionsVariablesPane.setViewModelElement(plan);
+            this.elementInformationPane.setViewModelElement(plan);
         }
     }
 
@@ -40,7 +40,7 @@ public abstract class AbstractPlanTab extends EditorTab {
             // set selected effect on new selected container
             containerToSelect.setCustomEffect(createSelectedEffect());
             // update properties gui
-            this.propertiesConditionsVariablesPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
+            this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
         }
     }
 
