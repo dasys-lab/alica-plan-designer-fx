@@ -1,23 +1,28 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
+import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
-
-import javax.swing.plaf.nimbus.State;
 
 public class AbstractPlanContainer extends Container {
 
-    StateContainer parentStateContainer;
+    private StateContainer parentStateContainer;
 
     public AbstractPlanContainer(StateContainer parentStateContainer, PlanElementViewModel abstractPlanViewModel, PlanTab planTab) {
         super(abstractPlanViewModel, null, planTab);
         this.parentStateContainer = parentStateContainer;
         this.setupContainer();
+        this.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                MainWindowController.getInstance().getEditorTabPane().openTab((SerializableViewModel) abstractPlanViewModel);
+            }
+        });
     }
 
     public StateContainer getParentStateContainer () {

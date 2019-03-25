@@ -120,6 +120,7 @@ public class ConditionsTab extends Tab {
 
         properties = new PropertySheet();
         properties.setModeSwitcherVisible(false);
+        properties.setSearchBoxVisible(false);
         String propertiesTitle = I18NRepo.getInstance().getString("label.caption.properties");
         TitledPane propertySection = new TitledPane(propertiesTitle, properties);
 
