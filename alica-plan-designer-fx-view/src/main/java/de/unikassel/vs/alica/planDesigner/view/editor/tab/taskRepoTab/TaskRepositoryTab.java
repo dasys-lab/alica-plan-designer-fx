@@ -4,7 +4,6 @@ import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.controller.UsagesWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
@@ -40,12 +39,12 @@ public class TaskRepositoryTab extends EditorTab {
 
         editorTabPane.getSelectionModel().selectedItemProperty().addListener((observable, selectedTabBefore, selectedTab) -> {
             if (this == selectedTab) {
-                this.propertiesConditionsVariablesPane.setViewModelElement(taskRepositoryViewModel);
+                this.elementInformationPane.setViewModelElement(taskRepositoryViewModel);
             }
         });
         editorTabPane.focusedProperty().addListener((observable, focusedBefore, focused) -> {
             if (focused && editorTabPane.getSelectionModel().getSelectedItem() == this) {
-                this.propertiesConditionsVariablesPane.setViewModelElement(taskRepositoryViewModel);
+                this.elementInformationPane.setViewModelElement(taskRepositoryViewModel);
             }
         });
 
@@ -74,12 +73,12 @@ public class TaskRepositoryTab extends EditorTab {
         tasksRepoListView.addElements(taskRepositoryViewModel.getTaskViewModels());
         tasksRepoListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                this.propertiesConditionsVariablesPane.setViewModelElement(newValue.getViewModelElement());
+                this.elementInformationPane.setViewModelElement(newValue.getViewModelElement());
             }
         });
         tasksRepoListView.focusedProperty().addListener((observable, focusedBefore, focused) -> {
             if (focused) {
-                this.propertiesConditionsVariablesPane.setViewModelElement(tasksRepoListView.getSelectedItem());
+                this.elementInformationPane.setViewModelElement(tasksRepoListView.getSelectedItem());
             }
         });
 

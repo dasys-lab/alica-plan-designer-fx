@@ -8,7 +8,7 @@ import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
-import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesConditionsVariablesPane;
+import de.unikassel.vs.alica.planDesigner.view.properties.ElementInformationPane;
 import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -21,7 +21,7 @@ public abstract class EditorTab extends Tab {
     protected IGuiModificationHandler guiModificationHandler;
     protected SerializableViewModel serializableViewModel;
 
-    protected PropertiesConditionsVariablesPane propertiesConditionsVariablesPane;
+    protected ElementInformationPane elementInformationPane;
     protected SplitPane splitPane;
 
     public EditorTab (SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
@@ -48,11 +48,11 @@ public abstract class EditorTab extends Tab {
             }
         });
 
-        propertiesConditionsVariablesPane = new PropertiesConditionsVariablesPane(guiModificationHandler);
-        propertiesConditionsVariablesPane.setViewModelElement(serializableViewModel);
-        propertiesConditionsVariablesPane.setMaxHeight(20000);
+        elementInformationPane = new ElementInformationPane(guiModificationHandler);
+        elementInformationPane.setViewModelElement(serializableViewModel);
+        elementInformationPane.setMaxHeight(20000);
 
-        this.splitPane = new SplitPane(propertiesConditionsVariablesPane);
+        this.splitPane = new SplitPane(elementInformationPane);
         this.splitPane.setOrientation(Orientation.VERTICAL);
 
         setContent(splitPane);

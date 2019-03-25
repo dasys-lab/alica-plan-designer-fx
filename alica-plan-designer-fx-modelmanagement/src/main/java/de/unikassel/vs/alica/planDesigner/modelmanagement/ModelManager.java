@@ -741,8 +741,8 @@ public class ModelManager implements Observer {
                 event = uiExtensionModelEvent;
                 break;
             case Types.VARIABLE:
-                if (parentElement instanceof HasVariables) {
-                    ((HasVariables) parentElement).addVariable((Variable) newElement);
+                if (parentElement instanceof AbstractPlan) {
+                    ((AbstractPlan) parentElement).addVariable((Variable) newElement);
                 } else {
                     throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
                 }
@@ -833,8 +833,8 @@ public class ModelManager implements Observer {
                 getPlanUIExtensionPair(parentElement.getId()).remove(removedElement);
                 break;
             case Types.VARIABLE:
-                if (parentElement instanceof HasVariables) {
-                    ((HasVariables) parentElement).removeVariable((Variable) removedElement);
+                if (parentElement instanceof AbstractPlan) {
+                    ((AbstractPlan) parentElement).removeVariable((Variable) removedElement);
                 } else {
                     throw new RuntimeException(this.getClass().getName() + ": Parent does not implement WithVariables Interface");
                 }

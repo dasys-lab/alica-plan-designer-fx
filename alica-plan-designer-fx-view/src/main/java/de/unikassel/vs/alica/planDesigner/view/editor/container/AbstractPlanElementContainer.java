@@ -33,7 +33,7 @@ public abstract class AbstractPlanElementContainer extends Pane implements Dragg
     private IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler;
     protected Node visualRepresentation;
     protected Node wrapper;
-    private PlanTab planTab;
+    protected PlanTab planTab;
 
     /**
      * @param viewModelElement

@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 
 public class AlicaIcon extends Image {
 
+    public static final String ADD = "add";
+
     public enum Size {
         SMALL("16x16"),
         BIG("24x24"),

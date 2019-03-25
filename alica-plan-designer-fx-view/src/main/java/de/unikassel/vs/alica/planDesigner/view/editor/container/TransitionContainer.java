@@ -105,7 +105,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
                 BendPointViewModel currentBendpoint = bendpoints.get(i);
                 points[j] = currentBendpoint.getX();
                 points[j + 1] = currentBendpoint.getY();
-                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getViewModelElement(), null);
+                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getViewModelElement(), planTab);
                 //bendpointContainer.setVisible(false);
                 draggableNodes.add(bendpointContainer);
                 _fromX = points[j];
