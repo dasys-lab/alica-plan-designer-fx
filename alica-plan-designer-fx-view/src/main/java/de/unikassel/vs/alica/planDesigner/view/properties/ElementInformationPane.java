@@ -79,11 +79,10 @@ public class ElementInformationPane extends TitledPane {
     }
 
     private void adaptUI(String type) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab);
+        tabPane.getTabs().removeAll(propertiesTab, preConditionTab, runtimeConditionTab, postConditionTab, parametrizationTab, variablesTab);
         switch (type) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
-            case Types.PLANTYPE:
             case Types.ENTRYPOINT:
             case Types.SYNCHRONISATION:
                 this.setContent(propertySheet);
@@ -118,9 +117,6 @@ public class ElementInformationPane extends TitledPane {
             case Types.MASTERPLAN:
                 this.setContent(tabPane);
                 tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab);
-                break;
-            case Types.STATE:
-                this.setContent(propertySheet);
                 break;
             case Types.BEHAVIOUR:
                 this.setContent(tabPane);
