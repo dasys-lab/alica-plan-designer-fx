@@ -394,8 +394,13 @@ public class ModelManager implements Observer {
             // Iterating over a List while modifying it results in an IllegalAccessException. By copying the list
             // beforehand this can be prevented
             for (AbstractPlan abstractPlan : new ArrayList<>(state.getAbstractPlans())) {
-                state.removeAbstractPlan(abstractPlan);
+                // Adding the real plan before removing the dummy
+                // This will (through listeners) trigger the creation of the corresponding ViewModelElement
+                // Would the dummy be removed first, the State would not contain this AbstractPlan
+                // The fact, that the dummy is still referenced within the State at this point is irrelevant, because it
+                // has the same id as the real one
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
+                state.removeAbstractPlan(abstractPlan);
             }
             for (int i = 0; i < state.getParametrisations().size(); i++) {
                 Parametrisation parametrisation = state.getParametrisations().get(i);

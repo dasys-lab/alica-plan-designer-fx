@@ -18,15 +18,22 @@ public class StateViewModel extends PlanElementViewModel {
         super(id, name, type);
         this.abstractPlans =  FXCollections.observableArrayList(new ArrayList<>());
         this.inTransitions =  FXCollections.observableArrayList(new ArrayList<>());
-        this.outTransitions =  FXCollections.observableArrayList(new ArrayList<>());
+        this.outTransitions = FXCollections.observableArrayList(new ArrayList<>());
         this.postCondition = new SimpleObjectProperty<>();
     }
 
     public ObservableList<PlanElementViewModel> getAbstractPlans() {
         return abstractPlans;
     }
-    public void setAbstractPlans(ObservableList<PlanElementViewModel> abstractPlans) {
-        this.abstractPlans = abstractPlans;
+
+    public void addAbstractPlan(PlanElementViewModel abstractPlan) {
+        if(!this.abstractPlans.contains(abstractPlan)) {
+            this.abstractPlans.add(abstractPlan);
+        }
+    }
+
+    public void removeAbstractPlan(PlanElementViewModel abstractPlan) {
+        this.abstractPlans.remove(abstractPlan);
     }
 
     public ObservableList<TransitionViewModel> getInTransitions() {
