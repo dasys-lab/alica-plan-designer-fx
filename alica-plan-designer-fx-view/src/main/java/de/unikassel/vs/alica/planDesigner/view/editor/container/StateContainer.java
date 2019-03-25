@@ -7,6 +7,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -29,53 +30,9 @@ public class StateContainer extends Container implements Observable {
         invalidationListeners = new ArrayList<>();
         makeDraggable(this);
         createPositionListeners(this, state);
-//        deleteAbstractPlansFromState(this);
         createAbstractPlanToStateListeners( state);
-//        setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
         setupContainer();
     }
-
-//    public void deleteAbstractPlansFromState(Node node) {
-//        node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-//            Parent parent = mouseEvent.getPickResult().getIntersectedNode().getParent();
-//            if(parent instanceof StateContainer) {
-//                return;
-//            }
-//
-//            AbstractPlanContainer abstractPlanContainer;
-//            if (parent instanceof AbstractPlanContainer) {
-//                abstractPlanContainer = (AbstractPlanContainer) parent;
-//            } else if (parent instanceof Label) {
-//                abstractPlanContainer = (AbstractPlanContainer) parent.getParent();
-//            } else {
-//                return;
-//            }
-//            if (abstractPlanContainer.getPlanElementViewModel() instanceof BehaviourViewModel ||
-//                    abstractPlanContainer.getPlanElementViewModel() instanceof PlanTypeViewModel ||
-//                    abstractPlanContainer.getPlanElementViewModel() instanceof PlanViewModel) {
-//                // set border
-//                abstractPlanContainer.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0.2), BorderStroke.THIN)));
-//                // register delete key event handler
-//                newKeyEvent((StateContainer) mouseEvent.getSource(), abstractPlanContainer);
-//            }
-//            mouseEvent.consume();
-//        });
-//    }
-
-//    private void newKeyEvent(StateContainer stateContainer, AbstractPlanContainer abstractPlanContainer){
-//        abstractPlanContainer.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-//            if(keyEvent.getCode() == KeyCode.DELETE) {
-//                GuiModificationEvent guiModificationEvent = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT,
-//                        abstractPlanContainer.getPlanElementViewModel().getType(),
-//                        planElementViewModel.getName());
-//                guiModificationEvent.setParentId(stateContainer.getState().getId());
-//                guiModificationEvent.setElementId(abstractPlanContainer.getPlanElementViewModel().getId());
-//                IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
-//                guiModificationHandler.handle(guiModificationEvent);
-//                abstractPlanContainer.setBorder(Border.EMPTY);
-//                keyEvent.consume();
-//            }});
-//    }
 
     @Override
     public void setupContainer() {
@@ -140,5 +97,10 @@ public class StateContainer extends Container implements Observable {
     public void setEffectToStandard() {
         this.setEffect(null);
         this.visualRepresentation.setEffect(Container.standardEffect);
+    }
+
+    @Override
+    public void setCustomEffect(Effect effect) {
+        this.visualRepresentation.setEffect(effect);
     }
 }
