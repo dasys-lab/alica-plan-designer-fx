@@ -187,6 +187,12 @@ public abstract class Container extends Pane implements DraggableEditorElement {
         });
     }
 
+    public void createNameListener() {
+        planElementViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(this::redrawElement);
+        });
+    }
+
     /**
      * Sets the standard effect for the {@link Container}.
      * This can be overwritten by a child class for individual styling.
