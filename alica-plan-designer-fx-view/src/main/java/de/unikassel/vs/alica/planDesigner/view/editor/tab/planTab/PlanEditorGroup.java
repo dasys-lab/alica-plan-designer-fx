@@ -119,10 +119,6 @@ public class PlanEditorGroup extends Group {
                         StateContainer stateContainer = createStateContainer(state, planEditorTab);
                         stateContainers.put(state.getId(), stateContainer);
                         getChildren().add(stateContainer);
-//                        int x = state.getXPosition();
-//                        int y = state.getYPosition();
-//                        stateContainer.setLayoutX(x);
-//                        stateContainer.setLayoutY(y);
                         stateContainer.relocate(state.getXPosition(), state.getYPosition());
                     }
                 }else if(c.wasRemoved()){

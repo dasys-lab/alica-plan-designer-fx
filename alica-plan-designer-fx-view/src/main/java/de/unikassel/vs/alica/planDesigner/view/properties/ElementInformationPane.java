@@ -17,26 +17,28 @@ import org.controlsfx.property.BeanPropertyUtils;
 /**
  * Root gui object for showing properties, conditions, and variables of selected objects.
  */
-public class PropertiesConditionsVariablesPane extends TitledPane {
+public class ElementInformationPane extends TitledPane {
+
 
     protected I18NRepo i18NRepo;
 
     /**
      * Not all Tabs are shown all the time, it depends on
-     * the item the PropertiesConditionsVariablesPane instance
+     * the item the ElementInformationPane instance
      * should represent.
      */
     protected TabPane tabPane;
     protected PropertySheet propertySheet;
     protected Tab propertiesTab;
     protected VariablesTab variablesTab;
+    protected ParametrizationTab parametrizationTab;
     protected ConditionsTab preConditionTab;
     protected ConditionsTab runtimeConditionTab;
     protected ConditionsTab postConditionTab;
 
     protected IGuiModificationHandler guiModificationHandler;
 
-    public PropertiesConditionsVariablesPane(IGuiModificationHandler handler) {
+    public ElementInformationPane(IGuiModificationHandler handler) {
         i18NRepo = I18NRepo.getInstance();
         guiModificationHandler = handler;
 
@@ -46,13 +48,14 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
         propertiesTab = new Tab(i18NRepo.getString("label.caption.properties"));
         propertiesTab.setContent(propertySheet);
         variablesTab = new VariablesTab(guiModificationHandler);
+        parametrizationTab = new ParametrizationTab(guiModificationHandler, i18NRepo.getString("label.caption.parametrization"));
         preConditionTab     = new ConditionsTab(i18NRepo.getString("label.caption.preCondtions")    , Types.PRECONDITION);
         runtimeConditionTab = new ConditionsTab(i18NRepo.getString("label.caption.runtimeCondtions"), Types.RUNTIMECONDITION);
         postConditionTab    = new ConditionsTab(i18NRepo.getString("label.caption.postCondtions")   , Types.POSTCONDITION);
 
         this.tabPane = new TabPane();
         this.tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
+        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, parametrizationTab, preConditionTab, runtimeConditionTab, postConditionTab);
 
         this.setContent(tabPane);
     }
@@ -69,6 +72,7 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
         adaptUI(element.getType());
         adaptConditions(element);
         variablesTab.setParentViewModel(element);
+        parametrizationTab.setViewModel(element);
 
         propertySheet.getItems().clear();
         propertySheet.getItems().addAll(createPropertySheetList(element));
@@ -84,6 +88,32 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
             case Types.SYNCHRONISATION:
                 this.setContent(propertySheet);
                 break;
+            case Types.PLANTYPE:
+                tabPane.getTabs().remove(postConditionTab);
+                tabPane.getTabs().remove(preConditionTab);
+                tabPane.getTabs().remove(runtimeConditionTab);
+                if (!tabPane.getTabs().contains(parametrizationTab)) {
+                    tabPane.getTabs().add(parametrizationTab);
+                }
+                if (!tabPane.getTabs().contains(variablesTab)) {
+                    tabPane.getTabs().add(variablesTab);
+                }break;
+            case Types.STATE:
+                if (!tabPane.getTabs().contains(parametrizationTab)) {
+                    tabPane.getTabs().add(parametrizationTab);
+                }
+                if (!tabPane.getTabs().contains(variablesTab)) {
+                    tabPane.getTabs().add(variablesTab);
+                }
+                if (!tabPane.getTabs().contains(preConditionTab)) {
+                    tabPane.getTabs().add(preConditionTab);
+                }
+                if (!tabPane.getTabs().contains(runtimeConditionTab)) {
+                    tabPane.getTabs().add(runtimeConditionTab);
+                }
+                if (!tabPane.getTabs().contains(postConditionTab)) {
+                    tabPane.getTabs().add(postConditionTab);
+                } break;
             case Types.PLAN:
             case Types.MASTERPLAN:
                 this.setContent(tabPane);
@@ -128,7 +158,7 @@ public class PropertiesConditionsVariablesPane extends TitledPane {
             if (idx != -1) {
                 retList[idx] = item;
             } else {
-                System.err.println("PropertiesConditionsVariablesPane: Unkown PropertySheet.Item Type, because it is maybe missing in the uiPropertyList of the ViewModelElement.");
+                System.err.println("ElementInformationPane: Unkown PropertySheet.Item Type, because it is maybe missing in the uiPropertyList of the ViewModelElement.");
             }
         }
         ObservableList<PropertySheet.Item> retObsList = FXCollections.observableArrayList();

@@ -104,7 +104,7 @@ public class TransitionContainer extends Container implements Observable {
                 BendPointViewModel currentBendpoint = bendpoints.get(i);
                 points[j] = currentBendpoint.getX();
                 points[j + 1] = currentBendpoint.getY();
-                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getPlanElementViewModel(), null);
+                BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getViewModelElement(), planTab);
                 //bendpointContainer.setVisible(false);
                 draggableNodes.add(bendpointContainer);
                 _fromX = points[j];

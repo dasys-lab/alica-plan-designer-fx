@@ -3,6 +3,8 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -45,37 +47,35 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     public void makeDraggable(Node node) {
         final DragContext dragContext = new DragContext();
 
-        node.addEventHandler(
-                MouseEvent.ANY,
-                mouseEvent -> {
-                    // disable mouse events for all children
-                    mouseEvent.consume();
-                });
+        // disable mouse events for all children
+        node.addEventHandler(MouseEvent.ANY, Event::consume);
 
-        node.addEventHandler(
-                MouseEvent.MOUSE_PRESSED,
-                mouseEvent -> {
-                    setDragged(false);
-                    // remember initial mouse cursor coordinates
-                    // and node position
-                    dragContext.mouseAnchorX = mouseEvent.getX();
-                    dragContext.mouseAnchorY = mouseEvent.getY();
-                    dragContext.initialLayoutX = node.getLayoutX();
-                    dragContext.initialLayoutY = node.getLayoutY();
-                });
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                BendpointContainer.this.setDragged(false);
+                // remember initial mouse cursor coordinates
+                // and node position
+                dragContext.mouseAnchorX = mouseEvent.getSceneX();
+                dragContext.mouseAnchorY = mouseEvent.getSceneY();
+                dragContext.initialLayoutX = node.getLayoutX();
+                dragContext.initialLayoutY = node.getLayoutY();
+            }
+        });
 
-        node.addEventHandler(
-                MouseEvent.MOUSE_DRAGGED,
-                mouseEvent -> {
-                    // shift node from its initial position by delta
-                    // calculated from mouse cursor movement
-                    setDragged(true);
+        node.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                // shift node from its initial position by delta
+                // calculated from mouse cursor movement
+                BendpointContainer.this.setDragged(true);
 
-                    // set temporary translation
-                    //node.setLayoutX(dragContext.initialLayoutX + mouseEvent.getX() - dragContext.mouseAnchorX);
-                    //node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getY() - dragContext.mouseAnchorY);
-                    //System.out.println("X: " + mouseEvent.getX() + " Y:" + mouseEvent.getY());
-                });
+                // set temporary translation
+                node.setTranslateX(mouseEvent.getSceneX() - dragContext.mouseAnchorX);
+                node.setTranslateY(mouseEvent.getSceneY() - dragContext.mouseAnchorY);
+                //System.out.println("X: " + mouseEvent.getX() + " Y:" + mouseEvent.getY());
+            }
+        });
 
         node.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseEvent -> {
             // save final position in actual bendpoint
@@ -83,14 +83,11 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
                 // reset translation and set layout to actual position
                 node.setTranslateX(0);
                 node.setTranslateY(0);
-                node.setLayoutX(dragContext.initialLayoutX + mouseEvent.getX() - dragContext.mouseAnchorX);
-                node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getY() - dragContext.mouseAnchorY);
+                node.setLayoutX(dragContext.initialLayoutX + mouseEvent.getSceneX() - dragContext.mouseAnchorX);
+                node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getSceneY() - dragContext.mouseAnchorY);
 
-                System.out.println("AFTER DRAG X: " + (mouseEvent.getX() - dragContext.mouseAnchorX) + " Y:" +
-                        (mouseEvent.getY() - dragContext.mouseAnchorY));
-                System.out.println("LAYOUT X: " + node.getLayoutX() + " Y:" + node.getLayoutY());
-
-                // TODO send event to controller
+                planTab.fireChangePositionEvent(this, containedElement.getType(), node.getLayoutX(), node.getLayoutY());
+                //getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
                 mouseEvent.consume();
                 redrawElement();
             }
@@ -108,7 +105,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
 
     @Override
     public void redrawElement() {
-        ((TransitionContainer) this.getParent()).setupContainer();
+        ((TransitionContainer) this.getParent()).redrawElement();
     }
 
     @Override
