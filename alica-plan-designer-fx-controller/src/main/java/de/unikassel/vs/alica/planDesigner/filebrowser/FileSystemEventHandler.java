@@ -4,6 +4,9 @@ import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
 import de.unikassel.vs.alica.planDesigner.controller.Controller;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 
 import java.io.File;
 import java.io.IOException;

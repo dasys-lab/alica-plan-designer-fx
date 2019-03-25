@@ -1,8 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,26 +10,18 @@ import java.util.List;
 
 public class Synchronisation extends PlanElement{
 
-    @JsonIgnore
-    protected final SimpleBooleanProperty dirty = new SimpleBooleanProperty();
     protected final SimpleIntegerProperty talkTimeout = new SimpleIntegerProperty();
     protected final SimpleIntegerProperty syncTimeout = new SimpleIntegerProperty();
     protected final SimpleBooleanProperty failOnSyncTimeout = new SimpleBooleanProperty();
+    protected final SimpleObjectProperty<Plan> plan = new SimpleObjectProperty<>();
+
     protected final ArrayList<Transition> syncedTransitions = new ArrayList<>();
+
+    private ChangeListenerForDirtyFlag changeListener;
 
     public Synchronisation(){}
     public Synchronisation(long id) {
         this.id = id;
-    }
-
-    public boolean getDirty() {
-        return dirty.get();
-    }
-    public void setDirty(boolean dirty) {
-        this.dirty.set(dirty);
-    }
-    public SimpleBooleanProperty dirtyProperty() {
-        return dirty;
     }
 
     public int getTalkTimeout() {
@@ -62,15 +54,33 @@ public class Synchronisation extends PlanElement{
         return failOnSyncTimeout;
     }
 
+    public void setPlan(Plan plan) {
+        this.plan.set(plan);
+    }
+    public Plan getPlan() {
+        return this.plan.get();
+    }
+    public SimpleObjectProperty<Plan> planProperty() {
+        return this.plan;
+    }
+
     public void addSyncedTransition(Transition transition) {
         syncedTransitions.add(transition);
-        this.setDirty(true);
+        changeListener.setDirty();
     }
     public void removeSyncedTransition(Transition transition) {
         syncedTransitions.remove(transition);
-        this.setDirty(true);
+        changeListener.setDirty();
     }
     public List<Transition> getSyncedTransitions() {
         return Collections.unmodifiableList(syncedTransitions);
+    }
+
+    public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
+        this.changeListener = listener;
+
+        talkTimeout.addListener(listener);
+        syncTimeout.addListener(listener);
+        failOnSyncTimeout.addListener(listener);
     }
 }

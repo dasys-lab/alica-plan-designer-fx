@@ -1,6 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.view.menu;
 
-import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.controller.UsagesWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
@@ -9,15 +8,9 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeItem;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class DeleteFileMenuItem extends MenuItem {
@@ -61,21 +54,9 @@ public class DeleteFileMenuItem extends MenuItem {
             return false;
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
-        try {
-            Parent infoWindow = fxmlLoader.load();
-            UsagesWindowController controller = fxmlLoader.getController();
-            controller.createReferencesList(usages, guiModificationHandler);
-            Stage stage = new Stage();
-            stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
-            stage.setScene(new Scene(infoWindow));
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(PlanDesignerApplication.getPrimaryStage());
-            stage.showAndWait();
-        } catch (IOException ignored) {
-        } finally {
-            return true;
-        }
+        UsagesWindowController.createUsagesWindow(usages, i18NRepo.getString("label.usage.nodelete"),
+                guiModificationHandler);
+        return  true;
     }
 
     public void setTreeCell(TreeCell toDelete) {

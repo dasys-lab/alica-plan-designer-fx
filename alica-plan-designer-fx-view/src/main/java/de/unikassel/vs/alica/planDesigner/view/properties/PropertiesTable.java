@@ -5,6 +5,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.text.Font;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
@@ -21,23 +22,29 @@ public class PropertiesTable<S> extends TableView<S> {
             return cell;
         });
         getColumns().add(column);
-        // 24 Pixel * (1 empty row + 1 heading) + 2 pixel for border
-        setPrefHeight(24 * (1 + 1) + 2);
+        resizeTable();
     }
 
     public void addItem(S viewModelItem) {
         getItems().add(viewModelItem);
-        // 24 Pixel * (#items + 1 heading) + 2 pixel for border
-        setPrefHeight(24 * (getItems().size() + 1) + 2);
+        resizeTable();
     }
 
     public void clear() {
         getItems().clear();
-        setPrefHeight(24 * (getItems().size() + 1) + 2);
+        resizeTable();
     }
 
     public void removeItem(S viewModelItem) {
         getItems().remove(viewModelItem);
-        setPrefHeight(24 * (getItems().size() + 1) + 2);
+        resizeTable();
+    }
+
+    private void resizeTable(){
+        int elements = this.getItems().size();
+        double fontSize = Font.getDefault().getSize() * 2;
+
+        // FontSize * (1 empty row + 1 heading) + 2 pixel for border
+        this.setPrefHeight(fontSize * (elements + 1) + 2);
     }
 }

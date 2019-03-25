@@ -5,13 +5,16 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.Container;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorElement;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -29,8 +32,17 @@ public class PlanTab extends AbstractPlanTab {
 
     public PlanTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
-
         draw();
+        this.planContent.addEventFilter(MouseEvent.MOUSE_CLICKED, getMouseClickedEventHandler());
+    }
+
+    /**
+     * Allows to select the plan itself by clicking on the scene and not on some container element.
+     */
+    private EventHandler<MouseEvent> getMouseClickedEventHandler() {
+        return event -> {
+            this.planEditorGroup.getPlanEditorTab().selectPlan((PlanViewModel)this.getSerializableViewModel());
+        };
     }
 
     private void draw() {
@@ -65,8 +77,8 @@ public class PlanTab extends AbstractPlanTab {
      * @param newY  the new y-coordinate
      */
     public void fireChangePositionEvent(DraggableEditorElement planElementContainer, String type, double newX, double newY) {
-        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_POSITION, type, planElementContainer.getViewModelElement().getName());
-        event.setElementId(planElementContainer.getViewModelElement().getId());
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_POSITION, type, planElementContainer.getPlanElementViewModel().getName());
+        event.setElementId(planElementContainer.getPlanElementViewModel().getId());
         event.setParentId(serializableViewModel.getId());
         event.setX((int) newX);
         event.setY((int) newY);
@@ -85,26 +97,34 @@ public class PlanTab extends AbstractPlanTab {
     }
 
     public GuiModificationEvent handleDelete() {
-        return null;
+        Container selectedContainer = this.selectedContainer.get();
+        if (selectedContainer == null) {
+            return null;
+        }
+        PlanElementViewModel planElementViewModel = selectedContainer.getPlanElementViewModel();
+        switch(planElementViewModel.getType()) {
+            case Types.BEHAVIOUR:
+            case Types.PLAN:
+            case Types.PLANTYPE:
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT, planElementViewModel.getType(), planElementViewModel.getName());
+                event.setParentId(((AbstractPlanContainer)selectedContainer).getParentStateContainer().getState().getId());
+                event.setElementId(planElementViewModel.getId());
+                return event;
+            case Types.STATE:
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, planElementViewModel.getType(), planElementViewModel.getName());
+                event.setParentId(planElementViewModel.getParentId());
+                event.setElementId(planElementViewModel.getId());
+                return event;
+            default:
+                System.err.println("PlanTab: Selected element type " + planElementViewModel.getType() + " is not handled!");
+                return null;
+        }
     }
 
     public void save() {
         save(Types.PLAN);
-    }
-
-    protected void initSelectedPlanElement(ViewModelElement viewModelElement) {
-        super.initSelectedPlanElements(viewModelElement);
-        contentProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                newValue.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-//                    if (event.getTarget() == planContent) {
-//                        List<Pair<PlanElement, AbstractPlanElementContainer>> planViewModel = new ArrayList<>();
-//                        planViewModel.add(new Pair<>(getEditable(), null));
-//                        getSelectedPlanElements().set(planViewModel);
-//                    }
-                });
-            }
-        });
     }
 
     public StackPane getPlanContent() {

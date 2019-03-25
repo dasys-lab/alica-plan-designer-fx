@@ -1,35 +1,35 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
+import de.unikassel.vs.alica.planDesigner.command.Command;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.*;
 
-public class CreateBehaviour extends AbstractCommand {
+public class CreateBehaviour extends Command {
     Behaviour behaviour;
 
     public CreateBehaviour(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
-        if (mmq.getElementType().equals(Types.BEHAVIOUR)) {
-            this.behaviour = new Behaviour();
-            this.behaviour.setName(mmq.getName());
-            this.behaviour.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), behaviour.getName()+ "." + FileSystemUtil.BEHAVIOUR_ENDING));
-        }
-        else
-        {
-            System.err.println("CreateBehaviour: Type does not match command!");
-        }
+        super(modelManager, mmq);
+        this.behaviour = createBehaviour();
+    }
+
+    protected Behaviour createBehaviour() {
+        Behaviour behaviour = new Behaviour();
+        behaviour.setName(mmq.getName());
+        behaviour.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), behaviour.getName()+ "." + Extensions.BEHAVIOUR));
+        behaviour.registerDirtyFlag();
+        return behaviour;
     }
 
     @Override
     public void doCommand() {
-        modelManager.createdPlanElement(Types.BEHAVIOUR, behaviour, null, true);
+        modelManager.storePlanElement(Types.BEHAVIOUR, this.behaviour,true);
+        this.fireEvent(ModelEventType.ELEMENT_CREATED, this.behaviour);
     }
 
     @Override
     public void undoCommand() {
-        modelManager.removedPlanElement(Types.BEHAVIOUR, behaviour, null, true);
+        modelManager.dropPlanElement(Types.BEHAVIOUR, this.behaviour, true);
+        this.fireEvent(ModelEventType.ELEMENT_DELETED, this.behaviour);
     }
 }

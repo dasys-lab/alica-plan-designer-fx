@@ -28,10 +28,9 @@ import java.util.LinkedList;
 
 public class TransitionTool extends AbstractTool {
 
-    private int initial = 0;
     private LinkedList<Point2D> bendPoints = new LinkedList<>();
 
-    private StateViewModel inState;
+    private StateViewModel inState = null;
     private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition);
 
     public TransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
@@ -50,7 +49,7 @@ public class TransitionTool extends AbstractTool {
                     if (parent instanceof StateContainer) {
                         setCursor(addCursor);
                     } else if (target instanceof StackPane){
-                        if (initial > 1) {
+                        if (inState != null) {
                             setCursor(bendPointCursor);
                         }
                         else {
@@ -66,23 +65,25 @@ public class TransitionTool extends AbstractTool {
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (event.getTarget() instanceof ToolButton) {
+                    if (event.getTarget() instanceof ToolButton || !(event.getTarget() instanceof Node)) {
                         return;
                     }
-                    if (initial > 1) {
-                        Node target = (Node) event.getTarget();
-                        Node parent = target.getParent();
+
+                    Node target = (Node) event.getTarget();
+                    Node parent = target.getParent();
+
+                    if (inState != null) {
                         if (parent instanceof StateContainer) {
                             // SET ENDPOINT
-                            StateViewModel outState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
+                            StateViewModel outState = ((StateContainer) parent).getState();
 
                             IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
                             GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.TRANSITION, null);
 
                             HashMap<String, Long> relatedObjects = new HashMap<>();
-                            relatedObjects.put(TransitionViewModel.INSTATE, inState.getId());
-                            relatedObjects.put(TransitionViewModel.OUTSTATE, outState.getId());
+                            relatedObjects.put(Types.INSTATE, inState.getId());
+                            relatedObjects.put(Types.OUTSTATE, outState.getId());
 
                             guiEvent.setRelatedObjects(relatedObjects);
                             guiEvent.setParentId(TransitionTool.this.planTab.getSerializableViewModel().getId());
@@ -111,29 +112,21 @@ public class TransitionTool extends AbstractTool {
                         } else {
                             // ADD BENDPOINT
                             Point2D eventTargetCoordinates = TransitionTool.this.getLocalCoordinatesFromEvent(event);
-
                             if (eventTargetCoordinates == null) {
                                 event.consume();
                             }
                             bendPoints.add(eventTargetCoordinates);
                         }
                     } else {
-                        Node target = (Node) event.getTarget();
-                        Node parent = target.getParent();
-                        if (!(target instanceof ToolButton)){
-                            initial = 1;
-                            try {
-                                target = (Node) event.getTarget();
-                                if (parent instanceof StateContainer) {
-                                    // SET STARTPOINT
-                                    inState = ((StateContainer) ((Node) event.getTarget()).getParent()).getState();
-                                }
-                            } catch (ClassCastException e) {
-                                e.printStackTrace();
+                        try {
+                            if (parent instanceof StateContainer) {
+                                // SET STARTPOINT
+                                inState = ((StateContainer) parent).getState();
                             }
+                        } catch (ClassCastException e) {
+                            e.printStackTrace();
                         }
                     }
-                    initial++;
                 }
             });
         }
@@ -146,7 +139,6 @@ public class TransitionTool extends AbstractTool {
     }
 
     private void reset() {
-        initial = 0;
         inState = null;
         bendPoints.clear();
     }

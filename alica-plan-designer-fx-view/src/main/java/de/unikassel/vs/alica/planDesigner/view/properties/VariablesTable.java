@@ -3,6 +3,7 @@ package de.unikassel.vs.alica.planDesigner.view.properties;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
@@ -18,6 +19,7 @@ public abstract class VariablesTable<S extends ViewModelElement> extends VBox {
         i18NRepo = I18NRepo.getInstance();
         table = new PropertiesTable<>();
         table.setEditable(true);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Add & Remove Buttons
         Button addButton = new Button(i18NRepo.getString("action.list.addShort"));
@@ -41,21 +43,19 @@ public abstract class VariablesTable<S extends ViewModelElement> extends VBox {
 
     public <T> void addColumn(String title, String propertyName, StringConverter<T> converter, boolean editable) {
         table.addColumn(title, propertyName, converter, editable);
+
     }
 
     public void addItem(S viewModel) {
         table.addItem(viewModel);
-        table.setMaxHeight(24*(table.getItems().size()+1)+2);
     }
 
     public void removeItem(S viewModel) {
         table.removeItem(viewModel);
-        table.setMaxHeight(24*(table.getItems().size()+1)+2);
     }
 
     public void clear() {
         table.clear();
-        table.setMaxHeight(24*(table.getItems().size()+1)+2);
     }
 
     public S getSelectedItem() {

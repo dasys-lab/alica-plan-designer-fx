@@ -9,6 +9,9 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
+import de.unikassel.vs.alica.planDesigner.converter.CustomLongConverter;
+import de.unikassel.vs.alica.planDesigner.converter.CustomPlanElementConverter;
+import de.unikassel.vs.alica.planDesigner.converter.CustomStringConverter;
 import de.unikassel.vs.alica.planDesigner.events.*;
 import de.unikassel.vs.alica.planDesigner.filebrowser.FileSystemEventHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -20,19 +23,21 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
-import de.unikassel.vs.alica.planDesigner.view.model.*;
+import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -87,6 +92,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         viewModelManager = new ViewModelManager(modelManager, this);
 
         repoViewModel = viewModelManager.createRepositoryViewModel();
+
+        setupBeanConverters();
     }
 
     protected void setupGeneratedSourcesManager() {
@@ -119,6 +126,23 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         configWindowController.setPluginEventHandler(pluginEventHandler);
 
         mainWindowController.setConfigWindowController(configWindowController);
+    }
+
+    private void setupBeanConverters(){
+        CustomStringConverter customStringConverter = new CustomStringConverter();
+        CustomLongConverter customLongConverter = new CustomLongConverter();
+        CustomPlanElementConverter customPlanElementConverter = new CustomPlanElementConverter(this.modelManager);
+
+        // Temporarily setting the log-level to prevent unnecessary output
+        Level logLevel = Logger.getRootLogger().getLevel();
+        Logger.getRootLogger().setLevel(Level.WARN);
+
+        ConvertUtils.register(customStringConverter, String.class);
+        ConvertUtils.register(customLongConverter, Long.class);
+        ConvertUtils.register(customPlanElementConverter, PlanElement.class);
+
+        // Setting the log-level to its previous level
+        Logger.getRootLogger().setLevel(logLevel);
     }
 
     // HANDLER EVENT METHODS
@@ -176,30 +200,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     /**
-     * Handles events fired by the {@link ModelManager}, when the UiExtensionModel has changed.
-     *
-     * @param event contains all information about the changes in the UiExtensionModel
-     */
-    @Override
-    public void handleUiExtensionModelEvent(UiExtensionModelEvent event) {
-        PlanElement modelElement = event.getElement();
-        PlanElementViewModel planElementViewModel = (PlanElementViewModel) viewModelManager.getViewModelElement(modelElement);
-
-        planElementViewModel.setXPosition(event.getExtension().getX());
-        planElementViewModel.setYPosition(event.getExtension().getY());
-
-        if (event.getExtension().getBendPoints().size() != 0) {
-            TransitionViewModel transition = (TransitionViewModel) planElementViewModel;
-            transition.getBendpoints().clear();
-            for (BendPoint bendPoint : event.getExtension().getBendPoints()) {
-                transition.addBendpoint((BendPointViewModel) viewModelManager.getViewModelElement(bendPoint));
-            }
-            ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, modelElement, Types.BENDPOINT);
-            updateViewModel(modelEvent, planElementViewModel, modelElement);
-        }
-    }
-
-    /**
      * Handles the model event for the repository view.
      *
      * @param eventType
@@ -245,29 +245,37 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private void updateViewModel(ModelEvent event, ViewModelElement viewModelElement, PlanElement planElement) {
         switch (event.getEventType()) {
             case ELEMENT_DELETED:
+            case ELEMENT_REMOVED:
                 viewModelManager.removeElement(event.getParentId(), viewModelElement);
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
-                try {
-                    BeanUtils.setProperty(viewModelElement, event.getChangedAttribute(), BeanUtils.getProperty(planElement, event.getChangedAttribute()));
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                }
+                viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue());
                 break;
+            case ELEMENT_PARSED:
             case ELEMENT_CREATED:
-                viewModelManager.addElement(this, event);
-                break;
-            case ELEMENT_ADD:
-                viewModelManager.addElement(this, event);
+            case ELEMENT_ADDED:
+                viewModelManager.addElement(event);
                 break;
             case ELEMENT_CONNECTED:
                 viewModelManager.connectElement(event);
                 break;
             case ELEMENT_DISCONNECTED:
                 viewModelManager.disconnectElement(event);
+            case ELEMENT_CHANGED_POSITION:
+                viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
             default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
                 break;
+        }
+
+        if (event.getUiElement() != null && event.getUiElement().getBendPoints().size() != 0) {
+            TransitionViewModel transition = (TransitionViewModel) viewModelElement;
+            transition.getBendpoints().clear();
+            for (BendPoint bendPoint : event.getUiElement().getBendPoints()) {
+                transition.addBendpoint((BendPointViewModel) viewModelManager.getViewModelElement(bendPoint));
+            }
+            ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, planElement, Types.BENDPOINT);
+            updateViewModel(modelEvent, viewModelElement, planElement);
         }
     }
 
@@ -325,6 +333,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     @Override
     public void handleGuiInitialized() {
         mainWindowController.enableMenuBar();
+        editorTabPane = mainWindowController.getEditorTabPane();
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
             mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
@@ -334,8 +343,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         repoTabPane = mainWindowController.getRepositoryTabPane();
         repoViewModel.setRepositoryTabPane(repoTabPane);
         repoViewModel.initGuiContent();
-
-        editorTabPane = mainWindowController.getEditorTabPane();
         editorTabPane.setGuiModificationHandler(this);
     }
 
@@ -362,24 +369,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementId(event.getElementId());
                 break;
             case ADD_ELEMENT:
-                if(event instanceof GuiModificationEventExpanded) {
-                    mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
-                    mmq.setElementId(event.getElementId());
-                    mmq.setElementType(event.getElementType());
-                    mmq.setParentId(event.getParentId());
-                    mmq.setName(event.getName());
-                    mmq.setComment(event.getComment());
-                    mmq.setTargetID(((GuiModificationEventExpanded) event).getTargetID());
-                } else {
-                    mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
-                    mmq.setElementId(event.getElementId());
-                    mmq.setElementType(event.getElementType());
-                    mmq.setParentId(event.getParentId());
-                    mmq.setName(event.getName());
-                    mmq.setComment(event.getComment());
-                    mmq.setX(event.getX());
-                    mmq.setY(event.getY());
-                }
+                mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
+                mmq.setElementId(event.getElementId());
+                mmq.setElementType(event.getElementType());
+                mmq.setParentId(event.getParentId());
+                mmq.setName(event.getName());
+                mmq.setComment(event.getComment());
+                mmq.setX(event.getX());
+                mmq.setY(event.getY());
                 mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
             case REMOVE_ELEMENT:
@@ -441,9 +438,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     public void handleFileSystemEvent(WatchEvent event, Path path) {
         // A change in a sub-directory also creates an event for the parent-directory. This event must be ignored,
         // because its filename is only the name of the subdirectory
-        if (!path.toFile().isFile()) {
+        /*if (!path.toFile().isFile()) {
             return;
-        }
+        }*/
 
         WatchEvent.Kind kind = event.kind();
         ModelModificationQuery mmq;
@@ -474,16 +471,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     @Override
     public ViewModelElement getViewModelElement(long id) {
         return viewModelManager.getViewModelElement(modelManager.getPlanElement(id));
-    }
-
-    public void updatePlansInPlanTypeTabs(PlanViewModel planViewModel) {
-        ObservableList<Tab> tabs = editorTabPane.getTabs();
-        for (Tab tab : tabs) {
-            if (tab instanceof PlanTypeTab) {
-                PlanTypeTab planTypeTab = (PlanTypeTab) tab;
-                planTypeTab.addPlanToAllPlans(planViewModel);
-            }
-        }
     }
 
     @Override

@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
@@ -75,11 +76,7 @@ public class Codegenerator {
                 return fileName.endsWith(".h") || fileName.endsWith(".cpp");
             }).forEach(e -> {
                 try {
-                    CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e));
-                    CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-                    CommentsParser parser = new CommentsParser(commonTokenStream);
-                    CommentsParser.All_textContext all_textContext = parser.all_text();
-                    protectedRegionsVisitor.visit(all_textContext);
+                    visit(protectedRegionsVisitor, e);
                 } catch (IOException e1) {
                     LOG.error("Could not parse existing source file " + e, e1);
                     throw new RuntimeException(e1);
@@ -108,6 +105,14 @@ public class Codegenerator {
             languageSpecificGenerator.createBehaviour(behaviour);
         }
         LOG.info("Generated all files successfully");
+    }
+
+    private void visit(ProtectedRegionsVisitor protectedRegionsVisitor, Path e) throws IOException {
+        CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(e));
+        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+        CommentsParser parser = new CommentsParser(commonTokenStream);
+        CommentsParser.All_textContext all_textContext = parser.all_text();
+        protectedRegionsVisitor.visit(all_textContext);
     }
 
     /**
@@ -148,11 +153,7 @@ public class Codegenerator {
         for (File genFile : filesToParse) {
             try {
                 if (genFile.exists()) {
-                    CommentsLexer lexer = new CommentsLexer(CharStreams.fromPath(genFile.toPath()));
-                    CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-                    CommentsParser parser = new CommentsParser(commonTokenStream);
-                    CommentsParser.All_textContext all_textContext = parser.all_text();
-                    protectedRegionsVisitor.visit(all_textContext);
+                    visit(protectedRegionsVisitor, genFile.toPath());
                 }
             } catch (IOException e1) {
                 LOG.error("Could not parse existing source file " + genFile.getAbsolutePath(), e1);

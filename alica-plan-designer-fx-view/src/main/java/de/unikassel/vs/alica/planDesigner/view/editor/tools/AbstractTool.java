@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 
-import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanElementContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.Container;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.beans.value.ChangeListener;
@@ -40,7 +40,6 @@ public abstract class AbstractTool {
 
     private HashMap<EventType, EventHandler> defaultHandlerMap;
     protected HashMap<EventType, EventHandler> customHandlerMap;
-    protected Cursor previousCursor;
 
     private boolean recentlyDone;
 
@@ -121,8 +120,6 @@ public abstract class AbstractTool {
         for (Map.Entry<EventType, EventHandler> entry : defaultHandlers().entrySet()) {
             planEditorTabPane.getScene().addEventFilter(entry.getKey(), entry.getValue());
         }
-
-        previousCursor = getCursor();
     }
 
     public void endTool() {
@@ -192,7 +189,7 @@ public abstract class AbstractTool {
     protected ViewModelElement getElementFromEvent(Event event){
         return planTab.getPlanEditorGroup().getChildren().stream()
                 .filter(container -> ((Pane) container).getChildren().contains(event.getTarget()))
-                .findFirst().map(node -> ((AbstractPlanElementContainer)node).getViewModelElement()).orElse(null);
+                .findFirst().map(node -> ((Container)node).getPlanElementViewModel()).orElse(null);
     }
 
 

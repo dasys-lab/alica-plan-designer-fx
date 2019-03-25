@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab;
 
+import de.unikassel.vs.alica.planDesigner.controller.ErrorWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiChangeAttributeEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
@@ -107,7 +108,13 @@ public class PlanTypeTab extends AbstractPlanTab {
 
         addPlanButton.setOnAction(e -> {
             if (!planListView.getSelectionModel().isEmpty()) {
-                fireModificationEvent(GuiEventType.ADD_ELEMENT, planListView.getSelectionModel().getSelectedItem().getViewModelElement());
+                try {
+                    fireModificationEvent(GuiEventType.ADD_ELEMENT, planListView.getSelectionModel().getSelectedItem().getViewModelElement());
+                }catch (RuntimeException excp){
+                    // Exception might be thrown, because the selected element can't be added, because this would cause
+                    // a loop in the model
+                    ErrorWindowController.createErrorWindow(excp.getMessage(), null);
+                }
             }
         });
 
@@ -205,9 +212,7 @@ public class PlanTypeTab extends AbstractPlanTab {
                     for (ViewModelElement element : c.getRemoved()) {
                         for (RepositoryLabel plan : planListView.getItems()) {
                             if (plan.getViewModelId() == element.getId()) {
-                                Platform.runLater(() -> {
-                                    planListView.getItems().remove(plan);
-                                });
+                                Platform.runLater(() -> planListView.getItems().remove(plan));
                                 break;
                             }
                         }
@@ -295,9 +300,5 @@ public class PlanTypeTab extends AbstractPlanTab {
             event.setElementId(serializableViewModel.getId());
             guiModificationHandler.handle(event);
         }
-    }
-
-    public void addPlanToAllPlans (PlanViewModel planViewModel) {
-        ((PlanTypeViewModel) serializableViewModel).addPlanToAllPlans(planViewModel);
     }
 }

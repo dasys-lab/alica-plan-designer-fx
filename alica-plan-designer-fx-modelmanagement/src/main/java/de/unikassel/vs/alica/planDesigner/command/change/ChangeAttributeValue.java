@@ -1,37 +1,30 @@
 package de.unikassel.vs.alica.planDesigner.command.change;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.*;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
-import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
-import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 
-public class ChangeAttributeValue extends AbstractCommand {
+public class ChangeAttributeValue extends Command {
 
     private String attribute;
     private PlanElement planElement;
     private String elementType;
     private Object newValue;
-    private String oldValue;
+    private Object oldValue;
 
     public ChangeAttributeValue(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
+        super(modelManager, mmq);
         this.elementType = mmq.getElementType();
         this.planElement = modelManager.getPlanElement(mmq.getElementId());
         this.attribute = mmq.getAttributeName();
-        this.newValue = mmq.getNewValue();
         try {
-            this.oldValue = BeanUtils.getProperty(planElement, attribute);
+            newValue = mmq.getNewValue();
+            // Using PropertyUtils instead of BeanUtils to get the actual Object and not just its String-representation
+            this.oldValue = PropertyUtils.getProperty(planElement, attribute);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

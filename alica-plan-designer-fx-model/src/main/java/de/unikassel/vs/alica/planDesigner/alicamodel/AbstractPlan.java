@@ -6,40 +6,32 @@ import java.util.List;
 
 public class AbstractPlan extends SerializablePlanElement {
 
-    protected final ArrayList<Variable> variables= new ArrayList<>();
+    protected final ArrayList<Variable> variables = new ArrayList<>();
 
     public AbstractPlan () {
         super();
     }
-
     public AbstractPlan (long id) {
         this.id = id;
     }
 
-    public void registerDirtyFlag() {
-        super.registerDirtyFlag();
-    }
-
     public void addVariable(Variable variable) {
+        variable.registerDirtyFlag(this.changeListenerForDirtyFlag);
         variables.add(variable);
-        variable.nameProperty().addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
-        variable.commentProperty().addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
-        variable.variableTypeProperty().addListener((observable, oldValue, newValue) -> {
-            this.setDirty(true);
-        });
-        this.setDirty(true);
+        this.changeListenerForDirtyFlag.setDirty();
     }
     public void removeVariable(Variable variable) {
-        // TODO: make listener in put method a local variable that is removed from the list of listeners here...
         variables.remove(variable);
-        this.setDirty(true);
+        this.changeListenerForDirtyFlag.setDirty();
     }
-
     public List<Variable> getVariables() {
         return Collections.unmodifiableList(variables);
+    }
+
+    public void registerDirtyFlag() {
+        super.registerDirtyFlag();
+        for (Variable var : variables) {
+            var.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
     }
 }

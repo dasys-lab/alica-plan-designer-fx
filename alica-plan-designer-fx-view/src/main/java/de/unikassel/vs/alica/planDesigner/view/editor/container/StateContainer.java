@@ -5,12 +5,9 @@ import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.geometry.Insets;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -18,12 +15,12 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StateContainer extends AbstractPlanElementContainer implements Observable {
+public class StateContainer extends Container implements Observable {
 
     public static final double STATE_RADIUS = 20.0;
     private boolean dragged;
     private List<InvalidationListener> invalidationListeners;
-    private List<AbstractPlanHBox> statePlans;
+    private List<AbstractPlanContainer> statePlans;
     private StateViewModel state;
 
     public StateContainer(StateViewModel state, PlanTab planTab) {
@@ -33,11 +30,9 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         invalidationListeners = new ArrayList<>();
         makeDraggable(this);
         createPositionListeners(this, state);
-        createAbstractPlanToStateListeners(this, state);
-        setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
+        createAbstractPlanToStateListeners( state);
         setupContainer();
     }
-
 
     @Override
     public void setupContainer() {
@@ -50,19 +45,13 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         elementName.setLayoutX(elementName.getLayoutX() - elementName.getLayoutBounds().getWidth() / 2);
         elementName.setLayoutY(elementName.getLayoutY() - STATE_RADIUS * 1.3);
 
-        for (PlanElementViewModel plan : state.getPlanElements()) {
-            statePlans.add(new AbstractPlanHBox(plan, this));
+        for (PlanElementViewModel plan : state.getAbstractPlans()) {
+            statePlans.add(new AbstractPlanContainer(this, plan, this.planTab));
         }
 
         if(statePlans != null && !statePlans.isEmpty()) {
             getChildren().addAll(statePlans);
         }
-    }
-
-    @Override
-    public void setEffectToStandard() {
-        visualRepresentation.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,
-                new Color(0,0,0,0.8), 10, 0, 0, 0));
     }
 
     @Override
@@ -72,7 +61,6 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
 
     @Override
     public void redrawElement() {
-//        ((PlanEditorGroup) getParent()).setupPlanVisualisation();
         setupContainer();
         invalidationListeners.forEach(listener -> listener.invalidated(this));
     }
@@ -97,11 +85,22 @@ public class StateContainer extends AbstractPlanElementContainer implements Obse
         invalidationListeners.remove(listener);
     }
 
-    public List<AbstractPlanHBox> getStatePlans() {
+    public List<AbstractPlanContainer> getStatePlans() {
         return statePlans;
     }
 
     public StateViewModel getState() {
         return state;
+    }
+
+    @Override
+    public void setEffectToStandard() {
+        this.setEffect(null);
+        this.visualRepresentation.setEffect(Container.standardEffect);
+    }
+
+    @Override
+    public void setCustomEffect(Effect effect) {
+        this.visualRepresentation.setEffect(effect);
     }
 }

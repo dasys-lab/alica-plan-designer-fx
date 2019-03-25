@@ -1,13 +1,15 @@
 package de.unikassel.vs.alica.planDesigner.view.filebrowser;
 
+import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
+import de.unikassel.vs.alica.planDesigner.controller.UsagesWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
+import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
-import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
-import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -26,6 +28,8 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public final class FileTreeView extends TreeView<File> {
 
@@ -59,7 +63,7 @@ public final class FileTreeView extends TreeView<File> {
             @Override
             public TreeCell<File> call(TreeView<File> param) {
                 TreeCell<File> fileWrapperTreeCell = new FileTreeCell(controller);
-                fileWrapperTreeCell.setContextMenu(new FileTreeViewContextMenu());
+                fileWrapperTreeCell.setContextMenu(param.getContextMenu());
                 fileWrapperTreeCell.selectedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -104,41 +108,28 @@ public final class FileTreeView extends TreeView<File> {
         if (topLevelFolder == null) {
             return;
         }
+        if(viewModelElement.getType() == Types.TASKREPOSITORY) {
+            ((FileTreeViewContextMenu)this.getContextMenu()).showTaskrepositoryItem(false);
+        }
 
         FileTreeItem folder = findFolder(viewModelElement, topLevelFolder, 0);
-//        boolean deleted = false;
         if (folder != null) {
-            // TODO: maybe unnecessary if complete view model elements are used.
-//            if (folderContainsViewModelElement(serializableViewModel, folder)) {
-//                removeFromFolder(serializableViewModel, folder);
-//                deleted = true;
-//            }
             FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(new AlicaIcon(viewModelElement.getType
                     (), AlicaIcon.Size.BIG)), viewModelElement);
             folder.getChildren().add(newItem);
             folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
-//            if (deleted) {
-//                this.getSelectionModel().select(newItem);
-//            }
         } else {
             throw new RuntimeException("Destination folder for PlanElement " + viewModelElement.getName() + " does not exist!");
         }
-    }
-
-    private boolean folderContainsViewModelElement(ViewModelElement viewModelElement, FileTreeItem folder) {
-        for (TreeItem item : folder.getChildren()) {
-            FileTreeItem fileTreeItem = (FileTreeItem) item;
-            if (!fileTreeItem.getValue().isDirectory() && fileTreeItem.getViewModelElement().getId() == viewModelElement.getId()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void removeViewModelElement(ViewModelElement viewModelElement) {
         FileTreeItem topLevelFolder = findTopLevelFolder(viewModelElement);
         if (topLevelFolder == null) {
             return;
+        }
+        if(viewModelElement.getType() == Types.TASKREPOSITORY) {
+            ((FileTreeViewContextMenu)this.getContextMenu()).showTaskrepositoryItem(true);
         }
         removeFromFolder(viewModelElement, topLevelFolder);
     }
@@ -226,7 +217,9 @@ public final class FileTreeView extends TreeView<File> {
      */
     private FileTreeItem findFolder(ViewModelElement modelElement, FileTreeItem treeItem, int index) {
         String relativePath = modelElement.getRelativeDirectory();
-        String[] folders = relativePath.split(File.pathSeparator);
+        // The value of File.separator under Windows is "\", which doesn't work here, because split requires a regex and
+        // "\" is not a valid regex. Patten.quote() allows to fit the input exactly (ignoring regex-like syntax)
+        String[] folders = relativePath.split(Pattern.quote(File.separator));
         if (folders.length == 1 && folders[0].isEmpty()) {
             return treeItem;
         }
@@ -277,15 +270,24 @@ public final class FileTreeView extends TreeView<File> {
     }
 
     public GuiModificationEvent handleDelete() {
-        //TODO: rework
-        return null;
-//        if (focusedProperty().get()) {
-//            DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(getSelectionModel()
-//                    .getSelectedItem()
-//                    .getValue());
-//            deleteFileMenuItem.deleteFile();
-//            return null;
-//        }
+        if(!this.isFocused()) {
+            return null;
+        }
+        FileTreeItem focused = (FileTreeItem) getFocusModel().getFocusedItem();
+        ViewModelElement toDelete = focused.getViewModelElement();
+        if (toDelete == null) {
+            // TODO: Implement deletion of folders
+            return null;
+        }
+        List<ViewModelElement> usages = controller.getGuiModificationHandler().getUsages(toDelete);
+        if(!usages.isEmpty()) {
+            UsagesWindowController.createUsagesWindow(usages
+                    , I18NRepo.getInstance().getString("label.usage.nodelete"), controller.getGuiModificationHandler());
+            return null;
+        }
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, toDelete.getType(), toDelete.getName());
+        event.setElementId(toDelete.getId());
+        return event;
     }
 
     public class MouseDraggedEventHandler implements EventHandler<MouseEvent> {

@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.modelmanagement;
 
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.events.ModelQueryType;
 
 import java.io.File;
@@ -13,8 +14,6 @@ public class ModelModificationQuery {
     protected String elementType;
     protected long elementId;
     protected String name;
-
-    protected Long targetID;
 
     protected long parentId;
 
@@ -41,20 +40,20 @@ public class ModelModificationQuery {
         this.name = absolutePath.substring(lastSeparatorIdx + 1, lastDotIdx);
         String ending = absolutePath.substring(lastDotIdx + 1, absolutePath.length());
         switch (ending) {
-            case FileSystemUtil.BEHAVIOUR_ENDING:
+            case Extensions.BEHAVIOUR:
                 elementType = Types.BEHAVIOUR;
                 break;
-            case FileSystemUtil.PLAN_ENDING:
+            case Extensions.PLAN:
                 elementType = Types.PLAN;
                 break;
-            case FileSystemUtil.PLANTYPE_ENDING:
+            case Extensions.PLANTYPE:
                 elementType = Types.PLANTYPE;
                 break;
-            case FileSystemUtil.TASKREPOSITORY_ENDING:
+            case Extensions.TASKREPOSITORY:
                 elementType = Types.TASKREPOSITORY;
                 break;
-            case FileSystemUtil.PLAN_EXTENSION_ENDING:
-                elementType = Types.PLAN; //TODO: Handle plan-extension-ending - Files
+            case Extensions.PLAN_UI:
+                elementType = Types.PLAN; //TODO: Handle plan-stateUiElement-ending - Files
                 break;
             default:
                 System.err.println("ModelModificationQuery: Unknown ending of file " + absolutePath);
@@ -81,7 +80,11 @@ public class ModelModificationQuery {
     }
 
     public String getName() {
-        return name;
+        if (name == null) {
+            return PlanElement.NO_NAME;
+        }else {
+            return name;
+        }
     }
 
     public void setName(String name) {
@@ -91,10 +94,6 @@ public class ModelModificationQuery {
     public String getElementType() {
         return elementType;
     }
-
-    public Long getTargetID() { return targetID; }
-
-    public void setTargetID(Long targetID) { this.targetID = targetID; }
 
     public ModelQueryType getQueryType() {
         return queryType;
@@ -153,7 +152,11 @@ public class ModelModificationQuery {
     }
 
     public String getComment(){
-        return comment;
+        if (comment == null) {
+            return "MISSING_COMMENT";
+        }else {
+            return comment;
+        }
     }
 
     public void setComment(String comment) {

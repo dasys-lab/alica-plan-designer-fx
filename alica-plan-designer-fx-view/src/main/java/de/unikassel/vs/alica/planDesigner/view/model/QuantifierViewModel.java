@@ -1,15 +1,22 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class QuantifierViewModel extends PlanElementViewModel{
 
-    protected StringProperty quantifierType = new SimpleStringProperty();
-    protected LongProperty scope = new SimpleLongProperty();
-    protected StringProperty sorts = new SimpleStringProperty();
+    public static final String[] QUANTIFIER_TYPES = {"ALL"};
+
+    protected StringProperty quantifierType = new SimpleStringProperty(this, "quantifierType", "");
+    protected LongProperty scope = new SimpleLongProperty(this, "scope", 0L);
+    protected StringProperty sorts = new SimpleStringProperty(this, "sorts", "");
 
     public QuantifierViewModel(long id, String name, String quantifierType) {
         super(id, name, quantifierType);
@@ -23,20 +30,32 @@ public class QuantifierViewModel extends PlanElementViewModel{
         this.quantifierType.set(quantifierType);
     }
 
-    public StringProperty quantifierType() {
+    public StringProperty quantifierTypeProperty() {
         return quantifierType;
     }
 
 
-    public long getScope() {
+    /**
+     * Get the scope.
+     *
+     * @return  the scope (is {@link Long} instead of long because of problems with
+     *                {@link javafx.beans.property.Property}s and primitives)
+     */
+    public Long getScope() {
         return scope.get();
     }
 
-    public void setScope(long scope) {
+    /**
+     * Set the scope.
+     *
+     * @param scope  scope (is {@link Long} instead of long because of problems with
+     *                {@link javafx.beans.property.Property}s and primitives)
+     */
+    public void setScope(Long scope) {
         this.scope.set(scope);
     }
 
-    public LongProperty scope() {
+    public LongProperty scopeProperty() {
         return scope;
     }
 
@@ -49,7 +68,22 @@ public class QuantifierViewModel extends PlanElementViewModel{
         this.sorts.set(sorts);
     }
 
-    public StringProperty sorts() {
+    public StringProperty sortsProperty() {
         return sorts;
+    }
+
+    @Override
+    public void registerListener(IGuiModificationHandler handler) {
+        super.registerListener(handler);
+        quantifierType.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, quantifierType.getClass().getSimpleName(), quantifierType.getName());
+        });
+        scope.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, scope.getClass().getSimpleName(), scope.getName());
+        });
+        sorts.addListener((observable, oldValue, newValue) -> {
+            List<String> newValues = new ArrayList<>(Arrays.asList(newValue.split("\\s+")));
+            fireGUIAttributeChangeEvent(handler, newValues, String.class.getSimpleName(), sorts.getName());
+        });
     }
 }

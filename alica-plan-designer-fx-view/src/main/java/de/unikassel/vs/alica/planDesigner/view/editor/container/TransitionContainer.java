@@ -16,15 +16,14 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class TransitionContainer extends AbstractPlanElementContainer implements Observable {
+public class TransitionContainer extends Container implements Observable {
     private StateContainer fromState;
     private StateContainer toState;
     private List<Node> draggableNodes;
     private List<Node> potentialDraggableNodes;
     private List<InvalidationListener> invalidationListeners = new ArrayList<>();
 
-    public TransitionContainer(TransitionViewModel transition/*, PmlUiExtension pmlUiExtension*/,
+    public TransitionContainer(TransitionViewModel transition,
                                StateContainer fromState, StateContainer toState, PlanTab planTab) {
         super(transition, null, planTab);
         this.fromState = fromState;
@@ -41,7 +40,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         potentialDraggableNodes = new ArrayList<>();
         setupContainer();
 
-        ((TransitionViewModel) getViewModelElement()).getBendpoints().addListener(new ListChangeListener<BendPointViewModel>() {
+        ((TransitionViewModel) getPlanElementViewModel()).getBendpoints().addListener(new ListChangeListener<BendPointViewModel>() {
             @Override
             public void onChanged(Change<? extends BendPointViewModel> c) {
                 redrawElement();
@@ -75,7 +74,7 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
         double triangleSpanVecY = -vecX;
         double triangleSpanLen = Math.sqrt(triangleSpanVecY * triangleSpanVecY + triangleSpanVecX * triangleSpanVecX);
 
-        List<BendPointViewModel> bendpoints = ((TransitionViewModel) getViewModelElement()).getBendpoints();
+        List<BendPointViewModel> bendpoints = ((TransitionViewModel) getPlanElementViewModel()).getBendpoints();
         int size = bendpoints.size();
         if (size == 0) {
             visualRepresentation = new Line(_fromX, _fromY, _toX, _toY);
@@ -203,5 +202,10 @@ public class TransitionContainer extends AbstractPlanElementContainer implements
     @Override
     public void removeListener(InvalidationListener listener) {
         invalidationListeners.remove(listener);
+    }
+
+    @Override
+    public void setEffectToStandard() {
+        this.setEffect(null);
     }
 }

@@ -8,7 +8,6 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.State;
  * you messed it up ... great ... you made the plandesigner great again ... huge ...
  * INSERT IT
  */
-import de.unikassel.vs.alica.defaultPlugin.DefaultTemplate;
 
 import java.util.Map;
 

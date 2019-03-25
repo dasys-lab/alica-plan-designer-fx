@@ -74,12 +74,12 @@ public class SyncTransitionTool extends AbstractTool {
                         // selected a potentially new synchronisation, so reset state of the tool
                         reset();
                     }
-                    sync = (SynchronizationViewModel) ((SynchronizationContainer) parent).getViewModelElement();
+                    sync = (SynchronizationViewModel) ((SynchronizationContainer) parent).getPlanElementViewModel();
                     return;
                 }
 
                 if (parent instanceof TransitionContainer) {
-                    trans = (TransitionViewModel) ((TransitionContainer) parent).getViewModelElement();
+                    trans = (TransitionViewModel) ((TransitionContainer) parent).getPlanElementViewModel();
                     HashMap<String, Long> related = new HashMap<>();
                     related.put(Types.SYNCHRONISATION, sync.getId());
                     related.put(Types.TRANSITION, trans.getId());

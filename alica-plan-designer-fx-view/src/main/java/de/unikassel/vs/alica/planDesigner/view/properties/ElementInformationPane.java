@@ -79,9 +79,13 @@ public class ElementInformationPane extends TitledPane {
     }
 
     private void adaptUI(String type) {
+        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab);
         switch (type) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
+            case Types.PLANTYPE:
+            case Types.ENTRYPOINT:
+            case Types.SYNCHRONISATION:
                 this.setContent(propertySheet);
                 break;
             case Types.PLANTYPE:
@@ -113,32 +117,27 @@ public class ElementInformationPane extends TitledPane {
             case Types.PLAN:
             case Types.MASTERPLAN:
                 this.setContent(tabPane);
-                tabPane.getTabs().removeAll(postConditionTab, parametrizationTab);
-                if (!tabPane.getTabs().contains(variablesTab)) {
-                    tabPane.getTabs().add(variablesTab);
-                }
-                if (!tabPane.getTabs().contains(preConditionTab)) {
-                    tabPane.getTabs().add(preConditionTab);
-                }
-                if (!tabPane.getTabs().contains(runtimeConditionTab)) {
-                    tabPane.getTabs().add(runtimeConditionTab);
-                }
+                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab);
+                break;
+            case Types.STATE:
+                this.setContent(propertySheet);
+                break;
+            case Types.BEHAVIOUR:
+                this.setContent(tabPane);
+                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab,postConditionTab);
+                break;
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+                this.setContent(tabPane);
+                tabPane.getTabs().addAll(propertiesTab, postConditionTab);
+                break;
+            case Types.TRANSITION:
+                this.setContent(tabPane);
+                tabPane.getTabs().addAll(propertiesTab, preConditionTab);
                 break;
             default:
                 this.setContent(tabPane);
-                tabPane.getTabs().remove(parametrizationTab);
-                if (!tabPane.getTabs().contains(variablesTab)) {
-                    tabPane.getTabs().add(variablesTab);
-                }
-                if (!tabPane.getTabs().contains(preConditionTab)) {
-                    tabPane.getTabs().add(preConditionTab);
-                }
-                if (!tabPane.getTabs().contains(runtimeConditionTab)) {
-                    tabPane.getTabs().add(runtimeConditionTab);
-                }
-                if (!tabPane.getTabs().contains(postConditionTab)) {
-                    tabPane.getTabs().add(postConditionTab);
-                }
+                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
                 break;
         }
     }

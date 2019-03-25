@@ -7,21 +7,26 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
-import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ConditionViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
+import javafx.util.converter.DefaultStringConverter;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.BeanPropertyUtils;
 
@@ -39,20 +44,51 @@ public class ConditionsTab extends Tab {
     private final String type;
     private final IPluginEventHandler pluginHandler;
 
-    private final  ComboBox<String> pluginSelection;
-    private final PropertySheet properties;
-    private final Pane pluginUI;
+    private ComboBox<String> pluginSelection;
+    private PropertySheet properties;
+    private VariablesTable<VariableViewModel> variables;
+    private VariablesTable<QuantifierViewModel> quantifiers;
+    private Pane pluginUI;
 
     private ViewModelElement parentElement;
+    private HasVariablesView variablesHoldingParent;
     private ConditionViewModel condition;
 
-    private final ScrollPane hidableView;
+    private ScrollPane hidableView;
 
-    public ConditionsTab(String title, String type){
+    private final ListChangeListener<VariableViewModel> allVariablesListener;
+    private final ListChangeListener<QuantifierViewModel> quantifierListener;
+
+    public ConditionsTab(String title, String type) {
         super(title);
         this.type = type;
         pluginHandler = MainWindowController.getInstance().getConfigWindowController().getPluginEventHandler();
 
+        allVariablesListener = c -> {
+            while(c.next()) {
+                for (VariableViewModel rem : c.getRemoved()) {
+                    variables.removeItem(rem);
+                }
+                for (VariableViewModel add : c.getAddedSubList()) {
+                    variables.addItem(add);
+                }
+            }
+        };
+
+        quantifierListener = c -> {
+            while (c.next()){
+                for (QuantifierViewModel rem : c.getRemoved()){
+                    quantifiers.removeItem(rem);
+                }
+                for (QuantifierViewModel add : c.getAddedSubList()){
+                    quantifiers.addItem(add);
+                }
+            }
+        };
+    }
+
+    private void createGui() {
+        this.setContent(null);
         pluginUI = new Pane();
         pluginSelection = new ComboBox<>();
         List<String> availablePlugins = pluginHandler.getAvailablePlugins();
@@ -84,17 +120,25 @@ public class ConditionsTab extends Tab {
 
         properties = new PropertySheet();
         properties.setModeSwitcherVisible(false);
+        properties.setSearchBoxVisible(false);
+        String propertiesTitle = I18NRepo.getInstance().getString("label.caption.properties");
+        TitledPane propertySection = new TitledPane(propertiesTitle, properties);
 
-        TitledPane section0 = new TitledPane();
-        section0.setContent(properties);
-        section0.setText(I18NRepo.getInstance().getString("label.caption.properties"));
+        String pluginTitle = I18NRepo.getInstance().getString("label.caption.pluginui");
+        TitledPane pluginSection = new TitledPane(pluginTitle, pluginUI);
+        pluginSection.setExpanded(false);
 
-        TitledPane section1 = new TitledPane();
-        section1.setContent(pluginUI);
-        section1.setText(I18NRepo.getInstance().getString("label.caption.pluginui"));
-        section1.setExpanded(false);
+        String variablesTitle = I18NRepo.getInstance().getString("label.caption.variables");
+        variables = createVariableTable();
+        TitledPane variablesSection = new TitledPane(variablesTitle, variables);
+        variablesSection.setExpanded(false);
 
-        VBox vBox = new VBox(section0, section1);
+        String quantifiersTitle = I18NRepo.getInstance().getString("label.caption.quantifiers");
+        quantifiers = createQuantifierTable();
+        TitledPane quantifierSection = new TitledPane(quantifiersTitle, quantifiers);
+        quantifierSection.setExpanded(false);
+
+        VBox vBox = new VBox(propertySection, pluginSection, variablesSection, quantifierSection);
         this.hidableView = new ScrollPane(vBox);
         hidableView.setFitToWidth(true);
 
@@ -106,7 +150,13 @@ public class ConditionsTab extends Tab {
     }
 
     public void setViewModelElement(ViewModelElement viewModelElement){
+
+        if(variablesHoldingParent != null) {
+            variablesHoldingParent.getVariables().removeListener(allVariablesListener);
+        }
+
         this.parentElement = viewModelElement;
+        ObjectProperty<ConditionViewModel> conditionProperty;
 
         switch(this.type){
             case Types.PRECONDITION:
@@ -114,14 +164,26 @@ public class ConditionsTab extends Tab {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
                         PlanViewModel plan = (PlanViewModel) parentElement;
-                        setConditionAndListener(plan.preConditionProperty());
+                        this.variablesHoldingParent = plan;
+                        conditionProperty = plan.preConditionProperty();
                         break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
-                        setConditionAndListener(behaviour.preConditionProperty());
+                        this.variablesHoldingParent = behaviour;
+                        conditionProperty = behaviour.preConditionProperty();
+                        break;
+
+                    case Types.TRANSITION:
+                        TransitionViewModel transition = (TransitionViewModel) parentElement;
+                        this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
+                                .getGuiModificationHandler().getViewModelElement(transition.getParentId());
+                        conditionProperty = transition.preConditionProperty();
                         break;
                     default:
                         condition = null;
+                        this.parentElement = null;
+                        this.variablesHoldingParent = null;
+                        conditionProperty = null;
                 }
                 break;
 
@@ -130,43 +192,62 @@ public class ConditionsTab extends Tab {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
                         PlanViewModel plan = (PlanViewModel) parentElement;
-                        setConditionAndListener(plan.runtimeConditionProperty());
+                        this.variablesHoldingParent = plan;
+                        conditionProperty = plan.runtimeConditionProperty();
                         break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
-                        setConditionAndListener(behaviour.runtimeConditionProperty());
+                        this.variablesHoldingParent = behaviour;
+                        conditionProperty = behaviour.runtimeConditionProperty();
                         break;
                     default:
                         condition = null;
+                        this.parentElement = null;
+                        this.variablesHoldingParent = null;
+                        conditionProperty = null;
                 }
                 break;
 
             case Types.POSTCONDITION:
                 switch (parentElement.getType()){
-                    // TODO: Find a way to get the postconditions of success- and failurestates from the viewmodel
-//                    case Types.SUCCESSSTATE:
-//                    case Types.FAILURESTATE:
-//                        StateViewModel state = (StateViewModel) viewModelElement;
-//                        condition = state.???
-//                        break;
+
+                    case Types.SUCCESSSTATE:
+                    case Types.FAILURESTATE:
+                        StateViewModel state = (StateViewModel) viewModelElement;
+                        this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
+                                .getGuiModificationHandler().getViewModelElement(state.getParentId());
+                        conditionProperty = state.postConditionProperty();
+                        break;
                     case Types.BEHAVIOUR:
                         BehaviourViewModel behaviour = (BehaviourViewModel) parentElement;
-                        setConditionAndListener(behaviour.posConditionProperty());
+                        this.variablesHoldingParent = behaviour;
+                        conditionProperty = behaviour.posConditionProperty();
                         break;
                     default:
                         condition = null;
+                        this.parentElement = null;
+                        this.variablesHoldingParent = null;
+                        conditionProperty = null;
                 }
                 break;
 
             default:
                 condition = null;
+                this.parentElement = null;
+                this.variablesHoldingParent = null;
+                conditionProperty = null;
         }
 
+
+        createGui();
+        if(conditionProperty != null) {
+            setConditionAndListener(conditionProperty);
+        }
 
         // Setup gui and listeners
         if(condition == null){
             pluginSelection.getSelectionModel().select(NONE);
-        }else{
+        }else {
             pluginSelection.getSelectionModel().select(condition.getPluginName());
             updateGuiOnChange(condition.getPluginName());
         }
@@ -215,33 +296,42 @@ public class ConditionsTab extends Tab {
     }
 
     private void setConditionAndListener(ObjectProperty<ConditionViewModel> property){
+        // Set the current value
+        setCondition(property.get());
+
+        // Update for new values
+        property.addListener((observable, oldValue, newValue) -> setCondition(newValue));
+    }
+
+    private void setCondition(ConditionViewModel condition){
+
+
+        if(condition != null) {
+            condition.getQuantifiers().removeListener(quantifierListener);
+        }
+
+
         Predicate<PropertyDescriptor> relevantProperties
                 = desc -> Arrays.asList("id", "name", "comment", "enabled", "conditionString").contains(desc.getName());
-
-        // Set the current value
-        this.condition = property.get();
+        this.condition = condition;
 
         this.properties.getItems().clear();
+        this.variables.clear();
+        this.quantifiers.clear();
         if(condition != null) {
             this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
+            for(VariableViewModel variable : variablesHoldingParent.getVariables()){
+                variables.addItem(variable);
+            }
+            variablesHoldingParent.getVariables().addListener(allVariablesListener);
+            for(QuantifierViewModel quantifier : condition.getQuantifiers()){
+                quantifiers.addItem(quantifier);
+            }
+            condition.getQuantifiers().addListener(quantifierListener);
             setPluginSelection(condition.getPluginName());
         }else {
             setPluginSelection(NONE);
         }
-
-        // Update for new values
-        property.addListener((observable, oldValue, newValue) -> {
-
-            this.condition = newValue;
-
-            this.properties.getItems().clear();
-            if(condition != null) {
-                this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
-                setPluginSelection(condition.getPluginName());
-            }else {
-                setPluginSelection(NONE);
-            }
-        });
     }
 
     private void setPluginSelection(String pluginName){
@@ -250,5 +340,198 @@ public class ConditionsTab extends Tab {
         this.pluginSelection.getSelectionModel().select(pluginName);
         this.hidableView.setVisible(pluginName != null && !pluginName.equals(NONE));
         this.pluginSelection.setOnAction(handler);
+    }
+
+    private VariablesTable<VariableViewModel> createVariableTable(){
+        VariablesTable<VariableViewModel> variablesTable = new VariablesTable<VariableViewModel>() {
+            @Override
+            protected void onAddElement() {
+                VariableViewModel sel = variables.getSelectedItem();
+                if(sel != null && !condition.getVariables().contains(sel)){
+                    GuiModificationEvent event = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.VARIABLE, sel.getName());
+                    event.setElementId(sel.getId());
+                    event.setParentId(condition.getId());
+                    MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+                }
+            }
+
+            @Override
+            protected void onRemoveElement() {
+                VariableViewModel sel = variables.getSelectedItem();
+                if(sel != null && condition.getVariables().contains(sel)){
+                    GuiModificationEvent event = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT, Types.VARIABLE, sel.getName());
+                    event.setElementId(sel.getId());
+                    event.setParentId(condition.getId());
+                    MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+                }
+            }
+        };
+
+        variablesTable.table.setRowFactory(param -> new TableRow<VariableViewModel>(){
+            @Override
+            public void updateItem(VariableViewModel item, boolean empty){
+                if(condition != null) {
+                    if (condition.getVariables().contains(item)) {
+                        setStyle("-fx-font-weight: bold;");
+                    } else {
+                        setStyle("");
+                    }
+                    condition.getVariables().addListener((InvalidationListener) observable -> {
+                        if (condition.getVariables().contains(item)) {
+                            setStyle("-fx-font-weight: bold;");
+                        } else {
+                            setStyle("");
+                        }
+                    });
+                }
+            }
+        });
+
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+        variablesTable.addColumn(i18NRepo.getString("label.column.name"), "name", new DefaultStringConverter(), true);
+        variablesTable.addColumn(i18NRepo.getString("label.column.elementType"), "variableType", new DefaultStringConverter(), true);
+        variablesTable.addColumn(i18NRepo.getString("label.column.comment"), "comment", new DefaultStringConverter(), true);
+        return variablesTable;
+    }
+
+    private VariablesTable<QuantifierViewModel> createQuantifierTable(){
+        VariablesTable<QuantifierViewModel> quantifiersTable = new VariablesTable<QuantifierViewModel>() {
+            @Override
+            protected void onAddElement() {
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.QUANTIFIER, "NEW_QUANTIFIER");
+                event.setParentId(condition.getId());
+                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+            }
+
+            @Override
+            protected void onRemoveElement() {
+                QuantifierViewModel selected = quantifiers.getSelectedItem();
+                if(selected == null){
+                    return;
+                }
+
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.QUANTIFIER, selected.getName());
+                event.setParentId(condition.getId());
+                event.setElementId(selected.getId());
+                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
+            }
+        };
+
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+
+        // Inserting a special column into the table, that holds a ComboBox instead of a TextField
+        String type = i18NRepo.getString("label.column.elementType");
+        TableColumn<QuantifierViewModel, String> typeColumn = new TableColumn<>(type);
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("quantifierType"));
+        Callback<TableColumn<QuantifierViewModel, String>, TableCell<QuantifierViewModel, String>> typeCellFactory
+                = ComboBoxTableCell.forTableColumn(new DefaultStringConverter()
+                , FXCollections.observableArrayList(QuantifierViewModel.QUANTIFIER_TYPES));
+        typeColumn.setCellFactory(col -> {
+            TableCell<QuantifierViewModel, String> cell = typeCellFactory.call(col);
+            cell.setEditable(true);
+            return cell;
+        });
+        quantifiersTable.table.getColumns().add(typeColumn);
+
+        // Inserting a special column into the table, that holds a ComboBox instead of a TextField
+        String scope = i18NRepo.getString("label.column.scope");
+        TableColumn<QuantifierViewModel, Long> scopeColumn = new TableColumn<>(scope);
+        scopeColumn.setCellValueFactory(new PropertyValueFactory<>("scope"));
+        Callback<TableColumn<QuantifierViewModel, Long>, TableCell<QuantifierViewModel, Long>> scopeCellFactory
+                = ComboBoxTableCell.forTableColumn(
+                // Custom StringConverter that allows to show the elements name in addition to its id
+                new StringConverter<Long>() {
+                    private IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+                    @Override
+                    public String toString(Long l) {
+                        if(l == 0) {
+                            return "";
+                        }
+                        ViewModelElement e = handler.getViewModelElement(l);
+                        return e.getName() + " (id: " + e.getId() + ")";
+                    }
+
+                    @Override
+                    public Long fromString(String s) {
+                        if(s.isEmpty()) {
+                            return 0L;
+                        }
+                        int strtIdx = s.lastIndexOf(' ') + 1;
+                        int endIdx  = s.lastIndexOf(')');
+                        return Long.parseLong(s.substring(strtIdx, endIdx));
+                    }
+                }
+                , this.getPossibleScopesObservableList());
+        scopeColumn.setCellFactory(col -> {
+            TableCell<QuantifierViewModel, Long> cell = scopeCellFactory.call(col);
+            cell.setEditable(true);
+            return cell;
+        });
+        quantifiersTable.table.getColumns().add(scopeColumn);
+
+
+
+        quantifiersTable.addColumn(i18NRepo.getString("label.column.sorts"), "sorts"
+                , new DefaultStringConverter(), true);
+        quantifiersTable.addColumn(i18NRepo.getString("label.column.comment"), "comment"
+                , new DefaultStringConverter(), true);
+
+        return quantifiersTable;
+    }
+
+    private ObservableList<Long> getPossibleScopesObservableList() {
+        ObservableList<Long> possibleScopes = FXCollections.observableArrayList();
+        if(parentElement == null || variablesHoldingParent == null) {
+            return possibleScopes;
+        }
+
+        switch (parentElement.getType()) {
+            case Types.BEHAVIOUR:
+                possibleScopes.add(parentElement.getId());
+                break;
+            case Types.PLAN:
+            case Types.MASTERPLAN:
+            case Types.SUCCESSSTATE:
+            case Types.FAILURESTATE:
+            case Types.TRANSITION:
+                PlanViewModel plan = (PlanViewModel) variablesHoldingParent;
+                possibleScopes.add(plan.getId());
+
+                // Adding the plans current States and Tasks to the possibleScopes
+                for(StateViewModel state : plan.getStates()) {
+                    possibleScopes.add(state.getId());
+                }
+                for(EntryPointViewModel entryPoint : plan.getEntryPoints()) {
+                    if(!possibleScopes.contains(entryPoint.getTask().getId())) {
+                        possibleScopes.add(entryPoint.getTask().getId());
+                    }
+                }
+
+                // Adding Listeners to keep the possibleScopes updated
+                plan.getStates().addListener((ListChangeListener<? super StateViewModel>) c -> {
+                    while(c.next()) {
+                        for(StateViewModel state : c.getAddedSubList()) {
+                            possibleScopes.add(state.getId());
+                        }
+                        for(StateViewModel state : c.getRemoved()) {
+                            possibleScopes.remove(state.getId());
+                        }
+                    }
+                });
+                plan.getEntryPoints().addListener((ListChangeListener<? super EntryPointViewModel>) c -> {
+                    while(c.next()) {
+                        for(EntryPointViewModel entryPoint : c.getAddedSubList()) {
+                            if(!possibleScopes.contains(entryPoint.getTask().getId())) {
+                                possibleScopes.add(entryPoint.getTask().getId());
+                            }
+                        }
+                        for(EntryPointViewModel entryPoint : c.getRemoved()) {
+                            possibleScopes.remove(entryPoint.getTask().getId());
+                        }
+                    }
+                });
+        }
+
+        return possibleScopes;
     }
 }

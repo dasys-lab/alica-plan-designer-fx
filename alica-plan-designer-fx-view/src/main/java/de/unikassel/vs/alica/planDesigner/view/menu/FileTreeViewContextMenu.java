@@ -27,9 +27,17 @@ public class FileTreeViewContextMenu extends ContextMenu {
         newResourceMenu.setInitialDirectoryHint(hintFile);
     }
 
+    public void showTaskrepositoryItem(boolean show) {
+        newResourceMenu.showTaskRepositoryItem(show);
+    }
+
     public void setTreeCell(TreeCell treeCell) {
         this.treeCell = treeCell;
         renameFileMenuItem.setTreeCell(treeCell);
         deleteFileMenuItem.setTreeCell(treeCell);
+    }
+
+    public NewResourceMenu getNewResourceMenu() {
+        return newResourceMenu;
     }
 }

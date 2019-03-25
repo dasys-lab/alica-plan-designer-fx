@@ -1,6 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.events;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
+
+import java.util.Map;
 
 public class ModelEvent {
     protected ModelEventType eventType;
@@ -10,6 +13,9 @@ public class ModelEvent {
 
     protected String changedAttribute;
     protected Object newValue;
+
+    protected Map<String, Long> relatedObjects;
+    protected UiElement uiElement;
 
     public ModelEvent(ModelEventType eventType, PlanElement element, String elementType) {
         this.eventType = eventType;
@@ -51,5 +57,21 @@ public class ModelEvent {
 
     public Object getNewValue() {
         return this.newValue;
+    }
+
+    public Map<String, Long> getRelatedObjects() {
+        return relatedObjects;
+    }
+
+    public void setRelatedObjects(Map<String, Long> relatedObjects) {
+        this.relatedObjects = relatedObjects;
+    }
+
+    public void setUiElement(UiElement uiElement) {
+        this.uiElement = uiElement;
+    }
+
+    public UiElement getUiElement() {
+        return uiElement;
     }
 }

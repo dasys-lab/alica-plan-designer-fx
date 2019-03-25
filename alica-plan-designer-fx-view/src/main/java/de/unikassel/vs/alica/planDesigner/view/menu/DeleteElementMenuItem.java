@@ -1,22 +1,15 @@
 package de.unikassel.vs.alica.planDesigner.view.menu;
 
-import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.controller.UsagesWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class DeleteElementMenuItem extends MenuItem {
@@ -57,22 +50,9 @@ public class DeleteElementMenuItem extends MenuItem {
         if (usages.isEmpty()) {
             return false;
         }
+        UsagesWindowController.createUsagesWindow(usages, i18NRepo.getString("label.usage.nodelete"), guiModificationHandler);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(ShowUsagesMenuItem.class.getClassLoader().getResource("usagesWindow.fxml"));
-        try {
-            Parent infoWindow = fxmlLoader.load();
-            UsagesWindowController controller = fxmlLoader.getController();
-            controller.createReferencesList(usages, guiModificationHandler);
-            Stage stage = new Stage();
-            stage.setTitle(i18NRepo.getString("label.usage.nodelete"));
-            stage.setScene(new Scene(infoWindow));
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(PlanDesignerApplication.getPrimaryStage());
-            stage.showAndWait();
-        } catch (IOException ignored) {
-        } finally {
-            return true;
-        }
+        return true;
     }
 
 

@@ -12,19 +12,19 @@ import java.util.Stack;
  * The CommandStack manages the undo and redo stack.
  * Every time the stacks change all observers are informed about the change.
  * You can also ask the CommandStack about the dirty state of a plan
- * which is determined by the save flag of the {@link AbstractCommand}s on the undo stack
+ * which is determined by the save flag of the {@link Command}s on the undo stack
  */
 public class CommandStack extends Observable {
     private static final Logger LOG = LogManager.getLogger(CommandStack.class);
-    private Stack<AbstractCommand> undoStack = new Stack<>();
-    private Stack<AbstractCommand> redoStack = new Stack<>();
+    private Stack<Command> undoStack = new Stack<>();
+    private Stack<Command> redoStack = new Stack<>();
     private ArrayList<Observer> observers = new ArrayList<>();
 
     /**
      * Executes a command, puts it on the undo stack and clears the redo stack.
      * @param command
      */
-    public void storeAndExecute(AbstractCommand command) {
+    public void storeAndExecute(Command command) {
         command.doCommand();
 //        command.setSaved(false);
         undoStack.push(command);
@@ -36,7 +36,7 @@ public class CommandStack extends Observable {
      * executes first command on undo stack and puts it from there to the redo stack.
      */
     public void undo() {
-        AbstractCommand undone = undoStack.pop();
+        Command undone = undoStack.pop();
         undone.undoCommand();
 //        undone.setSaved(false);
         redoStack.push(undone);
@@ -47,7 +47,7 @@ public class CommandStack extends Observable {
      * executes first command on redo stack and puts it from there to the undo stack.
      */
     public void redo() {
-        AbstractCommand redone = redoStack.pop();
+        Command redone = redoStack.pop();
         redone.doCommand();
 //        redone.setSaved(false);
         undoStack.push(redone);
@@ -120,11 +120,11 @@ public class CommandStack extends Observable {
 //        }
 //    }
 
-    public Stack<AbstractCommand> getUndoStack() {
+    public Stack<Command> getUndoStack() {
         return undoStack;
     }
 
-    public Stack<AbstractCommand> getRedoStack() {
+    public Stack<Command> getRedoStack() {
         return redoStack;
     }
 }

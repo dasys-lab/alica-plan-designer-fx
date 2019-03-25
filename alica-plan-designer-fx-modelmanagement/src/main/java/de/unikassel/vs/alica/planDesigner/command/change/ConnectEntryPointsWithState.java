@@ -3,27 +3,27 @@ package de.unikassel.vs.alica.planDesigner.command.change;
 import de.unikassel.vs.alica.planDesigner.alicamodel.EntryPoint;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
-import de.unikassel.vs.alica.planDesigner.command.AbstractCommand;
+import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.PlanUiExtensionPair;
+import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
-public class ConnectEntryPointsWithState extends AbstractCommand {
+public class ConnectEntryPointsWithState extends Command {
 
     protected EntryPoint entryPoint;
     protected State newState;
     protected State previousState;
-    protected PlanUiExtensionPair parentOfElement;
+    protected UiExtension parentOfElement;
 
-    public ConnectEntryPointsWithState(ModelManager modelManager, ModelModificationQuery mmq) {
-        super(modelManager);
-        this.entryPoint = (EntryPoint) modelManager.getPlanElement((mmq.getRelatedObjects().get(State.ENTRYPOINT)));
+    public ConnectEntryPointsWithState(ModelManager manager, ModelModificationQuery mmq) {
+        super(manager, mmq);
+        this.entryPoint = (EntryPoint) manager.getPlanElement((mmq.getRelatedObjects().get(Types.ENTRYPOINT)));
         this.previousState = entryPoint.getState();
-        this.newState = (State) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.STATE));
-        this.parentOfElement = modelManager.getPlanUIExtensionPair(mmq.getParentId());
+        this.newState = (State) manager.getPlanElement(mmq.getRelatedObjects().get(Types.STATE));
+        this.parentOfElement = manager.getPlanUIExtensionPair(mmq.getParentId());
     }
 
 

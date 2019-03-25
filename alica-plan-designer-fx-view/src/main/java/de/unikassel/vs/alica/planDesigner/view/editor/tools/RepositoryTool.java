@@ -20,7 +20,6 @@ public class RepositoryTool extends AbstractTool {
 
     @Override
     protected void initHandlerMap() {
-        previousCursor = Cursor.DEFAULT;
         customHandlerMap.put(MouseDragEvent.MOUSE_DRAG_OVER, new EventHandler<MouseDragEvent>() {
             @Override
             public void handle(MouseDragEvent event) {

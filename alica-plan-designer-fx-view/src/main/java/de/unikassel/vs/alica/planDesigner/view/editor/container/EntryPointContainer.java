@@ -1,43 +1,38 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.EntryPointViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.concurrent.Task;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import javafx.util.Pair;
-
-import java.util.ArrayList;
 
 /**
  *
  */
-public class EntryPointContainer extends AbstractPlanElementContainer {
+public class EntryPointContainer extends Container {
 
+    public static final double ENTRYPOINT_RADIUS = 10.0;
     private StateContainer stateContainer;
     private boolean dragged;
     private ImageView taskIcon;
     private EntryPointViewModel containedElement;
 
-    /**
-     * This constructor is for dummy containers. NEVER use in real UI
-     */
-    public EntryPointContainer() {
-        super(null, null, null);
-
-    }
+//    /**
+//     * This constructor is for dummy containers. NEVER use in real UI
+//     */
+//    public EntryPointContainer() {
+//        super(null, null, null);
+//
+//    }
 
     /**
      * @param containedElement
@@ -61,9 +56,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
     @Override
     public void setupContainer() {
         getChildren().clear();
-//        setLayoutX(getPmlUiExtension().getXPos());
-//        setLayoutY(getPmlUiExtension().getYPos());
-        visualRepresentation = new Circle(StateContainer.STATE_RADIUS,
+        visualRepresentation = new Circle(EntryPointContainer.ENTRYPOINT_RADIUS,
                 getVisualisationColor());
         setEffectToStandard();
 
@@ -74,7 +67,7 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
             Point2D localXY = parentToLocal(planXY);
 
             Point2D vec = new Point2D(localXY.getX() - visualRepresentation.getLayoutX(), localXY.getY() - visualRepresentation.getLayoutY());
-            double len = vec.magnitude() - StateContainer.STATE_RADIUS;
+            double len = vec.magnitude() - EntryPointContainer.ENTRYPOINT_RADIUS;
             vec = vec.normalize().multiply(len);
 
             Line line = new Line(visualRepresentation.getLayoutX(),
@@ -89,28 +82,15 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
         Text taskName = new Text(containedElement.getTask().getName());
         HBox hBox = new HBox();
         hBox.getChildren().addAll(taskIcon, taskName);
-        hBox.setLayoutX(visualRepresentation.getLayoutX() - taskName.getLayoutBounds().getWidth() / 2.0 - taskIcon.getFitWidth() / 2.0 - StateContainer.STATE_RADIUS / 2.0);
-        hBox.setLayoutY(visualRepresentation.getLayoutY() - StateContainer.STATE_RADIUS * 1.2 - taskName.getFont().getSize());
+        hBox.setLayoutX(visualRepresentation.getLayoutX() - taskName.getLayoutBounds().getWidth() / 2.0 - taskIcon.getFitWidth() / 2.0 - EntryPointContainer.ENTRYPOINT_RADIUS / 2.0);
+        hBox.setLayoutY(visualRepresentation.getLayoutY() - EntryPointContainer.ENTRYPOINT_RADIUS * 1.2 - taskName.getFont().getSize());
         getChildren().add(hBox);
-    }
-
-    @Override
-    public void setEffectToStandard() {
-        visualRepresentation.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,
-                new Color(0,0,0,0.8), 10, 0, 0, 0));
     }
 
     @Override
     public Color getVisualisationColor() {
         return Color.BLUE;
     }
-
-    protected EventHandler<MouseEvent> getMouseClickedEventHandler(EntryPointViewModel containedElement) {
-        ArrayList<Pair<ViewModelElement, AbstractPlanElementContainer>> selected = new ArrayList<>();
-        selected.add(new Pair<>(containedElement, this));
-        return event -> ((PlanEditorGroup) getParent()).getPlanEditorTab().getSelectedPlanElements().setValue(selected);
-    }
-
 
     @Override
     public void redrawElement() {
@@ -130,5 +110,15 @@ public class EntryPointContainer extends AbstractPlanElementContainer {
     public void setStateContainer(StateContainer stateContainer) {
         this.stateContainer = stateContainer;
         stateContainer.addListener(observable -> setupContainer());
+    }
+
+    @Override
+    public void setEffectToStandard() {
+        this.visualRepresentation.setEffect(Container.standardEffect);
+    }
+
+    @Override
+    public void setCustomEffect(Effect effect) {
+        this.visualRepresentation.setEffect(effect);
     }
 }
