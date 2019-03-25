@@ -20,6 +20,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.plugin.PluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
+import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
@@ -33,7 +34,11 @@ import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
+import javafx.stage.Screen;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -42,6 +47,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Central class that synchronizes model and view.
@@ -466,6 +472,30 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             return;
         }
         this.modelManager.handleModelModificationQuery(mmq);
+    }
+
+    public void handleNoTaskRepositoryNotification() {
+        HashMap<String, Double> params = configEventHandler.getPreferredWindowSettings();
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(i18NRepo.getString("label.warn"));
+        alert.setHeaderText(i18NRepo.getString("label.error.missing.taskrepository"));
+        alert.setContentText(i18NRepo.getString("label.error.missing.taskrepository.choice"));
+        alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2 - alert.getDialogPane().getWidth());
+        alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2 - alert.getDialogPane().getHeight());
+
+        ButtonType confirmBtn = new ButtonType(i18NRepo.getString("action.confirm"));
+        ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"), ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(confirmBtn, closeBtn);
+
+        alert.showAndWait();
+        if (alert.getResult() == confirmBtn) {
+            alert.close();
+        } else if (alert.getResult() == closeBtn) {
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
     @Override
