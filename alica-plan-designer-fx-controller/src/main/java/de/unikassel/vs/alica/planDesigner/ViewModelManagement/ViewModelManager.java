@@ -68,8 +68,10 @@ public class ViewModelManager {
             element = createEntryPointViewModel((EntryPoint) planElement);
         } else if (planElement instanceof Variable) {
             element = createVariableViewModel((Variable) planElement);
+        } else if (planElement instanceof Parametrisation) {
+            element = createParametrisationViewModel((Parametrisation) planElement);
         } else if (planElement instanceof Transition) {
-            element = createTransitionViewModel((Transition) planElement);
+             element = createTransitionViewModel((Transition) planElement);
         } else if (planElement instanceof Synchronisation) {
             element = createSynchronizationViewModel((Synchronisation) planElement);
         } else if (planElement instanceof Quantifier) {
@@ -153,6 +155,14 @@ public class ViewModelManager {
         variableViewModel.setVariableType(var.getVariableType());
         variableViewModel.setComment(var.getComment());
         return variableViewModel;
+    }
+
+    private ParametrizationViewModel createParametrisationViewModel(Parametrisation param) {
+        ParametrizationViewModel parametrizationViewModel = new ParametrizationViewModel(param.getId(), param.getName(), Types.PARAMETRIZATION);
+        parametrizationViewModel.setSubPlan((PlanViewModel) getViewModelElement(param.getSubPlan()));
+        parametrizationViewModel.setSubVariable((VariableViewModel) getViewModelElement(param.getSubVariable()));
+        parametrizationViewModel.setVariable((VariableViewModel) getViewModelElement(param.getVariable()));
+        return parametrizationViewModel;
     }
 
     private ConditionViewModel createConditionViewModel(Condition condition) {
@@ -399,6 +409,14 @@ public class ViewModelManager {
                     throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no variables");
                 }
                 break;
+            case Types.PARAMETRIZATION:
+                parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                if ( parentViewModel instanceof HasParametrizationView) {
+                    ((HasParametrizationView) parentViewModel).getParametrizations().remove(viewModelElement);
+                } else {
+                    throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no parametrization");
+                }
+                break;
             case Types.PRECONDITION:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
                 switch (parentViewModel.getType()){
@@ -506,6 +524,9 @@ public class ViewModelManager {
             case Types.VARIABLE:
                 ((HasVariablesView) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
                 break;
+            case Types.PARAMETRIZATION: {
+                ((HasParametrizationView) parentViewModel).getParametrizations().add((ParametrizationViewModel) viewModelElement);
+            } break;
             case Types.ABSTRACTPLAN:
                 PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
                 State state = (State) event.getNewValue();
@@ -640,6 +661,9 @@ public class ViewModelManager {
                 break;
             case Types.VARIABLE:
                 parentPlan.getVariables().add((VariableViewModel)element);
+                break;
+            case Types.PARAMETRIZATION:
+                int i = 0;
                 break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:

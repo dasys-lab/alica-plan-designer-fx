@@ -79,48 +79,25 @@ public class ElementInformationPane extends TitledPane {
     }
 
     private void adaptUI(String type) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab);
+        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, parametrizationTab);
         switch (type) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
-            case Types.PLANTYPE:
             case Types.ENTRYPOINT:
             case Types.SYNCHRONISATION:
                 this.setContent(propertySheet);
                 break;
             case Types.PLANTYPE:
-                tabPane.getTabs().remove(postConditionTab);
-                tabPane.getTabs().remove(preConditionTab);
-                tabPane.getTabs().remove(runtimeConditionTab);
-                if (!tabPane.getTabs().contains(parametrizationTab)) {
-                    tabPane.getTabs().add(parametrizationTab);
-                }
-                if (!tabPane.getTabs().contains(variablesTab)) {
-                    tabPane.getTabs().add(variablesTab);
-                }break;
-            case Types.STATE:
-                if (!tabPane.getTabs().contains(parametrizationTab)) {
-                    tabPane.getTabs().add(parametrizationTab);
-                }
-                if (!tabPane.getTabs().contains(variablesTab)) {
-                    tabPane.getTabs().add(variablesTab);
-                }
-                if (!tabPane.getTabs().contains(preConditionTab)) {
-                    tabPane.getTabs().add(preConditionTab);
-                }
-                if (!tabPane.getTabs().contains(runtimeConditionTab)) {
-                    tabPane.getTabs().add(runtimeConditionTab);
-                }
-                if (!tabPane.getTabs().contains(postConditionTab)) {
-                    tabPane.getTabs().add(postConditionTab);
-                } break;
+                this.setContent(tabPane);
+                tabPane.getTabs().addAll(propertiesTab, parametrizationTab);
+                break;
             case Types.PLAN:
             case Types.MASTERPLAN:
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab);
+                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, parametrizationTab);
                 break;
             case Types.STATE:
-                this.setContent(propertySheet);
+                tabPane.getTabs().addAll(propertiesTab, parametrizationTab);
                 break;
             case Types.BEHAVIOUR:
                 this.setContent(tabPane);

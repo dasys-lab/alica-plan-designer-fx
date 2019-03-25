@@ -29,4 +29,5 @@ public class Types {
     public static final String ABSTRACTPLAN = "abstractplan";
     public static final String UIEXTENSION = "uiextension";
     public static final String NOTYPE = "";
+    public static final String PARAMETRIZATION = "parametrization";
 }

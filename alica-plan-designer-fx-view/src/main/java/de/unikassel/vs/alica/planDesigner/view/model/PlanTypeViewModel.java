@@ -7,11 +7,13 @@ public class PlanTypeViewModel extends SerializableViewModel {
 
     private ObservableList<PlanViewModel> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
+    protected ObservableList<ParametrizationViewModel> parametrizations;
 
     public PlanTypeViewModel(long id, String name, String type) {
         super(id, name, type);
         allPlans = FXCollections.observableArrayList();
         plansInPlanType = FXCollections.observableArrayList();
+        parametrizations = FXCollections.observableArrayList();
     }
 
     public void addPlanToAllPlans(PlanViewModel plan) {
@@ -57,5 +59,19 @@ public class PlanTypeViewModel extends SerializableViewModel {
             }
         }
         return false;
+    }
+
+    public ObservableList getParametrizations() {
+        return parametrizations;
+    }
+
+    public void addParametrization(ParametrizationViewModel parametrization) {
+        if(!this.parametrizations.contains(parametrization)) {
+            this.parametrizations.add(parametrization);
+        }
+    }
+
+    public void removeParametrization(ParametrizationViewModel parametrization) {
+        this.parametrizations.remove(parametrization);
     }
 }

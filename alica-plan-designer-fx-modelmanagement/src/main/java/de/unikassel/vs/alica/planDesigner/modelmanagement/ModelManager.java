@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.modelmanagement;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
@@ -339,7 +340,7 @@ public class ModelManager implements Observer {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
             System.err.println(e.getMessage());
             return null;
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | IllegalArgumentException e) {
             e.printStackTrace();
             return null;
         }
@@ -978,6 +979,9 @@ public class ModelManager implements Observer {
                         break;
                     case Types.VARIABLE:
                         cmd = new AddVariableToCondition(this, mmq);
+                        break;
+                    case Types.PARAMETRIZATION:
+                        cmd = new CreateParametrization(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");
