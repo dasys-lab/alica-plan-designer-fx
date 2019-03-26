@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 public class AlicaIcon extends Image {
 
     public static final String ADD = "add";
+    private String resourcePath;
 
     public enum Size {
         SMALL("16x16"),
@@ -21,5 +22,10 @@ public class AlicaIcon extends Image {
     public AlicaIcon(String iconName, Size size) {
         super(AlicaIcon.class.getClassLoader().getResourceAsStream("images/" +
                 iconName.toLowerCase() + size.size + ".png"));
+        resourcePath = "images/" + iconName.toLowerCase() + size.size + ".png";
+    }
+
+    public String getResourcePath() {
+        return resourcePath;
     }
 }
