@@ -143,6 +143,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     @Override
     public void selectConfiguration(String confName) {
         if (confName != null && !confName.isEmpty()) {
+            storeConfiguration(confName);
             configManager.setActiveConfiguration(confName);
             configWindowController.selectActiveConfig(confName);
         } else if (configManager.getActiveConfiguration() != null){

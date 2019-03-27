@@ -17,7 +17,12 @@ import javafx.stage.WindowEvent;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import javax.swing.ImageIcon;
+import java.awt.Image;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.HashMap;
 
 public class PlanDesignerApplication extends Application {
@@ -54,7 +59,10 @@ public class PlanDesignerApplication extends Application {
         Parent root = fxmlLoader.load();
 
         // TODO: does not load the key.xpm
-        primaryStage.getIcons().add(new AlicaIcon("icon", AlicaIcon.Size.NONE));
+        AlicaIcon icon = new AlicaIcon("icon", AlicaIcon.Size.NONE);
+        primaryStage.getIcons().add(icon);
+        // Mac dock icon workaround
+        setOSXDockIcon(icon);
         primaryStage.setTitle("ALICA - Plan Designer");
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -95,6 +103,25 @@ public class PlanDesignerApplication extends Application {
         });
 
         primaryStage.show();
+    }
+
+    private void setOSXDockIcon(AlicaIcon icon) {
+        String osString = System.getProperty("os.name");
+
+        if (osString.contains("Mac") || osString.contains("osx")) {
+            try {
+                // does not work with Java versions > 9, for Java version 10 and higher use Taskbar.getTaskbar()
+                Class appClass = Class.forName("com.apple.eawt.Application");
+                Class params[] = new Class[]{Image.class};
+                Method getApplication = appClass.getMethod("getApplication");
+                Object application = getApplication.invoke(appClass);
+                Method setDockIconImage = appClass.getMethod("setDockIconImage", params);
+                URL iconURL = AlicaIcon.class.getClassLoader().getResource(icon.getResourcePath());
+                Image image = new ImageIcon(iconURL).getImage();
+                setDockIconImage.invoke(application, image);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+            }
+        }
     }
 
     @Override

@@ -38,6 +38,8 @@ public class ElementInformationPane extends TitledPane {
 
     protected IGuiModificationHandler guiModificationHandler;
 
+    private ViewModelElement elementShown = null;
+
     public ElementInformationPane(IGuiModificationHandler handler) {
         i18NRepo = I18NRepo.getInstance();
         guiModificationHandler = handler;
@@ -62,20 +64,22 @@ public class ElementInformationPane extends TitledPane {
 
 
     public void setViewModelElement(ViewModelElement element) {
-        if (element == null) {
+        if (element == null || element == elementShown) {
             return;
         }
 
-        setText(element.getName());
-        setGraphic(new ImageView(new AlicaIcon(element.getType(), AlicaIcon.Size.SMALL)));
+        elementShown = element;
 
-        adaptUI(element.getType());
-        adaptConditions(element);
-        variablesTab.setParentViewModel(element);
-        parametrisationTab.setViewModel(element);
+        setText(elementShown.getName());
+        setGraphic(new ImageView(new AlicaIcon(elementShown.getType(), AlicaIcon.Size.SMALL)));
+
+        adaptUI(elementShown.getType());
+        adaptConditions(elementShown);
+        variablesTab.setParentViewModel(elementShown);
+        parametrizationTab.setViewModel(elementShown);
 
         propertySheet.getItems().clear();
-        propertySheet.getItems().addAll(createPropertySheetList(element));
+        propertySheet.getItems().addAll(createPropertySheetList(elementShown));
     }
 
     private void adaptUI(String type) {
@@ -89,19 +93,20 @@ public class ElementInformationPane extends TitledPane {
                 break;
             case Types.PLANTYPE:
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, parametrisationTab);
+                tabPane.getTabs().addAll(propertiesTab, parametrizationTab, variablesTab);
+                break;
+            case Types.STATE:
+                this.setContent(tabPane);
+                tabPane.getTabs().addAll(propertiesTab, parametrizationTab);
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
                 this.setContent(tabPane);
                 tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab);
                 break;
-            case Types.STATE:
-                tabPane.getTabs().addAll(propertiesTab, parametrisationTab);
-                break;
             case Types.BEHAVIOUR:
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab,postConditionTab);
+                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
                 break;
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
@@ -113,6 +118,7 @@ public class ElementInformationPane extends TitledPane {
                 tabPane.getTabs().addAll(propertiesTab, preConditionTab);
                 break;
             default:
+                System.err.println("ElementInformationPane: Unknown element type '" + type + "' choosen for showing properties stuff!");
                 this.setContent(tabPane);
                 tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
                 break;

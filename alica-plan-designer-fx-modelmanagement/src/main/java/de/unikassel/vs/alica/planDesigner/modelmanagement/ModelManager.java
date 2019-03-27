@@ -19,6 +19,7 @@ import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelMixIns.*;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
+import javafx.application.Platform;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -133,30 +134,30 @@ public class ModelManager implements Observer {
     public PlanElement getPlanElement(String absolutePath) {
         String name = absolutePath.substring(absolutePath.lastIndexOf(File.separator) + 1);
         String[] split = name.split("\\.");
-        if (split[1].equals(Extensions.BEHAVIOUR)) {
+        if (split[split.length - 1].equals(Extensions.BEHAVIOUR)) {
             for (Behaviour beh : behaviourMap.values()) {
                 if (beh.getName().equals(split[0])) {
                     return beh;
                 }
             }
-        } else if (split[1].equals(Extensions.PLAN)) {
+        } else if (split[split.length - 1].equals(Extensions.PLAN)) {
             for (Plan plan : planMap.values()) {
                 if (plan.getName().equals(split[0])) {
                     return plan;
                 }
             }
-        } else if (split[1].equals(Extensions.PLANTYPE)) {
+        } else if (split[split.length - 1].equals(Extensions.PLANTYPE)) {
             for (PlanType pt : planTypeMap.values()) {
                 if (pt.getName().equals(split[0])) {
                     return pt;
                 }
             }
-        } else if (split[1].equals(Extensions.TASKREPOSITORY)) {
+        } else if (split[split.length - 1].equals(Extensions.TASKREPOSITORY)) {
             if (taskRepository.getName().equals(split[0])) {
                 return taskRepository;
             }
         } else {
-            System.out.println("ModelManager: trying to get PlanElement for unsupported ending: " + split[1]);
+            System.out.println("ModelManager: trying to get PlanElement for unsupported ending: " + split[split.length - 1]);
         }
         return null;
     }
@@ -197,6 +198,12 @@ public class ModelManager implements Observer {
     public void loadModelFromDisk() {
         unloadModel();
         loadModelFromDisk(tasksPath);
+        if(taskRepository == null) {
+            for(IModelEventHandler handler : eventHandlerList) {
+                handler.handleNoTaskRepositoryNotification();
+            }
+            return;
+        }
         loadModelFromDisk(plansPath);
         loadModelFromDisk(rolesPath);
         resolveReferences();
@@ -268,9 +275,14 @@ public class ModelManager implements Observer {
      * That is not the case during loading the initial model from disk.
      */
     private void loadModelFile(File modelFile, boolean resolveReferences) {
+        // 0. check if valid plan ending
+        String stringType = FileSystemUtil.getExtension(modelFile);
+        if((stringType == Types.NOTYPE)) {
+            return;
+        }
+
         // 1. parse plan element from disk
         Class classType = FileSystemUtil.getClassType(modelFile);
-        String stringType = FileSystemUtil.getExtension(modelFile);
         Object parsedObject = parseFile(modelFile, classType);
         if (parsedObject == null) {
             return;

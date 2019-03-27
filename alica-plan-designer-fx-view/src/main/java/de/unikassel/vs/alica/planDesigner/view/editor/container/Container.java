@@ -80,6 +80,7 @@ public abstract class Container extends Pane implements DraggableEditorElement {
             } else {
                 Container.this.planTab.setSelectedContainer(Container.this);
             }
+            event.consume();
         };
     }
 
@@ -183,6 +184,12 @@ public abstract class Container extends Pane implements DraggableEditorElement {
     public void createTaskToEntryPointListeners(Node node, EntryPointViewModel entryPoint){
 
         entryPoint.taskProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(this::redrawElement);
+        });
+    }
+
+    public void createNameListener() {
+        planElementViewModel.nameProperty().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(this::redrawElement);
         });
     }

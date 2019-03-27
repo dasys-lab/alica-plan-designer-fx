@@ -17,6 +17,7 @@ public class AbstractPlanContainer extends Container {
     public AbstractPlanContainer(StateContainer parentStateContainer, PlanElementViewModel abstractPlanViewModel, PlanTab planTab) {
         super(abstractPlanViewModel, null, planTab);
         this.parentStateContainer = parentStateContainer;
+        createNameListener();
         this.setupContainer();
         this.setOnMouseClicked(event -> {
             if(event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {

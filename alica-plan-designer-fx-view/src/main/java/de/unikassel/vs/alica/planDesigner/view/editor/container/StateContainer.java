@@ -3,6 +3,7 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.effect.BlurType;
@@ -29,8 +30,9 @@ public class StateContainer extends Container implements Observable {
         this.statePlans = new ArrayList<>();
         invalidationListeners = new ArrayList<>();
         makeDraggable(this);
+        createNameListener();
         createPositionListeners(this, state);
-        createAbstractPlanToStateListeners( state);
+        createAbstractPlanToStateListeners(state);
         setupContainer();
     }
 
@@ -49,7 +51,7 @@ public class StateContainer extends Container implements Observable {
             statePlans.add(new AbstractPlanContainer(this, plan, this.planTab));
         }
 
-        if(statePlans != null && !statePlans.isEmpty()) {
+        if (statePlans != null && !statePlans.isEmpty()) {
             getChildren().addAll(statePlans);
         }
     }
