@@ -76,13 +76,13 @@ public class StateViewModel extends PlanElementViewModel implements HasParametri
         return parametrisations;
     }
 
-    public void addParametrization(ParametrisationViewModel parametrisation) {
+    public void addParametrisation(ParametrisationViewModel parametrisation) {
         if(!this.parametrisations.contains(parametrisation)) {
             this.parametrisations.add(parametrisation);
         }
     }
 
-    public void removeParametrization(ParametrisationViewModel parametrisation) {
+    public void removeParametrisation(ParametrisationViewModel parametrisation) {
         this.parametrisations.remove(parametrisation);
     }
 

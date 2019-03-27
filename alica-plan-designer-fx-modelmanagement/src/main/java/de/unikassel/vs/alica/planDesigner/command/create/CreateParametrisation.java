@@ -30,10 +30,10 @@ public class CreateParametrisation extends Command {
         this.variable = (Variable) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.VARIABLE));
         this.subVariable = (Variable) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.PARAMETRISATION));
 
-        this.parametrisation = createParametrization();
+        this.parametrisation = createParametrisation();
     }
 
-    protected Parametrisation createParametrization() {
+    protected Parametrisation createParametrisation() {
         Parametrisation parametrisation = new Parametrisation();
 
         parametrisation.setSubPlan(subPlan);

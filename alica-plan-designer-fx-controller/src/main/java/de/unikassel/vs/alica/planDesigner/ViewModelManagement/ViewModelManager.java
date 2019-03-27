@@ -256,7 +256,7 @@ public class ViewModelManager {
         }
 
         for (Parametrisation param: state.getParametrisations()) {
-            stateViewModel.addParametrization((ParametrisationViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
+            stateViewModel.addParametrisation((ParametrisationViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
         }
 
         return stateViewModel;

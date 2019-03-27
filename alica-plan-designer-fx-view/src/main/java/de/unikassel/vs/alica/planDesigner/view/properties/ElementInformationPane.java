@@ -76,7 +76,7 @@ public class ElementInformationPane extends TitledPane {
         adaptUI(elementShown.getType());
         adaptConditions(elementShown);
         variablesTab.setParentViewModel(elementShown);
-        parametrizationTab.setViewModel(elementShown);
+        parametrisationTab.setViewModel(elementShown);
 
         propertySheet.getItems().clear();
         propertySheet.getItems().addAll(createPropertySheetList(elementShown));
@@ -93,11 +93,11 @@ public class ElementInformationPane extends TitledPane {
                 break;
             case Types.PLANTYPE:
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, parametrizationTab, variablesTab);
+                tabPane.getTabs().addAll(propertiesTab, parametrisationTab, variablesTab);
                 break;
             case Types.STATE:
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, parametrizationTab);
+                tabPane.getTabs().addAll(propertiesTab, parametrisationTab);
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
