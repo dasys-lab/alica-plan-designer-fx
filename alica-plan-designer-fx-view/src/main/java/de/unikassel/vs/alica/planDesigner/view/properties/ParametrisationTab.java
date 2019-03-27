@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.properties;
 
+import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -12,7 +13,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ParametrizationTab extends Tab {
+public class ParametrisationTab extends Tab {
 
     private Label varLabel;
     private ComboBox<ViewModelElement> varDropDown;
@@ -40,14 +40,16 @@ public class ParametrizationTab extends Tab {
 
     private ParamTable paramTable;
 
-    private ViewModelElement element;
     private final IGuiModificationHandler guiModificationHandler;
+    private ViewModelElement element;
 
-    public ParametrizationTab(IGuiModificationHandler guiModificationHandler, String title) {
+    public ViewModelElement getElement() {
+        return element;
+    }
+
+    public ParametrisationTab(IGuiModificationHandler guiModificationHandler, String title) {
         super(title);
         this.guiModificationHandler = guiModificationHandler;
-
-        ObservableMap<Object, Object> properties = this.getProperties();
 
         Node root = null;
         try {
@@ -94,14 +96,22 @@ public class ParametrizationTab extends Tab {
                 VariableViewModel selectedVar = (VariableViewModel) varDropDown.getSelectionModel().getSelectedItem();
                 VariableViewModel selectedSubVar = (VariableViewModel) subVarDropDown.getSelectionModel().getSelectedItem();
 
-                PlanViewModel selectedSubPlan = (PlanViewModel) subPlanDropDown.getSelectionModel().getSelectedItem();
+                ViewModelElement selectedSubPlan = subPlanDropDown.getSelectionModel().getSelectedItem();
 
-                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.PARAMETRIZATION, "NEW_VARIABLE");
+                if (selectedVar == null || selectedSubPlan == null || selectedSubVar == null) {
+                    return;
+                }
+                if (isDuplicate(selectedVar, selectedSubPlan, selectedSubVar)) {
+                    createDuplicateAlert();
+                    return;
+                }
+
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.PARAMETRISATION, "NEW_PARAM");
                 event.setParentId(element.getId());
 
                 HashMap<String, Long> relatedObjects = new HashMap<>();
                 relatedObjects.put(Types.VARIABLE, selectedVar.getId());
-                relatedObjects.put(Types.PARAMETRIZATION, selectedSubVar.getId());
+                relatedObjects.put(Types.PARAMETRISATION, selectedSubVar.getId());
                 relatedObjects.put(Types.PLAN, selectedSubPlan.getId());
 
                 event.setRelatedObjects(relatedObjects);
@@ -110,9 +120,40 @@ public class ParametrizationTab extends Tab {
         });
 
         paramTable = (ParamTable) root.lookup("#paramTable");
+        paramTable.setController(this);
 
         this.setContent(root);
         this.init();
+    }
+
+    private void createDuplicateAlert() {
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Duplicate!");
+        alert.setContentText(i18NRepo.getString("label.error.duplicateParametrisation"));
+
+
+        ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"));
+
+        alert.getButtonTypes().setAll(closeBtn);
+
+        alert.initOwner(PlanDesignerApplication.getPrimaryStage());
+        alert.showAndWait();
+    }
+
+    private boolean isDuplicate(VariableViewModel selectedVar, ViewModelElement selectedSubPlan, VariableViewModel selectedSubVar) {
+        ObservableList<ParametrisationViewModel> parametrisations = ((HasParametrisationView) element).getParametrisations();
+
+        for (ParametrisationViewModel parametrisationViewModel : parametrisations) {
+            if (parametrisationViewModel.getSubPlan().getId() == selectedSubPlan.getId()
+                    && parametrisationViewModel.getSubVariable().getId() == selectedSubVar.getId()
+                    && parametrisationViewModel.getVariable().getId() == selectedVar.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void init() {
@@ -141,7 +182,7 @@ public class ParametrizationTab extends Tab {
     }
 
     public void setViewModel(ViewModelElement element) {
-        if (!(element instanceof HasParametrizationView)) {
+        if (!(element instanceof HasParametrisationView)) {
             return;
         }
         this.element = element;
@@ -170,13 +211,13 @@ public class ParametrizationTab extends Tab {
 
             } break;
             default:{
-                System.err.println("ParametrizationTab: Unrecognized ViewElementType");
+                System.err.println("ParametrisationTab: Unrecognized ViewElementType");
             }
         }
 
-        ObservableList parametrizations = ((HasParametrizationView) element).getParametrizations();
-        paramTable.setItems(parametrizations);
-        parametrizations.addListener(new ListChangeListener() {
+        ObservableList parametrisations = ((HasParametrisationView) element).getParametrisations();
+        paramTable.setItems(parametrisations);
+        parametrisations.addListener(new ListChangeListener() {
             @Override
             public void onChanged(Change c) {
                 for (TableColumn column: paramTable.getColumns()) {
@@ -190,11 +231,18 @@ public class ParametrizationTab extends Tab {
             }
         });
 
-        if (parametrizations.isEmpty()) {
+        if (parametrisations.isEmpty()) {
             paramTable.setVisible(false);
         } else {
             paramTable.setVisible(true);
         }
+    }
+
+    public void deleteParametrisation(long id) {
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.PARAMETRISATION, "NEW_PARAM");
+        event.setElementId(id);
+        event.setParentId(element.getId());
+        guiModificationHandler.handle(event);
     }
 
     private class ViewModelElementStringConverter extends StringConverter<ViewModelElement> {
@@ -210,8 +258,7 @@ public class ParametrizationTab extends Tab {
         @Override
         public String toString(ViewModelElement viewModelElement) {
             if (withPlan) {
-                PlanViewModel plan = (PlanViewModel) guiModificationHandler.getViewModelElement(viewModelElement.getParentId());
-                return plan.getName() + ":" + viewModelElement.getName();
+                return getComplexPlanVariableName((VariableViewModel) viewModelElement);
             }
             return viewModelElement.getName();
         }
@@ -227,5 +274,16 @@ public class ParametrizationTab extends Tab {
             }
             return null;
         }
+    }
+
+    String getComplexPlanVariableName(VariableViewModel variableViewModel) {
+        PlanViewModel plan = null;
+        for (PlanViewModel planViewModel : ((PlanTypeViewModel) element).getAllPlans()) {
+            if (planViewModel.getVariables().contains(variableViewModel)) {
+                plan = planViewModel;
+                break;
+            }
+        }
+        return plan.getName() + ":" + variableViewModel.getName();
     }
 }

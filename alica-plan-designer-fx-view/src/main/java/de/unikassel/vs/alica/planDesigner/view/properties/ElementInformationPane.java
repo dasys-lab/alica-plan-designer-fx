@@ -31,7 +31,7 @@ public class ElementInformationPane extends TitledPane {
     protected PropertySheet propertySheet;
     protected Tab propertiesTab;
     protected VariablesTab variablesTab;
-    protected ParametrizationTab parametrizationTab;
+    protected ParametrisationTab parametrisationTab;
     protected ConditionsTab preConditionTab;
     protected ConditionsTab runtimeConditionTab;
     protected ConditionsTab postConditionTab;
@@ -48,14 +48,14 @@ public class ElementInformationPane extends TitledPane {
         propertiesTab = new Tab(i18NRepo.getString("label.caption.properties"));
         propertiesTab.setContent(propertySheet);
         variablesTab = new VariablesTab(guiModificationHandler);
-        parametrizationTab = new ParametrizationTab(guiModificationHandler, i18NRepo.getString("label.caption.parametrization"));
+        parametrisationTab = new ParametrisationTab(guiModificationHandler, i18NRepo.getString("label.caption.parametrisation"));
         preConditionTab     = new ConditionsTab(i18NRepo.getString("label.caption.preCondtions")    , Types.PRECONDITION);
         runtimeConditionTab = new ConditionsTab(i18NRepo.getString("label.caption.runtimeCondtions"), Types.RUNTIMECONDITION);
         postConditionTab    = new ConditionsTab(i18NRepo.getString("label.caption.postCondtions")   , Types.POSTCONDITION);
 
         this.tabPane = new TabPane();
         this.tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, parametrizationTab, preConditionTab, runtimeConditionTab, postConditionTab);
+        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, parametrisationTab, preConditionTab, runtimeConditionTab, postConditionTab);
 
         this.setContent(tabPane);
     }
@@ -72,14 +72,14 @@ public class ElementInformationPane extends TitledPane {
         adaptUI(element.getType());
         adaptConditions(element);
         variablesTab.setParentViewModel(element);
-        parametrizationTab.setViewModel(element);
+        parametrisationTab.setViewModel(element);
 
         propertySheet.getItems().clear();
         propertySheet.getItems().addAll(createPropertySheetList(element));
     }
 
     private void adaptUI(String type) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, parametrizationTab);
+        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, parametrisationTab);
         switch (type) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
@@ -89,15 +89,15 @@ public class ElementInformationPane extends TitledPane {
                 break;
             case Types.PLANTYPE:
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, parametrizationTab);
+                tabPane.getTabs().addAll(propertiesTab, parametrisationTab);
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, parametrizationTab);
+                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab);
                 break;
             case Types.STATE:
-                tabPane.getTabs().addAll(propertiesTab, parametrizationTab);
+                tabPane.getTabs().addAll(propertiesTab, parametrisationTab);
                 break;
             case Types.BEHAVIOUR:
                 this.setContent(tabPane);

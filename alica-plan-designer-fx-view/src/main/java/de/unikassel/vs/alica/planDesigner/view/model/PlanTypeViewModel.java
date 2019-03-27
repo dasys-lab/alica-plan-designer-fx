@@ -3,17 +3,17 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class PlanTypeViewModel extends SerializableViewModel {
+public class PlanTypeViewModel extends SerializableViewModel implements HasParametrisationView {
 
     private ObservableList<PlanViewModel> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
-    protected ObservableList<ParametrizationViewModel> parametrizations;
+    protected ObservableList<ParametrisationViewModel> parametrisations;
 
     public PlanTypeViewModel(long id, String name, String type) {
         super(id, name, type);
         allPlans = FXCollections.observableArrayList();
         plansInPlanType = FXCollections.observableArrayList();
-        parametrizations = FXCollections.observableArrayList();
+        parametrisations = FXCollections.observableArrayList();
     }
 
     public void addPlanToAllPlans(PlanViewModel plan) {
@@ -61,17 +61,17 @@ public class PlanTypeViewModel extends SerializableViewModel {
         return false;
     }
 
-    public ObservableList getParametrizations() {
-        return parametrizations;
+    public ObservableList getParametrisations() {
+        return parametrisations;
     }
 
-    public void addParametrization(ParametrizationViewModel parametrization) {
-        if(!this.parametrizations.contains(parametrization)) {
-            this.parametrizations.add(parametrization);
+    public void addParametrization(ParametrisationViewModel parametrisation) {
+        if(!this.parametrisations.contains(parametrisation)) {
+            this.parametrisations.add(parametrisation);
         }
     }
 
-    public void removeParametrization(ParametrizationViewModel parametrization) {
-        this.parametrizations.remove(parametrization);
+    public void removeParametrization(ParametrisationViewModel parametrisation) {
+        this.parametrisations.remove(parametrisation);
     }
 }

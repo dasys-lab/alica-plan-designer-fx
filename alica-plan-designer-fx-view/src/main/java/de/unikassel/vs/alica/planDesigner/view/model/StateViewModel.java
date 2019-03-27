@@ -7,12 +7,12 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class StateViewModel extends PlanElementViewModel implements HasParametrizationView {
+public class StateViewModel extends PlanElementViewModel implements HasParametrisationView {
     protected ObservableList<PlanElementViewModel> abstractPlans;
     protected ObservableList<TransitionViewModel> inTransitions;
     protected ObservableList<TransitionViewModel> outTransitions;
     protected ObjectProperty<ConditionViewModel> postCondition;
-    protected ObservableList<ParametrizationViewModel> parametrizations;
+    protected ObservableList<ParametrisationViewModel> parametrisations;
     protected EntryPointViewModel entryPoint;
 
     public StateViewModel(long id, String name, String type) {
@@ -20,7 +20,7 @@ public class StateViewModel extends PlanElementViewModel implements HasParametri
         this.abstractPlans =  FXCollections.observableArrayList(new ArrayList<>());
         this.inTransitions =  FXCollections.observableArrayList(new ArrayList<>());
         this.outTransitions = FXCollections.observableArrayList(new ArrayList<>());
-        this.parametrizations = FXCollections.observableArrayList(new ArrayList<>());
+        this.parametrisations = FXCollections.observableArrayList(new ArrayList<>());
         this.postCondition = new SimpleObjectProperty<>();
     }
 
@@ -72,18 +72,18 @@ public class StateViewModel extends PlanElementViewModel implements HasParametri
         return postCondition;
     }
 
-    public ObservableList getParametrizations() {
-        return parametrizations;
+    public ObservableList getParametrisations() {
+        return parametrisations;
     }
 
-    public void addParametrization(ParametrizationViewModel parametrization) {
-        if(!this.parametrizations.contains(parametrization)) {
-            this.parametrizations.add(parametrization);
+    public void addParametrization(ParametrisationViewModel parametrisation) {
+        if(!this.parametrisations.contains(parametrisation)) {
+            this.parametrisations.add(parametrisation);
         }
     }
 
-    public void removeParametrization(ParametrizationViewModel parametrization) {
-        this.parametrizations.remove(parametrization);
+    public void removeParametrization(ParametrisationViewModel parametrisation) {
+        this.parametrisations.remove(parametrisation);
     }
 
 

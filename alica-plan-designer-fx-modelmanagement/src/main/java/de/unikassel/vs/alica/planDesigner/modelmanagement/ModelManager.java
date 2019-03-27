@@ -1,7 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.modelmanagement;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
@@ -401,12 +400,17 @@ public class ModelManager implements Observer {
                 // The fact, that the dummy is still referenced within the State at this point is irrelevant, because it
                 // has the same id as the real one
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
+
+                for (int i = 0; i < state.getParametrisations().size(); i++) {
+                    Parametrisation parametrisation = state.getParametrisations().get(i);
+                    parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
+                    parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
+                    parametrisation.setVariable((Variable) getPlanElement(parametrisation.getVariable().getId()));
+                }
+
+                ArrayList<Parametrisation> parametrisations = new ArrayList<>(state.getParametrisations());
                 state.removeAbstractPlan(abstractPlan);
-            }
-            for (int i = 0; i < state.getParametrisations().size(); i++) {
-                Parametrisation parametrisation = state.getParametrisations().get(i);
-                parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
-                parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
+                parametrisations.forEach(state::addParametrisation);
             }
 
             if(state instanceof TerminalState) {
@@ -868,6 +872,9 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new CreateVariable(this, mmq);
                         break;
+                    case Types.PARAMETRISATION:
+                        cmd = new CreateParametrisation(this, mmq);
+                        break;
                     case Types.QUANTIFIER:
                         cmd = new CreateQuantifier(this, mmq);
                         break;
@@ -920,6 +927,9 @@ public class ModelManager implements Observer {
                     case Types.SUCCESSSTATE:
                     case Types.FAILURESTATE:
                         cmd = new DeleteStateInPlan(this, mmq);
+                        break;
+                    case Types.PARAMETRISATION:
+                        cmd = new DeleteParametrisation(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
@@ -980,8 +990,8 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new AddVariableToCondition(this, mmq);
                         break;
-                    case Types.PARAMETRIZATION:
-                        cmd = new CreateParametrization(this, mmq);
+                    case Types.PARAMETRISATION:
+                        cmd = new CreateParametrisation(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");

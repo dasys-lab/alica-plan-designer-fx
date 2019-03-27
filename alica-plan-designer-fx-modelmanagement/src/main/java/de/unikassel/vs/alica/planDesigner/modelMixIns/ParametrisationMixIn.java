@@ -14,7 +14,7 @@ public abstract class ParametrisationMixIn {
     @JsonDeserialize(using = ExternalFileDeserializer.class)
     protected AbstractPlan subPlan;
 
-    @JsonSerialize(using = ExternalRefSerializer.class)
+    @JsonSerialize(using = InternalRefSerializer.class)
     @JsonDeserialize(using = VariableDeserializer.class)
     protected Variable subVariable;
 

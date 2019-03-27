@@ -1,12 +1,12 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
-public class ParametrizationViewModel extends PlanElementViewModel {
+public class ParametrisationViewModel extends PlanElementViewModel {
 
     protected PlanViewModel subPlan;
     protected VariableViewModel subVariable;
     protected VariableViewModel variable;
 
-    public ParametrizationViewModel(long id, String name, String type) {
+    public ParametrisationViewModel(long id, String name, String type) {
         super(id, name, type);
     }
 
