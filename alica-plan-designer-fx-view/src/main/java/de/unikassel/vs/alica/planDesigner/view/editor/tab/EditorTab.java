@@ -26,6 +26,7 @@ public abstract class EditorTab extends Tab {
 
     public EditorTab (SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         super(serializableViewModel.getName());
+        serializableViewModel.nameProperty().addListener((observable, oldValue, newValue) -> this.setText(newValue));
         setGraphic(new ImageView(new AlicaIcon(serializableViewModel.getType(), AlicaIcon.Size.SMALL)));
 
         this.serializableViewModel = serializableViewModel;
