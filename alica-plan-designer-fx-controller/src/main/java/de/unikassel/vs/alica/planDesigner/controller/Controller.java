@@ -193,6 +193,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case Types.PLAN:
             case Types.PLANTYPE:
             case Types.BEHAVIOUR:
+            case Types.ROLESET:
             case Types.TASKREPOSITORY:
                 updateRepos(event.getEventType(), viewModelElement);
                 updateFileTreeView(event.getEventType(), viewModelElement);

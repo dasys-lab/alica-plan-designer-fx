@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.repo;
 
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.model.RoleSetViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskRepositoryViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
@@ -20,6 +21,7 @@ public final class RepositoryViewModel {
     private ObservableList<ViewModelElement> planTypes;
     private ObservableList<ViewModelElement> behaviours;
     private ObservableList<ViewModelElement> tasks;
+    private ObservableList<ViewModelElement> roles;
 
     private RepositoryTabPane repositoryTabPane;
 
@@ -28,6 +30,7 @@ public final class RepositoryViewModel {
         planTypes = FXCollections.observableArrayList(new ArrayList<>());
         behaviours = FXCollections.observableArrayList(new ArrayList<>());
         tasks = FXCollections.observableArrayList(new ArrayList<>());
+        roles = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public void initGuiContent() {
@@ -40,6 +43,7 @@ public final class RepositoryViewModel {
         repositoryTabPane.addPlanTypes(planTypes);
         repositoryTabPane.addTasks(tasks);
         repositoryTabPane.addBehaviours(behaviours);
+        repositoryTabPane.addRoles(roles);
         initListeners();
     }
 
@@ -48,6 +52,7 @@ public final class RepositoryViewModel {
         planTypes.clear();
         behaviours.clear();
         tasks.clear();
+        roles.clear();
     }
 
     public void initListeners() {
@@ -77,6 +82,13 @@ public final class RepositoryViewModel {
             public void onChanged(Change<? extends ViewModelElement> c) {
                 repositoryTabPane.clearTasksTab();
                 repositoryTabPane.addTasks(tasks);
+            }
+        });
+        roles.addListener(new ListChangeListener<ViewModelElement>() {
+            @Override
+            public void onChanged(Change<? extends ViewModelElement> c) {
+                repositoryTabPane.clearRolesTab();
+                repositoryTabPane.addRoles(roles);
             }
         });
     }
@@ -117,6 +129,15 @@ public final class RepositoryViewModel {
         }
     }
 
+    public void removeRole(long id) {
+        for(ViewModelElement role : roles) {
+            if(role.getId() == id) {
+                this.tasks.remove(role);
+                break;
+            }
+        }
+    }
+
     public void setRepositoryTabPane(RepositoryTabPane repositoryTabPane) {
         this.repositoryTabPane = repositoryTabPane;
     }
@@ -126,6 +147,9 @@ public final class RepositoryViewModel {
     }
     public ObservableList<ViewModelElement> getTasks(){
         return tasks;
+    }
+    public ObservableList<ViewModelElement> getRoles(){
+        return roles;
     }
 
     public void addElement(ViewModelElement viewModelElement) {
@@ -149,6 +173,12 @@ public final class RepositoryViewModel {
                     this.tasks.add(task);
                 }
                 break;
+            case Types.ROLESET:
+                this.roles.clear();
+                for (ViewModelElement role : ((RoleSetViewModel) viewModelElement).getRoleViewModels()) {
+                    this.roles.add(role);
+                }
+                break;
         }
     }
 
@@ -169,6 +199,9 @@ public final class RepositoryViewModel {
                 break;
             case Types.TASKREPOSITORY:
                 this.tasks.clear();
+                break;
+            case Types.ROLESET:
+                this.roles.clear();
                 break;
         }
     }

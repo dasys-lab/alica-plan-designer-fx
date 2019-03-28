@@ -35,6 +35,9 @@ public class NewResourceMenu extends Menu {
         MenuItem newBehaviourMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.behaviour"));
         newBehaviourMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.BEHAVIOUR));
         getItems().add(newBehaviourMenuItem);
+        MenuItem newRolesetMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.roleset"));
+        newRolesetMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.ROLESET));
+        getItems().add(newRolesetMenuItem);
         newTaskRepositoryMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.taskrepository"));
         newTaskRepositoryMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.TASKREPOSITORY));
         getItems().add(newTaskRepositoryMenuItem);

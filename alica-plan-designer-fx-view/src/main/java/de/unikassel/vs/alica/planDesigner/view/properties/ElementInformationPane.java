@@ -87,6 +87,8 @@ public class ElementInformationPane extends TitledPane {
         switch (type) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
+            case Types.ROLESET:
+            case Types.ROLE:
             case Types.ENTRYPOINT:
             case Types.SYNCHRONISATION:
                 this.setContent(propertySheet);

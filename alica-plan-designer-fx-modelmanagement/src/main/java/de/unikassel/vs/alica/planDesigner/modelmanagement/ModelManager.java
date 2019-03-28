@@ -40,6 +40,7 @@ public class ModelManager implements Observer {
     private HashMap<Long, Behaviour> behaviourMap;
     private HashMap<Long, PlanType> planTypeMap;
     private TaskRepository taskRepository;
+    private RoleSet roleSet;
 
     private List<IModelEventHandler> eventHandlerList;
     private CommandStack commandStack;
@@ -156,6 +157,10 @@ public class ModelManager implements Observer {
             if (taskRepository.getName().equals(split[0])) {
                 return taskRepository;
             }
+        } else if (split[split.length - 1].equals(Extensions.ROLESET)) {
+            if (roleSet.getName().equals(split[0])) {
+                return roleSet;
+            }
         } else {
             System.out.println("ModelManager: trying to get PlanElement for unsupported ending: " + split[split.length - 1]);
         }
@@ -230,6 +235,10 @@ public class ModelManager implements Observer {
 
         if (taskRepository != null) {
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, taskRepository, Types.TASKREPOSITORY));
+        }
+
+        if (roleSet != null) {
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, roleSet, Types.ROLESET));
         }
     }
 
@@ -560,6 +569,12 @@ public class ModelManager implements Observer {
                     planElementMap.put(task.getId(), task);
                 }
                 break;
+            case Types.ROLESET:
+                roleSet = (RoleSet) planElement;
+                for(Role role : roleSet.getRoles()) {
+                    planElementMap.put(role.getId(), role);
+                }
+                break;
             default:
                 throw new RuntimeException("ModelManager: Storing " + type + " not implemented, yet!");
         }
@@ -614,6 +629,9 @@ public class ModelManager implements Observer {
                 break;
             case Types.TASKREPOSITORY:
                 taskRepository = null;
+                break;
+            case Types.ROLESET:
+                roleSet = null;
                 break;
             case Types.BEHAVIOUR:
                 behaviourMap.remove(planElement.getId());
@@ -885,6 +903,12 @@ public class ModelManager implements Observer {
                     case Types.TASKREPOSITORY:
                         cmd = new CreateTaskRepository(this, mmq);
                         break;
+                    case Types.ROLESET:
+                        cmd = new CreateRoleSet(this, mmq);
+                        break;
+                    case Types.ROLE:
+                        cmd = new CreateRole(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
                         return;
@@ -1065,6 +1089,10 @@ public class ModelManager implements Observer {
             case Types.TASKREPOSITORY:
                 serializeToDisk(planElement, false);
                 break;
+            case Types.ROLE:
+            case Types.ROLESET:
+                serializeToDisk(planElement, false);
+                break;
             case Types.PLANTYPE:
                 serializeToDisk(planElement, false);
                 break;
@@ -1101,7 +1129,8 @@ public class ModelManager implements Observer {
                 elementsSavedMap.put(planElement.getId(), counter);
             }
             File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
-            if (fileExtension.equals(Extensions.PLAN)) {
+
+            if (Extensions.PLAN.equals(fileExtension)) {
                 objectMapper.writeValue(outfile, (Plan) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLAN));
 
@@ -1112,17 +1141,20 @@ public class ModelManager implements Observer {
                             , planElement.getName() + "." + Extensions.PLAN_UI).toFile();
                     objectMapper.writeValue(visualisationFile, uiExtension);
                 }
-
-            } else if (fileExtension.equals(Extensions.PLANTYPE)) {
+            } else if (Extensions.PLANTYPE.equals(fileExtension)) {
                 objectMapper.writeValue(outfile, (PlanType) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLANTYPE));
-            } else if (fileExtension.equals(Extensions.BEHAVIOUR)) {
+            } else if (Extensions.BEHAVIOUR.equals(fileExtension)) {
                 objectMapper.writeValue(outfile, (Behaviour) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.BEHAVIOUR));
-            } else if (fileExtension.equals(Extensions.TASKREPOSITORY)) {
+            } else if (Extensions.TASKREPOSITORY.equals(fileExtension)) {
                 outfile = Paths.get(tasksPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
                 objectMapper.writeValue(outfile, (TaskRepository) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.TASKREPOSITORY));
+            } else if (Extensions.ROLESET.equals(fileExtension)) {
+                outfile = Paths.get(rolesPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
+                objectMapper.writeValue(outfile, (RoleSet) planElement);
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.ROLESET));
             } else {
                 throw new RuntimeException("Modelmanager: Trying to serialize a file with unknown ending: " + fileExtension);
             }
