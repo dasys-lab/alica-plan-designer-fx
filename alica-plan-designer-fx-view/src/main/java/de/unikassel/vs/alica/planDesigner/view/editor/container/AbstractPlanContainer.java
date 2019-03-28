@@ -7,7 +7,7 @@ import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class AbstractPlanContainer extends Container {
@@ -17,17 +17,24 @@ public class AbstractPlanContainer extends Container {
     public AbstractPlanContainer(StateContainer parentStateContainer, PlanElementViewModel abstractPlanViewModel, PlanTab planTab) {
         super(abstractPlanViewModel, null, planTab);
         this.parentStateContainer = parentStateContainer;
-        createNameListener();
+        this.createNameListener();
         this.setupContainer();
-        this.setOnMouseClicked(event -> {
-            if(event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                MainWindowController.getInstance().getEditorTabPane().openTab((SerializableViewModel) abstractPlanViewModel);
-            }
-        });
     }
 
     public StateContainer getParentStateContainer () {
         return parentStateContainer;
+    }
+
+    @Override
+    protected void handleMouseClickedEvent(MouseEvent event) {
+        if(event.getClickCount() == 2) {
+            // A double-click opens the contained AbstractPlan in its own Tab
+            MainWindowController.getInstance().getEditorTabPane().openTab((SerializableViewModel) this.getPlanElementViewModel());
+            event.consume();
+        }else {
+            // A single-click selects the Container as usual
+            super.handleMouseClickedEvent(event);
+        }
     }
 
     @Override

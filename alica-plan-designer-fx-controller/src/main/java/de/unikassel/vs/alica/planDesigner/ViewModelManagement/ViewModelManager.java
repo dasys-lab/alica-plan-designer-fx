@@ -72,8 +72,10 @@ public class ViewModelManager {
             element = createEntryPointViewModel((EntryPoint) planElement);
         } else if (planElement instanceof Variable) {
             element = createVariableViewModel((Variable) planElement);
+        } else if (planElement instanceof Parametrisation) {
+            element = createParametrisationViewModel((Parametrisation) planElement);
         } else if (planElement instanceof Transition) {
-            element = createTransitionViewModel((Transition) planElement);
+             element = createTransitionViewModel((Transition) planElement);
         } else if (planElement instanceof Synchronisation) {
             element = createSynchronizationViewModel((Synchronisation) planElement);
         } else if (planElement instanceof Quantifier) {
@@ -178,6 +180,14 @@ public class ViewModelManager {
         return variableViewModel;
     }
 
+    private ParametrisationViewModel createParametrisationViewModel(Parametrisation param) {
+        ParametrisationViewModel parametrisationViewModel = new ParametrisationViewModel(param.getId(), param.getName(), Types.PARAMETRISATION);
+        parametrisationViewModel.setSubPlan((PlanViewModel) getViewModelElement(param.getSubPlan()));
+        parametrisationViewModel.setSubVariable((VariableViewModel) getViewModelElement(param.getSubVariable()));
+        parametrisationViewModel.setVariable((VariableViewModel) getViewModelElement(param.getVariable()));
+        return parametrisationViewModel;
+    }
+
     private ConditionViewModel createConditionViewModel(Condition condition) {
         ConditionViewModel conditionViewModel = null;
         if (condition instanceof PreCondition) {
@@ -267,6 +277,11 @@ public class ViewModelManager {
         if(state instanceof TerminalState && ((TerminalState) state).getPostCondition() != null) {
             stateViewModel.setPostCondition((ConditionViewModel) getViewModelElement(((TerminalState) state).getPostCondition()));
         }
+
+        for (Parametrisation param: state.getParametrisations()) {
+            stateViewModel.addParametrisation((ParametrisationViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
+        }
+
         return stateViewModel;
     }
 
@@ -331,6 +346,10 @@ public class ViewModelManager {
         planViewModel.setUtilityThreshold(plan.getUtilityThreshold());
         planViewModel.setComment(plan.getComment());
         planViewModel.setRelativeDirectory(plan.getRelativeDirectory());
+
+        for (Variable var : plan.getVariables()) {
+            planViewModel.getVariables().add((VariableViewModel) getViewModelElement(var));
+        }
         for (State state : plan.getStates()) {
             planViewModel.getStates().add(
                     (StateViewModel) getViewModelElement(state));
@@ -343,9 +362,6 @@ public class ViewModelManager {
         }
         for (Synchronisation synchronisation : plan.getSynchronisations()) {
             planViewModel.getSynchronisations().add((SynchronizationViewModel) getViewModelElement(synchronisation));
-        }
-        for (Variable var : plan.getVariables()) {
-            planViewModel.getVariables().add((VariableViewModel) getViewModelElement(var));
         }
         if (plan.getPreCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(plan.getPreCondition());
@@ -420,6 +436,14 @@ public class ViewModelManager {
                     ((HasVariablesView) parentViewModel).getVariables().remove(viewModelElement);
                 } else {
                     throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no variables");
+                }
+                break;
+            case Types.PARAMETRISATION:
+                parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                if ( parentViewModel instanceof HasParametrisationView) {
+                    ((HasParametrisationView) parentViewModel).getParametrisations().remove((ParametrisationViewModel) viewModelElement);
+                } else {
+                    throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no parametrisation");
                 }
                 break;
             case Types.PRECONDITION:
@@ -529,6 +553,9 @@ public class ViewModelManager {
             case Types.VARIABLE:
                 ((HasVariablesView) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
                 break;
+            case Types.PARAMETRISATION: {
+                ((HasParametrisationView) parentViewModel).getParametrisations().add((ParametrisationViewModel) viewModelElement);
+            } break;
             case Types.ABSTRACTPLAN:
                 PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
                 State state = (State) event.getNewValue();
@@ -671,6 +698,10 @@ public class ViewModelManager {
                 break;
             case Types.VARIABLE:
                 parentPlan.getVariables().add((VariableViewModel)element);
+                break;
+            case Types.PARAMETRISATION:
+                // TODO
+                System.err.println("ViewModelManager: Param not set");
                 break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:

@@ -8,7 +8,10 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.AddAbstractPlan;
 import de.unikassel.vs.alica.planDesigner.command.add.AddTaskToEntryPoint;
 import de.unikassel.vs.alica.planDesigner.command.add.AddVariableToCondition;
-import de.unikassel.vs.alica.planDesigner.command.change.*;
+import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
+import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
+import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
+import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
 import de.unikassel.vs.alica.planDesigner.command.create.*;
 import de.unikassel.vs.alica.planDesigner.command.delete.*;
 import de.unikassel.vs.alica.planDesigner.command.remove.RemoveAbstractPlanFromState;
@@ -19,7 +22,6 @@ import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelMixIns.*;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
-import javafx.application.Platform;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -360,7 +362,7 @@ public class ModelManager implements Observer {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
             System.err.println(e.getMessage());
             return null;
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | IllegalArgumentException e) {
             e.printStackTrace();
             return null;
         }
@@ -421,12 +423,17 @@ public class ModelManager implements Observer {
                 // The fact, that the dummy is still referenced within the State at this point is irrelevant, because it
                 // has the same id as the real one
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
+
+                for (int i = 0; i < state.getParametrisations().size(); i++) {
+                    Parametrisation parametrisation = state.getParametrisations().get(i);
+                    parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
+                    parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
+                    parametrisation.setVariable((Variable) getPlanElement(parametrisation.getVariable().getId()));
+                }
+
+                ArrayList<Parametrisation> parametrisations = new ArrayList<>(state.getParametrisations());
                 state.removeAbstractPlan(abstractPlan);
-            }
-            for (int i = 0; i < state.getParametrisations().size(); i++) {
-                Parametrisation parametrisation = state.getParametrisations().get(i);
-                parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
-                parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
+                parametrisations.forEach(state::addParametrisation);
             }
 
             if(state instanceof TerminalState) {
@@ -663,7 +670,14 @@ public class ModelManager implements Observer {
                 }
 
                 if (!ending.equals("")) {
-                    renameFile(getAbsoluteDirectory(planElement), (String) newValue, (String) oldValue, ending);
+                    String dir = getAbsoluteDirectory(planElement);
+                    String newName = (String) newValue;
+                    String oldName = (String) oldValue;
+                    renameFile(dir, newName, oldName, ending);
+                    // If the renamed element is a Plan and has a .pmlex-file, the .pmlex-file is also renamed
+                    if(ending.equals(Extensions.PLAN) && FileSystemUtil.getFile(dir, oldName, Extensions.PLAN_UI).exists()) {
+                        renameFile(dir, newName, oldName, Extensions.PLAN_UI);
+                    }
                     serializeToDisk((SerializablePlanElement) planElement, false);
                     ArrayList<PlanElement> usages = getUsages(planElement.getId());
                     if (usages != null) {
@@ -897,6 +911,9 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new CreateVariable(this, mmq);
                         break;
+                    case Types.PARAMETRISATION:
+                        cmd = new CreateParametrisation(this, mmq);
+                        break;
                     case Types.QUANTIFIER:
                         cmd = new CreateQuantifier(this, mmq);
                         break;
@@ -956,6 +973,9 @@ public class ModelManager implements Observer {
                     case Types.FAILURESTATE:
                         cmd = new DeleteStateInPlan(this, mmq);
                         break;
+                    case Types.PARAMETRISATION:
+                        cmd = new DeleteParametrisation(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
                         return;
@@ -1014,6 +1034,9 @@ public class ModelManager implements Observer {
                         break;
                     case Types.VARIABLE:
                         cmd = new AddVariableToCondition(this, mmq);
+                        break;
+                    case Types.PARAMETRISATION:
+                        cmd = new CreateParametrisation(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");

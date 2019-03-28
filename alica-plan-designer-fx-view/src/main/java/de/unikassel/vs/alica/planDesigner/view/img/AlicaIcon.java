@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 public class AlicaIcon extends Image {
 
     public static final String ADD = "add";
+    public static final String REMOVE = "remove";
     private String resourcePath;
 
     public enum Size {

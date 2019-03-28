@@ -77,13 +77,27 @@ public abstract class Container extends Pane implements DraggableEditorElement {
             AbstractTool recentlyDoneTool = Container.this.planTab.getEditorToolBar().getRecentlyDoneTool();
             if (recentlyDoneTool != null) {
                 recentlyDoneTool.setRecentlyDone(false);
+                event.consume();
             } else {
-                Container.this.planTab.setSelectedContainer(Container.this);
+                // Find the first Container in the hierarchy above the targeted Node
+                Node targetNode = event.getPickResult().getIntersectedNode();
+                while(targetNode != null && !(targetNode instanceof Container)) {
+                    targetNode = targetNode.getParent();
+                }
+                // If the targeted Container is this, select this and consume the event
+                if(targetNode == this) {
+                    handleMouseClickedEvent(event);
+                }
+                // If the targeted Container is not this (meaning it's a child of this) don't consume the event to
+                // allow the targeted Container to be selected
             }
-            event.consume();
         };
     }
 
+    protected void handleMouseClickedEvent(MouseEvent event) {
+        Container.this.planTab.setSelectedContainer(Container.this);
+        event.consume();
+    }
 
     public Node getVisualRepresentation() {
         return visualRepresentation;
