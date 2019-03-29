@@ -26,6 +26,8 @@ public class PlanViewModel extends SerializableViewModel implements HasVariables
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "masterPlan", "relativeDirectory", "utilityThreshold"));
+        this.masterPlanProperty().addListener((observable, oldValue, newValue)
+                -> this.setType(newValue ? Types.MASTERPLAN : Types.PLAN));
     }
 
     public void registerListener(IGuiModificationHandler handler) {
