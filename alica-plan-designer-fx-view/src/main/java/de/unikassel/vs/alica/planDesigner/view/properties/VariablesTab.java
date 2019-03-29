@@ -70,24 +70,11 @@ public class VariablesTab extends Tab {
         this.parentViewModel = parentViewModel;
 
         // fill table and register listener
-        switch (parentViewModel.getType()) {
-            case Types.BEHAVIOUR:
-                for (VariableViewModel var : ((BehaviourViewModel) this.parentViewModel).getVariables()) {
-                    variablesTable.addItem(var);
-                }
-                ((BehaviourViewModel) this.parentViewModel).getVariables().addListener(varListener);
-                break;
-            case Types.PLAN:
-            case Types.MASTERPLAN:
-                for (VariableViewModel var : ((PlanViewModel) this.parentViewModel).getVariables()) {
-                    variablesTable.addItem(var);
-                }
-                ((PlanViewModel) this.parentViewModel).getVariables().addListener(varListener);
-                break;
-            default:
-                this.parentViewModel = null;
-            break;
+        for (VariableViewModel var : ((HasVariablesView) parentViewModel).getVariables()) {
+            variablesTable.addItem(var);
         }
+
+        ((HasVariablesView) parentViewModel).getVariables().addListener(varListener);
     }
 
     private void clear() {
@@ -95,17 +82,7 @@ public class VariablesTab extends Tab {
             return;
         }
 
-        switch (parentViewModel.getType()) {
-            case Types.BEHAVIOUR:
-                ((BehaviourViewModel) this.parentViewModel).getVariables().removeListener(varListener);
-                break;
-            case Types.PLAN:
-            case Types.MASTERPLAN:
-                ((PlanViewModel) this.parentViewModel).getVariables().removeListener(varListener);
-                break;
-            default:
-                throw new RuntimeException("VariablesTab: Clear() - Parent ViewModelElement isn't of known type.");
-        }
+        ((HasVariablesView) this.parentViewModel).getVariables().removeListener(varListener);
 
         variablesTable.clear();
         this.parentViewModel = null;
