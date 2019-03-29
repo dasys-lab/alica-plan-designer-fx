@@ -556,6 +556,9 @@ public class ModelManager implements Observer {
                 for(Variable variable: behaviour.getVariables()) {
                     planElementMap.put(variable.getId(), variable);
                 }
+                for(Configuration configuration : behaviour.getConfigurations()) {
+                    planElementMap.put(configuration.getId(), configuration);
+                }
                 storeCondition(behaviour.getPreCondition());
                 storeCondition(behaviour.getRuntimeCondition());
                 storeCondition(behaviour.getPostCondition());
@@ -565,6 +568,13 @@ public class ModelManager implements Observer {
                 taskRepository = (TaskRepository) planElement;
                 for(Task task : taskRepository.getTasks()) {
                     planElementMap.put(task.getId(), task);
+                }
+                break;
+            case Types.CONFIGURATION:
+                Configuration configuration = (Configuration) planElement;
+                behaviour = configuration.getBehaviour();
+                if(!behaviour.getConfigurations().contains(configuration)) {
+                    behaviour.addConfiguration(configuration);
                 }
                 break;
             default:
@@ -624,6 +634,10 @@ public class ModelManager implements Observer {
                 break;
             case Types.BEHAVIOUR:
                 behaviourMap.remove(planElement.getId());
+                break;
+            case Types.CONFIGURATION:
+                Configuration configuration = (Configuration) planElement;
+                configuration.getBehaviour().removeConfiguration(configuration);
                 break;
             default:
                 throw new RuntimeException("ModelManager: ");
@@ -905,6 +919,9 @@ public class ModelManager implements Observer {
                     case Types.TASKREPOSITORY:
                         cmd = new CreateTaskRepository(this, mmq);
                         break;
+                    case Types.CONFIGURATION:
+                        cmd = new CreateConfiguration(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
                         return;
@@ -954,6 +971,9 @@ public class ModelManager implements Observer {
                         break;
                     case Types.PARAMETRISATION:
                         cmd = new DeleteParametrisation(this, mmq);
+                        break;
+                    case Types.CONFIGURATION:
+                        cmd = new DeleteConfiguration(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");

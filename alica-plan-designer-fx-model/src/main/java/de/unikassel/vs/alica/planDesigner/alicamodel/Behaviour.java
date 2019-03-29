@@ -4,6 +4,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Behaviour extends AbstractPlan {
     protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
     protected final SimpleLongProperty deferring = new SimpleLongProperty();
@@ -11,6 +15,8 @@ public class Behaviour extends AbstractPlan {
     protected SimpleObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<PostCondition> postCondition = new SimpleObjectProperty<>();
+
+    protected ArrayList<Configuration> configurations = new ArrayList<>();
 
     public PreCondition getPreCondition() {
         return preCondition.get();
@@ -69,6 +75,18 @@ public class Behaviour extends AbstractPlan {
     }
     public SimpleLongProperty deferringProperty() {
         return this.deferring;
+    }
+
+    public List<Configuration> getConfigurations() {
+        return Collections.unmodifiableList(configurations);
+    }
+
+    public void addConfiguration(Configuration configuration) {
+        configurations.add(configuration);
+    }
+
+    public void removeConfiguration(Configuration configuration) {
+        configurations.remove(configuration);
     }
 
     @Override

@@ -80,6 +80,8 @@ public class ViewModelManager {
             element = createConditionViewModel((Condition) planElement);
         } else if (planElement instanceof BendPoint) {
             element = createBendPointViewModel((BendPoint) planElement);
+        } else if (planElement instanceof Configuration) {
+            element = createConfigurationViewModel((Configuration) planElement);
         } else {
             System.err.println("ViewModelManager: getSerializableViewModel for type " + planElement.getClass().toString() + " not implemented!");
         }
@@ -127,6 +129,12 @@ public class ViewModelManager {
 
         for (Variable variable : behaviour.getVariables()) {
             behaviourViewModel.getVariables().add((VariableViewModel) getViewModelElement(variable));
+        }
+
+        for (Configuration configuration : behaviour.getConfigurations()) {
+            ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) getViewModelElement(configuration);
+            behaviourViewModel.getConfigurations().add(configurationViewModel);
+            configurationViewModel.setBehaviour(behaviourViewModel);
         }
 
         if (behaviour.getPreCondition() != null) {
@@ -352,6 +360,16 @@ public class ViewModelManager {
         }
 
         return planViewModel;
+    }
+
+    private ViewModelElement createConfigurationViewModel(Configuration configuration) {
+        ConfigurationViewModel configurationViewModel = new ConfigurationViewModel(configuration.getId()
+                , configuration.getName(), Types.CONFIGURATION);
+        // Accessing map directly to prevent endless recursion
+        configurationViewModel.setBehaviour((BehaviourViewModel) viewModelElements.get(configuration.getBehaviour().getId()));
+        configurationViewModel.getKeyValuePairs().putAll(configuration.getKeyValuePairs());
+
+        return configurationViewModel;
     }
 
     public void removeElement(long parentId, ViewModelElement viewModelElement) {

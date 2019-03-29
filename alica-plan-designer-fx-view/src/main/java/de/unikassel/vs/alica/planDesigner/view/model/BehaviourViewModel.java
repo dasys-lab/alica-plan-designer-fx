@@ -13,6 +13,7 @@ public class BehaviourViewModel extends SerializableViewModel implements HasVari
     protected LongProperty deferring = new SimpleLongProperty();
 
     protected ObservableList<VariableViewModel> variables;
+    protected ObservableList<ConfigurationViewModel> configurations;
     protected final ObjectProperty<ConditionViewModel> preCondition;
     protected final ObjectProperty<ConditionViewModel> runtimeCondition;
     protected final ObjectProperty<ConditionViewModel> postCondition;
@@ -20,6 +21,7 @@ public class BehaviourViewModel extends SerializableViewModel implements HasVari
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
         variables = FXCollections.observableArrayList(new ArrayList<>());
+        configurations = FXCollections.observableArrayList(new ArrayList<>());
         preCondition        = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
         runtimeCondition    = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
         postCondition       = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
@@ -53,6 +55,10 @@ public class BehaviourViewModel extends SerializableViewModel implements HasVari
     @Override
     public ObservableList<VariableViewModel> getVariables() {
         return variables;
+    }
+
+    public ObservableList<ConfigurationViewModel> getConfigurations() {
+        return configurations;
     }
 
     public ObjectProperty<ConditionViewModel> preConditionProperty(){
