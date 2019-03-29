@@ -715,6 +715,9 @@ public class ModelManager implements Observer {
     }
 
     private void renameFile(String absoluteDirectory, String newName, String oldName, String ending) throws IOException {
+        if(newName.equals(oldName)) {
+            return;
+        }
         File oldFile = FileSystemUtil.getFile(absoluteDirectory, oldName, ending);
         File newFile = new File(Paths.get(absoluteDirectory, newName + "." + ending).toString());
         if (newFile.exists()) {

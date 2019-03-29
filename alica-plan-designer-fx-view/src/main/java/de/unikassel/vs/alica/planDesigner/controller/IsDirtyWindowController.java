@@ -2,10 +2,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 
 import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
-import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -153,7 +150,7 @@ public class IsDirtyWindowController {
             stage.show();
             stage.requestFocus();
         });
-        stage.setOnCloseRequest(e ->{
+        stage.setOnCloseRequest(e -> {
             event.consume();
             stage.close();
         });
