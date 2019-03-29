@@ -146,12 +146,16 @@ public class ParametrisationTab extends Tab {
     private boolean isDuplicate(VariableViewModel selectedVar, ViewModelElement selectedSubPlan, VariableViewModel selectedSubVar) {
         ObservableList<ParametrisationViewModel> parametrisations = ((HasParametrisationView) element).getParametrisations();
 
+        if (selectedSubPlan.getType().equals(Types.ANNOTATEDPLAN)) {
+            selectedSubPlan = guiModificationHandler.getViewModelElement(((AnnotatedPlanView) selectedSubPlan).getPlanId());
+        }
+
         for (ParametrisationViewModel parametrisationViewModel : parametrisations) {
-            if (parametrisationViewModel.getSubPlan().getId() == selectedSubPlan.getId()
-                    && parametrisationViewModel.getSubVariable().getId() == selectedSubVar.getId()
-                    && parametrisationViewModel.getVariable().getId() == selectedVar.getId()) {
-                return true;
-            }
+            if (parametrisationViewModel.getSubPlan().getId() == selectedSubPlan.getId())
+                if (parametrisationViewModel.getSubVariable().getId() == selectedSubVar.getId())
+                    if (parametrisationViewModel.getVariable().getId() == selectedVar.getId()) {
+                        return true;
+                    }
         }
         return false;
     }
@@ -190,7 +194,8 @@ public class ParametrisationTab extends Tab {
             case Types.PLANTYPE: {
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) element;
 
-                ArrayList<ViewModelElement> elements = new ArrayList<>();
+                ArrayList<ViewModelElement> elements = new ArrayList<>(((PlanTypeViewModel) element).getVariables());
+
                 for(PlanViewModel planViewModel: planTypeViewModel.getAllPlans()) {
                     elements.addAll(planViewModel.getVariables());
                 }
@@ -277,13 +282,18 @@ public class ParametrisationTab extends Tab {
     }
 
     String getComplexPlanVariableName(VariableViewModel variableViewModel) {
-        PlanViewModel plan = null;
+        ViewModelElement plan = null;
         for (PlanViewModel planViewModel : ((PlanTypeViewModel) element).getAllPlans()) {
             if (planViewModel.getVariables().contains(variableViewModel)) {
                 plan = planViewModel;
                 break;
             }
         }
+
+        if (plan == null) {
+            plan = element;
+        }
+
         return plan.getName() + ":" + variableViewModel.getName();
     }
 }
