@@ -75,8 +75,9 @@ public class ElementInformationPane extends TitledPane {
 
         adaptUI(elementShown.getType());
         adaptConditions(elementShown);
+        adaptParametrisation(elementShown);
         variablesTab.setParentViewModel(elementShown);
-        parametrisationTab.setViewModel(elementShown);
+
 
         propertySheet.getItems().clear();
         propertySheet.getItems().addAll(createPropertySheetList(elementShown));
@@ -129,6 +130,9 @@ public class ElementInformationPane extends TitledPane {
         preConditionTab.setViewModelElement(element);
         runtimeConditionTab.setViewModelElement(element);
         postConditionTab.setViewModelElement(element);
+    }
+    private void adaptParametrisation(ViewModelElement elementShown) {
+        parametrisationTab.setViewModel(elementShown);
     }
 
 
