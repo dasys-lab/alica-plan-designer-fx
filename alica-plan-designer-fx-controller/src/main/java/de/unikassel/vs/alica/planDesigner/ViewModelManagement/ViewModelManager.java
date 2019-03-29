@@ -220,6 +220,15 @@ public class ViewModelManager {
             planTypeViewModel.removePlanFromAllPlans(annotatedPlan.getPlan().getId());
             planTypeViewModel.getPlansInPlanType().add((AnnotatedPlanView) getViewModelElement(annotatedPlan));
         }
+
+        for (Parametrisation param: planType.getParametrisations()) {
+            planTypeViewModel.addParametrisation((ParametrisationViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
+        }
+
+        for (Variable var : planType.getVariables()) {
+            planTypeViewModel.getVariables().add((VariableViewModel) getViewModelElement(var));
+        }
+
         return planTypeViewModel;
     }
 

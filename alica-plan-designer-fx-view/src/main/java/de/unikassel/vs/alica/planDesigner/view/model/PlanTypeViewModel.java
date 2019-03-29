@@ -3,16 +3,19 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class PlanTypeViewModel extends SerializableViewModel implements HasParametrisationView {
+public class PlanTypeViewModel extends SerializableViewModel implements HasParametrisationView, HasVariablesView {
 
     private ObservableList<PlanViewModel> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
-    protected ObservableList<ParametrisationViewModel> parametrisations;
+    private ObservableList<VariableViewModel> variables;
+    private ObservableList<ParametrisationViewModel> parametrisations;
+
 
     public PlanTypeViewModel(long id, String name, String type) {
         super(id, name, type);
         allPlans = FXCollections.observableArrayList();
         plansInPlanType = FXCollections.observableArrayList();
+        variables = FXCollections.observableArrayList();
         parametrisations = FXCollections.observableArrayList();
     }
 
@@ -61,7 +64,7 @@ public class PlanTypeViewModel extends SerializableViewModel implements HasParam
         return false;
     }
 
-    public ObservableList getParametrisations() {
+    public ObservableList<ParametrisationViewModel> getParametrisations() {
         return parametrisations;
     }
 
@@ -73,5 +76,10 @@ public class PlanTypeViewModel extends SerializableViewModel implements HasParam
 
     public void removeParametrisation(ParametrisationViewModel parametrisation) {
         this.parametrisations.remove(parametrisation);
+    }
+
+    @Override
+    public ObservableList<VariableViewModel> getVariables() {
+        return variables;
     }
 }

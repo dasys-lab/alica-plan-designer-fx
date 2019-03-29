@@ -465,6 +465,13 @@ public class ModelManager implements Observer {
         for (int i = 0; i < annotatedPlans.size(); i++) {
             annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
         }
+
+        for (int i = 0; i < planType.getParametrisations().size(); i++) {
+            Parametrisation parametrisation = planType.getParametrisations().get(i);
+            parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
+            parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
+            parametrisation.setVariable((Variable) getPlanElement(parametrisation.getVariable().getId()));
+        }
     }
 
     private void resolveReferences(Behaviour behaviour) {
