@@ -997,7 +997,7 @@ public class ModelManager implements Observer {
                         }
                         break;
                     case Types.PLANTYPE:
-                    case Types.BEHAVIOUR:
+                    case Types.CONFIGURATION:
                         cmd = new AddAbstractPlan(this, mmq);
                         break;
                     case Types.TASK:
@@ -1059,6 +1059,7 @@ public class ModelManager implements Observer {
                     case Types.MASTERPLAN:
                     case Types.PLAN:
                     case Types.PLANTYPE:
+                    case Types.CONFIGURATION:
                         cmd = new RemoveAbstractPlanFromState(this, mmq);
                         break;
                     default:

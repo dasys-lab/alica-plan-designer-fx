@@ -3,7 +3,11 @@ package de.unikassel.vs.alica.planDesigner.view.properties;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.Container;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
+import de.unikassel.vs.alica.planDesigner.view.model.ConfigurationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,6 +39,7 @@ public class ElementInformationPane extends TitledPane {
     protected ConditionsTab preConditionTab;
     protected ConditionsTab runtimeConditionTab;
     protected ConditionsTab postConditionTab;
+    protected ConfigurationsTab configurationsTab;
 
     protected IGuiModificationHandler guiModificationHandler;
 
@@ -54,6 +59,7 @@ public class ElementInformationPane extends TitledPane {
         preConditionTab     = new ConditionsTab(i18NRepo.getString("label.caption.preCondtions")    , Types.PRECONDITION);
         runtimeConditionTab = new ConditionsTab(i18NRepo.getString("label.caption.runtimeCondtions"), Types.RUNTIMECONDITION);
         postConditionTab    = new ConditionsTab(i18NRepo.getString("label.caption.postCondtions")   , Types.POSTCONDITION);
+        configurationsTab = new ConfigurationsTab(i18NRepo.getString("label.caption.configurations"));
 
         this.tabPane = new TabPane();
         this.tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -62,13 +68,30 @@ public class ElementInformationPane extends TitledPane {
         this.setContent(tabPane);
     }
 
+    public void setViewModelElement(Container elementContainer) {
+        if(elementContainer instanceof AbstractPlanContainer) {
+            StateContainer parentContainer = ((AbstractPlanContainer) elementContainer).getParentStateContainer();
+            setViewModelElement(elementContainer.getPlanElementViewModel(), parentContainer.getState());
+        }
+        setViewModelElement(elementContainer.getPlanElementViewModel(), null);
+    }
 
     public void setViewModelElement(ViewModelElement element) {
-        if (element == null || element == elementShown) {
+        setViewModelElement(element, null);
+    }
+
+    private void setViewModelElement(ViewModelElement element, ViewModelElement parentElement) {
+
+        // Treat a Configuration as if it was the behaviour it belongs to
+        ViewModelElement newElementShown = element.getType() == Types.CONFIGURATION
+                ? ((ConfigurationViewModel) element).getBehaviour()
+                : element;
+
+        if (newElementShown == null || newElementShown == elementShown) {
             return;
         }
 
-        elementShown = element;
+        elementShown = newElementShown;
 
         setText(elementShown.getName());
         setGraphic(new ImageView(new AlicaIcon(elementShown.getType(), AlicaIcon.Size.SMALL)));
@@ -77,13 +100,15 @@ public class ElementInformationPane extends TitledPane {
         adaptConditions(elementShown);
         variablesTab.setParentViewModel(elementShown);
         parametrisationTab.setViewModel(elementShown);
+        // Use the actual element here
+        configurationsTab.setParentViewModel(element, parentElement);
 
         propertySheet.getItems().clear();
         propertySheet.getItems().addAll(createPropertySheetList(elementShown));
     }
 
     private void adaptUI(String type) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, parametrisationTab);
+        tabPane.getTabs().clear();
         switch (type) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
@@ -105,8 +130,9 @@ public class ElementInformationPane extends TitledPane {
                 tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab);
                 break;
             case Types.BEHAVIOUR:
+            case Types.CONFIGURATION:
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
+                tabPane.getTabs().addAll(propertiesTab, variablesTab, configurationsTab,preConditionTab, runtimeConditionTab, postConditionTab);
                 break;
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:

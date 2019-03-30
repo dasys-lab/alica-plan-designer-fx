@@ -3,10 +3,7 @@ package de.unikassel.vs.alica.planDesigner.serialization;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.PlanType;
+import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 
 import java.io.IOException;
@@ -33,6 +30,9 @@ public class ExternalRefArraySerializer extends StdSerializer<List<AbstractPlan>
                 result +=  Paths.get(element.getRelativeDirectory(), element.getName() + "." + Extensions.BEHAVIOUR + "#" + element.getId()).toString() + ", ";
             } else if(element instanceof PlanType) {
                 result +=  Paths.get(element.getRelativeDirectory(), element.getName() + "." + Extensions.PLANTYPE + "#" + element.getId()).toString() + ", ";
+            } else if(element instanceof Configuration) {
+                result += Paths.get(element.getRelativeDirectory(), ((Configuration) element).getBehaviour().getName()
+                    + "." + Extensions.BEHAVIOUR + "#" + element.getId()).toString() + ", ";
             }
         }
         jsonGenerator.writeString(result);

@@ -425,6 +425,20 @@ public class ViewModelManager {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
                 }
                 break;
+            case Types.CONFIGURATION:
+                parentPlanElement = modelManager.getPlanElement(parentId);
+                ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) viewModelElement;
+                if(parentPlanElement instanceof State) {
+                    stateViewModel = (StateViewModel) getViewModelElement(parentPlanElement);
+                    stateViewModel.removeAbstractPlan(configurationViewModel);
+                    planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement((stateViewModel.getParentId())));
+                    planViewModel.getStates().remove(stateViewModel);
+                    planViewModel.getStates().add(stateViewModel);
+                }else if(parentPlanElement instanceof Behaviour) {
+                    BehaviourViewModel behaviourViewModel = (BehaviourViewModel) getViewModelElement(parentPlanElement);
+                    behaviourViewModel.getConfigurations().remove(configurationViewModel);
+                }
+                break;
             case Types.VARIABLE:
                 ViewModelElement parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
                 if ( parentViewModel instanceof HasVariablesView) {
@@ -543,6 +557,16 @@ public class ViewModelManager {
                     stateViewModel.addAbstractPlan(abstractPlanViewModel);
                 }else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
+                }
+                break;
+            case Types.CONFIGURATION:
+                ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) viewModelElement;
+                if (parentPlanElement instanceof State) {
+                    StateViewModel stateViewModel = (StateViewModel) parentViewModel;
+                    stateViewModel.addAbstractPlan(configurationViewModel);
+                }else if(parentPlanElement instanceof Behaviour) {
+                    BehaviourViewModel behaviourViewModel = (BehaviourViewModel) parentViewModel;
+                    behaviourViewModel.getConfigurations().add(configurationViewModel);
                 }
                 break;
             case Types.VARIABLE:

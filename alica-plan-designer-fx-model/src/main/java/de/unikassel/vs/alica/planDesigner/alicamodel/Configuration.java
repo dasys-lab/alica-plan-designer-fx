@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -28,10 +29,20 @@ public class Configuration extends AbstractPlan{
     }
 
     public String putKeyValuePair(String key, String value) {
+        getBehaviour().setDirty(true);
         return keyValuePairs.put(key, value);
     }
 
     public String removeKeyValuePair(String key) {
+        getBehaviour().setDirty(true);
         return keyValuePairs.remove(key);
+    }
+
+    @Override
+    public void registerDirtyFlag() {
+        InvalidationListener dirty = obs -> getBehaviour().setDirty(true);
+
+        this.nameProperty().addListener(dirty);
+        this.commentProperty().addListener(dirty);
     }
 }

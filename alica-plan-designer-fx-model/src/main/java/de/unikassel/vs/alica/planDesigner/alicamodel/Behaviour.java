@@ -83,10 +83,13 @@ public class Behaviour extends AbstractPlan {
 
     public void addConfiguration(Configuration configuration) {
         configurations.add(configuration);
+        configuration.registerDirtyFlag();
+        this.setDirty(true);
     }
 
     public void removeConfiguration(Configuration configuration) {
         configurations.remove(configuration);
+        this.setDirty(false);
     }
 
     @Override
@@ -105,6 +108,9 @@ public class Behaviour extends AbstractPlan {
         this.postCondition.addListener(this.changeListenerForDirtyFlag);
         if (this.postCondition.get() != null) {
             this.postCondition.get().registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
+        for(Configuration configuration : configurations) {
+            configuration.registerDirtyFlag();
         }
     }
 

@@ -1,10 +1,14 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
+import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.ConfigurationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import javafx.beans.InvalidationListener;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -41,15 +45,26 @@ public class AbstractPlanContainer extends Container {
     public void setupContainer() {
         Label label = new Label();
 
-        label.setText(planElementViewModel.getName());
-        this.planElementViewModel.nameProperty().addListener((observable, oldValue, newName) -> {
-            label.setText(newName);
-        });
+        if(planElementViewModel.getType() == Types.CONFIGURATION) {
+            BehaviourViewModel parentBehaviour = ((ConfigurationViewModel) planElementViewModel).getBehaviour();
+
+            label.setText(parentBehaviour.getName() + " - " + planElementViewModel.getName());
+            InvalidationListener updateName = obs
+                    -> label.setText(parentBehaviour.getName() + " - " + planElementViewModel.getName());
+            parentBehaviour.nameProperty().addListener(updateName);
+            planElementViewModel.nameProperty().addListener(updateName);
+        }else {
+            label.setText(planElementViewModel.getName());
+            this.planElementViewModel.nameProperty().addListener((observable, oldValue, newName) -> {
+                label.setText(newName);
+            });
+        }
 
         label.setGraphic(getGraphic(planElementViewModel.getType()));
         this.planElementViewModel.typeProperty().addListener((observable, oldValue, newType) -> {
             label.setGraphic(getGraphic(newType));
         });
+
         // need to be set, when the label is actually layouted (before getWidth is 0)
         label.widthProperty().addListener((observable, oldValue, newValue) -> {
             // 19px per abstract plan because every line is 16px high and the additional 3px are for spacing between elements
