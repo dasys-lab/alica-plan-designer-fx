@@ -1,7 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
