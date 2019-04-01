@@ -308,16 +308,19 @@ public class ViewModelManager {
         return transitionViewModel;
     }
 
-    private SynchronizationViewModel createSynchronizationViewModel(Synchronisation synchronisation) {
-        SynchronizationViewModel synchronizationViewModel = new SynchronizationViewModel(synchronisation.getId(), synchronisation.getName(),
+    private SynchronisationViewModel createSynchronizationViewModel(Synchronisation synchronisation) {
+        SynchronisationViewModel synchronisationViewModel = new SynchronisationViewModel(synchronisation.getId(), synchronisation.getName(),
                 Types.SYNCHRONISATION);
         for (Transition transition : synchronisation.getSyncedTransitions()) {
-            synchronizationViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
+            synchronisationViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
         }
         UiElement uiElement = modelManager.getPlanUIExtensionPair(synchronisation.getPlan().getId()).getUiElement(synchronisation.getId());
-        synchronizationViewModel.setXPosition(uiElement.getX());
-        synchronizationViewModel.setYPosition(uiElement.getY());
-        return synchronizationViewModel;
+        synchronisationViewModel.setXPosition(uiElement.getX());
+        synchronisationViewModel.setYPosition(uiElement.getY());
+        synchronisationViewModel.setSyncTimeout(synchronisation.getSyncTimeout());
+        synchronisationViewModel.setFailOnSyncTimeout(synchronisation.getFailOnSyncTimeout());
+        synchronisationViewModel.setTalkTimeout(synchronisation.getTalkTimeout());
+        return synchronisationViewModel;
     }
 
 
@@ -347,7 +350,7 @@ public class ViewModelManager {
             planViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
         }
         for (Synchronisation synchronisation : plan.getSynchronisations()) {
-            planViewModel.getSynchronisations().add((SynchronizationViewModel) getViewModelElement(synchronisation));
+            planViewModel.getSynchronisations().add((SynchronisationViewModel) getViewModelElement(synchronisation));
         }
         if (plan.getPreCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(plan.getPreCondition());
@@ -636,7 +639,7 @@ public class ViewModelManager {
                 parentPlan.getTransitions().add(transitionViewModel);
                 break;
             case Types.SYNCHRONISATION: {
-                SynchronizationViewModel syncViewModel = (SynchronizationViewModel) element;
+                SynchronisationViewModel syncViewModel = (SynchronisationViewModel) element;
                 syncViewModel.setXPosition(event.getUiElement().getX());
                 syncViewModel.setYPosition(event.getUiElement().getY());
                 parentPlan.getSynchronisations().add(syncViewModel);
@@ -698,7 +701,7 @@ public class ViewModelManager {
 
         switch (event.getElementType()) {
             case Types.SYNCTRANSITION:
-                ((SynchronizationViewModel) parentViewModel).getTransitions().add((TransitionViewModel) viewModelElement);
+                ((SynchronisationViewModel) parentViewModel).getTransitions().add((TransitionViewModel) viewModelElement);
                 break;
                 default:
                     System.err.println("ViewModelManager: Connect Element not supported for type: " + event.getElementType());
@@ -714,7 +717,7 @@ public class ViewModelManager {
 
         switch (event.getElementType()) {
             case Types.SYNCTRANSITION:
-                ((SynchronizationViewModel) parentViewModel).getTransitions().remove((TransitionViewModel) viewModelElement);
+                ((SynchronisationViewModel) parentViewModel).getTransitions().remove((TransitionViewModel) viewModelElement);
                 break;
             default:
                 System.err.println("ViewModelManager: Disconnect Element not supported for type: " + event.getElementType());

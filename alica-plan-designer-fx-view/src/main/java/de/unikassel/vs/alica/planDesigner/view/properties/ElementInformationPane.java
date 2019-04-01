@@ -73,19 +73,15 @@ public class ElementInformationPane extends TitledPane {
         setText(elementShown.getName());
         setGraphic(new ImageView(new AlicaIcon(elementShown.getType(), AlicaIcon.Size.SMALL)));
 
-        adaptUI(elementShown.getType());
-        adaptConditions(elementShown);
-        adaptParametrisation(elementShown);
-        variablesTab.setParentViewModel(elementShown);
-
+        adaptUI(elementShown);
 
         propertySheet.getItems().clear();
         propertySheet.getItems().addAll(createPropertySheetList(elementShown));
     }
 
-    private void adaptUI(String type) {
+    private void adaptUI(ViewModelElement elementShown) {
         tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, parametrisationTab);
-        switch (type) {
+        switch (elementShown.getType()) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
             case Types.ENTRYPOINT:
@@ -93,35 +89,44 @@ public class ElementInformationPane extends TitledPane {
                 this.setContent(propertySheet);
                 break;
             case Types.PLANTYPE:
+                this.parametrisationTab.setViewModel(elementShown);
+                this.variablesTab.setParentViewModel(elementShown);
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, parametrisationTab, variablesTab);
+                this.tabPane.getTabs().addAll(propertiesTab, parametrisationTab, variablesTab);
                 break;
             case Types.STATE:
+                this.parametrisationTab.setViewModel(elementShown);
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, parametrisationTab);
+                this.tabPane.getTabs().addAll(propertiesTab, parametrisationTab);
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
+                this.variablesTab.setParentViewModel(elementShown);
+                this.adaptConditions(elementShown);
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab);
+                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab);
                 break;
             case Types.BEHAVIOUR:
+                this.variablesTab.setParentViewModel(elementShown);
+                this.adaptConditions(elementShown);
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
+                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
                 break;
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
+                this.adaptConditions(elementShown);
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, postConditionTab);
+                this.tabPane.getTabs().addAll(propertiesTab, postConditionTab);
                 break;
             case Types.TRANSITION:
+                this.adaptConditions(elementShown);
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, preConditionTab);
+                this.tabPane.getTabs().addAll(propertiesTab, preConditionTab);
                 break;
             default:
-                System.err.println("ElementInformationPane: Unknown element type '" + type + "' choosen for showing properties stuff!");
+                System.err.println("ElementInformationPane: Unknown element type '" + elementShown.getType() + "' choosen for showing properties stuff!");
                 this.setContent(tabPane);
-                tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
+                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
                 break;
         }
     }
@@ -130,9 +135,6 @@ public class ElementInformationPane extends TitledPane {
         preConditionTab.setViewModelElement(element);
         runtimeConditionTab.setViewModelElement(element);
         postConditionTab.setViewModelElement(element);
-    }
-    private void adaptParametrisation(ViewModelElement elementShown) {
-        parametrisationTab.setViewModel(elementShown);
     }
 
 

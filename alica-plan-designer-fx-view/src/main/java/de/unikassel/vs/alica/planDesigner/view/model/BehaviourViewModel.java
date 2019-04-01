@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BehaviourViewModel extends SerializableViewModel implements HasVariablesView {
 
@@ -13,16 +14,16 @@ public class BehaviourViewModel extends SerializableViewModel implements HasVari
     protected LongProperty deferring = new SimpleLongProperty();
 
     protected ObservableList<VariableViewModel> variables;
-    protected final ObjectProperty<ConditionViewModel> preCondition;
-    protected final ObjectProperty<ConditionViewModel> runtimeCondition;
-    protected final ObjectProperty<ConditionViewModel> postCondition;
+    protected final ObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
+    protected final ObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
+    protected final ObjectProperty<ConditionViewModel> postCondition = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
         variables = FXCollections.observableArrayList(new ArrayList<>());
-        preCondition        = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
-        runtimeCondition    = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
-        postCondition       = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
     }
 
     public void setDeferring(long deferring) {
@@ -36,7 +37,6 @@ public class BehaviourViewModel extends SerializableViewModel implements HasVari
     public LongProperty deferringProperty() {
         return deferring;
     }
-
 
     public void setFrequency(int frequency) {
         this.frequency.set(frequency);

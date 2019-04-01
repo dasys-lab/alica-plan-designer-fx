@@ -18,7 +18,7 @@ public class PlanViewModel extends SerializableViewModel implements HasVariables
     protected final ObservableList<EntryPointViewModel> entryPoints = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<StateViewModel> states = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<TransitionViewModel> transitions = FXCollections.observableArrayList(new ArrayList<>());
-    protected final ObservableList<SynchronizationViewModel> synchronisations = FXCollections.observableArrayList(new ArrayList<>());
+    protected final ObservableList<SynchronisationViewModel> synchronisations = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<VariableViewModel> variables = FXCollections.observableArrayList(new ArrayList<>());
 
     public PlanViewModel(long id, String name, String type) {
@@ -88,7 +88,7 @@ public class PlanViewModel extends SerializableViewModel implements HasVariables
         return transitions;
     }
 
-    public ObservableList<SynchronizationViewModel> getSynchronisations() {
+    public ObservableList<SynchronisationViewModel> getSynchronisations() {
         return synchronisations;
     }
 
