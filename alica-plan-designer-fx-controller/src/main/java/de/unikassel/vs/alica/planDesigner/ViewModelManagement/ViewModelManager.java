@@ -14,8 +14,9 @@ import javafx.collections.ObservableList;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ViewModelManager {
 
@@ -119,9 +120,15 @@ public class ViewModelManager {
         roleSetViewModel.setComment(roleSet.getComment());
         roleSetViewModel.setRelativeDirectory(roleSetViewModel.getRelativeDirectory());
         this.viewModelElements.put(roleSetViewModel.getId(), roleSetViewModel);
+
         for (Role role : roleSet.getRoles()) {
             roleSetViewModel.addRole((RoleViewModel) getViewModelElement(role));
         }
+
+        for (Task task : this.modelManager.getTasks()) {
+            roleSetViewModel.addTask( (TaskViewModel) this.viewModelElements.get(task.getId()));
+        }
+
         return roleSetViewModel;
     }
 

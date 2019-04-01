@@ -8,10 +8,12 @@ import java.util.ArrayList;
 public class RoleSetViewModel extends SerializableViewModel {
 
     private ObservableList<RoleViewModel> roles;
+    private ObservableList<TaskViewModel> tasks;
 
     public RoleSetViewModel(long id, String name, String type) {
         super(id, name, type);
         roles = FXCollections.observableArrayList(new ArrayList<>());
+        tasks = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public void addRole(RoleViewModel role) {
@@ -31,5 +33,13 @@ public class RoleSetViewModel extends SerializableViewModel {
 
     public ObservableList<RoleViewModel> getRoleViewModels() {
         return roles;
+    }
+
+    public void addTask(TaskViewModel task) {
+        tasks.add(task);
+    }
+
+    public ObservableList<TaskViewModel> getTaskViewModels() {
+        return tasks;
     }
 }

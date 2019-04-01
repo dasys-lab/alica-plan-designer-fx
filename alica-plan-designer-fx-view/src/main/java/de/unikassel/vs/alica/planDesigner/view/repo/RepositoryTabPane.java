@@ -80,6 +80,7 @@ public class RepositoryTabPane extends TabPane {
     public void addTasks(List<ViewModelElement> tasks) {
         tasksTab.addElements(tasks);
     }
+
     public void addRoles(List<ViewModelElement> tasks) {
         rolesTab.addElements(tasks);
     }

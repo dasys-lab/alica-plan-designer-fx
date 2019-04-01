@@ -114,6 +114,10 @@ public class ModelManager implements Observer {
         return new ArrayList<>(planMap.values());
     }
 
+    public List<Task> getTasks() {
+        return this.taskRepository.getTasks();
+    }
+
     public ArrayList<Behaviour> getBehaviours() {
         return new ArrayList<>(behaviourMap.values());
     }
