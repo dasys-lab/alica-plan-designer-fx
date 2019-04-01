@@ -9,36 +9,28 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class CreateParametrisation extends Command {
 
-    private final Plan subPlan;
-    private final Variable subVariable;
-    private final Variable variable;
     private final Parametrisation parametrisation;
     private final PlanElement parent;
 
     public CreateParametrisation(ModelManager manager, ModelModificationQuery mmq) {
         super(manager, mmq);
-
         this.parent = modelManager.getPlanElement(mmq.getParentId());
-
-        PlanElement tempElement =  modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.PLAN));
-        if (tempElement instanceof AnnotatedPlan) {
-            this.subPlan = ((AnnotatedPlan) tempElement).getPlan();
-        } else {
-            this.subPlan = (Plan) tempElement;
-        }
-
-        this.variable = (Variable) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.VARIABLE));
-        this.subVariable = (Variable) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.PARAMETRISATION));
-
         this.parametrisation = createParametrisation();
     }
 
     protected Parametrisation createParametrisation() {
         Parametrisation parametrisation = new Parametrisation();
 
-        parametrisation.setSubPlan(subPlan);
-        parametrisation.setSubVariable(subVariable);
-        parametrisation.setVariable(variable);
+        PlanElement tempElement =  modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.PLAN));
+        if (tempElement instanceof AnnotatedPlan) {
+            parametrisation.setSubPlan(((AnnotatedPlan) tempElement).getPlan());
+        } else if (tempElement instanceof Plan) {
+            parametrisation.setSubPlan((Plan) tempElement);
+        } else {
+            parametrisation.setSubPlan((Behaviour) tempElement);
+        }
+        parametrisation.setSubVariable((Variable) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.PARAMETRISATION)));
+        parametrisation.setVariable((Variable) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.VARIABLE)));
 
         return parametrisation;
     }

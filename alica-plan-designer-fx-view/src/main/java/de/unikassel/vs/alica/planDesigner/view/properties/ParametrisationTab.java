@@ -76,6 +76,10 @@ public class ParametrisationTab extends Tab {
                             PlanViewModel planViewModel = (PlanViewModel) newValue;
                             variables = planViewModel.getVariables();
                         } break;
+                        case Types.BEHAVIOUR: {
+                            BehaviourViewModel behaviourViewModel = (BehaviourViewModel) newValue;
+                            variables = behaviourViewModel.getVariables();
+                        } break;
                         default: throw new RuntimeException(newValue.getType());
                     }
                     subVarDropDown.setItems(FXCollections.observableArrayList(variables));
