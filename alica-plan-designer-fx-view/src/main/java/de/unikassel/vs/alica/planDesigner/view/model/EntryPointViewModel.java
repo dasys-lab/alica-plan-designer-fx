@@ -1,22 +1,34 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-public class EntryPointViewModel extends PlanElementViewModel {
-    protected StateViewModel state;
+import java.util.Arrays;
 
+public class EntryPointViewModel extends PlanElementViewModel {
+
+    protected final SimpleBooleanProperty successRequired = new SimpleBooleanProperty(this, "successRequired", false);
+    protected final SimpleIntegerProperty minCardinality = new SimpleIntegerProperty(this, "minCardinality", 0);
+    protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty(this, "maxCardinality", 0);
     protected final SimpleObjectProperty<TaskViewModel> task = new SimpleObjectProperty<>();
+    protected final SimpleObjectProperty<StateViewModel> state = new SimpleObjectProperty<>();
+    protected final SimpleObjectProperty<PlanViewModel> plan = new SimpleObjectProperty<>();
 
     public EntryPointViewModel(long id, String name, String type) {
+
         super(id, name, type);
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "succesRequired", "minCardinality", "maxCardinality"));
     }
 
     public StateViewModel getState() {
-        return state;
+        return state.getValue();
     }
 
     public void setState(StateViewModel state) {
-        this.state = state;
+        this.state.setValue(state);
     }
 
     public TaskViewModel getTask() { return task.get(); }

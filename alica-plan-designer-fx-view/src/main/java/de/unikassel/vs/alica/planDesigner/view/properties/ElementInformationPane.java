@@ -53,7 +53,7 @@ public class ElementInformationPane extends TitledPane {
         propertiesTab = new Tab(i18NRepo.getString("label.caption.properties"));
         propertiesTab.setContent(propertySheet);
         variablesTab = new VariablesTab(guiModificationHandler);
-        variableBindingTab = new VariableBindingTab(guiModificationHandler, i18NRepo.getString("label.caption.parametrisation"));
+        variableBindingTab = new VariableBindingTab(guiModificationHandler, i18NRepo.getString("label.caption.variableBinding"));
         preConditionTab     = new ConditionsTab(i18NRepo.getString("label.caption.preCondtions")    , Types.PRECONDITION);
         runtimeConditionTab = new ConditionsTab(i18NRepo.getString("label.caption.runtimeCondtions"), Types.RUNTIMECONDITION);
         postConditionTab    = new ConditionsTab(i18NRepo.getString("label.caption.postCondtions")   , Types.POSTCONDITION);

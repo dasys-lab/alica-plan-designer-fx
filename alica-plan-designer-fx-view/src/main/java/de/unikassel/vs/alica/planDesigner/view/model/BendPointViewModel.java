@@ -11,7 +11,7 @@ public class BendPointViewModel extends PlanElementViewModel {
         super(id, name, type);
 
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("id"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
     }
 
     public double getX() {

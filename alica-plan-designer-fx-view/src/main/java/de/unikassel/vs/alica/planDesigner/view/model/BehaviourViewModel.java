@@ -10,13 +10,14 @@ import java.util.Arrays;
 
 public class BehaviourViewModel extends SerializableViewModel implements HasVariablesView {
 
-    protected IntegerProperty frequency = new SimpleIntegerProperty();
-    protected LongProperty deferring = new SimpleLongProperty();
+    protected SimpleIntegerProperty frequency = new SimpleIntegerProperty();
+    protected SimpleLongProperty deferring = new SimpleLongProperty();
 
     protected ObservableList<VariableViewModel> variables;
-    protected final ObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
-    protected final ObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
-    protected final ObjectProperty<ConditionViewModel> postCondition = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
+
+    protected final SimpleObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
+    protected final SimpleObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
+    protected final SimpleObjectProperty<ConditionViewModel> postCondition = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
