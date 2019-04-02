@@ -4,4 +4,5 @@ import javafx.collections.ObservableList;
 
 public interface HasVariablesView {
     ObservableList<VariableViewModel> getVariables();
+    long getId();
 }

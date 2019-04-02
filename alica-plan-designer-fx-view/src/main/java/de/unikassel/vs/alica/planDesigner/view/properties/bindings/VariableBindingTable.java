@@ -1,112 +1,134 @@
 package de.unikassel.vs.alica.planDesigner.view.properties.bindings;
 
+import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
-import de.unikassel.vs.alica.planDesigner.view.model.VariableBindingViewModel;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
+import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.util.Callback;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
-public class VariableBindingTable extends TableView<VariableBindingViewModel> {
+import java.util.HashMap;
 
-    private VariableBindingTab controller;
+public abstract class VariableBindingTable extends VBox {
+
+    public PropertiesTable<VariableBindingViewModel> table;
+    I18NRepo i18NRepo;
+    private ComboBox<VariableViewModel> varDropDown;
+    private ComboBox<HasVariablesView> subPlanDropDown;
+    private ComboBox<VariableViewModel> subVarDropDown;
+    private Button addButton;
 
     public VariableBindingTable() {
+        super();
+        this.i18NRepo = I18NRepo.getInstance();
+
+        // LABELS, DROPDOWNS, ADD Button
+        Label varLabel = new Label(i18NRepo.getString("label.caption.variable") + ":");
+        varDropDown = new ComboBox<VariableViewModel>();
+
+        Label subPlanLabel = new Label (i18NRepo.getString("label.column.subplan") + ":");
+        subPlanDropDown = new ComboBox<HasVariablesView>();
+        subPlanDropDown.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            this.fillSubVariableDropDown(newValue);
+        });
+
+        Label subVarLabel = new Label (i18NRepo.getString("label.column.subVariable") + ":");
+        subVarDropDown = new ComboBox<VariableViewModel>();
+
+        addButton = new Button();
+        addButton.setGraphic(new ImageView(new AlicaIcon(AlicaIcon.ADD, AlicaIcon.Size.SMALL)));
+        addButton.setOnAction(event -> {
+            onAddElement();
+        });
+        HBox dropDownHBox = new HBox(varLabel, varDropDown, subPlanLabel, subPlanDropDown, subVarLabel, subVarDropDown, addButton);
+
+        // TABLE
+        table = new PropertiesTable<>();
+        table.setEditable(false);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        this.getChildren().addAll(dropDownHBox, table);
+    }
+
+    private void fillSubVariableDropDown(HasVariablesView hasVariablesView) {
+        this.subVarDropDown.getItems().clear();
+        ObservableList<VariableViewModel> variables = hasVariablesView.getVariables();
+        for (VariableViewModel variable : variables) {
+            this.subVarDropDown.getItems().add(variable);
+        }
+    }
+
+    public void fillVariablesDropDown(ObservableList<VariableViewModel> variables) {
+        this.varDropDown.getItems().clear();
+        for (VariableViewModel variable : variables) {
+            this.varDropDown.getItems().add(variable);
+        }
+    }
+
+
+
+    private void createAlert() {
         I18NRepo i18NRepo = I18NRepo.getInstance();
 
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Invalid Variable Binding!");
+        alert.setContentText(i18NRepo.getString("label.error.invalidVariableBinding"));
 
-        TableColumn<VariableBindingViewModel, String>  actionCol = new TableColumn<>();
-        actionCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+        ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"));
 
-        Callback<TableColumn<VariableBindingViewModel, String>, TableCell<VariableBindingViewModel, String>> cellFactory = new Callback<TableColumn<VariableBindingViewModel, String>, TableCell<VariableBindingViewModel, String>>() {
+        alert.getButtonTypes().setAll(closeBtn);
 
-            @Override
-            public TableCell<VariableBindingViewModel, String> call(final TableColumn<VariableBindingViewModel, String> param) {
-                return new TableCell<VariableBindingViewModel, String>() {
-                    final Button button = new Button();
-
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        button.setGraphic(new ImageView(new AlicaIcon(AlicaIcon.REMOVE, AlicaIcon.Size.SMALL)));
-                        if (empty) {
-                            setGraphic(null);
-                            setText(null);
-                        } else {
-                            button.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent actionEvent) {
-                                    controller.deleteParametrisation(getTableView().getItems().get(getIndex()).getId());
-
-                                }
-                            });
-                            setGraphic(button);
-                            setText(null);
-                            setAlignment(Pos.CENTER);
-                        }
-                    }
-                };
-            }
-        };
-
-        actionCol.setCellFactory(cellFactory);
-
-        TableColumn<VariableBindingViewModel, String> varColumn = new TableColumn<>();
-        varColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<VariableBindingViewModel, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<VariableBindingViewModel, String> cellData) {
-                String name = null;
-                switch (controller.getElement().getType()) {
-                    case Types.PLANTYPE:
-                        name = controller.getComplexPlanVariableName(cellData.getValue().getVariable());
-                        break;
-                    case Types.STATE:
-                        name = cellData.getValue().getVariable().getName();
-                        break;
-                    default:
-                        name = "Error";
-                }
-                return new SimpleStringProperty(name);
-            }
-        });
-
-        TableColumn<VariableBindingViewModel, String> subPlanColumn = new TableColumn<>();
-        subPlanColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<VariableBindingViewModel, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<VariableBindingViewModel, String> cellData) {
-                return new SimpleStringProperty(cellData.getValue().getSubPlan().getName());
-            }
-        });
-
-        TableColumn<VariableBindingViewModel, String> subVarColumn = new TableColumn<>();
-        subVarColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<VariableBindingViewModel, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<VariableBindingViewModel, String> cellData) {
-                return new SimpleStringProperty(cellData.getValue().getSubVariable().getName());
-            }
-        });
-
-        varColumn.setText(i18NRepo.getString("label.caption.variables"));
-        subVarColumn.setText(i18NRepo.getString("label.column.subVariable"));
-        subPlanColumn.setText(i18NRepo.getString("label.column.subplan"));
-
-        this.getColumns().add(0, actionCol);
-        this.getColumns().add(1, varColumn);
-        this.getColumns().add(2, subPlanColumn);
-        this.getColumns().add(3, subVarColumn);
+        alert.initOwner(PlanDesignerApplication.getPrimaryStage());
+        alert.showAndWait();
     }
 
-    public void setController(VariableBindingTab controller) {
-        this.controller = controller;
+    public <T> void addColumn(String title, String propertyName, StringConverter<T> converter, boolean editable) {
+        table.addColumn(title, propertyName, converter, editable);
     }
+
+    public void addItem(VariableBindingViewModel viewModel) {
+        table.addItem(viewModel);
+    }
+
+    public void removeItem(VariableBindingViewModel viewModel) {
+        table.removeItem(viewModel);
+    }
+
+    public void clear() {
+        this.table.clear();
+        // clear drop downs
+        this.varDropDown.getItems().clear();
+        this.subVarDropDown.getItems().clear();
+        this.subPlanDropDown.getItems().clear();
+    }
+
+    public VariableBindingViewModel getSelectedItem() {
+        return table.getSelectionModel().getSelectedItem();
+    }
+
+    public VariableViewModel getSelectedVariable() {
+        return varDropDown.getSelectionModel().getSelectedItem();
+    }
+
+    public VariableViewModel getSelectedSubVariable() {
+        return subVarDropDown.getSelectionModel().getSelectedItem();
+    }
+
+    public HasVariablesView getSelectedSubPlan() {
+        return subPlanDropDown.getSelectionModel().getSelectedItem();
+    }
+
+    protected abstract void onAddElement();
+
+    protected abstract void onRemoveElement();
+
 }

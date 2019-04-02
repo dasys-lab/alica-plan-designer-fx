@@ -4,6 +4,7 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
+import de.unikassel.vs.alica.planDesigner.view.model.HasVariableBinding;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.properties.bindings.VariableBindingTab;
 import de.unikassel.vs.alica.planDesigner.view.properties.conditions.ConditionsTab;
@@ -53,7 +54,7 @@ public class ElementInformationPane extends TitledPane {
         propertiesTab = new Tab(i18NRepo.getString("label.caption.properties"));
         propertiesTab.setContent(propertySheet);
         variablesTab = new VariablesTab(guiModificationHandler);
-        variableBindingTab = new VariableBindingTab(guiModificationHandler, i18NRepo.getString("label.caption.parametrisation"));
+        variableBindingTab = new VariableBindingTab(guiModificationHandler);
         preConditionTab     = new ConditionsTab(i18NRepo.getString("label.caption.preCondtions")    , Types.PRECONDITION);
         runtimeConditionTab = new ConditionsTab(i18NRepo.getString("label.caption.runtimeCondtions"), Types.RUNTIMECONDITION);
         postConditionTab    = new ConditionsTab(i18NRepo.getString("label.caption.postCondtions")   , Types.POSTCONDITION);
@@ -92,13 +93,13 @@ public class ElementInformationPane extends TitledPane {
                 this.setContent(propertySheet);
                 break;
             case Types.PLANTYPE:
-                this.variableBindingTab.setViewModel(elementShown);
+                this.variableBindingTab.setParentViewModel((HasVariableBinding) elementShown);
                 this.variablesTab.setParentViewModel(elementShown);
                 this.setContent(tabPane);
                 this.tabPane.getTabs().addAll(propertiesTab, variableBindingTab, variablesTab);
                 break;
             case Types.STATE:
-                this.variableBindingTab.setViewModel(elementShown);
+                this.variableBindingTab.setParentViewModel((HasVariableBinding) elementShown);
                 this.setContent(tabPane);
                 this.tabPane.getTabs().addAll(propertiesTab, variableBindingTab);
                 break;
