@@ -14,11 +14,11 @@ public abstract class VariableBindingMixIn {
     @JsonDeserialize(using = ExternalRefDeserializer.class)
     protected AbstractPlan subPlan;
 
-    @JsonSerialize(using = InternalRefSerializer.class)
+    @JsonSerialize(using = ExternalRefSerializer.class)
     @JsonDeserialize(using = VariableDeserializer.class)
     protected Variable subVariable;
 
-    @JsonSerialize(using = ExternalRefSerializer.class)
+    @JsonSerialize(using = InternalRefSerializer.class)
     @JsonDeserialize(using = VariableDeserializer.class)
     protected Variable variable;
 }

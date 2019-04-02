@@ -134,7 +134,6 @@ public class VariableBindingTab extends Tab {
     }
 
     void fireEvent(GuiEventType eventType) {
-
         GuiModificationEvent event = new GuiModificationEvent(eventType, Types.VARIABLEBINDING, "Variable Binding");
         event.setParentId(parentViewModel.getId());
         if (eventType == GuiEventType.CREATE_ELEMENT) {
