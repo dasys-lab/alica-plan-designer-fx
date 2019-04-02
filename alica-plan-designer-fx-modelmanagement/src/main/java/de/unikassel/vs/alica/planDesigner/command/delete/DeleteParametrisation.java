@@ -9,34 +9,34 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
 public class DeleteParametrisation extends Command {
 
-    protected Parametrisation parametrisation;
+    protected VariableBinding variableBinding;
     protected PlanElement parent;
 
     public DeleteParametrisation(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
-        this.parametrisation = (Parametrisation) modelManager.getPlanElement(mmq.getElementId());
+        this.variableBinding = (VariableBinding) modelManager.getPlanElement(mmq.getElementId());
         this.parent = modelManager.getPlanElement(mmq.getParentId());
     }
 
     @Override
     public void doCommand() {
         if (parent instanceof State) {
-            ((State) this.parent).removeParametrisation(parametrisation);
+            ((State) this.parent).removeVariableBinding(variableBinding);
         } else if (parent instanceof PlanType) {
-            ((PlanType) this.parent).removeParametrisation(parametrisation);
+            ((PlanType) this.parent).removeParametrisation(variableBinding);
         }
-        this.modelManager.dropPlanElement(Types.VARIABLE, this.parametrisation, false);
-        this.fireEvent(ModelEventType.ELEMENT_DELETED, this.parametrisation);
+        this.modelManager.dropPlanElement(Types.VARIABLE, this.variableBinding, false);
+        this.fireEvent(ModelEventType.ELEMENT_DELETED, this.variableBinding);
     }
 
     @Override
     public void undoCommand() {
         if (parent instanceof State) {
-            ((State) this.parent).addParametrisation(parametrisation);
+            ((State) this.parent).addVariableBinding(variableBinding);
         } else if (parent instanceof PlanType) {
-            ((PlanType) this.parent).addParametrisation(parametrisation);
+            ((PlanType) this.parent).addParametrisation(variableBinding);
         }
-        this.modelManager.storePlanElement(Types.PARAMETRISATION, this.parametrisation, false);
-        this.fireEvent(ModelEventType.ELEMENT_CREATED, this.parametrisation);
+        this.modelManager.storePlanElement(Types.VARIABLEBINDING, this.variableBinding, false);
+        this.fireEvent(ModelEventType.ELEMENT_CREATED, this.variableBinding);
     }
 }

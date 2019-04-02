@@ -1,4 +1,4 @@
-package de.unikassel.vs.alica.planDesigner.view.properties;
+package de.unikassel.vs.alica.planDesigner.view.properties.conditions;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
@@ -8,6 +8,7 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
+import de.unikassel.vs.alica.planDesigner.view.properties.variables.VariablesTable;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;

@@ -1,4 +1,4 @@
-package de.unikassel.vs.alica.planDesigner.view.properties;
+package de.unikassel.vs.alica.planDesigner.view.properties.variables;
 
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;

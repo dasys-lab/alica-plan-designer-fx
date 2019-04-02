@@ -7,12 +7,12 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class StateViewModel extends PlanElementViewModel implements HasParametrisationView {
+public class StateViewModel extends PlanElementViewModel implements HasVariableBinding {
     protected ObservableList<PlanElementViewModel> abstractPlans;
     protected ObservableList<TransitionViewModel> inTransitions;
     protected ObservableList<TransitionViewModel> outTransitions;
     protected ObjectProperty<ConditionViewModel> postCondition;
-    protected ObservableList<ParametrisationViewModel> parametrisations;
+    protected ObservableList<VariableBindingViewModel> parametrisations;
     protected EntryPointViewModel entryPoint;
 
     public StateViewModel(long id, String name, String type) {
@@ -72,18 +72,18 @@ public class StateViewModel extends PlanElementViewModel implements HasParametri
         return postCondition;
     }
 
-    public ObservableList getParametrisations() {
+    public ObservableList getVariableBindings() {
         return parametrisations;
     }
 
-    public void addParametrisation(ParametrisationViewModel parametrisation) {
-        if(!this.parametrisations.contains(parametrisation)) {
-            this.parametrisations.add(parametrisation);
+    public void addVariableBinding(VariableBindingViewModel binding) {
+        if(!this.parametrisations.contains(binding)) {
+            this.parametrisations.add(binding);
         }
     }
 
-    public void removeParametrisation(ParametrisationViewModel parametrisation) {
-        this.parametrisations.remove(parametrisation);
+    public void removeVariableBinding(VariableBindingViewModel binding) {
+        this.parametrisations.remove(binding);
     }
 
 

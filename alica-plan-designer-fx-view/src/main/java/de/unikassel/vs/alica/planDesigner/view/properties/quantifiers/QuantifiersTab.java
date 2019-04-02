@@ -1,7 +1,8 @@
-package de.unikassel.vs.alica.planDesigner.view.properties;
+package de.unikassel.vs.alica.planDesigner.view.properties.quantifiers;
 
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.model.QuantifierViewModel;
+import de.unikassel.vs.alica.planDesigner.view.properties.variables.VariablesTable;
 import javafx.scene.control.Tab;
 import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.LongStringConverter;

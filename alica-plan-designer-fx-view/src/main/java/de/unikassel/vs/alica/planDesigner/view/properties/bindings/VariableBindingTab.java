@@ -1,4 +1,4 @@
-package de.unikassel.vs.alica.planDesigner.view.properties;
+package de.unikassel.vs.alica.planDesigner.view.properties.bindings;
 
 import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ParametrisationTab extends Tab {
+public class VariableBindingTab extends Tab {
 
     private Label varLabel;
     private ComboBox<ViewModelElement> varDropDown;
@@ -38,22 +38,22 @@ public class ParametrisationTab extends Tab {
 
     private Button addButton;
 
-    private ParamTable paramTable;
+    private VariableBindingTable variableBindingTable;
 
-    private final IGuiModificationHandler guiModificationHandler;
+    private final IGuiModificationHandler handler;
     private ViewModelElement element;
 
     public ViewModelElement getElement() {
         return element;
     }
 
-    public ParametrisationTab(IGuiModificationHandler guiModificationHandler, String title) {
+    public VariableBindingTab(IGuiModificationHandler handler, String title) {
         super(title);
-        this.guiModificationHandler = guiModificationHandler;
+        this.handler = handler;
 
         Node root = null;
         try {
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("paramTabContent.fxml"));
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("variableBindingTabContent.fxml"));
 
             varLabel = (Label) root.lookup("#varLabel");
             varDropDown = (ComboBox<ViewModelElement>) root.lookup("#varDropDown");
@@ -69,7 +69,7 @@ public class ParametrisationTab extends Tab {
                     switch (newValue.getType()) {
                         case Types.ANNOTATEDPLAN: {
                             AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) newValue;
-                            PlanViewModel planViewModel = (PlanViewModel) guiModificationHandler.getViewModelElement(annotatedPlanView.getPlanId());
+                            PlanViewModel planViewModel = (PlanViewModel) handler.getViewModelElement(annotatedPlanView.getPlanId());
                             variables = planViewModel.getVariables();
                         } break;
                         case Types.PLAN: {
@@ -110,21 +110,21 @@ public class ParametrisationTab extends Tab {
                     return;
                 }
 
-                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.PARAMETRISATION, "NEW_PARAM");
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.VARIABLEBINDING, "NEW_PARAM");
                 event.setParentId(element.getId());
 
                 HashMap<String, Long> relatedObjects = new HashMap<>();
                 relatedObjects.put(Types.VARIABLE, selectedVar.getId());
-                relatedObjects.put(Types.PARAMETRISATION, selectedSubVar.getId());
+                relatedObjects.put(Types.VARIABLEBINDING, selectedSubVar.getId());
                 relatedObjects.put(Types.PLAN, selectedSubPlan.getId());
 
                 event.setRelatedObjects(relatedObjects);
-                guiModificationHandler.handle(event);
+                handler.handle(event);
             }
         });
 
-        paramTable = (ParamTable) root.lookup("#paramTable");
-        paramTable.setController(this);
+        variableBindingTable = (VariableBindingTable) root.lookup("#variableBindingTable");
+        variableBindingTable.setController(this);
 
         this.setContent(root);
         this.init();
@@ -148,16 +148,16 @@ public class ParametrisationTab extends Tab {
     }
 
     private boolean isDuplicate(VariableViewModel selectedVar, ViewModelElement selectedSubPlan, VariableViewModel selectedSubVar) {
-        ObservableList<ParametrisationViewModel> parametrisations = ((HasParametrisationView) element).getParametrisations();
+        ObservableList<VariableBindingViewModel> parametrisations = ((HasVariableBinding) element).getVariableBindings();
 
         if (selectedSubPlan.getType().equals(Types.ANNOTATEDPLAN)) {
-            selectedSubPlan = guiModificationHandler.getViewModelElement(((AnnotatedPlanView) selectedSubPlan).getPlanId());
+            selectedSubPlan = handler.getViewModelElement(((AnnotatedPlanView) selectedSubPlan).getPlanId());
         }
 
-        for (ParametrisationViewModel parametrisationViewModel : parametrisations) {
-            if (parametrisationViewModel.getSubPlan().getId() == selectedSubPlan.getId())
-                if (parametrisationViewModel.getSubVariable().getId() == selectedSubVar.getId())
-                    if (parametrisationViewModel.getVariable().getId() == selectedVar.getId()) {
+        for (VariableBindingViewModel variableBindingViewModel : parametrisations) {
+            if (variableBindingViewModel.getSubPlan().getId() == selectedSubPlan.getId())
+                if (variableBindingViewModel.getSubVariable().getId() == selectedSubVar.getId())
+                    if (variableBindingViewModel.getVariable().getId() == selectedVar.getId()) {
                         return true;
                     }
         }
@@ -190,7 +190,7 @@ public class ParametrisationTab extends Tab {
     }
 
     public void setViewModel(ViewModelElement element) {
-        if (!(element instanceof HasParametrisationView)) {
+        if (!(element instanceof HasVariableBinding)) {
             return;
         }
         this.element = element;
@@ -214,44 +214,44 @@ public class ParametrisationTab extends Tab {
             } break;
             case Types.STATE: {
                 StateViewModel stateViewModel = (StateViewModel) element;
-                varDropDown.setItems(FXCollections.observableArrayList(((PlanViewModel) guiModificationHandler.getViewModelElement(element.getParentId())).getVariables()));
+                varDropDown.setItems(FXCollections.observableArrayList(((PlanViewModel) handler.getViewModelElement(element.getParentId())).getVariables()));
                 subPlanDropDown.setItems(FXCollections.observableArrayList(stateViewModel.getAbstractPlans()));
                 subVarDropDown.setItems(FXCollections.observableArrayList(new ViewModelElement(0L, "please select plan first", null)));
 
             } break;
             default:{
-                System.err.println("ParametrisationTab: Unrecognized ViewElementType");
+                System.err.println("VariableBindingTab: Unrecognized ViewElementType");
             }
         }
 
-        ObservableList parametrisations = ((HasParametrisationView) element).getParametrisations();
-        paramTable.setItems(parametrisations);
-        parametrisations.addListener(new ListChangeListener() {
-            @Override
-            public void onChanged(Change c) {
-                for (TableColumn column: paramTable.getColumns()) {
-                    paramTable.resizeColumn(column, 1);
-                }
-                if (c.getList().size() > 0) {
-                    paramTable.setVisible(true);
-                } else {
-                    paramTable.setVisible(false);
-                }
-            }
-        });
-
-        if (parametrisations.isEmpty()) {
-            paramTable.setVisible(false);
-        } else {
-            paramTable.setVisible(true);
-        }
+        ObservableList variableBindings = ((HasVariableBinding) element).getVariableBindings();
+        variableBindingTable.setItems(variableBindings);
+//        variableBindings.addListener(new ListChangeListener() {
+//            @Override
+//            public void onChanged(Change c) {
+//                for (TableColumn column: variableBindingTable.getColumns()) {
+//                    variableBindingTable.resizeColumn(column, 1);
+//                }
+//                if (c.getList().size() > 0) {
+//                    variableBindingTable.setVisible(true);
+//                } else {
+//                    variableBindingTable.setVisible(false);
+//                }
+//            }
+//        });
+//
+//        if (variableBindings.isEmpty()) {
+//            variableBindingTable.setVisible(false);
+//        } else {
+//            variableBindingTable.setVisible(true);
+//        }
     }
 
     public void deleteParametrisation(long id) {
-        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.PARAMETRISATION, "NEW_PARAM");
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.VARIABLEBINDING, "NEW_PARAM");
         event.setElementId(id);
         event.setParentId(element.getId());
-        guiModificationHandler.handle(event);
+        handler.handle(event);
     }
 
     private class ViewModelElementStringConverter extends StringConverter<ViewModelElement> {

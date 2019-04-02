@@ -2,7 +2,7 @@ package de.unikassel.vs.alica.planDesigner.alicamodel;
 
 import javafx.beans.property.SimpleObjectProperty;
 
-public class Parametrisation extends PlanElement{
+public class VariableBinding extends PlanElement{
     protected final SimpleObjectProperty<Variable> variable = new SimpleObjectProperty<>();
     protected final SimpleObjectProperty<AbstractPlan> subPlan = new SimpleObjectProperty<>();
     protected final SimpleObjectProperty<Variable> subVariable = new SimpleObjectProperty<>();

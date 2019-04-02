@@ -85,7 +85,7 @@ public class ModelManager implements Observer {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
         objectMapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
-        objectMapper.addMixIn(Parametrisation.class, ParametrisationMixIn.class);
+        objectMapper.addMixIn(VariableBinding.class, ParametrisationMixIn.class);
         objectMapper.addMixIn(AnnotatedPlan.class, AnnotatedPlanMixIn.class);
         objectMapper.addMixIn(Plan.class, PlanMixIn.class);
         objectMapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
@@ -415,16 +415,16 @@ public class ModelManager implements Observer {
                 // has the same id as the real one
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
 
-                for (int i = 0; i < state.getParametrisations().size(); i++) {
-                    Parametrisation parametrisation = state.getParametrisations().get(i);
-                    parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
-                    parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
-                    parametrisation.setVariable((Variable) getPlanElement(parametrisation.getVariable().getId()));
+                for (int i = 0; i < state.getVariableBindings().size(); i++) {
+                    VariableBinding variableBinding = state.getVariableBindings().get(i);
+                    variableBinding.setSubPlan((AbstractPlan) getPlanElement(variableBinding.getSubPlan().getId()));
+                    variableBinding.setSubVariable((Variable) getPlanElement(variableBinding.getSubVariable().getId()));
+                    variableBinding.setVariable((Variable) getPlanElement(variableBinding.getVariable().getId()));
                 }
 
-                ArrayList<Parametrisation> parametrisations = new ArrayList<>(state.getParametrisations());
+                ArrayList<VariableBinding> variableBindings = new ArrayList<>(state.getVariableBindings());
                 state.removeAbstractPlan(abstractPlan);
-                parametrisations.forEach(state::addParametrisation);
+                variableBindings.forEach(state::addVariableBinding);
             }
 
             if(state instanceof TerminalState) {
@@ -466,11 +466,11 @@ public class ModelManager implements Observer {
             annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
         }
 
-        for (int i = 0; i < planType.getParametrisations().size(); i++) {
-            Parametrisation parametrisation = planType.getParametrisations().get(i);
-            parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
-            parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
-            parametrisation.setVariable((Variable) getPlanElement(parametrisation.getVariable().getId()));
+        for (int i = 0; i < planType.getVariableBindings().size(); i++) {
+            VariableBinding variableBinding = planType.getVariableBindings().get(i);
+            variableBinding.setSubPlan((AbstractPlan) getPlanElement(variableBinding.getSubPlan().getId()));
+            variableBinding.setSubVariable((Variable) getPlanElement(variableBinding.getSubVariable().getId()));
+            variableBinding.setVariable((Variable) getPlanElement(variableBinding.getVariable().getId()));
         }
     }
 
@@ -527,8 +527,8 @@ public class ModelManager implements Observer {
                 }
                 for(State state : plan.getStates()) {
                     planElementMap.put(state.getId(), state);
-                    for (Parametrisation parametrisation : state.getParametrisations()) {
-                        planElementMap.put(parametrisation.getId(), parametrisation);
+                    for (VariableBinding variableBinding : state.getVariableBindings()) {
+                        planElementMap.put(variableBinding.getId(), variableBinding);
                     }
                     if(state instanceof TerminalState){
                         TerminalState terminalState = (TerminalState) state;
@@ -553,8 +553,8 @@ public class ModelManager implements Observer {
                 for(AnnotatedPlan annotatedPlan: planType.getAnnotatedPlans()) {
                     planElementMap.put(annotatedPlan.getId(), annotatedPlan);
                 }
-                for(Parametrisation parametrisation: planType.getParametrisations()) {
-                    planElementMap.put(parametrisation.getId(), parametrisation);
+                for(VariableBinding variableBinding : planType.getVariableBindings()) {
+                    planElementMap.put(variableBinding.getId(), variableBinding);
                 }
                 break;
             case Types.BEHAVIOUR:
@@ -784,7 +784,7 @@ public class ModelManager implements Observer {
             }
             stateLoop:
             for (State state : parent.getStates()) {
-                for (Parametrisation param : state.getParametrisations()) {
+                for (VariableBinding param : state.getVariableBindings()) {
                     if (param.getSubVariable() == planElement) {
                         usages.add(parent);
                         break stateLoop;
@@ -807,7 +807,7 @@ public class ModelManager implements Observer {
                 usages.add(planType);
                 continue;
             }
-            for (Parametrisation param : planType.getParametrisations()) {
+            for (VariableBinding param : planType.getVariableBindings()) {
                 if (param.getSubVariable() == planElement) {
                     usages.add(planType);
                     break;
@@ -903,8 +903,8 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new CreateVariable(this, mmq);
                         break;
-                    case Types.PARAMETRISATION:
-                        cmd = new CreateParametrisation(this, mmq);
+                    case Types.VARIABLEBINDING:
+                        cmd = new CreateVariableBinding(this, mmq);
                         break;
                     case Types.QUANTIFIER:
                         cmd = new CreateQuantifier(this, mmq);
@@ -959,7 +959,7 @@ public class ModelManager implements Observer {
                     case Types.FAILURESTATE:
                         cmd = new DeleteStateInPlan(this, mmq);
                         break;
-                    case Types.PARAMETRISATION:
+                    case Types.VARIABLEBINDING:
                         cmd = new DeleteParametrisation(this, mmq);
                         break;
                     default:
@@ -1021,8 +1021,8 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new AddVariableToCondition(this, mmq);
                         break;
-                    case Types.PARAMETRISATION:
-                        cmd = new CreateParametrisation(this, mmq);
+                    case Types.VARIABLEBINDING:
+                        cmd = new CreateVariableBinding(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");

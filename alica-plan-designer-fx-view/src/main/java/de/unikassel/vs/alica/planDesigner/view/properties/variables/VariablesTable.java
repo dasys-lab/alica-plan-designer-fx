@@ -1,7 +1,8 @@
-package de.unikassel.vs.alica.planDesigner.view.properties;
+package de.unikassel.vs.alica.planDesigner.view.properties.variables;
 
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
@@ -11,7 +12,7 @@ import javafx.util.StringConverter;
 public abstract class VariablesTable<S extends ViewModelElement> extends VBox {
 
     HBox addDeleteHBox;
-    PropertiesTable<S> table;
+    public PropertiesTable<S> table;
     I18NRepo i18NRepo;
 
     public VariablesTable() {

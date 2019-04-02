@@ -3,12 +3,12 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class PlanTypeViewModel extends SerializableViewModel implements HasParametrisationView, HasVariablesView {
+public class PlanTypeViewModel extends SerializableViewModel implements HasVariableBinding, HasVariablesView {
 
     private ObservableList<PlanViewModel> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
     private ObservableList<VariableViewModel> variables;
-    private ObservableList<ParametrisationViewModel> parametrisations;
+    private ObservableList<VariableBindingViewModel> parametrisations;
 
 
     public PlanTypeViewModel(long id, String name, String type) {
@@ -64,18 +64,18 @@ public class PlanTypeViewModel extends SerializableViewModel implements HasParam
         return false;
     }
 
-    public ObservableList<ParametrisationViewModel> getParametrisations() {
+    public ObservableList<VariableBindingViewModel> getVariableBindings() {
         return parametrisations;
     }
 
-    public void addParametrisation(ParametrisationViewModel parametrisation) {
-        if(!this.parametrisations.contains(parametrisation)) {
-            this.parametrisations.add(parametrisation);
+    public void addVariableBinding(VariableBindingViewModel binding) {
+        if(!this.parametrisations.contains(binding)) {
+            this.parametrisations.add(binding);
         }
     }
 
-    public void removeParametrisation(ParametrisationViewModel parametrisation) {
-        this.parametrisations.remove(parametrisation);
+    public void removeVariableBinding(VariableBindingViewModel binding) {
+        this.parametrisations.remove(binding);
     }
 
     @Override

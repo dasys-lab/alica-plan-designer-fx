@@ -1,7 +1,9 @@
-package de.unikassel.vs.alica.planDesigner.view.properties;
+package de.unikassel.vs.alica.planDesigner.view.properties.conditions;
 
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.model.ConditionViewModel;
+import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable;
+import de.unikassel.vs.alica.planDesigner.view.properties.quantifiers.QuantifiersTab;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

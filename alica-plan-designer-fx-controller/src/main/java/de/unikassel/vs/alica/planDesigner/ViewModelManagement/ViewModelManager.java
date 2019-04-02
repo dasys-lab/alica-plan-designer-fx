@@ -68,8 +68,8 @@ public class ViewModelManager {
             element = createEntryPointViewModel((EntryPoint) planElement);
         } else if (planElement instanceof Variable) {
             element = createVariableViewModel((Variable) planElement);
-        } else if (planElement instanceof Parametrisation) {
-            element = createParametrisationViewModel((Parametrisation) planElement);
+        } else if (planElement instanceof VariableBinding) {
+            element = createParametrisationViewModel((VariableBinding) planElement);
         } else if (planElement instanceof Transition) {
              element = createTransitionViewModel((Transition) planElement);
         } else if (planElement instanceof Synchronisation) {
@@ -157,12 +157,12 @@ public class ViewModelManager {
         return variableViewModel;
     }
 
-    private ParametrisationViewModel createParametrisationViewModel(Parametrisation param) {
-        ParametrisationViewModel parametrisationViewModel = new ParametrisationViewModel(param.getId(), param.getName(), Types.PARAMETRISATION);
-        parametrisationViewModel.setSubPlan((PlanViewModel) getViewModelElement(param.getSubPlan()));
-        parametrisationViewModel.setSubVariable((VariableViewModel) getViewModelElement(param.getSubVariable()));
-        parametrisationViewModel.setVariable((VariableViewModel) getViewModelElement(param.getVariable()));
-        return parametrisationViewModel;
+    private VariableBindingViewModel createParametrisationViewModel(VariableBinding param) {
+        VariableBindingViewModel variableBindingViewModel = new VariableBindingViewModel(param.getId(), param.getName(), Types.VARIABLEBINDING);
+        variableBindingViewModel.setSubPlan((PlanViewModel) getViewModelElement(param.getSubPlan()));
+        variableBindingViewModel.setSubVariable((VariableViewModel) getViewModelElement(param.getSubVariable()));
+        variableBindingViewModel.setVariable((VariableViewModel) getViewModelElement(param.getVariable()));
+        return variableBindingViewModel;
     }
 
     private ConditionViewModel createConditionViewModel(Condition condition) {
@@ -221,8 +221,8 @@ public class ViewModelManager {
             planTypeViewModel.getPlansInPlanType().add((AnnotatedPlanView) getViewModelElement(annotatedPlan));
         }
 
-        for (Parametrisation param: planType.getParametrisations()) {
-            planTypeViewModel.addParametrisation((ParametrisationViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
+        for (VariableBinding param: planType.getVariableBindings()) {
+            planTypeViewModel.addVariableBinding((VariableBindingViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
         }
 
         for (Variable var : planType.getVariables()) {
@@ -264,8 +264,8 @@ public class ViewModelManager {
             stateViewModel.setPostCondition((ConditionViewModel) getViewModelElement(((TerminalState) state).getPostCondition()));
         }
 
-        for (Parametrisation param: state.getParametrisations()) {
-            stateViewModel.addParametrisation((ParametrisationViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
+        for (VariableBinding param: state.getVariableBindings()) {
+            stateViewModel.addVariableBinding((VariableBindingViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
         }
 
         return stateViewModel;
@@ -427,12 +427,12 @@ public class ViewModelManager {
                     throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no variables");
                 }
                 break;
-            case Types.PARAMETRISATION:
+            case Types.VARIABLEBINDING:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
-                if ( parentViewModel instanceof HasParametrisationView) {
-                    ((HasParametrisationView) parentViewModel).getParametrisations().remove((ParametrisationViewModel) viewModelElement);
+                if ( parentViewModel instanceof HasVariableBinding) {
+                    ((HasVariableBinding) parentViewModel).getVariableBindings().remove((VariableBindingViewModel) viewModelElement);
                 } else {
-                    throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no parametrisation");
+                    throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no variableBinding");
                 }
                 break;
             case Types.PRECONDITION:
@@ -542,8 +542,8 @@ public class ViewModelManager {
             case Types.VARIABLE:
                 ((HasVariablesView) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
                 break;
-            case Types.PARAMETRISATION: {
-                ((HasParametrisationView) parentViewModel).getParametrisations().add((ParametrisationViewModel) viewModelElement);
+            case Types.VARIABLEBINDING: {
+                ((HasVariableBinding) parentViewModel).getVariableBindings().add((VariableBindingViewModel) viewModelElement);
             } break;
             case Types.ABSTRACTPLAN:
                 PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
@@ -680,7 +680,7 @@ public class ViewModelManager {
             case Types.VARIABLE:
                 parentPlan.getVariables().add((VariableViewModel)element);
                 break;
-            case Types.PARAMETRISATION:
+            case Types.VARIABLEBINDING:
                 // TODO
                 System.err.println("ViewModelManager: Param not set");
                 break;

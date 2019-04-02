@@ -27,7 +27,7 @@ public abstract class StateMixIn {
     @JsonSerialize(contentUsing = ExternalRefSerializer.class)
     @JsonDeserialize(contentUsing = ExternalRefDeserializer.class)
     protected ArrayList<AbstractPlan> abstractPlans;
-    protected ArrayList<Parametrisation> parametrisations;
+    protected ArrayList<VariableBinding> variableBindings;
     @JsonSerialize(contentUsing = InternalRefSerializer.class)
     protected ArrayList<Transition> inTransitions;
     @JsonSerialize(contentUsing = InternalRefSerializer.class)
