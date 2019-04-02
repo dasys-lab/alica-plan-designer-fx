@@ -1,21 +1,20 @@
 package de.unikassel.vs.alica.planDesigner.view.properties.bindings;
 
-import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
-import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
-import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
-import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public abstract class VariableBindingTable extends VBox {
 
@@ -25,6 +24,7 @@ public abstract class VariableBindingTable extends VBox {
     private ComboBox<HasVariablesView> subPlanDropDown;
     private ComboBox<VariableViewModel> subVarDropDown;
     private Button addButton;
+    private Button deleteButton;
 
     public VariableBindingTable() {
         super();
@@ -32,63 +32,69 @@ public abstract class VariableBindingTable extends VBox {
 
         // LABELS, DROPDOWNS, ADD Button
         Label varLabel = new Label(i18NRepo.getString("label.caption.variable") + ":");
+        varLabel.setPadding(new Insets(0,0,0,5));
         varDropDown = new ComboBox<VariableViewModel>();
+        varDropDown.setConverter(new VariableStringConverter());
 
         Label subPlanLabel = new Label (i18NRepo.getString("label.column.subplan") + ":");
+        subPlanLabel.setPadding(new Insets(0,0,0,15));
         subPlanDropDown = new ComboBox<HasVariablesView>();
         subPlanDropDown.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.fillSubVariableDropDown(newValue);
         });
+        subPlanDropDown.setConverter(new HasVariablesViewStringConverter());
 
-        Label subVarLabel = new Label (i18NRepo.getString("label.column.subVariable") + ":");
+        Label subVarLabel = new Label (i18NRepo.getString("label.column.subvariable") + ":");
+        subVarLabel.setPadding(new Insets(0,0,0,15));
         subVarDropDown = new ComboBox<VariableViewModel>();
+        subVarDropDown.setConverter(new VariableStringConverter());
 
         addButton = new Button();
         addButton.setGraphic(new ImageView(new AlicaIcon(AlicaIcon.ADD, AlicaIcon.Size.SMALL)));
         addButton.setOnAction(event -> {
             onAddElement();
         });
-        HBox dropDownHBox = new HBox(varLabel, varDropDown, subPlanLabel, subPlanDropDown, subVarLabel, subVarDropDown, addButton);
+
+        deleteButton = new Button();
+        deleteButton.setGraphic(new ImageView(new AlicaIcon(AlicaIcon.REMOVE, AlicaIcon.Size.SMALL)));
+        deleteButton.setOnAction(event -> {
+            onRemoveElement();
+        });
+        Separator sep = new Separator();
+        sep.setOrientation(Orientation.VERTICAL);
+        HBox dropDownHBox = new HBox(varLabel, varDropDown, subPlanLabel, subPlanDropDown, subVarLabel, subVarDropDown,sep, addButton, deleteButton);
+        dropDownHBox.setAlignment(Pos.CENTER_LEFT);
+        dropDownHBox.setSpacing(5);
+        dropDownHBox.setPadding(new Insets(3,0,3,0));
 
         // TABLE
         table = new PropertiesTable<>();
         table.setEditable(false);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.clear();
 
         this.getChildren().addAll(dropDownHBox, table);
     }
 
     private void fillSubVariableDropDown(HasVariablesView hasVariablesView) {
         this.subVarDropDown.getItems().clear();
-        ObservableList<VariableViewModel> variables = hasVariablesView.getVariables();
-        for (VariableViewModel variable : variables) {
-            this.subVarDropDown.getItems().add(variable);
+        if (hasVariablesView != null) {
+            this.subVarDropDown.getItems().addAll(hasVariablesView.getVariables());
         }
     }
 
-    public void fillVariablesDropDown(ObservableList<VariableViewModel> variables) {
+    public void setVariablesDropDownContent(ObservableList<VariableViewModel> variables) {
         this.varDropDown.getItems().clear();
-        for (VariableViewModel variable : variables) {
-            this.varDropDown.getItems().add(variable);
+        if (variables != null) {
+            this.varDropDown.getItems().addAll(variables);
         }
     }
 
-
-
-    private void createAlert() {
-        I18NRepo i18NRepo = I18NRepo.getInstance();
-
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Invalid Variable Binding!");
-        alert.setContentText(i18NRepo.getString("label.error.invalidVariableBinding"));
-
-        ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"));
-
-        alert.getButtonTypes().setAll(closeBtn);
-
-        alert.initOwner(PlanDesignerApplication.getPrimaryStage());
-        alert.showAndWait();
+    public void setSubPlanDropDownContent(ArrayList<HasVariablesView> hasVariablesViewArrayList) {
+        this.subPlanDropDown.getItems().clear();
+        if (hasVariablesViewArrayList != null) {
+            this.subPlanDropDown.getItems().addAll(hasVariablesViewArrayList);
+        }
     }
 
     public <T> void addColumn(String title, String propertyName, StringConverter<T> converter, boolean editable) {

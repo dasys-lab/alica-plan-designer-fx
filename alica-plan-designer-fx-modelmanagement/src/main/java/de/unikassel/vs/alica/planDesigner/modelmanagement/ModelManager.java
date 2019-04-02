@@ -85,7 +85,7 @@ public class ModelManager implements Observer {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
         objectMapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
-        objectMapper.addMixIn(VariableBinding.class, ParametrisationMixIn.class);
+        objectMapper.addMixIn(VariableBinding.class, VariableBindingMixIn.class);
         objectMapper.addMixIn(AnnotatedPlan.class, AnnotatedPlanMixIn.class);
         objectMapper.addMixIn(Plan.class, PlanMixIn.class);
         objectMapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
@@ -960,7 +960,7 @@ public class ModelManager implements Observer {
                         cmd = new DeleteStateInPlan(this, mmq);
                         break;
                     case Types.VARIABLEBINDING:
-                        cmd = new DeleteParametrisation(this, mmq);
+                        cmd = new DeleteVariableBinding(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");

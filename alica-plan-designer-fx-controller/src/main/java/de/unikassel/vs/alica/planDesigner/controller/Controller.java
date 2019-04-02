@@ -364,6 +364,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case CREATE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
                 mmq.setParentId(event.getParentId());
+                mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
             case DELETE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());

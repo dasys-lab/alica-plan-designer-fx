@@ -159,7 +159,7 @@ public class ViewModelManager {
 
     private VariableBindingViewModel createParametrisationViewModel(VariableBinding param) {
         VariableBindingViewModel variableBindingViewModel = new VariableBindingViewModel(param.getId(), param.getName(), Types.VARIABLEBINDING);
-        variableBindingViewModel.setSubPlan((PlanViewModel) getViewModelElement(param.getSubPlan()));
+        variableBindingViewModel.setSubPlan((HasVariablesView) getViewModelElement(param.getSubPlan()));
         variableBindingViewModel.setSubVariable((VariableViewModel) getViewModelElement(param.getSubVariable()));
         variableBindingViewModel.setVariable((VariableViewModel) getViewModelElement(param.getVariable()));
         return variableBindingViewModel;
