@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -13,19 +14,20 @@ import java.util.List;
 
 public class RoleListView extends ListView<RoleLabel> {
 
+    private IGuiModificationHandler guiModificationHandler;
+
     public RoleListView() {
         super();
         this.setCellFactory(param -> new RoleCell());
-
-        this.getSelectionModel().getSelectedItems().addListener(
-                (ListChangeListener<RoleLabel>) c -> System.out.println("RLV: selects " + getSelectedItem()));
-
-        this.focusedProperty().addListener(
-                (observable, focusedBefore, focused) -> System.out.println("RLV: focus " + getSelectedItem()));
-
-        Platform.runLater(() -> this.getSelectionModel().select(0));
-        Platform.runLater(() -> requestFocus());
     }
+
+    public void setFocus() {
+         Platform.runLater(()->  {
+        this.getSelectionModel().select(0);
+        this.getFocusModel().focus(0);
+        this.requestFocus();
+    });
+}
 
 
     public void removeElement(ViewModelElement viewModel) {
@@ -42,22 +44,26 @@ public class RoleListView extends ListView<RoleLabel> {
     }
 
     public void addElement(ViewModelElement viewModelElement) {
-
-        Platform.runLater(() -> getItems().add(new RoleLabel(viewModelElement)));
+        Platform.runLater(() -> getItems().add(new RoleLabel(viewModelElement, guiModificationHandler)));
     }
 
     public void addElements(List<? extends ViewModelElement> viewModelElements) {
         Platform.runLater(() -> {
 
             for (ViewModelElement viewModelElement : viewModelElements) {
-                getItems().add(new RoleLabel(viewModelElement));
+                getItems().add(new RoleLabel(viewModelElement, guiModificationHandler));
             }
         });
     }
 
     public ViewModelElement getSelectedItem() {
         MultipleSelectionModel<RoleLabel> selectionModel = this.getSelectionModel();
-        return selectionModel.getSelectedItem().getViewModelElement();
+        return selectionModel != null ? selectionModel.getSelectedItem().getViewModelElement() : null;
+    }
+
+
+    public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
+        this.guiModificationHandler = guiModificationHandler;
     }
 
     private static class RoleCell extends ListCell<RoleLabel> {

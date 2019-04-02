@@ -5,8 +5,10 @@ import java.util.HashMap;
 
 public class Role extends PlanElement {
 
+    public static final float DEFAULT = 0.0f;
+
     protected ArrayList<Characteristic> characteristics = new ArrayList<>();
-    protected HashMap<Long, Float> taskPriority = new HashMap<>();
+    protected HashMap<Long, Float> taskPriorities = new HashMap<>();
     private RoleSet roleSet;
 
     public Role() {
@@ -18,15 +20,15 @@ public class Role extends PlanElement {
     }
 
     public float getPriority(long taskID) {
-        return taskPriority.get(taskID);
+        return taskPriorities.get(taskID);
     }
 
-    public HashMap<Long, Float> getTaskPriority() {
-        return this.taskPriority;
+    public HashMap<Long, Float> getTaskPriorities() {
+        return this.taskPriorities;
     }
 
     public void addTaskIDPriority(long taskID , float priority) {
-        this.taskPriority.put(taskID, priority);
+        this.taskPriorities.put(taskID, priority);
     }
 
     public ArrayList<Characteristic> getCharacteristics() {
@@ -46,10 +48,10 @@ public class Role extends PlanElement {
         name.addListener(listener);
     }
 
-    public void addTask(Task task) {
-
-        if(!taskPriority.keySet().contains(task.getId())) {
-            taskPriority.put(task.getId(), 0.0f);
-        }
-    }
+//    public void addTask(Task task) {
+//
+//        if(!taskPriorities.keySet().contains(task.getId())) {
+//            taskPriorities.put(task.getId(), DEFAULT);
+//        }
+//    }
 }

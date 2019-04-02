@@ -35,11 +35,11 @@ public class RoleSetViewModel extends SerializableViewModel {
         return roles;
     }
 
-    public void addTask(TaskViewModel task) {
-        tasks.add(task);
-    }
-
     public ObservableList<TaskViewModel> getTaskViewModels() {
         return tasks;
+    }
+
+    public void addTask(TaskViewModel task) {
+        tasks.add(task);
     }
 }

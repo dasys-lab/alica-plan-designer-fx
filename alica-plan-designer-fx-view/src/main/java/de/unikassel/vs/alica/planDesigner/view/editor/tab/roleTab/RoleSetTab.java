@@ -9,34 +9,27 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
+import javafx.util.converter.DefaultStringConverter;
 
 import java.util.ArrayList;
 
 public class RoleSetTab extends EditorTab {
 
     protected RoleSetViewModel roleSetViewModel;
-    protected RoleListView roleSetListView;
-    protected TaskTableView taskTableView;
+    protected RoleListView roleListView;
+    protected TaskPriorityTableView taskTableView;
 
-    private EditorTabPane editorTabPane;
-    ObservableList<TaskPriority> taskPriorities = FXCollections.observableArrayList();
+    private ObservableList<TaskPriority> taskPriorities = FXCollections.observableArrayList();
 
     public RoleSetTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
-        this.editorTabPane = editorTabPane;
         editorTabPane.getSelectionModel().selectedItemProperty().addListener((observable, selectedTabBefore, selectedTab) -> {
 
             if (this == selectedTab) {
@@ -56,98 +49,79 @@ public class RoleSetTab extends EditorTab {
 
                 if (c.wasAdded()) {
                     for (RoleViewModel role : c.getAddedSubList()) {
-                        roleSetListView.addElement(role);
+                        roleListView.addElement(role);
                     }
                 }
 
                 if (c.wasRemoved()) {
                     for (RoleViewModel role : c.getRemoved()) {
-                        roleSetListView.removeElement(role);
+                        roleListView.removeElement(role);
                     }
                 }
             }
         });
 
-        roleSetListView = new RoleListView();
-        roleSetListView.addElements(roleSetViewModel.getRoleViewModels());
-        roleSetListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        roleListView = new RoleListView();
+        roleListView.setGuiModificationHandler(editorTabPane.getGuiModificationHandler());
+        roleListView.addElements(roleSetViewModel.getRoleViewModels());
+        roleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
             if (newValue != null) {
                 this.elementInformationPane.setViewModelElement(newValue.getViewModelElement());
+                taskTableView.updateSelectedRole((RoleViewModel) roleListView.getSelectedItem());
             }
         });
-
-        roleSetListView.focusedProperty().addListener((observable, focusedBefore, focused) -> {
-
-            if (focused) {
-                this.elementInformationPane.setViewModelElement(roleSetListView.getSelectedItem());
-            }
-        });
+//        roleListView.focusedProperty().addListener((observable, focusedBefore, focused) -> {
+//
+//            if (focused) {
+//                System.out.println("RST: focuses " + roleListView.getCurrentRole());
+//                this.elementInformationPane.setViewModelElement(roleListView.getCurrentRole());
+//            }
+//        });
         draw();
     }
 
     private void draw() {
         HBox createRoleVisual = createRoleButtonVisual();
         TitledPane roleListVisual = createRoleListVisual();
-        TaskTableView taskPriorityTableVisual = createTaskPriorityTableVisual();
+        TaskPriorityTableView taskPriorityTableVisual = createTaskPriorityTableVisual();
         VBox roleSetVisual = new VBox();
         roleSetVisual.setPrefHeight(Double.MAX_VALUE);
         HBox roleTaskPriorityListVisual = new HBox();
         roleTaskPriorityListVisual.getChildren().addAll(roleListVisual, taskPriorityTableVisual);
         roleSetVisual.getChildren().addAll( roleTaskPriorityListVisual, createRoleVisual );
+        roleListView.setFocus();
         splitPane.getItems().add(0, roleSetVisual);
+//        this.editorTabPane.getSelectionModel().select(this);
     }
 
     private TitledPane createRoleListVisual() {
         TitledPane rolesPane = new TitledPane();
-        rolesPane.setContent(roleSetListView);
+        rolesPane.setContent(roleListView);
         rolesPane.setText(i18NRepo.getString("label.caption.roles"));
         rolesPane.setCollapsible(false);
         rolesPane.setPadding(new Insets(0,0,0,0));
         rolesPane.setStyle("-fx-font-weight: bold;");
-        roleSetListView.setStyle("-fx-font-weight: normal;");
-        roleSetListView.setPrefHeight(Double.MAX_VALUE);
+        roleListView.setStyle("-fx-font-weight: normal;");
+        roleListView.setPrefHeight(Double.MAX_VALUE);
         rolesPane.prefHeightProperty().bind(splitPane.heightProperty());
         return rolesPane;
     }
 
-    private TaskTableView createTaskPriorityTableVisual() {
-        TableColumn<TaskViewModel, String> taskColumn = new TableColumn(i18NRepo.getString("label.caption.tasks"));
-        taskColumn.setCellValueFactory(new PropertyValueFactory("task"));
-
-        TableColumn<Float, Float> priorityColumn = new TableColumn(i18NRepo.getString("label.caption.priorities"));
-        priorityColumn.setCellValueFactory(new PropertyValueFactory("priority"));
-        priorityColumn.setEditable(true);
-
-        taskTableView = new TaskTableView(taskColumn, priorityColumn);
+    private TaskPriorityTableView createTaskPriorityTableVisual() {
+        taskTableView = new TaskPriorityTableView();
+        taskTableView.addColumn(i18NRepo.getString("label.caption.tasks"), "task",new DefaultStringConverter(), false);
+        taskTableView.addColumn(i18NRepo.getString("label.caption.priorities"), "priority",new DefaultStringConverter(), true);
         taskTableView.prefHeightProperty().bind(splitPane.heightProperty());
         taskTableView.prefWidthProperty().bind(splitPane.widthProperty());
         taskTableView.setEditable(true);
-
-        ObservableList<TaskViewModel> taskViewModels = roleSetViewModel.getTaskViewModels();
-
-        for (TaskViewModel taskViewModel : taskViewModels) {
-            taskPriorities.add( new TaskPriority(taskViewModel.getName(), "0.0"));
-        }
-
-        taskTableView.setItems(taskPriorities);
-
-
-//        taskTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//
-//            if (newValue != null) {
-//                this.elementInformationPane.setViewModelElement(newValue.getViewModelElement());
-//            }
-//        });
-//        taskTableView.focusedProperty().addListener((observable, focusedBefore, focused) -> {
-//
-//            if (focused) {
-//                this.elementInformationPane.setViewModelElement(taskTableView.getSelectedItem());
-//            }
-//        });
+        taskTableView.addTasks(roleSetViewModel.getTaskViewModels());
+//        for (TaskViewModel taskViewModel : roleSetViewModel.getTaskViewModels()) {
+//            taskPriorities.add( new TaskPriority(taskViewModel.getId(), taskViewModel.getName(), ""));
+//        }
+//        taskTableView.setItems(taskPriorities);
         return taskTableView;
     }
-
 
     private HBox createRoleButtonVisual() {
         HBox createRoleHBox = new HBox();
@@ -173,19 +147,19 @@ public class RoleSetTab extends EditorTab {
     }
 
     public GuiModificationEvent handleDelete() {
-//        ViewModelElement elementToDelete = roleSetListView.getSelectedItem();
-//        if (elementToDelete == null) {
-//            return null;
-//        }
-//
-//        if (!isRoleUsed(elementToDelete)) {
-//            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.ROLE, elementToDelete.getName());
-//            event.setElementId(elementToDelete.getId());
-//            event.setParentId(roleSetViewModel.getId());
-//            return event;
-//        } else {
+        ViewModelElement elementToDelete = roleListView.getSelectedItem();
+        if (elementToDelete == null) {
             return null;
-//        }
+        }
+
+        if (!isRoleUsed(elementToDelete)) {
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.ROLE, elementToDelete.getName());
+            event.setElementId(elementToDelete.getId());
+            event.setParentId(roleSetViewModel.getId());
+            return event;
+        } else {
+            return null;
+        }
     }
 
     private boolean isRoleUsed(ViewModelElement roleToBeDeleted) {
@@ -195,19 +169,5 @@ public class RoleSetTab extends EditorTab {
         }
         UsagesWindowController.createUsagesWindow(usages, i18NRepo.getString("label.usage.nodelete"), guiModificationHandler);
         return true;
-    }
-
-    public class TaskPriority {
-
-        private StringProperty task;
-        private StringProperty priority;
-
-        private TaskPriority(String task, String priority) {
-            this.task = new SimpleStringProperty(task);
-            this.priority = new SimpleStringProperty(priority);
-        }
-
-        public StringProperty priorityProperty() { return priority; }
-        public StringProperty taskProperty() { return task; }
     }
 }

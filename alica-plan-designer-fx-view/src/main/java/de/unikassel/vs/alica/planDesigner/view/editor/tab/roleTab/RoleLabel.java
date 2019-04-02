@@ -7,21 +7,27 @@ import javafx.scene.control.Label;
 public class RoleLabel extends Label {
 
     protected final ViewModelElement viewModelElement;
+    protected IGuiModificationHandler guiModificationHandler;
 
-    public RoleLabel(ViewModelElement viewModelElement) {
+//    public RoleLabel(ViewModelElement viewModelElement) {
+//        this.viewModelElement = viewModelElement;
+//    }
+
+    public RoleLabel(ViewModelElement viewModelElement, IGuiModificationHandler guiModificationHandler) {
         this.viewModelElement = viewModelElement;
-    }
-
-    public String getViewModelType() {
-        return viewModelElement.getType();
-    }
-
-    public long getViewModelId() {
-        return viewModelElement.getId();
+        // TODO: can it be removed ???
+        this.guiModificationHandler = guiModificationHandler;
+        this.viewModelElement.nameProperty().addListener((observable, oldValue, newValue) -> {
+            setText(newValue);
+        });
     }
 
     public ViewModelElement getViewModelElement() {
         return viewModelElement;
+    }
+
+    public long getViewModelId() {
+        return viewModelElement.getId();
     }
 
     public String getViewModelName() {

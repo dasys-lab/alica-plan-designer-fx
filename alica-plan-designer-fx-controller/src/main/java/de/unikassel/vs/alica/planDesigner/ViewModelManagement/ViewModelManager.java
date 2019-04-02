@@ -15,8 +15,6 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ViewModelManager {
 
@@ -142,6 +140,7 @@ public class ViewModelManager {
 
     private RoleViewModel createRoleViewModel(Role role) {
         RoleViewModel roleViewModel = new RoleViewModel(role.getId(), role.getName(), Types.ROLE);
+        roleViewModel.setTaskPriorities(role.getTaskPriorities());
         roleViewModel.setRoleSetViewModel((RoleSetViewModel) getViewModelElement(role.getRoleSet()));
         roleViewModel.getRoleSetViewModel().addRole(roleViewModel);
         roleViewModel.setParentId(role.getRoleSet().getId());

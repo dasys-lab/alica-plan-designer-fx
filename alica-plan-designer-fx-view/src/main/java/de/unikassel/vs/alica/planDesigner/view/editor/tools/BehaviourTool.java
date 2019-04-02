@@ -29,7 +29,7 @@ public class BehaviourTool extends AbstractTool {
 //
 //    @Override
 //    public void draw() {
-//        ((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem()).getPlanEditorGroup().setupPlanVisualisation();
+//        ((PlanTab) planEditorTabPane.getSelectionModel().getCurrentRole()).getPlanEditorGroup().setupPlanVisualisation();
 //    }
 
     @Override
@@ -58,7 +58,7 @@ public class BehaviourTool extends AbstractTool {
 //                        ((Node)event.getTarget()).getParent() instanceof TerminalStateContainer == false) {
 //                    StateContainer stateContainer = (StateContainer) ((Node)event.getTarget()).getParent();
 //                    CreateNewDialogController newDialogController =
-//                            NewResourceMenu.createFileDialog(((PlanTab) planEditorTabPane.getSelectionModel().getSelectedItem())
+//                            NewResourceMenu.createFileDialog(((PlanTab) planEditorTabPane.getSelectionModel().getCurrentRole())
 //                                    .getFilePath().getParent().toFile(),
 //                            getAlicaFactory().createBehaviour().eClass());
 //                    Behaviour newBehaviour = (Behaviour) newDialogController.getCreatedObject();

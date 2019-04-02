@@ -30,6 +30,7 @@ public class ElementInformationPane extends TitledPane {
     protected TabPane tabPane;
     protected PropertySheet propertySheet;
     protected Tab propertiesTab;
+    protected Tab characteristicsTab;
     protected VariablesTab variablesTab;
     protected ParametrisationTab parametrisationTab;
     protected ConditionsTab preConditionTab;
@@ -54,10 +55,11 @@ public class ElementInformationPane extends TitledPane {
         preConditionTab     = new ConditionsTab(i18NRepo.getString("label.caption.preCondtions")    , Types.PRECONDITION);
         runtimeConditionTab = new ConditionsTab(i18NRepo.getString("label.caption.runtimeCondtions"), Types.RUNTIMECONDITION);
         postConditionTab    = new ConditionsTab(i18NRepo.getString("label.caption.postCondtions")   , Types.POSTCONDITION);
+        characteristicsTab = new Tab(i18NRepo.getString("label.caption.characteristics"));
 
         this.tabPane = new TabPane();
         this.tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, parametrisationTab, preConditionTab, runtimeConditionTab, postConditionTab);
+        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, parametrisationTab, preConditionTab, runtimeConditionTab, postConditionTab, characteristicsTab);
 
         this.setContent(tabPane);
     }
@@ -83,15 +85,18 @@ public class ElementInformationPane extends TitledPane {
     }
 
     private void adaptUI(String type) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, parametrisationTab);
+        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, parametrisationTab, characteristicsTab);
         switch (type) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
             case Types.ROLESET:
-            case Types.ROLE:
             case Types.ENTRYPOINT:
             case Types.SYNCHRONISATION:
                 this.setContent(propertySheet);
+                break;
+            case Types.ROLE:
+                this.setContent(tabPane);
+                tabPane.getTabs().addAll(propertiesTab, characteristicsTab);
                 break;
             case Types.PLANTYPE:
                 this.setContent(tabPane);

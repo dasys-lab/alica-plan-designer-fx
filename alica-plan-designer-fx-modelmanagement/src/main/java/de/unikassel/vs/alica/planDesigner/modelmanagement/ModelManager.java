@@ -671,6 +671,9 @@ public class ModelManager implements Observer {
                     case Types.TASKREPOSITORY:
                         ending = Extensions.TASKREPOSITORY;
                         break;
+                    case Types.ROLESET:
+                        ending = Extensions.ROLESET;
+                        break;
                 }
 
                 if (!ending.equals("")) {

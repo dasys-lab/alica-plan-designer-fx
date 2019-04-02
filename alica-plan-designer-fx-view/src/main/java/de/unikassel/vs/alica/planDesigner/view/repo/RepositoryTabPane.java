@@ -31,13 +31,12 @@ public class RepositoryTabPane extends TabPane {
         RepositoryTool behaviourTool = new RepositoryTool(planEditorTabPane);
         RepositoryTool planTypeTool = new RepositoryTool(planEditorTabPane);
         RepositoryTool taskTool = new RepositoryTool(planEditorTabPane);
-        RepositoryTool roleTool = new RepositoryTool(planEditorTabPane);
 
         plansTab = new RepositoryTab("Plans", planTool);
         planTypesTab = new RepositoryTab("PlanTypes", planTypeTool);
         behavioursTab = new RepositoryTab("Behaviours", behaviourTool);
         tasksTab = new RepositoryTab("Tasks", taskTool);
-        rolesTab = new RepositoryTab("Roles", roleTool);
+        rolesTab = new RepositoryTab("Roles", null);
 
         getTabs().addAll(plansTab, planTypesTab, behavioursTab, tasksTab, rolesTab);
     }
