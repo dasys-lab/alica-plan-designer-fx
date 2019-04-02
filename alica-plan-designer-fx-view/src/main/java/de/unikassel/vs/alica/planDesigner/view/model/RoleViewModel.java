@@ -11,7 +11,6 @@ public class RoleViewModel extends PlanElementViewModel {
 
     private RoleSetViewModel roleSetViewModel;
     private HashMap<Long, Float> taskPriorities;
-    private IGuiModificationHandler handler;
 
     public RoleViewModel (long id, String name, String type) {
         super(id, name, type);
@@ -29,10 +28,6 @@ public class RoleViewModel extends PlanElementViewModel {
         this.taskPriorities = taskPriorities;
     }
 
-    public HashMap<Long, Float> getTaskPriorities() {
-        return taskPriorities;
-    }
-
     public float getTaskPriority(long taskID) {
         return taskPriorities.containsKey(taskID)? taskPriorities.get(taskID) : RoleViewModel.DEFAULT;
     }
@@ -41,8 +36,7 @@ public class RoleViewModel extends PlanElementViewModel {
         super.registerListener(handler);
     }
 
-    public void setTaskPriority(long taskID, String value) {
-        float priority = Float.valueOf(value);
+    public void setTaskPriority(long taskID, float priority) {
 
         if(priority != DEFAULT) {
             taskPriorities.put(taskID, priority);

@@ -3,8 +3,6 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
@@ -12,7 +10,7 @@ import javafx.scene.control.MultipleSelectionModel;
 import java.util.Iterator;
 import java.util.List;
 
-public class RoleListView extends ListView<RoleLabel> {
+public class RoleListView extends ListView<RoleListLabel> {
 
     private IGuiModificationHandler guiModificationHandler;
 
@@ -31,10 +29,10 @@ public class RoleListView extends ListView<RoleLabel> {
 
 
     public void removeElement(ViewModelElement viewModel) {
-        Iterator<RoleLabel> iter = getItems().iterator();
+        Iterator<RoleListLabel> iter = getItems().iterator();
 
         while (iter.hasNext()) {
-            RoleLabel roleLabel = iter.next();
+            RoleListLabel roleLabel = iter.next();
 
             if (roleLabel.getViewModelId() == viewModel.getId()) {
                 iter.remove();
@@ -44,20 +42,20 @@ public class RoleListView extends ListView<RoleLabel> {
     }
 
     public void addElement(ViewModelElement viewModelElement) {
-        Platform.runLater(() -> getItems().add(new RoleLabel(viewModelElement, guiModificationHandler)));
+        Platform.runLater(() -> getItems().add(new RoleListLabel(viewModelElement, guiModificationHandler)));
     }
 
     public void addElements(List<? extends ViewModelElement> viewModelElements) {
         Platform.runLater(() -> {
 
             for (ViewModelElement viewModelElement : viewModelElements) {
-                getItems().add(new RoleLabel(viewModelElement, guiModificationHandler));
+                getItems().add(new RoleListLabel(viewModelElement, guiModificationHandler));
             }
         });
     }
 
     public ViewModelElement getSelectedItem() {
-        MultipleSelectionModel<RoleLabel> selectionModel = this.getSelectionModel();
+        MultipleSelectionModel<RoleListLabel> selectionModel = this.getSelectionModel();
         return selectionModel != null ? selectionModel.getSelectedItem().getViewModelElement() : null;
     }
 
@@ -66,10 +64,10 @@ public class RoleListView extends ListView<RoleLabel> {
         this.guiModificationHandler = guiModificationHandler;
     }
 
-    private static class RoleCell extends ListCell<RoleLabel> {
+    private static class RoleCell extends ListCell<RoleListLabel> {
 
         @Override
-        protected void updateItem(RoleLabel item, boolean empty) {
+        protected void updateItem(RoleListLabel item, boolean empty) {
             super.updateItem(item, empty);
 
             if (empty || item == null || item.getViewModelName() == null) {

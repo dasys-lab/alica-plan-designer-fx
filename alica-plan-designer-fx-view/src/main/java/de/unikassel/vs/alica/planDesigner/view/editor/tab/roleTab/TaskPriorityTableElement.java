@@ -3,13 +3,13 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleStringProperty;
 
-public class TaskPriority {
+public class TaskPriorityTableElement {
 
     private SimpleStringProperty task;
     private SimpleStringProperty priority;
     private long taskID;
 
-    public TaskPriority(long taskID, String task, String priority) {
+    public TaskPriorityTableElement(long taskID, String task, String priority) {
         this.taskID = taskID;
         this.task = new SimpleStringProperty(task);
         this.priority = new SimpleStringProperty(priority);

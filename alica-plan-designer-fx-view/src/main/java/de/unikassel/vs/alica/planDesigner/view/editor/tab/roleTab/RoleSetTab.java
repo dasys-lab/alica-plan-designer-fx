@@ -7,8 +7,6 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -26,7 +24,7 @@ public class RoleSetTab extends EditorTab {
     protected RoleListView roleListView;
     protected TaskPriorityTableView taskTableView;
 
-    private ObservableList<TaskPriority> taskPriorities = FXCollections.observableArrayList();
+    private ObservableList<TaskPriorityTableElement> taskPriorities = FXCollections.observableArrayList();
 
     public RoleSetTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
@@ -71,13 +69,6 @@ public class RoleSetTab extends EditorTab {
                 taskTableView.updateSelectedRole((RoleViewModel) roleListView.getSelectedItem());
             }
         });
-//        roleListView.focusedProperty().addListener((observable, focusedBefore, focused) -> {
-//
-//            if (focused) {
-//                System.out.println("RST: focuses " + roleListView.getCurrentRole());
-//                this.elementInformationPane.setViewModelElement(roleListView.getCurrentRole());
-//            }
-//        });
         draw();
     }
 
@@ -92,7 +83,6 @@ public class RoleSetTab extends EditorTab {
         roleSetVisual.getChildren().addAll( roleTaskPriorityListVisual, createRoleVisual );
         roleListView.setFocus();
         splitPane.getItems().add(0, roleSetVisual);
-//        this.editorTabPane.getSelectionModel().select(this);
     }
 
     private TitledPane createRoleListVisual() {
@@ -116,10 +106,6 @@ public class RoleSetTab extends EditorTab {
         taskTableView.prefWidthProperty().bind(splitPane.widthProperty());
         taskTableView.setEditable(true);
         taskTableView.addTasks(roleSetViewModel.getTaskViewModels());
-//        for (TaskViewModel taskViewModel : roleSetViewModel.getTaskViewModels()) {
-//            taskPriorities.add( new TaskPriority(taskViewModel.getId(), taskViewModel.getName(), ""));
-//        }
-//        taskTableView.setItems(taskPriorities);
         return taskTableView;
     }
 

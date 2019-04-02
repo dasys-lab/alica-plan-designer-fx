@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class TaskPriorityTableView extends PropertiesTable<TaskPriority> {
+public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElement> {
 
     private RoleViewModel currentRole;
 
@@ -19,7 +19,7 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriority> {
     private void updateCells() {
 
         for (Object item : this.getItems()) {
-            TaskPriority taskPriority = (TaskPriority)item;
+            TaskPriorityTableElement taskPriority = (TaskPriorityTableElement)item;
             taskPriority.setPriority(String.valueOf(currentRole.getTaskPriority(taskPriority.getTaskID())));
         }
     }
@@ -28,16 +28,13 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriority> {
         this.currentRole = (RoleViewModel) item;
     }
 
-    public RoleViewModel getCurrentRole() {
-        return currentRole;
-    }
-
     public void addTasks(ObservableList<TaskViewModel> taskViewModels) {
-        ObservableList<TaskPriority> taskPriorities = FXCollections.observableArrayList();;
+        ObservableList<TaskPriorityTableElement> taskPriorities = FXCollections.observableArrayList();;
         taskViewModels.forEach(taskViewModel -> {
-            TaskPriority taskPriority = new TaskPriority(taskViewModel.getId(), taskViewModel.getName(), "");
+            TaskPriorityTableElement taskPriority = new TaskPriorityTableElement(taskViewModel.getId(), taskViewModel.getName(), "");
             taskPriority.addListener(observable -> {
-                currentRole.setTaskPriority(taskPriority.getTaskID(), ((SimpleStringProperty)observable).getValue());
+                currentRole.setTaskPriority(taskPriority.getTaskID(),
+                           Float.valueOf(((SimpleStringProperty)observable).getValue()));
             });
             taskPriorities.add(taskPriority);
         });
