@@ -139,7 +139,7 @@ public class ConditionsTab extends Tab {
         TitledPane quantifierSection = new TitledPane(quantifiersTitle, quantifiers);
         quantifierSection.setExpanded(false);
 
-        VBox vBox = new VBox(propertySection, pluginSection, variablesSection, quantifierSection);
+        VBox vBox = new VBox(propertySection, variablesSection, quantifierSection, pluginSection);
         this.hideableView = new ScrollPane(vBox);
         hideableView.setFitToWidth(true);
 
@@ -503,8 +503,8 @@ public class ConditionsTab extends Tab {
                     possibleScopes.add(state.getId());
                 }
                 for(EntryPointViewModel entryPoint : plan.getEntryPoints()) {
-                    if(!possibleScopes.contains(entryPoint.getTask().getId())) {
-                        possibleScopes.add(entryPoint.getTask().getId());
+                    if(!possibleScopes.contains(entryPoint.getId())) {
+                        possibleScopes.add(entryPoint.getId());
                     }
                 }
 
@@ -522,12 +522,12 @@ public class ConditionsTab extends Tab {
                 plan.getEntryPoints().addListener((ListChangeListener<? super EntryPointViewModel>) c -> {
                     while(c.next()) {
                         for(EntryPointViewModel entryPoint : c.getAddedSubList()) {
-                            if(!possibleScopes.contains(entryPoint.getTask().getId())) {
-                                possibleScopes.add(entryPoint.getTask().getId());
+                            if(!possibleScopes.contains(entryPoint.getId())) {
+                                possibleScopes.add(entryPoint.getId());
                             }
                         }
                         for(EntryPointViewModel entryPoint : c.getRemoved()) {
-                            possibleScopes.remove(entryPoint.getTask().getId());
+                            possibleScopes.remove(entryPoint.getId());
                         }
                     }
                 });

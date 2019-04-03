@@ -421,6 +421,7 @@ public class ModelManager implements Observer {
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
                 state.removeAbstractPlan(abstractPlan);
             }
+
             // here they are inserted again
             for (int i = 0; i < bindings.size(); i++) {
                 state.addVariableBinding(bindings.get(i));
