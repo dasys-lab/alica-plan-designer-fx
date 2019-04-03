@@ -527,12 +527,16 @@ public class ViewModelManager {
                     SerializableViewModel abstractPlanViewModel = (SerializableViewModel) viewModelElement;
                     StateViewModel stateViewModel = (StateViewModel) parentViewModel;
                     stateViewModel.addAbstractPlan(abstractPlanViewModel);
-                }else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
+                } else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
                 }
                 break;
             case Types.VARIABLE:
-                ((AbstractPlanViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                if (parentViewModel instanceof AbstractPlanViewModel) {
+                    ((AbstractPlanViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                } else if (parentViewModel instanceof ConditionViewModel) {
+                    ((ConditionViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                }
                 break;
             case Types.VARIABLEBINDING:
                 ((HasVariableBinding) parentViewModel).getVariableBindings().add((VariableBindingViewModel) viewModelElement);
