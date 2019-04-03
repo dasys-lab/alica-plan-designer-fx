@@ -1,16 +1,16 @@
 package de.unikassel.vs.alica.planDesigner.view.properties.bindings;
 
-import de.unikassel.vs.alica.planDesigner.view.model.HasVariablesView;
+import de.unikassel.vs.alica.planDesigner.view.model.AbstractPlanViewModel;
 import javafx.util.StringConverter;
 
-public class HasVariablesViewStringConverter extends StringConverter<HasVariablesView> {
+public class HasVariablesViewStringConverter extends StringConverter<AbstractPlanViewModel> {
     @Override
-    public String toString(HasVariablesView object) {
+    public String toString(AbstractPlanViewModel object) {
         return object.getName();
     }
 
     @Override
-    public HasVariablesView fromString(String string) {
+    public AbstractPlanViewModel fromString(String string) {
         return null;
     }
 }

@@ -27,6 +27,7 @@ public class VariableBindingTab extends Tab {
         this.i18NRepo = I18NRepo.getInstance();
         setText(this.i18NRepo.getString("label.caption.variableBindings"));
 
+        // Table
         this.variableBindingTable = new VariableBindingTable() {
             @Override
             protected void onAddElement() {
@@ -43,6 +44,7 @@ public class VariableBindingTab extends Tab {
         this.variableBindingTable.addColumn(this.i18NRepo.getString("label.column.subvariable"), "subVariable", new VariableStringConverter(),false);
         this.setContent(this.variableBindingTable);
 
+        // Listener for new bindings (result of add and remove button)
         this.bindingListener = new ListChangeListener<VariableBindingViewModel>() {
             public void onChanged(Change<? extends VariableBindingViewModel> c) {
                 while (c.next()) {
@@ -63,18 +65,18 @@ public class VariableBindingTab extends Tab {
         this.parentViewModel.getVariableBindings().addListener(bindingListener);
 
         // fill variables dropdown and sub plans dropdown of table
-        ArrayList<HasVariablesView> hasVariablesViewArrayList = new ArrayList<>();
+        ArrayList<AbstractPlanViewModel> hasVariablesViewArrayList = new ArrayList<>();
         if (parentViewModel.getType() == Types.STATE) {
             variableBindingTable.setVariablesDropDownContent(((PlanViewModel) guiModificationHandler.getViewModelElement(this.parentViewModel.getParentId())).getVariables());
             for (PlanElementViewModel abstractPlanViewModel : ((StateViewModel) this.parentViewModel).getAbstractPlans()) {
-                hasVariablesViewArrayList.add((HasVariablesView) abstractPlanViewModel);
+                hasVariablesViewArrayList.add((AbstractPlanViewModel) abstractPlanViewModel);
             }
             variableBindingTable.setSubPlanDropDownContent(hasVariablesViewArrayList);
         } else if (parentViewModel.getType() == Types.PLANTYPE) {
             variableBindingTable.setVariablesDropDownContent(((PlanTypeViewModel) this.parentViewModel).getVariables());
             for (AnnotatedPlanView annotatedPlanView : ((PlanTypeViewModel) this.parentViewModel).getPlansInPlanType()) {
                 if (annotatedPlanView.isActivated()) {
-                    hasVariablesViewArrayList.add((HasVariablesView) guiModificationHandler.getViewModelElement(annotatedPlanView.getPlanId()));
+                    hasVariablesViewArrayList.add((AbstractPlanViewModel) guiModificationHandler.getViewModelElement(annotatedPlanView.getPlanId()));
                 }
             }
             variableBindingTable.setSubPlanDropDownContent(hasVariablesViewArrayList);
@@ -118,7 +120,7 @@ public class VariableBindingTab extends Tab {
     private boolean isBindingValid() {
         VariableViewModel selectedVar = this.variableBindingTable.getSelectedVariable();
         VariableViewModel selectedSubVar = this.variableBindingTable.getSelectedSubVariable();
-        HasVariablesView selectedSubPlan = this.variableBindingTable.getSelectedSubPlan();
+        AbstractPlanViewModel selectedSubPlan = this.variableBindingTable.getSelectedSubPlan();
         if (selectedVar == null || selectedSubPlan == null || selectedSubVar == null) {
             return false;
         }

@@ -66,7 +66,6 @@ public class ElementInformationPane extends TitledPane {
         this.setContent(tabPane);
     }
 
-
     public void setViewModelElement(ViewModelElement element) {
         if (element == null || element == elementShown) {
             return;

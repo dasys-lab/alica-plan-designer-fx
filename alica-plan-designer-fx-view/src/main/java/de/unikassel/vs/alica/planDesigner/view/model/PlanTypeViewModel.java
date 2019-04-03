@@ -3,7 +3,7 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class PlanTypeViewModel extends SerializableViewModel implements HasVariableBinding, HasVariablesView {
+public class PlanTypeViewModel extends AbstractPlanViewModel implements HasVariableBinding {
 
     private ObservableList<PlanViewModel> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;

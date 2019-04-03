@@ -70,11 +70,11 @@ public class VariablesTab extends Tab {
         this.parentViewModel = parentViewModel;
 
         // fill table and register listener
-        for (VariableViewModel var : ((HasVariablesView) parentViewModel).getVariables()) {
+        for (VariableViewModel var : ((AbstractPlanViewModel) parentViewModel).getVariables()) {
             variablesTable.addItem(var);
         }
 
-        ((HasVariablesView) parentViewModel).getVariables().addListener(varListener);
+        ((AbstractPlanViewModel) parentViewModel).getVariables().addListener(varListener);
     }
 
     private void clear() {
@@ -82,7 +82,7 @@ public class VariablesTab extends Tab {
             return;
         }
 
-        ((HasVariablesView) this.parentViewModel).getVariables().removeListener(varListener);
+        ((AbstractPlanViewModel) this.parentViewModel).getVariables().removeListener(varListener);
 
         variablesTable.clear();
         this.parentViewModel = null;

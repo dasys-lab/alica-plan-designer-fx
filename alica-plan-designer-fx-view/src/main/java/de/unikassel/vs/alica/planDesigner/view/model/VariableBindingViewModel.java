@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class VariableBindingViewModel extends PlanElementViewModel {
 
-    protected final SimpleObjectProperty<HasVariablesView> subPlan = new SimpleObjectProperty<>(this, "subPlan", null);
+    protected final SimpleObjectProperty<AbstractPlanViewModel> subPlan = new SimpleObjectProperty<>(this, "subPlan", null);
     protected final SimpleObjectProperty<VariableViewModel> subVariable = new SimpleObjectProperty<>(this, "subVariable", null);
     protected final SimpleObjectProperty<VariableViewModel> variable = new SimpleObjectProperty<>(this, "variable", null);
 
@@ -12,11 +12,11 @@ public class VariableBindingViewModel extends PlanElementViewModel {
         super(id, name, type);
     }
 
-    public HasVariablesView getSubPlan() {
+    public AbstractPlanViewModel getSubPlan() {
         return subPlan.get();
     }
 
-    public void setSubPlan(HasVariablesView subPlan) {
+    public void setSubPlan(AbstractPlanViewModel subPlan) {
         this.subPlan.set(subPlan);
     }
 

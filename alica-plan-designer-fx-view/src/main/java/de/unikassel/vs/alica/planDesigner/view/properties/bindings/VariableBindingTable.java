@@ -21,7 +21,7 @@ public abstract class VariableBindingTable extends VBox {
     public PropertiesTable<VariableBindingViewModel> table;
     I18NRepo i18NRepo;
     private ComboBox<VariableViewModel> varDropDown;
-    private ComboBox<HasVariablesView> subPlanDropDown;
+    private ComboBox<AbstractPlanViewModel> subPlanDropDown;
     private ComboBox<VariableViewModel> subVarDropDown;
     private Button addButton;
     private Button deleteButton;
@@ -38,7 +38,7 @@ public abstract class VariableBindingTable extends VBox {
 
         Label subPlanLabel = new Label (i18NRepo.getString("label.column.subplan") + ":");
         subPlanLabel.setPadding(new Insets(0,0,0,15));
-        subPlanDropDown = new ComboBox<HasVariablesView>();
+        subPlanDropDown = new ComboBox<AbstractPlanViewModel>();
         subPlanDropDown.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.fillSubVariableDropDown(newValue);
         });
@@ -76,7 +76,7 @@ public abstract class VariableBindingTable extends VBox {
         this.getChildren().addAll(dropDownHBox, table);
     }
 
-    private void fillSubVariableDropDown(HasVariablesView hasVariablesView) {
+    private void fillSubVariableDropDown(AbstractPlanViewModel hasVariablesView) {
         this.subVarDropDown.getItems().clear();
         if (hasVariablesView != null) {
             this.subVarDropDown.getItems().addAll(hasVariablesView.getVariables());
@@ -90,7 +90,7 @@ public abstract class VariableBindingTable extends VBox {
         }
     }
 
-    public void setSubPlanDropDownContent(ArrayList<HasVariablesView> hasVariablesViewArrayList) {
+    public void setSubPlanDropDownContent(ArrayList<AbstractPlanViewModel> hasVariablesViewArrayList) {
         this.subPlanDropDown.getItems().clear();
         if (hasVariablesViewArrayList != null) {
             this.subPlanDropDown.getItems().addAll(hasVariablesViewArrayList);
@@ -129,7 +129,7 @@ public abstract class VariableBindingTable extends VBox {
         return subVarDropDown.getSelectionModel().getSelectedItem();
     }
 
-    public HasVariablesView getSelectedSubPlan() {
+    public AbstractPlanViewModel getSelectedSubPlan() {
         return subPlanDropDown.getSelectionModel().getSelectedItem();
     }
 

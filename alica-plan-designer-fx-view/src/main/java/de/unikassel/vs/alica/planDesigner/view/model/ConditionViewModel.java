@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class ConditionViewModel extends PlanElementViewModel implements  HasVariablesView{
+public class ConditionViewModel extends PlanElementViewModel {
 
     protected StringProperty conditionString = new SimpleStringProperty(this, "conditionString", null);
     protected StringProperty pluginName = new SimpleStringProperty(this, "pluginName", null);

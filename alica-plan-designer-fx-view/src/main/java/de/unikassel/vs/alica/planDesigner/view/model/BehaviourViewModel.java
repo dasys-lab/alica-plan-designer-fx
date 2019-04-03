@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class BehaviourViewModel extends SerializableViewModel implements HasVariablesView {
+public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     protected IntegerProperty frequency = new SimpleIntegerProperty();
     protected LongProperty deferring = new SimpleLongProperty();
