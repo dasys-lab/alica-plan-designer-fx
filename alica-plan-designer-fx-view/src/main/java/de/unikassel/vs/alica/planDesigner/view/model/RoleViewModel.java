@@ -6,9 +6,6 @@ import java.util.HashMap;
 
 public class RoleViewModel extends PlanElementViewModel {
 
-    //TODO: move to model side
-    public static final float DEFAULT = 0.0f;
-
     private RoleSetViewModel roleSetViewModel;
     private HashMap<Long, Float> taskPriorities;
 
@@ -29,7 +26,7 @@ public class RoleViewModel extends PlanElementViewModel {
     }
 
     public float getTaskPriority(long taskID) {
-        return taskPriorities.containsKey(taskID)? taskPriorities.get(taskID) : RoleViewModel.DEFAULT;
+        return taskPriorities.containsKey(taskID)? taskPriorities.get(taskID) : roleSetViewModel.getPriorityDefault();
     }
 
     public void registerListener(IGuiModificationHandler handler) {
@@ -38,7 +35,7 @@ public class RoleViewModel extends PlanElementViewModel {
 
     public void setTaskPriority(long taskID, float priority) {
 
-        if(priority != DEFAULT) {
+        if(priority != roleSetViewModel.getPriorityDefault()) {
             taskPriorities.put(taskID, priority);
         }
     }

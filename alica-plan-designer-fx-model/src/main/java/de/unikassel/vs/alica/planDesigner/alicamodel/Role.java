@@ -5,8 +5,6 @@ import java.util.HashMap;
 
 public class Role extends PlanElement {
 
-    public static final float DEFAULT = 0.0f;
-
     protected ArrayList<Characteristic> characteristics = new ArrayList<>();
     protected HashMap<Long, Float> taskPriorities = new HashMap<>();
     private RoleSet roleSet;
@@ -47,11 +45,4 @@ public class Role extends PlanElement {
         comment.addListener(listener);
         name.addListener(listener);
     }
-
-//    public void addTask(Task task) {
-//
-//        if(!taskPriorities.keySet().contains(task.getId())) {
-//            taskPriorities.put(task.getId(), DEFAULT);
-//        }
-//    }
 }

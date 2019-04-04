@@ -6,9 +6,18 @@ import java.util.List;
 
 public class RoleSet extends SerializablePlanElement {
 
-    protected final ArrayList<Role> roles = new ArrayList<>();
+    private float priorityDefault = 0.5f;
+    private final ArrayList<Role> roles = new ArrayList<>();
 
     public RoleSet() {}
+
+    public float getPriorityDefault() {
+        return priorityDefault;
+    }
+
+    public void setPriorityDefault(float priorityDefault) {
+        this.priorityDefault = priorityDefault;
+    }
 
     public Role getRole(long roleID) {
         for (Role role : roles) {
@@ -18,6 +27,7 @@ public class RoleSet extends SerializablePlanElement {
         }
         return null;
     }
+
     public boolean contains (Role role) {
         return roles.contains(role);
     }
