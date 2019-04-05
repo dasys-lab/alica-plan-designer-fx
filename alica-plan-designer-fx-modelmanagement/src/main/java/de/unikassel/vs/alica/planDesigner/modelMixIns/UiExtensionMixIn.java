@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.deserialization.PlanDeserializer;
 import de.unikassel.vs.alica.planDesigner.serialization.ExternalRefSerializer;
-import de.unikassel.vs.alica.planDesigner.deserialization.PlanElementKeyDeserializer;
-import de.unikassel.vs.alica.planDesigner.serialization.InternalRefKeySerializer;
-import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 
 import java.util.HashMap;

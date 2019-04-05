@@ -86,7 +86,7 @@ public class ModelManager implements Observer {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
         objectMapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
-        objectMapper.addMixIn(Parametrisation.class, ParametrisationMixIn.class);
+        objectMapper.addMixIn(VariableBinding.class, VariableBindingMixIn.class);
         objectMapper.addMixIn(AnnotatedPlan.class, AnnotatedPlanMixIn.class);
         objectMapper.addMixIn(Plan.class, PlanMixIn.class);
         objectMapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
@@ -262,10 +262,6 @@ public class ModelManager implements Observer {
         uiExtensionMap.clear();
     }
 
-    /**
-     * This method could be superfluous, as "loadModelFile" is maybe called by the file watcher.
-     * Anyway, temporarily this is a nice method for testing and is therefore called in the constr.
-     */
     private void loadModelFromDisk(String directory) {
         File plansDirectory = new File(directory);
         if (!plansDirectory.exists()) {
@@ -420,6 +416,15 @@ public class ModelManager implements Observer {
         }
 
         for (State state : plan.getStates()) {
+            // need to copy temporarily, because "state.removeAbstractPlan" does also remove bindings
+            ArrayList<VariableBinding> bindings = new ArrayList<>(state.getVariableBindings());
+            for (int i = 0; i < bindings.size(); i++) {
+                VariableBinding binding = bindings.get(i);
+                binding.setSubPlan((AbstractPlan) getPlanElement(binding.getSubPlan().getId()));
+                binding.setSubVariable((Variable) getPlanElement(binding.getSubVariable().getId()));
+                binding.setVariable((Variable) getPlanElement(binding.getVariable().getId()));
+            }
+
             // Iterating over a List while modifying it results in an IllegalAccessException. By copying the list
             // beforehand this can be prevented
             for (AbstractPlan abstractPlan : new ArrayList<>(state.getAbstractPlans())) {
@@ -429,17 +434,12 @@ public class ModelManager implements Observer {
                 // The fact, that the dummy is still referenced within the State at this point is irrelevant, because it
                 // has the same id as the real one
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
-
-                for (int i = 0; i < state.getParametrisations().size(); i++) {
-                    Parametrisation parametrisation = state.getParametrisations().get(i);
-                    parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
-                    parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
-                    parametrisation.setVariable((Variable) getPlanElement(parametrisation.getVariable().getId()));
-                }
-
-                ArrayList<Parametrisation> parametrisations = new ArrayList<>(state.getParametrisations());
                 state.removeAbstractPlan(abstractPlan);
-                parametrisations.forEach(state::addParametrisation);
+            }
+
+            // here they are inserted again
+            for (int i = 0; i < bindings.size(); i++) {
+                state.addVariableBinding(bindings.get(i));
             }
 
             if(state instanceof TerminalState) {
@@ -479,6 +479,13 @@ public class ModelManager implements Observer {
         List<AnnotatedPlan> annotatedPlans = planType.getAnnotatedPlans();
         for (int i = 0; i < annotatedPlans.size(); i++) {
             annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
+        }
+
+        for (int i = 0; i < planType.getVariableBindings().size(); i++) {
+            VariableBinding variableBinding = planType.getVariableBindings().get(i);
+            variableBinding.setSubPlan((AbstractPlan) getPlanElement(variableBinding.getSubPlan().getId()));
+            variableBinding.setSubVariable((Variable) getPlanElement(variableBinding.getSubVariable().getId()));
+            variableBinding.setVariable((Variable) getPlanElement(variableBinding.getVariable().getId()));
         }
     }
 
@@ -535,8 +542,8 @@ public class ModelManager implements Observer {
                 }
                 for(State state : plan.getStates()) {
                     planElementMap.put(state.getId(), state);
-                    for (Parametrisation parametrisation : state.getParametrisations()) {
-                        planElementMap.put(parametrisation.getId(), parametrisation);
+                    for (VariableBinding variableBinding : state.getVariableBindings()) {
+                        planElementMap.put(variableBinding.getId(), variableBinding);
                     }
                     if(state instanceof TerminalState){
                         TerminalState terminalState = (TerminalState) state;
@@ -561,8 +568,8 @@ public class ModelManager implements Observer {
                 for(AnnotatedPlan annotatedPlan: planType.getAnnotatedPlans()) {
                     planElementMap.put(annotatedPlan.getId(), annotatedPlan);
                 }
-                for(Parametrisation parametrisation: planType.getParametrisations()) {
-                    planElementMap.put(parametrisation.getId(), parametrisation);
+                for(VariableBinding variableBinding : planType.getVariableBindings()) {
+                    planElementMap.put(variableBinding.getId(), variableBinding);
                 }
                 break;
             case Types.BEHAVIOUR:
@@ -735,6 +742,9 @@ public class ModelManager implements Observer {
     }
 
     private void renameFile(String absoluteDirectory, String newName, String oldName, String ending) throws IOException {
+        if(newName.equals(oldName)) {
+            return;
+        }
         File oldFile = FileSystemUtil.getFile(absoluteDirectory, oldName, ending);
         File newFile = new File(Paths.get(absoluteDirectory, newName + "." + ending).toString());
         if (newFile.exists()) {
@@ -809,7 +819,7 @@ public class ModelManager implements Observer {
             }
             stateLoop:
             for (State state : parent.getStates()) {
-                for (Parametrisation param : state.getParametrisations()) {
+                for (VariableBinding param : state.getVariableBindings()) {
                     if (param.getSubVariable() == planElement) {
                         usages.add(parent);
                         break stateLoop;
@@ -832,7 +842,7 @@ public class ModelManager implements Observer {
                 usages.add(planType);
                 continue;
             }
-            for (Parametrisation param : planType.getParametrisations()) {
+            for (VariableBinding param : planType.getVariableBindings()) {
                 if (param.getSubVariable() == planElement) {
                     usages.add(planType);
                     break;
@@ -928,8 +938,8 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new CreateVariable(this, mmq);
                         break;
-                    case Types.PARAMETRISATION:
-                        cmd = new CreateParametrisation(this, mmq);
+                    case Types.VARIABLEBINDING:
+                        cmd = new CreateVariableBinding(this, mmq);
                         break;
                     case Types.QUANTIFIER:
                         cmd = new CreateQuantifier(this, mmq);
@@ -990,8 +1000,8 @@ public class ModelManager implements Observer {
                     case Types.FAILURESTATE:
                         cmd = new DeleteStateInPlan(this, mmq);
                         break;
-                    case Types.PARAMETRISATION:
-                        cmd = new DeleteParametrisation(this, mmq);
+                    case Types.VARIABLEBINDING:
+                        cmd = new DeleteVariableBinding(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
@@ -1052,8 +1062,8 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new AddVariableToCondition(this, mmq);
                         break;
-                    case Types.PARAMETRISATION:
-                        cmd = new CreateParametrisation(this, mmq);
+                    case Types.VARIABLEBINDING:
+                        cmd = new CreateVariableBinding(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");

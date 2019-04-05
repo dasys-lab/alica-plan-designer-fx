@@ -1,4 +1,4 @@
-package de.unikassel.vs.alica.planDesigner.view.properties;
+package de.unikassel.vs.alica.planDesigner.view.properties.conditions;
 
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
@@ -8,6 +8,7 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
+import de.unikassel.vs.alica.planDesigner.view.properties.variables.VariablesTable;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -51,10 +52,10 @@ public class ConditionsTab extends Tab {
     private Pane pluginUI;
 
     private ViewModelElement parentElement;
-    private HasVariablesView variablesHoldingParent;
+    private AbstractPlanViewModel variablesHoldingParent;
     private ConditionViewModel condition;
 
-    private ScrollPane hidableView;
+    private ScrollPane hideableView;
 
     private final ListChangeListener<VariableViewModel> allVariablesListener;
     private final ListChangeListener<QuantifierViewModel> quantifierListener;
@@ -138,13 +139,13 @@ public class ConditionsTab extends Tab {
         TitledPane quantifierSection = new TitledPane(quantifiersTitle, quantifiers);
         quantifierSection.setExpanded(false);
 
-        VBox vBox = new VBox(propertySection, pluginSection, variablesSection, quantifierSection);
-        this.hidableView = new ScrollPane(vBox);
-        hidableView.setFitToWidth(true);
+        VBox vBox = new VBox(propertySection, variablesSection, quantifierSection, pluginSection);
+        this.hideableView = new ScrollPane(vBox);
+        hideableView.setFitToWidth(true);
 
         TitledPane mainPane = new TitledPane();
         mainPane.setText(I18NRepo.getInstance().getString("label.caption.selectedplugin"));
-        mainPane.setContent(new VBox(selectionBox, hidableView));
+        mainPane.setContent(new VBox(selectionBox, hideableView));
         mainPane.setCollapsible(false);
         this.setContent(mainPane);
     }
@@ -175,7 +176,7 @@ public class ConditionsTab extends Tab {
 
                     case Types.TRANSITION:
                         TransitionViewModel transition = (TransitionViewModel) parentElement;
-                        this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
+                        this.variablesHoldingParent = (AbstractPlanViewModel) MainWindowController.getInstance()
                                 .getGuiModificationHandler().getViewModelElement(transition.getParentId());
                         conditionProperty = transition.preConditionProperty();
                         break;
@@ -214,7 +215,7 @@ public class ConditionsTab extends Tab {
                     case Types.SUCCESSSTATE:
                     case Types.FAILURESTATE:
                         StateViewModel state = (StateViewModel) viewModelElement;
-                        this.variablesHoldingParent = (HasVariablesView) MainWindowController.getInstance()
+                        this.variablesHoldingParent = (AbstractPlanViewModel) MainWindowController.getInstance()
                                 .getGuiModificationHandler().getViewModelElement(state.getParentId());
                         conditionProperty = state.postConditionProperty();
                         break;
@@ -338,7 +339,7 @@ public class ConditionsTab extends Tab {
         EventHandler<ActionEvent> handler = this.pluginSelection.getOnAction();
         this.pluginSelection.setOnAction(null);
         this.pluginSelection.getSelectionModel().select(pluginName);
-        this.hidableView.setVisible(pluginName != null && !pluginName.equals(NONE));
+        this.hideableView.setVisible(pluginName != null && !pluginName.equals(NONE));
         this.pluginSelection.setOnAction(handler);
     }
 
@@ -502,8 +503,8 @@ public class ConditionsTab extends Tab {
                     possibleScopes.add(state.getId());
                 }
                 for(EntryPointViewModel entryPoint : plan.getEntryPoints()) {
-                    if(!possibleScopes.contains(entryPoint.getTask().getId())) {
-                        possibleScopes.add(entryPoint.getTask().getId());
+                    if(!possibleScopes.contains(entryPoint.getId())) {
+                        possibleScopes.add(entryPoint.getId());
                     }
                 }
 
@@ -521,12 +522,12 @@ public class ConditionsTab extends Tab {
                 plan.getEntryPoints().addListener((ListChangeListener<? super EntryPointViewModel>) c -> {
                     while(c.next()) {
                         for(EntryPointViewModel entryPoint : c.getAddedSubList()) {
-                            if(!possibleScopes.contains(entryPoint.getTask().getId())) {
-                                possibleScopes.add(entryPoint.getTask().getId());
+                            if(!possibleScopes.contains(entryPoint.getId())) {
+                                possibleScopes.add(entryPoint.getId());
                             }
                         }
                         for(EntryPointViewModel entryPoint : c.getRemoved()) {
-                            possibleScopes.remove(entryPoint.getTask().getId());
+                            possibleScopes.remove(entryPoint.getId());
                         }
                     }
                 });

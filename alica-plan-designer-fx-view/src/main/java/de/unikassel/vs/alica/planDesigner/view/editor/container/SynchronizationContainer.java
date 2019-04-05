@@ -2,7 +2,7 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
-import de.unikassel.vs.alica.planDesigner.view.model.SynchronizationViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.SynchronisationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -11,8 +11,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.*;
@@ -29,12 +27,12 @@ public class SynchronizationContainer extends Container implements Observable {
     private List<InvalidationListener> invalidationListeners;
     private List<TransitionContainer> transitionContainers;
     private Map<TransitionContainer, Shape> transitionToLineMap;
-    private SynchronizationViewModel synchronisation;
+    private SynchronisationViewModel synchronisation;
 
     /**
      * @param containedElement
      */
-    public SynchronizationContainer(SynchronizationViewModel containedElement, List<TransitionContainer> transitionContainers, PlanTab planTab) {
+    public SynchronizationContainer(SynchronisationViewModel containedElement, List<TransitionContainer> transitionContainers, PlanTab planTab) {
         super(containedElement, null, planTab);
 
         invalidationListeners = new ArrayList<>();
@@ -56,7 +54,7 @@ public class SynchronizationContainer extends Container implements Observable {
         setupContainer();
     }
 
-    public void createSyncTransitionToSynchronisationListeners(Node node, SynchronizationViewModel synchronization) {
+    public void createSyncTransitionToSynchronisationListeners(Node node, SynchronisationViewModel synchronization) {
         synchronization.getTransitions().addListener(new ListChangeListener<TransitionViewModel>() {
             @Override
             public void onChanged(Change<? extends TransitionViewModel> c) {
@@ -94,7 +92,7 @@ public class SynchronizationContainer extends Container implements Observable {
     public void setupContainer() {
         getChildren().clear();
 
-        SynchronizationViewModel syncViewModel = (SynchronizationViewModel) getPlanElementViewModel();
+        SynchronisationViewModel syncViewModel = (SynchronisationViewModel) getPlanElementViewModel();
 
         // POSITION
         setLayoutX(syncViewModel.getXPosition());

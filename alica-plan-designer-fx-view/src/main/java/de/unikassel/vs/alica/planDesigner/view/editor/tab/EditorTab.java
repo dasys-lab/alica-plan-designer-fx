@@ -28,11 +28,18 @@ public abstract class EditorTab extends Tab {
         super(serializableViewModel.getName());
         serializableViewModel.nameProperty().addListener((observable, oldValue, newValue) -> this.setText(newValue));
         setGraphic(new ImageView(new AlicaIcon(serializableViewModel.getType(), AlicaIcon.Size.SMALL)));
+        // The type might change later (Plan -> MasterPlan)
+        serializableViewModel.typeProperty().addListener((observable, oldValue, newValue) ->
+                setGraphic(new ImageView(new AlicaIcon(newValue, AlicaIcon.Size.SMALL))));
 
         this.serializableViewModel = serializableViewModel;
         this. guiModificationHandler = handler;
         this.i18NRepo = I18NRepo.getInstance();
 
+        // The opened SerializableViewModel may be dirty already
+        if(isDirty()) {
+            this.setText(getText() + "*");
+        }
         serializableViewModel.dirtyProperty().addListener((observable, oldValue, newValue) -> {
             if (!getText().contains("*") && newValue) {
                 this.setText(getText() + "*");

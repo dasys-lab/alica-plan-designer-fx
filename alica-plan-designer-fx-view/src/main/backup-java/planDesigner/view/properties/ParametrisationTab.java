@@ -53,7 +53,7 @@ public class ParametrisationTab extends AbstractPropertyTab {
         TableColumn<Parametrisation, Label> subPlanColumn = new TableColumn<>(i18NRepo.getString("label.column.subplan"));
         subPlanColumn.setCellValueFactory(new ParametrisationTab.CellColumnLabelCreatorCallback("subplan.name"));
         parametrisationTableView.getColumns().add(subPlanColumn);
-        TableColumn<Parametrisation, Label> subVariableColumn = new TableColumn<>(i18NRepo.getString("label.column.subVariable"));
+        TableColumn<Parametrisation, Label> subVariableColumn = new TableColumn<>(i18NRepo.getString("label.column.subvariable"));
         subVariableColumn.setCellValueFactory(new ParametrisationTab.CellColumnLabelCreatorCallback("subvar.name"));
         parametrisationTableView.getColumns().add(subVariableColumn);
         TableColumn<Parametrisation, ComboBox<Variable>> varColumn = new TableColumn<>(i18NRepo.getString("label.column.subVariableValue"));

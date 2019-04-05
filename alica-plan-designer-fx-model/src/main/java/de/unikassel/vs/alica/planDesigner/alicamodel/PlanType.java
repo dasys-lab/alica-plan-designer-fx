@@ -6,20 +6,20 @@ import java.util.List;
 
 public class PlanType extends AbstractPlan {
 
-    protected final ArrayList<Parametrisation> parametrisations = new ArrayList<>();
+    protected final ArrayList<VariableBinding> variableBindings = new ArrayList<>();
     protected final ArrayList<AnnotatedPlan> annotatedPlans = new ArrayList<>();
 
-    public void addParametrisation(Parametrisation parametrisation) {
-        parametrisations.add(parametrisation);
-        parametrisation.registerDirtyFlag(this.changeListenerForDirtyFlag);
+    public void addParametrisation(VariableBinding variableBinding) {
+        variableBindings.add(variableBinding);
+        variableBinding.registerDirtyFlag(this.changeListenerForDirtyFlag);
         this.changeListenerForDirtyFlag.setDirty();
     }
-    public void removeParametrisation(Parametrisation parametrisation) {
-        parametrisations.remove(parametrisation);
+    public void removeParametrisation(VariableBinding variableBinding) {
+        variableBindings.remove(variableBinding);
         this.changeListenerForDirtyFlag.setDirty();
     }
-    public List<Parametrisation> getParametrisations() {
-        return Collections.unmodifiableList(parametrisations);
+    public List<VariableBinding> getVariableBindings() {
+        return Collections.unmodifiableList(variableBindings);
     }
 
     public void addAnnotatedPlan(AnnotatedPlan annotatedPlan) {

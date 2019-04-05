@@ -7,12 +7,12 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
-public class StateViewModel extends PlanElementViewModel implements HasParametrisationView {
+public class StateViewModel extends PlanElementViewModel implements HasVariableBinding {
     protected ObservableList<PlanElementViewModel> abstractPlans;
     protected ObservableList<TransitionViewModel> inTransitions;
     protected ObservableList<TransitionViewModel> outTransitions;
     protected ObjectProperty<ConditionViewModel> postCondition;
-    protected ObservableList<ParametrisationViewModel> parametrisations;
+    protected ObservableList<VariableBindingViewModel> variableBindings;
     protected EntryPointViewModel entryPoint;
 
     public StateViewModel(long id, String name, String type) {
@@ -20,7 +20,7 @@ public class StateViewModel extends PlanElementViewModel implements HasParametri
         this.abstractPlans =  FXCollections.observableArrayList(new ArrayList<>());
         this.inTransitions =  FXCollections.observableArrayList(new ArrayList<>());
         this.outTransitions = FXCollections.observableArrayList(new ArrayList<>());
-        this.parametrisations = FXCollections.observableArrayList(new ArrayList<>());
+        this.variableBindings = FXCollections.observableArrayList(new ArrayList<>());
         this.postCondition = new SimpleObjectProperty<>();
     }
 
@@ -72,18 +72,18 @@ public class StateViewModel extends PlanElementViewModel implements HasParametri
         return postCondition;
     }
 
-    public ObservableList getParametrisations() {
-        return parametrisations;
+    public ObservableList getVariableBindings() {
+        return variableBindings;
     }
 
-    public void addParametrisation(ParametrisationViewModel parametrisation) {
-        if(!this.parametrisations.contains(parametrisation)) {
-            this.parametrisations.add(parametrisation);
+    public void addVariableBinding(VariableBindingViewModel binding) {
+        if(!this.variableBindings.contains(binding)) {
+            this.variableBindings.add(binding);
         }
     }
 
-    public void removeParametrisation(ParametrisationViewModel parametrisation) {
-        this.parametrisations.remove(parametrisation);
+    public void removeVariableBinding(VariableBindingViewModel binding) {
+        this.variableBindings.remove(binding);
     }
 
 

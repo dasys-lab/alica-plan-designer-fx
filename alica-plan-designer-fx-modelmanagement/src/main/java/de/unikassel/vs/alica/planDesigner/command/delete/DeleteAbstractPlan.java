@@ -16,7 +16,7 @@ public class DeleteAbstractPlan extends Command {
     private Map<Plan, List<State>> referencedStateListForBackup;
     private Map<HashMap<PlanElement, UiElement>, List<UiElement>> referencesInStyleFiles;
     private Map<PlanType, AnnotatedPlan> referencedAnnotatedPlansForBackup;
-    private Map<Parametrisation, Variable> referencedParametrisationForBackup;
+    private Map<VariableBinding, Variable> referencedParametrisationForBackup;
     private Path path;
     private AbstractPlan abstractPlan;
 
@@ -56,7 +56,7 @@ public class DeleteAbstractPlan extends Command {
                         saveForDeletionConfirmation[0] = true;
                     }
 
-                    state.getParametrisations().forEach(parametrisation -> {
+                    state.getVariableBindings().forEach(parametrisation -> {
                         if(parametrisation.getSubPlan() != null && parametrisation.getSubPlan().equals(abstractPlan)) {
                             referencedParametrisationForBackup.put(parametrisation, parametrisation.getSubVariable());
                             parametrisation.setSubPlan(null);
@@ -248,7 +248,7 @@ public class DeleteAbstractPlan extends Command {
             referencedParametrisationForBackup
                     .entrySet()
                     .forEach(entry -> {
-                        Parametrisation key = entry.getKey();
+                        VariableBinding key = entry.getKey();
                         key.setSubVariable(entry.getValue());
                         key.setSubPlan(entry.getKey().getSubPlan());
                         key.setVariable(entry.getKey().getVariable());

@@ -10,7 +10,7 @@ public class AnnotatedPlan extends PlanElement {
 
     @Override
     public String getName() {
-        return "Annotated" + plan.getName();
+        return "Annotated" + plan.get().getName();
     }
 
     public Plan getPlan() {

@@ -3,16 +3,19 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class PlanTypeViewModel extends SerializableViewModel implements HasParametrisationView {
+public class PlanTypeViewModel extends AbstractPlanViewModel implements HasVariableBinding {
 
     private ObservableList<PlanViewModel> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
-    protected ObservableList<ParametrisationViewModel> parametrisations;
+    private ObservableList<VariableViewModel> variables;
+    private ObservableList<VariableBindingViewModel> parametrisations;
+
 
     public PlanTypeViewModel(long id, String name, String type) {
         super(id, name, type);
         allPlans = FXCollections.observableArrayList();
         plansInPlanType = FXCollections.observableArrayList();
+        variables = FXCollections.observableArrayList();
         parametrisations = FXCollections.observableArrayList();
     }
 
@@ -61,17 +64,22 @@ public class PlanTypeViewModel extends SerializableViewModel implements HasParam
         return false;
     }
 
-    public ObservableList getParametrisations() {
+    public ObservableList<VariableBindingViewModel> getVariableBindings() {
         return parametrisations;
     }
 
-    public void addParametrisation(ParametrisationViewModel parametrisation) {
-        if(!this.parametrisations.contains(parametrisation)) {
-            this.parametrisations.add(parametrisation);
+    public void addVariableBinding(VariableBindingViewModel binding) {
+        if(!this.parametrisations.contains(binding)) {
+            this.parametrisations.add(binding);
         }
     }
 
-    public void removeParametrisation(ParametrisationViewModel parametrisation) {
-        this.parametrisations.remove(parametrisation);
+    public void removeVariableBinding(VariableBindingViewModel binding) {
+        this.parametrisations.remove(binding);
+    }
+
+    @Override
+    public ObservableList<VariableViewModel> getVariables() {
+        return variables;
     }
 }

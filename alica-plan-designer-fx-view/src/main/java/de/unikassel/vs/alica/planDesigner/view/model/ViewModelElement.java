@@ -6,7 +6,6 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import javax.sound.midi.ControllerEventListener;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,6 +71,9 @@ public class ViewModelElement {
     public final SimpleStringProperty typeProperty() { return this.type; }
     public String getType() {
         return type.get();
+    }
+    public void setType(String type) {
+        this.type.set(type);
     }
 
     public final SimpleStringProperty relativeDirectoryProperty() {return this.relativeDirectory; }

@@ -19,7 +19,6 @@ public class QuantifierScopeDeserializer extends StdDeserializer<PlanElement> {
     @Override
     public PlanElement deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         TreeNode tree = p.getCodec().readTree(p);
-        long id = ((ValueNode)tree).asLong();
-        return new PlanElement(id);
+        return new PlanElement(((ValueNode)tree).asLong());
     }
 }

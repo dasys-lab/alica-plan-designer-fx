@@ -13,19 +13,18 @@ import java.io.IOException;
 
 public class TransitionSynchronizationDeserializer extends StdDeserializer<Synchronisation> {
 
-public TransitionSynchronizationDeserializer() {
-        this(null);
+        public TransitionSynchronizationDeserializer() {
+                this(null);
         }
 
-public TransitionSynchronizationDeserializer(Class<?> vc) {super(vc);}
+        public TransitionSynchronizationDeserializer(Class<?> vc) {super(vc);}
 
-@Override
-public Synchronisation deserialize(
-        JsonParser jsonparser,
-        DeserializationContext context)
-        throws IOException, JsonProcessingException {
-        TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
-        Synchronisation synchronisation = new Synchronisation(((LongNode)tree).longValue());
-        return synchronisation;
+        @Override
+        public Synchronisation deserialize(
+                JsonParser jsonparser,
+                DeserializationContext context)
+                throws IOException, JsonProcessingException {
+                TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
+                return new Synchronisation(((LongNode)tree).longValue());
         }
 }

@@ -13,7 +13,7 @@ public class State extends PlanElement {
     protected final SimpleObjectProperty<Plan> parentPlan = new SimpleObjectProperty<>();
 
     protected final ArrayList<AbstractPlan> abstractPlans = new ArrayList<>();
-    protected final ArrayList<Parametrisation> parametrisations = new ArrayList<>();
+    protected final ArrayList<VariableBinding> variableBindings = new ArrayList<>();
     protected final ArrayList<Transition> outTransitions = new ArrayList<>();
     protected final ArrayList<Transition> inTransitions = new ArrayList<>();
 
@@ -48,17 +48,14 @@ public class State extends PlanElement {
     }
     public void addAbstractPlan(AbstractPlan abstractPlan) {
         abstractPlans.add(abstractPlan);
-        // TODO Issue #53 on Github
         this.changeListener.setDirty();
     }
     public void removeAbstractPlan(AbstractPlan abstractPlan) {
         abstractPlans.remove(abstractPlan);
-        // TODO Issue #53 on Github
-
         // iterator in order to avoid concurrent modification exception
-        Iterator<Parametrisation> iterator = parametrisations.iterator();
+        Iterator<VariableBinding> iterator = variableBindings.iterator();
         while ((iterator).hasNext()) {
-            Parametrisation param = iterator.next();
+            VariableBinding param = iterator.next();
             if (param.getSubPlan().getId() == abstractPlan.getId()) {
                 iterator.remove();
             }
@@ -66,16 +63,16 @@ public class State extends PlanElement {
         this.changeListener.setDirty();
     }
 
-    public List<Parametrisation> getParametrisations() {
-        return Collections.unmodifiableList(parametrisations);
+    public List<VariableBinding> getVariableBindings() {
+        return Collections.unmodifiableList(variableBindings);
     }
-    public void addParametrisation(Parametrisation param) {
-        this.parametrisations.add(param);
-        param.registerDirtyFlag(this.changeListener);
+    public void addVariableBinding(VariableBinding binding) {
+        this.variableBindings.add(binding);
+        binding.registerDirtyFlag(this.changeListener);
         this.changeListener.setDirty();
     }
-    public void removeParametrisation(Parametrisation param) {
-        this.parametrisations.remove(param);
+    public void removeVariableBinding(VariableBinding binding) {
+        this.variableBindings.remove(binding);
         this.changeListener.setDirty();
     }
 
@@ -104,7 +101,7 @@ public class State extends PlanElement {
         this.name.addListener(listener);
         this.comment.addListener(listener);
 
-        for (Parametrisation param : parametrisations) {
+        for (VariableBinding param : variableBindings) {
             param.registerDirtyFlag(listener);
         }
     }

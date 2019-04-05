@@ -71,8 +71,8 @@ public class ViewModelManager {
             element = createEntryPointViewModel((EntryPoint) planElement);
         } else if (planElement instanceof Variable) {
             element = createVariableViewModel((Variable) planElement);
-        } else if (planElement instanceof Parametrisation) {
-            element = createParametrisationViewModel((Parametrisation) planElement);
+        } else if (planElement instanceof VariableBinding) {
+            element = createParametrisationViewModel((VariableBinding) planElement);
         } else if (planElement instanceof Transition) {
              element = createTransitionViewModel((Transition) planElement);
         } else if (planElement instanceof Synchronisation) {
@@ -192,12 +192,12 @@ public class ViewModelManager {
         return variableViewModel;
     }
 
-    private ParametrisationViewModel createParametrisationViewModel(Parametrisation param) {
-        ParametrisationViewModel parametrisationViewModel = new ParametrisationViewModel(param.getId(), param.getName(), Types.PARAMETRISATION);
-        parametrisationViewModel.setSubPlan((PlanViewModel) getViewModelElement(param.getSubPlan()));
-        parametrisationViewModel.setSubVariable((VariableViewModel) getViewModelElement(param.getSubVariable()));
-        parametrisationViewModel.setVariable((VariableViewModel) getViewModelElement(param.getVariable()));
-        return parametrisationViewModel;
+    private VariableBindingViewModel createParametrisationViewModel(VariableBinding param) {
+        VariableBindingViewModel variableBindingViewModel = new VariableBindingViewModel(param.getId(), param.getName(), Types.VARIABLEBINDING);
+        variableBindingViewModel.setSubPlan((AbstractPlanViewModel) getViewModelElement(param.getSubPlan()));
+        variableBindingViewModel.setSubVariable((VariableViewModel) getViewModelElement(param.getSubVariable()));
+        variableBindingViewModel.setVariable((VariableViewModel) getViewModelElement(param.getVariable()));
+        return variableBindingViewModel;
     }
 
     private ConditionViewModel createConditionViewModel(Condition condition) {
@@ -255,6 +255,15 @@ public class ViewModelManager {
             planTypeViewModel.removePlanFromAllPlans(annotatedPlan.getPlan().getId());
             planTypeViewModel.getPlansInPlanType().add((AnnotatedPlanView) getViewModelElement(annotatedPlan));
         }
+
+        for (VariableBinding param: planType.getVariableBindings()) {
+            planTypeViewModel.addVariableBinding((VariableBindingViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
+        }
+
+        for (Variable var : planType.getVariables()) {
+            planTypeViewModel.getVariables().add((VariableViewModel) getViewModelElement(var));
+        }
+
         return planTypeViewModel;
     }
 
@@ -290,8 +299,8 @@ public class ViewModelManager {
             stateViewModel.setPostCondition((ConditionViewModel) getViewModelElement(((TerminalState) state).getPostCondition()));
         }
 
-        for (Parametrisation param: state.getParametrisations()) {
-            stateViewModel.addParametrisation((ParametrisationViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
+        for (VariableBinding param: state.getVariableBindings()) {
+            stateViewModel.addVariableBinding((VariableBindingViewModel) getViewModelElement(modelManager.getPlanElement(param.getId())));
         }
 
         return stateViewModel;
@@ -334,16 +343,19 @@ public class ViewModelManager {
         return transitionViewModel;
     }
 
-    private SynchronizationViewModel createSynchronizationViewModel(Synchronisation synchronisation) {
-        SynchronizationViewModel synchronizationViewModel = new SynchronizationViewModel(synchronisation.getId(), synchronisation.getName(),
+    private SynchronisationViewModel createSynchronizationViewModel(Synchronisation synchronisation) {
+        SynchronisationViewModel synchronisationViewModel = new SynchronisationViewModel(synchronisation.getId(), synchronisation.getName(),
                 Types.SYNCHRONISATION);
         for (Transition transition : synchronisation.getSyncedTransitions()) {
-            synchronizationViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
+            synchronisationViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
         }
         UiElement uiElement = modelManager.getPlanUIExtensionPair(synchronisation.getPlan().getId()).getUiElement(synchronisation.getId());
-        synchronizationViewModel.setXPosition(uiElement.getX());
-        synchronizationViewModel.setYPosition(uiElement.getY());
-        return synchronizationViewModel;
+        synchronisationViewModel.setXPosition(uiElement.getX());
+        synchronisationViewModel.setYPosition(uiElement.getY());
+        synchronisationViewModel.setSyncTimeout(synchronisation.getSyncTimeout());
+        synchronisationViewModel.setFailOnSyncTimeout(synchronisation.getFailOnSyncTimeout());
+        synchronisationViewModel.setTalkTimeout(synchronisation.getTalkTimeout());
+        return synchronisationViewModel;
     }
 
 
@@ -373,7 +385,7 @@ public class ViewModelManager {
             planViewModel.getTransitions().add((TransitionViewModel) getViewModelElement(transition));
         }
         for (Synchronisation synchronisation : plan.getSynchronisations()) {
-            planViewModel.getSynchronisations().add((SynchronizationViewModel) getViewModelElement(synchronisation));
+            planViewModel.getSynchronisations().add((SynchronisationViewModel) getViewModelElement(synchronisation));
         }
         if (plan.getPreCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(plan.getPreCondition());
@@ -444,19 +456,11 @@ public class ViewModelManager {
                 break;
             case Types.VARIABLE:
                 ViewModelElement parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
-                if ( parentViewModel instanceof HasVariablesView) {
-                    ((HasVariablesView) parentViewModel).getVariables().remove(viewModelElement);
-                } else {
-                    throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no variables");
-                }
+                ((AbstractPlanViewModel) parentViewModel).getVariables().remove(viewModelElement);
                 break;
-            case Types.PARAMETRISATION:
+            case Types.VARIABLEBINDING:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
-                if ( parentViewModel instanceof HasParametrisationView) {
-                    ((HasParametrisationView) parentViewModel).getParametrisations().remove((ParametrisationViewModel) viewModelElement);
-                } else {
-                    throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no parametrisation");
-                }
+                ((HasVariableBinding) parentViewModel).getVariableBindings().remove(viewModelElement);
                 break;
             case Types.PRECONDITION:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
@@ -558,16 +562,20 @@ public class ViewModelManager {
                     SerializableViewModel abstractPlanViewModel = (SerializableViewModel) viewModelElement;
                     StateViewModel stateViewModel = (StateViewModel) parentViewModel;
                     stateViewModel.addAbstractPlan(abstractPlanViewModel);
-                }else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
+                } else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
                 }
                 break;
             case Types.VARIABLE:
-                ((HasVariablesView) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                if (parentViewModel instanceof AbstractPlanViewModel) {
+                    ((AbstractPlanViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                } else if (parentViewModel instanceof ConditionViewModel) {
+                    ((ConditionViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                }
                 break;
-            case Types.PARAMETRISATION: {
-                ((HasParametrisationView) parentViewModel).getParametrisations().add((ParametrisationViewModel) viewModelElement);
-            } break;
+            case Types.VARIABLEBINDING:
+                ((HasVariableBinding) parentViewModel).getVariableBindings().add((VariableBindingViewModel) viewModelElement);
+                break;
             case Types.ABSTRACTPLAN:
                 PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
                 State state = (State) event.getNewValue();
@@ -670,7 +678,7 @@ public class ViewModelManager {
                 parentPlan.getTransitions().add(transitionViewModel);
                 break;
             case Types.SYNCHRONISATION: {
-                SynchronizationViewModel syncViewModel = (SynchronizationViewModel) element;
+                SynchronisationViewModel syncViewModel = (SynchronisationViewModel) element;
                 syncViewModel.setXPosition(event.getUiElement().getX());
                 syncViewModel.setYPosition(event.getUiElement().getY());
                 parentPlan.getSynchronisations().add(syncViewModel);
@@ -711,10 +719,6 @@ public class ViewModelManager {
             case Types.VARIABLE:
                 parentPlan.getVariables().add((VariableViewModel)element);
                 break;
-            case Types.PARAMETRISATION:
-                // TODO
-                System.err.println("ViewModelManager: Param not set");
-                break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
                 // NO-OP
@@ -732,7 +736,7 @@ public class ViewModelManager {
 
         switch (event.getElementType()) {
             case Types.SYNCTRANSITION:
-                ((SynchronizationViewModel) parentViewModel).getTransitions().add((TransitionViewModel) viewModelElement);
+                ((SynchronisationViewModel) parentViewModel).getTransitions().add((TransitionViewModel) viewModelElement);
                 break;
                 default:
                     System.err.println("ViewModelManager: Connect Element not supported for type: " + event.getElementType());
@@ -748,7 +752,7 @@ public class ViewModelManager {
 
         switch (event.getElementType()) {
             case Types.SYNCTRANSITION:
-                ((SynchronizationViewModel) parentViewModel).getTransitions().remove((TransitionViewModel) viewModelElement);
+                ((SynchronisationViewModel) parentViewModel).getTransitions().remove((TransitionViewModel) viewModelElement);
                 break;
             default:
                 System.err.println("ViewModelManager: Disconnect Element not supported for type: " + event.getElementType());
