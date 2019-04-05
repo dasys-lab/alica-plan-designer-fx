@@ -10,20 +10,17 @@ import java.util.ArrayList;
 
 public class RoleSetViewModel extends SerializableViewModel {
 
-    private FloatProperty priorityDefault = new SimpleFloatProperty(null, "priorityDefault", 0.0f);
     private ObservableList<RoleViewModel> roles;
     private ObservableList<TaskViewModel> tasks;
-
-//    public RoleSetViewModel(long id, String name, String type) {
-//        this(id, name, type, 0.0f);
-//    }
+    private FloatProperty priorityDefault;
 
     public RoleSetViewModel(long id, String name, String type, float priorityDefault) {
         super(id, name, type);
+        this.priorityDefault  = new SimpleFloatProperty(null, "priorityDefault", 0.01f);
         this.priorityDefault.setValue(priorityDefault);
+        this.uiPropertyList.add("priorityDefault");
         roles = FXCollections.observableArrayList(new ArrayList<>());
         tasks = FXCollections.observableArrayList(new ArrayList<>());
-        this.uiPropertyList.add("priorityDefault");
     }
 
     public void addRole(RoleViewModel role) {
