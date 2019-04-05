@@ -140,7 +140,13 @@ public class ViewModelManager {
 
     private RoleViewModel createRoleViewModel(Role role) {
         RoleViewModel roleViewModel = new RoleViewModel(role.getId(), role.getName(), Types.ROLE);
-        roleViewModel.setTaskPriorities(role.getTaskPriorities());
+        HashMap<TaskViewModel, Float> taskPriorities = new HashMap<>();
+
+        for (Task task: role.getTaskPriorities().keySet()) {
+            TaskViewModel taskViewModel = (TaskViewModel)this.getViewModelElement(task);
+            taskPriorities.put( taskViewModel, role.getTaskPriorities().get(task));
+        }
+        roleViewModel.setTaskPriorities(taskPriorities);
         roleViewModel.setRoleSetViewModel((RoleSetViewModel) getViewModelElement(role.getRoleSet()));
         roleViewModel.getRoleSetViewModel().addRole(roleViewModel);
         roleViewModel.setParentId(role.getRoleSet().getId());

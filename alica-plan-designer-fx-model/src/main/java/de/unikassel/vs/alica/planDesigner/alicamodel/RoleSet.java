@@ -6,7 +6,7 @@ import java.util.List;
 
 public class RoleSet extends SerializablePlanElement {
 
-    private float priorityDefault = 0.5f;
+    private float priorityDefault;
     private final ArrayList<Role> roles = new ArrayList<>();
 
     public RoleSet() {}

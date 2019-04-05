@@ -2,11 +2,12 @@ package de.unikassel.vs.alica.planDesigner.alicamodel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class Role extends PlanElement {
 
+    protected HashMap<Task, Float> taskPriorities = new HashMap<>();
     protected ArrayList<Characteristic> characteristics = new ArrayList<>();
-    protected HashMap<Long, Float> taskPriorities = new HashMap<>();
     private RoleSet roleSet;
 
     public Role() {
@@ -18,15 +19,17 @@ public class Role extends PlanElement {
     }
 
     public float getPriority(long taskID) {
-        return taskPriorities.get(taskID);
+        Optional<Task> task = taskPriorities.keySet().stream().filter(t -> t.getId() == taskID).findFirst();
+        return taskPriorities.get(task.get());
     }
+    public float getPriority(Task task) {return taskPriorities.get(task); }
 
-    public HashMap<Long, Float> getTaskPriorities() {
+    public HashMap<Task, Float> getTaskPriorities() {
         return this.taskPriorities;
     }
 
-    public void addTaskIDPriority(long taskID , float priority) {
-        this.taskPriorities.put(taskID, priority);
+    public void addTaskIDPriority(Task task , float priority) {
+        this.taskPriorities.put(task, priority);
     }
 
     public ArrayList<Characteristic> getCharacteristics() {

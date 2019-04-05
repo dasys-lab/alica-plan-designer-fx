@@ -3,11 +3,12 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 public class RoleViewModel extends PlanElementViewModel {
 
     private RoleSetViewModel roleSetViewModel;
-    private HashMap<Long, Float> taskPriorities;
+    private HashMap<TaskViewModel, Float> taskPriorities;
 
     public RoleViewModel (long id, String name, String type) {
         super(id, name, type);
@@ -21,22 +22,28 @@ public class RoleViewModel extends PlanElementViewModel {
         this.roleSetViewModel = roleSetViewModel;
     }
 
-    public void setTaskPriorities(HashMap<Long, Float> taskPriorities) {
+    public void setTaskPriorities(HashMap<TaskViewModel, Float> taskPriorities) {
         this.taskPriorities = taskPriorities;
     }
 
-    public float getTaskPriority(long taskID) {
-        return taskPriorities.containsKey(taskID)? taskPriorities.get(taskID) : roleSetViewModel.getPriorityDefault();
+    public Float getTaskPriority(long taskID) {
+        Optional<TaskViewModel> task = taskPriorities.keySet().stream().filter(t -> t.getId() == taskID).findFirst();
+        return task.isPresent() ?  taskPriorities.get(task.get()) : null;
+
     }
 
     public void registerListener(IGuiModificationHandler handler) {
         super.registerListener(handler);
     }
 
-    public void setTaskPriority(long taskID, float priority) {
+    public void setTaskPriority(TaskViewModel task, float priority) {
 
         if(priority != roleSetViewModel.getPriorityDefault()) {
-            taskPriorities.put(taskID, priority);
+            taskPriorities.put(task, priority);
         }
+    }
+
+    public HashMap<TaskViewModel, Float> getTaskPriorities() {
+        return taskPriorities;
     }
 }

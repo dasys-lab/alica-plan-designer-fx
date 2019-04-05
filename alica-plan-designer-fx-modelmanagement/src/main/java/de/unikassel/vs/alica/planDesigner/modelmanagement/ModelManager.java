@@ -93,6 +93,7 @@ public class ModelManager implements Observer {
         objectMapper.addMixIn(State.class, StateMixIn.class);
         objectMapper.addMixIn(Synchronisation.class, SynchronizationMixIn.class);
         objectMapper.addMixIn(Task.class, TaskMixIn.class);
+        objectMapper.addMixIn(Role.class, RoleMixIn.class);
         objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
         objectMapper.addMixIn(UiExtension.class, UiExtensionMixIn.class);
         objectMapper.addMixIn(BendPoint.class, BendPointMixIn.class);
@@ -360,6 +361,7 @@ public class ModelManager implements Observer {
             while (modelFile.length() == 0) {
                 Thread.sleep(1000);
             }
+            System.out.println("MM: " + modelFile.getName() +"  "+ type);
             planElement = objectMapper.readValue(modelFile, type);
         } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException
                 | com.fasterxml.jackson.databind.deser.UnresolvedForwardReference e) {
@@ -760,11 +762,19 @@ public class ModelManager implements Observer {
             usages.addAll(getVariableUsages(planElement));
         } else if (planElement instanceof TaskRepository) {
             usages.addAll(getTaskRepoUsages(planElement));
+        } else if (planElement instanceof RoleSet) {
+            usages.addAll(getRoleSetUsages(planElement));
         } else if (planElement instanceof State) {
             usages.add(((State) planElement).getParentPlan()); // A State is always used in exactly one Plan
         } else {
             throw new RuntimeException("Usages requested for unhandled elementType of element with id  " + modelElementId);
         }
+        return usages;
+    }
+
+    private HashSet<Plan> getRoleSetUsages(PlanElement planElement) {
+        // TODO: implement functionality
+        HashSet<Plan> usages = new HashSet<>();
         return usages;
     }
 
@@ -1242,6 +1252,9 @@ public class ModelManager implements Observer {
         }
         if (element instanceof TaskRepository) {
             return Paths.get(tasksPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
+        }
+        if (element instanceof RoleSet) {
+            return Paths.get(rolesPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
         }
         return null;
     }

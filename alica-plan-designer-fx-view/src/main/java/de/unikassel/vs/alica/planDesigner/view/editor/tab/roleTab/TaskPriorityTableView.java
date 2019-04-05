@@ -25,8 +25,9 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
     private void updateCells() {
 
         for (Object item : this.getItems()) {
-            TaskPriorityTableElement taskPriority = (TaskPriorityTableElement)item;
-            taskPriority.setPriority(String.valueOf(currentRole.getTaskPriority(taskPriority.getTaskID())));
+            Float taskPriority = currentRole.getTaskPriority(((TaskPriorityTableElement) item).getTaskID());
+            taskPriority = taskPriority == null ? priorityDefault : taskPriority;
+            ((TaskPriorityTableElement) item).setPriority(String.valueOf(taskPriority));
         }
     }
 
@@ -35,12 +36,14 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
     }
 
     public void addTasks(ObservableList<TaskViewModel> taskViewModels) {
-        ObservableList<TaskPriorityTableElement> taskPriorities = FXCollections.observableArrayList();;
+        ObservableList<TaskPriorityTableElement> taskPriorities = FXCollections.observableArrayList();
         taskViewModels.forEach(taskViewModel -> {
-            TaskPriorityTableElement taskPriority = new TaskPriorityTableElement(taskViewModel.getId(), taskViewModel.getName(), String.valueOf(priorityDefault));
+            TaskPriorityTableElement taskPriority = new TaskPriorityTableElement(taskViewModel, String.valueOf(priorityDefault));
             taskPriority.addListener(observable -> {
-                currentRole.setTaskPriority(taskPriority.getTaskID(),
+                currentRole.setTaskPriority(taskPriority.getTask(),
                            Float.valueOf(((SimpleStringProperty)observable).getValue()));
+                System.out.println("TPTV: " + taskPriority.getTask().getName() + " value:" + ((SimpleStringProperty)observable).getValue()
+                        + " modified priorities:" + currentRole.getTaskPriorities().size() );
             });
             taskPriorities.add(taskPriority);
         });

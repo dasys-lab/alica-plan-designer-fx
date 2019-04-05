@@ -100,7 +100,7 @@ public class RoleSetTab extends EditorTab {
 
     private TaskPriorityTableView createTaskPriorityTableVisual() {
         taskTableView = new TaskPriorityTableView(roleSetViewModel.getPriorityDefault());
-        taskTableView.addColumn(i18NRepo.getString("label.caption.tasks"), "task",new DefaultStringConverter(), false);
+        taskTableView.addColumn(i18NRepo.getString("label.caption.tasks"), "taskName",new DefaultStringConverter(), false);
         taskTableView.addColumn(i18NRepo.getString("label.caption.priorities"), "priority",new DefaultStringConverter(), true);
         taskTableView.prefHeightProperty().bind(splitPane.heightProperty());
         taskTableView.prefWidthProperty().bind(splitPane.widthProperty());

@@ -1,17 +1,18 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
 
+import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleStringProperty;
 
 public class TaskPriorityTableElement {
 
-    private SimpleStringProperty task;
+    private final TaskViewModel task;
+    private SimpleStringProperty taskName;
     private SimpleStringProperty priority;
-    private long taskID;
 
-    public TaskPriorityTableElement(long taskID, String task, String priority) {
-        this.taskID = taskID;
-        this.task = new SimpleStringProperty(task);
+    public TaskPriorityTableElement(TaskViewModel task, String priority) {
+        this.task = task;
+        this.taskName = new SimpleStringProperty(task.getName());
         this.priority = new SimpleStringProperty(priority);
     }
 
@@ -23,15 +24,19 @@ public class TaskPriorityTableElement {
         return priority;
     }
 
-    public SimpleStringProperty taskProperty() {
-        return task;
+    public SimpleStringProperty taskNameProperty() {
+        return taskName;
     }
 
     public void setPriority(String priority) {
         this.priority.set(priority);
     }
 
+    public TaskViewModel getTask() {
+        return task;
+    }
+
     public long getTaskID() {
-        return taskID;
+        return task.getId();
     }
 }
