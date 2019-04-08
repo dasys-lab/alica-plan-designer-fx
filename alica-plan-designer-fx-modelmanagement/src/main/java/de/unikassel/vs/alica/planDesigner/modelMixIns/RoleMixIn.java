@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.RoleSet;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Task;
 import de.unikassel.vs.alica.planDesigner.deserialization.RoleSetRoles2Deserializer;
 import de.unikassel.vs.alica.planDesigner.deserialization.RoleSetRolesDeserializer;
+import de.unikassel.vs.alica.planDesigner.serialization.ExternalRefSerializer;
 import de.unikassel.vs.alica.planDesigner.serialization.InternalRefKeySerializer;
 import de.unikassel.vs.alica.planDesigner.serialization.InternalRefSerializer;
 
@@ -15,7 +16,7 @@ public abstract class RoleMixIn {
     @JsonSerialize(using = InternalRefSerializer.class)
     protected RoleSet roleSet;
 
-    @JsonSerialize(keyUsing = InternalRefSerializer.class)
+    @JsonSerialize(keyUsing = ExternalRefSerializer.class)
     @JsonDeserialize(keyUsing = RoleSetRolesDeserializer.class)
     protected HashMap<Task, Float> taskPriorities;
 

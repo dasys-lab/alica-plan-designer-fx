@@ -18,9 +18,12 @@ import java.io.IOException;
 public class RoleSetRolesDeserializer extends KeyDeserializer {
 
     @Override
-    public Object deserializeKey(String s, DeserializationContext deserializationContext) throws IOException {
+    public Object deserializeKey(String taskString, DeserializationContext deserializationContext) throws IOException {
         System.out.println("RSRD: deserializeKey not implemented");
-        return null;
+        int idIndex = taskString.indexOf('#');
+        taskString = taskString.substring(idIndex + 1);
+        Task task = new Task(Long.parseLong(taskString));
+        return task;
 //        TreeNode tree = jsonparser.getCodec().readTree(jsonparser);
 //        ObservableList<Role> roles = FXCollections.observableArrayList();
 //        for(int i = 0; i < tree.size(); i++) {
