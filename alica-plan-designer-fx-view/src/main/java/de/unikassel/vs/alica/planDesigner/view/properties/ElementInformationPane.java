@@ -86,7 +86,7 @@ public class ElementInformationPane extends TitledPane {
 
 
     private void adaptUI(ViewModelElement elementShown) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab);
+        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab, characteristicsTab);
         switch (elementShown.getType()) {
             case Types.TASKREPOSITORY:
             case Types.TASK:

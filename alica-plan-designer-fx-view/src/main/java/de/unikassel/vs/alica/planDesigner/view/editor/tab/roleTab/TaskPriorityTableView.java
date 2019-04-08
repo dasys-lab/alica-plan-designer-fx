@@ -23,7 +23,6 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
     }
 
     private void updateCells() {
-
         for (Object item : this.getItems()) {
             Float taskPriority = currentRole.getTaskPriority(((TaskPriorityTableElement) item).getTaskID());
             taskPriority = taskPriority == null ? priorityDefault : taskPriority;
@@ -40,6 +39,9 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
         taskViewModels.forEach(taskViewModel -> {
             TaskPriorityTableElement taskPriority = new TaskPriorityTableElement(taskViewModel, String.valueOf(priorityDefault));
             taskPriority.addListener(observable -> {
+                if (currentRole == null) {
+                    return;
+                }
                 currentRole.setTaskPriority(taskPriority.getTask(),
                            Float.valueOf(((SimpleStringProperty)observable).getValue()));
                 System.out.println("TPTV: " + taskPriority.getTask().getName() + " value:" + ((SimpleStringProperty)observable).getValue()
