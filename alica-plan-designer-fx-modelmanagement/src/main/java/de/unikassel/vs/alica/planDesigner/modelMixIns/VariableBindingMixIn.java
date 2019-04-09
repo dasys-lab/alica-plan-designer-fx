@@ -9,12 +9,12 @@ import de.unikassel.vs.alica.planDesigner.deserialization.VariableDeserializer;
 import de.unikassel.vs.alica.planDesigner.serialization.ExternalRefSerializer;
 import de.unikassel.vs.alica.planDesigner.serialization.InternalRefSerializer;
 
-public abstract class ParametrisationMixIn {
+public abstract class VariableBindingMixIn {
     @JsonSerialize(using = ExternalRefSerializer.class)
     @JsonDeserialize(using = ExternalRefDeserializer.class)
     protected AbstractPlan subPlan;
 
-    @JsonSerialize(using = InternalRefSerializer.class)
+    @JsonSerialize(using = ExternalRefSerializer.class)
     @JsonDeserialize(using = VariableDeserializer.class)
     protected Variable subVariable;
 

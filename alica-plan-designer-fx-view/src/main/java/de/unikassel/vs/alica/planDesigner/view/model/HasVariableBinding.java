@@ -6,4 +6,8 @@ public interface HasVariableBinding {
     ObservableList<VariableBindingViewModel> getVariableBindings();
     void addVariableBinding(VariableBindingViewModel binding);
     void removeVariableBinding(VariableBindingViewModel binding);
+
+    String getType();
+    long getParentId();
+    long getId();
 }

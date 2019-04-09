@@ -12,7 +12,7 @@ public class StateViewModel extends PlanElementViewModel implements HasVariableB
     protected ObservableList<TransitionViewModel> inTransitions;
     protected ObservableList<TransitionViewModel> outTransitions;
     protected ObjectProperty<ConditionViewModel> postCondition;
-    protected ObservableList<VariableBindingViewModel> parametrisations;
+    protected ObservableList<VariableBindingViewModel> variableBindings;
     protected EntryPointViewModel entryPoint;
 
     public StateViewModel(long id, String name, String type) {
@@ -20,7 +20,7 @@ public class StateViewModel extends PlanElementViewModel implements HasVariableB
         this.abstractPlans =  FXCollections.observableArrayList(new ArrayList<>());
         this.inTransitions =  FXCollections.observableArrayList(new ArrayList<>());
         this.outTransitions = FXCollections.observableArrayList(new ArrayList<>());
-        this.parametrisations = FXCollections.observableArrayList(new ArrayList<>());
+        this.variableBindings = FXCollections.observableArrayList(new ArrayList<>());
         this.postCondition = new SimpleObjectProperty<>();
     }
 
@@ -73,17 +73,17 @@ public class StateViewModel extends PlanElementViewModel implements HasVariableB
     }
 
     public ObservableList getVariableBindings() {
-        return parametrisations;
+        return variableBindings;
     }
 
     public void addVariableBinding(VariableBindingViewModel binding) {
-        if(!this.parametrisations.contains(binding)) {
-            this.parametrisations.add(binding);
+        if(!this.variableBindings.contains(binding)) {
+            this.variableBindings.add(binding);
         }
     }
 
     public void removeVariableBinding(VariableBindingViewModel binding) {
-        this.parametrisations.remove(binding);
+        this.variableBindings.remove(binding);
     }
 
 

@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class PlanViewModel extends SerializableViewModel implements HasVariablesView{
+public class PlanViewModel extends AbstractPlanViewModel {
 
     protected final BooleanProperty masterPlan = new SimpleBooleanProperty(null, "masterPlan", false);
     protected final DoubleProperty utilityThreshold = new SimpleDoubleProperty(null, "utilityThreshold", 0.5);
@@ -20,8 +20,6 @@ public class PlanViewModel extends SerializableViewModel implements HasVariables
     protected final ObservableList<StateViewModel> states = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<TransitionViewModel> transitions = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<SynchronisationViewModel> synchronisations = FXCollections.observableArrayList(new ArrayList<>());
-
-    protected final ObservableList<VariableViewModel> variables = FXCollections.observableArrayList(new ArrayList<>());
 
     public PlanViewModel(long id, String name, String type) {
         super(id, name, type);
@@ -92,9 +90,5 @@ public class PlanViewModel extends SerializableViewModel implements HasVariables
 
     public ObservableList<SynchronisationViewModel> getSynchronisations() {
         return synchronisations;
-    }
-
-    public ObservableList<VariableViewModel> getVariables() {
-        return variables;
     }
 }

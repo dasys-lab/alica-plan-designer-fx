@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ConditionViewModel extends PlanElementViewModel implements  HasVariablesView{
+public class ConditionViewModel extends PlanElementViewModel {
 
     protected SimpleBooleanProperty enabled = new SimpleBooleanProperty(this, "enabled", false);
     protected SimpleStringProperty conditionString = new SimpleStringProperty(this, "conditionString", null);

@@ -85,7 +85,7 @@ public class ModelManager implements Observer {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
         objectMapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
-        objectMapper.addMixIn(VariableBinding.class, ParametrisationMixIn.class);
+        objectMapper.addMixIn(VariableBinding.class, VariableBindingMixIn.class);
         objectMapper.addMixIn(AnnotatedPlan.class, AnnotatedPlanMixIn.class);
         objectMapper.addMixIn(Plan.class, PlanMixIn.class);
         objectMapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
@@ -248,10 +248,6 @@ public class ModelManager implements Observer {
         uiExtensionMap.clear();
     }
 
-    /**
-     * This method could be superfluous, as "loadModelFile" is maybe called by the file watcher.
-     * Anyway, temporarily this is a nice method for testing and is therefore called in the constr.
-     */
     private void loadModelFromDisk(String directory) {
         File plansDirectory = new File(directory);
         if (!plansDirectory.exists()) {
@@ -405,6 +401,15 @@ public class ModelManager implements Observer {
         }
 
         for (State state : plan.getStates()) {
+            // need to copy temporarily, because "state.removeAbstractPlan" does also remove bindings
+            ArrayList<VariableBinding> bindings = new ArrayList<>(state.getVariableBindings());
+            for (int i = 0; i < bindings.size(); i++) {
+                VariableBinding binding = bindings.get(i);
+                binding.setSubPlan((AbstractPlan) getPlanElement(binding.getSubPlan().getId()));
+                binding.setSubVariable((Variable) getPlanElement(binding.getSubVariable().getId()));
+                binding.setVariable((Variable) getPlanElement(binding.getVariable().getId()));
+            }
+
             // Iterating over a List while modifying it results in an IllegalAccessException. By copying the list
             // beforehand this can be prevented
             for (AbstractPlan abstractPlan : new ArrayList<>(state.getAbstractPlans())) {
@@ -414,17 +419,12 @@ public class ModelManager implements Observer {
                 // The fact, that the dummy is still referenced within the State at this point is irrelevant, because it
                 // has the same id as the real one
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
-
-                for (int i = 0; i < state.getVariableBindings().size(); i++) {
-                    VariableBinding variableBinding = state.getVariableBindings().get(i);
-                    variableBinding.setSubPlan((AbstractPlan) getPlanElement(variableBinding.getSubPlan().getId()));
-                    variableBinding.setSubVariable((Variable) getPlanElement(variableBinding.getSubVariable().getId()));
-                    variableBinding.setVariable((Variable) getPlanElement(variableBinding.getVariable().getId()));
-                }
-
-                ArrayList<VariableBinding> variableBindings = new ArrayList<>(state.getVariableBindings());
                 state.removeAbstractPlan(abstractPlan);
-                variableBindings.forEach(state::addVariableBinding);
+            }
+
+            // here they are inserted again
+            for (int i = 0; i < bindings.size(); i++) {
+                state.addVariableBinding(bindings.get(i));
             }
 
             if(state instanceof TerminalState) {
@@ -960,7 +960,7 @@ public class ModelManager implements Observer {
                         cmd = new DeleteStateInPlan(this, mmq);
                         break;
                     case Types.VARIABLEBINDING:
-                        cmd = new DeleteParametrisation(this, mmq);
+                        cmd = new DeleteVariableBinding(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");

@@ -21,16 +21,7 @@ public class CreateVariableBinding extends Command {
     protected VariableBinding createVariableBinding() {
         VariableBinding variableBinding = new VariableBinding();
 
-        PlanElement tempElement =  modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.PLAN));
-        if (tempElement instanceof AnnotatedPlan) {
-            variableBinding.setSubPlan(((AnnotatedPlan) tempElement).getPlan());
-        } else if (tempElement instanceof Plan) {
-            variableBinding.setSubPlan((Plan) tempElement);
-        } else if (tempElement instanceof PlanType) {
-            variableBinding.setSubPlan((Plan) tempElement);
-        } else {
-            variableBinding.setSubPlan((Behaviour) tempElement);
-        }
+        variableBinding.setSubPlan((AbstractPlan) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.PLAN)));
         variableBinding.setSubVariable((Variable) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.VARIABLEBINDING)));
         variableBinding.setVariable((Variable) modelManager.getPlanElement(mmq.getRelatedObjects().get(Types.VARIABLE)));
 

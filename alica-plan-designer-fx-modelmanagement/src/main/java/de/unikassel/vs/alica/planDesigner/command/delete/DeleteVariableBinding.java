@@ -7,12 +7,12 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-public class DeleteParametrisation extends Command {
+public class DeleteVariableBinding extends Command {
 
     protected VariableBinding variableBinding;
     protected PlanElement parent;
 
-    public DeleteParametrisation(ModelManager modelManager, ModelModificationQuery mmq) {
+    public DeleteVariableBinding(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
         this.variableBinding = (VariableBinding) modelManager.getPlanElement(mmq.getElementId());
         this.parent = modelManager.getPlanElement(mmq.getParentId());

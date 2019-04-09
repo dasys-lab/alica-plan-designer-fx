@@ -48,13 +48,10 @@ public class State extends PlanElement {
     }
     public void addAbstractPlan(AbstractPlan abstractPlan) {
         abstractPlans.add(abstractPlan);
-        // TODO Issue #53 on Github
         this.changeListener.setDirty();
     }
     public void removeAbstractPlan(AbstractPlan abstractPlan) {
         abstractPlans.remove(abstractPlan);
-        // TODO Issue #53 on Github
-
         // iterator in order to avoid concurrent modification exception
         Iterator<VariableBinding> iterator = variableBindings.iterator();
         while ((iterator).hasNext()) {

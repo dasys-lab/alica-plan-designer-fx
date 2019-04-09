@@ -17,7 +17,7 @@ public class JSonSerializer {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
         mapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
-        mapper.addMixIn(VariableBinding.class, ParametrisationMixIn.class);
+        mapper.addMixIn(VariableBinding.class, VariableBindingMixIn.class);
         mapper.addMixIn(AnnotatedPlan.class, AnnotatedPlanMixIn.class);
         mapper.addMixIn(Plan.class, PlanMixIn.class);
         mapper.addMixIn(Quantifier.class, QuantifierMixIn.class);

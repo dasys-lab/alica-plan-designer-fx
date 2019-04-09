@@ -159,7 +159,7 @@ public class ViewModelManager {
 
     private VariableBindingViewModel createParametrisationViewModel(VariableBinding param) {
         VariableBindingViewModel variableBindingViewModel = new VariableBindingViewModel(param.getId(), param.getName(), Types.VARIABLEBINDING);
-        variableBindingViewModel.setSubPlan((PlanViewModel) getViewModelElement(param.getSubPlan()));
+        variableBindingViewModel.setSubPlan((AbstractPlanViewModel) getViewModelElement(param.getSubPlan()));
         variableBindingViewModel.setSubVariable((VariableViewModel) getViewModelElement(param.getSubVariable()));
         variableBindingViewModel.setVariable((VariableViewModel) getViewModelElement(param.getVariable()));
         return variableBindingViewModel;
@@ -421,19 +421,11 @@ public class ViewModelManager {
                 break;
             case Types.VARIABLE:
                 ViewModelElement parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
-                if ( parentViewModel instanceof HasVariablesView) {
-                    ((HasVariablesView) parentViewModel).getVariables().remove(viewModelElement);
-                } else {
-                    throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no variables");
-                }
+                ((AbstractPlanViewModel) parentViewModel).getVariables().remove(viewModelElement);
                 break;
             case Types.VARIABLEBINDING:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
-                if ( parentViewModel instanceof HasVariableBinding) {
-                    ((HasVariableBinding) parentViewModel).getVariableBindings().remove((VariableBindingViewModel) viewModelElement);
-                } else {
-                    throw new RuntimeException(getClass().getSimpleName() + ": Parent ViewModel object has no variableBinding");
-                }
+                ((HasVariableBinding) parentViewModel).getVariableBindings().remove(viewModelElement);
                 break;
             case Types.PRECONDITION:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
@@ -535,16 +527,20 @@ public class ViewModelManager {
                     SerializableViewModel abstractPlanViewModel = (SerializableViewModel) viewModelElement;
                     StateViewModel stateViewModel = (StateViewModel) parentViewModel;
                     stateViewModel.addAbstractPlan(abstractPlanViewModel);
-                }else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
+                } else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
                 }
                 break;
             case Types.VARIABLE:
-                ((HasVariablesView) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                if (parentViewModel instanceof AbstractPlanViewModel) {
+                    ((AbstractPlanViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                } else if (parentViewModel instanceof ConditionViewModel) {
+                    ((ConditionViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                }
                 break;
-            case Types.VARIABLEBINDING: {
+            case Types.VARIABLEBINDING:
                 ((HasVariableBinding) parentViewModel).getVariableBindings().add((VariableBindingViewModel) viewModelElement);
-            } break;
+                break;
             case Types.ABSTRACTPLAN:
                 PlanViewModel planViewModel = (PlanViewModel) viewModelElement;
                 State state = (State) event.getNewValue();
@@ -679,10 +675,6 @@ public class ViewModelManager {
                 break;
             case Types.VARIABLE:
                 parentPlan.getVariables().add((VariableViewModel)element);
-                break;
-            case Types.VARIABLEBINDING:
-                // TODO
-                System.err.println("ViewModelManager: Param not set");
                 break;
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:

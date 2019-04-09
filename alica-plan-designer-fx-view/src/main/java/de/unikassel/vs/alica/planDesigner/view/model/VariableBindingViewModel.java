@@ -1,36 +1,38 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import javafx.beans.property.SimpleObjectProperty;
+
 public class VariableBindingViewModel extends PlanElementViewModel {
 
-    protected PlanViewModel subPlan;
-    protected VariableViewModel subVariable;
-    protected VariableViewModel variable;
+    protected final SimpleObjectProperty<AbstractPlanViewModel> subPlan = new SimpleObjectProperty<>(this, "subPlan", null);
+    protected final SimpleObjectProperty<VariableViewModel> subVariable = new SimpleObjectProperty<>(this, "subVariable", null);
+    protected final SimpleObjectProperty<VariableViewModel> variable = new SimpleObjectProperty<>(this, "variable", null);
 
     public VariableBindingViewModel(long id, String name, String type) {
         super(id, name, type);
     }
 
-    public PlanViewModel getSubPlan() {
-        return subPlan;
+    public AbstractPlanViewModel getSubPlan() {
+        return subPlan.get();
     }
 
-    public void setSubPlan(PlanViewModel subPlan) {
-        this.subPlan = subPlan;
+    public void setSubPlan(AbstractPlanViewModel subPlan) {
+        this.subPlan.set(subPlan);
     }
 
     public VariableViewModel getSubVariable() {
-        return subVariable;
+        return subVariable.get();
     }
 
     public void setSubVariable(VariableViewModel subVariable) {
-        this.subVariable = subVariable;
+        this.subVariable.set(subVariable);
     }
 
     public VariableViewModel getVariable() {
-        return variable;
+        return variable.get();
     }
 
     public void setVariable(VariableViewModel variable) {
-        this.variable = variable;
+        this.variable.set(variable);
     }
 }
