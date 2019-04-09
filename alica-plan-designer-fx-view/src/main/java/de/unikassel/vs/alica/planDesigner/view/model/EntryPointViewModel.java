@@ -20,7 +20,7 @@ public class EntryPointViewModel extends PlanElementViewModel {
         super(id, name, type);
 
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "successRequired", "minCardinality", "maxCardinality"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "successRequired", "minCardinality", "maxCardinality"));
     }
 
     public StateViewModel getState() {
@@ -36,4 +36,8 @@ public class EntryPointViewModel extends PlanElementViewModel {
     public SimpleObjectProperty<TaskViewModel> taskProperty() { return task; }
 
     public void setTask(TaskViewModel task) { this.task.set(task); }
+
+    public boolean isSuccessRequired() {
+        return this.successRequired.get();
+    }
 }
