@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class AbstractPlanViewModel extends SerializableViewModel {
 
-    protected final ObservableList<VariableViewModel> variables = FXCollections.observableArrayList(new ArrayList<>());
+    protected final ObservableList<VariableViewModel> variables = FXCollections.observableArrayList();
 
     public AbstractPlanViewModel(long id, String name, String type) {
         super(id, name, type);

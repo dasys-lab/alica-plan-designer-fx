@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
 
+import com.google.common.collect.ImmutableMap;
 import de.unikassel.vs.alica.planDesigner.controller.UsagesWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
@@ -7,21 +8,30 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.DefaultStringConverter;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RoleSetTab extends EditorTab {
 
-    protected RoleSetViewModel roleSetViewModel;
-    protected RoleListView roleListView;
+    protected RoleSetViewModel      roleSetViewModel;
+    protected RoleListView          roleListView;
     protected TaskPriorityTableView taskTableView;
 
     private ObservableList<TaskPriorityTableElement> taskPriorities = FXCollections.observableArrayList();
@@ -72,6 +82,7 @@ public class RoleSetTab extends EditorTab {
         draw();
     }
 
+
     private void draw() {
         HBox createRoleVisual = createRoleButtonVisual();
         TitledPane roleListVisual = createRoleListVisual();
@@ -105,7 +116,17 @@ public class RoleSetTab extends EditorTab {
         taskTableView.prefHeightProperty().bind(splitPane.heightProperty());
         taskTableView.prefWidthProperty().bind(splitPane.widthProperty());
         taskTableView.setEditable(true);
-        taskTableView.addTasks(roleSetViewModel.getTaskViewModels());
+        taskTableView.addListener(evt -> {
+            String id = String.valueOf(evt.getOldValue());
+            String value = (String) evt.getNewValue();
+            System.out.println(id + " " +value );
+            RoleViewModel roleViewModel = (RoleViewModel)evt.getSource();
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_ELEMENT, Types.ROLE, "taskPriority");
+            event.setRelatedObjects(ImmutableMap.<String, Long>of( value, Long.parseLong(id)));
+            event.setElementId(roleViewModel.getId());
+            guiModificationHandler.handle(event);
+        });
+        taskTableView.addTasks(roleSetViewModel.getTaskRepository().getTaskViewModels());
         return taskTableView;
     }
 

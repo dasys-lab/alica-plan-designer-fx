@@ -32,6 +32,8 @@ public class ExternalRefSerializer extends StdSerializer<PlanElement> {
         } else if (planElement instanceof Task) {
             TaskRepository taskRepository = ((Task) planElement).getTaskRepository();
             jsonGenerator.writeString(Paths.get(taskRepository.getRelativeDirectory(), taskRepository.getName() + ".tsk#" + planElement.getId()).toString());
+        } else if (planElement instanceof RoleSet) {
+            jsonGenerator.writeNumber(planElement.getId());
         } else if (planElement instanceof Variable) {
             // special case for external reference to variable from within a variable binding
             SerializablePlanElement parent = ((VariableBinding)jsonGenerator.getCurrentValue()).getSubPlan();

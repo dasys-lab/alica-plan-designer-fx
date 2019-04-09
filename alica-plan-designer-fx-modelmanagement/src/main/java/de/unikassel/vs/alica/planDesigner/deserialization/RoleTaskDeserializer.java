@@ -10,16 +10,18 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Task;
 
 import java.io.IOException;
 
-public class RoleSetRoles2Deserializer extends StdDeserializer<Task> {
+public class RoleTaskDeserializer extends KeyDeserializer {
 
 
-    protected RoleSetRoles2Deserializer(StdDeserializer<?> src) {
-        super(src);
-    }
+//    @Override
+//    public Task deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+//        System.out.println("RTDeS: deserializeKey not implemented");
+//        return null;
+//    }
 
     @Override
-    public Task deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        System.out.println("RSR2D: deserializeKey not implemented");
+    public Object deserializeKey(String s, DeserializationContext deserializationContext) throws IOException {
+        System.err.println("RTDeS: deserializeKey not implemented");
         return null;
     }
 }

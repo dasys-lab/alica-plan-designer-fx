@@ -8,10 +8,7 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.AddAbstractPlan;
 import de.unikassel.vs.alica.planDesigner.command.add.AddTaskToEntryPoint;
 import de.unikassel.vs.alica.planDesigner.command.add.AddVariableToCondition;
-import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
-import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
+import de.unikassel.vs.alica.planDesigner.command.change.*;
 import de.unikassel.vs.alica.planDesigner.command.create.*;
 import de.unikassel.vs.alica.planDesigner.command.delete.*;
 import de.unikassel.vs.alica.planDesigner.command.remove.RemoveAbstractPlanFromState;
@@ -709,6 +706,7 @@ public class ModelManager implements Observer {
 
         ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, elementType);
         event.setChangedAttribute(attribute);
+
         try {
             // Using PropertyUtils instead of BeanUtils to get the actual Object and not just its String-representation
             event.setNewValue(PropertyUtils.getProperty(planElement, attribute));
@@ -784,6 +782,7 @@ public class ModelManager implements Observer {
 
     private HashSet<Plan> getRoleSetUsages(PlanElement planElement) {
         // TODO: implement functionality
+        System.out.println("MM: getRoleSetUsages " + planElement.getName());
         HashSet<Plan> usages = new HashSet<>();
         return usages;
     }
@@ -1109,6 +1108,9 @@ public class ModelManager implements Observer {
                     case Types.SYNCTRANSITION:
                         cmd = new ConnectSynchronizationWithTransition(this, mmq);
                         break;
+                    case Types.ROLE:
+                        cmd = new ChangeTaskPriority(this, mmq);
+                        break;
                     default:
                         cmd = new ChangeAttributeValue(this, mmq);
                         break;
@@ -1170,6 +1172,8 @@ public class ModelManager implements Observer {
             // Setting the values in the elementsSaved map at the beginning,
             // because otherwise listeners may react before values are updated
             if (!movedOrCreated) {
+                //TODO: Refactoring
+
                 // the counter is set to 2 because, saving an element always creates two filesystem modified events
                 int counter = 2;
                 // when a plan is saved it needs to be 4 however, because the stateUiElement is saved as well

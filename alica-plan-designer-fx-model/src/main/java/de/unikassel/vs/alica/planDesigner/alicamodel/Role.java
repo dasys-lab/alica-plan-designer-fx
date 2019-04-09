@@ -1,5 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -18,17 +21,17 @@ public class Role extends PlanElement {
         this.id = id;
     }
 
-    public float getPriority(long taskID) {
+    public Float getPriority(long taskID) {
         Optional<Task> task = taskPriorities.keySet().stream().filter(t -> t.getId() == taskID).findFirst();
-        return taskPriorities.get(task.get());
+        return task.isPresent()? taskPriorities.get(task.get()): null;
     }
-    public float getPriority(Task task) {return taskPriorities.get(task); }
+    public Float getPriority(Task task) {return taskPriorities.get(task); }
 
     public HashMap<Task, Float> getTaskPriorities() {
         return this.taskPriorities;
     }
 
-    public void addTaskIDPriority(Task task , float priority) {
+    public void addTaskPriority(Task task, float priority) {
         this.taskPriorities.put(task, priority);
     }
 
@@ -45,7 +48,8 @@ public class Role extends PlanElement {
     }
 
     public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
-        comment.addListener(listener);
-        name.addListener(listener);
+        this.name.addListener(listener);
+        this.comment.addListener(listener);
+        this.characteristics.forEach(c -> c.addListener(listener));
     }
 }

@@ -1,17 +1,21 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
 public class RoleViewModel extends PlanElementViewModel {
 
     private RoleSetViewModel roleSetViewModel;
-    private HashMap<TaskViewModel, Float> taskPriorities;
+    private ObservableMap<TaskViewModel, Float> taskPriorities;
 
     public RoleViewModel (long id, String name, String type) {
         super(id, name, type);
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment"));
     }
 
     public RoleSetViewModel getRoleSetViewModel() {
@@ -22,8 +26,19 @@ public class RoleViewModel extends PlanElementViewModel {
         this.roleSetViewModel = roleSetViewModel;
     }
 
-    public void setTaskPriorities(HashMap<TaskViewModel, Float> taskPriorities) {
+    public void setTaskPriorities(ObservableMap<TaskViewModel, Float> taskPriorities) {
         this.taskPriorities = taskPriorities;
+    }
+    public void setTaskPriority(HashMap<Long, Float> taskPriorities) {
+        this.taskPriorities.clear();
+        ObservableList<TaskViewModel> taskViewModels = this.getRoleSetViewModel().getTaskRepository().getTaskViewModels();
+
+        taskPriorities.forEach((t, p) -> {
+            taskViewModels.forEach(tvm -> {
+                if (tvm.getId() == t)
+                    this.taskPriorities.put(tvm, p);
+            });
+        });
     }
 
     public Float getTaskPriority(long taskID) {
@@ -32,9 +47,13 @@ public class RoleViewModel extends PlanElementViewModel {
 
     }
 
-    public void registerListener(IGuiModificationHandler handler) {
-        super.registerListener(handler);
-    }
+//    public void registerListener(IGuiModificationHandler handler) {
+//        super.registerListener(handler);
+//        this.taskPriorities.addListener((MapChangeListener<TaskViewModel, Float>) change -> {
+////            fireGUIAttributeChangeEvent(handler, change, "TaskPriority", change.getKey().getName());
+//            fireGUIAttributeChangeEvent(handler, change, taskPriorities.getClass().getSimpleName(), "taskPriorities");
+//        });
+//    }
 
     public void setTaskPriority(TaskViewModel task, float priority) {
 
@@ -43,7 +62,7 @@ public class RoleViewModel extends PlanElementViewModel {
         }
     }
 
-    public HashMap<TaskViewModel, Float> getTaskPriorities() {
+    public ObservableMap<TaskViewModel, Float> getTaskPriorities() {
         return taskPriorities;
     }
 }

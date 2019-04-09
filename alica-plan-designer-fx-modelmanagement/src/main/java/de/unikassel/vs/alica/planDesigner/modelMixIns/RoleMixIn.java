@@ -4,22 +4,22 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.unikassel.vs.alica.planDesigner.alicamodel.RoleSet;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Task;
-import de.unikassel.vs.alica.planDesigner.deserialization.RoleSetRoles2Deserializer;
-import de.unikassel.vs.alica.planDesigner.deserialization.RoleSetRolesDeserializer;
+import de.unikassel.vs.alica.planDesigner.deserialization.RoleDeserializer;
+import de.unikassel.vs.alica.planDesigner.deserialization.RoleTaskDeserializer;
+import de.unikassel.vs.alica.planDesigner.serialization.ExternalRefSerializer;
 import de.unikassel.vs.alica.planDesigner.serialization.InternalRefKeySerializer;
 import de.unikassel.vs.alica.planDesigner.serialization.InternalRefSerializer;
-
 import java.util.HashMap;
 
 public abstract class RoleMixIn {
     @JsonSerialize(using = InternalRefSerializer.class)
     protected RoleSet roleSet;
 
-    @JsonSerialize(keyUsing = InternalRefSerializer.class)
-    @JsonDeserialize(keyUsing = RoleSetRolesDeserializer.class)
+    //@JsonSerialize(using = InternalRefSerializer.class)
+    @JsonDeserialize(using = RoleDeserializer.class)
     protected HashMap<Task, Float> taskPriorities;
 
-    @JsonSerialize(using = InternalRefKeySerializer.class)
-    @JsonDeserialize(using = RoleSetRoles2Deserializer.class)
+    @JsonSerialize(keyUsing = ExternalRefSerializer.class)
+    @JsonDeserialize(keyUsing = RoleTaskDeserializer.class)
     protected Task task;
 }

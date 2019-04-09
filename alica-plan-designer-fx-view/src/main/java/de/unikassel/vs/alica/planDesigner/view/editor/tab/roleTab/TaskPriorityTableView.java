@@ -3,14 +3,21 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
 import de.unikassel.vs.alica.planDesigner.view.model.RoleViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.EventListener;
 
 public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElement> {
 
     private RoleViewModel currentRole;
     private float priorityDefault;
+    private PropertyChangeListener eventListener;
 
     public TaskPriorityTableView(float priorityDefault) {
         super();
@@ -38,20 +45,22 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
     public void addTasks(ObservableList<TaskViewModel> taskViewModels) {
         ObservableList<TaskPriorityTableElement> taskPriorities = FXCollections.observableArrayList();
         taskViewModels.forEach(taskViewModel -> {
-            TaskPriorityTableElement taskPriority = new TaskPriorityTableElement(taskViewModel, String.valueOf(priorityDefault));
-            taskPriority.addListener(observable -> {
-                currentRole.setTaskPriority(taskPriority.getTask(),
-                           Float.valueOf(((SimpleStringProperty)observable).getValue()));
-                System.out.println("TPTV: " + taskPriority.getTask().getName() + " value:" + ((SimpleStringProperty)observable).getValue()
-                        + " modified priorities:" + currentRole.getTaskPriorities().size() );
-            });
+            TaskPriorityTableElement taskPriority = new TaskPriorityTableElement(this, taskViewModel, String.valueOf(priorityDefault));
+            taskPriority.addListener(this.eventListener);
             taskPriorities.add(taskPriority);
         });
         this.setItems(taskPriorities);
+    }
 
+    public void addListener(PropertyChangeListener eventListener) {
+        this.eventListener = eventListener;
     }
 
     public void setPriorityDefault(float priorityDefault) {
         this.priorityDefault = priorityDefault;
+    }
+
+    public RoleViewModel getCurrentRole() {
+        return currentRole;
     }
 }

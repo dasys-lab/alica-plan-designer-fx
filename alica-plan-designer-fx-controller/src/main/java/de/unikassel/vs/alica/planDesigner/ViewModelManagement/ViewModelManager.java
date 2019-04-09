@@ -10,7 +10,9 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,6 +23,8 @@ public class ViewModelManager {
     protected ModelManager modelManager;
     protected IGuiModificationHandler guiModificationHandler;
     protected Map<Long, ViewModelElement> viewModelElements;
+
+    private TaskRepositoryViewModel taskRepositoryViewModel;
 
     public ViewModelManager(ModelManager modelManager, IGuiModificationHandler handler) {
         this.modelManager = modelManager;
@@ -122,12 +126,18 @@ public class ViewModelManager {
         for (Role role : roleSet.getRoles()) {
             roleSetViewModel.addRole((RoleViewModel) getViewModelElement(role));
         }
-
-        for (Task task : this.modelManager.getTasks()) {
-            roleSetViewModel.addTask( (TaskViewModel) this.viewModelElements.get(task.getId()));
-        }
-
+        roleSetViewModel.setTaskRepository(this.getTaskRepositoryViewModel());
         return roleSetViewModel;
+    }
+
+    public TaskRepositoryViewModel getTaskRepositoryViewModel() {
+
+        if (this.taskRepositoryViewModel == null) {
+            this.taskRepositoryViewModel =
+                    (TaskRepositoryViewModel) this.viewModelElements.values().stream()
+                            .filter(viewModelElement -> viewModelElement instanceof TaskRepositoryViewModel).findFirst().get();
+        }
+        return this.taskRepositoryViewModel;
     }
 
     private TaskViewModel createTaskViewModel(Task task) {
@@ -140,7 +150,7 @@ public class ViewModelManager {
 
     private RoleViewModel createRoleViewModel(Role role) {
         RoleViewModel roleViewModel = new RoleViewModel(role.getId(), role.getName(), Types.ROLE);
-        HashMap<TaskViewModel, Float> taskPriorities = new HashMap<>();
+        ObservableMap<TaskViewModel, Float> taskPriorities = FXCollections.observableHashMap();
 
         for (Task task: role.getTaskPriorities().keySet()) {
             TaskViewModel taskViewModel = (TaskViewModel)this.getViewModelElement(task);
@@ -767,7 +777,7 @@ public class ViewModelManager {
 
     public void changeElementAttribute(ViewModelElement viewModelElement, String changedAttribute, Object newValue) {
         try {
-            BeanUtils.setProperty(viewModelElement, changedAttribute,newValue);
+            BeanUtils.setProperty(viewModelElement, changedAttribute, newValue);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
