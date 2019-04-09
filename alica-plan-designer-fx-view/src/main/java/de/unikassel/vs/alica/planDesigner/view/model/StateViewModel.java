@@ -25,7 +25,7 @@ public class StateViewModel extends PlanElementViewModel implements HasVariableB
         this.postCondition = new SimpleObjectProperty<>();
 
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment"));
     }
 
     public ObservableList<PlanElementViewModel> getAbstractPlans() {

@@ -20,7 +20,7 @@ public class TransitionViewModel extends PlanElementViewModel {
         this.bendpoints = FXCollections.observableArrayList(new LinkedList<BendPointViewModel>());
 
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "instate", "outState", "preCondition"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "inState", "outState"));
     }
 
     public StateViewModel getInState() {

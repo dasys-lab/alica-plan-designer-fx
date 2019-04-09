@@ -1,8 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 
 import java.util.Arrays;
 
@@ -40,4 +38,20 @@ public class EntryPointViewModel extends PlanElementViewModel {
     public boolean isSuccessRequired() {
         return this.successRequired.get();
     }
+
+    public final SimpleBooleanProperty successRequiredProperty() {return successRequired; }
+    public void setSuccessRequired(boolean successRequired) {
+        this.successRequired.setValue(successRequired);
+    }
+    public boolean getSuccessRequired() {
+        return successRequired.get();
+    }
+
+    public final SimpleIntegerProperty minCardinalityProperty() {return minCardinality; }
+    public void setMinCardinality(int minCardinality) {this.minCardinality.setValue(minCardinality);}
+    public int getMinCardinality() {return minCardinality.get();}
+
+    public final SimpleIntegerProperty maxCardinalityProperty() {return maxCardinality; }
+    public void setMaxCardinality(int maxCardinality) {this.maxCardinality.setValue(maxCardinality);}
+    public int getMaxCardinality() {return maxCardinality.get();}
 }

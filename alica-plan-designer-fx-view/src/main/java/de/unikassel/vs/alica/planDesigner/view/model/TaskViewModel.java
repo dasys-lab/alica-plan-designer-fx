@@ -8,7 +8,7 @@ public class TaskViewModel extends PlanElementViewModel {
         super(id, name, type);
 
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment"));
     }
 
     public TaskRepositoryViewModel getTaskRepositoryViewModel() {
