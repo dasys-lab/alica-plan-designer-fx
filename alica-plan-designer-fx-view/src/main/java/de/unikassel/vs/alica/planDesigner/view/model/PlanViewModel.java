@@ -15,10 +15,12 @@ public class PlanViewModel extends SerializableViewModel implements HasVariables
     protected final DoubleProperty utilityThreshold = new SimpleDoubleProperty(null, "utilityThreshold", 0.5);
     protected final ObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(null, Types.PRECONDITION, null);
     protected final ObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(null, Types.RUNTIMECONDITION, null);
+
     protected final ObservableList<EntryPointViewModel> entryPoints = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<StateViewModel> states = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<TransitionViewModel> transitions = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<SynchronisationViewModel> synchronisations = FXCollections.observableArrayList(new ArrayList<>());
+
     protected final ObservableList<VariableViewModel> variables = FXCollections.observableArrayList(new ArrayList<>());
 
     public PlanViewModel(long id, String name, String type) {

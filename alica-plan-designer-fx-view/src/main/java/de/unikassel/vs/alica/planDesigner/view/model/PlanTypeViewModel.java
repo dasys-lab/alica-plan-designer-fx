@@ -8,7 +8,7 @@ public class PlanTypeViewModel extends SerializableViewModel implements HasVaria
     private ObservableList<PlanViewModel> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
     private ObservableList<VariableViewModel> variables;
-    private ObservableList<VariableBindingViewModel> parametrisations;
+    private ObservableList<VariableBindingViewModel> variableBindings;
 
 
     public PlanTypeViewModel(long id, String name, String type) {
@@ -16,7 +16,7 @@ public class PlanTypeViewModel extends SerializableViewModel implements HasVaria
         allPlans = FXCollections.observableArrayList();
         plansInPlanType = FXCollections.observableArrayList();
         variables = FXCollections.observableArrayList();
-        parametrisations = FXCollections.observableArrayList();
+        variableBindings = FXCollections.observableArrayList();
     }
 
     public void addPlanToAllPlans(PlanViewModel plan) {
@@ -65,17 +65,17 @@ public class PlanTypeViewModel extends SerializableViewModel implements HasVaria
     }
 
     public ObservableList<VariableBindingViewModel> getVariableBindings() {
-        return parametrisations;
+        return variableBindings;
     }
 
     public void addVariableBinding(VariableBindingViewModel binding) {
-        if(!this.parametrisations.contains(binding)) {
-            this.parametrisations.add(binding);
+        if(!this.variableBindings.contains(binding)) {
+            this.variableBindings.add(binding);
         }
     }
 
     public void removeVariableBinding(VariableBindingViewModel binding) {
-        this.parametrisations.remove(binding);
+        this.variableBindings.remove(binding);
     }
 
     @Override
