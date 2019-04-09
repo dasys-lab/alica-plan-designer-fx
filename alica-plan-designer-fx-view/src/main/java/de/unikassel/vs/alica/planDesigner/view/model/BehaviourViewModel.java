@@ -10,10 +10,8 @@ import java.util.Arrays;
 
 public class BehaviourViewModel  extends AbstractPlanViewModel {
 
-    protected SimpleIntegerProperty frequency = new SimpleIntegerProperty();
-    protected SimpleLongProperty deferring = new SimpleLongProperty();
-
-    protected ObservableList<VariableViewModel> variables;
+    protected SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
+    protected SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
 
     protected final SimpleObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
     protected final SimpleObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
@@ -21,7 +19,6 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
-        variables = FXCollections.observableArrayList(new ArrayList<>());
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
@@ -49,11 +46,6 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     public IntegerProperty frequencyProperty() {
         return frequency;
-    }
-
-    @Override
-    public ObservableList<VariableViewModel> getVariables() {
-        return variables;
     }
 
     public ObjectProperty<ConditionViewModel> preConditionProperty(){

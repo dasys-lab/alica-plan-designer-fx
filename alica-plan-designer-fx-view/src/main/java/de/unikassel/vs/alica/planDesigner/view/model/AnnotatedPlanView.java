@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class AnnotatedPlanView extends ViewModelElement {
 
     protected final SimpleBooleanProperty activated = new SimpleBooleanProperty(this, "activated", false);
-    protected final SimpleLongProperty planId = new SimpleLongProperty(this, "planId", 0);
+    protected final SimpleLongProperty planId = new SimpleLongProperty(this, "planId", 0L);
 
     public AnnotatedPlanView(long id, String name, String type, boolean activated, long planId) {
         super(id, name, type);

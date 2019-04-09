@@ -6,12 +6,12 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class EntryPoint extends PlanElement {
 
-    protected final SimpleBooleanProperty successRequired = new SimpleBooleanProperty();
-    protected final SimpleIntegerProperty minCardinality = new SimpleIntegerProperty();
-    protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty();
-    protected final SimpleObjectProperty<Task> task = new SimpleObjectProperty<>();
-    protected final SimpleObjectProperty<State> state = new SimpleObjectProperty<>();
-    protected final SimpleObjectProperty<Plan> plan = new SimpleObjectProperty<>();
+    protected final SimpleBooleanProperty successRequired = new SimpleBooleanProperty(this, "successRequired", false);
+    protected final SimpleIntegerProperty minCardinality = new SimpleIntegerProperty(this, "minCardinality", 0);
+    protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty(this, "minCardinality", 0);
+    protected final SimpleObjectProperty<Task> task = new SimpleObjectProperty<>(this, "task", null);
+    protected final SimpleObjectProperty<State> state = new SimpleObjectProperty<>(this, "state", null);
+    protected final SimpleObjectProperty<Plan> plan = new SimpleObjectProperty<>(this, "plan", null);
 
 
     public boolean getSuccessRequired() {

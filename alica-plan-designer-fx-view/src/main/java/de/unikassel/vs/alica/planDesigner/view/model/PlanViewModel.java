@@ -11,10 +11,10 @@ import java.util.Arrays;
 
 public class PlanViewModel extends AbstractPlanViewModel {
 
-    protected final BooleanProperty masterPlan = new SimpleBooleanProperty(null, "masterPlan", false);
-    protected final DoubleProperty utilityThreshold = new SimpleDoubleProperty(null, "utilityThreshold", 0.5);
-    protected final ObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(null, Types.PRECONDITION, null);
-    protected final ObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(null, Types.RUNTIMECONDITION, null);
+    protected final SimpleBooleanProperty masterPlan = new SimpleBooleanProperty(null, "masterPlan", false);
+    protected final SimpleDoubleProperty utilityThreshold = new SimpleDoubleProperty(null, "utilityThreshold", 0.5);
+    protected final SimpleObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(null, Types.PRECONDITION, null);
+    protected final SimpleObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(null, Types.RUNTIMECONDITION, null);
 
     protected final ObservableList<EntryPointViewModel> entryPoints = FXCollections.observableArrayList(new ArrayList<>());
     protected final ObservableList<StateViewModel> states = FXCollections.observableArrayList(new ArrayList<>());

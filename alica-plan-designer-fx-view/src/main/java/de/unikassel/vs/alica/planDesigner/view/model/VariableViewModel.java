@@ -4,12 +4,17 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.Arrays;
+
 public class VariableViewModel extends PlanElementViewModel {
 
     protected final StringProperty variableType = new SimpleStringProperty(null, "variableType", "");
 
     public VariableViewModel(long id, String name, String elementType) {
         super(id, name, elementType);
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "variableType"));
     }
 
     public final StringProperty variableTypeProperty() {

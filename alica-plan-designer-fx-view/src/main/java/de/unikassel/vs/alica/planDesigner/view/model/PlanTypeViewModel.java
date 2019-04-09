@@ -3,11 +3,12 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.Arrays;
+
 public class PlanTypeViewModel extends AbstractPlanViewModel implements HasVariableBinding {
 
     private ObservableList<PlanViewModel> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
-    private ObservableList<VariableViewModel> variables;
     private ObservableList<VariableBindingViewModel> variableBindings;
 
 
@@ -15,8 +16,10 @@ public class PlanTypeViewModel extends AbstractPlanViewModel implements HasVaria
         super(id, name, type);
         allPlans = FXCollections.observableArrayList();
         plansInPlanType = FXCollections.observableArrayList();
-        variables = FXCollections.observableArrayList();
         variableBindings = FXCollections.observableArrayList();
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
     }
 
     public void addPlanToAllPlans(PlanViewModel plan) {
@@ -76,10 +79,5 @@ public class PlanTypeViewModel extends AbstractPlanViewModel implements HasVaria
 
     public void removeVariableBinding(VariableBindingViewModel binding) {
         this.variableBindings.remove(binding);
-    }
-
-    @Override
-    public ObservableList<VariableViewModel> getVariables() {
-        return variables;
     }
 }

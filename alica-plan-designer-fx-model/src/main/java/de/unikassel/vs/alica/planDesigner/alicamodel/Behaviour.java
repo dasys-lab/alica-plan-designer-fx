@@ -5,8 +5,8 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 public class Behaviour extends AbstractPlan {
-    protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
-    protected final SimpleLongProperty deferring = new SimpleLongProperty(this, "deffering", 0);
+    protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
+    protected final SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
 
     protected SimpleObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();

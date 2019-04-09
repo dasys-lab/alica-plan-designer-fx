@@ -11,16 +11,16 @@ public class EntryPointViewModel extends PlanElementViewModel {
     protected final SimpleBooleanProperty successRequired = new SimpleBooleanProperty(this, "successRequired", false);
     protected final SimpleIntegerProperty minCardinality = new SimpleIntegerProperty(this, "minCardinality", 0);
     protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty(this, "maxCardinality", 0);
-    protected final SimpleObjectProperty<TaskViewModel> task = new SimpleObjectProperty<>();
-    protected final SimpleObjectProperty<StateViewModel> state = new SimpleObjectProperty<>();
-    protected final SimpleObjectProperty<PlanViewModel> plan = new SimpleObjectProperty<>();
+    protected final SimpleObjectProperty<TaskViewModel> task = new SimpleObjectProperty<>(this, "task", null);
+    protected final SimpleObjectProperty<StateViewModel> state = new SimpleObjectProperty<>(this, "state", null);
+    protected final SimpleObjectProperty<PlanViewModel> plan = new SimpleObjectProperty<>(this, "plan", null);
 
     public EntryPointViewModel(long id, String name, String type) {
 
         super(id, name, type);
 
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "succesRequired", "minCardinality", "maxCardinality"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "successRequired", "minCardinality", "maxCardinality"));
     }
 
     public StateViewModel getState() {

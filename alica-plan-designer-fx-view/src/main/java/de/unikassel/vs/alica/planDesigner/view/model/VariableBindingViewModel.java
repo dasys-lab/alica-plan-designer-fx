@@ -2,6 +2,8 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.util.Arrays;
+
 public class VariableBindingViewModel extends PlanElementViewModel {
 
     protected final SimpleObjectProperty<AbstractPlanViewModel> subPlan = new SimpleObjectProperty<>(this, "subPlan", null);
@@ -10,6 +12,9 @@ public class VariableBindingViewModel extends PlanElementViewModel {
 
     public VariableBindingViewModel(long id, String name, String type) {
         super(id, name, type);
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
     }
 
     public AbstractPlanViewModel getSubPlan() {
