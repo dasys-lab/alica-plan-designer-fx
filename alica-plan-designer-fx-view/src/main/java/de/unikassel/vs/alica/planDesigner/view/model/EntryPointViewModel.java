@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import javafx.beans.property.*;
 
 import java.util.Arrays;
@@ -19,6 +20,19 @@ public class EntryPointViewModel extends PlanElementViewModel {
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "successRequired", "minCardinality", "maxCardinality"));
+    }
+
+    public void registerListener(IGuiModificationHandler handler) {
+        super.registerListener(handler);
+        successRequired.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, successRequired.getClass().getSimpleName(), successRequired.getName());
+        });
+        minCardinality.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, minCardinality.getClass().getSimpleName(), minCardinality.getName());
+        });
+        maxCardinality.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, maxCardinality.getClass().getSimpleName(), maxCardinality.getName());
+        });
     }
 
     public StateViewModel getState() {

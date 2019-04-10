@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -22,6 +23,16 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
+    }
+
+    public void registerListener(IGuiModificationHandler handler) {
+        super.registerListener(handler);
+        frequency.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, frequency.getClass().getSimpleName(), frequency.getName());
+        });
+        deferring.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, deferring.getClass().getSimpleName(), deferring.getName());
+        });
     }
 
     public void setDeferring(long deferring) {
