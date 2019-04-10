@@ -15,11 +15,11 @@ public abstract class RoleMixIn {
     @JsonSerialize(using = InternalRefSerializer.class)
     protected RoleSet roleSet;
 
-    //@JsonSerialize(using = InternalRefSerializer.class)
+    @JsonSerialize(keyUsing = ExternalRefSerializer.class)
     @JsonDeserialize(using = RoleDeserializer.class)
     protected HashMap<Task, Float> taskPriorities;
 
-    @JsonSerialize(keyUsing = ExternalRefSerializer.class)
-    @JsonDeserialize(keyUsing = RoleTaskDeserializer.class)
-    protected Task task;
+//    @JsonSerialize(using = ExternalRefSerializer.class)
+//    @JsonDeserialize(using = RoleTaskDeserializer.class)
+//    protected Task task;
 }

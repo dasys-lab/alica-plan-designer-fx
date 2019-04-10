@@ -31,7 +31,7 @@ public class ExternalRefSerializer extends StdSerializer<PlanElement> {
             jsonGenerator.writeString(Paths.get(((SerializablePlanElement)planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.TASKREPOSITORY + "#" + planElement.getId()).toString());
         } else if (planElement instanceof Task) {
             TaskRepository taskRepository = ((Task) planElement).getTaskRepository();
-            jsonGenerator.writeString(Paths.get(taskRepository.getRelativeDirectory(), taskRepository.getName() + ".tsk#" + planElement.getId()).toString());
+            jsonGenerator.writeString(Paths.get(taskRepository.getRelativeDirectory(), taskRepository.getName() + "." + Extensions.TASKREPOSITORY + "#" + planElement.getId()).toString());
         } else if (planElement instanceof RoleSet) {
             jsonGenerator.writeNumber(planElement.getId());
         } else if (planElement instanceof Variable) {
