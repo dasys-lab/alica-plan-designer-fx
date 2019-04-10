@@ -3,15 +3,10 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
 import de.unikassel.vs.alica.planDesigner.view.model.RoleViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.EventListener;
 
 public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElement> {
 
@@ -30,7 +25,6 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
     }
 
     private void updateCells() {
-
         for (Object item : this.getItems()) {
             Float taskPriority = currentRole.getTaskPriority(((TaskPriorityTableElement) item).getTaskID());
             taskPriority = taskPriority == null ? priorityDefault : taskPriority;
