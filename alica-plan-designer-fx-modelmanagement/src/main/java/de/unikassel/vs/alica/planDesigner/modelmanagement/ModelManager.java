@@ -1108,7 +1108,7 @@ public class ModelManager implements Observer {
                     case Types.SYNCTRANSITION:
                         cmd = new ConnectSynchronizationWithTransition(this, mmq);
                         break;
-                    case Types.ROLE:
+                    case Types.ROLE_TASK_PROPERTY:
                         cmd = new ChangeTaskPriority(this, mmq);
                         break;
                     default:

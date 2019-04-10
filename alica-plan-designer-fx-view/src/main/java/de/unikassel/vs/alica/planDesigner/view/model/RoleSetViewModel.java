@@ -13,23 +13,23 @@ import java.util.Arrays;
 public class RoleSetViewModel extends SerializableViewModel {
 
     private ObservableList<RoleViewModel> roles;
-    private FloatProperty priorityDefault;
+    private FloatProperty defaultPriority;
     private TaskRepositoryViewModel taskRepository;
 
-    public RoleSetViewModel(long id, String name, String type, float priorityDefault) {
+    public RoleSetViewModel(long id, String name, String type, float defaultPriority) {
         super(id, name, type);
-        this.priorityDefault  = new SimpleFloatProperty(null, "priorityDefault", 0.01f);
-        this.priorityDefault.setValue(priorityDefault);
+        this.defaultPriority = new SimpleFloatProperty(null, "defaultPriority", 0.01f);
+        this.defaultPriority.setValue(defaultPriority);
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "priorityDefault"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "defaultPriority", "defaultRoleSet"));
 
         roles = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public void registerListener(IGuiModificationHandler handler) {
         super.registerListener(handler);
-        priorityDefault.addListener((observable, oldValue, newValue) -> {
-            fireGUIAttributeChangeEvent(handler, newValue, priorityDefault.getClass().getSimpleName(), priorityDefault.getName());
+        defaultPriority.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, defaultPriority.getClass().getSimpleName(), defaultPriority.getName());
         });
     }
 
@@ -48,16 +48,15 @@ public class RoleSetViewModel extends SerializableViewModel {
         }
     }
 
-    public FloatProperty priorityDefaultProperty() {
-        return priorityDefault;
+    public FloatProperty getDefaultPriorityProperty() {
+        return defaultPriority;
     }
 
-    public float getPriorityDefault() {
-        return priorityDefault.get();
+    public float getDefaultPriority() {
+        return defaultPriority.get();
     }
-
-    public void setPriorityDefault(float priorityDefault) {
-        this.priorityDefault.set(priorityDefault);
+    public void setDefaultPriority(float defaultPriority) {
+        this.defaultPriority.set(defaultPriority);
     }
 
     public ObservableList<RoleViewModel> getRoleViewModels() {

@@ -11,12 +11,13 @@ import java.beans.PropertyChangeListener;
 public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElement> {
 
     private RoleViewModel currentRole;
-    private float priorityDefault;
+    private float defaultPriority;
+    private boolean defaultRoleSet;
     private PropertyChangeListener eventListener;
 
-    public TaskPriorityTableView(float priorityDefault) {
+    public TaskPriorityTableView(float defaultPriority) {
         super();
-        this.priorityDefault = priorityDefault;
+        this.defaultPriority = defaultPriority;
     }
 
     public void updateSelectedRole(RoleViewModel item) {
@@ -27,7 +28,7 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
     private void updateCells() {
         for (Object item : this.getItems()) {
             Float taskPriority = currentRole.getTaskPriority(((TaskPriorityTableElement) item).getTaskID());
-            taskPriority = taskPriority == null ? priorityDefault : taskPriority;
+            taskPriority = taskPriority == null ? defaultPriority : taskPriority;
             ((TaskPriorityTableElement) item).setPriority(String.valueOf(taskPriority));
         }
     }
@@ -39,7 +40,7 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
     public void addTasks(ObservableList<TaskViewModel> taskViewModels) {
         ObservableList<TaskPriorityTableElement> taskPriorities = FXCollections.observableArrayList();
         taskViewModels.forEach(taskViewModel -> {
-            TaskPriorityTableElement taskPriority = new TaskPriorityTableElement(this, taskViewModel, String.valueOf(priorityDefault));
+            TaskPriorityTableElement taskPriority = new TaskPriorityTableElement(this, taskViewModel, String.valueOf(defaultPriority));
             taskPriority.addListener(this.eventListener);
             taskPriorities.add(taskPriority);
         });
@@ -50,9 +51,19 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
         this.eventListener = eventListener;
     }
 
-    public void setPriorityDefault(float priorityDefault) {
-        this.priorityDefault = priorityDefault;
+    public float getDefaultPriority() {
+        return defaultPriority;
     }
+    public void setDefaultPriority(float defaultPriority) {
+        this.defaultPriority = defaultPriority;
+    }
+    public boolean getDefaultRoleSet() {
+        return defaultRoleSet;
+    }
+    public void setDefaultRoleSet(boolean defaultRoleSet) {
+        this.defaultRoleSet = defaultRoleSet;
+    }
+
 
     public RoleViewModel getCurrentRole() {
         return currentRole;

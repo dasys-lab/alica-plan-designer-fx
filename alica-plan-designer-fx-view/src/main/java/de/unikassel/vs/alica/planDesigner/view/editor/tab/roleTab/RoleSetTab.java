@@ -110,7 +110,7 @@ public class RoleSetTab extends EditorTab {
     }
 
     private TaskPriorityTableView createTaskPriorityTableVisual() {
-        taskTableView = new TaskPriorityTableView(roleSetViewModel.getPriorityDefault());
+        taskTableView = new TaskPriorityTableView(roleSetViewModel.getDefaultPriority());
         taskTableView.addColumn(i18NRepo.getString("label.caption.tasks"), "taskName",new DefaultStringConverter(), false);
         taskTableView.addColumn(i18NRepo.getString("label.caption.priorities"), "priority",new DefaultStringConverter(), true);
         taskTableView.prefHeightProperty().bind(splitPane.heightProperty());
@@ -121,7 +121,7 @@ public class RoleSetTab extends EditorTab {
             String value = (String) evt.getNewValue();
             System.out.println(id + " " +value );
             RoleViewModel roleViewModel = (RoleViewModel)evt.getSource();
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_ELEMENT, Types.ROLE, "taskPriority");
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_ELEMENT, Types.ROLE_TASK_PROPERTY, "taskPriority");
             event.setRelatedObjects(ImmutableMap.<String, Long>of( value, Long.parseLong(id)));
             event.setElementId(roleViewModel.getId());
             guiModificationHandler.handle(event);

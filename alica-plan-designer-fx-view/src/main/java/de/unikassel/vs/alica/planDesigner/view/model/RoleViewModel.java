@@ -57,7 +57,7 @@ public class RoleViewModel extends PlanElementViewModel {
 
     public void setTaskPriority(TaskViewModel task, float priority) {
 
-        if(priority != roleSetViewModel.getPriorityDefault()) {
+        if(priority != roleSetViewModel.getDefaultPriority()) {
             taskPriorities.put(task, priority);
         }
     }
