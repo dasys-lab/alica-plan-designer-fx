@@ -1,9 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -14,12 +12,15 @@ public class RoleSetViewModel extends SerializableViewModel {
 
     private ObservableList<RoleViewModel> roles;
     private FloatProperty defaultPriority;
+    private BooleanProperty defaultRoleSet;
     private TaskRepositoryViewModel taskRepository;
 
-    public RoleSetViewModel(long id, String name, String type, float defaultPriority) {
+    public RoleSetViewModel(long id, String name, String type, float defaultPriority, boolean defaultRoleSet) {
         super(id, name, type);
-        this.defaultPriority = new SimpleFloatProperty(null, "defaultPriority", 0.01f);
+        this.defaultPriority = new SimpleFloatProperty(null, "defaultPriority", 0.0f);
         this.defaultPriority.setValue(defaultPriority);
+        this.defaultRoleSet = new SimpleBooleanProperty(null, "defaultRoleSet", true);
+        this.defaultRoleSet.setValue(defaultRoleSet);
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "defaultPriority", "defaultRoleSet"));
 
@@ -58,6 +59,14 @@ public class RoleSetViewModel extends SerializableViewModel {
     public void setDefaultPriority(float defaultPriority) {
         this.defaultPriority.set(defaultPriority);
     }
+
+    public boolean getDefaultRoleSet() {
+        return defaultRoleSet.get();
+    }
+    public void setDefaultRoleSet(boolean defaultRoleSet) {
+        this.defaultRoleSet.set(defaultRoleSet);
+    }
+
 
     public ObservableList<RoleViewModel> getRoleViewModels() {
         return roles;

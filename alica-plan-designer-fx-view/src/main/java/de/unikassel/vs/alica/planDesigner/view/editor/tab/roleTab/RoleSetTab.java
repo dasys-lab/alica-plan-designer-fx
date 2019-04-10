@@ -7,14 +7,13 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
-import de.unikassel.vs.alica.planDesigner.view.model.*;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
+import de.unikassel.vs.alica.planDesigner.view.model.RoleSetViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.RoleViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -23,10 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.DefaultStringConverter;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class RoleSetTab extends EditorTab {
 
@@ -119,7 +115,6 @@ public class RoleSetTab extends EditorTab {
         taskTableView.addListener(evt -> {
             String id = String.valueOf(evt.getOldValue());
             String value = (String) evt.getNewValue();
-            System.out.println(id + " " +value );
             RoleViewModel roleViewModel = (RoleViewModel)evt.getSource();
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_ELEMENT, Types.ROLE_TASK_PROPERTY, "taskPriority");
             event.setRelatedObjects(ImmutableMap.<String, Long>of( value, Long.parseLong(id)));

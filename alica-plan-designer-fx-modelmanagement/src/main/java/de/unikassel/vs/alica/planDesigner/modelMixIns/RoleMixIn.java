@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.unikassel.vs.alica.planDesigner.alicamodel.RoleSet;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Task;
-import de.unikassel.vs.alica.planDesigner.deserialization.RoleDeserializer;
+import de.unikassel.vs.alica.planDesigner.deserialization.RoleTaskPriorityDeserializer;
 import de.unikassel.vs.alica.planDesigner.serialization.ExternalRefSerializer;
 import de.unikassel.vs.alica.planDesigner.serialization.InternalRefSerializer;
 
@@ -15,10 +15,6 @@ public abstract class RoleMixIn {
     protected RoleSet roleSet;
 
     @JsonSerialize(keyUsing = ExternalRefSerializer.class)
-    @JsonDeserialize(using = RoleDeserializer.class)
+    @JsonDeserialize(using = RoleTaskPriorityDeserializer.class)
     protected HashMap<Task, Float> taskPriorities;
-
-//    @JsonSerialize(using = ExternalRefSerializer.class)
-//    @JsonDeserialize(using = RoleTaskDeserializer.class)
-//    protected Task task;
 }

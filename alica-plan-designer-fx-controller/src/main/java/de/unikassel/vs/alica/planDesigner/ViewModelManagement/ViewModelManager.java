@@ -118,7 +118,7 @@ public class ViewModelManager {
     }
 
     private RoleSetViewModel createRoleSetViewModel(RoleSet roleSet) {
-        RoleSetViewModel roleSetViewModel = new RoleSetViewModel(roleSet.getId(), roleSet.getName(), Types.ROLESET, roleSet.getDefaultPriority());
+        RoleSetViewModel roleSetViewModel = new RoleSetViewModel(roleSet.getId(), roleSet.getName(), Types.ROLESET, roleSet.getDefaultPriority(), roleSet.getDefaultRoleSet());
         roleSetViewModel.setComment(roleSet.getComment());
         roleSetViewModel.setRelativeDirectory(roleSetViewModel.getRelativeDirectory());
         this.viewModelElements.put(roleSetViewModel.getId(), roleSetViewModel);
