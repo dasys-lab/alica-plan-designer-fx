@@ -13,6 +13,7 @@ public class PlanElement {
     public static final String NO_NAME = "NO_NAME";
 
     protected static int PLAN_ELEMENT_COUNTER = 0;
+
     protected  long id;
     protected final SimpleStringProperty name = new SimpleStringProperty(null, "name", "");
     protected final SimpleStringProperty comment = new SimpleStringProperty(null, "comment", "");

@@ -39,6 +39,9 @@ public class ParsePlan extends Command {
             case Types.TASKREPOSITORY:
                 newElement = modelManager.parseFile(FileSystemUtil.getFile(mmq), TaskRepository.class);
                 break;
+            case Types.ROLESET:
+                newElement = modelManager.parseFile(FileSystemUtil.getFile(mmq), RoleSet.class);
+                break;
             default:
                 System.err.println("ParseAbstractPlan: Parsing model eventType " + mmq.getElementType() + " not implemented, yet!");
                 return;

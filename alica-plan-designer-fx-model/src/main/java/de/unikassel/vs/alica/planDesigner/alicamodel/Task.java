@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-public class Task extends PlanElement{
+public class Task extends PlanElement {
 
     protected TaskRepository taskRepository;
 

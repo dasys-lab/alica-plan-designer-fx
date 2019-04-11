@@ -8,10 +8,7 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.AddAbstractPlan;
 import de.unikassel.vs.alica.planDesigner.command.add.AddTaskToEntryPoint;
 import de.unikassel.vs.alica.planDesigner.command.add.AddVariableToCondition;
-import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
-import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
+import de.unikassel.vs.alica.planDesigner.command.change.*;
 import de.unikassel.vs.alica.planDesigner.command.create.*;
 import de.unikassel.vs.alica.planDesigner.command.delete.*;
 import de.unikassel.vs.alica.planDesigner.command.remove.RemoveAbstractPlanFromState;
@@ -42,6 +39,7 @@ public class ModelManager implements Observer {
     private HashMap<Long, Behaviour> behaviourMap;
     private HashMap<Long, PlanType> planTypeMap;
     private TaskRepository taskRepository;
+    private RoleSet roleSet;
 
     private List<IModelEventHandler> eventHandlerList;
     private CommandStack commandStack;
@@ -92,6 +90,7 @@ public class ModelManager implements Observer {
         objectMapper.addMixIn(State.class, StateMixIn.class);
         objectMapper.addMixIn(Synchronisation.class, SynchronizationMixIn.class);
         objectMapper.addMixIn(Task.class, TaskMixIn.class);
+        objectMapper.addMixIn(Role.class, RoleMixIn.class);
         objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
         objectMapper.addMixIn(UiExtension.class, UiExtensionMixIn.class);
         objectMapper.addMixIn(BendPoint.class, BendPointMixIn.class);
@@ -111,6 +110,10 @@ public class ModelManager implements Observer {
 
     public ArrayList<Plan> getPlans() {
         return new ArrayList<>(planMap.values());
+    }
+
+    public List<Task> getTasks() {
+        return this.taskRepository.getTasks();
     }
 
     public ArrayList<Behaviour> getBehaviours() {
@@ -157,6 +160,10 @@ public class ModelManager implements Observer {
         } else if (split[split.length - 1].equals(Extensions.TASKREPOSITORY)) {
             if (taskRepository.getName().equals(split[0])) {
                 return taskRepository;
+            }
+        } else if (split[split.length - 1].equals(Extensions.ROLESET)) {
+            if (roleSet.getName().equals(split[0])) {
+                return roleSet;
             }
         } else {
             System.out.println("ModelManager: trying to get PlanElement for unsupported ending: " + split[split.length - 1]);
@@ -232,6 +239,10 @@ public class ModelManager implements Observer {
 
         if (taskRepository != null) {
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, taskRepository, Types.TASKREPOSITORY));
+        }
+
+        if (roleSet != null) {
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, roleSet, Types.ROLESET));
         }
     }
 
@@ -343,6 +354,7 @@ public class ModelManager implements Observer {
             while (modelFile.length() == 0) {
                 Thread.sleep(1000);
             }
+            System.out.println("MM: " + modelFile.getName() +"  "+ type);
             planElement = objectMapper.readValue(modelFile, type);
         } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException
                 | com.fasterxml.jackson.databind.deser.UnresolvedForwardReference e) {
@@ -574,6 +586,12 @@ public class ModelManager implements Observer {
                     planElementMap.put(task.getId(), task);
                 }
                 break;
+            case Types.ROLESET:
+                roleSet = (RoleSet) planElement;
+                for(Role role : roleSet.getRoles()) {
+                    planElementMap.put(role.getId(), role);
+                }
+                break;
             default:
                 throw new RuntimeException("ModelManager: Storing " + type + " not implemented, yet!");
         }
@@ -629,6 +647,9 @@ public class ModelManager implements Observer {
             case Types.TASKREPOSITORY:
                 taskRepository = null;
                 break;
+            case Types.ROLESET:
+                roleSet = null;
+                break;
             case Types.BEHAVIOUR:
                 behaviourMap.remove(planElement.getId());
                 break;
@@ -656,6 +677,9 @@ public class ModelManager implements Observer {
                     case Types.TASKREPOSITORY:
                         ending = Extensions.TASKREPOSITORY;
                         break;
+                    case Types.ROLESET:
+                        ending = Extensions.ROLESET;
+                        break;
                 }
 
                 if (!ending.equals("")) {
@@ -682,6 +706,7 @@ public class ModelManager implements Observer {
 
         ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, elementType);
         event.setChangedAttribute(attribute);
+
         try {
             // Using PropertyUtils instead of BeanUtils to get the actual Object and not just its String-representation
             event.setNewValue(PropertyUtils.getProperty(planElement, attribute));
@@ -745,11 +770,20 @@ public class ModelManager implements Observer {
             usages.addAll(getVariableUsages(planElement));
         } else if (planElement instanceof TaskRepository) {
             usages.addAll(getTaskRepoUsages(planElement));
+        } else if (planElement instanceof RoleSet) {
+            usages.addAll(getRoleSetUsages(planElement));
         } else if (planElement instanceof State) {
             usages.add(((State) planElement).getParentPlan()); // A State is always used in exactly one Plan
         } else {
             throw new RuntimeException("Usages requested for unhandled elementType of element with id  " + modelElementId);
         }
+        return usages;
+    }
+
+    private HashSet<Plan> getRoleSetUsages(PlanElement planElement) {
+        // TODO: implement functionality
+        System.out.println("MM: getRoleSetUsages " + planElement.getName());
+        HashSet<Plan> usages = new HashSet<>();
         return usages;
     }
 
@@ -912,6 +946,12 @@ public class ModelManager implements Observer {
                     case Types.TASKREPOSITORY:
                         cmd = new CreateTaskRepository(this, mmq);
                         break;
+                    case Types.ROLESET:
+                        cmd = new CreateRoleSet(this, mmq);
+                        break;
+                    case Types.ROLE:
+                        cmd = new CreateRole(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
                         return;
@@ -1068,6 +1108,9 @@ public class ModelManager implements Observer {
                     case Types.SYNCTRANSITION:
                         cmd = new ConnectSynchronizationWithTransition(this, mmq);
                         break;
+                    case Types.ROLE_TASK_PROPERTY:
+                        cmd = new ChangeTaskPriority(this, mmq);
+                        break;
                     default:
                         cmd = new ChangeAttributeValue(this, mmq);
                         break;
@@ -1098,6 +1141,10 @@ public class ModelManager implements Observer {
             case Types.TASKREPOSITORY:
                 serializeToDisk(planElement, false);
                 break;
+            case Types.ROLE:
+            case Types.ROLESET:
+                serializeToDisk(planElement, false);
+                break;
             case Types.PLANTYPE:
                 serializeToDisk(planElement, false);
                 break;
@@ -1125,6 +1172,8 @@ public class ModelManager implements Observer {
             // Setting the values in the elementsSaved map at the beginning,
             // because otherwise listeners may react before values are updated
             if (!movedOrCreated) {
+                //TODO: Refactoring
+
                 // the counter is set to 2 because, saving an element always creates two filesystem modified events
                 int counter = 2;
                 // when a plan is saved it needs to be 4 however, because the stateUiElement is saved as well
@@ -1134,7 +1183,8 @@ public class ModelManager implements Observer {
                 elementsSavedMap.put(planElement.getId(), counter);
             }
             File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
-            if (fileExtension.equals(Extensions.PLAN)) {
+
+            if (Extensions.PLAN.equals(fileExtension)) {
                 objectMapper.writeValue(outfile, (Plan) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLAN));
 
@@ -1145,17 +1195,20 @@ public class ModelManager implements Observer {
                             , planElement.getName() + "." + Extensions.PLAN_UI).toFile();
                     objectMapper.writeValue(visualisationFile, uiExtension);
                 }
-
-            } else if (fileExtension.equals(Extensions.PLANTYPE)) {
+            } else if (Extensions.PLANTYPE.equals(fileExtension)) {
                 objectMapper.writeValue(outfile, (PlanType) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLANTYPE));
-            } else if (fileExtension.equals(Extensions.BEHAVIOUR)) {
+            } else if (Extensions.BEHAVIOUR.equals(fileExtension)) {
                 objectMapper.writeValue(outfile, (Behaviour) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.BEHAVIOUR));
-            } else if (fileExtension.equals(Extensions.TASKREPOSITORY)) {
+            } else if (Extensions.TASKREPOSITORY.equals(fileExtension)) {
                 outfile = Paths.get(tasksPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
                 objectMapper.writeValue(outfile, (TaskRepository) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.TASKREPOSITORY));
+            } else if (Extensions.ROLESET.equals(fileExtension)) {
+                outfile = Paths.get(rolesPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
+                objectMapper.writeValue(outfile, (RoleSet) planElement);
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.ROLESET));
             } else {
                 throw new RuntimeException("Modelmanager: Trying to serialize a file with unknown ending: " + fileExtension);
             }
@@ -1213,6 +1266,9 @@ public class ModelManager implements Observer {
         }
         if (element instanceof TaskRepository) {
             return Paths.get(tasksPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
+        }
+        if (element instanceof RoleSet) {
+            return Paths.get(rolesPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
         }
         return null;
     }

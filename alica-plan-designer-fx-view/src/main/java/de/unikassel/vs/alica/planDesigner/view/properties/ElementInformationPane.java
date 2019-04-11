@@ -34,6 +34,7 @@ public class ElementInformationPane extends TitledPane {
     protected TabPane tabPane;
     protected PropertySheet propertySheet;
     protected Tab propertiesTab;
+    protected Tab characteristicsTab;
     protected VariablesTab variablesTab;
     protected VariableBindingTab variableBindingTab;
     protected ConditionsTab preConditionTab;
@@ -59,6 +60,7 @@ public class ElementInformationPane extends TitledPane {
         preConditionTab     = new ConditionsTab(i18NRepo.getString("label.caption.preCondtions")    , Types.PRECONDITION);
         runtimeConditionTab = new ConditionsTab(i18NRepo.getString("label.caption.runtimeCondtions"), Types.RUNTIMECONDITION);
         postConditionTab    = new ConditionsTab(i18NRepo.getString("label.caption.postCondtions")   , Types.POSTCONDITION);
+        characteristicsTab = new Tab(i18NRepo.getString("label.caption.characteristics"));
 
         this.tabPane = new TabPane();
         this.tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -83,14 +85,20 @@ public class ElementInformationPane extends TitledPane {
         propertySheet.getItems().addAll(createPropertySheetList(elementShown));
     }
 
+
     private void adaptUI(ViewModelElement elementShown) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab);
+        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab, characteristicsTab);
         switch (elementShown.getType()) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
+            case Types.ROLESET:
             case Types.ENTRYPOINT:
             case Types.SYNCHRONISATION:
                 this.setContent(propertySheet);
+                break;
+            case Types.ROLE:
+                this.setContent(tabPane);
+                tabPane.getTabs().addAll(propertiesTab, characteristicsTab);
                 break;
             case Types.PLANTYPE:
                 this.variableBindingTab.setParentViewModel((HasVariableBinding) elementShown);

@@ -10,18 +10,21 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ViewModelManager {
 
     protected ModelManager modelManager;
     protected IGuiModificationHandler guiModificationHandler;
     protected Map<Long, ViewModelElement> viewModelElements;
+
+    private TaskRepositoryViewModel taskRepositoryViewModel;
 
     public ViewModelManager(ModelManager modelManager, IGuiModificationHandler handler) {
         this.modelManager = modelManager;
@@ -56,6 +59,10 @@ public class ViewModelManager {
             element = createTaskViewModel((Task) planElement);
         } else if (planElement instanceof TaskRepository) {
             element = createTaskRepositoryViewModel((TaskRepository) planElement);
+        } else if (planElement instanceof RoleSet) {
+            element = createRoleSetViewModel((RoleSet) planElement);
+        } else if (planElement instanceof Role) {
+            element = createRoleViewModel((Role) planElement);
         } else if (planElement instanceof Plan) {
             element = createPlanViewModel((Plan) planElement);
         } else if (planElement instanceof PlanType) {
@@ -110,12 +117,50 @@ public class ViewModelManager {
         return taskRepositoryViewModel;
     }
 
+    private RoleSetViewModel createRoleSetViewModel(RoleSet roleSet) {
+        RoleSetViewModel roleSetViewModel = new RoleSetViewModel(roleSet.getId(), roleSet.getName(), Types.ROLESET, roleSet.getDefaultPriority(), roleSet.getDefaultRoleSet());
+        roleSetViewModel.setComment(roleSet.getComment());
+        roleSetViewModel.setRelativeDirectory(roleSetViewModel.getRelativeDirectory());
+        this.viewModelElements.put(roleSetViewModel.getId(), roleSetViewModel);
+
+        for (Role role : roleSet.getRoles()) {
+            roleSetViewModel.addRole((RoleViewModel) getViewModelElement(role));
+        }
+        roleSetViewModel.setTaskRepository(this.getTaskRepositoryViewModel());
+        return roleSetViewModel;
+    }
+
+    public TaskRepositoryViewModel getTaskRepositoryViewModel() {
+
+        if (this.taskRepositoryViewModel == null) {
+            this.taskRepositoryViewModel =
+                    (TaskRepositoryViewModel) this.viewModelElements.values().stream()
+                            .filter(viewModelElement -> viewModelElement instanceof TaskRepositoryViewModel).findFirst().get();
+        }
+        return this.taskRepositoryViewModel;
+    }
+
     private TaskViewModel createTaskViewModel(Task task) {
         TaskViewModel taskViewModel = new TaskViewModel(task.getId(), task.getName(), Types.TASK);
         taskViewModel.setTaskRepositoryViewModel((TaskRepositoryViewModel) getViewModelElement(task.getTaskRepository()));
         taskViewModel.getTaskRepositoryViewModel().addTask(taskViewModel);
         taskViewModel.setParentId(task.getTaskRepository().getId());
         return taskViewModel;
+    }
+
+    private RoleViewModel createRoleViewModel(Role role) {
+        RoleViewModel roleViewModel = new RoleViewModel(role.getId(), role.getName(), Types.ROLE);
+        ObservableMap<TaskViewModel, Float> taskPriorities = FXCollections.observableHashMap();
+
+        for (Task task: role.getTaskPriorities().keySet()) {
+            TaskViewModel taskViewModel = (TaskViewModel)this.getViewModelElement(task);
+            taskPriorities.put( taskViewModel, role.getTaskPriorities().get(task));
+        }
+        roleViewModel.setTaskPriorities(taskPriorities);
+        roleViewModel.setRoleSetViewModel((RoleSetViewModel) getViewModelElement(role.getRoleSet()));
+        roleViewModel.getRoleSetViewModel().addRole(roleViewModel);
+        roleViewModel.setParentId(role.getRoleSet().getId());
+        return roleViewModel;
     }
 
     private BehaviourViewModel createBehaviourViewModel(Behaviour behaviour) {
@@ -517,7 +562,7 @@ public class ViewModelManager {
                 if (event.getEventType() == ModelEventType.ELEMENT_ADDED) {
                     EntryPointViewModel entryPointViewModel = (EntryPointViewModel) parentViewModel;
                     entryPointViewModel.setTask(taskViewModel);
-                } else if (event.getEventType() == ModelEventType.ELEMENT_ADDED) {
+                } else if (event.getEventType() == ModelEventType.ELEMENT_CREATED) {
                     TaskRepositoryViewModel taskRepositoryViewModel = (TaskRepositoryViewModel) parentViewModel;
                     taskRepositoryViewModel.addTask(taskViewModel);
                 }
@@ -600,7 +645,15 @@ public class ViewModelManager {
                 conditionViewModel.getQuantifiers().add((QuantifierViewModel) viewModelElement);
                 break;
             case Types.TASKREPOSITORY:
+            case Types.ROLESET:
                 //No-OP
+                break;
+            case Types.ROLE:
+                RoleViewModel roleViewModel = (RoleViewModel) viewModelElement;
+                if (event.getEventType() == ModelEventType.ELEMENT_CREATED) {
+                    RoleSetViewModel roleSetViewModel = (RoleSetViewModel) parentViewModel;
+                    roleSetViewModel.addRole(roleViewModel);
+                }
                 break;
             default:
                 System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());
@@ -727,7 +780,7 @@ public class ViewModelManager {
 
     public void changeElementAttribute(ViewModelElement viewModelElement, String changedAttribute, Object newValue) {
         try {
-            BeanUtils.setProperty(viewModelElement, changedAttribute,newValue);
+            BeanUtils.setProperty(viewModelElement, changedAttribute, newValue);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

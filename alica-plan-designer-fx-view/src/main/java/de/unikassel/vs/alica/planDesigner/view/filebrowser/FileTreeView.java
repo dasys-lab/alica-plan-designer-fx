@@ -114,8 +114,8 @@ public final class FileTreeView extends TreeView<File> {
 
         FileTreeItem folder = findFolder(viewModelElement, topLevelFolder, 0);
         if (folder != null) {
-            FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(new AlicaIcon(viewModelElement.getType
-                    (), AlicaIcon.Size.BIG)), viewModelElement);
+            FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(new AlicaIcon(viewModelElement.getType(),
+                    AlicaIcon.Size.BIG)), viewModelElement);
             folder.getChildren().add(newItem);
             folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
         } else {
@@ -175,6 +175,8 @@ public final class FileTreeView extends TreeView<File> {
                 return Paths.get(plansPath, viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".pml").toFile();
             case Types.PLANTYPE:
                 return Paths.get(plansPath, viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".pty").toFile();
+            case Types.ROLESET:
+                return Paths.get(plansPath, viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".rst").toFile();
             case Types.TASKREPOSITORY:
                 return Paths.get(taskPath, viewModelElement.getRelativeDirectory(), viewModelElement.getName() + ".tsk").toFile();
             default:
@@ -198,7 +200,7 @@ public final class FileTreeView extends TreeView<File> {
                 return plansFileTreeItem;
             case Types.TASKREPOSITORY:
                 return tasksFileTreeItem;
-            case Types.ROLE:
+            case Types.ROLESET:
                 return rolesFileTreeItem;
             default:
                 System.err.println("FileTreeView: No top level folder for " + viewModelElement.getType() + " available!");
