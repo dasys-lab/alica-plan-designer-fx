@@ -11,11 +11,8 @@ public class RoleListLabel extends Label {
 
     public RoleListLabel(ViewModelElement viewModelElement, IGuiModificationHandler guiModificationHandler) {
         this.viewModelElement = viewModelElement;
-        // TODO: can it be removed ???
         this.guiModificationHandler = guiModificationHandler;
-        this.viewModelElement.nameProperty().addListener((observable, oldValue, newValue) -> {
-            setText(newValue);
-        });
+        this.viewModelElement.nameProperty().addListener((observable, oldValue, newValue) -> setText(newValue));
     }
 
     public ViewModelElement getViewModelElement() {

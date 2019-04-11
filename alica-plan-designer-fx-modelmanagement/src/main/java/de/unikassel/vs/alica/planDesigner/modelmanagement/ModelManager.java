@@ -405,6 +405,17 @@ public class ModelManager implements Observer {
         for (UiExtension uiExtension : uiExtensionMap.values()) {
             uiExtension.setPlan(planMap.get(uiExtension.getPlan().getId()));
         }
+        roleSet.getRoles().forEach(role -> resolveReferences(role));
+    }
+
+    private void resolveReferences(Role role) {
+        HashMap<Task, Float> taskPriorities = new HashMap<>();
+
+        role.getTaskPriorities().forEach((t, p) -> {
+            Task task = taskRepository.getTask(t.getId());
+            taskPriorities.put(task, p);
+        });
+        role.setTaskPriorities(taskPriorities);
     }
 
     private void resolveReferences(Plan plan) {
