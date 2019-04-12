@@ -10,6 +10,7 @@ import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ConfigurationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.properties.variables.VariablesTable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -45,7 +46,7 @@ public class ConfigurationsTab extends Tab {
         });
     }
 
-    public void setParentViewModel(ViewModelElement parentViewModel, ViewModelElement containingState) {
+    public void setParentViewModel(ViewModelElement parentViewModel) {
         switch(parentViewModel.getType()) {
             case Types.BEHAVIOUR:
                 this.behaviour.set((BehaviourViewModel) parentViewModel);
@@ -55,7 +56,7 @@ public class ConfigurationsTab extends Tab {
             case Types.CONFIGURATION:
                 this.behaviour.set(((ConfigurationViewModel)parentViewModel).getBehaviour());
                 this.configuration.set((ConfigurationViewModel) parentViewModel);
-                this.containingState.set((StateViewModel) containingState);
+                //this.containingState.set((StateViewModel) containingState);
                 break;
             default:
                 this.behaviour.set(null);

@@ -70,27 +70,23 @@ public class ElementInformationPane extends TitledPane {
 
         this.tabPane = new TabPane();
         this.tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, variableBindingTab, preConditionTab, runtimeConditionTab, postConditionTab);
+        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, variableBindingTab, configurationsTab, preConditionTab, runtimeConditionTab, postConditionTab);
 
         this.setContent(tabPane);
     }
 
     public void setViewModelElement(ViewModelElement element) {
-        setViewModelElement(element, null);
-    }
-
-    private void setViewModelElement(ViewModelElement element, ViewModelElement parentElement) {
 
         // Treat a Configuration as if it was the behaviour it belongs to
-        ViewModelElement newElementShown = element.getType() == Types.CONFIGURATION
-                ? ((ConfigurationViewModel) element).getBehaviour()
-                : element;
+        if (element.getType().equals(Types.CONFIGURATION)) {
+            element = ((ConfigurationViewModel) element).getBehaviour();
+        }
 
-        if (newElementShown == null || newElementShown == elementShown) {
+        if (element == null || element == elementShown) {
             return;
         }
 
-        elementShown = newElementShown;
+        elementShown = element;
 
         setText(elementShown.getName());
         setGraphic(new ImageView(new AlicaIcon(elementShown.getType(), AlicaIcon.Size.SMALL)));
@@ -103,7 +99,7 @@ public class ElementInformationPane extends TitledPane {
 
 
     private void adaptUI(ViewModelElement elementShown) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab, characteristicsTab);
+        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab, characteristicsTab, configurationsTab);
         switch (elementShown.getType()) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
@@ -137,10 +133,10 @@ public class ElementInformationPane extends TitledPane {
             case Types.BEHAVIOUR:
             case Types.CONFIGURATION:
                 this.variablesTab.setParentViewModel(elementShown);
-                this.configurationsTab.setParentViewModel(element, parentElement);
+                this.configurationsTab.setParentViewModel(elementShown);
                 this.adaptConditions(elementShown);
                 this.setContent(tabPane);
-                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, configurationTab, preConditionTab, runtimeConditionTab, postConditionTab);
+                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, configurationsTab, preConditionTab, runtimeConditionTab, postConditionTab);
                 break;
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:

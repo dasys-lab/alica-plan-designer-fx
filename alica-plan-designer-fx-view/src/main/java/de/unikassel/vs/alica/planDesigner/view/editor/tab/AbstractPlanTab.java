@@ -40,7 +40,7 @@ public abstract class AbstractPlanTab extends EditorTab {
         }
 
         // update properties gui
-        this.elementInformationPane.setViewModelElement(containerToSelect);
+        this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
     }
 
     private DropShadow createSelectedEffect() {
