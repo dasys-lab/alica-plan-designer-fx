@@ -10,9 +10,9 @@ import java.util.List;
 
 public class Synchronisation extends PlanElement{
 
-    protected final SimpleIntegerProperty talkTimeout = new SimpleIntegerProperty();
-    protected final SimpleIntegerProperty syncTimeout = new SimpleIntegerProperty();
-    protected final SimpleBooleanProperty failOnSyncTimeout = new SimpleBooleanProperty();
+    protected final SimpleIntegerProperty talkTimeout = new SimpleIntegerProperty(this, "talkTimeout", 0);
+    protected final SimpleIntegerProperty syncTimeout = new SimpleIntegerProperty(this, "syncTimeout", 0);
+    protected final SimpleBooleanProperty failOnSyncTimeout = new SimpleBooleanProperty(this, "failOnSyncTimeout", false);
     protected final SimpleObjectProperty<Plan> plan = new SimpleObjectProperty<>();
 
     protected final ArrayList<Transition> syncedTransitions = new ArrayList<>();

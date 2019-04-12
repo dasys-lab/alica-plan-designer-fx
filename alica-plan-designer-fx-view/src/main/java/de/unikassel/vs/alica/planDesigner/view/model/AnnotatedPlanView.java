@@ -2,16 +2,22 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleLongProperty;
+
+import java.util.Arrays;
 
 public class AnnotatedPlanView extends ViewModelElement {
 
-    protected final BooleanProperty activated = new SimpleBooleanProperty();
-    protected long planId;
+    protected final SimpleBooleanProperty activated = new SimpleBooleanProperty(this, "activated", false);
+    protected final SimpleLongProperty planId = new SimpleLongProperty(this, "planId", 0L);
 
     public AnnotatedPlanView(long id, String name, String type, boolean activated, long planId) {
         super(id, name, type);
         this.activated.setValue(activated);
-        this.planId = planId;
+        this.planId.setValue(planId);
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "relativeDirectory", "activated", "planId"));
     }
 
     public AnnotatedPlanView(ViewModelElement element, boolean activated) {
@@ -33,6 +39,6 @@ public class AnnotatedPlanView extends ViewModelElement {
     }
 
     public long getPlanId() {
-        return this.planId;
+        return this.planId.getValue();
     }
 }

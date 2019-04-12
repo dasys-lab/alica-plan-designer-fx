@@ -5,12 +5,12 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class AnnotatedPlan extends PlanElement {
 
-    private final SimpleBooleanProperty activated = new SimpleBooleanProperty();
-    private final SimpleObjectProperty<Plan> plan = new SimpleObjectProperty<>();
+    private final SimpleBooleanProperty activated = new SimpleBooleanProperty(this, "activated", false);
+    private final SimpleObjectProperty<Plan> plan = new SimpleObjectProperty<>(this, "planId", null);
 
     @Override
     public String getName() {
-        return "Annotated" + plan.getName();
+        return "Annotated" + plan.get().getName();
     }
 
     public Plan getPlan() {

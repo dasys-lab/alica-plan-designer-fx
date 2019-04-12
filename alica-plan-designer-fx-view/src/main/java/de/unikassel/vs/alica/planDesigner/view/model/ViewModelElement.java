@@ -12,11 +12,11 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class ViewModelElement {
-    protected final SimpleLongProperty id = new SimpleLongProperty(null, "id", 0);
+    protected final SimpleLongProperty id = new SimpleLongProperty(null, "id", 0L);
     protected final SimpleStringProperty name = new SimpleStringProperty(null, "name", "");
     protected final SimpleStringProperty type = new SimpleStringProperty(null, "type", "");
     protected final SimpleStringProperty relativeDirectory = new SimpleStringProperty(null, "relativeDirectory", "");
-    protected final SimpleLongProperty parentId = new SimpleLongProperty(null, "parentId", 0);
+    protected final SimpleLongProperty parentId = new SimpleLongProperty(null, "parentId", 0L);
     protected ArrayList<String> uiPropertyList;
 
     public ViewModelElement(long id, String name, String type) {

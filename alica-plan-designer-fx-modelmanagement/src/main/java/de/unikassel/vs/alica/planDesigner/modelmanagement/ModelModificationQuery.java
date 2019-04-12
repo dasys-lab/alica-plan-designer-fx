@@ -52,6 +52,9 @@ public class ModelModificationQuery {
             case Extensions.TASKREPOSITORY:
                 elementType = Types.TASKREPOSITORY;
                 break;
+            case Extensions.ROLESET:
+                elementType = Types.ROLESET;
+                break;
             case Extensions.PLAN_UI:
                 elementType = Types.PLAN; //TODO: Handle plan-stateUiElement-ending - Files
                 break;

@@ -9,8 +9,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Behaviour extends AbstractPlan {
-    protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty();
-    protected final SimpleLongProperty deferring = new SimpleLongProperty();
+    protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
+    protected final SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
 
     protected SimpleObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();

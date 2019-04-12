@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TaskRepositoryViewModel extends SerializableViewModel {
 
@@ -12,6 +13,9 @@ public class TaskRepositoryViewModel extends SerializableViewModel {
     public TaskRepositoryViewModel(long id, String name, String type) {
         super(id, name, type);
         tasks = FXCollections.observableArrayList(new ArrayList<>());
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
     }
 
     public void addTask(TaskViewModel task) {

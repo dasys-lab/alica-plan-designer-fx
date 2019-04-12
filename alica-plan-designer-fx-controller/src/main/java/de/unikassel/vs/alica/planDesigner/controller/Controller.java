@@ -193,11 +193,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case Types.PLAN:
             case Types.PLANTYPE:
             case Types.BEHAVIOUR:
+            case Types.ROLESET:
             case Types.TASKREPOSITORY:
                 updateRepos(event.getEventType(), viewModelElement);
                 updateFileTreeView(event.getEventType(), viewModelElement);
                 break;
             case Types.TASK:
+            case Types.ROLE:
                 updateRepos(event.getEventType(), viewModelElement);
                 break;
         }
@@ -269,7 +271,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.disconnectElement(event);
             case ELEMENT_CHANGED_POSITION:
                 viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
-            default:
+                default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
                 break;
         }
@@ -364,6 +366,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case CREATE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
                 mmq.setParentId(event.getParentId());
+                mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
             case DELETE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
@@ -406,6 +409,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setElementType(event.getElementType());
                 mmq.setParentId(event.getParentId());
                 mmq.setElementId(event.getElementId());
+                mmq.setRelatedObjects(event.getRelatedObjects());
+                mmq.setAttributeName(event.getName());
                 if (event instanceof GuiChangeAttributeEvent) {
                     GuiChangeAttributeEvent guiChangeAttributeEvent = (GuiChangeAttributeEvent) event;
                     mmq.setAttributeName(guiChangeAttributeEvent.getAttributeName());

@@ -3,17 +3,23 @@ package de.unikassel.vs.alica.planDesigner.view.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class PlanTypeViewModel extends SerializableViewModel implements HasParametrisationView {
+import java.util.Arrays;
+
+public class PlanTypeViewModel extends AbstractPlanViewModel implements HasVariableBinding {
 
     private ObservableList<PlanViewModel> allPlans;
     private ObservableList<AnnotatedPlanView> plansInPlanType;
-    protected ObservableList<ParametrisationViewModel> parametrisations;
+    private ObservableList<VariableBindingViewModel> variableBindings;
+
 
     public PlanTypeViewModel(long id, String name, String type) {
         super(id, name, type);
         allPlans = FXCollections.observableArrayList();
         plansInPlanType = FXCollections.observableArrayList();
-        parametrisations = FXCollections.observableArrayList();
+        variableBindings = FXCollections.observableArrayList();
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
     }
 
     public void addPlanToAllPlans(PlanViewModel plan) {
@@ -61,17 +67,17 @@ public class PlanTypeViewModel extends SerializableViewModel implements HasParam
         return false;
     }
 
-    public ObservableList getParametrisations() {
-        return parametrisations;
+    public ObservableList<VariableBindingViewModel> getVariableBindings() {
+        return variableBindings;
     }
 
-    public void addParametrisation(ParametrisationViewModel parametrisation) {
-        if(!this.parametrisations.contains(parametrisation)) {
-            this.parametrisations.add(parametrisation);
+    public void addVariableBinding(VariableBindingViewModel binding) {
+        if(!this.variableBindings.contains(binding)) {
+            this.variableBindings.add(binding);
         }
     }
 
-    public void removeParametrisation(ParametrisationViewModel parametrisation) {
-        this.parametrisations.remove(parametrisation);
+    public void removeVariableBinding(VariableBindingViewModel binding) {
+        this.variableBindings.remove(binding);
     }
 }

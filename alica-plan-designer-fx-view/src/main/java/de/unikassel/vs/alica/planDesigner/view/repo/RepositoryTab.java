@@ -52,6 +52,4 @@ public class RepositoryTab extends Tab {
     public ViewModelElement getSelectedItem() {
         return this.repositoryListView.getSelectedItem();
     }
-
-
 }

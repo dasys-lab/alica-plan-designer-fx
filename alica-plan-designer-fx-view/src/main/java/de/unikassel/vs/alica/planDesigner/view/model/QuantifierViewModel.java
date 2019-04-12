@@ -14,12 +14,15 @@ public class QuantifierViewModel extends PlanElementViewModel{
 
     public static final String[] QUANTIFIER_TYPES = {"ALL"};
 
-    protected StringProperty quantifierType = new SimpleStringProperty(this, "quantifierType", "");
-    protected LongProperty scope = new SimpleLongProperty(this, "scope", 0L);
-    protected StringProperty sorts = new SimpleStringProperty(this, "sorts", "");
+    protected SimpleStringProperty quantifierType = new SimpleStringProperty(this, "quantifierType", "");
+    protected SimpleLongProperty scope = new SimpleLongProperty(this, "scope", 0L);
+    protected SimpleStringProperty sorts = new SimpleStringProperty(this, "sorts", "");
 
     public QuantifierViewModel(long id, String name, String quantifierType) {
         super(id, name, quantifierType);
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
     }
 
     public String getQuantifierType() {

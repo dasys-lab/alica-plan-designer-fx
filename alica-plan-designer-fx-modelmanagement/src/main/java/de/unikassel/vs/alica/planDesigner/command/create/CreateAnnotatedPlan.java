@@ -24,7 +24,6 @@ public class CreateAnnotatedPlan extends Command {
                             , plan.getName(), planType.getName()));
         }
         this.annotatedPlan = createAnnotatedPlan();
-
     }
 
     public AnnotatedPlan createAnnotatedPlan() {

@@ -8,7 +8,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
-import de.unikassel.vs.alica.planDesigner.view.model.SynchronizationViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.SynchronisationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 public class SyncTransitionTool extends AbstractTool {
 
-    private SynchronizationViewModel sync;
+    private SynchronisationViewModel sync;
     private TransitionViewModel trans;
 
 
@@ -74,7 +74,7 @@ public class SyncTransitionTool extends AbstractTool {
                         // selected a potentially new synchronisation, so reset state of the tool
                         reset();
                     }
-                    sync = (SynchronizationViewModel) ((SynchronizationContainer) parent).getPlanElementViewModel();
+                    sync = (SynchronisationViewModel) ((SynchronizationContainer) parent).getPlanElementViewModel();
                     return;
                 }
 

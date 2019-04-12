@@ -8,7 +8,9 @@ public class Types {
     public static final String PLANTYPE = "plantype";
     public static final String TASKREPOSITORY = "taskrepository";
     public static final String TASK = "task";
+    public static final String ROLESET = "roleset";
     public static final String ROLE = "role";
+    public static final String ROLE_TASK_PROPERTY = "roletaskproperty";
     public static final String VARIABLE = "variable";
     public static final String FOLDER = "folder";
     public static final String ANNOTATEDPLAN = "annotatedplan";
@@ -30,5 +32,5 @@ public class Types {
     public static final String ABSTRACTPLAN = "abstractplan";
     public static final String UIEXTENSION = "uiextension";
     public static final String NOTYPE = "";
-    public static final String PARAMETRISATION = "parametrisation";
+    public static final String VARIABLEBINDING = "variablebinding";
 }

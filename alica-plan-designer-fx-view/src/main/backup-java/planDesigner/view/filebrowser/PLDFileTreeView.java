@@ -229,7 +229,7 @@ public final class PLDFileTreeView extends TreeView<FileWrapper> {
                 e.printStackTrace();
             }
 //            RepositoryTabPane repositoryTabPane = MainWindowController.getInstance().getRepositoryTabPane();
-//            Tab previousTab = repositoryTabPane.getSelectionModel().getSelectedItem();
+//            Tab previousTab = repositoryTabPane.getSelectionModel().getCurrentRole();
 //            repositoryTabPane.init();
 //            repositoryTabPane.getSelectionModel().select(previousTab);
 

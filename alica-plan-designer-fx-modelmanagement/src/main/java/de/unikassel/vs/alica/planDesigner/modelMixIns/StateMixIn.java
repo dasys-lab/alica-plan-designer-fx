@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
-import de.unikassel.vs.alica.planDesigner.deserialization.FileArrayDeserializer;
-import de.unikassel.vs.alica.planDesigner.deserialization.PlanDeserializer;
-import de.unikassel.vs.alica.planDesigner.serialization.ExternalRefArraySerializer;
-import de.unikassel.vs.alica.planDesigner.serialization.InternalRefArraySerializer;
+import de.unikassel.vs.alica.planDesigner.deserialization.ExternalRefDeserializer;
+import de.unikassel.vs.alica.planDesigner.serialization.ExternalRefSerializer;
 import de.unikassel.vs.alica.planDesigner.serialization.InternalRefSerializer;
 
 import java.util.ArrayList;
@@ -26,12 +24,13 @@ public abstract class StateMixIn {
     protected EntryPoint entryPoint;
     @JsonSerialize(using = InternalRefSerializer.class)
     protected Plan parentPlan;
-    @JsonSerialize(using = ExternalRefArraySerializer.class)
-    @JsonDeserialize(using = FileArrayDeserializer.class)
+    @JsonSerialize(contentUsing = ExternalRefSerializer.class)
+    @JsonDeserialize(contentUsing = ExternalRefDeserializer.class)
     protected ArrayList<AbstractPlan> abstractPlans;
-    protected ArrayList<Parametrisation> parametrisations;
-    @JsonSerialize(using = InternalRefArraySerializer.class)
+    @JsonSerialize(contentUsing = InternalRefSerializer.class)
     protected ArrayList<Transition> inTransitions;
-    @JsonSerialize(using = InternalRefArraySerializer.class)
+    @JsonSerialize(contentUsing = InternalRefSerializer.class)
     protected ArrayList<Transition> outTransitions;
+
+    protected ArrayList<VariableBinding> variableBindings;
 }

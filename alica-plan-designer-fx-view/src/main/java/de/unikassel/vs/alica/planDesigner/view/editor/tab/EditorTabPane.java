@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.RoleSetTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.scene.control.Tab;
@@ -49,6 +50,8 @@ public class EditorTabPane extends TabPane {
                 return new TaskRepositoryTab(serializableViewModel, this);
             case Types.TASK:
                 return new TaskRepositoryTab((SerializableViewModel) guiModificationHandler.getViewModelElement(serializableViewModel.getParentId()), this);
+            case Types.ROLESET:
+                return new RoleSetTab(serializableViewModel, this);
             case Types.BEHAVIOUR:
                 return new BehaviourTab(serializableViewModel, this);
             case Types.PLANTYPE:

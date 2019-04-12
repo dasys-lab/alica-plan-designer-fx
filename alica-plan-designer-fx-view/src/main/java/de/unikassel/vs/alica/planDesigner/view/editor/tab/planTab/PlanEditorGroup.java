@@ -101,7 +101,7 @@ public class PlanEditorGroup extends Group {
 
     private Map<Long, SynchronizationContainer> createSynchronisationContainers() {
         Map<Long, SynchronizationContainer> synchros = new HashMap<>();
-        for (SynchronizationViewModel synchronisation : plan.getSynchronisations()) {
+        for (SynchronisationViewModel synchronisation : plan.getSynchronisations()) {
             ArrayList<TransitionContainer> synchedTransitions = new ArrayList<>();
             for(TransitionViewModel model : synchronisation.getTransitions()) {
                 synchedTransitions.add(transitionContainers.get(model.getId()));
@@ -196,10 +196,10 @@ public class PlanEditorGroup extends Group {
     }
 
     private void createSynchronizationListeners() {
-        plan.getSynchronisations().addListener((ListChangeListener<SynchronizationViewModel>) c -> {
+        plan.getSynchronisations().addListener((ListChangeListener<SynchronisationViewModel>) c -> {
             while (c.next()) {
                 if(c.wasAdded()) {
-                    for(SynchronizationViewModel sync : c.getAddedSubList()) {
+                    for(SynchronisationViewModel sync : c.getAddedSubList()) {
                         ArrayList<TransitionContainer> synchedTransitions = new ArrayList<>();
                         for(TransitionViewModel model : sync.getTransitions()) {
                             synchedTransitions.add(transitionContainers.get(model.getId()));
@@ -210,7 +210,7 @@ public class PlanEditorGroup extends Group {
                         getChildren().add(syncContainer);
                     }
                 } else if (c.wasRemoved()) {
-                    for (SynchronizationViewModel sync : c.getRemoved()) {
+                    for (SynchronisationViewModel sync : c.getRemoved()) {
                         SynchronizationContainer syncContainer = synchronizationContainers.remove(sync.getId());
                         getChildren().remove(syncContainer);
                     }

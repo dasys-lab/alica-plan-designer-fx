@@ -87,6 +87,15 @@ public class PlanTab extends AbstractPlanTab {
         guiModificationHandler.handle(event);
     }
 
+    public void fireModificationEvent(GuiEventType eventType, String elementType, String name, HashMap<String, Long> relatedElements, int x, int y) {
+        GuiModificationEvent event = new GuiModificationEvent(eventType, elementType, name);
+        event.setX(x);
+        event.setY(y);
+        event.setParentId(getSerializableViewModel().getId());
+        event.setRelatedObjects(relatedElements);
+        guiModificationHandler.handle(event);
+    }
+
     public void fireModificationEvent(GuiEventType eventType, String elementType, String name, HashMap<String, Long> relatedElements) {
         GuiModificationEvent event = new GuiModificationEvent(eventType, elementType, name);
         event.setParentId(getSerializableViewModel().getId());

@@ -5,34 +5,38 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TransitionViewModel extends PlanElementViewModel {
-    protected StateViewModel inState;
-    protected StateViewModel outState;
-    protected ObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, "preCondition", null);
+    protected SimpleObjectProperty<StateViewModel> inState = new SimpleObjectProperty<>(this, "inState", null);
+    protected SimpleObjectProperty<StateViewModel> outState = new SimpleObjectProperty<>(this, "outState", null);
+    protected SimpleObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, "preCondition", null);
     private ObservableList<BendPointViewModel> bendpoints;
 
     public TransitionViewModel(long id, String name, String type) {
         super(id, name, type);
         this.bendpoints = FXCollections.observableArrayList(new LinkedList<BendPointViewModel>());
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment"));
     }
 
     public StateViewModel getInState() {
-        return inState;
+        return inState.getValue();
     }
 
     public void setInState(StateViewModel inState) {
-        this.inState = inState;
+        this.inState.setValue(inState);
     }
 
     public StateViewModel getOutState() {
-        return outState;
+        return outState.getValue();
     }
 
     public void setOutState(StateViewModel outState) {
-        this.outState = outState;
+        this.outState.setValue(outState);
     }
 
     public ConditionViewModel getPreCondition() {

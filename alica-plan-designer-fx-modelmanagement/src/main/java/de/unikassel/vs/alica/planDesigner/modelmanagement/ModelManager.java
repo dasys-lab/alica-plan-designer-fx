@@ -8,10 +8,7 @@ import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.AddAbstractPlan;
 import de.unikassel.vs.alica.planDesigner.command.add.AddTaskToEntryPoint;
 import de.unikassel.vs.alica.planDesigner.command.add.AddVariableToCondition;
-import de.unikassel.vs.alica.planDesigner.command.change.ChangeAttributeValue;
-import de.unikassel.vs.alica.planDesigner.command.change.ChangePosition;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectEntryPointsWithState;
-import de.unikassel.vs.alica.planDesigner.command.change.ConnectSynchronizationWithTransition;
+import de.unikassel.vs.alica.planDesigner.command.change.*;
 import de.unikassel.vs.alica.planDesigner.command.create.*;
 import de.unikassel.vs.alica.planDesigner.command.delete.*;
 import de.unikassel.vs.alica.planDesigner.command.remove.RemoveAbstractPlanFromState;
@@ -42,6 +39,7 @@ public class ModelManager implements Observer {
     private HashMap<Long, Behaviour> behaviourMap;
     private HashMap<Long, PlanType> planTypeMap;
     private TaskRepository taskRepository;
+    private RoleSet roleSet;
 
     private List<IModelEventHandler> eventHandlerList;
     private CommandStack commandStack;
@@ -85,13 +83,14 @@ public class ModelManager implements Observer {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
         objectMapper.addMixIn(EntryPoint.class, EntryPointMixIn.class);
-        objectMapper.addMixIn(Parametrisation.class, ParametrisationMixIn.class);
+        objectMapper.addMixIn(VariableBinding.class, VariableBindingMixIn.class);
         objectMapper.addMixIn(AnnotatedPlan.class, AnnotatedPlanMixIn.class);
         objectMapper.addMixIn(Plan.class, PlanMixIn.class);
         objectMapper.addMixIn(Quantifier.class, QuantifierMixIn.class);
         objectMapper.addMixIn(State.class, StateMixIn.class);
         objectMapper.addMixIn(Synchronisation.class, SynchronizationMixIn.class);
         objectMapper.addMixIn(Task.class, TaskMixIn.class);
+        objectMapper.addMixIn(Role.class, RoleMixIn.class);
         objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
         objectMapper.addMixIn(UiExtension.class, UiExtensionMixIn.class);
         objectMapper.addMixIn(BendPoint.class, BendPointMixIn.class);
@@ -111,6 +110,10 @@ public class ModelManager implements Observer {
 
     public ArrayList<Plan> getPlans() {
         return new ArrayList<>(planMap.values());
+    }
+
+    public List<Task> getTasks() {
+        return this.taskRepository.getTasks();
     }
 
     public ArrayList<Behaviour> getBehaviours() {
@@ -157,6 +160,10 @@ public class ModelManager implements Observer {
         } else if (split[split.length - 1].equals(Extensions.TASKREPOSITORY)) {
             if (taskRepository.getName().equals(split[0])) {
                 return taskRepository;
+            }
+        } else if (split[split.length - 1].equals(Extensions.ROLESET)) {
+            if (roleSet.getName().equals(split[0])) {
+                return roleSet;
             }
         } else {
             System.out.println("ModelManager: trying to get PlanElement for unsupported ending: " + split[split.length - 1]);
@@ -233,6 +240,10 @@ public class ModelManager implements Observer {
         if (taskRepository != null) {
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, taskRepository, Types.TASKREPOSITORY));
         }
+
+        if (roleSet != null) {
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, roleSet, Types.ROLESET));
+        }
     }
 
     private void unloadModel() {
@@ -248,10 +259,6 @@ public class ModelManager implements Observer {
         uiExtensionMap.clear();
     }
 
-    /**
-     * This method could be superfluous, as "loadModelFile" is maybe called by the file watcher.
-     * Anyway, temporarily this is a nice method for testing and is therefore called in the constr.
-     */
     private void loadModelFromDisk(String directory) {
         File plansDirectory = new File(directory);
         if (!plansDirectory.exists()) {
@@ -347,6 +354,7 @@ public class ModelManager implements Observer {
             while (modelFile.length() == 0) {
                 Thread.sleep(1000);
             }
+            System.out.println("MM: " + modelFile.getName() +"  "+ type);
             planElement = objectMapper.readValue(modelFile, type);
         } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException
                 | com.fasterxml.jackson.databind.deser.UnresolvedForwardReference e) {
@@ -405,6 +413,15 @@ public class ModelManager implements Observer {
         }
 
         for (State state : plan.getStates()) {
+            // need to copy temporarily, because "state.removeAbstractPlan" does also remove bindings
+            ArrayList<VariableBinding> bindings = new ArrayList<>(state.getVariableBindings());
+            for (int i = 0; i < bindings.size(); i++) {
+                VariableBinding binding = bindings.get(i);
+                binding.setSubPlan((AbstractPlan) getPlanElement(binding.getSubPlan().getId()));
+                binding.setSubVariable((Variable) getPlanElement(binding.getSubVariable().getId()));
+                binding.setVariable((Variable) getPlanElement(binding.getVariable().getId()));
+            }
+
             // Iterating over a List while modifying it results in an IllegalAccessException. By copying the list
             // beforehand this can be prevented
             for (AbstractPlan abstractPlan : new ArrayList<>(state.getAbstractPlans())) {
@@ -414,17 +431,12 @@ public class ModelManager implements Observer {
                 // The fact, that the dummy is still referenced within the State at this point is irrelevant, because it
                 // has the same id as the real one
                 state.addAbstractPlan((AbstractPlan) planElementMap.get(abstractPlan.getId()));
-
-                for (int i = 0; i < state.getParametrisations().size(); i++) {
-                    Parametrisation parametrisation = state.getParametrisations().get(i);
-                    parametrisation.setSubPlan((AbstractPlan) getPlanElement(parametrisation.getSubPlan().getId()));
-                    parametrisation.setSubVariable((Variable) getPlanElement(parametrisation.getSubVariable().getId()));
-                    parametrisation.setVariable((Variable) getPlanElement(parametrisation.getVariable().getId()));
-                }
-
-                ArrayList<Parametrisation> parametrisations = new ArrayList<>(state.getParametrisations());
                 state.removeAbstractPlan(abstractPlan);
-                parametrisations.forEach(state::addParametrisation);
+            }
+
+            // here they are inserted again
+            for (int i = 0; i < bindings.size(); i++) {
+                state.addVariableBinding(bindings.get(i));
             }
 
             if(state instanceof TerminalState) {
@@ -464,6 +476,13 @@ public class ModelManager implements Observer {
         List<AnnotatedPlan> annotatedPlans = planType.getAnnotatedPlans();
         for (int i = 0; i < annotatedPlans.size(); i++) {
             annotatedPlans.get(i).setPlan(planMap.get(annotatedPlans.get(i).getPlan().getId()));
+        }
+
+        for (int i = 0; i < planType.getVariableBindings().size(); i++) {
+            VariableBinding variableBinding = planType.getVariableBindings().get(i);
+            variableBinding.setSubPlan((AbstractPlan) getPlanElement(variableBinding.getSubPlan().getId()));
+            variableBinding.setSubVariable((Variable) getPlanElement(variableBinding.getSubVariable().getId()));
+            variableBinding.setVariable((Variable) getPlanElement(variableBinding.getVariable().getId()));
         }
     }
 
@@ -520,8 +539,8 @@ public class ModelManager implements Observer {
                 }
                 for(State state : plan.getStates()) {
                     planElementMap.put(state.getId(), state);
-                    for (Parametrisation parametrisation : state.getParametrisations()) {
-                        planElementMap.put(parametrisation.getId(), parametrisation);
+                    for (VariableBinding variableBinding : state.getVariableBindings()) {
+                        planElementMap.put(variableBinding.getId(), variableBinding);
                     }
                     if(state instanceof TerminalState){
                         TerminalState terminalState = (TerminalState) state;
@@ -546,8 +565,8 @@ public class ModelManager implements Observer {
                 for(AnnotatedPlan annotatedPlan: planType.getAnnotatedPlans()) {
                     planElementMap.put(annotatedPlan.getId(), annotatedPlan);
                 }
-                for(Parametrisation parametrisation: planType.getParametrisations()) {
-                    planElementMap.put(parametrisation.getId(), parametrisation);
+                for(VariableBinding variableBinding : planType.getVariableBindings()) {
+                    planElementMap.put(variableBinding.getId(), variableBinding);
                 }
                 break;
             case Types.BEHAVIOUR:
@@ -575,6 +594,12 @@ public class ModelManager implements Observer {
                 behaviour = configuration.getBehaviour();
                 if(!behaviour.getConfigurations().contains(configuration)) {
                     behaviour.addConfiguration(configuration);
+                }
+                break;
+            case Types.ROLESET:
+                roleSet = (RoleSet) planElement;
+                for(Role role : roleSet.getRoles()) {
+                    planElementMap.put(role.getId(), role);
                 }
                 break;
             default:
@@ -632,6 +657,9 @@ public class ModelManager implements Observer {
             case Types.TASKREPOSITORY:
                 taskRepository = null;
                 break;
+            case Types.ROLESET:
+                roleSet = null;
+                break;
             case Types.BEHAVIOUR:
                 behaviourMap.remove(planElement.getId());
                 break;
@@ -663,6 +691,9 @@ public class ModelManager implements Observer {
                     case Types.TASKREPOSITORY:
                         ending = Extensions.TASKREPOSITORY;
                         break;
+                    case Types.ROLESET:
+                        ending = Extensions.ROLESET;
+                        break;
                 }
 
                 if (!ending.equals("")) {
@@ -689,6 +720,7 @@ public class ModelManager implements Observer {
 
         ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, elementType);
         event.setChangedAttribute(attribute);
+
         try {
             // Using PropertyUtils instead of BeanUtils to get the actual Object and not just its String-representation
             event.setNewValue(PropertyUtils.getProperty(planElement, attribute));
@@ -752,11 +784,20 @@ public class ModelManager implements Observer {
             usages.addAll(getVariableUsages(planElement));
         } else if (planElement instanceof TaskRepository) {
             usages.addAll(getTaskRepoUsages(planElement));
+        } else if (planElement instanceof RoleSet) {
+            usages.addAll(getRoleSetUsages(planElement));
         } else if (planElement instanceof State) {
             usages.add(((State) planElement).getParentPlan()); // A State is always used in exactly one Plan
         } else {
             throw new RuntimeException("Usages requested for unhandled elementType of element with id  " + modelElementId);
         }
+        return usages;
+    }
+
+    private HashSet<Plan> getRoleSetUsages(PlanElement planElement) {
+        // TODO: implement functionality
+        System.out.println("MM: getRoleSetUsages " + planElement.getName());
+        HashSet<Plan> usages = new HashSet<>();
         return usages;
     }
 
@@ -791,7 +832,7 @@ public class ModelManager implements Observer {
             }
             stateLoop:
             for (State state : parent.getStates()) {
-                for (Parametrisation param : state.getParametrisations()) {
+                for (VariableBinding param : state.getVariableBindings()) {
                     if (param.getSubVariable() == planElement) {
                         usages.add(parent);
                         break stateLoop;
@@ -814,7 +855,7 @@ public class ModelManager implements Observer {
                 usages.add(planType);
                 continue;
             }
-            for (Parametrisation param : planType.getParametrisations()) {
+            for (VariableBinding param : planType.getVariableBindings()) {
                 if (param.getSubVariable() == planElement) {
                     usages.add(planType);
                     break;
@@ -910,8 +951,8 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new CreateVariable(this, mmq);
                         break;
-                    case Types.PARAMETRISATION:
-                        cmd = new CreateParametrisation(this, mmq);
+                    case Types.VARIABLEBINDING:
+                        cmd = new CreateVariableBinding(this, mmq);
                         break;
                     case Types.QUANTIFIER:
                         cmd = new CreateQuantifier(this, mmq);
@@ -921,6 +962,12 @@ public class ModelManager implements Observer {
                         break;
                     case Types.CONFIGURATION:
                         cmd = new CreateConfiguration(this, mmq);
+                        break;
+                    case Types.ROLESET:
+                        cmd = new CreateRoleSet(this, mmq);
+                        break;
+                    case Types.ROLE:
+                        cmd = new CreateRole(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
@@ -969,8 +1016,8 @@ public class ModelManager implements Observer {
                     case Types.FAILURESTATE:
                         cmd = new DeleteStateInPlan(this, mmq);
                         break;
-                    case Types.PARAMETRISATION:
-                        cmd = new DeleteParametrisation(this, mmq);
+                    case Types.VARIABLEBINDING:
+                        cmd = new DeleteVariableBinding(this, mmq);
                         break;
                     case Types.CONFIGURATION:
                         cmd = new DeleteConfiguration(this, mmq);
@@ -1034,8 +1081,8 @@ public class ModelManager implements Observer {
                     case Types.VARIABLE:
                         cmd = new AddVariableToCondition(this, mmq);
                         break;
-                    case Types.PARAMETRISATION:
-                        cmd = new CreateParametrisation(this, mmq);
+                    case Types.VARIABLEBINDING:
+                        cmd = new CreateVariableBinding(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Unknown model modification query gets ignored!");
@@ -1082,6 +1129,9 @@ public class ModelManager implements Observer {
                     case Types.SYNCTRANSITION:
                         cmd = new ConnectSynchronizationWithTransition(this, mmq);
                         break;
+                    case Types.ROLE_TASK_PROPERTY:
+                        cmd = new ChangeTaskPriority(this, mmq);
+                        break;
                     default:
                         cmd = new ChangeAttributeValue(this, mmq);
                         break;
@@ -1112,6 +1162,10 @@ public class ModelManager implements Observer {
             case Types.TASKREPOSITORY:
                 serializeToDisk(planElement, false);
                 break;
+            case Types.ROLE:
+            case Types.ROLESET:
+                serializeToDisk(planElement, false);
+                break;
             case Types.PLANTYPE:
                 serializeToDisk(planElement, false);
                 break;
@@ -1139,6 +1193,8 @@ public class ModelManager implements Observer {
             // Setting the values in the elementsSaved map at the beginning,
             // because otherwise listeners may react before values are updated
             if (!movedOrCreated) {
+                //TODO: Refactoring
+
                 // the counter is set to 2 because, saving an element always creates two filesystem modified events
                 int counter = 2;
                 // when a plan is saved it needs to be 4 however, because the stateUiElement is saved as well
@@ -1148,7 +1204,8 @@ public class ModelManager implements Observer {
                 elementsSavedMap.put(planElement.getId(), counter);
             }
             File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
-            if (fileExtension.equals(Extensions.PLAN)) {
+
+            if (Extensions.PLAN.equals(fileExtension)) {
                 objectMapper.writeValue(outfile, (Plan) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLAN));
 
@@ -1159,17 +1216,20 @@ public class ModelManager implements Observer {
                             , planElement.getName() + "." + Extensions.PLAN_UI).toFile();
                     objectMapper.writeValue(visualisationFile, uiExtension);
                 }
-
-            } else if (fileExtension.equals(Extensions.PLANTYPE)) {
+            } else if (Extensions.PLANTYPE.equals(fileExtension)) {
                 objectMapper.writeValue(outfile, (PlanType) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLANTYPE));
-            } else if (fileExtension.equals(Extensions.BEHAVIOUR)) {
+            } else if (Extensions.BEHAVIOUR.equals(fileExtension)) {
                 objectMapper.writeValue(outfile, (Behaviour) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.BEHAVIOUR));
-            } else if (fileExtension.equals(Extensions.TASKREPOSITORY)) {
+            } else if (Extensions.TASKREPOSITORY.equals(fileExtension)) {
                 outfile = Paths.get(tasksPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
                 objectMapper.writeValue(outfile, (TaskRepository) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.TASKREPOSITORY));
+            } else if (Extensions.ROLESET.equals(fileExtension)) {
+                outfile = Paths.get(rolesPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
+                objectMapper.writeValue(outfile, (RoleSet) planElement);
+                fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.ROLESET));
             } else {
                 throw new RuntimeException("Modelmanager: Trying to serialize a file with unknown ending: " + fileExtension);
             }
@@ -1227,6 +1287,9 @@ public class ModelManager implements Observer {
         }
         if (element instanceof TaskRepository) {
             return Paths.get(tasksPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
+        }
+        if (element instanceof RoleSet) {
+            return Paths.get(rolesPath, ((SerializablePlanElement) element).getRelativeDirectory()).toString();
         }
         return null;
     }

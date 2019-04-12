@@ -3,6 +3,7 @@ package de.unikassel.vs.alica.defaultPlugin;
 import de.unikassel.vs.alica.generator.IConstraintCodeGenerator;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
+import de.unikassel.vs.alica.defaultPlugin.DefaultTemplate;
 /**
  * IF the following line is not import de.unikassel.vs.alica.defaultPlugin.DefaultTemplate;
  * you messed it up ... great ... you made the plandesigner great again ... huge ...

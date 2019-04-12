@@ -34,4 +34,7 @@ public class Characteristic extends PlanElement {
         this.value = value;
     }
 
+    public void addListener(ChangeListenerForDirtyFlag listener) {
+        weight.addListener(listener);
+    }
 }
