@@ -49,15 +49,11 @@ public class EntryPointViewModel extends PlanElementViewModel {
 
     public void setTask(TaskViewModel task) { this.task.set(task); }
 
-    public boolean isSuccessRequired() {
-        return this.successRequired.get();
-    }
-
     public final SimpleBooleanProperty successRequiredProperty() {return successRequired; }
     public void setSuccessRequired(boolean successRequired) {
         this.successRequired.setValue(successRequired);
     }
-    public boolean getSuccessRequired() {
+    public boolean isSuccessRequired() {
         return successRequired.get();
     }
 
