@@ -10,10 +10,11 @@ import java.util.Arrays;
 
 public class PlanElementViewModel extends ViewModelElement {
 
-    protected final StringProperty comment = new SimpleStringProperty(null, "comment", "");
+    protected final SimpleStringProperty name = new SimpleStringProperty(null, "name", "");
+    protected final SimpleStringProperty comment = new SimpleStringProperty(null, "comment", "");
 
-    private final IntegerProperty xPosition = new SimpleIntegerProperty(null, "xPosition", 0);
-    private final IntegerProperty yPosition = new SimpleIntegerProperty(null, "yPosition", 0);
+    private final SimpleIntegerProperty xPosition = new SimpleIntegerProperty(null, "xPosition", 0);
+    private final SimpleIntegerProperty yPosition = new SimpleIntegerProperty(null, "yPosition", 0);
 
     public PlanElementViewModel (long id, String name, String type) {
         super(id, name, type);

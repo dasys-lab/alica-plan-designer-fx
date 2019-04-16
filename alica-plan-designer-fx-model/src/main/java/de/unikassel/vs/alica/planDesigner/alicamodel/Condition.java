@@ -13,9 +13,9 @@ import java.util.List;
 
 public class Condition extends PlanElement {
 
-    protected final SimpleBooleanProperty enabled = new SimpleBooleanProperty();
-    protected final SimpleStringProperty conditionString = new SimpleStringProperty();
-    protected final SimpleStringProperty pluginName = new SimpleStringProperty();
+    protected final SimpleBooleanProperty enabled = new SimpleBooleanProperty(this, "enabled", false);
+    protected final SimpleStringProperty conditionString = new SimpleStringProperty(this, "conditionString", null);
+    protected final SimpleStringProperty pluginName = new SimpleStringProperty(this, "pluginName", null);
     protected final ArrayList<Variable> variables = new ArrayList<>();
     protected final ArrayList<Quantifier> quantifiers = new ArrayList<>();
     private ChangeListenerForDirtyFlag listenerForDirtyFlag;

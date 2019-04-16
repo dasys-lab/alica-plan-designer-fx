@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class SerializablePlanElement extends PlanElement {
 
     @JsonIgnore
-    protected final SimpleBooleanProperty dirty = new SimpleBooleanProperty();
+    protected final SimpleBooleanProperty dirty = new SimpleBooleanProperty(null, "dirty", false);
     @JsonIgnore
     protected final ChangeListenerForDirtyFlag changeListenerForDirtyFlag = new ChangeListenerForDirtyFlag(this);
     protected final SimpleStringProperty relativeDirectory = new SimpleStringProperty();

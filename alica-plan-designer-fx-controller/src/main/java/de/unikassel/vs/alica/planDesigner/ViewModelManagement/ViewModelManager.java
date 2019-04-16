@@ -328,6 +328,9 @@ public class ViewModelManager {
         if (ep.getTask() != null) {
             entryPointViewModel.setTask((TaskViewModel) getViewModelElement(ep.getTask()));
         }
+        entryPointViewModel.setMinCardinality(ep.getMinCardinality());
+        entryPointViewModel.setMaxCardinality(ep.getMaxCardinality());
+        entryPointViewModel.setSuccessRequired(ep.getSuccessRequired());
         entryPointViewModel.setParentId(ep.getPlan().getId());
         UiElement uiElement = modelManager.getPlanUIExtensionPair(ep.getPlan().getId()).getUiElement(ep.getId());
         entryPointViewModel.setXPosition(uiElement.getX());

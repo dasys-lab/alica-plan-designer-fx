@@ -88,14 +88,9 @@ public class EntryPointTool extends AbstractTool {
                         return;
                     }
 
-                    GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.ENTRYPOINT, null);
-                    guiEvent.setX((int) localCoordinates.getX());
-                    guiEvent.setY((int) localCoordinates.getY());
-                    guiEvent.setParentId(planTab.getSerializableViewModel().getId());
                     HashMap<String, Long> related = new HashMap<>();
                     related.put(Types.TASK, task.getId());
-                    guiEvent.setRelatedObjects(related);
-                    MainWindowController.getInstance().getGuiModificationHandler().handle(guiEvent);
+                    planTab.fireModificationEvent(GuiEventType.ADD_ELEMENT, Types.ENTRYPOINT, null, related, (int) localCoordinates.getX(), (int) localCoordinates.getY());
                 }
             });
         }

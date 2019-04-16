@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -10,20 +11,28 @@ import java.util.Arrays;
 
 public class BehaviourViewModel  extends AbstractPlanViewModel {
 
-    protected IntegerProperty frequency = new SimpleIntegerProperty();
-    protected LongProperty deferring = new SimpleLongProperty();
+    protected SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
+    protected SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
 
-    protected ObservableList<VariableViewModel> variables;
-    protected final ObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
-    protected final ObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
-    protected final ObjectProperty<ConditionViewModel> postCondition = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
+    protected final SimpleObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
+    protected final SimpleObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
+    protected final SimpleObjectProperty<ConditionViewModel> postCondition = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
-        variables = FXCollections.observableArrayList(new ArrayList<>());
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
+    }
+
+    public void registerListener(IGuiModificationHandler handler) {
+        super.registerListener(handler);
+        frequency.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, frequency.getClass().getSimpleName(), frequency.getName());
+        });
+        deferring.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, deferring.getClass().getSimpleName(), deferring.getName());
+        });
     }
 
     public void setDeferring(long deferring) {
@@ -48,11 +57,6 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     public IntegerProperty frequencyProperty() {
         return frequency;
-    }
-
-    @Override
-    public ObservableList<VariableViewModel> getVariables() {
-        return variables;
     }
 
     public ObjectProperty<ConditionViewModel> preConditionProperty(){

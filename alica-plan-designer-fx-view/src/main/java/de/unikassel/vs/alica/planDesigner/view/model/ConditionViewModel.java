@@ -9,12 +9,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ConditionViewModel extends PlanElementViewModel {
 
-    protected StringProperty conditionString = new SimpleStringProperty(this, "conditionString", null);
-    protected StringProperty pluginName = new SimpleStringProperty(this, "pluginName", null);
-    protected BooleanProperty enabled = new SimpleBooleanProperty(this, "enabled", false);
+    protected SimpleBooleanProperty enabled = new SimpleBooleanProperty(this, "enabled", false);
+    protected SimpleStringProperty conditionString = new SimpleStringProperty(this, "conditionString", null);
+    protected SimpleStringProperty pluginName = new SimpleStringProperty(this, "pluginName", null);
+
     protected final ObservableList<VariableViewModel> variables;
     protected final ObservableList<QuantifierViewModel> quantifier;
 
@@ -22,6 +24,9 @@ public class ConditionViewModel extends PlanElementViewModel {
         super(id, name, type);
         this.variables = FXCollections.observableArrayList(new ArrayList<>());
         this.quantifier = FXCollections.observableArrayList(new ArrayList<>());
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "enabled", "conditionString", "pluginName"));
     }
 
     public String getConditionString() {

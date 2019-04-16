@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 public class Transition extends  PlanElement {
     protected final SimpleObjectProperty<State> inState = new SimpleObjectProperty<>(this, "inState", null);
     protected final SimpleObjectProperty<State> outState = new SimpleObjectProperty<>(this, "outState", null);
-    protected final SimpleObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
+    protected final SimpleObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>(this, "preCondition", null);
     protected final SimpleObjectProperty<Synchronisation> synchronisation = new SimpleObjectProperty<>();
 
     private ChangeListenerForDirtyFlag changeListener;

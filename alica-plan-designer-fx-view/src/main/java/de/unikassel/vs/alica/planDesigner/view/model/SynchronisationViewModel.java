@@ -18,6 +18,7 @@ public class SynchronisationViewModel extends PlanElementViewModel {
     public SynchronisationViewModel(long id, String name, String type) {
         super(id, name, type);
         this.transitions = FXCollections.observableArrayList(new ArrayList<>());
+
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "talkTimeout", "syncTimeout", "failOnSyncTimeout"));
     }

@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class StateViewModel extends PlanElementViewModel implements HasVariableBinding {
     protected ObservableList<PlanElementViewModel> abstractPlans;
@@ -22,6 +23,9 @@ public class StateViewModel extends PlanElementViewModel implements HasVariableB
         this.outTransitions = FXCollections.observableArrayList(new ArrayList<>());
         this.variableBindings = FXCollections.observableArrayList(new ArrayList<>());
         this.postCondition = new SimpleObjectProperty<>();
+
+        this.uiPropertyList.clear();
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment"));
     }
 
     public ObservableList<PlanElementViewModel> getAbstractPlans() {
