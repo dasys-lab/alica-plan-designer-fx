@@ -23,7 +23,6 @@ public class RepositoryTabPane extends TabPane {
     RepositoryTab planTypesTab;
     RepositoryTab behavioursTab;
     RepositoryTab tasksTab;
-    RepositoryTab rolesTab;
 
     public RepositoryTabPane() {
         TabPane planEditorTabPane = MainWindowController.getInstance().getEditorTabPane();
@@ -36,9 +35,8 @@ public class RepositoryTabPane extends TabPane {
         planTypesTab = new RepositoryTab("PlanTypes", planTypeTool);
         behavioursTab = new RepositoryTab("Behaviours", behaviourTool);
         tasksTab = new RepositoryTab("Tasks", taskTool);
-        rolesTab = new RepositoryTab("Roles", null);
 
-        getTabs().addAll(plansTab, planTypesTab, behavioursTab, tasksTab, rolesTab);
+        getTabs().addAll(plansTab, planTypesTab, behavioursTab, tasksTab);
     }
 
     public void setGuiModificationHandler(IGuiModificationHandler usageHandler) {
@@ -80,16 +78,11 @@ public class RepositoryTabPane extends TabPane {
         tasksTab.addElements(tasks);
     }
 
-    public void addRoles(List<ViewModelElement> tasks) {
-        rolesTab.addElements(tasks);
-    }
-
     public void clearGuiContent() {
         plansTab.clearGuiContent();
         planTypesTab.clearGuiContent();
         behavioursTab.clearGuiContent();
         tasksTab.clearGuiContent();
-        rolesTab.clearGuiContent();
     }
 
     public void clearPlansTab() {
@@ -106,10 +99,6 @@ public class RepositoryTabPane extends TabPane {
 
     public void clearTasksTab() {
         tasksTab.clearGuiContent();
-    }
-
-    public void clearRolesTab() {
-        rolesTab.clearGuiContent();
     }
 
     public GuiModificationEvent handleDelete() {
