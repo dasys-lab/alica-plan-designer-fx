@@ -25,10 +25,7 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
-import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
@@ -265,10 +262,26 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.addElement(event);
                 break;
             case ELEMENT_CONNECTED:
-                viewModelManager.connectElement(event);
+                switch (viewModelElement.getType()) {
+                    case Types.CONFIGURATION:
+                        String key = event.getChangedAttribute();
+                        String value = (String) event.getNewValue();
+                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().put(key, value);
+                        break;
+                        default:
+                            viewModelManager.connectElement(event);
+                }
                 break;
             case ELEMENT_DISCONNECTED:
-                viewModelManager.disconnectElement(event);
+                switch (viewModelElement.getType()) {
+                    case Types.CONFIGURATION:
+                        String key = event.getChangedAttribute();
+                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().remove(key);
+                        break;
+                    default:
+                        viewModelManager.disconnectElement(event);
+                }
+                break;
             case ELEMENT_CHANGED_POSITION:
                 viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
                 default:

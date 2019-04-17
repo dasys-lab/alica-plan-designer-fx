@@ -7,9 +7,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanCont
 import de.unikassel.vs.alica.planDesigner.view.editor.container.Container;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
-import de.unikassel.vs.alica.planDesigner.view.model.ConfigurationViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.HasVariableBinding;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.properties.bindings.VariableBindingTab;
 import de.unikassel.vs.alica.planDesigner.view.properties.conditions.ConditionsTab;
 import de.unikassel.vs.alica.planDesigner.view.properties.variables.VariablesTab;
@@ -76,12 +74,6 @@ public class ElementInformationPane extends TitledPane {
     }
 
     public void setViewModelElement(ViewModelElement element) {
-
-        // Treat a Configuration as if it was the behaviour it belongs to
-        if (element.getType().equals(Types.CONFIGURATION)) {
-            element = ((ConfigurationViewModel) element).getBehaviour();
-        }
-
         if (element == null || element == elementShown) {
             return;
         }
@@ -97,6 +89,10 @@ public class ElementInformationPane extends TitledPane {
         propertySheet.getItems().addAll(createPropertySheetList(elementShown));
     }
 
+    public void setViewModelElement(ConfigurationViewModel configurationViewModel, StateViewModel stateViewModel) {
+        configurationsTab.setParentState(stateViewModel);
+        setViewModelElement(configurationViewModel);
+    }
 
     private void adaptUI(ViewModelElement elementShown) {
         tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab, characteristicsTab, configurationsTab);
@@ -121,7 +117,8 @@ public class ElementInformationPane extends TitledPane {
             case Types.STATE:
                 this.variableBindingTab.setParentViewModel((HasVariableBinding) elementShown);
                 this.setContent(tabPane);
-                this.tabPane.getTabs().addAll(propertiesTab, variableBindingTab);
+                this.configurationsTab.setParentViewModel(elementShown);
+                this.tabPane.getTabs().addAll(propertiesTab, variableBindingTab, configurationsTab);
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
@@ -131,8 +128,14 @@ public class ElementInformationPane extends TitledPane {
                 this.tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab);
                 break;
             case Types.BEHAVIOUR:
-            case Types.CONFIGURATION:
                 this.variablesTab.setParentViewModel(elementShown);
+                this.configurationsTab.setParentViewModel(elementShown);
+                this.adaptConditions(elementShown);
+                this.setContent(tabPane);
+                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, configurationsTab, preConditionTab, runtimeConditionTab, postConditionTab);
+                break;
+            case Types.CONFIGURATION:
+                this.variablesTab.setParentViewModel(((ConfigurationViewModel)elementShown).getBehaviour());
                 this.configurationsTab.setParentViewModel(elementShown);
                 this.adaptConditions(elementShown);
                 this.setContent(tabPane);
@@ -179,5 +182,4 @@ public class ElementInformationPane extends TitledPane {
         retObsList.addAll(retList);
         return retObsList;
     }
-
 }

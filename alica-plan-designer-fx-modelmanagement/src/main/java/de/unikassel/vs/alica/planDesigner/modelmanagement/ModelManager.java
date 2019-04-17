@@ -1132,6 +1132,14 @@ public class ModelManager implements Observer {
                     case Types.ROLE_TASK_PROPERTY:
                         cmd = new ChangeTaskPriority(this, mmq);
                         break;
+                    case Types.CONFIGURATION:
+                        boolean add = (boolean) mmq.newValue;
+                        if (add) {
+                            cmd = new KeyValuePairConfiguration(this, mmq, true);
+                        } else {
+                            cmd = new KeyValuePairConfiguration(this, mmq, false);
+                        }
+                        break;
                     default:
                         cmd = new ChangeAttributeValue(this, mmq);
                         break;
@@ -1197,7 +1205,7 @@ public class ModelManager implements Observer {
 
                 // the counter is set to 2 because, saving an element always creates two filesystem modified events
                 int counter = 2;
-                // when a plan is saved it needs to be 4 however, because the stateUiElement is saved as well
+                // w hen a plan is saved it needs to be 4 however, because the stateUiElement is saved as well
                 if (fileExtension.equals(Extensions.PLAN)) {
                     counter = 4;
                 }

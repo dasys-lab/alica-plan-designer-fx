@@ -35,7 +35,7 @@ public class AbstractPlanContainer extends Container {
             // A double-click opens the contained AbstractPlan in its own Tab
             MainWindowController.getInstance().getEditorTabPane().openTab((SerializableViewModel) this.getPlanElementViewModel());
             event.consume();
-        }else {
+        } else {
             // A single-click selects the Container as usual
             super.handleMouseClickedEvent(event);
         }
