@@ -38,6 +38,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.log4j.Level;
@@ -158,7 +159,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      *
      * @param event
      */
-    public void generateCode(GuiModificationEvent event) {
+    public void generateCode(GuiModificationEvent event, Text generatingText) {
         Codegenerator codegenerator = new Codegenerator(
                 modelManager.getPlans(),
                 modelManager.getBehaviours(),
@@ -166,6 +167,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 configurationManager.getClangFormatPath(),
                 configurationManager.getActiveConfiguration().getGenSrcPath(),
                 generatedSourcesManager);
+        Platform.runLater(() -> generatingText.textProperty().bind(codegenerator.currentFile));
         switch (event.getEventType()) {
             case GENERATE_ELEMENT:
                 codegenerator.generate((AbstractPlan) modelManager.getPlanElement(event.getElementId()));
