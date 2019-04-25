@@ -26,14 +26,8 @@ public class TaskPriorityTableElement {
     }
 
     public void addListener(PropertyChangeListener listener) {
-        this.listener = new InvalidationListener() {
-            @Override
-            public void invalidated(Observable observable) {
-
-                listener.propertyChange(new PropertyChangeEvent(tableView.getCurrentRole(), "taskPriority", task.getId(),
-                        ((StringProperty)observable).getValue()));
-            }
-        };
+        this.listener = observable -> listener.propertyChange(new PropertyChangeEvent(tableView.getCurrentRole(), "taskPriority", task.getId(),
+                ((StringProperty)observable).getValue()));
     }
 
     public SimpleStringProperty priorityProperty() {
