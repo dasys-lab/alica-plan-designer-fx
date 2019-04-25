@@ -145,7 +145,8 @@ public class ModelManager implements Observer {
                     return beh;
                 }
             }
-        } else if (split[split.length - 1].equals(Extensions.PLAN)) {
+        } else if (split[split.length - 1].equals(Extensions.PLAN)
+                || split[split.length - 1].equals(Extensions.PLAN_EXTENSION)) {
             for (Plan plan : planMap.values()) {
                 if (plan.getName().equals(split[0])) {
                     return plan;
@@ -207,7 +208,7 @@ public class ModelManager implements Observer {
     public void loadModelFromDisk() {
         unloadModel();
         loadModelFromDisk(tasksPath);
-        if(taskRepository == null) {
+        if(taskRepository == null && !this.tasksPath.isEmpty()) {
             for(IModelEventHandler handler : eventHandlerList) {
                 handler.handleNoTaskRepositoryNotification();
             }
@@ -405,6 +406,17 @@ public class ModelManager implements Observer {
         for (UiExtension uiExtension : uiExtensionMap.values()) {
             uiExtension.setPlan(planMap.get(uiExtension.getPlan().getId()));
         }
+        roleSet.getRoles().forEach(role -> resolveReferences(role));
+    }
+
+    private void resolveReferences(Role role) {
+        HashMap<Task, Float> taskPriorities = new HashMap<>();
+
+        role.getTaskPriorities().forEach((t, p) -> {
+            Task task = taskRepository.getTask(t.getId());
+            taskPriorities.put(task, p);
+        });
+        role.setTaskPriorities(taskPriorities);
     }
 
     private void resolveReferences(Plan plan) {
@@ -694,9 +706,10 @@ public class ModelManager implements Observer {
                     String newName = (String) newValue;
                     String oldName = (String) oldValue;
                     renameFile(dir, newName, oldName, ending);
+
                     // If the renamed element is a Plan and has a .pmlex-file, the .pmlex-file is also renamed
-                    if(ending.equals(Extensions.PLAN) && FileSystemUtil.getFile(dir, oldName, Extensions.PLAN_UI).exists()) {
-                        renameFile(dir, newName, oldName, Extensions.PLAN_UI);
+                    if(ending.equals(Extensions.PLAN) && FileSystemUtil.getFile(dir, oldName, Extensions.PLAN_EXTENSION).exists()) {
+                        renameFile(dir, newName, oldName, Extensions.PLAN_EXTENSION);
                     }
                     serializeToDisk((SerializablePlanElement) planElement, false);
                     ArrayList<PlanElement> usages = getUsages(planElement.getId());
@@ -1199,7 +1212,7 @@ public class ModelManager implements Observer {
                 UiExtension uiExtension = uiExtensionMap.get(planElement.getId());
                 if (uiExtension != null) {
                     File visualisationFile = Paths.get(plansPath, planElement.getRelativeDirectory()
-                            , planElement.getName() + "." + Extensions.PLAN_UI).toFile();
+                            , planElement.getName() + "." + Extensions.PLAN_EXTENSION).toFile();
                     objectMapper.writeValue(visualisationFile, uiExtension);
                 }
             } else if (Extensions.PLANTYPE.equals(fileExtension)) {
@@ -1241,7 +1254,7 @@ public class ModelManager implements Observer {
         // A plans uiExtension has to be deleted as well
         if(planElement instanceof Plan) {
             File extensionFile = Paths.get(plansPath, planElement.getRelativeDirectory()
-                    , planElement.getName() + "." + Extensions.PLAN_UI).toFile();
+                    , planElement.getName() + "." + Extensions.PLAN_EXTENSION).toFile();
             extensionFile.delete();
         }
     }
