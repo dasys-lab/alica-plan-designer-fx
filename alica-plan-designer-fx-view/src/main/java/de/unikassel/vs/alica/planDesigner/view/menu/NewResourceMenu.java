@@ -27,22 +27,22 @@ public class NewResourceMenu extends Menu {
         this.initialDirectoryHint = initialDirectoryHint;
         i18NRepo = I18NRepo.getInstance();
         MenuItem newPlanMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plan"));
-        newPlanMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.PLAN));
+        newPlanMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.PLAN).showAndWait());
         getItems().add(newPlanMenuItem);
         MenuItem newPlanTypeMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plantype"));
-        newPlanTypeMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.PLANTYPE));
+        newPlanTypeMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.PLANTYPE).showAndWait());
         getItems().add(newPlanTypeMenuItem);
         MenuItem newBehaviourMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.behaviour"));
-        newBehaviourMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.BEHAVIOUR));
+        newBehaviourMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.BEHAVIOUR).showAndWait());
         getItems().add(newBehaviourMenuItem);
         MenuItem newRolesetMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.roleset"));
-        newRolesetMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.ROLESET));
+        newRolesetMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.ROLESET).showAndWait());
         getItems().add(newRolesetMenuItem);
         newTaskRepositoryMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.taskrepository"));
-        newTaskRepositoryMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.TASKREPOSITORY));
+        newTaskRepositoryMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.TASKREPOSITORY).showAndWait());
         getItems().add(newTaskRepositoryMenuItem);
         MenuItem newFolderMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.folder"));
-        newFolderMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.FOLDER));
+        newFolderMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.FOLDER).showAndWait());
         getItems().add(newFolderMenuItem);
     }
 
@@ -69,7 +69,7 @@ public class NewResourceMenu extends Menu {
             stage.setScene(new Scene(rootOfDialog));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(PlanDesignerApplication.getPrimaryStage());
-            stage.showAndWait();
+            createNewDialogController.setStage(stage);
             return createNewDialogController;
         } catch (IOException e) {
             // if the helper window is not loadable something is really wrong here

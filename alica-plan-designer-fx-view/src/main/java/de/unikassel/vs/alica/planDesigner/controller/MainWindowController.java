@@ -16,7 +16,6 @@ import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
-import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -27,11 +26,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
-import javafx.util.Duration;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -75,9 +71,6 @@ public class MainWindowController implements Initializable {
     @FXML
     private FileTreeView fileTreeView;
 
-    //@FXML
-    //private PropertyTabPane propertyAndStatusTabPane;
-
     @FXML
     private RepositoryTabPane repositoryTabPane;
 
@@ -88,25 +81,13 @@ public class MainWindowController implements Initializable {
     private MenuBar menuBar;
 
     @FXML
-    private Rectangle statusBlob;
+    private SplitPane mainSplitPane;
 
     @FXML
     private Text statusText;
 
     @FXML
-    private SplitPane mainSplitPane;
-
-    @FXML
-    private ProgressBar progressBar;
-
-    @FXML
-    private Text generatingText;
-
-    @FXML
-    private StackPane statusStackPane;
-
-    @FXML
-    private StackPane generatingStackPane;
+    private HBox statusBox;
 
     //--------------------------------------------------------------------------------------------
 //  FIELDS
@@ -211,14 +192,8 @@ public class MainWindowController implements Initializable {
 //--------------------------------------------------------------------------------------------
 
     private void setUpCodeGenerationProgressIndicator() {
-            generatingText.setText(i18NRepo.getString("label.menu.generation.generating"));
-            progressBar.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() / 4);
-            progressBar.setPrefHeight(menuBar.getHeight());
-            generatingStackPane.setLayoutX(Screen.getPrimary().getVisualBounds().getWidth() / 2 - progressBar.getWidth() / 2);
-            statusBlob.setWidth(progressBar.getWidth());
-            statusBlob.setHeight(menuBar.getHeight());
-            statusStackPane.setLayoutX(Screen.getPrimary().getVisualBounds().getWidth() / 2 - statusBlob.getWidth() / 2);
-            statusText.setText(i18NRepo.getString("label.generation.completed"));
+        double menuItemsWidth = 250;
+        statusBox.setLayoutX(menuItemsWidth + 100);
     }
 
     private List<Menu> createMenus() {
@@ -275,7 +250,7 @@ public class MainWindowController implements Initializable {
             try {
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ELEMENT, modelElement.getType(), modelElement.getName());
                 event.setElementId(modelElement.getId());
-                waitOnProgressLabel(() -> this.guiModificationHandler.generateCode(event));
+                waitOnProgressLabel(() -> this.guiModificationHandler.generateCode(event, statusText));
             } catch (RuntimeException ex) {
                 LOG.error("MainWindowController: Error while generating code", ex);
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
@@ -284,7 +259,7 @@ public class MainWindowController implements Initializable {
         generateItem.setOnAction(e -> {
             try {
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, "", "");
-                waitOnProgressLabel(() -> this.guiModificationHandler.generateCode(event));
+                waitOnProgressLabel(() -> this.guiModificationHandler.generateCode(event, statusText));
             } catch (RuntimeException ex) {
                 LOG.error("MainWindowController: Error while generating code for all elements", ex);
                 ErrorWindowController.createErrorWindow(i18NRepo.getString("label.error.codegen"), null);
@@ -341,46 +316,11 @@ public class MainWindowController implements Initializable {
     private void waitOnProgressLabel(Runnable toWaitOn) {
         new Thread(() -> {
             //Ping
-            Platform.runLater(() -> {
-                progressBar.setProgress(-1.0);
-                progressBar.setPrefWidth(this.mainSplitPane.getParent().getScene().getWidth() / 4);
-                progressBar.setPrefHeight(menuBar.getHeight());
-                generatingStackPane.setLayoutX(mainSplitPane.getLayoutX() + this.mainSplitPane.getParent().getScene().getWidth() / 2 - progressBar.getWidth() / 2);
-                progressBar.setVisible(true);
-                generatingText.setVisible(true);
-            });
+            Platform.runLater(() -> statusText.setVisible(true));
             //Run generation
             toWaitOn.run();
             // Show Message
-            Platform.runLater(() -> {
-                progressBar.setProgress(0.0);
-                progressBar.setVisible(false);
-                generatingText.setVisible(false);
-                statusBlob.setWidth(progressBar.getWidth());
-                statusBlob.setHeight(menuBar.getHeight());
-                statusStackPane.setLayoutX(mainSplitPane.getLayoutX() + this.mainSplitPane.getParent().getScene().getWidth() / 2 - statusBlob.getWidth() / 2);
-                statusBlob.setVisible(true);
-                statusText.setVisible(true);
-
-                FadeTransition fadeTransitionStatusBlob = new FadeTransition();
-                fadeTransitionStatusBlob.setFromValue(1.0);
-                fadeTransitionStatusBlob.setToValue(0.0);
-                fadeTransitionStatusBlob.setDelay(Duration.seconds(3.0));
-                fadeTransitionStatusBlob.setNode(statusBlob);
-
-                FadeTransition fadeTransitionStatusText = new FadeTransition();
-                fadeTransitionStatusText.setFromValue(1.0);
-                fadeTransitionStatusText.setToValue(0.0);
-                fadeTransitionStatusText.setDelay(Duration.seconds(3.0));
-                fadeTransitionStatusText.setNode(statusText);
-
-                fadeTransitionStatusBlob.play();
-                fadeTransitionStatusText.play();
-                fadeTransitionStatusBlob.onFinishedProperty().setValue(event -> {
-                    statusBlob.setVisible(false);
-                    statusText.setVisible(false);
-                });
-            });
+            Platform.runLater(() -> statusText.setVisible(false));
         }).start();
     }
 
