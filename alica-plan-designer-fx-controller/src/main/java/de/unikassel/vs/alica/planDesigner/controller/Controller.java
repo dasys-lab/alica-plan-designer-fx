@@ -45,6 +45,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -136,7 +137,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         mainWindowController.setConfigWindowController(configWindowController);
     }
 
-    private void setupBeanConverters(){
+    private void setupBeanConverters() {
         CustomStringConverter customStringConverter = new CustomStringConverter();
         CustomLongConverter customLongConverter = new CustomLongConverter();
         CustomPlanElementConverter customPlanElementConverter = new CustomPlanElementConverter(this.modelManager);
@@ -274,7 +275,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.disconnectElement(event);
             case ELEMENT_CHANGED_POSITION:
                 viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
-                default:
+            default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
                 break;
         }
@@ -327,7 +328,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         editorTabPane.getTabs().clear();
         repoTabPane.clearGuiContent();
         repoViewModel.clear();
-        ((FileTreeViewContextMenu)mainWindowController.getFileTreeView().getContextMenu()).showTaskrepositoryItem(true);
+        ((FileTreeViewContextMenu) mainWindowController.getFileTreeView().getContextMenu()).showTaskrepositoryItem(true);
         mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
 
         // load model from path
@@ -490,13 +491,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         alert.setTitle(i18NRepo.getString("label.warn"));
         alert.setHeaderText(i18NRepo.getString("label.error.missing.taskrepository"));
         alert.setContentText(i18NRepo.getString("label.error.missing.taskrepository.choice"));
-        alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2 - alert.getDialogPane().getWidth());
-        alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2 - alert.getDialogPane().getHeight());
+        alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2 - alert.getDialogPane().getWidth() * 1.5);
+        alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2 - alert.getDialogPane().getHeight() * 1.5);
 
-        ButtonType confirmBtn = new ButtonType(i18NRepo.getString("action.confirm"));
+        ButtonType createTaskRepositoryBtn = new ButtonType(i18NRepo.getString("action.create.taskrepository"));
+        ButtonType confirmBtn = new ButtonType(i18NRepo.getString("action.openanyway"));
         ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        alert.getButtonTypes().setAll(confirmBtn, closeBtn);
+        alert.getButtonTypes().setAll(createTaskRepositoryBtn, confirmBtn, closeBtn);
 
         alert.showAndWait();
         if (alert.getResult() == confirmBtn) {
@@ -504,6 +506,18 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         } else if (alert.getResult() == closeBtn) {
             Platform.exit();
             System.exit(0);
+        } else if (alert.getResult() == createTaskRepositoryBtn) {
+            CreateNewDialogController createNewDialogController;
+            if (configurationManager.getActiveConfiguration() != null) {
+                createNewDialogController = ((FileTreeViewContextMenu) MainWindowController.getInstance().getFileTreeView()
+                        .getContextMenu()).getNewResourceMenu().createFileDialog(new File(configurationManager.getActiveConfiguration().getTasksPath()), Types.TASKREPOSITORY);
+            } else {
+                createNewDialogController = ((FileTreeViewContextMenu) MainWindowController.getInstance().getFileTreeView()
+                        .getContextMenu()).getNewResourceMenu().createFileDialog(null, Types.TASKREPOSITORY);
+            }
+            createNewDialogController.getStage().setX(alert.getX() + createNewDialogController.getMainVBox().getPrefWidth() / 2);
+            createNewDialogController.getStage().setY(alert.getY());
+            createNewDialogController.showAndWait();
         }
     }
 
