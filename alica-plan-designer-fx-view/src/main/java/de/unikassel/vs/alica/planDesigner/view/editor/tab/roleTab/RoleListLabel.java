@@ -7,6 +7,8 @@ import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryLabel;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
@@ -26,7 +28,7 @@ public class RoleListLabel extends Label {
         this.viewModelElement = viewModelElement;
         setGraphic(this.viewModelElement.getType());
         this.guiModificationHandler = guiModificationHandler;
-        this.viewModelElement.nameProperty().addListener((observable, oldValue, newValue) -> setText(newValue));
+        this.viewModelElement.nameProperty().addListener((observable, oldValue, newValue) -> updateText(newValue));
         this.viewModelElement.typeProperty().addListener((observable, oldValue, newValue) -> setGraphic(newValue));
 
         RenameElementMenuItem renameFileMenuItem = new RenameElementMenuItem(this.viewModelElement, guiModificationHandler);
@@ -35,11 +37,12 @@ public class RoleListLabel extends Label {
         ContextMenu contextMenu = new ContextMenu(renameFileMenuItem, usageMenu, deleteMenu);
         this.setContextMenu(contextMenu);
 
-        this.setOnContextMenuRequested(e -> {
-            System.out.println("RLL:setOnContextMenuRequested");
-            RoleListLabel.this.getContextMenu().show(RoleListLabel.this.roleListView, e.getScreenX(), e.getScreenY());
-            e.consume();
-        });
+        this.setOnContextMenuRequested(e -> RoleListLabel.this.getContextMenu().show(RoleListLabel.this.roleListView, e.getScreenX(), e.getScreenY()));
+    }
+
+    public void updateText(String text) {
+        super.setText(text);
+        RoleListLabel.this.roleListView.refresh();
     }
 
     public void setGraphic(String iconName) {

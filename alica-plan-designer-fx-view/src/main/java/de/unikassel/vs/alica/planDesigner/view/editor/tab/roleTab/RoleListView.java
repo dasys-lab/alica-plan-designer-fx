@@ -1,26 +1,11 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
 
-import com.sun.javafx.scene.control.skin.LabeledText;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import de.unikassel.vs.alica.planDesigner.view.menu.DeleteElementMenuItem;
-import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
-import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
-import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryLabel;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 
 import java.util.Iterator;
 import java.util.List;
@@ -32,47 +17,7 @@ public class RoleListView extends ListView<RoleListLabel> {
     public RoleListView() {
         super();
         this.setCellFactory(param -> new RoleCell());
-
-//        this.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//
-//                if(event.getButton() == MouseButton.SECONDARY &&
-//                        event.getSource() instanceof RoleListView && event.getTarget() instanceof LabeledText) {
-//                    RoleListView roleListView = (RoleListView) event.getSource();
-//                    System.out.println("RoleListView:Contructor " + roleListView.getSelectedItem().getName());
-//                    MultipleSelectionModel<RoleListLabel> selectionModel = roleListView.getSelectionModel();
-//                    RoleListLabel selectedItem = selectionModel.getSelectedItem();
-//                    RenameElementMenuItem renameFileMenuItem = new RenameElementMenuItem(roleListView.getSelectedItem(), guiModificationHandler);
-//                    ShowUsagesMenuItem usageMenu = new ShowUsagesMenuItem(roleListView.getSelectedItem(), guiModificationHandler);
-//                    DeleteElementMenuItem deleteMenu = new DeleteElementMenuItem(roleListView.getSelectedItem(), guiModificationHandler);
-//                    ContextMenu contextMenu = new ContextMenu(renameFileMenuItem, usageMenu, deleteMenu);
-//                    contextMenu.show(RoleListView.this, event.getScreenX(), event.getScreenY());
-//                    event.consume();
-//                }
-//            }
-//        });
-//        this.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-//            @Override
-//            public void handle(ContextMenuEvent event) {
-//                RoleListView roleListView = (RoleListView) event.getSource();
-//                RenameElementMenuItem renameFileMenuItem = new RenameElementMenuItem(roleListView.getSelectedItem(), guiModificationHandler);
-//                ShowUsagesMenuItem usageMenu = new ShowUsagesMenuItem(roleListView.getSelectedItem(), guiModificationHandler);
-//                DeleteElementMenuItem deleteMenu = new DeleteElementMenuItem(roleListView.getSelectedItem(), guiModificationHandler);
-//                ContextMenu contextMenu = new ContextMenu(renameFileMenuItem, usageMenu, deleteMenu);
-//                contextMenu.show(RoleListView.this, event.getScreenX(), event.getScreenY());
-//                event.consume();
-//            }
-//        });
-        this.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-            @Override
-            public void handle(ContextMenuEvent event) {
-                System.out.println("RLV:setOnContextMenu ");
-                RoleListView roleListView = (RoleListView) event.getSource();
-                RoleListLabel selectedItem = roleListView.getSelectionModel().getSelectedItem();
-                selectedItem.fireEvent(event);
-            }
-        });
+        this.setOnContextMenuRequested(event -> ((RoleListView) event.getSource()).getSelectionModel().getSelectedItem().fireEvent(event));
     }
 
     public void setFocus() {
@@ -101,13 +46,10 @@ public class RoleListView extends ListView<RoleListLabel> {
     }
 
     public void addElements(List<? extends ViewModelElement> viewModelElements) {
-//        Platform.runLater(() -> {
 
-            for (ViewModelElement viewModelElement : viewModelElements) {
-//                getItems().add(new RoleListLabel(viewModelElement, guiModificationHandler));
-                addElement(viewModelElement);
-            }
-//        });
+        for (ViewModelElement viewModelElement : viewModelElements) {
+            addElement(viewModelElement);
+        }
     }
 
     public ViewModelElement getSelectedItem() {

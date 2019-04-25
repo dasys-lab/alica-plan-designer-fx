@@ -699,6 +699,7 @@ public class ModelManager implements Observer {
                     String newName = (String) newValue;
                     String oldName = (String) oldValue;
                     renameFile(dir, newName, oldName, ending);
+
                     // If the renamed element is a Plan and has a .pmlex-file, the .pmlex-file is also renamed
                     if(ending.equals(Extensions.PLAN) && FileSystemUtil.getFile(dir, oldName, Extensions.PLAN_EXTENSION).exists()) {
                         renameFile(dir, newName, oldName, Extensions.PLAN_EXTENSION);
