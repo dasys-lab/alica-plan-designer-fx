@@ -25,6 +25,7 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
+import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
 import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
@@ -326,6 +327,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         editorTabPane.getTabs().clear();
         repoTabPane.clearGuiContent();
         repoViewModel.clear();
+        ((FileTreeViewContextMenu)mainWindowController.getFileTreeView().getContextMenu()).showTaskrepositoryItem(true);
         mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
 
         // load model from path
