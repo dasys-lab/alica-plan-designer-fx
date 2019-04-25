@@ -46,14 +46,17 @@ public class ConfigurationsTab extends Tab {
     //----
     // PROPERTIES
     //----
-    private final ObjectProperty<BehaviourViewModel> behaviour = new SimpleObjectProperty<>();
-    private final ObjectProperty<ConfigurationViewModel> configuration = new SimpleObjectProperty<>();
-    private final ObjectProperty<StateViewModel> configurationState = new SimpleObjectProperty<>();
+    private final ObjectProperty<BehaviourViewModel> selectedBehaviour = new SimpleObjectProperty<>();
+    private final ObjectProperty<ConfigurationViewModel> selectedConfiguration = new SimpleObjectProperty<>();
+    private final ObjectProperty<StateViewModel> selectedState = new SimpleObjectProperty<>();
 
     //----
     // GUI ELEMENTS
     //----
     private final VBox root;
+    private final TitledPane configurationManager;
+    private final TitledPane configurationChooser;
+    private final TitledPane keyValuePairTable;
     private TextField keyField;
     private TextField valField;
     private TableView<Map.Entry<String, String>> keyValueTableView;
@@ -67,39 +70,43 @@ public class ConfigurationsTab extends Tab {
         this.root = new VBox();
         this.setContent(root);
 
-        configuration.addListener((observable, oldValue, newValue) -> {
-            if(configurationState.get() != null) {
+        selectedConfiguration.addListener((observable, oldValue, newValue) -> {
+            if(selectedState.get() != null) {
                 if (oldValue != null && newValue != null) {
                     if (oldValue.getBehaviour().getId() == newValue.getBehaviour().getId()) {
-                        replaceConfiguration(configurationState.get(), oldValue, newValue);
+                        replaceConfiguration(selectedState.get(), oldValue, newValue);
                     }
                 }
             }
         });
+
+        configurationManager = createConfigurationManager();
+        configurationChooser = createConfigurationChooser();
+        keyValuePairTable = createKeyValuePairTable();
     }
 
     //----
     // PUBLIC METHODS
     //----
     public void setParentState(StateViewModel stateViewModel) {
-        this.configurationState.set(stateViewModel);
+        this.selectedState.set(stateViewModel);
     }
 
     public void setParentViewModel(ViewModelElement parentViewModel) {
         root.getChildren().clear();
         switch(parentViewModel.getType()) {
             case Types.BEHAVIOUR:
-                root.getChildren().addAll(createConfigurationManager());
+                root.getChildren().addAll(configurationManager);
 
-                this.behaviour.set((BehaviourViewModel) parentViewModel);
-                this.configuration.set(null);
-                this.configurationState.set(null);
+                this.selectedBehaviour.set((BehaviourViewModel) parentViewModel);
+                this.selectedConfiguration.set(null);
+                this.selectedState.set(null);
                 break;
             case Types.CONFIGURATION:
-                root.getChildren().addAll(createConfigurationChooser(), createKeyValuePairTable());
+                root.getChildren().addAll(configurationChooser, keyValuePairTable);
 
-                this.configuration.set((ConfigurationViewModel) parentViewModel);
-                this.behaviour.set(((ConfigurationViewModel)parentViewModel).getBehaviour());
+                this.selectedConfiguration.set((ConfigurationViewModel) parentViewModel);
+                this.selectedBehaviour.set(((ConfigurationViewModel)parentViewModel).getBehaviour());
                 break;
             default:
                 System.err.println("This should not happen!");
@@ -113,16 +120,16 @@ public class ConfigurationsTab extends Tab {
     //----
 
     //----
-    // CONFIGURATION MANAGER (only for behaviour)
+    // CONFIGURATION MANAGER (only for selectedBehaviour)
     // Creates GUI for adding/removing configurations for behaviours. Only shown when
-    // behaviour is selected.
+    // selectedBehaviour is selected.
     //----
     private TitledPane createConfigurationManager() {
         TitledPane pane = new TitledPane();
         pane.setText(I18NRepo.getInstance().getString("label.caption.configurations"));
 
-        behaviour.addListener((observable, oldValue, newValue) -> updateConfigurationManager(pane, newValue));
-        setOnSelectionChanged(event -> updateConfigurationManager(pane, behaviour.get()));
+        selectedBehaviour.addListener((observable, oldValue, newValue) -> updateConfigurationManager(pane, newValue));
+        setOnSelectionChanged(event -> updateConfigurationManager(pane, selectedBehaviour.get()));
 
         return pane;
     }
@@ -199,19 +206,19 @@ public class ConfigurationsTab extends Tab {
         parent.getChildren().addAll(link, content);
         pane.setContent(parent);
 
-        behaviour.addListener((observable, oldValue, newValue) -> updateConfigurationChooser(content, newValue));
-        behaviour.addListener((observable, oldValue, newValue) -> {
+        selectedBehaviour.addListener((observable, oldValue, newValue) -> updateConfigurationChooser(content, newValue));
+        selectedBehaviour.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 link.setGraphic(new ImageView(new AlicaIcon(Types.BEHAVIOUR, AlicaIcon.Size.SMALL)));
                 link.setText(newValue.getName());
                 link.setOnAction(event -> {
-                    behaviour.set(null);
+                    selectedBehaviour.set(null);
                     setParentViewModel(newValue);
                 });
             }
         });
         setOnSelectionChanged(event -> {
-            updateConfigurationChooser(content, behaviour.get());
+            updateConfigurationChooser(content, selectedBehaviour.get());
         });
 
         return pane;
@@ -224,7 +231,7 @@ public class ConfigurationsTab extends Tab {
         ToggleGroup group = new ToggleGroup();
         for(ConfigurationViewModel c : newBehaviour.getConfigurations()) {
             RadioButton box = new RadioButton(c.getName() );
-            if (c.getId() == configuration.get().getId()) {
+            if (c.getId() == selectedConfiguration.get().getId()) {
                 box.setSelected(true);
             }
             box.setUserData(c);
@@ -234,12 +241,12 @@ public class ConfigurationsTab extends Tab {
 
         group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             Toggle value = observable.getValue();
-            ConfigurationsTab.this.configuration.set((ConfigurationViewModel) value.getUserData());
+            ConfigurationsTab.this.selectedConfiguration.set((ConfigurationViewModel) value.getUserData());
         });
 
         // TODO change radiobutton when list elements properties change
         newBehaviour.getConfigurations().addListener((ListChangeListener<ConfigurationViewModel>) c -> {
-            updateConfigurationChooser(content, behaviour.get());
+            updateConfigurationChooser(content, selectedBehaviour.get());
         });
     }
 
@@ -250,7 +257,7 @@ public class ConfigurationsTab extends Tab {
         TitledPane pane = new TitledPane();
         pane.setText(I18NRepo.getInstance().getString("label.caption.keyvaluepairs"));
 
-        this.configuration.addListener((observable, oldValue, newValue) -> updateKeyValuePairTable(pane, newValue));
+        this.selectedConfiguration.addListener((observable, oldValue, newValue) -> updateKeyValuePairTable(pane, newValue));
 
         return pane;
     }
@@ -268,7 +275,7 @@ public class ConfigurationsTab extends Tab {
         Button remButton = new Button("-");
         Button putButton = new Button("+");
         HBox controls = new HBox(keyField, valField, remButton, putButton);
-        remButton.setOnAction(evt -> createKeyValueEvent(configuration, keyField.getText(), valField.getText(), false));
+        remButton.setOnAction(evt -> createKeyValueEvent(configuration, keyField.getText(), valField.getText(),false));
         putButton.setOnAction(evt -> createKeyValueEvent(configuration, keyField.getText(), valField.getText(),true));
 
         // Table
@@ -329,7 +336,7 @@ public class ConfigurationsTab extends Tab {
     private void createKeyValueEvent(ConfigurationViewModel configuration, String key, String value, boolean add) {
         GuiChangeAttributeEvent addKeyValueEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.CONFIGURATION, configuration.getName());
         addKeyValueEvent.setElementId(configuration.getId());
-        addKeyValueEvent.setParentId(configurationState.get().getId());
+        addKeyValueEvent.setParentId(selectedState.get().getId());
 
         addKeyValueEvent.setAttributeName(key);
         addKeyValueEvent.setAttributeType(value);
@@ -375,7 +382,7 @@ public class ConfigurationsTab extends Tab {
     // ERROR HANDLING
     //----
     private boolean isDuplicate(String newName) {
-        for (ConfigurationViewModel c : behaviour.get().getConfigurations()) {
+        for (ConfigurationViewModel c : selectedBehaviour.get().getConfigurations()) {
             if (newName.equals(c.getName())) {
                 return true;
             }
