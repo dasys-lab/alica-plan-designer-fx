@@ -17,6 +17,8 @@ import de.unikassel.vs.alica.planDesigner.view.properties.variables.VariablesTab
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
@@ -60,6 +62,8 @@ public class ConfigurationsTab extends Tab {
     private TextField keyField;
     private TextField valField;
     private TableView<Map.Entry<String, String>> keyValueTableView;
+    private ChangeListener<BehaviourViewModel> chooserListener;
+    private ChangeListener<BehaviourViewModel> managerListener;
 
     //----
     // CONSTRUCTOR
@@ -96,7 +100,9 @@ public class ConfigurationsTab extends Tab {
         root.getChildren().clear();
         switch(parentViewModel.getType()) {
             case Types.BEHAVIOUR:
-                root.getChildren().addAll(configurationManager);
+                root.getChildren().add(configurationManager);
+                selectedBehaviour.removeListener(chooserListener);
+                selectedBehaviour.addListener(managerListener);
 
                 this.selectedBehaviour.set((BehaviourViewModel) parentViewModel);
                 this.selectedConfiguration.set(null);
@@ -104,6 +110,8 @@ public class ConfigurationsTab extends Tab {
                 break;
             case Types.CONFIGURATION:
                 root.getChildren().addAll(configurationChooser, keyValuePairTable);
+                selectedBehaviour.removeListener(managerListener);
+                selectedBehaviour.addListener(chooserListener);
 
                 this.selectedConfiguration.set((ConfigurationViewModel) parentViewModel);
                 this.selectedBehaviour.set(((ConfigurationViewModel)parentViewModel).getBehaviour());
@@ -111,8 +119,6 @@ public class ConfigurationsTab extends Tab {
             default:
                 System.err.println("This should not happen!");
         }
-
-
     }
 
     //----
@@ -128,15 +134,20 @@ public class ConfigurationsTab extends Tab {
         TitledPane pane = new TitledPane();
         pane.setText(I18NRepo.getInstance().getString("label.caption.configurations"));
 
-        selectedBehaviour.addListener((observable, oldValue, newValue) -> updateConfigurationManager(pane, newValue));
-        setOnSelectionChanged(event -> updateConfigurationManager(pane, selectedBehaviour.get()));
+        managerListener = new ChangeListener<BehaviourViewModel>() {
+            @Override
+            public void changed(ObservableValue<? extends BehaviourViewModel> observable, BehaviourViewModel oldValue, BehaviourViewModel newValue) {
+                ConfigurationsTab.this.updateConfigurationManager(newValue);
+            }
+        };
+        selectedBehaviour.addListener(managerListener);
 
         return pane;
     }
 
-    private void updateConfigurationManager(TitledPane pane, BehaviourViewModel behaviour) {
-        pane.setContent(null);
-        pane.setExpanded(true);
+    private void updateConfigurationManager(BehaviourViewModel behaviour) {
+        configurationManager.setContent(null);
+        configurationManager.setExpanded(true);
         if(behaviour == null) {
             return;
         }
@@ -187,7 +198,7 @@ public class ConfigurationsTab extends Tab {
             }
         });
 
-        pane.setContent(configurations);
+        configurationManager.setContent(configurations);
     }
 
     //----
@@ -206,20 +217,19 @@ public class ConfigurationsTab extends Tab {
         parent.getChildren().addAll(link, content);
         pane.setContent(parent);
 
-        selectedBehaviour.addListener((observable, oldValue, newValue) -> updateConfigurationChooser(content, newValue));
-        selectedBehaviour.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
+        chooserListener = new ChangeListener<BehaviourViewModel>() {
+            @Override
+            public void changed(ObservableValue<? extends BehaviourViewModel> observable, BehaviourViewModel oldValue, BehaviourViewModel newValue) {
+                ConfigurationsTab.this.updateConfigurationChooser(content, newValue);
                 link.setGraphic(new ImageView(new AlicaIcon(Types.BEHAVIOUR, AlicaIcon.Size.SMALL)));
                 link.setText(newValue.getName());
                 link.setOnAction(event -> {
                     selectedBehaviour.set(null);
-                    setParentViewModel(newValue);
+                    ConfigurationsTab.this.setParentViewModel(newValue);
                 });
             }
-        });
-        setOnSelectionChanged(event -> {
-            updateConfigurationChooser(content, selectedBehaviour.get());
-        });
+        };
+        selectedBehaviour.addListener(chooserListener);
 
         return pane;
     }
@@ -257,14 +267,14 @@ public class ConfigurationsTab extends Tab {
         TitledPane pane = new TitledPane();
         pane.setText(I18NRepo.getInstance().getString("label.caption.keyvaluepairs"));
 
-        this.selectedConfiguration.addListener((observable, oldValue, newValue) -> updateKeyValuePairTable(pane, newValue));
+        this.selectedConfiguration.addListener((observable, oldValue, newValue) -> updateKeyValuePairTable(newValue));
 
         return pane;
     }
 
-    private void updateKeyValuePairTable(TitledPane pane, ConfigurationViewModel configuration) {
-        pane.setContent(null);
-        pane.setExpanded(false);
+    private void updateKeyValuePairTable(ConfigurationViewModel configuration) {
+        keyValuePairTable.setContent(null);
+        keyValuePairTable.setExpanded(false);
         if(configuration == null) {
             return;
         }
@@ -326,7 +336,7 @@ public class ConfigurationsTab extends Tab {
             }
         });
 
-        pane.setContent(new ScrollPane(new HBox(keyValueTableView, controls)));
+        keyValuePairTable.setContent(new ScrollPane(new HBox(keyValueTableView, controls)));
     }
 
 
