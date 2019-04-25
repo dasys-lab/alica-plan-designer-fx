@@ -1133,11 +1133,10 @@ public class ModelManager implements Observer {
                         cmd = new ChangeTaskPriority(this, mmq);
                         break;
                     case Types.CONFIGURATION:
-                        boolean add = (boolean) mmq.newValue;
-                        if (add) {
-                            cmd = new KeyValuePairConfiguration(this, mmq, true);
-                        } else {
-                            cmd = new KeyValuePairConfiguration(this, mmq, false);
+                        try {
+                            cmd = new KeyValuePairConfiguration(this, mmq, (boolean) mmq.newValue);
+                        } catch (ClassCastException e) {
+                            cmd = new ChangeAttributeValue(this, mmq);
                         }
                         break;
                     default:
@@ -1179,6 +1178,16 @@ public class ModelManager implements Observer {
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
+                for (State state : ((Plan) planElement).getStates()) {
+                    for (AbstractPlan aPlan: state.getAbstractPlans()) {
+                        if (aPlan instanceof Configuration) {
+                            Behaviour behaviour = ((Configuration) aPlan).getBehaviour();
+                            if (behaviour.getDirty()) {
+                                serialize(behaviour, Types.BEHAVIOUR);
+                            }
+                        }
+                    }
+                }
                 serializeToDisk(planElement, false);
                 break;
             case Types.BEHAVIOUR:

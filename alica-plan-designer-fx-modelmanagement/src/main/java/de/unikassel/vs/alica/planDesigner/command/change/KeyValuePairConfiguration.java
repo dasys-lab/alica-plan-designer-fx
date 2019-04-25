@@ -1,7 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.command.change;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Configuration;
-import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
