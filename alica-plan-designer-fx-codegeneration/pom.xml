@@ -47,7 +47,7 @@
                     <source>8</source>
                     <target>8</target>
                     <excludes>
-                        <exclude>${project.build.sourceDirectory}/main/xtend-gen</exclude>
+                        <exclude>xtend-gen/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
