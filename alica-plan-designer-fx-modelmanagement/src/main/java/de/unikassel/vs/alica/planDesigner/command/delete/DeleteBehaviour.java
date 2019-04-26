@@ -34,14 +34,8 @@ public class DeleteBehaviour extends Command {
         }
 
         //Get the generated Files
-        String generatedPaths = modelManager.getGeneratedFilesForAbstractPlan(behaviour);
-        generatedPaths = generatedPaths.replace("[","");
-        generatedPaths = generatedPaths.replace("]","");
-        String[] split = generatedPaths.split(", ");
+        paths = modelManager.getGeneratedFilesForAbstractPlan(behaviour);
 
-        for (int i = 0; i < split.length; i++) {
-            paths.add(new File(split[i]));
-        }
         if(paths.size() != 0) {
             try {
                 for (File path: paths) {

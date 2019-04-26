@@ -36,15 +36,7 @@ public class DeletePlan extends Command {
             return;
         }
         //Get the generated Files
-        String generatedPaths = modelManager.getGeneratedFilesForAbstractPlan(plan);
-        generatedPaths = generatedPaths.replace("[","");
-        generatedPaths = generatedPaths.replace("]","");
-        String[] split = generatedPaths.split(", ");
-
-        for (int i = 0; i < split.length; i++) {
-            paths.add(new File(split[i]));
-        }
-
+        paths = modelManager.getGeneratedFilesForAbstractPlan(plan);
         if(paths.size() != 0) {
             try {
                 for (File path: paths) {

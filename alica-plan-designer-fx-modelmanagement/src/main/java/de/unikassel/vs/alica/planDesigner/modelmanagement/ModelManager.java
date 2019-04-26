@@ -205,8 +205,8 @@ public class ModelManager implements Observer {
         eventHandlerList.add(eventHandler);
     }
 
-    public String getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan){
-        String path = null;
+    public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan){
+        List<File> path = null;
         for(IModelEventHandler handler : eventHandlerList) {
              path = handler.getGeneratedFilesForAbstractPlan(abstractPlan);
         }

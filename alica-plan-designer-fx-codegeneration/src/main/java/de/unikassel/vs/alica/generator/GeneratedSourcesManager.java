@@ -67,21 +67,6 @@ public class GeneratedSourcesManager {
         return generatedFiles;
     }
 
-    public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
-        List<File> generatedFiles = new ArrayList<>();
-        String destinationPath = trimFileFromPath(abstractPlan.getRelativeDirectory());
-        String headerFilename = abstractPlan.getName() + abstractPlan.getId() + ".h";
-        String sourceFilename = abstractPlan.getName() + abstractPlan.getId() + ".cpp";
-        generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, headerFilename).toFile());
-        generatedFiles.add(Paths.get(getSrcDir(), destinationPath, sourceFilename).toFile());
-
-        String constraintHeaderFileName = abstractPlan.getName() + abstractPlan.getId() + "Constraints.h";
-        String constraintSourceFileName = abstractPlan.getName() + abstractPlan.getId() + "Constraints.cpp";
-        generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, "constraints", constraintHeaderFileName).toFile());
-        generatedFiles.add(Paths.get(getSrcDir(), destinationPath, "constraints", constraintSourceFileName).toFile());
-        return generatedFiles;
-    }
-
     public List<File> getGeneratedConditionFilesForPlan(AbstractPlan abstractPlan) {
         List<File> generatedFiles = new ArrayList<>();
         String destinationPath = trimFileFromPath(abstractPlan.getRelativeDirectory());
