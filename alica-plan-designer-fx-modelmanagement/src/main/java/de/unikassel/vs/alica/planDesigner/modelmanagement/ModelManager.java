@@ -25,8 +25,13 @@ import org.apache.commons.beanutils.PropertyUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ModelManager implements Observer {
 
@@ -644,7 +649,7 @@ public class ModelManager implements Observer {
 
         SerializablePlanElement serializablePlanElement = (SerializablePlanElement) planElement;
         if (removeFromDisk) {
-            removeFromDisk(serializablePlanElement, true);
+            removeFromDisk(serializablePlanElement, 1);
         }
 
         switch (type) {
@@ -731,7 +736,11 @@ public class ModelManager implements Observer {
 
     public void moveFile(SerializablePlanElement elementToMove, String newAbsoluteDirectory, String ending) {
         // 1. Delete file from file system
-        removeFromDisk(elementToMove, true);
+        if(elementToMove instanceof  Plan) {
+            removeFromDisk(elementToMove, 2);
+        } else {
+            removeFromDisk(elementToMove, 1);
+        }
 
         // 2. Change relative directory property
         elementToMove.setRelativeDirectory(makeRelativeDirectory(newAbsoluteDirectory, elementToMove.getName() + "." + ending));
@@ -739,10 +748,7 @@ public class ModelManager implements Observer {
         // 3. Serialize file to file system
         serializeToDisk(elementToMove, true);
 
-        // 4. Do the 1-3 for the pmlex file in case of pml files
-        //TODO implement once pmlex is supported
-
-        // 5. Update external references to file
+        // 4. Update external references to file
         ArrayList<PlanElement> usages = getUsages(elementToMove.getId());
         for (PlanElement planElement : usages) {
             if (planElement instanceof SerializablePlanElement) {
@@ -980,8 +986,7 @@ public class ModelManager implements Observer {
                 cmd = new ParsePlan(this, mmq);
                 break;
             case DELETE_ELEMENT:
-                if (elementDeletedMap.containsKey(mmq.getElementId())) {
-                    elementDeletedMap.remove(mmq.getElementId());
+                if (ignoreDeletedEvent(getPlanElement(mmq.getElementId()))) {
                     return;
                 }
                 switch (mmq.getElementType()) {
@@ -1236,10 +1241,10 @@ public class ModelManager implements Observer {
      *
      * @param planElement
      */
-    public void removeFromDisk(SerializablePlanElement planElement, boolean doneByGUI) {
+    public void removeFromDisk(SerializablePlanElement planElement, int ignoreEventCounter) {
         String extension = FileSystemUtil.getExtension(planElement);
-        if (doneByGUI) {
-            elementDeletedMap.put(planElement.getId(), 1);
+        if (ignoreEventCounter > 0 ) {
+            elementDeletedMap.put(planElement.getId(), ignoreEventCounter);
         }
         File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + extension).toFile();
         outfile.delete();
@@ -1346,6 +1351,28 @@ public class ModelManager implements Observer {
         }
         return false;
     }
+
+    /**
+     * Check, whether to ignore the deletion of the given {@link PlanElement}
+     *
+     * @param newElement the {@link PlanElement} to check
+     * @return true, if should be ignored
+     */
+    private boolean ignoreDeletedEvent(PlanElement newElement) {
+        if (elementDeletedMap.containsKey(newElement.getId())) {
+            int counter = elementDeletedMap.get(newElement.getId()) - 1;
+            if (counter == 0) {
+                // second event arrived, so remove the entry
+                elementDeletedMap.remove(newElement.getId());
+            } else {
+                // first event arrived, so set the reduced counter
+                elementDeletedMap.put(newElement.getId(), counter);
+            }
+            return true;
+        }
+        return false;
+    }
+
 
     public void fireEvent(ModelEvent event) {
         if (event != null) {

@@ -481,6 +481,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             System.err.println("Controller: Unknown filesystem event elementType received that gets ignored!");
             return;
         }
+        mainWindowController.getFileTreeView().updateDirectories(path);
         this.modelManager.handleModelModificationQuery(mmq);
     }
 
