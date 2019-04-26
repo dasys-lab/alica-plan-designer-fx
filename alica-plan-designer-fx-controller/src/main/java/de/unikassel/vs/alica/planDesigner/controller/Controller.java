@@ -212,6 +212,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     /**
+     * Handles FileTree updates fired by the model manager, when a file has been moved.
+     *
+     * @param path path that has to be updated.
+     */
+    public void handleFileTreeViewUpdate(String path) {
+    //TODO implement
+    }
+
+    /**
      * Handles the model event for the repository view.
      *
      * @param eventType
