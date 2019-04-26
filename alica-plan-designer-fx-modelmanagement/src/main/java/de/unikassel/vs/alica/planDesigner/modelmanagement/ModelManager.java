@@ -734,7 +734,7 @@ public class ModelManager implements Observer {
         fireEvent(event);
     }
 
-    public void moveFile(SerializablePlanElement elementToMove, String newAbsoluteDirectory, String ending) {
+    public void moveFile(SerializablePlanElement elementToMove, String type, String newAbsoluteDirectory, String ending) {
         // 0. Save previous path
         String previousPath = getAbsoluteDirectory(elementToMove);
 
@@ -746,7 +746,8 @@ public class ModelManager implements Observer {
         }
 
         // 2. Change relative directory property
-        elementToMove.setRelativeDirectory(makeRelativeDirectory(newAbsoluteDirectory, elementToMove.getName() + "." + ending));
+        changeAttribute(elementToMove, type, "relativeDirectory",
+                makeRelativeDirectory(newAbsoluteDirectory, elementToMove.getName() + "." + ending), previousPath);
 
         // 3. Serialize file to file system
         serializeToDisk(elementToMove, true);
@@ -762,7 +763,7 @@ public class ModelManager implements Observer {
 
         // 5. update FileTreeView since file deletion event is catched and thus the tree view is not updated
         for(IModelEventHandler handler: eventHandlerList) {
-            handler.handleFileTreeViewUpdate(newAbsoluteDirectory);
+            handler.handleFileTreeViewUpdate(previousPath, elementToMove.getId());
         }
     }
 

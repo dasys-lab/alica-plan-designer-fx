@@ -47,6 +47,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
@@ -216,8 +217,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      *
      * @param path path that has to be updated.
      */
-    public void handleFileTreeViewUpdate(String path) {
-    //TODO implement
+    public void handleFileTreeViewUpdate(String path, long id) {
+        mainWindowController.getFileTreeView().removeViewModelElement(getViewModelElement(id));
+        mainWindowController.getFileTreeView().updateDirectories(Paths.get(path));
+        mainWindowController.getFileTreeView().addViewModelElement(getViewModelElement(id));
     }
 
     /**
