@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
@@ -584,6 +585,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public String getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
-        return  generatedSourcesManager.getGeneratedFilesForAbstractPlan(abstractPlan).toString();
+        if(abstractPlan instanceof Behaviour) {
+            return generatedSourcesManager.getGeneratedFilesForBehaviour((Behaviour) abstractPlan).toString();
+        }
+        return generatedSourcesManager.getGeneratedFilesForAbstractPlan(abstractPlan).toString();
     }
 }
