@@ -205,6 +205,14 @@ public class ModelManager implements Observer {
         eventHandlerList.add(eventHandler);
     }
 
+    public String getGeneratedFilesForBehaviour(Behaviour behaviour){
+        String path = null;
+        for(IModelEventHandler handler : eventHandlerList) {
+             path = handler.getGeneratedFilesForBehaviour(behaviour);
+        }
+        return path;
+    }
+    
     public void loadModelFromDisk() {
         unloadModel();
         loadModelFromDisk(tasksPath);
