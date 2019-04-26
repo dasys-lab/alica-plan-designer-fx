@@ -10,6 +10,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,14 +38,14 @@ public class ChangeTaskPriority extends Command {
 
     @Override
     public void doCommand() {
-//        this.modelManager.changeAttribute(planElement, elementType, attribute, newValue, oldValue);
         this.role.addTaskPriority((Task) this.newValue.getKey(), Float.valueOf((String)this.newValue.getValue()));
         this.fireEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, this.role);
     }
 
     @Override
     public void undoCommand() {
-//        this.modelManager.changeAttribute(planElement, elementType, attribute, oldValue, newValue);
+        this.role.addTaskPriority((Task) this.oldValue.getKey(), Float.valueOf((String)this.oldValue.getValue()));
+        this.fireEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, this.role);
     }
 
     @Override
@@ -54,7 +55,19 @@ public class ChangeTaskPriority extends Command {
         event.setChangedAttribute(mmq.getAttributeName());
         event.setRelatedObjects(mmq.getRelatedObjects());
         HashMap<Long, Float> taskIdPriorities = new HashMap<>();
-        this.role.getTaskPriorities().forEach((t, p)-> taskIdPriorities.put(t.getId(), p));
+        ArrayList<Task> removableItems = new ArrayList<>();
+        this.role.getTaskPriorities().forEach((t, p) -> {
+
+            if (p != taskIdPriorities.get(t.getId())) {
+
+                if (role.getRoleSet().getDefaultPriority() == p) {
+                    removableItems.add(t);
+                } else {
+                    taskIdPriorities.put(t.getId(), p);
+                }
+            }
+        });
+        removableItems.forEach(t -> this.role.getTaskPriorities().remove(t));
         event.setNewValue(taskIdPriorities);
         this.modelManager.fireEvent(event);
     }

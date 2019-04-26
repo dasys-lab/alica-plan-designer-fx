@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.apache.log4j.LogManager;
@@ -46,10 +47,14 @@ public class CreateNewDialogController implements Initializable {
     @FXML
     private Button createButton;
 
+    @FXML
+    private VBox mainVBox;
+
     private File initialDirectoryHint;
     private String type;
     private I18NRepo i18NRepo;
     private IGuiModificationHandler guiModificationHandler;
+    private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -96,6 +101,10 @@ public class CreateNewDialogController implements Initializable {
 
         pathTextField.setText(parentPath);
 
+    }
+
+    public void showAndWait() {
+        this.stage.showAndWait();
     }
 
     private void createResource() {
@@ -154,5 +163,17 @@ public class CreateNewDialogController implements Initializable {
         }
         this.type = type;
         nameLabel.setText(i18NRepo.getString("label.menu.new." + type) + " " + i18NRepo.getString("label.name") + ":");
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public VBox getMainVBox() {
+        return mainVBox;
     }
 }
