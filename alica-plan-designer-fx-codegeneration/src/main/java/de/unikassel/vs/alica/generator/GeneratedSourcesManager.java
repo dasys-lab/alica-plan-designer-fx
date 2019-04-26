@@ -67,6 +67,14 @@ public class GeneratedSourcesManager {
         return generatedFiles;
     }
 
+    public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
+        List<File> generatedFiles = new ArrayList<>();
+        String destinationPath = trimFileFromPath(abstractPlan.getRelativeDirectory());
+        generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, abstractPlan.getName() + ".h").toFile());
+        generatedFiles.add(Paths.get(getSrcDir(), destinationPath, abstractPlan.getName() + ".cpp").toFile());
+        return generatedFiles;
+    }
+
     public List<File> getGeneratedConditionFilesForPlan(AbstractPlan abstractPlan) {
         List<File> generatedFiles = new ArrayList<>();
         String destinationPath = trimFileFromPath(abstractPlan.getRelativeDirectory());

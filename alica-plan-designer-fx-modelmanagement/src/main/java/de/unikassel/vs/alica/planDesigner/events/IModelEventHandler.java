@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.events;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
+import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
 
 public interface IModelEventHandler {
     public abstract void handleModelEvent(ModelEvent event);
@@ -9,5 +9,5 @@ public interface IModelEventHandler {
     public abstract void disableUndo(boolean disable);
     public abstract void disableRedo(boolean disable);
     public abstract void handleNoTaskRepositoryNotification();
-    public abstract String getGeneratedFilesForBehaviour(Behaviour behaviour);
+    public abstract String getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan);
 }

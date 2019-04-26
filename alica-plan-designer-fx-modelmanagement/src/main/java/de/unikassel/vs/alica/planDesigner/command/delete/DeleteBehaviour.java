@@ -33,7 +33,7 @@ public class DeleteBehaviour extends Command {
         }
 
         //Get the generated Files
-        String path = modelManager.getGeneratedFilesForBehaviour(behaviour);
+        String path = modelManager.getGeneratedFilesForAbstractPlan(behaviour);
         path = path.replace("[","");
         path = path.replace("]","");
         String[] split = path.split(", ");
