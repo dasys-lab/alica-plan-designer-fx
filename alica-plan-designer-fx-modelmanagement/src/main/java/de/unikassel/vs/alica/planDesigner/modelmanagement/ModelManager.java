@@ -205,10 +205,10 @@ public class ModelManager implements Observer {
         eventHandlerList.add(eventHandler);
     }
 
-    public String getGeneratedFilesForBehaviour(Behaviour behaviour){
-        String path = null;
+    public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan){
+        List<File> path = null;
         for(IModelEventHandler handler : eventHandlerList) {
-             path = handler.getGeneratedFilesForBehaviour(behaviour);
+             path = handler.getGeneratedFilesForAbstractPlan(abstractPlan);
         }
         return path;
     }
