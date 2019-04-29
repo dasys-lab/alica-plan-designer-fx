@@ -1,14 +1,17 @@
 package de.unikassel.vs.alica.planDesigner.command.change;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.command.ChangeAttributeCommand;
 import de.unikassel.vs.alica.planDesigner.command.Command;
+import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class ChangeAttributeValue extends Command {
+public class ChangeAttributeValue extends ChangeAttributeCommand {
 
     private String attribute;
     private PlanElement planElement;
@@ -33,10 +36,12 @@ public class ChangeAttributeValue extends Command {
     @Override
     public void doCommand() {
         this.modelManager.changeAttribute(planElement, elementType, attribute, newValue, oldValue);
+        fireEvent(planElement, elementType, attribute);
     }
 
     @Override
     public void undoCommand() {
         this.modelManager.changeAttribute(planElement, elementType, attribute, oldValue, newValue);
+        fireEvent(planElement, elementType, attribute);
     }
 }

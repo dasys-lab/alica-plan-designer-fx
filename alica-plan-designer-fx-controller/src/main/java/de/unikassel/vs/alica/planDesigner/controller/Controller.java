@@ -201,7 +201,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case Types.ROLESET:
             case Types.TASKREPOSITORY:
                 updateRepos(event.getEventType(), viewModelElement);
-                updateFileTreeView(event.getEventType(), viewModelElement);
+                updateFileTreeView(event, viewModelElement);
                 break;
             case Types.TASK:
             case Types.ROLE:
@@ -210,17 +210,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         }
 
         updateViewModel(event, viewModelElement, modelElement);
-    }
-
-    /**
-     * Handles FileTree updates fired by the model manager, when a file has been moved.
-     *
-     * @param path path that has to be updated.
-     */
-    public void handleFileTreeViewUpdate(String path, long id) {
-        mainWindowController.getFileTreeView().removeViewModelElement(getViewModelElement(id));
-        mainWindowController.getFileTreeView().updateDirectories(Paths.get(path));
-        mainWindowController.getFileTreeView().addViewModelElement(getViewModelElement(id));
     }
 
     /**
@@ -244,17 +233,23 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     /**
      * Handles the model event for the file tree view.
      *
-     * @param eventType
+     * @param event
      * @param viewModelElement
      */
-    private void updateFileTreeView(ModelEventType eventType, ViewModelElement viewModelElement) {
-        switch (eventType) {
+    private void updateFileTreeView(ModelEvent event, ViewModelElement viewModelElement) {
+        switch (event.getEventType()) {
             case ELEMENT_PARSED:
             case ELEMENT_CREATED:
                 mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
                 break;
             case ELEMENT_DELETED:
                 mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
+                break;
+            case ELEMENT_ATTRIBUTE_CHANGED:
+                if(event.getChangedAttribute().equals("relativeDirectory")) {
+                    mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
+                    mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
+                }
                 break;
         }
     }

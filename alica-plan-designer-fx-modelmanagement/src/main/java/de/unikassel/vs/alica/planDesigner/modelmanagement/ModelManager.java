@@ -721,17 +721,6 @@ public class ModelManager implements Observer {
         } catch (IllegalAccessException | InvocationTargetException | IOException e) {
             throw new RuntimeException(e);
         }
-
-        ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, planElement, elementType);
-        event.setChangedAttribute(attribute);
-
-        try {
-            // Using PropertyUtils instead of BeanUtils to get the actual Object and not just its String-representation
-            event.setNewValue(PropertyUtils.getProperty(planElement, attribute));
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        fireEvent(event);
     }
 
     public void moveFile(SerializablePlanElement elementToMove, String type, String newAbsoluteDirectory, String ending) {
@@ -759,11 +748,6 @@ public class ModelManager implements Observer {
                 SerializablePlanElement serializablePlanElement = (SerializablePlanElement) planElement;
                 serializeToDisk(serializablePlanElement, true);
             }
-        }
-
-        // 5. update FileTreeView since file deletion event is catched and thus the tree view is not updated
-        for(IModelEventHandler handler: eventHandlerList) {
-            handler.handleFileTreeViewUpdate(previousPath, elementToMove.getId());
         }
     }
 
