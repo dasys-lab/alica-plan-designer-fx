@@ -27,9 +27,9 @@ public class SynchronizationTool extends AbstractTool {
         ToolButton toolButton = new ToolButton();
         toolButton.setIcon(Types.SYNCHRONISATION);
         setToolButton(toolButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.synchronisation);
-        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synchronisation);
-        addCursor = new AlicaCursor(AlicaCursor.Type.add_synchronisation);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.synchronisation, 8, 8);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synchronisation, 8, 8);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_synchronisation, 8, 8);
         return toolButton;
     }
 

@@ -25,9 +25,9 @@ public class FailureStateTool extends StateTool {
         ToolButton toolButton = new ToolButton();
         toolButton.setIcon(stateType);
         setToolButton(toolButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.failurestate);
-        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_failurestate);
-        addCursor = new AlicaCursor(AlicaCursor.Type.add_failurestate);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.failurestate, 8, 8);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_failurestate, 8, 8);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_failurestate, 8, 8);
         return toolButton;
     }
 }

@@ -20,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -31,7 +32,7 @@ public class TransitionTool extends AbstractTool {
     private LinkedList<Point2D> bendPoints = new LinkedList<>();
 
     private StateViewModel inState = null;
-    private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition);
+    private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition, 8, 8);
 
     public TransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
@@ -148,7 +149,8 @@ public class TransitionTool extends AbstractTool {
         ToolButton toolButton = new ToolButton();
         toolButton.setIcon(Types.TRANSITION);
         setToolButton(toolButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.transition, 0, 8);
+
+        imageCursor = new AlicaCursor(AlicaCursor.Type.transition, 8, 8);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_transition, 8, 8);
         addCursor = new AlicaCursor(AlicaCursor.Type.add_transition, 8, 8);
         return toolButton;

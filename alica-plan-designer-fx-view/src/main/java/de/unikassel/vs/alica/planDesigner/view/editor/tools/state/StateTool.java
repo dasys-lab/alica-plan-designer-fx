@@ -93,9 +93,9 @@ public class StateTool extends AbstractTool {
         ToolButton tollButton = new ToolButton();
         tollButton.setIcon(Types.STATE);
         setToolButton(tollButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.state);
-        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_state);
-        addCursor = new AlicaCursor(AlicaCursor.Type.add_state);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.state, 8, 8);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_state, 8, 8);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_state, 8, 8);
         return tollButton;
     }
 }

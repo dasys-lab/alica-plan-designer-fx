@@ -106,9 +106,9 @@ public class SyncTransitionTool extends AbstractTool {
         ToolButton toolButton = new ToolButton();
         toolButton.setIcon(Types.SYNCTRANSITION);
         setToolButton(toolButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.synctransition);
-        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synctransition);
-        addCursor = new AlicaCursor(AlicaCursor.Type.add_synctransition);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.synctransition, 8, 8);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_synctransition, 8, 8);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_synctransition, 8, 8);
         return toolButton;
     }
 }
