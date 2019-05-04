@@ -10,6 +10,7 @@ import org.testfx.framework.junit.ApplicationTest;
 public class SavePlanTests extends ApplicationTest {
     private PlanDesignerApplication planDesignerApplication;
     private String planName = "testfxPlan";
+    private String planNameExtension = planName + "." + Extensions.PLAN;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -37,9 +38,23 @@ public class SavePlanTests extends ApplicationTest {
 
     @Test
     public void testOpenPlan() {
+        openPlansView();
+        doubleClickOn(planNameExtension);
+    }
+
+    @Test
+    public void testDeletePlan() {
+        openPlansView();
+        rightClickOn(planNameExtension);
+        for (int i = 0; i < 3; i++) {
+            type(KeyCode.DOWN);
+        }
+        type(KeyCode.ENTER);
+    }
+
+    private void openPlansView() {
         clickOn("#fileTreeView");
         type(KeyCode.PAGE_UP);
         type(KeyCode.RIGHT);
-        doubleClickOn(planName + "." + Extensions.PLAN);
     }
 }
