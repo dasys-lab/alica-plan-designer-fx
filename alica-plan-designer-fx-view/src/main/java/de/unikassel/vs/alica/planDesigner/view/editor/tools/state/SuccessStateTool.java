@@ -12,6 +12,7 @@ import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import javafx.geometry.Point2D;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 
 
 public class SuccessStateTool extends StateTool {
@@ -23,6 +24,8 @@ public class SuccessStateTool extends StateTool {
     @Override
     public ToolButton createToolUI() {
         ToolButton toolButton = new ToolButton();
+        Tooltip tooltip = new Tooltip(stateType);
+        toolButton.setTooltip(tooltip);
         toolButton.setIcon(stateType);
         setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.successstate, 8, 8);

@@ -16,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 
 import java.util.HashMap;
@@ -104,6 +105,8 @@ public class SyncTransitionTool extends AbstractTool {
     @Override
     public ToolButton createToolUI() {
         ToolButton toolButton = new ToolButton();
+        Tooltip tooltip = new Tooltip(Types.SYNCTRANSITION);
+        toolButton.setTooltip(tooltip);
         toolButton.setIcon(Types.SYNCTRANSITION);
         setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.synctransition, 8, 8);

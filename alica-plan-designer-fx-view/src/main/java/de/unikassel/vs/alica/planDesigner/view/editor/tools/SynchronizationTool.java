@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -25,6 +26,8 @@ public class SynchronizationTool extends AbstractTool {
     @Override
     public ToolButton createToolUI() {
         ToolButton toolButton = new ToolButton();
+        Tooltip tooltip = new Tooltip(Types.SYNCHRONISATION);
+        toolButton.setTooltip(tooltip);
         toolButton.setIcon(Types.SYNCHRONISATION);
         setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.synchronisation, 8, 8);
