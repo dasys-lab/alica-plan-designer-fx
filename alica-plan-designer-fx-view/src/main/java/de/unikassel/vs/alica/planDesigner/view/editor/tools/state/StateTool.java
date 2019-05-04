@@ -95,6 +95,7 @@ public class StateTool extends AbstractTool {
         Tooltip tooltip = new Tooltip(Types.STATE);
         toolButton.setTooltip(tooltip);
         toolButton.setIcon(Types.STATE);
+        toolButton.setId("StateToolButton");
         setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.state, 8, 8);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_state, 8, 8);

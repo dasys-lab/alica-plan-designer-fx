@@ -52,6 +52,7 @@ public class PlanTab extends AbstractPlanTab {
     private void draw() {
         planEditorGroup = new PlanEditorGroup((PlanViewModel) serializableViewModel, this);
         planContent = new StackPane(planEditorGroup);
+        planContent.setId("PlanTabPlanContent");
         planContent.setPadding(new Insets(50, 50, 50, 50));
         planContent.setManaged(true);
         planEditorGroup.setManaged(true);

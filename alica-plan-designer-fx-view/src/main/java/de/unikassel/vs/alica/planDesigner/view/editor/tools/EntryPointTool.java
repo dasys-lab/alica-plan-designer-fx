@@ -39,6 +39,7 @@ public class EntryPointTool extends AbstractTool {
         Tooltip tooltip = new Tooltip(Types.ENTRYPOINT);
         toolButton.setTooltip(tooltip);
         toolButton.setIcon(Types.ENTRYPOINT);
+        toolButton.setId("EntryPointToolButton");
         setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.entrypoint, 8, 8);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_entrypoint, 8, 8);

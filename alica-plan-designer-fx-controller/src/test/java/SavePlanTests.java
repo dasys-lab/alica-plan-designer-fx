@@ -2,6 +2,7 @@ import de.unikassel.vs.alica.planDesigner.PlanDesigner;
 import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Test;
@@ -24,7 +25,24 @@ public class SavePlanTests extends ApplicationTest {
     public void testCreatePlan() {
         createPlan();
         openPlan();
+        placeEntryPoint();
         deletePlan();
+    }
+
+    private void placeEntryPoint() {
+        // place entryPoint
+        clickOn("#EntryPointToolButton");
+        clickOn("#PlanTabPlanContent");
+        // create task
+        clickOn("#newTaskNameTextField");
+        String taskName = "testfxTask";
+        write(taskName);
+        clickOn("#createTaskButton");
+        // choose created task
+        clickOn("#taskComboBox");
+        Node taskComboBoxTaskName = lookup(taskName).selectAt(1).queryFirst();  // ignore the taskName in the textField
+        clickOn(taskComboBoxTaskName);
+        clickOn("#confirmTaskChoiceButton");
     }
 
     private void createPlan() {
