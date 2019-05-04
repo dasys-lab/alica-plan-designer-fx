@@ -24,9 +24,11 @@ public class NewResourceMenu extends Menu {
 
     public NewResourceMenu(File initialDirectoryHint) {
         super(I18NRepo.getInstance().getString("label.menu.new"));
+        setId("newMenuItem");
         this.initialDirectoryHint = initialDirectoryHint;
         i18NRepo = I18NRepo.getInstance();
         MenuItem newPlanMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plan"));
+        newPlanMenuItem.setId("newPlanMenuItem");
         newPlanMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.PLAN).showAndWait());
         getItems().add(newPlanMenuItem);
         MenuItem newPlanTypeMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.plantype"));
