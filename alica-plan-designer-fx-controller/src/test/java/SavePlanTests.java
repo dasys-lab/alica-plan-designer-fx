@@ -22,6 +22,12 @@ public class SavePlanTests extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
+        createPlan();
+        openPlan();
+        deletePlan();
+    }
+
+    private void createPlan() {
         // open create plan dialog
         clickOn("#fileMenu");
         clickOn("#newMenuItem");
@@ -36,14 +42,12 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#createButton");
     }
 
-    @Test
-    public void testOpenPlan() {
+    private void openPlan() {
         openPlansView();
         doubleClickOn(planNameExtension);
     }
 
-    @Test
-    public void testDeletePlan() {
+    private void deletePlan() {
         openPlansView();
         rightClickOn(planNameExtension);
         for (int i = 0; i < 3; i++) {
