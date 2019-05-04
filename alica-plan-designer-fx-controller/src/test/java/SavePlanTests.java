@@ -7,6 +7,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.service.query.PointQuery;
 
 public class SavePlanTests extends ApplicationTest {
     private PlanDesignerApplication planDesignerApplication;
@@ -26,13 +27,15 @@ public class SavePlanTests extends ApplicationTest {
         createPlan();
         openPlan();
         placeEntryPoint();
+        placeState();
+        placeSuccessState();
         deletePlan();
     }
 
     private void placeEntryPoint() {
         // place entryPoint
         clickOn("#EntryPointToolButton");
-        clickOn("#PlanTabPlanContent");
+        clickOn(freePlanContentPos());
         // create task
         clickOn("#newTaskNameTextField");
         String taskName = "testfxTask";
@@ -43,6 +46,27 @@ public class SavePlanTests extends ApplicationTest {
         Node taskComboBoxTaskName = lookup(taskName).selectAt(1).queryFirst();  // ignore the taskName in the textField
         clickOn(taskComboBoxTaskName);
         clickOn("#confirmTaskChoiceButton");
+        dropElement();
+    }
+
+    private PointQuery freePlanContentPos() {
+        return offset("#PlanTabPlanContent", 100, 0);
+    }
+
+    public void placeState() {
+        clickOn("#StateToolButton");
+        clickOn(freePlanContentPos());
+        dropElement();
+    }
+
+    public void placeSuccessState() {
+        clickOn("#SuccessStateToolButton");
+        clickOn(freePlanContentPos());
+        dropElement();
+    }
+
+    private void dropElement() {
+        type(KeyCode.ESCAPE);
     }
 
     private void createPlan() {
