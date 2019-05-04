@@ -20,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -147,6 +148,8 @@ public class TransitionTool extends AbstractTool {
     @Override
     public ToolButton createToolUI() {
         ToolButton toolButton = new ToolButton();
+        Tooltip tooltip = new Tooltip(Types.TRANSITION);
+        toolButton.setTooltip(tooltip);
         toolButton.setIcon(Types.TRANSITION);
         setToolButton(toolButton);
 
