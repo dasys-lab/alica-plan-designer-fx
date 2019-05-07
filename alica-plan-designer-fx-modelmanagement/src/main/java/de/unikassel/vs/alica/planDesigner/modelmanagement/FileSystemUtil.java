@@ -99,7 +99,7 @@ public class FileSystemUtil {
             case Extensions.PLAN_EXTENSION:
                 return Types.UIEXTENSION;
             default:
-                return Types.NOTYPE;
+                return Types.UNSUPPORTED;
         }
     }
 
