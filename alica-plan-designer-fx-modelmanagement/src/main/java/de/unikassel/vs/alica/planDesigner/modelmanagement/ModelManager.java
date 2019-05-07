@@ -210,6 +210,14 @@ public class ModelManager implements Observer {
         eventHandlerList.add(eventHandler);
     }
 
+    public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan){
+        List<File> path = null;
+        for(IModelEventHandler handler : eventHandlerList) {
+             path = handler.getGeneratedFilesForAbstractPlan(abstractPlan);
+        }
+        return path;
+    }
+    
     public void loadModelFromDisk() {
         unloadModel();
         loadModelFromDisk(tasksPath);

@@ -97,6 +97,10 @@ public class CreateNewDialogController implements Initializable {
         }
 
         File chosenFile = fileChooser.showDialog(stage);
+        if (chosenFile == null) {
+            // dialog was closed without selecting a path
+            return;
+        }
         String parentPath = chosenFile.getAbsolutePath();
 
         pathTextField.setText(parentPath);

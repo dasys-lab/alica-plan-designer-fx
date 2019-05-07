@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
@@ -52,6 +53,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Central class that synchronizes model and view.
@@ -587,5 +589,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     @Override
     public void handleRedo() {
         modelManager.redo();
+    }
+
+    @Override
+    public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
+        if(abstractPlan instanceof Behaviour) {
+            return generatedSourcesManager.getGeneratedFilesForBehaviour((Behaviour) abstractPlan);
+        }
+        List<File> fileList = generatedSourcesManager.getGeneratedConditionFilesForPlan(abstractPlan);
+        fileList.addAll(generatedSourcesManager.getGeneratedConstraintFilesForPlan(abstractPlan));
+        return fileList;
     }
 }

@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import javafx.scene.layout.VBox;
@@ -38,11 +39,13 @@ public class InitTransitionTool extends AbstractTool {
     @Override
     public ToolButton createToolUI() {
         ToolButton toolButton = new ToolButton();
+        Tooltip tooltip = new Tooltip(Types.INITSTATECONNECTION);
+        toolButton.setTooltip(tooltip);
         toolButton.setIcon(Types.INITSTATECONNECTION);
         setToolButton(toolButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.initstateconnection);
-        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_initstateconnection);
-        addCursor = new AlicaCursor(AlicaCursor.Type.add_initstateconnection);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.initstateconnection, 8, 8);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_initstateconnection, 8, 8);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_initstateconnection, 8, 8);
         return toolButton;
     }
 
