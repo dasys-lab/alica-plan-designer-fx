@@ -1,4 +1,4 @@
-package de.unikassel.vs.alica.planDesigner.view.properties;
+package de.unikassel.vs.alica.planDesigner.view.properties.configuration;
 
 import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
@@ -13,7 +13,6 @@ import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ConfigurationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
-import de.unikassel.vs.alica.planDesigner.view.properties.variables.VariablesTable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,6 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -154,7 +154,7 @@ public class ConfigurationsTab extends Tab {
 
         I18NRepo i18NRepo = I18NRepo.getInstance();
 
-        VariablesTable<ConfigurationViewModel> configurations = new VariablesTable<ConfigurationViewModel>() {
+        ConfigurationsTable<ConfigurationViewModel> configurations = new ConfigurationsTable<ConfigurationViewModel>() {
             @Override
             protected void onAddElement() {
                 String new_configuration = "NEW_CONFIGURATION";
@@ -179,9 +179,9 @@ public class ConfigurationsTab extends Tab {
             }
         };
 
-        configurations.addColumn(i18NRepo.getString("alicatype.property.name"), "name", new DefaultStringConverter(), true);
+        configurations.addColumn(i18NRepo.getString("alicatype.property.name"), "name", new DefaultStringConverter(), true, new ConfigurationsTableListener());
         configurations.addColumn(i18NRepo.getString("alicatype.property.id"), "id", new LongStringConverter(), false);
-        configurations.addColumn(i18NRepo.getString("alicatype.property.comment"), "comment", new DefaultStringConverter(), true);
+        configurations.addColumn(i18NRepo.getString("alicatype.property.comment"), "comment", new DefaultStringConverter(), true, new ConfigurationsTableListener());
 
         for(ConfigurationViewModel c : behaviour.getConfigurations()) {
             configurations.addItem(c);
@@ -353,8 +353,8 @@ public class ConfigurationsTab extends Tab {
 
         addKeyValueEvent.setNewValue(add);
 
-        IGuiModificationHandler controller = MainWindowController.getInstance().getGuiModificationHandler();
-        controller.handle(addKeyValueEvent);
+        IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+        handler.handle(addKeyValueEvent);
 
         if (!add) {
             keyField.clear();
@@ -382,6 +382,7 @@ public class ConfigurationsTab extends Tab {
 
     private void resizeTableView(ConfigurationViewModel configuration) {
         int itemsAndHeaderSize = configuration.getKeyValuePairs().size() + 1;
+
         keyValueTableView.setPrefHeight(itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
         keyValueTableView.setMinHeight( itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
         keyValueTableView.setMaxHeight( itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
@@ -416,4 +417,36 @@ public class ConfigurationsTab extends Tab {
         alert.showAndWait();
     }
 
+    public class ConfigurationsTableListener<S, T> implements EventHandler<TableColumn.CellEditEvent<ConfigurationViewModel, String>> {
+
+        private String attributeName;
+
+        @Override
+        public void handle(TableColumn.CellEditEvent<ConfigurationViewModel, String> event) {
+            ConfigurationViewModel configurationViewModel = event.getRowValue();
+            String newValue = event.getNewValue();
+            String oldName = event.getOldValue();
+            if ("name".equals(attributeName)) {
+                if (isDuplicate(newValue)) {
+                    createAlert();
+                    event.consume();
+                    event.getTableView().getItems().set(event.getTablePosition().getRow(), configurationViewModel);
+                    return;
+                }
+            }
+
+            GuiChangeAttributeEvent attributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.CONFIGURATION, oldName);
+            attributeEvent.setNewValue(newValue);
+            attributeEvent.setAttributeType(String.class.getSimpleName());
+            attributeEvent.setAttributeName(attributeName);
+            attributeEvent.setElementId(configurationViewModel.getId());
+            IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+            handler.handle(attributeEvent);
+            event.consume();
+        }
+
+        public void setPropertyName(String propertyName) {
+            this.attributeName = propertyName;
+        }
+    }
 }
