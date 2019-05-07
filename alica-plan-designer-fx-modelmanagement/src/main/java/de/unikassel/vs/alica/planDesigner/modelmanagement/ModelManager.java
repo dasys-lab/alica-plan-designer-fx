@@ -295,7 +295,7 @@ public class ModelManager implements Observer {
     private void loadModelFile(File modelFile, boolean resolveReferences) {
         // 0. check if valid plan ending
         String stringType = FileSystemUtil.getExtension(modelFile);
-        if((stringType == Types.NOTYPE)) {
+        if((stringType == Types.UNSUPPORTED)) {
             return;
         }
 
@@ -981,8 +981,13 @@ public class ModelManager implements Observer {
                 break;
             case PARSE_ELEMENT:
                 File f = FileSystemUtil.getFile(mmq);
+
+                if ( f == null || !f.exists() )  {
+                    return;
+                }
                 PlanElement element = getPlanElement(f.toString());
-                if (!f.exists() || element == null || ignoreModifiedEvent(element)) {
+
+                if ( element == null || ignoreModifiedEvent(element)) {
                     return;
                 }
                 cmd = new ParsePlan(this, mmq);
