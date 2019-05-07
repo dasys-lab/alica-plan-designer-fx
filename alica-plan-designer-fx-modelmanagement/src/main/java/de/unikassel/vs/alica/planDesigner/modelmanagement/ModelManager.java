@@ -732,24 +732,25 @@ public class ModelManager implements Observer {
     }
 
     public void moveFile(SerializablePlanElement elementToMove, String type, String newAbsoluteDirectory, String ending) {
-        // 0. Save previous path
+        // 1. Save previous path and previous files
         String previousPath = getAbsoluteDirectory(elementToMove);
+        List<File> oldFilesToMove = getGeneratedFilesForAbstractPlan((AbstractPlan) elementToMove);
 
-        // 1. Delete file from file system
+        // 2. Delete file from file system
         if(elementToMove instanceof  Plan) {
             removeFromDisk(elementToMove, 2);
         } else {
             removeFromDisk(elementToMove, 1);
         }
 
-        // 2. Change relative directory property
+        // 3. Change relative directory property
         changeAttribute(elementToMove, type, "relativeDirectory",
                 makeRelativeDirectory(newAbsoluteDirectory, elementToMove.getName() + "." + ending), previousPath);
 
-        // 3. Serialize file to file system
+        // 4. Serialize file to file system
         serializeToDisk(elementToMove, true);
 
-        // 4. Update external references to file
+        // 5. Update external references to file
         ArrayList<PlanElement> usages = getUsages(elementToMove.getId());
         for (PlanElement planElement : usages) {
             if (planElement instanceof SerializablePlanElement) {
@@ -757,6 +758,15 @@ public class ModelManager implements Observer {
                 serializeToDisk(serializablePlanElement, true);
             }
         }
+
+        // 6. Move generated files
+        List<File> filesToMove = getGeneratedFilesForAbstractPlan((AbstractPlan) elementToMove);
+        for(int i = 0 ; i < filesToMove.size(); i++) {
+            System.out.println(oldFilesToMove.get(i).toString());
+            System.out.println(filesToMove.get(i).toString());
+            //Files. move(previousPath, newAbsoluteDirectory, ATOMIC_MOVE);
+        }
+
     }
 
     private void renameFile(String absoluteDirectory, String newName, String oldName, String ending) throws IOException {
