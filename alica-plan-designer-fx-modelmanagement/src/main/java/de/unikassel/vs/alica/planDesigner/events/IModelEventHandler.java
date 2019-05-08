@@ -12,5 +12,6 @@ public interface IModelEventHandler {
     public abstract void disableUndo(boolean disable);
     public abstract void disableRedo(boolean disable);
     public abstract void handleNoTaskRepositoryNotification();
+    public abstract void handleWrongTaskRepositoryNotification();
     public abstract List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan);
 }

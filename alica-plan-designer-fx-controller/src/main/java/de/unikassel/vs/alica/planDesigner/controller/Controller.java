@@ -524,6 +524,24 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     @Override
+    public void handleWrongTaskRepositoryNotification() {
+        HashMap<String, Double> params = configEventHandler.getPreferredWindowSettings();
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(i18NRepo.getString("label.warn"));
+        alert.setHeaderText(i18NRepo.getString("label.error.wrong.taskrepository"));
+        alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2 - alert.getDialogPane().getWidth());
+        alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2 - alert.getDialogPane().getHeight());
+
+        ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(closeBtn);
+
+        alert.showAndWait();
+        Platform.exit();
+        System.exit(0);
+    }
+
+    @Override
     public ViewModelElement getViewModelElement(long id) {
         return viewModelManager.getViewModelElement(modelManager.getPlanElement(id));
     }
