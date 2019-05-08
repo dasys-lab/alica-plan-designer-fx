@@ -437,11 +437,9 @@ public class ModelManager implements Observer {
     private void resolveReferences(Plan plan) {
         for (EntryPoint ep : plan.getEntryPoints()) {
             Task task = taskRepository.getTask(ep.getTask().getId());
-            TaskRepository taskRepository = ep.getTask().getTaskRepository();
-
-            if (task == null || taskRepository == null) {
+            if (task == null) {
                 for(IModelEventHandler handler : eventHandlerList) {
-                    handler.handleWrongTaskRepositoryNotification();
+                    handler.handleWrongTaskRepositoryNotification(plan.getName(), task.getId());
                 }
                 return;
             }
