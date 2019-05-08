@@ -48,7 +48,6 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
@@ -210,7 +209,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 updateRepos(event.getEventType(), viewModelElement);
                 break;
         }
-
+        // Generate files for moved code
+        if(event.getEventType() == ModelEventType.ELEMENT_ATTRIBUTE_CHANGED  && event.getChangedAttribute().equals("relativeDirectory")) {
+            mainWindowController.waitOnProgressLabel(() -> generateCode(new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, event.getElementType(),
+                    modelElement.getName()), mainWindowController.getStatusText()));
+        }
         updateViewModel(event, viewModelElement, modelElement);
     }
 

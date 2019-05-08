@@ -35,6 +35,8 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ModelManager implements Observer {
 
+    public static final int IGNORE_DELETE_PLAN_COUNTER = 2;
+    public static final int IGNORE_DELETE_BEH_PT_COUNTER = 1;
     private String plansPath;
     private String tasksPath;
     private String rolesPath;
@@ -737,10 +739,11 @@ public class ModelManager implements Observer {
         List<File> oldFilesToMove = getGeneratedFilesForAbstractPlan((AbstractPlan) elementToMove);
 
         // 2. Delete file from file system
+        //TODO constant
         if(elementToMove instanceof  Plan) {
-            removeFromDisk(elementToMove, 2);
+            removeFromDisk(elementToMove, IGNORE_DELETE_PLAN_COUNTER);
         } else {
-            removeFromDisk(elementToMove, 1);
+            removeFromDisk(elementToMove, IGNORE_DELETE_BEH_PT_COUNTER);
         }
 
         // 3. Change relative directory property
@@ -762,11 +765,12 @@ public class ModelManager implements Observer {
         // 6. Move generated files
         List<File> filesToMove = getGeneratedFilesForAbstractPlan((AbstractPlan) elementToMove);
         for(int i = 0 ; i < filesToMove.size(); i++) {
-            System.out.println(oldFilesToMove.get(i).toString());
-            System.out.println(filesToMove.get(i).toString());
-            //Files. move(previousPath, newAbsoluteDirectory, ATOMIC_MOVE);
+            try {
+                Files.move(oldFilesToMove.get(i).toPath(), filesToMove.get(i).toPath(), ATOMIC_MOVE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     private void renameFile(String absoluteDirectory, String newName, String oldName, String ending) throws IOException {

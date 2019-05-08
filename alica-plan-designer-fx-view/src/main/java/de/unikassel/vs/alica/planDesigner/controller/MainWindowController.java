@@ -161,6 +161,11 @@ public class MainWindowController implements Initializable {
         this.guiModificationHandler = creationHandler;
     }
 
+
+    public Text getStatusText() {
+        return statusText;
+    }
+
     //--------------------------------------------------------------------------------------------
 //  INTERFACE IMPLEMENTATIONS
 //--------------------------------------------------------------------------------------------
@@ -313,7 +318,7 @@ public class MainWindowController implements Initializable {
         editorTabPane.openTab(toOpen);
     }
 
-    private void waitOnProgressLabel(Runnable toWaitOn) {
+    public void waitOnProgressLabel(Runnable toWaitOn) {
         new Thread(() -> {
             //Ping
             Platform.runLater(() -> statusText.setVisible(true));
