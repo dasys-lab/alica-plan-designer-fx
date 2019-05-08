@@ -302,7 +302,7 @@ public class ModelManager implements Observer {
     private void loadModelFile(File modelFile, boolean resolveReferences) {
         // 0. check if valid plan ending
         String stringType = FileSystemUtil.getExtension(modelFile);
-        if((stringType == Types.NOTYPE)) {
+        if((stringType == Types.UNSUPPORTED)) {
             return;
         }
 
@@ -436,7 +436,16 @@ public class ModelManager implements Observer {
 
     private void resolveReferences(Plan plan) {
         for (EntryPoint ep : plan.getEntryPoints()) {
-            ep.setTask(taskRepository.getTask(ep.getTask().getId()));
+            Task task = taskRepository.getTask(ep.getTask().getId());
+            TaskRepository taskRepository = ep.getTask().getTaskRepository();
+
+            if (task == null || taskRepository == null) {
+                for(IModelEventHandler handler : eventHandlerList) {
+                    handler.handleWrongTaskRepositoryNotification();
+                }
+                return;
+            }
+            ep.setTask(task);
         }
 
         for (State state : plan.getStates()) {
@@ -994,8 +1003,13 @@ public class ModelManager implements Observer {
                 break;
             case PARSE_ELEMENT:
                 File f = FileSystemUtil.getFile(mmq);
+
+                if ( f == null || !f.exists() )  {
+                    return;
+                }
                 PlanElement element = getPlanElement(f.toString());
-                if (!f.exists() || element == null || ignoreModifiedEvent(element)) {
+
+                if ( element == null || ignoreModifiedEvent(element)) {
                     return;
                 }
                 cmd = new ParsePlan(this, mmq);

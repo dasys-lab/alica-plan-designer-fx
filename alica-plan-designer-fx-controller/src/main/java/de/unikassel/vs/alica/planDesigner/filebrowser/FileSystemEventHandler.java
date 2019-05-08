@@ -94,7 +94,7 @@ public class FileSystemEventHandler implements Runnable  {
                 // wait for key to be signalled
                 WatchKey key;
                 try {
-                    key = watcher.poll(500, TimeUnit.MILLISECONDS);
+                    key = watcher.take();
                 } catch (InterruptedException x) {
                     return;
                 }
