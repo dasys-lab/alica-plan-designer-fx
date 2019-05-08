@@ -344,4 +344,6 @@ public class MainWindowController implements Initializable {
     //            propertyAndStatusTabPane.getTabs().clear();
     //        }
     //    }
+
+
 }

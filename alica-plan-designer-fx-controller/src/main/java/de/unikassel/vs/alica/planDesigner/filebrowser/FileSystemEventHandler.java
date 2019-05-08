@@ -77,6 +77,16 @@ public class FileSystemEventHandler implements Runnable  {
     public void run() {
         try {
             watcher = FileSystems.getDefault().newWatchService();
+
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    try {
+                        watcher.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
             Configuration conf = ConfigurationManager.getInstance().getActiveConfiguration();
             if (conf != null) {
                 if(conf.getPlansPath() != null && !conf.getPlansPath().isEmpty()) {
@@ -145,6 +155,9 @@ public class FileSystemEventHandler implements Runnable  {
                     }
                 }
             }
+
+        } catch (ClosedWatchServiceException e) {
+            System.out.println("File watcher closed");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
