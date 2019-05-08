@@ -19,32 +19,32 @@
             <items>
                 <SplitPane fx:id="treeRepoSplitPane" dividerPositions="0.8" orientation="VERTICAL">
                     <items>
-                        <VBox minHeight="-Infinity">
+                        <VBox >
                             <children>
                                 <Label text="FileTreeView">
                                     <VBox.margin>
                                         <Insets left="10.0" />
                                     </VBox.margin>
                                 </Label>
-                                <FileTreeView fx:id="fileTreeView" minWidth="100.0" prefWidth="300.0" VBox.vgrow="ALWAYS" />
+                                <FileTreeView fx:id="fileTreeView" prefWidth="300.0" VBox.vgrow="ALWAYS" />
                             </children>
                         </VBox>
-                        <VBox minHeight="-Infinity">
+                        <VBox>
                             <children>
                                 <Label text="RepositoryView">
                                     <VBox.margin>
                                         <Insets left="10.0" />
                                     </VBox.margin>
                                 </Label>
-                                <RepositoryTabPane fx:id="repositoryTabPane" minWidth="100.0" prefWidth="300.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
+                                <RepositoryTabPane fx:id="repositoryTabPane" prefWidth="300.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
                             </children>
                         </VBox>
                     </items>
                 </SplitPane>
-                <EditorTabPane fx:id="editorTabPane" minHeight="100.0" minWidth="100.0" tabClosingPolicy="ALL_TABS" />
+                <EditorTabPane fx:id="editorTabPane" minWidth="100.0" tabClosingPolicy="ALL_TABS" />
             </items>
         </SplitPane>
-      <HBox fx:id="statusBox" alignment="TOP_RIGHT" minHeight="30.0" AnchorPane.rightAnchor="0.0">
+      <HBox fx:id="statusBox" alignment="TOP_RIGHT" AnchorPane.rightAnchor="0.0">
          <children>
             <VBox alignment="CENTER">
                <children>

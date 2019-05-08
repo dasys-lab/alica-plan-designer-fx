@@ -118,7 +118,7 @@ public class FileSystemEventHandler implements Runnable  {
                     Path child = dir.resolve(name);
 
                     // print out event
-//                    System.out.format("FileSystemEventHandler: %s: %s%n", event.kind().name(), child);
+                    System.out.format("FileSystemEventHandler: %s: %s%n", event.kind().name(), child);
 
                     // if directory is created, and watching recursively, then
                     // register it and its sub-directories
