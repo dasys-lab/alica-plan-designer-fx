@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane?>
+<?import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView?>
+<?import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <MenuBar fx:id="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+        <SplitPane fx:id="mainSplitPane" dividerPositions="0.01" orientation="HORIZONTAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+            <items>
+                <SplitPane fx:id="treeRepoSplitPane" dividerPositions="0.8" orientation="VERTICAL">
+                    <items>
+                        <VBox >
+                            <children>
+                                <Label text="FileTreeView">
+                                    <VBox.margin>
+                                        <Insets left="10.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <FileTreeView fx:id="fileTreeView" prefWidth="300.0" VBox.vgrow="ALWAYS" />
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label text="RepositoryView">
+                                    <VBox.margin>
+                                        <Insets left="10.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <RepositoryTabPane fx:id="repositoryTabPane" prefWidth="300.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
+                            </children>
+                        </VBox>
+                    </items>
+                </SplitPane>
+                <EditorTabPane fx:id="editorTabPane" minWidth="100.0" tabClosingPolicy="ALL_TABS" />
+            </items>
+        </SplitPane>
+      <HBox fx:id="statusBox" alignment="TOP_RIGHT" AnchorPane.rightAnchor="0.0">
+         <children>
+            <VBox alignment="CENTER">
+               <children>
+                      <Text fx:id="statusText" textAlignment="RIGHT" visible="false">
+                     <VBox.margin>
+                        <Insets right="8.0" />
+                     </VBox.margin>
+                  </Text>
+               </children></VBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
+    </children>
+</AnchorPane>
