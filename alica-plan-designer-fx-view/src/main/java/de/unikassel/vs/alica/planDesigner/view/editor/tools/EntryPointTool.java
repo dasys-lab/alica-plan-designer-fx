@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import org.apache.log4j.LogManager;
@@ -35,11 +36,13 @@ public class EntryPointTool extends AbstractTool {
     @Override
     public ToolButton createToolUI() {
         ToolButton toolButton = new ToolButton();
+        Tooltip tooltip = new Tooltip(Types.ENTRYPOINT);
+        toolButton.setTooltip(tooltip);
         toolButton.setIcon(Types.ENTRYPOINT);
         setToolButton(toolButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.entrypoint);
-        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_entrypoint);
-        addCursor = new AlicaCursor(AlicaCursor.Type.add_entrypoint);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.entrypoint, 8, 8);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_entrypoint, 8, 8);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_entrypoint, 8, 8);
         return toolButton;
     }
 

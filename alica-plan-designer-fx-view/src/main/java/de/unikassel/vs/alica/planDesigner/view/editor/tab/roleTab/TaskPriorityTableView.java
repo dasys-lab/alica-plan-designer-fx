@@ -29,6 +29,7 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
         for (Object item : this.getItems()) {
             Float taskPriority = currentRole.getTaskPriority(((TaskPriorityTableElement) item).getTaskID());
             taskPriority = taskPriority == null ? defaultPriority : taskPriority;
+            ((TaskPriorityTableElement) item).removeListener();
             ((TaskPriorityTableElement) item).setPriority(String.valueOf(taskPriority));
         }
     }

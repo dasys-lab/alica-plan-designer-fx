@@ -43,7 +43,6 @@ public final class RepositoryViewModel {
         repositoryTabPane.addPlanTypes(planTypes);
         repositoryTabPane.addTasks(tasks);
         repositoryTabPane.addBehaviours(behaviours);
-        repositoryTabPane.addRoles(roles);
         initListeners();
     }
 
@@ -82,13 +81,6 @@ public final class RepositoryViewModel {
             public void onChanged(Change<? extends ViewModelElement> c) {
                 repositoryTabPane.clearTasksTab();
                 repositoryTabPane.addTasks(tasks);
-            }
-        });
-        roles.addListener(new ListChangeListener<ViewModelElement>() {
-            @Override
-            public void onChanged(Change<? extends ViewModelElement> c) {
-                repositoryTabPane.clearRolesTab();
-                repositoryTabPane.addRoles(roles);
             }
         });
     }

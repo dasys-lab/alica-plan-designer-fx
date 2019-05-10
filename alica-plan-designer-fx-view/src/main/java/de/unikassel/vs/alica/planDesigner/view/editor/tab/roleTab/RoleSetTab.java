@@ -121,7 +121,9 @@ public class RoleSetTab extends EditorTab {
             event.setElementId(roleViewModel.getId());
             guiModificationHandler.handle(event);
         });
-        taskTableView.addTasks(roleSetViewModel.getTaskRepository().getTaskViewModels());
+
+        if (roleSetViewModel.getTaskRepository() != null)
+            taskTableView.addTasks(roleSetViewModel.getTaskRepository().getTaskViewModels());
         return taskTableView;
     }
 

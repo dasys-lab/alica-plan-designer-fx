@@ -79,12 +79,4 @@ public class RoleSetViewModel extends SerializableViewModel {
     public void setTaskRepository(TaskRepositoryViewModel taskRepository) {
         this.taskRepository = taskRepository;
     }
-
-    //    public ObservableList<TaskViewModel> getTaskViewModels() {
-//        return tasks;
-//    }
-//
-//    public void addTask(TaskViewModel task) {
-//        tasks.add(task);
-//    }
 }

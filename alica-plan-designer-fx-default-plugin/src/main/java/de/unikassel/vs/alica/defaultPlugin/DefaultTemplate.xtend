@@ -157,36 +157,38 @@ class DefaultTemplate {
         // State: «state.name»
         «var  List<Transition> outTransitions = state.outTransitions»
         «FOR transition : outTransitions»
-            «var  List<Variable> variables = transition.preCondition.variables»
-            «IF (transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin" && variables.size > 0)»
-                /*
-                 * Transition:
-                 * - Name: «transition.preCondition.name»
-                 * - Comment: «transition.preCondition.comment»
-                 * - ConditionString: «transition.preCondition.conditionString»
-                 *
-                 * «var  List<AbstractPlan> plans = state.abstractPlans»
-                 * Plans in State: «FOR plan : plans»
-                 * - Plan Name: «plan.name», PlanID: «plan.id» «ENDFOR»
-                 * Static Variables: «FOR variable : variables»«variable.name» «ENDFOR»
-                 * Domain Variables:
-                «IF transition.preCondition.quantifiers !== null && transition.preCondition.quantifiers.size > 0»
-                    «var  List<Quantifier> quantifiers = transition.preCondition.quantifiers»
-                    «FOR q : quantifiers»
-                        «var  List<String> sorts=  q.sorts»
-                        * forall agents in «q.scope.name» let v = «sorts»
-                    «ENDFOR»
-                «ENDIF»
-                 */
-                void Constraint«transition.preCondition.id»::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) {
-                    /*PROTECTED REGION ID(cc«transition.preCondition.id») ENABLED START*/
-                    «IF (protectedRegions.containsKey("cc" + transition.preCondition.id))»
-                        «protectedRegions.get("cc" + transition.preCondition.id)»
-                    «ELSE»
-                        //Please describe your precondition constraint here
+            «IF transition.preCondition != null»
+                «var  List<Variable> variables = transition.preCondition.variables»
+                «IF (transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin" && variables.size > 0)»
+                    /*
+                    * Transition:
+                    * - Name: «transition.preCondition.name»
+                    * - Comment: «transition.preCondition.comment»
+                    * - ConditionString: «transition.preCondition.conditionString»
+                    *
+                    * «var  List<AbstractPlan> plans = state.abstractPlans»
+                    * Plans in State: «FOR plan : plans»
+                    * - Plan Name: «plan.name», PlanID: «plan.id» «ENDFOR»
+                    * Static Variables: «FOR variable : variables»«variable.name» «ENDFOR»
+                    * Domain Variables:
+                    «IF transition.preCondition.quantifiers !== null && transition.preCondition.quantifiers.size > 0»
+                        «var  List<Quantifier> quantifiers = transition.preCondition.quantifiers»
+                        «FOR q : quantifiers»
+                            «var  List<String> sorts=  q.sorts»
+                            * forall agents in «q.scope.name» let v = «sorts»
+                        «ENDFOR»
                     «ENDIF»
-                    /*PROTECTED REGION END*/
-                }
+                     */
+                    void Constraint«transition.preCondition.id»::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) {
+                        /*PROTECTED REGION ID(cc«transition.preCondition.id») ENABLED START*/
+                        «IF (protectedRegions.containsKey("cc" + transition.preCondition.id))»
+                            «protectedRegions.get("cc" + transition.preCondition.id)»
+                        «ELSE»
+                            //Please describe your precondition constraint here
+                        «ENDIF»
+                        /*PROTECTED REGION END*/
+                    }
+                «ENDIF»
             «ENDIF»
         «ENDFOR»
     '''
