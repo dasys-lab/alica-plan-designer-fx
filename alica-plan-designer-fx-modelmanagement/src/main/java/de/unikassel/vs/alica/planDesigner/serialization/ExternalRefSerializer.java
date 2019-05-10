@@ -8,6 +8,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 public class ExternalRefSerializer extends StdSerializer<PlanElement> {
 
@@ -34,7 +35,13 @@ public class ExternalRefSerializer extends StdSerializer<PlanElement> {
             jsonGenerator.writeString(Paths.get(((SerializablePlanElement)planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.TASKREPOSITORY + "#" + planElement.getId()).toString());
         } else if (planElement instanceof Task) {
             TaskRepository taskRepository = ((Task) planElement).getTaskRepository();
-            jsonGenerator.writeFieldName(Paths.get(taskRepository.getRelativeDirectory(), taskRepository.getName() + "." + Extensions.TASKREPOSITORY + "#" + planElement.getId()).toString());
+            if(jsonGenerator.getCurrentValue() instanceof HashMap) {
+                jsonGenerator.writeFieldName(Paths.get(taskRepository.getRelativeDirectory(), taskRepository.getName() + "." + Extensions.TASKREPOSITORY + "#" + planElement.getId()).toString());
+            } else if (jsonGenerator.getCurrentValue() instanceof EntryPoint) {
+                jsonGenerator.writeString(Paths.get(taskRepository.getRelativeDirectory(), taskRepository.getName() + "." + Extensions.TASKREPOSITORY + "#" + planElement.getId()).toString());
+            } else {
+                throw new RuntimeException("ExternalRefSerializer: Unkown type to serialize... :P");
+            }
         } else if (planElement instanceof RoleSet) {
             jsonGenerator.writeString(Paths.get(((SerializablePlanElement)planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.ROLESET + "#" + planElement.getId()).toString());
         } else if (planElement instanceof Variable) {
@@ -46,6 +53,8 @@ public class ExternalRefSerializer extends StdSerializer<PlanElement> {
                 jsonGenerator.writeString(Paths.get(parent.getRelativeDirectory(), parent.getName() + "." + Extensions.BEHAVIOUR + "#" + planElement.getId()).toString());
             } else if (parent instanceof Plan) {
                 jsonGenerator.writeString(Paths.get(parent.getRelativeDirectory(), parent.getName() + "." + Extensions.PLAN+ "#" + planElement.getId()).toString());
+            } else {
+                throw new RuntimeException("ExternalRefSerializer: Unkown type to serialize... :P");
             }
         } else {
             throw new RuntimeException("ExternalRefSerializer: Unkown type to serialize... :P");

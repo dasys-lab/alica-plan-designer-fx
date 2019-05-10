@@ -44,7 +44,7 @@ public class PlanViewModel extends AbstractPlanViewModel {
     public void setMasterPlan(boolean masterPlan) {
         this.masterPlan.setValue(masterPlan);
     }
-    public boolean getMasterPlan() {
+    public boolean isMasterPlan() {
         return masterPlan.get();
     }
 

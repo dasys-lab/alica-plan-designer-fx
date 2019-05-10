@@ -1,6 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
 
-import de.unikassel.vs.alica.planDesigner.view.model.RoleViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -17,7 +16,7 @@ public class TaskPriorityTableElement {
     private SimpleStringProperty taskName;
     private SimpleStringProperty priority;
 
-    private PropertyChangeListener listener;
+    private InvalidationListener listener;
 
     public TaskPriorityTableElement(TaskPriorityTableView tableView, TaskViewModel task, String priority) {
         this.tableView = tableView;
@@ -27,15 +26,8 @@ public class TaskPriorityTableElement {
     }
 
     public void addListener(PropertyChangeListener listener) {
-        this.listener = listener;
-
-        this.priority.addListener(new InvalidationListener() {
-            @Override
-            public void invalidated(Observable observable) {
-                listener.propertyChange(new PropertyChangeEvent(tableView.getCurrentRole(), "taskPriority", task.getId(),
-                        ((StringProperty)observable).getValue()));
-            }
-        });
+        this.listener = observable -> listener.propertyChange(new PropertyChangeEvent(tableView.getCurrentRole(), "taskPriority", task.getId(),
+                ((StringProperty)observable).getValue()));
     }
 
     public SimpleStringProperty priorityProperty() {
@@ -48,6 +40,11 @@ public class TaskPriorityTableElement {
 
     public void setPriority(String priority) {
         this.priority.set(priority);
+        this.priority.addListener(this.listener);
+    }
+
+    public void setStartPriority(String priority) {
+        this.priority.set(priority);
     }
 
     public TaskViewModel getTask() {
@@ -56,5 +53,9 @@ public class TaskPriorityTableElement {
 
     public long getTaskID() {
         return task.getId();
+    }
+
+    public void removeListener() {
+        this.priority.removeListener(this.listener);
     }
 }

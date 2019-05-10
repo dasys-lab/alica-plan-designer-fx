@@ -37,5 +37,8 @@ public class PlanType extends AbstractPlan {
 
     public void registerDirtyFlag() {
         super.registerDirtyFlag();
+        for (AnnotatedPlan annotatedPlan: annotatedPlans) {
+            annotatedPlan.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
     }
 }

@@ -96,10 +96,10 @@ public class FileSystemUtil {
                 return Types.TASKREPOSITORY;
             case Extensions.ROLESET:
                 return Types.ROLESET;
-            case Extensions.PLAN_UI:
+            case Extensions.PLAN_EXTENSION:
                 return Types.UIEXTENSION;
             default:
-                return Types.NOTYPE;
+                return Types.UNSUPPORTED;
         }
     }
 
@@ -115,7 +115,7 @@ public class FileSystemUtil {
                 return TaskRepository.class;
             case Extensions.ROLESET:
                 return RoleSet.class;
-            case Extensions.PLAN_UI:
+            case Extensions.PLAN_EXTENSION:
                 return UiExtension.class;
             default:
                 return null;

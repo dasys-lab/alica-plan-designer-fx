@@ -34,6 +34,12 @@ public class Role extends PlanElement {
     public HashMap<Task, Float> getTaskPriorities() {
         return this.taskPriorities;
     }
+
+    public void removeTaskPriority(Task task) {
+        this.taskPriorities.remove(task);
+        this.atributeChangedListener.setDirty();
+    }
+
     public void addTaskPriority(Task task, float priority) {
         this.taskPriorities.put(task, priority);
         this.atributeChangedListener.setDirty();

@@ -31,6 +31,6 @@ public class Types {
     public static final String BENDPOINT = "bendpoint";
     public static final String ABSTRACTPLAN = "abstractplan";
     public static final String UIEXTENSION = "uiextension";
-    public static final String NOTYPE = "";
+    public static final String UNSUPPORTED = "unsupported";
     public static final String VARIABLEBINDING = "variablebinding";
 }

@@ -17,6 +17,7 @@ public class RoleListView extends ListView<RoleListLabel> {
     public RoleListView() {
         super();
         this.setCellFactory(param -> new RoleCell());
+        this.setOnContextMenuRequested(event -> ((RoleListView) event.getSource()).getSelectionModel().getSelectedItem().fireEvent(event));
     }
 
     public void setFocus() {
@@ -26,7 +27,6 @@ public class RoleListView extends ListView<RoleListLabel> {
         this.requestFocus();
     });
 }
-
 
     public void removeElement(ViewModelElement viewModel) {
         Iterator<RoleListLabel> iter = getItems().iterator();
@@ -42,23 +42,20 @@ public class RoleListView extends ListView<RoleListLabel> {
     }
 
     public void addElement(ViewModelElement viewModelElement) {
-        Platform.runLater(() -> getItems().add(new RoleListLabel(viewModelElement, guiModificationHandler)));
+        Platform.runLater(() -> getItems().add(new RoleListLabel(this, viewModelElement, guiModificationHandler)));
     }
 
     public void addElements(List<? extends ViewModelElement> viewModelElements) {
-        Platform.runLater(() -> {
 
-            for (ViewModelElement viewModelElement : viewModelElements) {
-                getItems().add(new RoleListLabel(viewModelElement, guiModificationHandler));
-            }
-        });
+        for (ViewModelElement viewModelElement : viewModelElements) {
+            addElement(viewModelElement);
+        }
     }
 
     public ViewModelElement getSelectedItem() {
         MultipleSelectionModel<RoleListLabel> selectionModel = this.getSelectionModel();
         return selectionModel != null ? selectionModel.getSelectedItem().getViewModelElement() : null;
     }
-
 
     public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
         this.guiModificationHandler = guiModificationHandler;

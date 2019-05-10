@@ -117,7 +117,7 @@ public class ConfigurationsTab extends Tab {
                 this.selectedBehaviour.set(((ConfigurationViewModel)parentViewModel).getBehaviour());
                 break;
             default:
-                System.err.println("This should not happen!");
+                System.err.println("ConfigurationTab: This should not happen!");
         }
     }
 

@@ -16,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -90,12 +91,14 @@ public class StateTool extends AbstractTool {
 
     @Override
     public ToolButton createToolUI() {
-        ToolButton tollButton = new ToolButton();
-        tollButton.setIcon(Types.STATE);
-        setToolButton(tollButton);
-        imageCursor = new AlicaCursor(AlicaCursor.Type.state);
-        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_state);
-        addCursor = new AlicaCursor(AlicaCursor.Type.add_state);
-        return tollButton;
+        ToolButton toolButton = new ToolButton();
+        Tooltip tooltip = new Tooltip(Types.STATE);
+        toolButton.setTooltip(tooltip);
+        toolButton.setIcon(Types.STATE);
+        setToolButton(toolButton);
+        imageCursor = new AlicaCursor(AlicaCursor.Type.state, 8, 8);
+        forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_state, 8, 8);
+        addCursor = new AlicaCursor(AlicaCursor.Type.add_state, 8, 8);
+        return toolButton;
     }
 }

@@ -128,6 +128,7 @@ public class ViewModelManager {
         for (Role role : roleSet.getRoles()) {
             roleSetViewModel.addRole((RoleViewModel) getViewModelElement(role));
         }
+
         roleSetViewModel.setTaskRepository(this.getTaskRepositoryViewModel());
         return roleSetViewModel;
     }
@@ -135,9 +136,11 @@ public class ViewModelManager {
     public TaskRepositoryViewModel getTaskRepositoryViewModel() {
 
         if (this.taskRepositoryViewModel == null) {
-            this.taskRepositoryViewModel =
-                    (TaskRepositoryViewModel) this.viewModelElements.values().stream()
-                            .filter(viewModelElement -> viewModelElement instanceof TaskRepositoryViewModel).findFirst().get();
+            Optional<ViewModelElement> optional = this.viewModelElements.values().stream()
+                    .filter(viewModelElement -> viewModelElement instanceof TaskRepositoryViewModel).findFirst();
+
+            if (optional.isPresent())
+                this.taskRepositoryViewModel = (TaskRepositoryViewModel) optional.get();
         }
         return this.taskRepositoryViewModel;
     }

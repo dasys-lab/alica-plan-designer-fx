@@ -7,6 +7,7 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.properties.variables.VariablesTable;
 import javafx.beans.InvalidationListener;
@@ -20,13 +21,13 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.BeanPropertyUtils;
@@ -395,6 +396,95 @@ public class ConditionsTab extends Tab {
         return variablesTable;
     }
 
+    private Callback<ListView<Long>, ListCell<Long>> scopeCellFactory = new Callback<ListView<Long>, ListCell<Long>>() {
+        @Override
+        public ListCell<Long> call(ListView<Long> l) {
+            return new ListCell<Long>() {
+                @Override
+                protected void updateItem(Long item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if(item == null || item == 0) {
+                        return;
+                    }
+                    IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+                    ViewModelElement e = handler.getViewModelElement(item);
+                    String name = e.getName();
+                    String type = e.getType();
+                    setText(name);
+
+                    String iconName;
+                    switch (type) {
+                        case "plan":
+                            iconName = Types.PLAN;
+                            break;
+                        case "state":
+                        case "successstate":
+                        case "failurestate":
+                            iconName = Types.STATE;
+                            break;
+                        case "entrypoint":
+                            iconName = Types.ENTRYPOINT;
+                            break;
+                        default:
+                            return;
+                    }
+                    // set graphic inside comboBox
+                    ImageView icon = new ImageView(new AlicaIcon(iconName, AlicaIcon.Size.SMALL));
+                    setGraphic(icon);
+                }
+            };
+        }
+    };
+
+    class ComboBoxIconCell extends TableCell<QuantifierViewModel, Long> {
+        private ComboBox<Long> comboBox;
+        private ObservableList<Long> data;
+
+        private ComboBoxIconCell(ObservableList<Long> data) {
+            this.data = data;
+        }
+
+        @Override
+        public void startEdit() {
+            if (!isEmpty()) {
+                super.startEdit();
+                // recreating the comboBox removes the current selection
+                if (comboBox == null) {
+                    createComboBox();
+                }
+                // injects the comboBox into the TableCell
+                setGraphic(comboBox);
+            }
+        }
+
+        @Override
+        public void updateItem(Long item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if(item == null || item == 0) {
+                return;
+            }
+            IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
+            ViewModelElement e = handler.getViewModelElement(item);
+            String name = e.getName();
+            setText(name);
+
+            setGraphic(null);
+        }
+
+        private void createComboBox() {
+            comboBox = new ComboBox<>(data);
+            comboBox.setCellFactory(scopeCellFactory);
+            comboBox.setButtonCell(scopeCellFactory.call(null));
+            comboBox.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
+            comboBox.setOnAction((e) -> {
+                Long committedValue = comboBox.getSelectionModel().getSelectedItem();
+                commitEdit(committedValue);
+            });
+        }
+    }
+
+
     private VariablesTable<QuantifierViewModel> createQuantifierTable(){
         VariablesTable<QuantifierViewModel> quantifiersTable = new VariablesTable<QuantifierViewModel>() {
             @Override
@@ -438,36 +528,8 @@ public class ConditionsTab extends Tab {
         String scope = i18NRepo.getString("label.column.scope");
         TableColumn<QuantifierViewModel, Long> scopeColumn = new TableColumn<>(scope);
         scopeColumn.setCellValueFactory(new PropertyValueFactory<>("scope"));
-        Callback<TableColumn<QuantifierViewModel, Long>, TableCell<QuantifierViewModel, Long>> scopeCellFactory
-                = ComboBoxTableCell.forTableColumn(
-                // Custom StringConverter that allows to show the elements name in addition to its id
-                new StringConverter<Long>() {
-                    private IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
-                    @Override
-                    public String toString(Long l) {
-                        if(l == 0) {
-                            return "";
-                        }
-                        ViewModelElement e = handler.getViewModelElement(l);
-                        return e.getName() + " (id: " + e.getId() + ")";
-                    }
-
-                    @Override
-                    public Long fromString(String s) {
-                        if(s.isEmpty()) {
-                            return 0L;
-                        }
-                        int strtIdx = s.lastIndexOf(' ') + 1;
-                        int endIdx  = s.lastIndexOf(')');
-                        return Long.parseLong(s.substring(strtIdx, endIdx));
-                    }
-                }
-                , this.getPossibleScopesObservableList());
-        scopeColumn.setCellFactory(col -> {
-            TableCell<QuantifierViewModel, Long> cell = scopeCellFactory.call(col);
-            cell.setEditable(true);
-            return cell;
-        });
+        Callback<TableColumn<QuantifierViewModel, Long>, TableCell<QuantifierViewModel, Long>> scopeCellFactory = (TableColumn<QuantifierViewModel, Long> param) -> new ComboBoxIconCell(this.getPossibleScopesObservableList());
+        scopeColumn.setCellFactory(scopeCellFactory);
         quantifiersTable.table.getColumns().add(scopeColumn);
 
 

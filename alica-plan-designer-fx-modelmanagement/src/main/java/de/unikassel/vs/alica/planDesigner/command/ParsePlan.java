@@ -65,7 +65,7 @@ public class ParsePlan extends Command {
             //If the new element is a Plan, its visualisation has to be loaded as well
             Plan newPlan = (Plan) newElement;
             File uiExtensionFile = FileSystemUtil.getFile(mmq.getAbsoluteDirectory()
-                    , mmq.getName(), Extensions.PLAN_UI);
+                    , mmq.getName(), Extensions.PLAN_EXTENSION);
             try {
                 UiExtension newUiExtension = modelManager.parseFile(uiExtensionFile, UiExtension.class);
                 if (newUiExtension != null) {

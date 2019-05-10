@@ -85,11 +85,11 @@ public class TransitionContainer extends Container implements Observable {
             */
 
             polygon = new Polygon(_toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen),
-                    _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
+                    _toY - 5*(vecY/vecLen) + 5*(triangleSpanVecY/triangleSpanLen),
                     _toX,
                     _toY,
                     _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen),
-                    _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
+                    _toY - 5*(vecY/vecLen) - 5*(triangleSpanVecY/triangleSpanLen));
         } else {
             double[] points = new double[size * 2 + 4];
             points[0] = _fromX;
@@ -135,11 +135,11 @@ public class TransitionContainer extends Container implements Observable {
             visualRepresentation = new Polyline(points);
             ((Shape)visualRepresentation).setFill(null);
             polygon = new Polygon(_toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen),
-                    _toY - 5*(vecY/vecLen) + 5* triangleSpanVecY/triangleSpanLen,
+                    _toY - 5*(vecY/vecLen) + 5*(triangleSpanVecY/triangleSpanLen),
                     _toX,
                     _toY,
                     _toX - 5*(vecX/vecLen)-5*(triangleSpanVecX/triangleSpanLen),
-                    _toY - 5*(vecY/vecLen) - 5* triangleSpanVecY/triangleSpanLen);
+                    _toY - 5*(vecY/vecLen) - 5*(triangleSpanVecY/triangleSpanLen));
         }
 
         polygon.setFill(getVisualisationColor());

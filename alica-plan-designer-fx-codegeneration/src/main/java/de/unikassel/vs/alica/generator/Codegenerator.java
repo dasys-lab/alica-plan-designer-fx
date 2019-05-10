@@ -9,6 +9,8 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +40,8 @@ public class Codegenerator {
     private final IGenerator languageSpecificGenerator;
     private final String codeGenerationDestination;
     private final GeneratedSourcesManager generatedSourcesManager;
+
+    public StringProperty currentFile = new SimpleStringProperty();
 
     private List<Plan> plans;
     private List<Behaviour> behaviours;
@@ -77,6 +81,7 @@ public class Codegenerator {
             }).forEach(e -> {
                 try {
                     visit(protectedRegionsVisitor, e);
+                    currentFile.set(e.toString());
                 } catch (IOException e1) {
                     LOG.error("Could not parse existing source file " + e, e1);
                     throw new RuntimeException(e1);
