@@ -26,6 +26,7 @@ public class StateContainer extends Container implements Observable {
 
     public StateContainer(StateViewModel state, PlanTab planTab) {
         super(state, null, planTab);
+        this.setId("StateContainer");
         this.state = state;
         this.statePlans = new ArrayList<>();
         invalidationListeners = new ArrayList<>();

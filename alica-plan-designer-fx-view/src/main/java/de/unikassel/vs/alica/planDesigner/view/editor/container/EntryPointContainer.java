@@ -40,6 +40,7 @@ public class EntryPointContainer extends Container {
     public EntryPointContainer(EntryPointViewModel containedElement, /*PmlUiExtension pmlUiExtension,*/
                                StateContainer stateContainer, PlanTab planTab) {
         super(containedElement, null, planTab);
+        this.setId("EntryPointContainer");
         if (stateContainer != null) {
             setStateContainer(stateContainer);
         }

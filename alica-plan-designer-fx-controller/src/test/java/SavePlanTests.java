@@ -29,7 +29,23 @@ public class SavePlanTests extends ApplicationTest {
         placeEntryPoint();
         placeState();
         placeSuccessState();
+        initTransitionFromEntryPointToState();
+        transitionFromStateToSuccessState();
         deletePlan();
+    }
+
+    private void initTransitionFromEntryPointToState() {
+        clickOn("#InitTransitionToolButton");
+        clickOn("#EntryPointContainer");
+        clickOn("#StateContainer");
+        dropElement();
+    }
+
+    private void transitionFromStateToSuccessState() {
+        clickOn("#TransitionToolButton");
+        clickOn("#StateContainer");
+        clickOn("#SuccessStateContainer");
+        dropElement();
     }
 
     private void placeEntryPoint() {
@@ -50,7 +66,7 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private PointQuery freePlanContentPos() {
-        return offset("#PlanTabPlanContent", 100, 0);
+        return offset("#PlanTabPlanContent", 200, 0);
     }
 
     public void placeState() {
