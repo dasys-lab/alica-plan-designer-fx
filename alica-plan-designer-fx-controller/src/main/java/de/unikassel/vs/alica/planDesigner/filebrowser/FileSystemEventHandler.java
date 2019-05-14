@@ -77,6 +77,16 @@ public class FileSystemEventHandler implements Runnable  {
     public void run() {
         try {
             watcher = FileSystems.getDefault().newWatchService();
+
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    try {
+                        watcher.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
             Configuration conf = ConfigurationManager.getInstance().getActiveConfiguration();
             if (conf != null) {
                 if(conf.getPlansPath() != null && !conf.getPlansPath().isEmpty()) {
@@ -94,7 +104,7 @@ public class FileSystemEventHandler implements Runnable  {
                 // wait for key to be signalled
                 WatchKey key;
                 try {
-                    key = watcher.poll(500, TimeUnit.MILLISECONDS);
+                    key = watcher.take();
                 } catch (InterruptedException x) {
                     return;
                 }
@@ -118,7 +128,7 @@ public class FileSystemEventHandler implements Runnable  {
                     Path child = dir.resolve(name);
 
                     // print out event
-//                    System.out.format("FileSystemEventHandler: %s: %s%n", event.kind().name(), child);
+                    System.out.format("FileSystemEventHandler: %s: %s%n", event.kind().name(), child);
 
                     // if directory is created, and watching recursively, then
                     // register it and its sub-directories
@@ -145,6 +155,9 @@ public class FileSystemEventHandler implements Runnable  {
                     }
                 }
             }
+
+        } catch (ClosedWatchServiceException e) {
+            System.out.println("File watcher closed");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

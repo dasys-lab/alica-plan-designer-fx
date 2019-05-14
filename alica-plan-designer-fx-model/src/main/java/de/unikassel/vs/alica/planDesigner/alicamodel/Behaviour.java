@@ -4,6 +4,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Behaviour extends AbstractPlan {
     protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
     protected final SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
@@ -11,6 +15,8 @@ public class Behaviour extends AbstractPlan {
     protected SimpleObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<PostCondition> postCondition = new SimpleObjectProperty<>();
+
+    protected ArrayList<Configuration> configurations = new ArrayList<>();
 
     public PreCondition getPreCondition() {
         return preCondition.get();
@@ -71,6 +77,21 @@ public class Behaviour extends AbstractPlan {
         return this.deferring;
     }
 
+    public List<Configuration> getConfigurations() {
+        return Collections.unmodifiableList(configurations);
+    }
+
+    public void addConfiguration(Configuration configuration) {
+        configurations.add(configuration);
+        configuration.registerDirtyFlag();
+        this.setDirty(true);
+    }
+
+    public void removeConfiguration(Configuration configuration) {
+        configurations.remove(configuration);
+        this.setDirty(false);
+    }
+
     @Override
     public void registerDirtyFlag() {
         super.registerDirtyFlag();
@@ -87,6 +108,9 @@ public class Behaviour extends AbstractPlan {
         this.postCondition.addListener(this.changeListenerForDirtyFlag);
         if (this.postCondition.get() != null) {
             this.postCondition.get().registerDirtyFlag(this.changeListenerForDirtyFlag);
+        }
+        for(Configuration configuration : configurations) {
+            configuration.registerDirtyFlag();
         }
     }
 

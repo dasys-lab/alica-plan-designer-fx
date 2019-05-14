@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.EntryPointContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.FailureStateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
@@ -13,9 +14,7 @@ import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.menu.DeleteElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.RenameElementMenuItem;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowUsagesMenuItem;
-import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
@@ -90,9 +89,16 @@ public class RepositoryLabel extends Label {
                     if (parent instanceof StateContainer) {
                         if (viewModelElement instanceof TaskViewModel) { return; }
                         StateContainer stateContainer = (StateContainer) parent;
-                        GuiModificationEvent guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT,viewModelElement.getType(), viewModelElement.getName());
+                        GuiModificationEvent guiModificationEvent;
+                        if(viewModelElement instanceof BehaviourViewModel) {
+                            ConfigurationViewModel defaultConfiguration = ((BehaviourViewModel) viewModelElement).getConfigurations().get(0);
+                            guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.CONFIGURATION, defaultConfiguration.getName());
+                            guiModificationEvent.setElementId(defaultConfiguration.getId());
+                        } else {
+                            guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName());
+                            guiModificationEvent.setElementId(viewModelElement.getId());
+                        }
                         guiModificationEvent.setParentId(stateContainer.getState().getId());
-                        guiModificationEvent.setElementId(viewModelElement.getId());
                         guiModificationHandler.handle(guiModificationEvent);
                     }
                     if (parent instanceof EntryPointContainer && viewModelElement instanceof TaskViewModel) {

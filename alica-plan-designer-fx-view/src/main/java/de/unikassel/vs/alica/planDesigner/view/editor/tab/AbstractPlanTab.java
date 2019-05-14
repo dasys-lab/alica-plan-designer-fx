@@ -1,9 +1,13 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.Container;
+import de.unikassel.vs.alica.planDesigner.view.model.ConfigurationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -40,7 +44,13 @@ public abstract class AbstractPlanTab extends EditorTab {
         }
 
         // update properties gui
-        this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
+        if (containerToSelect.getPlanElementViewModel().getType().equals(Types.CONFIGURATION)) {
+            ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) containerToSelect.getPlanElementViewModel();
+            StateViewModel stateViewModel = (StateViewModel) ((AbstractPlanContainer) containerToSelect).getParentStateContainer().getPlanElementViewModel();
+            this.elementInformationPane.setViewModelElement(configurationViewModel, stateViewModel);
+        } else {
+            this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
+        }
     }
 
     private DropShadow createSelectedEffect() {

@@ -15,7 +15,7 @@ public class TaskRepositoryViewModel extends SerializableViewModel {
         tasks = FXCollections.observableArrayList(new ArrayList<>());
 
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment"));
     }
 
     public void addTask(TaskViewModel task) {

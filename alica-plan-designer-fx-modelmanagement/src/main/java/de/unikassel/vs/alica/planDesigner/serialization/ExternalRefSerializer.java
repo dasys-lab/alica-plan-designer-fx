@@ -1,14 +1,12 @@
 package de.unikassel.vs.alica.planDesigner.serialization;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
@@ -27,7 +25,10 @@ public class ExternalRefSerializer extends StdSerializer<PlanElement> {
         if (planElement instanceof Plan) {
             jsonGenerator.writeString(Paths.get(((SerializablePlanElement) planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.PLAN + "#" + planElement.getId()).toString());
         } else if (planElement instanceof Behaviour) {
-            jsonGenerator.writeString(Paths.get(((SerializablePlanElement)planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.BEHAVIOUR + "#" + planElement.getId()).toString());
+            jsonGenerator.writeString(Paths.get(((SerializablePlanElement) planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.BEHAVIOUR + "#" + planElement.getId()).toString());
+        } else if(planElement instanceof Configuration) {
+            Behaviour parentBehaviour = ((Configuration) planElement).getBehaviour();
+            jsonGenerator.writeString(Paths.get(parentBehaviour.getRelativeDirectory(), parentBehaviour.getName() + "." + Extensions.BEHAVIOUR + "#" + planElement.getId()).toString());
         } else if (planElement instanceof PlanType) {
             jsonGenerator.writeString(Paths.get(((SerializablePlanElement)planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.PLANTYPE + "#" + planElement.getId()).toString());
         } else if (planElement instanceof TaskRepository) {

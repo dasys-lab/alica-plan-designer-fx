@@ -87,6 +87,8 @@ public class ViewModelManager {
             element = createConditionViewModel((Condition) planElement);
         } else if (planElement instanceof BendPoint) {
             element = createBendPointViewModel((BendPoint) planElement);
+        } else if (planElement instanceof Configuration) {
+            element = createConfigurationViewModel((Configuration) planElement);
         } else {
             System.err.println("ViewModelManager: getSerializableViewModel for type " + planElement.getClass().toString() + " not implemented!");
         }
@@ -175,6 +177,12 @@ public class ViewModelManager {
 
         for (Variable variable : behaviour.getVariables()) {
             behaviourViewModel.getVariables().add((VariableViewModel) getViewModelElement(variable));
+        }
+
+        for (Configuration configuration : behaviour.getConfigurations()) {
+            ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) getViewModelElement(configuration);
+            behaviourViewModel.getConfigurations().add(configurationViewModel);
+            configurationViewModel.setBehaviour(behaviourViewModel);
         }
 
         if (behaviour.getPreCondition() != null) {
@@ -417,6 +425,16 @@ public class ViewModelManager {
         return planViewModel;
     }
 
+    private ViewModelElement createConfigurationViewModel(Configuration configuration) {
+        ConfigurationViewModel configurationViewModel = new ConfigurationViewModel(configuration.getId()
+                , configuration.getName(), Types.CONFIGURATION);
+        // Accessing map directly to prevent endless recursion
+        configurationViewModel.setBehaviour((BehaviourViewModel) viewModelElements.get(configuration.getBehaviour().getId()));
+        configurationViewModel.getKeyValuePairs().putAll(configuration.getKeyValuePairs());
+
+        return configurationViewModel;
+    }
+
     public void removeElement(long parentId, ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {
             case Types.TASK:
@@ -468,6 +486,20 @@ public class ViewModelManager {
                     planViewModel.getStates().add(stateViewModel);
                 }else if(viewModelElement.getType().equals(Types.PLAN) || viewModelElement.getType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
+                }
+                break;
+            case Types.CONFIGURATION:
+                parentPlanElement = modelManager.getPlanElement(parentId);
+                ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) viewModelElement;
+                if(parentPlanElement instanceof State) {
+                    stateViewModel = (StateViewModel) getViewModelElement(parentPlanElement);
+                    stateViewModel.removeAbstractPlan(configurationViewModel);
+                    planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement((stateViewModel.getParentId())));
+                    planViewModel.getStates().remove(stateViewModel);
+                    planViewModel.getStates().add(stateViewModel);
+                }else if(parentPlanElement instanceof Behaviour) {
+                    BehaviourViewModel behaviourViewModel = (BehaviourViewModel) getViewModelElement(parentPlanElement);
+                    behaviourViewModel.getConfigurations().remove(configurationViewModel);
                 }
                 break;
             case Types.VARIABLE:
@@ -580,6 +612,16 @@ public class ViewModelManager {
                     stateViewModel.addAbstractPlan(abstractPlanViewModel);
                 } else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
+                }
+                break;
+            case Types.CONFIGURATION:
+                ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) viewModelElement;
+                if (parentPlanElement instanceof State) {
+                    StateViewModel stateViewModel = (StateViewModel) parentViewModel;
+                    stateViewModel.addAbstractPlan(configurationViewModel);
+                }else if(parentPlanElement instanceof Behaviour) {
+                    BehaviourViewModel behaviourViewModel = (BehaviourViewModel) parentViewModel;
+                    behaviourViewModel.getConfigurations().add(configurationViewModel);
                 }
                 break;
             case Types.VARIABLE:
