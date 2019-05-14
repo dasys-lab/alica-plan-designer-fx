@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.events.ConfigEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IConfigurationEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -142,5 +143,6 @@ public class PlanDesignerApplication extends Application {
         ConfigEvent configEvent = new ConfigEvent(ConfigEvent.WINDOW_SETTINGS);
         configEvent.setParameters(params);
         configEventHandler.handlePreferredWindowSettings(configEvent);
+        System.exit(0);
     }
 }

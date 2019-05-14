@@ -14,6 +14,8 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
     protected SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
     protected SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
 
+    protected ObservableList<ConfigurationViewModel> configurations;
+
     protected final SimpleObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
     protected final SimpleObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
     protected final SimpleObjectProperty<ConditionViewModel> postCondition = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
@@ -23,6 +25,8 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
+
+        configurations = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public void registerListener(IGuiModificationHandler handler) {
@@ -57,6 +61,10 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     public IntegerProperty frequencyProperty() {
         return frequency;
+    }
+
+    public ObservableList<ConfigurationViewModel> getConfigurations() {
+        return configurations;
     }
 
     public ObjectProperty<ConditionViewModel> preConditionProperty(){

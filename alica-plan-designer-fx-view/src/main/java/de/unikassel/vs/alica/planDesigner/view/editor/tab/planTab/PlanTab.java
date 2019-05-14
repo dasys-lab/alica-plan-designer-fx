@@ -15,7 +15,6 @@ import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.event.EventHandler;
-import javafx.event.EventTarget;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -119,6 +118,7 @@ public class PlanTab extends AbstractPlanTab {
             case Types.BEHAVIOUR:
             case Types.PLAN:
             case Types.PLANTYPE:
+            case Types.CONFIGURATION:
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT, planElementViewModel.getType(), planElementViewModel.getName());
                 event.setParentId(((AbstractPlanContainer)selectedContainer).getParentStateContainer().getState().getId());
                 event.setElementId(planElementViewModel.getId());

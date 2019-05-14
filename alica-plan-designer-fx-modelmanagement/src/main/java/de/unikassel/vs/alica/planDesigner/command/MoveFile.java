@@ -5,12 +5,13 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 
-public class MoveFile extends Command {
+public class MoveFile extends ChangeAttributeCommand {
 
     private SerializablePlanElement elementToMove;
     private String newAbsoluteDirectory;
     private String originalRelativeDirectory;
     private String ending;
+    private String type;
 
     public MoveFile(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
@@ -18,15 +19,18 @@ public class MoveFile extends Command {
         this.ending = FileSystemUtil.getExtension(this.elementToMove);
         this.newAbsoluteDirectory = mmq.getAbsoluteDirectory();
         this.originalRelativeDirectory = this.elementToMove.getRelativeDirectory();
+        this.type = mmq.getElementType();
     }
 
     @Override
     public void doCommand() {
-        this.modelManager.moveFile(elementToMove, newAbsoluteDirectory, ending);
+        this.modelManager.moveFile(elementToMove, type, newAbsoluteDirectory, ending);
+        fireEvent(elementToMove, type, "relativeDirectory");
     }
 
     @Override
     public void undoCommand() {
-        this.modelManager.moveFile(elementToMove, originalRelativeDirectory, ending);
+        this.modelManager.moveFile(elementToMove, type, originalRelativeDirectory, ending);
+        fireEvent(elementToMove, type, "relativeDirectory");
     }
 }

@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
@@ -27,10 +28,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
-import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
@@ -202,14 +200,18 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case Types.ROLESET:
             case Types.TASKREPOSITORY:
                 updateRepos(event.getEventType(), viewModelElement);
-                updateFileTreeView(event.getEventType(), viewModelElement);
+                updateFileTreeView(event, viewModelElement);
                 break;
             case Types.TASK:
             case Types.ROLE:
                 updateRepos(event.getEventType(), viewModelElement);
                 break;
         }
-
+        // Generate files for moved code
+        if(event.getEventType() == ModelEventType.ELEMENT_ATTRIBUTE_CHANGED  && event.getChangedAttribute().equals("relativeDirectory")) {
+            mainWindowController.waitOnProgressLabel(() -> generateCode(new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, event.getElementType(),
+                    modelElement.getName()), mainWindowController.getStatusText()));
+        }
         updateViewModel(event, viewModelElement, modelElement);
     }
 
@@ -234,17 +236,23 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     /**
      * Handles the model event for the file tree view.
      *
-     * @param eventType
+     * @param event
      * @param viewModelElement
      */
-    private void updateFileTreeView(ModelEventType eventType, ViewModelElement viewModelElement) {
-        switch (eventType) {
+    private void updateFileTreeView(ModelEvent event, ViewModelElement viewModelElement) {
+        switch (event.getEventType()) {
             case ELEMENT_PARSED:
             case ELEMENT_CREATED:
                 mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
                 break;
             case ELEMENT_DELETED:
                 mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
+                break;
+            case ELEMENT_ATTRIBUTE_CHANGED:
+                if(event.getChangedAttribute().equals("relativeDirectory")) {
+                    mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
+                    mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
+                }
                 break;
         }
     }
@@ -271,10 +279,26 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.addElement(event);
                 break;
             case ELEMENT_CONNECTED:
-                viewModelManager.connectElement(event);
+                switch (viewModelElement.getType()) {
+                    case Types.CONFIGURATION:
+                        String key = event.getChangedAttribute();
+                        String value = (String) event.getNewValue();
+                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().put(key, value);
+                        break;
+                        default:
+                            viewModelManager.connectElement(event);
+                }
                 break;
             case ELEMENT_DISCONNECTED:
-                viewModelManager.disconnectElement(event);
+                switch (viewModelElement.getType()) {
+                    case Types.CONFIGURATION:
+                        String key = event.getChangedAttribute();
+                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().remove(key);
+                        break;
+                    default:
+                        viewModelManager.disconnectElement(event);
+                }
+                break;
             case ELEMENT_CHANGED_POSITION:
                 viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
             default:
@@ -483,6 +507,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             System.err.println("Controller: Unknown filesystem event elementType received that gets ignored!");
             return;
         }
+        mainWindowController.getFileTreeView().updateDirectories(path);
         this.modelManager.handleModelModificationQuery(mmq);
     }
 
@@ -521,6 +546,25 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             createNewDialogController.getStage().setY(alert.getY());
             createNewDialogController.showAndWait();
         }
+    }
+
+    @Override
+    public void handleWrongTaskRepositoryNotification(String planName, long taskID) {
+        HashMap<String, Double> params = configEventHandler.getPreferredWindowSettings();
+        I18NRepo i18NRepo = I18NRepo.getInstance();
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(i18NRepo.getString("label.warn"));
+        alert.setHeaderText(i18NRepo.getString("label.error.wrong.taskrepository") + " " + taskID + "  "
+                + i18NRepo.getString("label.error.wrong.taskrepository2") + " " + planName+ ".");
+        alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2 - alert.getDialogPane().getWidth());
+        alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2 - alert.getDialogPane().getHeight());
+
+        ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(closeBtn);
+
+        alert.showAndWait();
+        Platform.exit();
+        System.exit(0);
     }
 
     @Override
@@ -587,9 +631,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
         if(abstractPlan instanceof Behaviour) {
             return generatedSourcesManager.getGeneratedFilesForBehaviour((Behaviour) abstractPlan);
+        } else if (abstractPlan instanceof Plan) {
+            List<File> fileList = generatedSourcesManager.getGeneratedConditionFilesForPlan(abstractPlan);
+            fileList.addAll(generatedSourcesManager.getGeneratedConstraintFilesForPlan(abstractPlan));
+            return fileList;
+        } else {
+            return new ArrayList<>();
         }
-        List<File> fileList = generatedSourcesManager.getGeneratedConditionFilesForPlan(abstractPlan);
-        fileList.addAll(generatedSourcesManager.getGeneratedConstraintFilesForPlan(abstractPlan));
-        return fileList;
     }
 }
