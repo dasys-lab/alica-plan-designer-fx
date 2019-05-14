@@ -277,7 +277,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.disconnectElement(event);
             case ELEMENT_CHANGED_POSITION:
                 viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
-            default:
+                break;
+                default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
                 break;
         }
@@ -286,7 +287,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             TransitionViewModel transition = (TransitionViewModel) viewModelElement;
             transition.getBendpoints().clear();
             for (BendPoint bendPoint : event.getUiElement().getBendPoints()) {
-                transition.addBendpoint((BendPointViewModel) viewModelManager.getViewModelElement(bendPoint));
+                BendPointViewModel bendPointViewModel = (BendPointViewModel) viewModelManager.getViewModelElement(bendPoint);
+                transition.addBendpoint(bendPointViewModel);
             }
             ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, planElement, Types.BENDPOINT);
             updateViewModel(modelEvent, viewModelElement, planElement);
@@ -432,6 +434,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setParentId(event.getParentId());
                 mmq.setX(event.getX());
                 mmq.setY(event.getY());
+                mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
             case MOVE_FILE:
                 mmq = new ModelModificationQuery(ModelQueryType.MOVE_FILE, event.getAbsoluteDirectory(), event.getElementType(), event.getName());

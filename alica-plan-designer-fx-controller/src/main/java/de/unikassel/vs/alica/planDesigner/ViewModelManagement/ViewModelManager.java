@@ -658,6 +658,8 @@ public class ViewModelManager {
                     roleSetViewModel.addRole(roleViewModel);
                 }
                 break;
+            case Types.BENDPOINT:
+                break;
             default:
                 System.err.println("ViewModelManager: Add Element not supported for type: " + viewModelElement.getType());
                 //TODO: maybe handle other types
@@ -777,8 +779,19 @@ public class ViewModelManager {
     }
 
     public void changePosition(PlanElementViewModel planElementViewModel, ModelEvent event) {
-        planElementViewModel.setXPosition(event.getUiElement().getX());
-        planElementViewModel.setYPosition(event.getUiElement().getY());
+        if (event.getElementType().equals(Types.BENDPOINT)){
+            for(BendPoint bPoint : event.getUiElement().getBendPoints()){
+                if(bPoint.getId() == event.getRelatedObjects().get(Types.BENDPOINT)){
+                    BendPointViewModel bendPointViewModel = (BendPointViewModel) this.getViewModelElement(bPoint);
+
+                    bendPointViewModel.setX(event.getUiElement().getX());
+                    bendPointViewModel.setY(event.getUiElement().getY());
+                }
+            }
+        } else {
+            planElementViewModel.setXPosition(event.getUiElement().getX());
+            planElementViewModel.setYPosition(event.getUiElement().getY());
+        }
     }
 
     public void changeElementAttribute(ViewModelElement viewModelElement, String changedAttribute, Object newValue) {

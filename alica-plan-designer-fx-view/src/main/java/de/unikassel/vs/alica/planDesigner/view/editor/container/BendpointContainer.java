@@ -1,5 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
+import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
+import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
@@ -23,12 +25,14 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     protected boolean dragged;
     protected ViewModelElement parent;
     private PlanTab planTab;
+    private TransitionContainer transitionContainer;
 
-    public BendpointContainer(ViewModelElement containedElement, ViewModelElement parent, PlanTab planTab) {
+    public BendpointContainer(ViewModelElement containedElement, ViewModelElement parent, PlanTab planTab, TransitionContainer transitionContainer) {
         super(0, 0, WIDTH, HEIGHT);
         this.containedElement = containedElement;
         this.parent = parent;
         this.planTab = planTab;
+        this.transitionContainer = transitionContainer;
         init();
     }
 
@@ -86,7 +90,9 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
                 node.setLayoutX(dragContext.initialLayoutX + mouseEvent.getSceneX() - dragContext.mouseAnchorX);
                 node.setLayoutY(dragContext.initialLayoutY + mouseEvent.getSceneY() - dragContext.mouseAnchorY);
 
-                planTab.fireChangePositionEvent(this, containedElement.getType(), node.getLayoutX(), node.getLayoutY());
+
+                planTab.fireBendPointChangePositionEvent(this, this.parent, containedElement.getType(), node.getLayoutX(), node.getLayoutY());
+
                 //getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
                 mouseEvent.consume();
                 redrawElement();
@@ -105,7 +111,9 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
 
     @Override
     public void redrawElement() {
-        ((TransitionContainer) this.getParent()).redrawElement();
+        //System.out.println(this.getParent());
+        //((TransitionContainer) this.getParent()).redrawElement();
+        transitionContainer.redrawElement();
     }
 
     @Override
