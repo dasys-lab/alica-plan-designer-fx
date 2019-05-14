@@ -206,7 +206,6 @@ public class MainWindowController implements Initializable {
 
         // ---- FILE MENU ----
         fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
-        fileMenu.setId("fileMenu");
         fileMenu.getItems().add(((FileTreeViewContextMenu)fileTreeView.getContextMenu()).getNewResourceMenu());
 
         // -- SAVE MENU --

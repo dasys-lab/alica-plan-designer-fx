@@ -87,14 +87,9 @@ public class SavePlanTests extends ApplicationTest {
 
     private void createPlan() {
         // open create plan dialog
-        clickOn("#fileMenu");
-        clickOn("#newMenuItem");
-        clickOn("#newPlanMenuItem");
-
-        // enter plan path and name
-        String plansPath = ConfigurationManager.getInstance().getActiveConfiguration().getPlansPath();
-        clickOn("#pathTextField");
-        write(plansPath);
+        rightClickOn("plans");
+        rightClickOn("New");
+        rightClickOn("Plan");
         clickOn("#nameTextField");
         write(planName);
         clickOn("#createButton");
