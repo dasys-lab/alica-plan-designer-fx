@@ -20,6 +20,7 @@ public class CreateConfiguration extends Command {
     private Configuration createConfiguration() {
         Configuration configuration = new Configuration();
         configuration.setName(mmq.getName());
+        configuration.setComment(mmq.getComment());
 
         Behaviour behaviour = (Behaviour) modelManager.getPlanElement(mmq.getParentId());
         configuration.setBehaviour(behaviour);

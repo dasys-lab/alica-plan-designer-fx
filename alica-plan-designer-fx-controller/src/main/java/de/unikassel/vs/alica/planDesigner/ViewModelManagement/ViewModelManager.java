@@ -431,6 +431,7 @@ public class ViewModelManager {
         // Accessing map directly to prevent endless recursion
         configurationViewModel.setBehaviour((BehaviourViewModel) viewModelElements.get(configuration.getBehaviour().getId()));
         configurationViewModel.getKeyValuePairs().putAll(configuration.getKeyValuePairs());
+        configurationViewModel.setComment(configuration.getComment());
 
         return configurationViewModel;
     }
