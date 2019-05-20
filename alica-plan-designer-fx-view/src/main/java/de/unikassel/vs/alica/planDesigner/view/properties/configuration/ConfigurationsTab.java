@@ -8,33 +8,30 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
-import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ConfigurationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.util.converter.DefaultStringConverter;
-import javafx.util.converter.LongStringConverter;
+import javafx.util.Callback;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigurationsTab extends Tab {
@@ -42,8 +39,8 @@ public class ConfigurationsTab extends Tab {
     //----
     // CONSTANTS
     //----
-    public static final int CELL_SIZE = 25;
-    public static final int CELL_OFFSET = 5;
+    private static final int CELL_SIZE = 30;
+    private static final int CELL_OFFSET = 5;
 
     //----
     // PROPERTIES
@@ -56,14 +53,10 @@ public class ConfigurationsTab extends Tab {
     // GUI ELEMENTS
     //----
     private final VBox root;
-    private final TitledPane configurationManager;
-    private final TitledPane configurationChooser;
+    private final VBox configurationManager;
     private final TitledPane keyValuePairTable;
-    private TextField keyField;
-    private TextField valField;
     private TableView<Map.Entry<String, String>> keyValueTableView;
-    private ChangeListener<BehaviourViewModel> chooserListener;
-    private ChangeListener<BehaviourViewModel> managerListener;
+    private DropDown dropDown;
 
     //----
     // CONSTRUCTOR
@@ -85,7 +78,6 @@ public class ConfigurationsTab extends Tab {
         });
 
         configurationManager = createConfigurationManager();
-        configurationChooser = createConfigurationChooser();
         keyValuePairTable = createKeyValuePairTable();
     }
 
@@ -98,21 +90,14 @@ public class ConfigurationsTab extends Tab {
 
     public void setParentViewModel(ViewModelElement parentViewModel) {
         root.getChildren().clear();
+        root.getChildren().addAll(configurationManager, keyValuePairTable);
         switch(parentViewModel.getType()) {
             case Types.BEHAVIOUR:
-                root.getChildren().add(configurationManager);
-                selectedBehaviour.removeListener(chooserListener);
-                selectedBehaviour.addListener(managerListener);
-
                 this.selectedBehaviour.set((BehaviourViewModel) parentViewModel);
                 this.selectedConfiguration.set(null);
                 this.selectedState.set(null);
                 break;
             case Types.CONFIGURATION:
-                root.getChildren().addAll(configurationChooser, keyValuePairTable);
-                selectedBehaviour.removeListener(managerListener);
-                selectedBehaviour.addListener(chooserListener);
-
                 this.selectedConfiguration.set((ConfigurationViewModel) parentViewModel);
                 this.selectedBehaviour.set(((ConfigurationViewModel)parentViewModel).getBehaviour());
                 break;
@@ -130,134 +115,34 @@ public class ConfigurationsTab extends Tab {
     // Creates GUI for adding/removing configurations for behaviours. Only shown when
     // selectedBehaviour is selected.
     //----
-    private TitledPane createConfigurationManager() {
-        TitledPane pane = new TitledPane();
-        pane.setText(I18NRepo.getInstance().getString("label.caption.configurations"));
+    private VBox createConfigurationManager() {
+        VBox pane = new VBox();
 
-        managerListener = new ChangeListener<BehaviourViewModel>() {
+        selectedBehaviour.addListener(new ChangeListener<BehaviourViewModel>() {
             @Override
             public void changed(ObservableValue<? extends BehaviourViewModel> observable, BehaviourViewModel oldValue, BehaviourViewModel newValue) {
                 ConfigurationsTab.this.updateConfigurationManager(newValue);
             }
-        };
-        selectedBehaviour.addListener(managerListener);
+        });
 
         return pane;
     }
 
     private void updateConfigurationManager(BehaviourViewModel behaviour) {
-        configurationManager.setContent(null);
-        configurationManager.setExpanded(true);
+        configurationManager.getChildren().clear();
         if(behaviour == null) {
             return;
         }
 
-        I18NRepo i18NRepo = I18NRepo.getInstance();
+        dropDown = new DropDown(selectedBehaviour, selectedConfiguration);
+        dropDown.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(dropDown, Priority.ALWAYS);
 
-        ConfigurationsTable<ConfigurationViewModel> configurations = new ConfigurationsTable<ConfigurationViewModel>() {
-            @Override
-            protected void onAddElement() {
-                String new_configuration = "NEW_CONFIGURATION";
-
-                if (isDuplicate(new_configuration)) {
-                    createAlert();
-                    return;
-                }
-
-                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.CONFIGURATION, new_configuration);
-                event.setParentId(behaviour.getId());
-                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
-            }
-
-            @Override
-            protected void onRemoveElement() {
-                ConfigurationViewModel selected = getSelectedItem();
-                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.CONFIGURATION, selected.getName());
-                event.setElementId(selected.getId());
-                event.setParentId(selected.getBehaviour().getId());
-                MainWindowController.getInstance().getGuiModificationHandler().handle(event);
-            }
-        };
-
-        configurations.addColumn(i18NRepo.getString("alicatype.property.name"), "name", new DefaultStringConverter(), true, new ConfigurationsTableListener());
-        configurations.addColumn(i18NRepo.getString("alicatype.property.id"), "id", new LongStringConverter(), false);
-        configurations.addColumn(i18NRepo.getString("alicatype.property.comment"), "comment", new DefaultStringConverter(), true, new ConfigurationsTableListener());
-
-        for(ConfigurationViewModel c : behaviour.getConfigurations()) {
-            configurations.addItem(c);
+        if (selectedConfiguration.get() != null) {
+            dropDown.setValue(selectedConfiguration.get());
         }
 
-        behaviour.getConfigurations().addListener((ListChangeListener<? super ConfigurationViewModel>) change -> {
-            while(change.next()){
-                for(ConfigurationViewModel added : change.getAddedSubList()) {
-                    configurations.addItem(added);
-                }
-                for(ConfigurationViewModel removed : change.getRemoved()) {
-                    configurations.removeItem(removed);
-                }
-            }
-        });
-
-        configurationManager.setContent(configurations);
-    }
-
-    //----
-    // CONFIGURATION CHOOSER
-    //----
-    private TitledPane createConfigurationChooser() {
-        TitledPane pane = new TitledPane();
-        pane.setText(I18NRepo.getInstance().getString("label.caption.configurations"));
-
-        HBox parent = new HBox();
-        VBox content = new VBox();
-        Button link = new Button();
-
-        parent.setAlignment(Pos.CENTER_LEFT);
-        HBox.setMargin(link, new Insets(0,10,0,0));
-        parent.getChildren().addAll(link, content);
-        pane.setContent(parent);
-
-        chooserListener = new ChangeListener<BehaviourViewModel>() {
-            @Override
-            public void changed(ObservableValue<? extends BehaviourViewModel> observable, BehaviourViewModel oldValue, BehaviourViewModel newValue) {
-                ConfigurationsTab.this.updateConfigurationChooser(content, newValue);
-                link.setGraphic(new ImageView(new AlicaIcon(Types.BEHAVIOUR, AlicaIcon.Size.SMALL)));
-                link.setText(newValue.getName());
-                link.setOnAction(event -> {
-                    selectedBehaviour.set(null);
-                    ConfigurationsTab.this.setParentViewModel(newValue);
-                });
-            }
-        };
-        selectedBehaviour.addListener(chooserListener);
-
-        return pane;
-    }
-
-    private void updateConfigurationChooser(VBox content, BehaviourViewModel newBehaviour) {
-        if (content.getChildren() != null) {
-            content.getChildren().clear();
-        }
-        ToggleGroup group = new ToggleGroup();
-        for(ConfigurationViewModel c : newBehaviour.getConfigurations()) {
-            RadioButton box = new RadioButton(c.getName() );
-            if (c.getId() == selectedConfiguration.get().getId()) {
-                box.setSelected(true);
-            }
-            box.setUserData(c);
-            box.setToggleGroup(group);
-            content.getChildren().add(box);
-        }
-
-        group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            Toggle value = observable.getValue();
-            ConfigurationsTab.this.selectedConfiguration.set((ConfigurationViewModel) value.getUserData());
-        });
-
-        // TODO change radiobutton when list elements properties change
-        newBehaviour.getConfigurations().addListener((ListChangeListener<ConfigurationViewModel>) c -> {
-            updateConfigurationChooser(content, selectedBehaviour.get());
-        });
+        configurationManager.getChildren().addAll(dropDown);
     }
 
     //----
@@ -268,6 +153,14 @@ public class ConfigurationsTab extends Tab {
         pane.setText(I18NRepo.getInstance().getString("label.caption.keyvaluepairs"));
 
         this.selectedConfiguration.addListener((observable, oldValue, newValue) -> updateKeyValuePairTable(newValue));
+        pane.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue && selectedConfiguration.get() != null) {
+                    resizeTableView(selectedConfiguration.get());
+                }
+            }
+        });
 
         return pane;
     }
@@ -275,22 +168,16 @@ public class ConfigurationsTab extends Tab {
     private void updateKeyValuePairTable(ConfigurationViewModel configuration) {
         keyValuePairTable.setContent(null);
         keyValuePairTable.setExpanded(false);
-        if(configuration == null) {
+        if(configuration == null || selectedConfiguration.get() == null) {
             return;
         }
-
-        // Controls
-        keyField = new TextField("Key");
-        valField = new TextField("Value");
-        Button remButton = new Button("-");
-        Button putButton = new Button("+");
-        HBox controls = new HBox(keyField, valField, remButton, putButton);
-        remButton.setOnAction(evt -> createKeyValueEvent(configuration, keyField.getText(), valField.getText(),false));
-        putButton.setOnAction(evt -> createKeyValueEvent(configuration, keyField.getText(), valField.getText(),true));
 
         // Table
         ObservableList<Map.Entry<String, String>> items = FXCollections.observableArrayList(configuration.getKeyValuePairs().entrySet());
         keyValueTableView = new TableView<>(items);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("","");
+        keyValueTableView.getItems().addAll(map.entrySet());
         keyValueTableView.setFixedCellSize(CELL_SIZE);
         keyValueTableView.setPlaceholder(new Text());
         keyValueTableView.setEditable(true);
@@ -302,9 +189,12 @@ public class ConfigurationsTab extends Tab {
         keyColumn.setEditable(true);
         keyColumn.setOnEditCommit(event -> {
             String value = event.getRowValue().getValue();
-            createKeyValueEvent(configuration, event.getOldValue(), value, false);
+            if (!"".equals(event.getOldValue())) {
+                createKeyValueEvent(configuration, event.getOldValue(), value, false);
+            }
             createKeyValueEvent(configuration, event.getNewValue(), value, true);
             event.consume();
+            resizeTableView(configuration);
         });
         keyValueTableView.getColumns().add(keyColumn);
 
@@ -314,29 +204,48 @@ public class ConfigurationsTab extends Tab {
         valueColumn.setEditable(true);
         valueColumn.setOnEditCommit(event -> {
             String key = event.getRowValue().getKey();
-            createKeyValueEvent(configuration, key, event.getOldValue(), false);
-            createKeyValueEvent(configuration, key, event.getNewValue(), true);
+            if (!"".equals(key)) {
+                createKeyValueEvent(configuration, key, event.getOldValue(), false);
+            }
+            if (key != null && !key.isEmpty()) {
+                createKeyValueEvent(configuration, key, event.getNewValue(), true);
+            }
             event.consume();
+            resizeTableView(configuration);
         });
         keyValueTableView.getColumns().add(valueColumn);
 
         configuration.getKeyValuePairs().addListener((MapChangeListener<? super String, ? super String>) change -> {
-           keyValueTableView.setItems(FXCollections.observableArrayList(configuration.getKeyValuePairs().entrySet()));
-           resizeTableView(configuration);
+            keyValueTableView.setItems(FXCollections.observableArrayList(configuration.getKeyValuePairs().entrySet()));
+            HashMap<String, String> tmp = new HashMap<>();
+            tmp.put("","");
+            keyValueTableView.getItems().addAll(tmp.entrySet());
+            resizeTableView(configuration);
         });
         keyValueTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         HBox.setHgrow(keyValueTableView, Priority.ALWAYS);
 
+        keyValueTableView.setRowFactory(new Callback<TableView<Map.Entry<String, String>>, TableRow<Map.Entry<String, String>>>() {
+            @Override
+            public TableRow<Map.Entry<String, String>> call(TableView<Map.Entry<String, String>> param) {
+                final TableRow<Map.Entry<String, String>> row = new TableRow<>();
+                final ContextMenu rowMenu = new ContextMenu();
+                MenuItem removeItem = new MenuItem("Delete");
+                removeItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        createKeyValueEvent(selectedConfiguration.get(), row.getItem().getKey(), row.getItem().getValue(), false);
+                    }
+                });
+                rowMenu.getItems().addAll(removeItem);
 
-
-        keyValueTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                keyField.setText(newValue.getKey());
-                valField.setText(newValue.getValue());
+                // only display context menu for non-null items:
+                row.contextMenuProperty().bind(Bindings.when(Bindings.isNotNull(row.itemProperty())).then(rowMenu).otherwise((ContextMenu)null));
+                return row;
             }
         });
 
-        keyValuePairTable.setContent(new ScrollPane(new HBox(keyValueTableView, controls)));
+        keyValuePairTable.setContent(new ScrollPane(new HBox(keyValueTableView)));
     }
 
 
@@ -346,7 +255,10 @@ public class ConfigurationsTab extends Tab {
     private void createKeyValueEvent(ConfigurationViewModel configuration, String key, String value, boolean add) {
         GuiChangeAttributeEvent addKeyValueEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.CONFIGURATION, configuration.getName());
         addKeyValueEvent.setElementId(configuration.getId());
-        addKeyValueEvent.setParentId(selectedState.get().getId());
+
+        if(selectedState.get()!= null) {
+            addKeyValueEvent.setParentId(selectedState.get().getId());
+        }
 
         addKeyValueEvent.setAttributeName(key);
         addKeyValueEvent.setAttributeType(value);
@@ -357,10 +269,9 @@ public class ConfigurationsTab extends Tab {
         handler.handle(addKeyValueEvent);
 
         if (!add) {
-            keyField.clear();
-            valField.clear();
             keyValueTableView.setSelectionModel(null);
         }
+        keyValueTableView.refresh();
     }
 
     //----
@@ -381,72 +292,12 @@ public class ConfigurationsTab extends Tab {
     }
 
     private void resizeTableView(ConfigurationViewModel configuration) {
-        int itemsAndHeaderSize = configuration.getKeyValuePairs().size() + 1;
+        int itemsAndHeaderSize = configuration.getKeyValuePairs().size() + 2;
 
         keyValueTableView.setPrefHeight(itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
         keyValueTableView.setMinHeight( itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
         keyValueTableView.setMaxHeight( itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
-    }
-
-
-    //----
-    // ERROR HANDLING
-    //----
-    private boolean isDuplicate(String newName) {
-        for (ConfigurationViewModel c : selectedBehaviour.get().getConfigurations()) {
-            if (newName.equals(c.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void createAlert() {
-        I18NRepo i18NRepo = I18NRepo.getInstance();
-
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Invalid Configuration!");
-        alert.setContentText(i18NRepo.getString("label.error.invalidConfiguration"));
-
-        ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"));
-
-        alert.getButtonTypes().setAll(closeBtn);
-
-        alert.initOwner(PlanDesignerApplication.getPrimaryStage());
-        alert.showAndWait();
-    }
-
-    public class ConfigurationsTableListener<S, T> implements EventHandler<TableColumn.CellEditEvent<ConfigurationViewModel, String>> {
-
-        private String attributeName;
-
-        @Override
-        public void handle(TableColumn.CellEditEvent<ConfigurationViewModel, String> event) {
-            ConfigurationViewModel configurationViewModel = event.getRowValue();
-            String newValue = event.getNewValue();
-            String oldName = event.getOldValue();
-            if ("name".equals(attributeName)) {
-                if (isDuplicate(newValue)) {
-                    createAlert();
-                    event.consume();
-                    event.getTableView().getItems().set(event.getTablePosition().getRow(), configurationViewModel);
-                    return;
-                }
-            }
-
-            GuiChangeAttributeEvent attributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.CONFIGURATION, oldName);
-            attributeEvent.setNewValue(newValue);
-            attributeEvent.setAttributeType(String.class.getSimpleName());
-            attributeEvent.setAttributeName(attributeName);
-            attributeEvent.setElementId(configurationViewModel.getId());
-            IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
-            handler.handle(attributeEvent);
-            event.consume();
-        }
-
-        public void setPropertyName(String propertyName) {
-            this.attributeName = propertyName;
-        }
+        keyValueTableView.setMinWidth(keyValuePairTable.getWidth() - CELL_OFFSET);
+        keyValueTableView.refresh();
     }
 }
