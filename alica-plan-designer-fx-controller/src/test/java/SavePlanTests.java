@@ -13,6 +13,8 @@ public class SavePlanTests extends ApplicationTest {
     private PlanDesignerApplication planDesignerApplication;
     private String planName = "testfxPlan";
     private String planNameExtension = planName + "." + Extensions.PLAN;
+    private String behaviourName = "testfxBehaviour";
+    private String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -25,13 +27,26 @@ public class SavePlanTests extends ApplicationTest {
     @Test
     public void testCreatePlan() {
         createPlan();
+        createBehaviour();
         openPlan();
         placeEntryPoint();
         placeState();
         placeSuccessState();
         initTransitionFromEntryPointToState();
         transitionFromStateToSuccessState();
+        placeBehaviour();
         deletePlan();
+        deleteBehaviour();
+        sleep(10000);
+    }
+
+    private void placeBehaviour() {
+        clickOn("#behavioursTab");
+        type(KeyCode.TAB);
+        for (int i = 0; i < 5; i++) {
+            type(KeyCode.PAGE_DOWN);
+        }
+        drag(behaviourName).dropTo("#StateContainer");
     }
 
     private void initTransitionFromEntryPointToState() {
@@ -88,10 +103,20 @@ public class SavePlanTests extends ApplicationTest {
     private void createPlan() {
         // open create plan dialog
         rightClickOn("plans");
-        rightClickOn("New");
-        rightClickOn("Plan");
+        clickOn("New");
+        clickOn("Plan");
         clickOn("#nameTextField");
         write(planName);
+        clickOn("#createButton");
+    }
+
+    private void createBehaviour() {
+        rightClickOn("plans");
+        clickOn("New");
+        moveTo("Plan");  // avoid closing menu if mouse is outside of menu dialog
+        clickOn("Behaviour");
+        clickOn("#nameTextField");
+        write(behaviourName);
         clickOn("#createButton");
     }
 
@@ -102,11 +127,14 @@ public class SavePlanTests extends ApplicationTest {
 
     private void deletePlan() {
         openPlansView();
-        rightClickOn(planNameExtension);
-        for (int i = 0; i < 3; i++) {
-            type(KeyCode.DOWN);
-        }
-        type(KeyCode.ENTER);
+        clickOn(planNameExtension);
+        type(KeyCode.DELETE);
+    }
+
+    private void deleteBehaviour() {
+        openPlansView();
+        clickOn(behaviourNameExtension);
+        type(KeyCode.DELETE);
     }
 
     private void openPlansView() {
