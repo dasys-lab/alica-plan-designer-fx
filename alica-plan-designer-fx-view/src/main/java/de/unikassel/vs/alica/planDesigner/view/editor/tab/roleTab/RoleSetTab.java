@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.DefaultStringConverter;
 
@@ -29,8 +30,10 @@ public class RoleSetTab extends EditorTab {
     protected RoleSetViewModel      roleSetViewModel;
     protected RoleListView          roleListView;
     protected TaskPriorityTableView taskTableView;
+    protected CharacteristicsTableView characteristicsTableView;
 
     private ObservableList<TaskPriorityTableElement> taskPriorities = FXCollections.observableArrayList();
+    private ObservableList<CharacteristicsTableElement> characteristics = FXCollections.observableArrayList();
 
     public RoleSetTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
@@ -82,12 +85,25 @@ public class RoleSetTab extends EditorTab {
     private void draw() {
         HBox createRoleVisual = createRoleButtonVisual();
         TitledPane roleListVisual = createRoleListVisual();
-        TaskPriorityTableView taskPriorityTableVisual = createTaskPriorityTableVisual();
-        VBox roleSetVisual = new VBox();
+
+        TaskPriorityTableView taskPriorityTableView = createTaskPriorityTableVisual();
+        CharacteristicsTableView characteristicsTableView = createCharacteristicsTableVisual();
+
+        VBox splacer1 = new VBox();
+        splacer1.setSpacing(10);
+        splacer1. setPadding(new Insets(5,15,5,15));
+        VBox splacer2 = new VBox();
+        splacer2.setSpacing(10);
+        splacer2. setPadding(new Insets(5,15,5,15));
+        HBox roleTaskPriorityListVisual = new HBox(roleListVisual,
+                                                    splacer1, taskPriorityTableView,
+                                                    splacer2, characteristicsTableView );
+
+        VBox roleSetVisual = new VBox(roleTaskPriorityListVisual, createRoleVisual);
+        HBox.setHgrow(roleTaskPriorityListVisual, Priority.ALWAYS);
+        HBox.setHgrow(roleSetVisual, Priority.ALWAYS);
+
         roleSetVisual.setPrefHeight(Double.MAX_VALUE);
-        HBox roleTaskPriorityListVisual = new HBox();
-        roleTaskPriorityListVisual.getChildren().addAll(roleListVisual, taskPriorityTableVisual);
-        roleSetVisual.getChildren().addAll( roleTaskPriorityListVisual, createRoleVisual );
         roleListView.setFocus();
         splitPane.getItems().add(0, roleSetVisual);
     }
@@ -101,6 +117,7 @@ public class RoleSetTab extends EditorTab {
         rolesPane.setStyle("-fx-font-weight: bold;");
         roleListView.setStyle("-fx-font-weight: normal;");
         roleListView.setPrefHeight(Double.MAX_VALUE);
+        roleListView.setMinWidth(200.0);
         rolesPane.prefHeightProperty().bind(splitPane.heightProperty());
         return rolesPane;
     }
@@ -108,10 +125,12 @@ public class RoleSetTab extends EditorTab {
     private TaskPriorityTableView createTaskPriorityTableVisual() {
         taskTableView = new TaskPriorityTableView(roleSetViewModel.getDefaultPriority());
         taskTableView.addColumn(i18NRepo.getString("label.caption.tasks"), "taskName",new DefaultStringConverter(), false);
+        taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setMinWidth(150.0);
         taskTableView.addColumn(i18NRepo.getString("label.caption.priorities"), "priority",new DefaultStringConverter(), true);
         taskTableView.prefHeightProperty().bind(splitPane.heightProperty());
         taskTableView.prefWidthProperty().bind(splitPane.widthProperty());
         taskTableView.setEditable(true);
+
         taskTableView.addListener(evt -> {
             String id = String.valueOf(evt.getOldValue());
             String value = (String) evt.getNewValue();
@@ -125,6 +144,28 @@ public class RoleSetTab extends EditorTab {
         if (roleSetViewModel.getTaskRepository() != null)
             taskTableView.addTasks(roleSetViewModel.getTaskRepository().getTaskViewModels());
         return taskTableView;
+    }
+
+    private CharacteristicsTableView createCharacteristicsTableVisual() {
+        characteristicsTableView = new CharacteristicsTableView(roleSetViewModel.getDefaultPriority());
+        characteristicsTableView.addColumn(i18NRepo.getString("label.caption.characteristics"), "name",new DefaultStringConverter(), false);
+        characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(200.0);
+        characteristicsTableView.addColumn(i18NRepo.getString("label.caption.priorities"), "priority",new DefaultStringConverter(), true);
+        characteristicsTableView.prefHeightProperty().bind(splitPane.heightProperty());
+        characteristicsTableView.prefWidthProperty().bind(splitPane.widthProperty());
+        characteristicsTableView.setEditable(true);
+
+        characteristicsTableView.addListener(evt -> {
+            String id = String.valueOf(evt.getOldValue());
+            String value = (String) evt.getNewValue();
+            RoleViewModel roleViewModel = (RoleViewModel)evt.getSource();
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_ELEMENT, Types.ROLE_TASK_PROPERTY, "taskPriority");
+            event.setRelatedObjects(ImmutableMap.<String, Long>of( value, Long.parseLong(id)));
+            event.setElementId(roleViewModel.getId());
+            guiModificationHandler.handle(event);
+        });
+
+        return characteristicsTableView;
     }
 
     private HBox createRoleButtonVisual() {

@@ -11,6 +11,7 @@ public class RoleViewModel extends PlanElementViewModel {
 
     private RoleSetViewModel roleSetViewModel;
     private ObservableMap<TaskViewModel, Float> taskPriorities;
+    private ObservableMap<CharacteristicViewModel, Float> roleCharacteristics;
 
     public RoleViewModel (long id, String name, String type) {
         super(id, name, type);
@@ -29,6 +30,7 @@ public class RoleViewModel extends PlanElementViewModel {
     public void setTaskPriorities(ObservableMap<TaskViewModel, Float> taskPriorities) {
         this.taskPriorities = taskPriorities;
     }
+
     public void setTaskPriority(HashMap<Long, Float> taskPriorities) {
         this.taskPriorities.clear();
         ObservableList<TaskViewModel> taskViewModels = this.getRoleSetViewModel().getTaskRepository().getTaskViewModels();
@@ -60,6 +62,10 @@ public class RoleViewModel extends PlanElementViewModel {
         if(priority != roleSetViewModel.getDefaultPriority()) {
             taskPriorities.put(task, priority);
         }
+    }
+
+    public void setRoleCharacteristic(CharacteristicViewModel characteristic, float priority) {
+        roleCharacteristics.put(characteristic, priority);
     }
 
     public ObservableMap<TaskViewModel, Float> getTaskPriorities() {

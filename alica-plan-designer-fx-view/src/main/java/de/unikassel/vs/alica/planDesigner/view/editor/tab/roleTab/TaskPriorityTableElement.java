@@ -26,7 +26,8 @@ public class TaskPriorityTableElement {
     }
 
     public void addListener(PropertyChangeListener listener) {
-        this.listener = observable -> listener.propertyChange(new PropertyChangeEvent(tableView.getCurrentRole(), "taskPriority", task.getId(),
+        this.listener = observable -> listener.propertyChange(new PropertyChangeEvent(
+                tableView.getCurrentRole(), "taskPriority", task.getId(),
                 ((StringProperty)observable).getValue()));
     }
 

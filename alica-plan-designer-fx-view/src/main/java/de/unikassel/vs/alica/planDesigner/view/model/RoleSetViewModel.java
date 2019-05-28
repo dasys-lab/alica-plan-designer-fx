@@ -11,6 +11,7 @@ import java.util.Arrays;
 public class RoleSetViewModel extends SerializableViewModel {
 
     private ObservableList<RoleViewModel> roles;
+    private ObservableList<CharacteristicViewModel> characteristics;
     private FloatProperty defaultPriority;
     private BooleanProperty defaultRoleSet;
     private TaskRepositoryViewModel taskRepository;

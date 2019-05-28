@@ -26,16 +26,13 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
     }
 
     private void updateCells() {
+
         for (Object item : this.getItems()) {
             Float taskPriority = currentRole.getTaskPriority(((TaskPriorityTableElement) item).getTaskID());
             taskPriority = taskPriority == null ? defaultPriority : taskPriority;
             ((TaskPriorityTableElement) item).removeListener();
             ((TaskPriorityTableElement) item).setPriority(String.valueOf(taskPriority));
         }
-    }
-
-    public  void setCurrentRole(RoleViewModel item) {
-        this.currentRole = (RoleViewModel) item;
     }
 
     public void addTasks(ObservableList<TaskViewModel> taskViewModels) {
@@ -64,9 +61,10 @@ public class TaskPriorityTableView extends PropertiesTable<TaskPriorityTableElem
     public void setDefaultRoleSet(boolean defaultRoleSet) {
         this.defaultRoleSet = defaultRoleSet;
     }
-
-
     public RoleViewModel getCurrentRole() {
         return currentRole;
+    }
+    public void setCurrentRole(RoleViewModel item) {
+        this.currentRole = (RoleViewModel) item;
     }
 }
