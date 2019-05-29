@@ -10,12 +10,9 @@ import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 
-import java.io.File;
-
 public class CopyFileMenuItem extends MenuItem {
     private TreeCell toCopy;
     private IGuiModificationHandler guiModificationHandler;
-    private String copyName;
 
     public CopyFileMenuItem() {
         super(I18NRepo.getInstance().getString("label.menu.edit.copy"));
@@ -24,15 +21,14 @@ public class CopyFileMenuItem extends MenuItem {
     }
     public void onCopy() {
         ViewModelElement elementToCopy = ((FileTreeItem)toCopy.getTreeItem()).getViewModelElement();
-        copyName = elementToCopy.getName() +  "copy";
-        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, elementToCopy.getType(), copyName);
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.COPY_ELEMENT, elementToCopy.getType(), elementToCopy.getName());
         event.setElementId(elementToCopy.getId());
         guiModificationHandler.handle(event);
-        System.out.println(elementToCopy);
     }
 
-    public void setTreeCell(TreeCell toDelete) {
-        this.toCopy = toDelete;
+
+    public void setTreeCell(TreeCell toCopy) {
+        this.toCopy = toCopy;
     }
 
 }
