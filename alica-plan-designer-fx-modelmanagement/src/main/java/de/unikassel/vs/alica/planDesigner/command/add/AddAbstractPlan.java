@@ -18,7 +18,7 @@ public class AddAbstractPlan extends Command {
         this.abstractPlan = (AbstractPlan) modelManager.getPlanElement(mmq.getElementId());
 
         if(this.abstractPlan instanceof Behaviour) {
-            throw new RuntimeException("Cannot add Behaviour to a States AbstractPlans-list. Use Configuration instead!");
+            throw new RuntimeException("Cannot add Behaviour to a States AbstractPlans-list. Use BehaviourConfiguration instead!");
         }
         if(modelManager.checkForInclusionLoop(state, abstractPlan)){
             throw new RuntimeException(

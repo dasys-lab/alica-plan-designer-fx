@@ -26,9 +26,6 @@ public class ExternalRefSerializer extends StdSerializer<PlanElement> {
             jsonGenerator.writeString(Paths.get(((SerializablePlanElement) planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.PLAN + "#" + planElement.getId()).toString());
         } else if (planElement instanceof Behaviour) {
             jsonGenerator.writeString(Paths.get(((SerializablePlanElement) planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.BEHAVIOUR + "#" + planElement.getId()).toString());
-        } else if(planElement instanceof Configuration) {
-            Behaviour parentBehaviour = ((Configuration) planElement).getBehaviour();
-            jsonGenerator.writeString(Paths.get(parentBehaviour.getRelativeDirectory(), parentBehaviour.getName() + "." + Extensions.BEHAVIOUR + "#" + planElement.getId()).toString());
         } else if (planElement instanceof PlanType) {
             jsonGenerator.writeString(Paths.get(((SerializablePlanElement)planElement).getRelativeDirectory(), planElement.getName() + "." + Extensions.PLANTYPE + "#" + planElement.getId()).toString());
         } else if (planElement instanceof TaskRepository) {

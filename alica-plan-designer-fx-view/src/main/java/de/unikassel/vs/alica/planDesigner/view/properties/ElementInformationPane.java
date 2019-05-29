@@ -23,9 +23,7 @@ import org.controlsfx.property.BeanPropertyUtils;
  */
 public class ElementInformationPane extends TitledPane {
 
-
     protected I18NRepo i18NRepo;
-
     /**
      * Not all Tabs are shown all the time, it depends on
      * the item the ElementInformationPane instance
@@ -87,11 +85,6 @@ public class ElementInformationPane extends TitledPane {
         propertySheet.getItems().addAll(createPropertySheetList(elementShown));
     }
 
-    public void setViewModelElement(ConfigurationViewModel configurationViewModel, StateViewModel stateViewModel) {
-        configurationsTab.setParentState(stateViewModel);
-        setViewModelElement(configurationViewModel);
-    }
-
     private void adaptUI(ViewModelElement elementShown) {
         tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab, characteristicsTab, configurationsTab);
         switch (elementShown.getType()) {
@@ -127,13 +120,6 @@ public class ElementInformationPane extends TitledPane {
                 break;
             case Types.BEHAVIOUR:
                 this.variablesTab.setParentViewModel(elementShown);
-                this.configurationsTab.setParentViewModel(elementShown);
-                this.adaptConditions(elementShown);
-                this.setContent(tabPane);
-                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, configurationsTab, preConditionTab, runtimeConditionTab, postConditionTab);
-                break;
-            case Types.CONFIGURATION:
-                this.variablesTab.setParentViewModel(((ConfigurationViewModel)elementShown).getBehaviour());
                 this.configurationsTab.setParentViewModel(elementShown);
                 this.adaptConditions(elementShown);
                 this.setContent(tabPane);

@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,11 +15,11 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
     protected SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
     protected SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
 
-    protected ObservableList<ConfigurationViewModel> configurations;
-
     protected final SimpleObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
     protected final SimpleObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
     protected final SimpleObjectProperty<ConditionViewModel> postCondition = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
+
+    protected ObservableMap<String, String> keyValuePairs;
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
@@ -26,7 +27,7 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
 
-        configurations = FXCollections.observableArrayList(new ArrayList<>());
+        this.keyValuePairs = FXCollections.observableHashMap();
     }
 
     public void registerListener(IGuiModificationHandler handler) {
@@ -63,10 +64,6 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
         return frequency;
     }
 
-    public ObservableList<ConfigurationViewModel> getConfigurations() {
-        return configurations;
-    }
-
     public ObjectProperty<ConditionViewModel> preConditionProperty(){
         return preCondition;
     }
@@ -101,5 +98,9 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     public void setPostCondition(ConditionViewModel conditionViewModel) {
         this.postCondition.set(conditionViewModel);
+    }
+
+    public ObservableMap<String, String> getKeyValuePairs() {
+        return keyValuePairs;
     }
 }

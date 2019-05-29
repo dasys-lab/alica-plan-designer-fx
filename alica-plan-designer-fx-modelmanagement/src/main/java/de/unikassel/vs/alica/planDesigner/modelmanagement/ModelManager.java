@@ -20,18 +20,15 @@ import de.unikassel.vs.alica.planDesigner.modelMixIns.*;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ModelManager implements Observer {
 
@@ -609,9 +606,6 @@ public class ModelManager implements Observer {
                 for(Variable variable: behaviour.getVariables()) {
                     planElementMap.put(variable.getId(), variable);
                 }
-                for(Configuration configuration : behaviour.getConfigurations()) {
-                    planElementMap.put(configuration.getId(), configuration);
-                }
                 storeCondition(behaviour.getPreCondition());
                 storeCondition(behaviour.getRuntimeCondition());
                 storeCondition(behaviour.getPostCondition());
@@ -621,13 +615,6 @@ public class ModelManager implements Observer {
                 taskRepository = (TaskRepository) planElement;
                 for(Task task : taskRepository.getTasks()) {
                     planElementMap.put(task.getId(), task);
-                }
-                break;
-            case Types.CONFIGURATION:
-                Configuration configuration = (Configuration) planElement;
-                behaviour = configuration.getBehaviour();
-                if(!behaviour.getConfigurations().contains(configuration)) {
-                    behaviour.addConfiguration(configuration);
                 }
                 break;
             case Types.ROLESET:
@@ -696,10 +683,6 @@ public class ModelManager implements Observer {
                 break;
             case Types.BEHAVIOUR:
                 behaviourMap.remove(planElement.getId());
-                break;
-            case Types.CONFIGURATION:
-                Configuration configuration = (Configuration) planElement;
-                configuration.getBehaviour().removeConfiguration(configuration);
                 break;
             default:
                 throw new RuntimeException("ModelManager: ");
@@ -1001,9 +984,6 @@ public class ModelManager implements Observer {
                     case Types.TASKREPOSITORY:
                         cmd = new CreateTaskRepository(this, mmq);
                         break;
-                    case Types.CONFIGURATION:
-                        cmd = new CreateConfiguration(this, mmq);
-                        break;
                     case Types.ROLESET:
                         cmd = new CreateRoleSet(this, mmq);
                         break;
@@ -1063,9 +1043,6 @@ public class ModelManager implements Observer {
                         break;
                     case Types.VARIABLEBINDING:
                         cmd = new DeleteVariableBinding(this, mmq);
-                        break;
-                    case Types.CONFIGURATION:
-                        cmd = new DeleteConfiguration(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
@@ -1223,16 +1200,17 @@ public class ModelManager implements Observer {
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
-                for (State state : ((Plan) planElement).getStates()) {
-                    for (AbstractPlan aPlan: state.getAbstractPlans()) {
-                        if (aPlan instanceof Configuration) {
-                            Behaviour behaviour = ((Configuration) aPlan).getBehaviour();
-                            if (behaviour.getDirty()) {
-                                serialize(behaviour, Types.BEHAVIOUR);
-                            }
-                        }
-                    }
-                }
+                // Why should we automatically store behaviours in a plan? No reason? Then delete it
+//                for (State state : ((Plan) planElement).getStates()) {
+//                    for (AbstractPlan abstractPlan: state.getAbstractPlans()) {
+//                        if (abstractPlan instanceof Behaviour) {
+//                            Behaviour behaviour = (Behaviour) abstractPlan;
+//                            if (behaviour.getDirty()) {
+//                                serialize(behaviour, Types.BEHAVIOUR);
+//                            }
+//                        }
+//                    }
+//                }
                 serializeToDisk(planElement, false);
                 break;
             case Types.BEHAVIOUR:

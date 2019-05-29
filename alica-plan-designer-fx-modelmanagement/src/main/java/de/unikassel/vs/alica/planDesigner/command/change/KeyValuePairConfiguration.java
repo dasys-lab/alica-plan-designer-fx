@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.command.change;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.Configuration;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
@@ -11,7 +11,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 public class KeyValuePairConfiguration extends Command {
     private final boolean add;
     private final Pair pair;
-    private final Configuration configuration;
+    private final Behaviour behaviour;
 
     public KeyValuePairConfiguration(ModelManager manager, ModelModificationQuery mmq, boolean add) {
         super(manager, mmq);
@@ -19,7 +19,7 @@ public class KeyValuePairConfiguration extends Command {
         this.add = add;
         this.pair = new Pair(mmq.getAttributeName(), mmq.getAttributeType());
 
-        this.configuration = (Configuration) modelManager.getPlanElement(mmq.getElementId());
+        this.behaviour = (Behaviour) modelManager.getPlanElement(mmq.getElementId());
     }
 
     @Override
@@ -41,16 +41,16 @@ public class KeyValuePairConfiguration extends Command {
     }
 
     private void add() {
-        configuration.putKeyValuePair(pair.getKey(), pair.getValue());
-        ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CONNECTED, configuration, Types.CONFIGURATION);
+        behaviour.putKeyValuePair(pair.getKey(), pair.getValue());
+        ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CONNECTED, behaviour, Types.CONFIGURATION);
         modelEvent.setChangedAttribute(pair.getKey());
         modelEvent.setNewValue(pair.getValue());
         modelManager.fireEvent(modelEvent);
     }
 
     private void remove() {
-        configuration.removeKeyValuePair(pair.getKey());
-        ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_DISCONNECTED, configuration, Types.CONFIGURATION);
+        behaviour.removeKeyValuePair(pair.getKey());
+        ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_DISCONNECTED, behaviour, Types.CONFIGURATION);
         modelEvent.setChangedAttribute(pair.getKey());
         modelEvent.setNewValue(pair.getValue());
         modelManager.fireEvent(modelEvent);
