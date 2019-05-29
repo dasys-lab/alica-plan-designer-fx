@@ -8,6 +8,8 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 
+import java.util.HashMap;
+
 public abstract class UiPositionCommand extends Command {
 
     protected int x;
@@ -34,6 +36,15 @@ public abstract class UiPositionCommand extends Command {
         ModelEvent event = new ModelEvent(eventType, planElement, mmq.getElementType());
         event.setUiElement(this.uiElement);
         event.setParentId(mmq.getParentId());
+        this.modelManager.fireEvent(event);
+    }
+
+
+    protected void fireEvent(ModelEventType eventType, PlanElement planElement, HashMap<String, Long> relatedElement) {
+        ModelEvent event = new ModelEvent(eventType, planElement, mmq.getElementType());
+        event.setUiElement(this.uiElement);
+        event.setParentId(mmq.getParentId());
+        event.setRelatedObjects(relatedElement);
         this.modelManager.fireEvent(event);
     }
 }

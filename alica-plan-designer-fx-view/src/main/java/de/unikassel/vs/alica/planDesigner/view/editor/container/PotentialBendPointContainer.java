@@ -13,7 +13,7 @@ public class PotentialBendPointContainer extends BendpointContainer {
 
     public PotentialBendPointContainer(ViewModelElement containedElement, PlanViewModel parent, PlanTab planTab,
                                        TransitionContainer transitionContainer) {
-        super(containedElement, parent, planTab);
+        super(containedElement, parent, planTab, transitionContainer);
         this.transitionContainer = transitionContainer;
     }
 

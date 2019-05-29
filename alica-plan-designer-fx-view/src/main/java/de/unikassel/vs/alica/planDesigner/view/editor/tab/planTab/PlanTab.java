@@ -14,6 +14,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
@@ -22,6 +23,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PlanTab extends AbstractPlanTab {
 
@@ -85,6 +87,18 @@ public class PlanTab extends AbstractPlanTab {
         event.setParentId(serializableViewModel.getId());
         event.setX((int) newX);
         event.setY((int) newY);
+        guiModificationHandler.handle(event);
+    }
+
+    public void fireBendPointChangePositionEvent(DraggableEditorElement planElementContainer, ViewModelElement parentTransition, String type, double newX, double newY) {
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_POSITION, type, planElementContainer.getPlanElementViewModel().getName());
+        event.setElementId(parentTransition.getId());
+        event.setParentId(serializableViewModel.getId());
+        event.setX((int) newX);
+        event.setY((int) newY);
+        HashMap<String, Long> bendpoint = new HashMap<>();
+        bendpoint.put(planElementContainer.getPlanElementViewModel().getType(), planElementContainer.getPlanElementViewModel().getId());
+        event.setRelatedObjects(bendpoint);
         guiModificationHandler.handle(event);
     }
 
