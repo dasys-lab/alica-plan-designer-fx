@@ -117,7 +117,8 @@ public final class FileTreeView extends TreeView<File> {
             FileTreeItem newItem = new FileTreeItem(createFile(viewModelElement), new ImageView(new AlicaIcon(viewModelElement.getType(),
                     AlicaIcon.Size.BIG)), viewModelElement);
             folder.getChildren().add(newItem);
-            folder.getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
+            folder.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+
         } else {
             throw new RuntimeException("Destination folder for PlanElement " + viewModelElement.getName() + " does not exist!");
         }
