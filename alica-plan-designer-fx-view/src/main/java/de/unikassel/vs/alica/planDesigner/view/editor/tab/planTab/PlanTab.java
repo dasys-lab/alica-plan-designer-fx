@@ -14,8 +14,8 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.event.EventHandler;
-import javafx.event.EventTarget;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -23,6 +23,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PlanTab extends AbstractPlanTab {
 
@@ -88,6 +89,18 @@ public class PlanTab extends AbstractPlanTab {
         guiModificationHandler.handle(event);
     }
 
+    public void fireBendPointChangePositionEvent(DraggableEditorElement planElementContainer, ViewModelElement parentTransition, String type, double newX, double newY) {
+        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CHANGE_POSITION, type, planElementContainer.getPlanElementViewModel().getName());
+        event.setElementId(parentTransition.getId());
+        event.setParentId(serializableViewModel.getId());
+        event.setX((int) newX);
+        event.setY((int) newY);
+        HashMap<String, Long> bendpoint = new HashMap<>();
+        bendpoint.put(planElementContainer.getPlanElementViewModel().getType(), planElementContainer.getPlanElementViewModel().getId());
+        event.setRelatedObjects(bendpoint);
+        guiModificationHandler.handle(event);
+    }
+
     public void fireModificationEvent(GuiEventType eventType, String elementType, String name, HashMap<String, Long> relatedElements, int x, int y) {
         GuiModificationEvent event = new GuiModificationEvent(eventType, elementType, name);
         event.setX(x);
@@ -118,6 +131,7 @@ public class PlanTab extends AbstractPlanTab {
             case Types.BEHAVIOUR:
             case Types.PLAN:
             case Types.PLANTYPE:
+            case Types.CONFIGURATION:
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT, planElementViewModel.getType(), planElementViewModel.getName());
                 event.setParentId(((AbstractPlanContainer)selectedContainer).getParentStateContainer().getState().getId());
                 event.setElementId(planElementViewModel.getId());

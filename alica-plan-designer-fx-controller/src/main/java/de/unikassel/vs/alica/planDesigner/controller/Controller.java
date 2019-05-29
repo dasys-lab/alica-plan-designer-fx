@@ -28,10 +28,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
-import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.TransitionViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import javafx.application.Platform;
@@ -282,13 +279,30 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.addElement(event);
                 break;
             case ELEMENT_CONNECTED:
-                viewModelManager.connectElement(event);
+                switch (viewModelElement.getType()) {
+                    case Types.CONFIGURATION:
+                        String key = event.getChangedAttribute();
+                        String value = (String) event.getNewValue();
+                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().put(key, value);
+                        break;
+                        default:
+                            viewModelManager.connectElement(event);
+                }
                 break;
             case ELEMENT_DISCONNECTED:
-                viewModelManager.disconnectElement(event);
+                switch (viewModelElement.getType()) {
+                    case Types.CONFIGURATION:
+                        String key = event.getChangedAttribute();
+                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().remove(key);
+                        break;
+                    default:
+                        viewModelManager.disconnectElement(event);
+                }
+                break;
             case ELEMENT_CHANGED_POSITION:
                 viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
-            default:
+                break;
+                default:
                 System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
                 break;
         }
@@ -297,7 +311,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             TransitionViewModel transition = (TransitionViewModel) viewModelElement;
             transition.getBendpoints().clear();
             for (BendPoint bendPoint : event.getUiElement().getBendPoints()) {
-                transition.addBendpoint((BendPointViewModel) viewModelManager.getViewModelElement(bendPoint));
+                BendPointViewModel bendPointViewModel = (BendPointViewModel) viewModelManager.getViewModelElement(bendPoint);
+                transition.addBendpoint(bendPointViewModel);
             }
             ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, planElement, Types.BENDPOINT);
             updateViewModel(modelEvent, viewModelElement, planElement);
@@ -448,6 +463,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setParentId(event.getParentId());
                 mmq.setX(event.getX());
                 mmq.setY(event.getY());
+                mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
             case MOVE_FILE:
                 mmq = new ModelModificationQuery(ModelQueryType.MOVE_FILE, event.getAbsoluteDirectory(), event.getElementType(), event.getName());

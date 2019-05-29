@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.properties;
 
+import javafx.event.EventHandler;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -12,6 +13,10 @@ import javafx.util.StringConverter;
 public class PropertiesTable<S> extends TableView<S> {
 
     public <T> void addColumn(String title, String propertyName, StringConverter<T> converter, boolean editable) {
+        addColumn(title, propertyName, converter, editable, null);
+    }
+
+    public <T> void addColumn(String title, String propertyName, StringConverter<T> converter, boolean editable, EventHandler<TableColumn.CellEditEvent<S, T>> listener) {
         TableColumn<S, T> column = new TableColumn<S, T>(title);
         column.setCellValueFactory(new PropertyValueFactory<S, T>(propertyName));
         Callback<TableColumn<S, T>, TableCell<S, T>> defaultTextFieldCellFactory
@@ -22,6 +27,9 @@ public class PropertiesTable<S> extends TableView<S> {
             return cell;
         });
         getColumns().add(column);
+        if (listener != null) {
+            column.setOnEditCommit(listener);
+        }
         resizeTable();
     }
 
