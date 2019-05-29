@@ -16,6 +16,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
@@ -90,11 +91,11 @@ public class RoleSetTab extends EditorTab {
         CharacteristicsTableView characteristicsTableView = createCharacteristicsTableVisual();
 
         VBox splacer1 = new VBox();
-        splacer1.setSpacing(10);
-        splacer1. setPadding(new Insets(5,15,5,15));
+//        splacer1.setSpacing(10);
+        splacer1. setPadding(new Insets(5,15,5,25));
         VBox splacer2 = new VBox();
-        splacer2.setSpacing(10);
-        splacer2. setPadding(new Insets(5,15,5,15));
+//        splacer2.setSpacing(10);
+        splacer2. setPadding(new Insets(5,15,5,25));
         HBox roleTaskPriorityListVisual = new HBox(roleListVisual,
                                                     splacer1, taskPriorityTableView,
                                                     splacer2, characteristicsTableView );
@@ -127,6 +128,9 @@ public class RoleSetTab extends EditorTab {
         taskTableView.addColumn(i18NRepo.getString("label.caption.tasks"), "taskName",new DefaultStringConverter(), false);
         taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setMinWidth(150.0);
         taskTableView.addColumn(i18NRepo.getString("label.caption.priorities"), "priority",new DefaultStringConverter(), true);
+        taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setStyle("-fx-alignment: CENTER;");
+        taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setMaxWidth(150.0);
+        taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setMinWidth(100.0);
         taskTableView.prefHeightProperty().bind(splitPane.heightProperty());
         taskTableView.prefWidthProperty().bind(splitPane.widthProperty());
         taskTableView.setEditable(true);
@@ -143,6 +147,7 @@ public class RoleSetTab extends EditorTab {
 
         if (roleSetViewModel.getTaskRepository() != null)
             taskTableView.addTasks(roleSetViewModel.getTaskRepository().getTaskViewModels());
+        taskTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         return taskTableView;
     }
 
@@ -150,7 +155,10 @@ public class RoleSetTab extends EditorTab {
         characteristicsTableView = new CharacteristicsTableView(roleSetViewModel.getDefaultPriority());
         characteristicsTableView.addColumn(i18NRepo.getString("label.caption.characteristics"), "name",new DefaultStringConverter(), false);
         characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(200.0);
-        characteristicsTableView.addColumn(i18NRepo.getString("label.caption.priorities"), "priority",new DefaultStringConverter(), true);
+        characteristicsTableView.addColumn(i18NRepo.getString("label.caption.value"), "priority",new DefaultStringConverter(), true);
+        characteristicsTableView.getColumns().get(taskTableView.getColumns().size()-1).setStyle("-fx-alignment: CENTER;");
+        characteristicsTableView.getColumns().get(taskTableView.getColumns().size()-1).setMaxWidth(150.0);
+        characteristicsTableView.getColumns().get(taskTableView.getColumns().size()-1).setMinWidth(100.0);
         characteristicsTableView.prefHeightProperty().bind(splitPane.heightProperty());
         characteristicsTableView.prefWidthProperty().bind(splitPane.widthProperty());
         characteristicsTableView.setEditable(true);
@@ -164,7 +172,7 @@ public class RoleSetTab extends EditorTab {
             event.setElementId(roleViewModel.getId());
             guiModificationHandler.handle(event);
         });
-
+        characteristicsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         return characteristicsTableView;
     }
 
