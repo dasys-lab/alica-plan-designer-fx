@@ -7,7 +7,7 @@ import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.properties.bindings.VariableBindingTab;
 import de.unikassel.vs.alica.planDesigner.view.properties.conditions.ConditionsTab;
-import de.unikassel.vs.alica.planDesigner.view.properties.configuration.ConfigurationsTab;
+import de.unikassel.vs.alica.planDesigner.view.properties.configuration.BehaviourParametersTab;
 import de.unikassel.vs.alica.planDesigner.view.properties.variables.VariablesTab;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +38,7 @@ public class ElementInformationPane extends TitledPane {
     protected ConditionsTab preConditionTab;
     protected ConditionsTab runtimeConditionTab;
     protected ConditionsTab postConditionTab;
-    protected ConfigurationsTab configurationsTab;
+    protected BehaviourParametersTab behaviourParametersTab;
 
     protected IGuiModificationHandler guiModificationHandler;
 
@@ -59,12 +59,12 @@ public class ElementInformationPane extends TitledPane {
         preConditionTab     = new ConditionsTab(i18NRepo.getString("label.caption.preCondtions")    , Types.PRECONDITION);
         runtimeConditionTab = new ConditionsTab(i18NRepo.getString("label.caption.runtimeCondtions"), Types.RUNTIMECONDITION);
         postConditionTab    = new ConditionsTab(i18NRepo.getString("label.caption.postCondtions")   , Types.POSTCONDITION);
-        configurationsTab = new ConfigurationsTab(i18NRepo.getString("label.caption.configurations"));
+        behaviourParametersTab = new BehaviourParametersTab(i18NRepo.getString("label.caption.parameters"));
         characteristicsTab = new Tab(i18NRepo.getString("label.caption.characteristics"));
 
         this.tabPane = new TabPane();
         this.tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, variableBindingTab, configurationsTab, preConditionTab, runtimeConditionTab, postConditionTab);
+        this.tabPane.getTabs().addAll(propertiesTab, variablesTab, variableBindingTab, behaviourParametersTab, preConditionTab, runtimeConditionTab, postConditionTab);
 
         this.setContent(tabPane);
     }
@@ -86,7 +86,7 @@ public class ElementInformationPane extends TitledPane {
     }
 
     private void adaptUI(ViewModelElement elementShown) {
-        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab, characteristicsTab, configurationsTab);
+        tabPane.getTabs().removeAll(preConditionTab, propertiesTab, runtimeConditionTab, variablesTab, postConditionTab, variableBindingTab, characteristicsTab, behaviourParametersTab);
         switch (elementShown.getType()) {
             case Types.TASKREPOSITORY:
             case Types.TASK:
@@ -108,8 +108,7 @@ public class ElementInformationPane extends TitledPane {
             case Types.STATE:
                 this.variableBindingTab.setParentViewModel((HasVariableBinding) elementShown);
                 this.setContent(tabPane);
-                this.configurationsTab.setParentViewModel(elementShown);
-                this.tabPane.getTabs().addAll(propertiesTab, variableBindingTab, configurationsTab);
+                this.tabPane.getTabs().addAll(propertiesTab, variableBindingTab);
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
@@ -120,10 +119,10 @@ public class ElementInformationPane extends TitledPane {
                 break;
             case Types.BEHAVIOUR:
                 this.variablesTab.setParentViewModel(elementShown);
-                this.configurationsTab.setParentViewModel(elementShown);
+                this.behaviourParametersTab.setParentViewModel(elementShown);
                 this.adaptConditions(elementShown);
                 this.setContent(tabPane);
-                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, configurationsTab, preConditionTab, runtimeConditionTab, postConditionTab);
+                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, behaviourParametersTab, preConditionTab, runtimeConditionTab, postConditionTab);
                 break;
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:

@@ -1154,13 +1154,6 @@ public class ModelManager implements Observer {
                     case Types.ROLE_TASK_PROPERTY:
                         cmd = new ChangeTaskPriority(this, mmq);
                         break;
-                    case Types.CONFIGURATION:
-                        try {
-                            cmd = new KeyValuePairConfiguration(this, mmq, (boolean) mmq.newValue);
-                        } catch (ClassCastException e) {
-                            cmd = new ChangeAttributeValue(this, mmq);
-                        }
-                        break;
                     default:
                         cmd = new ChangeAttributeValue(this, mmq);
                         break;

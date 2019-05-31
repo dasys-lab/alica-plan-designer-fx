@@ -279,25 +279,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.addElement(event);
                 break;
             case ELEMENT_CONNECTED:
-                switch (viewModelElement.getType()) {
-                    case Types.CONFIGURATION:
-                        String key = event.getChangedAttribute();
-                        String value = (String) event.getNewValue();
-                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().put(key, value);
-                        break;
-                        default:
-                            viewModelManager.connectElement(event);
-                }
+                viewModelManager.connectElement(event);
                 break;
             case ELEMENT_DISCONNECTED:
-                switch (viewModelElement.getType()) {
-                    case Types.CONFIGURATION:
-                        String key = event.getChangedAttribute();
-                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().remove(key);
-                        break;
-                    default:
-                        viewModelManager.disconnectElement(event);
-                }
+                viewModelManager.disconnectElement(event);
                 break;
             case ELEMENT_CHANGED_POSITION:
                 viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);

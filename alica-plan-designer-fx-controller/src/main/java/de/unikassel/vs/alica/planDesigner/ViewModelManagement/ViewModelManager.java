@@ -177,8 +177,8 @@ public class ViewModelManager {
             behaviourViewModel.getVariables().add((VariableViewModel) getViewModelElement(variable));
         }
 
-        for (Map.Entry<String, String> keyValuePair : behaviour.getKeyValuePairs().entrySet()) {
-            behaviourViewModel.getKeyValuePairs().put(keyValuePair.getKey(), keyValuePair.getValue());
+        for (Map.Entry<String, String> keyValuePair : behaviour.getParameters().entrySet()) {
+            behaviourViewModel.getParameters().put(keyValuePair.getKey(), keyValuePair.getValue());
         }
 
         if (behaviour.getPreCondition() != null) {

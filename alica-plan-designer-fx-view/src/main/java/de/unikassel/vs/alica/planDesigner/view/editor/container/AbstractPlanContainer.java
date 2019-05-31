@@ -44,20 +44,11 @@ public class AbstractPlanContainer extends Container {
     public void setupContainer() {
         Label label = new Label();
 
-        if(planElementViewModel.getType() == Types.CONFIGURATION) {
-            BehaviourViewModel parentBehaviour = ((ConfigurationViewModel) planElementViewModel).getBehaviour();
+        label.setText(planElementViewModel.getName());
+        this.planElementViewModel.nameProperty().addListener((observable, oldValue, newName) -> {
+            label.setText(newName);
+        });
 
-            label.setText(parentBehaviour.getName() + " - " + planElementViewModel.getName());
-            InvalidationListener updateName = obs
-                    -> label.setText(parentBehaviour.getName() + " - " + planElementViewModel.getName());
-            parentBehaviour.nameProperty().addListener(updateName);
-            planElementViewModel.nameProperty().addListener(updateName);
-        }else {
-            label.setText(planElementViewModel.getName());
-            this.planElementViewModel.nameProperty().addListener((observable, oldValue, newName) -> {
-                label.setText(newName);
-            });
-        }
 
         label.setGraphic(getGraphic(planElementViewModel.getType()));
         this.planElementViewModel.typeProperty().addListener((observable, oldValue, newType) -> {

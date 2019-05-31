@@ -14,7 +14,7 @@ public class Behaviour extends AbstractPlan {
     protected SimpleObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<PostCondition> postCondition = new SimpleObjectProperty<>();
 
-    private final Map<String, String> keyValuePairs = new HashMap<>();
+    private final Map<String, String> parameters = new HashMap<>();
 
     public PreCondition getPreCondition() {
         return preCondition.get();
@@ -75,18 +75,18 @@ public class Behaviour extends AbstractPlan {
         return this.deferring;
     }
 
-    public Map<String, String> getKeyValuePairs() {
-        return Collections.unmodifiableMap(keyValuePairs);
+    public Map<String, String> getParameters() {
+        return Collections.unmodifiableMap(parameters);
     }
 
     public String putKeyValuePair(String key, String value) {
         setDirty(true);
-        return keyValuePairs.put(key, value);
+        return parameters.put(key, value);
     }
 
     public String removeKeyValuePair(String key) {
         setDirty(true);
-        return keyValuePairs.remove(key);
+        return parameters.remove(key);
     }
 
     @Override

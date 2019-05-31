@@ -4,10 +4,8 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BehaviourViewModel  extends AbstractPlanViewModel {
@@ -19,15 +17,13 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
     protected final SimpleObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
     protected final SimpleObjectProperty<ConditionViewModel> postCondition = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
 
-    protected ObservableMap<String, String> keyValuePairs;
+    protected final ObservableMap<String, String> parameters = FXCollections.observableHashMap();
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
-
-        this.keyValuePairs = FXCollections.observableHashMap();
     }
 
     public void registerListener(IGuiModificationHandler handler) {
@@ -100,7 +96,7 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
         this.postCondition.set(conditionViewModel);
     }
 
-    public ObservableMap<String, String> getKeyValuePairs() {
-        return keyValuePairs;
+    public ObservableMap<String, String> getParameters() {
+        return parameters;
     }
 }
