@@ -15,10 +15,10 @@ import java.util.List;
 
 public class RoleSetViewModel extends SerializableViewModel {
 
-    private ObservableList<RoleViewModel> roleViewModels;
+    private TaskRepositoryViewModel taskRepository;
     private FloatProperty defaultPriority;
     private BooleanProperty defaultRoleSet;
-    private TaskRepositoryViewModel taskRepository;
+    private ObservableList<RoleViewModel> roleViewModels;
 
     public RoleSetViewModel(long id, String name, String type, float defaultPriority, boolean defaultRoleSet) {
         super(id, name, type);
@@ -28,6 +28,7 @@ public class RoleSetViewModel extends SerializableViewModel {
         this.defaultRoleSet.setValue(defaultRoleSet);
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "defaultPriority", "defaultRoleSet"));
+
         roleViewModels = FXCollections.observableArrayList(new ArrayList<>());
         roleViewModels.addListener(new ListChangeListener<RoleViewModel>() {
             @Override
@@ -35,7 +36,7 @@ public class RoleSetViewModel extends SerializableViewModel {
                 if(!c.next())
                     return;
                 List<? extends RoleViewModel> addedSubList = c.getAddedSubList();
-                System.out.println("RSVM: role model list changed: " + addedSubList.get(0));
+                System.out.println("RSVM: (debugging) role model list changed: " + addedSubList.get(0));
             }
         });
     }
@@ -44,6 +45,9 @@ public class RoleSetViewModel extends SerializableViewModel {
         super.registerListener(handler);
         defaultPriority.addListener((observable, oldValue, newValue) -> {
             fireGUIAttributeChangeEvent(handler, newValue, defaultPriority.getClass().getSimpleName(), defaultPriority.getName());
+        });
+        defaultRoleSet.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, defaultRoleSet.getClass().getSimpleName(), defaultRoleSet.getName());
         });
     }
 

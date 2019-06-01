@@ -51,6 +51,7 @@ public class CharacteristicViewModel extends PlanElementViewModel {
             guiChangeAttributeEvent.setAttributeType(attributeType);
             guiChangeAttributeEvent.setAttributeName(attributeName);
             guiChangeAttributeEvent.setElementId(getId());
+            guiChangeAttributeEvent.setParentId(getParentId());
             handler.handle(guiChangeAttributeEvent);
         }
     }

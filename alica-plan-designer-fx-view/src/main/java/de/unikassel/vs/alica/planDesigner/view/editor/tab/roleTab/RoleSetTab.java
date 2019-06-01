@@ -29,10 +29,10 @@ import java.util.ArrayList;
 
 public class RoleSetTab extends EditorTab {
 
-    protected RoleSetViewModel      roleSetViewModel;
-    protected RoleListView          roleListView;
-    protected TaskPriorityTableView taskTableView;
-    protected CharacteristicsTableView characteristicsTableView;
+    protected RoleSetViewModel          roleSetViewModel;
+    protected RoleListView              roleListView;
+    protected TaskPriorityTableView     taskTableView;
+    protected CharacteristicsTableView  characteristicsTableView;
 
     private ObservableList<TaskPriorityTableElement> taskPriorities = FXCollections.observableArrayList();
     private ObservableList<CharacteristicsTableElement> characteristics = FXCollections.observableArrayList();

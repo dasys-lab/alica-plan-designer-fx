@@ -207,7 +207,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
         }
         // Generate files for moved code
-        if(event.getEventType() == ModelEventType.ELEMENT_ATTRIBUTE_CHANGED  && event.getChangedAttribute().equals("relativeDirectory")) {
+        if(event.getEventType() == ModelEventType.ELEMENT_ATTRIBUTE_CHANGED  && "relativeDirectory".equals(event.getChangedAttribute())) {
             mainWindowController.waitOnProgressLabel(() -> generateCode(new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, event.getElementType(),
                     modelElement.getName()), mainWindowController.getStatusText()));
         }
