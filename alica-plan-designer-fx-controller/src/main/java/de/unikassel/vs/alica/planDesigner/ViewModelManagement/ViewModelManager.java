@@ -158,7 +158,7 @@ public class ViewModelManager {
     private RoleViewModel createRoleViewModel(Role role) {
         RoleViewModel roleViewModel = new RoleViewModel(role.getId(), role.getName(), Types.ROLE);
         ObservableMap<TaskViewModel, Float> taskPriorities = FXCollections.observableHashMap();
-        ObservableMap<CharacteristicViewModel, String> characteristics = FXCollections.observableHashMap();
+//        ObservableList<CharacteristicViewModel> characteristics = FXCollections.observableArrayList();
 
         for (Task task: role.getTaskPriorities().keySet()) {
             TaskViewModel taskViewModel = (TaskViewModel)this.getViewModelElement(task);
@@ -166,8 +166,10 @@ public class ViewModelManager {
         }
 
         for (Characteristic characteristic : role.getCharacteristics()) {
-            CharacteristicViewModel viewModel = (CharacteristicViewModel)this.getViewModelElement(characteristic);
-            characteristics.put(viewModel, characteristic.getValue().toString());
+            CharacteristicViewModel characteristicViewModel = (CharacteristicViewModel)this.getViewModelElement(characteristic);
+            characteristicViewModel.setRoleViewModel(roleViewModel);
+            characteristicViewModel.getRoleViewModel().addRoleCharacteristic(characteristicViewModel);
+//            characteristics.add(characteristicViewModel);
         }
 
         roleViewModel.setTaskPrioritieViewModels(taskPriorities);
@@ -182,8 +184,14 @@ public class ViewModelManager {
                                                         Types.ROLE_CHARCTERISTIC, null);
 
         characteristicViewModel.setParentId(characteristic.getRole().getId());
-        characteristicViewModel.setRoleViewModel((RoleViewModel) getViewModelElement(characteristic.getRole()));
-        characteristicViewModel.getRoleViewModel().addRoleCharacteristic(characteristicViewModel);
+        RoleViewModel roleViewModel = (RoleViewModel) viewModelElements.get(characteristic.getRole().getId());
+
+        if(roleViewModel != null)
+            roleViewModel.addRoleCharacteristic(characteristicViewModel);
+//        if(viewModelElement == null)
+//            viewModelElement = getViewModelElement(characteristic.getRole());
+//        characteristicViewModel.setRoleViewModel((RoleViewModel) viewModelElement);
+//        characteristicViewModel.getRoleViewModel().addRoleCharacteristic(characteristicViewModel);
         return characteristicViewModel;
     }
 

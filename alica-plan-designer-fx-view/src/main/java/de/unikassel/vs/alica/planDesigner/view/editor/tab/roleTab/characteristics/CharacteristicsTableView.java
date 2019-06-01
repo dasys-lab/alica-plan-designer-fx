@@ -60,7 +60,7 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
                 if (!c.next())
                     return;
                 List addedSubList = c.getAddedSubList();
-                System.out.println("CTV: change characteristic " + addedSubList.get(0) + " " + addedSubList.size());
+                System.out.println("CTV: update Cells (change characteristic " + addedSubList.get(0) + " " + addedSubList.size()+")");
                 updateCells();
             }
         });

@@ -8,9 +8,9 @@ public class CharacteristicsTableElement {
     private CharacteristicViewModel viewModel;
 
     public CharacteristicsTableElement(CharacteristicsTableView tableView,
-                                       CharacteristicViewModel characteristic, String value, String weight) {
+                                       CharacteristicViewModel characteristicViewModel, String value, String weight) {
         this.tableView = tableView;
-        this.viewModel = characteristic;
+        this.viewModel = characteristicViewModel;
         this.viewModel.registerListener(tableView.getGuiModificationHandler());
     }
 

@@ -631,6 +631,9 @@ public class ModelManager implements Observer {
                 roleSet = (RoleSet) planElement;
                 for(Role role : roleSet.getRoles()) {
                     planElementMap.put(role.getId(), role);
+                    for (Characteristic characteristic:role.getCharacteristics()) {
+                        planElementMap.put(characteristic.getId(), characteristic);
+                    }
                 }
                 break;
             default:

@@ -15,7 +15,6 @@ public class CharacteristicViewModel extends PlanElementViewModel {
 
     protected RoleListView roleListView;
     protected RoleViewModel roleViewModel;
-//    private SimpleStringProperty name = new SimpleStringProperty(null, "name", "");
     protected SimpleStringProperty value = new SimpleStringProperty(null, "value", "");
     protected SimpleStringProperty weight = new SimpleStringProperty(null, "weight", "");
 
@@ -29,30 +28,46 @@ public class CharacteristicViewModel extends PlanElementViewModel {
     @Override
     public void registerListener(IGuiModificationHandler handler) {
         super.registerListener(handler);
-//        masterPlan.addListener((observable, oldValue, newValue) -> {
-//            fireGUIAttributeChangeEvent(handler, newValue, masterPlan.getClass().getSimpleName(), masterPlan.getName());
-//        });
-//        utilityThreshold.addListener((observable, oldValue, newValue) -> {
-//            fireGUIAttributeChangeEvent(handler, newValue, utilityThreshold.getClass().getSimpleName(), utilityThreshold.getName());
-//        });
+        value.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, value.getClass().getSimpleName(), value.getName());
+        });
+        weight.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, weight.getClass().getSimpleName(), weight.getName());
+        });
     }
 
     @Override
     protected void fireGUIAttributeChangeEvent(IGuiModificationHandler handler, Object newValue, String attributeType, String attributeName) {
 
-        if (idProperty().getValue() == 0 && getParentId() == 0) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, getType(), String.valueOf(newValue));
-            event.setParentId(this.roleListView.getSelectedItem().idProperty().getValue());
-            handler.handle(event);
-        }
-        else {
-            GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, getType(), getName());
-            guiChangeAttributeEvent.setNewValue(newValue);
-            guiChangeAttributeEvent.setAttributeType(attributeType);
-            guiChangeAttributeEvent.setAttributeName(attributeName);
-            guiChangeAttributeEvent.setElementId(getId());
-            guiChangeAttributeEvent.setParentId(getParentId());
-            handler.handle(guiChangeAttributeEvent);
+        switch (attributeName) {
+            case "name":
+                if (getId() == 0 && getParentId() == 0) {
+                    GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, getType(), String.valueOf(newValue));
+                    event.setParentId(this.roleListView.getSelectedItem().idProperty().getValue());
+                    handler.handle(event);
+                }
+                else {
+                    GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, getType(), getName());
+                    guiChangeAttributeEvent.setNewValue(newValue);
+                    guiChangeAttributeEvent.setAttributeType(attributeType);
+                    guiChangeAttributeEvent.setAttributeName(attributeName);
+                    guiChangeAttributeEvent.setElementId(getId());
+                    guiChangeAttributeEvent.setParentId(getParentId());
+                    handler.handle(guiChangeAttributeEvent);
+                }
+                break;
+            case "value":
+            case "weight":
+                if (getId() == 0 && getParentId() == 0)
+                    break;
+                GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, getType(), getName());
+                guiChangeAttributeEvent.setNewValue(newValue);
+                guiChangeAttributeEvent.setAttributeType(attributeType);
+                guiChangeAttributeEvent.setAttributeName(attributeName);
+                guiChangeAttributeEvent.setElementId(getId());
+                guiChangeAttributeEvent.setParentId(getParentId());
+                handler.handle(guiChangeAttributeEvent);
+                break;
         }
     }
 

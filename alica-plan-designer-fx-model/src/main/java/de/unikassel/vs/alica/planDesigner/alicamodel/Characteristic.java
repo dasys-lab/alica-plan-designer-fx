@@ -6,8 +6,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 public class Characteristic extends PlanElement {
 
     protected final SimpleDoubleProperty weight = new SimpleDoubleProperty();
-    protected Capability capability;
-    protected CapValue value;
+//    protected Capability capability;
+    protected String value;
     protected Role role;
 
     public double getWeight() {
@@ -20,17 +20,17 @@ public class Characteristic extends PlanElement {
         return weight;
     }
 
-    public Capability getCapability() {
-        return this.capability;
-    }
-    public void setCapability(Capability capability) {
-        this.capability = capability;
-    }
+//    public Capability getCapability() {
+//        return this.capability;
+//    }
+//    public void setCapability(Capability capability) {
+//        this.capability = capability;
+//    }
 
-    public CapValue getValue() {
+    public String getValue() {
         return this.value;
     }
-    public void setValue(CapValue value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
