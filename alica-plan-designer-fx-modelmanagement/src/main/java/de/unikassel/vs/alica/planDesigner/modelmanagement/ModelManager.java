@@ -20,18 +20,15 @@ import de.unikassel.vs.alica.planDesigner.modelMixIns.*;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ModelManager implements Observer {
 
@@ -1010,6 +1007,9 @@ public class ModelManager implements Observer {
                     case Types.ROLE:
                         cmd = new CreateRole(this, mmq);
                         break;
+                    case Types.ROLE_CHARACTERISTIC:
+                        cmd = new CreateCharacteristic(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
                         return;
@@ -1176,6 +1176,9 @@ public class ModelManager implements Observer {
                         break;
                     case Types.ROLE_TASK_PROPERTY:
                         cmd = new ChangeTaskPriority(this, mmq);
+                        break;
+                    case Types.ROLE_CHARACTERISTIC:
+                        cmd = new ChangeRoleCharacteristic(this, mmq);
                         break;
                     case Types.CONFIGURATION:
                         try {

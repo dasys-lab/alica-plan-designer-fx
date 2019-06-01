@@ -1,4 +1,4 @@
-package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
+package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.taskpriorities;
 
 import de.unikassel.vs.alica.planDesigner.view.model.RoleViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;

@@ -1,8 +1,7 @@
-package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
+package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.taskpriorities;
 
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
