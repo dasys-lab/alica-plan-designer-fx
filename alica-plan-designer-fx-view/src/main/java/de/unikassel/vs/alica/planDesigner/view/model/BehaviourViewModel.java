@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public class BehaviourViewModel  extends AbstractPlanViewModel {
 
@@ -98,5 +99,20 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     public ObservableMap<String, String> getParameters() {
         return parameters;
+    }
+
+    public void replaceParameter(Map.Entry<String, String> newEntry, Map.Entry<String, String> oldEntry) {
+        if (oldEntry == null || (newEntry != null && newEntry.getKey() == oldEntry.getKey())) {
+            this.parameters.put(newEntry.getKey(), newEntry.getValue());
+            return;
+        }
+
+        if (newEntry == null) {
+            this.parameters.remove(oldEntry.getKey());
+            return;
+        }
+
+        this.parameters.remove(oldEntry.getKey());
+        this.parameters.put(newEntry.getKey(), newEntry.getValue());
     }
 }

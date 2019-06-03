@@ -785,15 +785,18 @@ public class ViewModelManager {
         planElementViewModel.setYPosition(event.getUiElement().getY());
     }
 
-    public void changeElementAttribute(ViewModelElement viewModelElement, String changedAttribute, Object newValue) {
+    public void changeElementAttribute(ViewModelElement viewModelElement, String changedAttribute, Object newValue, Object oldValue) {
         try {
-            BeanUtils.setProperty(viewModelElement, changedAttribute, newValue);
+            if (newValue instanceof Map.Entry || (viewModelElement instanceof  BehaviourViewModel && changedAttribute.equals("parameters"))) {
+                BehaviourViewModel behaviour = (BehaviourViewModel) viewModelElement;
+                behaviour.replaceParameter((Map.Entry<String, String>)newValue, (Map.Entry<String, String>)oldValue);
+            } else {
+                BeanUtils.setProperty(viewModelElement, changedAttribute, newValue);
+            }
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
-
-
 
     private void updatePlansInPlanViewModels(PlanViewModel planViewModel, ModelEventType type) {
         for(PlanType planType : modelManager.getPlanTypes()) {
@@ -803,7 +806,7 @@ public class ViewModelManager {
                 // Prevent double inclusions
                 if (type == ModelEventType.ELEMENT_ADDED && !planTypeViewModel.getAllPlans().contains(planViewModel)) {
                     planTypeViewModel.addPlanToAllPlans(planViewModel);
-                }else if(type == ModelEventType.ELEMENT_REMOVED) {
+                } else if(type == ModelEventType.ELEMENT_REMOVED) {
                     planTypeViewModel.removePlanFromAllPlans(planViewModel.getId());
                 }
             }

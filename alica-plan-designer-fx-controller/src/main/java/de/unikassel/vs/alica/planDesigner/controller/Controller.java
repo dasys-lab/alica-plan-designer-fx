@@ -271,7 +271,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.removeElement(event.getParentId(), viewModelElement);
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
-                viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue());
+                viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue(), event.getOldValue());
                 break;
             case ELEMENT_PARSED:
             case ELEMENT_CREATED:
@@ -427,12 +427,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setParentId(event.getParentId());
                 mmq.setElementId(event.getElementId());
                 mmq.setRelatedObjects(event.getRelatedObjects());
-                mmq.setAttributeName(event.getName());
                 if (event instanceof GuiChangeAttributeEvent) {
                     GuiChangeAttributeEvent guiChangeAttributeEvent = (GuiChangeAttributeEvent) event;
-                    mmq.setAttributeName(guiChangeAttributeEvent.getAttributeName());
                     mmq.setAttributeType(guiChangeAttributeEvent.getAttributeType());
+                    mmq.setAttributeName(guiChangeAttributeEvent.getAttributeName());
                     mmq.setNewValue(guiChangeAttributeEvent.getNewValue());
+                    mmq.setOldValue(guiChangeAttributeEvent.getOldValue());
                 }
                 break;
             case CHANGE_POSITION:

@@ -79,14 +79,31 @@ public class Behaviour extends AbstractPlan {
         return Collections.unmodifiableMap(parameters);
     }
 
-    public String putKeyValuePair(String key, String value) {
+    public String putParameter(String key, String value) {
         setDirty(true);
         return parameters.put(key, value);
     }
 
-    public String removeKeyValuePair(String key) {
+    public String removeParameter(String key) {
         setDirty(true);
         return parameters.remove(key);
+    }
+
+    public void replaceParameter(Map.Entry<String, String> newEntry, Map.Entry<String, String> oldEntry) {
+        setDirty(true);
+
+        if (oldEntry == null || (newEntry != null) && oldEntry.getKey() == newEntry.getKey()) {
+            this.parameters.put(newEntry.getKey(), newEntry.getValue());
+            return;
+        }
+
+        if (newEntry == null) {
+            this.parameters.remove(oldEntry.getKey());
+            return;
+        }
+
+        this.parameters.remove(oldEntry.getKey());
+        this.parameters.put(newEntry.getKey(), newEntry.getValue());
     }
 
     @Override

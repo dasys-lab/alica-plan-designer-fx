@@ -2,9 +2,6 @@ package de.unikassel.vs.alica.planDesigner.command.change;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.command.ChangeAttributeCommand;
-import de.unikassel.vs.alica.planDesigner.command.Command;
-import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
-import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -27,7 +24,11 @@ public class ChangeAttributeValue extends ChangeAttributeCommand {
         try {
             newValue = mmq.getNewValue();
             // Using PropertyUtils instead of BeanUtils to get the actual Object and not just its String-representation
-            this.oldValue = PropertyUtils.getProperty(planElement, attribute);
+            if (mmq.getOldValue() == null) {
+                this.oldValue = PropertyUtils.getProperty(planElement, attribute);
+            } else {
+                this.oldValue = mmq.getOldValue();
+            }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
@@ -36,12 +37,12 @@ public class ChangeAttributeValue extends ChangeAttributeCommand {
     @Override
     public void doCommand() {
         this.modelManager.changeAttribute(planElement, elementType, attribute, newValue, oldValue);
-        fireEvent(planElement, elementType, attribute);
+        fireEvent(planElement, elementType, attribute, newValue, oldValue);
     }
 
     @Override
     public void undoCommand() {
         this.modelManager.changeAttribute(planElement, elementType, attribute, oldValue, newValue);
-        fireEvent(planElement, elementType, attribute);
+        fireEvent(planElement, elementType, attribute, oldValue, newValue);
     }
 }

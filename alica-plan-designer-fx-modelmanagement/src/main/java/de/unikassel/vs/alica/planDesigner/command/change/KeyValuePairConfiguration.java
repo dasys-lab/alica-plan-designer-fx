@@ -41,7 +41,7 @@ public class KeyValuePairConfiguration extends Command {
     }
 
     private void add() {
-        behaviour.putKeyValuePair(pair.getKey(), pair.getValue());
+        behaviour.putParameter(pair.getKey(), pair.getValue());
         ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CONNECTED, behaviour, Types.CONFIGURATION);
         modelEvent.setChangedAttribute(pair.getKey());
         modelEvent.setNewValue(pair.getValue());
@@ -49,7 +49,7 @@ public class KeyValuePairConfiguration extends Command {
     }
 
     private void remove() {
-        behaviour.removeKeyValuePair(pair.getKey());
+        behaviour.removeParameter(pair.getKey());
         ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_DISCONNECTED, behaviour, Types.CONFIGURATION);
         modelEvent.setChangedAttribute(pair.getKey());
         modelEvent.setNewValue(pair.getValue());

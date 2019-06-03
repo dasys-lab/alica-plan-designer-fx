@@ -691,7 +691,12 @@ public class ModelManager implements Observer {
 
     public void changeAttribute(PlanElement planElement, String elementType, String attribute, Object newValue, Object oldValue) {
         try {
-            BeanUtils.setProperty(planElement, attribute, newValue);
+            if (planElement instanceof Behaviour && attribute.equals("parameters")) {
+                Behaviour behaviour = (Behaviour) planElement;
+                behaviour.replaceParameter((Map.Entry<String, String>) newValue, (Map.Entry<String, String>) oldValue);
+            } else {
+                BeanUtils.setProperty(planElement, attribute, newValue);
+            }
 
             if (attribute.equals("name")) {
                 String ending = "";
