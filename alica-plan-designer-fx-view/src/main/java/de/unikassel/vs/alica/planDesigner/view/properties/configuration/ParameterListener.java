@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class ParameterListener<T> implements ChangeListener<T>, MapChangeListener {
 
-    // height of a row in px 
+    // height of a row in px
     public static final int CELL_SIZE = 28;
     private TableView<Map.Entry<String, String>> parametersTableView;
 
