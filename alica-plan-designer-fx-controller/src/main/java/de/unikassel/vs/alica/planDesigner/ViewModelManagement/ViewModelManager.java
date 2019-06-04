@@ -63,6 +63,8 @@ public class ViewModelManager {
             element = createRoleSetViewModel((RoleSet) planElement);
         } else if (planElement instanceof Role) {
             element = createRoleViewModel((Role) planElement);
+        } else if (planElement instanceof Characteristic) {
+            element = createCharacteristicViewModel((Characteristic) planElement);
         } else if (planElement instanceof Plan) {
             element = createPlanViewModel((Plan) planElement);
         } else if (planElement instanceof PlanType) {
@@ -156,17 +158,45 @@ public class ViewModelManager {
     private RoleViewModel createRoleViewModel(Role role) {
         RoleViewModel roleViewModel = new RoleViewModel(role.getId(), role.getName(), Types.ROLE);
         ObservableMap<TaskViewModel, Float> taskPriorities = FXCollections.observableHashMap();
+//        ObservableList<CharacteristicViewModel> characteristics = FXCollections.observableArrayList();
 
         for (Task task: role.getTaskPriorities().keySet()) {
             TaskViewModel taskViewModel = (TaskViewModel)this.getViewModelElement(task);
             taskPriorities.put( taskViewModel, role.getTaskPriorities().get(task));
         }
-        roleViewModel.setTaskPriorities(taskPriorities);
+
+        for (Characteristic characteristic : role.getCharacteristics()) {
+            CharacteristicViewModel characteristicViewModel = (CharacteristicViewModel)this.getViewModelElement(characteristic);
+            characteristicViewModel.setRoleViewModel(roleViewModel);
+            characteristicViewModel.getRoleViewModel().addRoleCharacteristic(characteristicViewModel);
+//            characteristics.add(characteristicViewModel);
+        }
+
+        roleViewModel.setTaskPrioritieViewModels(taskPriorities);
         roleViewModel.setRoleSetViewModel((RoleSetViewModel) getViewModelElement(role.getRoleSet()));
         roleViewModel.getRoleSetViewModel().addRole(roleViewModel);
         roleViewModel.setParentId(role.getRoleSet().getId());
         return roleViewModel;
     }
+
+    private CharacteristicViewModel createCharacteristicViewModel(Characteristic characteristic) {
+        CharacteristicViewModel characteristicViewModel = new CharacteristicViewModel(characteristic.getId(), characteristic.getName(),
+                                                        Types.ROLE_CHARCTERISTIC, null);
+
+        characteristicViewModel.setParentId(characteristic.getRole().getId());
+        characteristicViewModel.setValue(characteristic.getValue());
+        characteristicViewModel.setWeight(String.valueOf(characteristic.getWeight()));
+        RoleViewModel roleViewModel = (RoleViewModel) viewModelElements.get(characteristic.getRole().getId());
+
+        if(roleViewModel != null)
+            roleViewModel.addRoleCharacteristic(characteristicViewModel);
+//        if(viewModelElement == null)
+//            viewModelElement = getViewModelElement(characteristic.getRole());
+//        characteristicViewModel.setRoleViewModel((RoleViewModel) viewModelElement);
+//        characteristicViewModel.getRoleViewModel().addRoleCharacteristic(characteristicViewModel);
+        return characteristicViewModel;
+    }
+
 
     private BehaviourViewModel createBehaviourViewModel(Behaviour behaviour) {
         BehaviourViewModel behaviourViewModel = new BehaviourViewModel(behaviour.getId(), behaviour.getName(), Types.BEHAVIOUR);
@@ -692,6 +722,13 @@ public class ViewModelManager {
             case Types.TASKREPOSITORY:
             case Types.ROLESET:
                 //No-OP
+                break;
+            case Types.ROLE_CHARCTERISTIC:
+                CharacteristicViewModel characteristicViewModel = (CharacteristicViewModel) viewModelElement;
+                if (event.getEventType() == ModelEventType.ELEMENT_CREATED) {
+                    RoleViewModel roleViewModel = (RoleViewModel) parentViewModel;
+                    characteristicViewModel.setRoleViewModel(roleViewModel);
+                }
                 break;
             case Types.ROLE:
                 RoleViewModel roleViewModel = (RoleViewModel) viewModelElement;

@@ -1,8 +1,7 @@
-package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab;
+package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.taskpriorities;
 
 import de.unikassel.vs.alica.planDesigner.view.model.TaskViewModel;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -26,7 +25,8 @@ public class TaskPriorityTableElement {
     }
 
     public void addListener(PropertyChangeListener listener) {
-        this.listener = observable -> listener.propertyChange(new PropertyChangeEvent(tableView.getCurrentRole(), "taskPriority", task.getId(),
+        this.listener = observable -> listener.propertyChange(new PropertyChangeEvent(
+                tableView.getCurrentRole(), "taskPriority", task.getId(),
                 ((StringProperty)observable).getValue()));
     }
 
