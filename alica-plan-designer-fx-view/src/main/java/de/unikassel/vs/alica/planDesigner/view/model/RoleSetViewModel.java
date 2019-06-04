@@ -30,15 +30,15 @@ public class RoleSetViewModel extends SerializableViewModel {
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "defaultPriority", "defaultRoleSet"));
 
         roleViewModels = FXCollections.observableArrayList(new ArrayList<>());
-        roleViewModels.addListener(new ListChangeListener<RoleViewModel>() {
-            @Override
-            public void onChanged(Change<? extends RoleViewModel> c) {
-                if(!c.next())
-                    return;
-                List<? extends RoleViewModel> addedSubList = c.getAddedSubList();
-                System.out.println("RSVM: (debugging) role model list changed: " + addedSubList.get(0));
-            }
-        });
+//        roleViewModels.addListener(new ListChangeListener<RoleViewModel>() {
+//            @Override
+//            public void onChanged(Change<? extends RoleViewModel> c) {
+//                if(!c.next())
+//                    return;
+//                List<? extends RoleViewModel> addedSubList = c.getAddedSubList();
+//                System.out.println("RSVM: (debugging) role model list changed: " + addedSubList.get(0));
+//            }
+//        });
     }
 
     public void registerListener(IGuiModificationHandler handler) {

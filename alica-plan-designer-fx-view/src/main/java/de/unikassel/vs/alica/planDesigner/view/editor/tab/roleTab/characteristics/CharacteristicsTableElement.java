@@ -42,7 +42,7 @@ public class CharacteristicsTableElement {
         return viewModel.weightProperty();
     }
     public void setWeight(String weight) {
-        this.viewModel.setweight(weight);
+        this.viewModel.setWeight(weight);
 //        this.weight.addListener(this.listener);
     }
 }

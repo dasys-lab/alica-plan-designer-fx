@@ -9,6 +9,8 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.characteristics.CharacteristicsTableElement;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.characteristics.CharacteristicsTableView;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.roles.RoleTableElement;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.roles.RoleTableView;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.taskpriorities.TaskPriorityTableElement;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.taskpriorities.TaskPriorityTableView;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
@@ -19,7 +21,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -30,7 +31,8 @@ import java.util.ArrayList;
 public class RoleSetTab extends EditorTab {
 
     protected RoleSetViewModel          roleSetViewModel;
-    protected RoleListView              roleListView;
+//    protected RoleListView              roleListView;
+    protected RoleTableView             roleTableView;
     protected TaskPriorityTableView     taskTableView;
     protected CharacteristicsTableView  characteristicsTableView;
 
@@ -57,36 +59,40 @@ public class RoleSetTab extends EditorTab {
             while(c.next()) {
 
                 if (c.wasAdded()) {
+
                     for (RoleViewModel role : c.getAddedSubList()) {
-                        roleListView.addElement(role);
+                        roleTableView.addElement(role);
                     }
                 }
 
                 if (c.wasRemoved()) {
+
                     for (RoleViewModel role : c.getRemoved()) {
-                        roleListView.removeElement(role);
+                        roleTableView.removeElement(role);
                     }
                 }
             }
         });
 
-        roleListView = new RoleListView();
-        roleListView.setGuiModificationHandler(editorTabPane.getGuiModificationHandler());
-        roleListView.addElements(roleSetViewModel.getRoleViewModels());
+        roleTableView = new RoleTableView(roleSetViewModel);
+        roleTableView.setGuiModificationHandler(editorTabPane.getGuiModificationHandler());
+        roleTableView.addElements(roleSetViewModel.getRoleViewModels());
 
-        roleListView.addSelectionListener(evt -> {
+        roleTableView.addSelectionListener(evt -> {
+
             if (evt.getNewValue()!= null) {
-                elementInformationPane.setViewModelElement(((RoleListLabel)evt.getNewValue()).getViewModelElement());
-                taskTableView.updateSelectedRole(roleListView.getSelectedItem());
-                characteristicsTableView.updateSelectedRole(roleListView.getSelectedItem());
+                elementInformationPane.setViewModelElement(((RoleTableElement)evt.getNewValue()).getViewModelElement());
+                taskTableView.updateSelectedRole(roleTableView.getSelectedItem());
+                characteristicsTableView.updateSelectedRole(roleTableView.getSelectedItem());
             }
         });
         createVisuals();
     }
 
     private void createVisuals() {
-        HBox createRoleVisual = createRoleButtonVisual();
-        TitledPane roleListVisual = createRoleListVisual();
+//        HBox createRoleVisual = createRoleButtonVisual();
+//        TitledPane roleListVisual = createRoleListVisual();
+        VBox roleTableVisual = createRoleTableVisual();
         TaskPriorityTableView taskPriorityTableView = createTaskPriorityTableVisual();
         CharacteristicsTableView characteristicsTableView = createCharacteristicsTableVisual();
 
@@ -95,28 +101,29 @@ public class RoleSetTab extends EditorTab {
         VBox splacer2 = new VBox();
         splacer2.setPadding(new Insets(5,35,5,25));
 
-        HBox roleTaskPriorityListVisual = new HBox(roleListVisual, splacer1, taskPriorityTableView, splacer2, characteristicsTableView );
-        VBox roleSetVisual = new VBox(roleTaskPriorityListVisual, createRoleVisual);
+        HBox roleTaskPriorityListVisual = new HBox(roleTableVisual, splacer1, taskPriorityTableView, splacer2, characteristicsTableView );
+//        VBox roleSetVisual = new VBox(roleTaskPriorityListVisual, createRoleVisual);
+        VBox roleSetVisual = new VBox(roleTaskPriorityListVisual);
         HBox.setHgrow(roleTaskPriorityListVisual, Priority.ALWAYS);
         HBox.setHgrow(roleSetVisual, Priority.ALWAYS);
         roleSetVisual.setPrefHeight(Double.MAX_VALUE);
-        roleListView.setFocus();
+        roleTableView.setFocus();
         splitPane.getItems().add(0, roleSetVisual);
     }
 
-    private TitledPane createRoleListVisual() {
-        TitledPane rolesPane = new TitledPane();
-        rolesPane.setContent(roleListView);
-        rolesPane.setText(i18NRepo.getString("label.caption.roles"));
-        rolesPane.setCollapsible(false);
-        rolesPane.setPadding(new Insets(0,0,0,0));
-        rolesPane.setStyle("-fx-font-weight: bold;");
-        roleListView.setStyle("-fx-font-weight: normal;");
-        roleListView.setPrefHeight(Double.MAX_VALUE);
-        roleListView.setMinWidth(200.0);
-        rolesPane.prefHeightProperty().bind(splitPane.heightProperty());
-        roleListView.requestFocus();
-        return rolesPane;
+
+    private VBox createRoleTableVisual() {
+        roleTableView.addColumn(i18NRepo.getString("label.caption.roles"), "name", new DefaultStringConverter(), true);
+        roleTableView.getColumns().get(roleTableView.getColumns().size()-1).setMinWidth(100.0);
+        roleTableView.prefHeightProperty().bind(splitPane.heightProperty());
+        roleTableView.setMinWidth(121.0);
+        roleTableView.setEditable(true);
+        roleTableView.requestFocus();
+        roleTableView.setGuiModificationHandler(this.guiModificationHandler);
+        roleTableView.initTable(roleSetViewModel);
+        roleTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        VBox roleSetVisual = new VBox(roleTableView);
+        return roleSetVisual;
     }
 
     private TaskPriorityTableView createTaskPriorityTableVisual() {
@@ -148,15 +155,15 @@ public class RoleSetTab extends EditorTab {
     }
 
     private CharacteristicsTableView createCharacteristicsTableVisual() {
-        characteristicsTableView = new CharacteristicsTableView(roleSetViewModel, roleListView);
+        characteristicsTableView = new CharacteristicsTableView(roleSetViewModel, roleTableView);
         characteristicsTableView.addColumn(i18NRepo.getString("label.caption.characteristics"), "name",new DefaultStringConverter(), true);
         characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(200.0);
         characteristicsTableView.addColumn(i18NRepo.getString("label.caption.value"), "value",new DefaultStringConverter(), true);
-        characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(200.0);
+        characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(100.0);
         characteristicsTableView.addColumn(i18NRepo.getString("label.caption.weight"), "weight",new DefaultStringConverter(), true);
         characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setStyle("-fx-alignment: CENTER;");
         characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMaxWidth(250.0);
-        characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(150.0);
+        characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(100.0);
         characteristicsTableView.prefHeightProperty().bind(splitPane.heightProperty());
         characteristicsTableView.prefWidthProperty().bind(splitPane.widthProperty());
         characteristicsTableView.setEditable(true);
@@ -174,7 +181,7 @@ public class RoleSetTab extends EditorTab {
             characteristicsTableView.updatePlaceholder();
         });
 
-        characteristicsTableView.initTable(roleListView, roleSetViewModel);
+        characteristicsTableView.initTable(roleTableView, roleSetViewModel);
         characteristicsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         return characteristicsTableView;
     }
@@ -203,7 +210,7 @@ public class RoleSetTab extends EditorTab {
     }
 
     public GuiModificationEvent handleDelete() {
-        ViewModelElement elementToDelete = roleListView.getSelectedItem();
+        ViewModelElement elementToDelete = roleTableView.getSelectedItem();
         if (elementToDelete == null) {
             return null;
         }

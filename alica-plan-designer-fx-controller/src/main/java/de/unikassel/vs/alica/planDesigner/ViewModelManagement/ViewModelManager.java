@@ -184,6 +184,8 @@ public class ViewModelManager {
                                                         Types.ROLE_CHARCTERISTIC, null);
 
         characteristicViewModel.setParentId(characteristic.getRole().getId());
+        characteristicViewModel.setValue(characteristic.getValue());
+        characteristicViewModel.setWeight(String.valueOf(characteristic.getWeight()));
         RoleViewModel roleViewModel = (RoleViewModel) viewModelElements.get(characteristic.getRole().getId());
 
         if(roleViewModel != null)

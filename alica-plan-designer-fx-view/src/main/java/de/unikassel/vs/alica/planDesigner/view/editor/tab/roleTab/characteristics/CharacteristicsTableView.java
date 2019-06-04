@@ -2,8 +2,7 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.characteristi
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.RoleListLabel;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.RoleListView;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.roles.RoleTableView;
 import de.unikassel.vs.alica.planDesigner.view.model.CharacteristicViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.RoleSetViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.RoleViewModel;
@@ -12,7 +11,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
@@ -20,7 +18,7 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
 
     private ObservableList<CharacteristicsTableElement> characteristicsTableElements;
 
-    private RoleListView        roleListView;
+    private RoleTableView        roleTableView;
     private RoleSetViewModel    roleSetViewModel;
     private RoleViewModel       currentRoleViewModel;
 
@@ -30,26 +28,26 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
     private String defaultValue;
 
 
-    public CharacteristicsTableView(RoleSetViewModel roleSetViewModel, RoleListView roleListView) {
+    public CharacteristicsTableView(RoleSetViewModel roleSetViewModel, RoleTableView roleTableView) {
         super();
         this.roleSetViewModel = roleSetViewModel;
-        this.roleListView = roleListView;
+        this.roleTableView = roleTableView;
         this.defaultValue = "";
         characteristicsTableElements = FXCollections.observableArrayList();
 
         this.setItems(characteristicsTableElements);
-        this.roleSetViewModel.getRoleViewModels().addListener(new ListChangeListener<RoleViewModel>() {
-            @Override
-            public void onChanged(Change<? extends RoleViewModel> c) {
-                System.out.println("CTV: role set changed: " + ((RoleViewModel)c.getList().get(c.getList().size()-1)).getName());
-            }
-        });
-        this.roleListView.addSelectionListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("CTV: selected role changed: " + ((RoleListLabel)evt.getNewValue()).getViewModelElement().getName());
-            }
-        });
+//        this.roleSetViewModel.getRoleViewModels().addListener(new ListChangeListener<RoleViewModel>() {
+//            @Override
+//            public void onChanged(Change<? extends RoleViewModel> c) {
+//                System.out.println("CTV: role set changed: " + ((RoleViewModel)c.getList().get(c.getList().size()-1)).getName());
+//            }
+//        });
+//        this.roleListView.addSelectionListener(new PropertyChangeListener() {
+//            @Override
+//            public void propertyChange(PropertyChangeEvent evt) {
+//                System.out.println("CTV: selected role changed: " + ((RoleListLabel)evt.getNewValue()).getViewModelElement().getName());
+//            }
+//        });
     }
 
     public void updateSelectedRole(RoleViewModel roleViewModel) {
@@ -60,7 +58,7 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
                 if (!c.next())
                     return;
                 List addedSubList = c.getAddedSubList();
-                System.out.println("CTV: update Cells (change characteristic " + addedSubList.get(0) + " " + addedSubList.size()+")");
+//                System.out.println("CTV: update Cells (change characteristic " + addedSubList.get(0) + " " + addedSubList.size()+")");
                 updateCells();
             }
         });
@@ -86,9 +84,10 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
     }
 
     public void addPlaceholder() {
-        CharacteristicViewModel characteristicViewModel = new CharacteristicViewModel(0,"", Types.ROLE_CHARCTERISTIC, roleListView );
-            CharacteristicsTablePlaceholder element = new CharacteristicsTablePlaceholder(this,
-                    characteristicViewModel, "", "");
+        CharacteristicViewModel characteristicViewModel = new CharacteristicViewModelCreatable(0,"", Types.ROLE_CHARCTERISTIC, roleTableView );
+//            CharacteristicsTablePlaceholder element = new CharacteristicsTablePlaceholder(this,
+//                    characteristicViewModel, "", "");
+        CharacteristicsTableElement element = new CharacteristicsTableElement(this, characteristicViewModel, "", "");
             characteristicsTableElements.add(element);
     }
 
@@ -98,7 +97,7 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
         this.characteristicsTableElements.clear();
 
         for (CharacteristicViewModel characteristicViewModel : roleCharacteristics) {
-            System.out.println("CTV: update Cells " + characteristicViewModel.getName());
+//            System.out.println("CTV: update Cells " + characteristicViewModel.getName());
             addCharacteristic(characteristicViewModel);
         }
         addPlaceholder();
@@ -114,28 +113,28 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
     }
 
     protected RoleViewModel getCurrentRole() {
-        return (RoleViewModel) roleListView.getSelectedItem();
+        return (RoleViewModel) roleTableView.getSelectedItem();
     }
 
-    public void initTable(RoleListView roleListView, RoleSetViewModel roleSetViewModel) {
-        this.roleListView = roleListView;
+    public void initTable(RoleTableView roleTableView, RoleSetViewModel roleSetViewModel) {
+        this.roleTableView = roleTableView;
         this.roleSetViewModel = roleSetViewModel;
-        this.roleListView.getItems().addListener(new ListChangeListener<RoleListLabel>() {
-            @Override
-            public void onChanged(Change<? extends RoleListLabel> c) {
-                ObservableList<? extends RoleListLabel> list = c.getList();
-                System.out.println("CTV: init role list table: " + ((RoleListLabel)list.get(list.size()-1)).getViewModelElement().getName());
-            }
-        });
-
-        this.roleListView.addSelectionListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                RoleListLabel label = (RoleListLabel) evt.getNewValue();
-                long modelID = label.getViewModelElement().getId();
-                System.out.println("CTV: role selected: " + currentRoleViewModel.getId() + " " + modelID );
-            }
-        });
+//        this.roleTableView.getItems().addListener(new ListChangeListener<RoleListLabel>() {
+//            @Override
+//            public void onChanged(Change<? extends RoleListLabel> c) {
+//                ObservableList<? extends RoleListLabel> list = c.getList();
+//                System.out.println("CTV: init role list table: " + ((RoleListLabel)list.get(list.size()-1)).getViewModelElement().getName());
+//            }
+//        });
+//
+//        this.roleTableView.addSelectionListener(new PropertyChangeListener() {
+//            @Override
+//            public void propertyChange(PropertyChangeEvent evt) {
+//                RoleListLabel label = (RoleListLabel) evt.getNewValue();
+//                long modelID = label.getViewModelElement().getId();
+//                System.out.println("CTV: role selected: " + currentRoleViewModel.getId() + " " + modelID );
+//            }
+//        });
         updatePlaceholder();
     }
 
@@ -148,7 +147,7 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
                 if(list.size() < 1)
                     return;
                 CharacteristicsTableElement element = list.get(list.size() - 1);
-                System.out.println("CTV: new characteristic element: " + element.getClass().getSimpleName());
+//                System.out.println("CTV: new characteristic element: " + element.getClass().getSimpleName());
             }
         });
     }
@@ -161,22 +160,17 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
     }
 
     public void updatePlaceholder() {
-        String name = null;
-
-        if(characteristicsTableElements.size() > 0) {
-            CharacteristicViewModel characteristic = characteristicsTableElements.get(characteristicsTableElements.size() - 1).getViewModel();
-            name = characteristic.getName();
-        }
+//        String name = null;
+//
+//        if(characteristicsTableElements.size() > 0) {
+//            CharacteristicViewModel characteristic = characteristicsTableElements.get(characteristicsTableElements.size() - 1).getViewModel();
+//            name = characteristic.getName();
+//        }
 
         if(characteristicsTableElements.size() > 0 && characteristicsTableElements.get(characteristicsTableElements.size() - 1).getViewModel().getName().equals(""))
             return;
         addPlaceholder();
     }
-
-//    public void setCurrentRole(RoleViewModel currentRole) {
-//        this.currentRole = currentRole;
-
-//    }
 
     public IGuiModificationHandler getGuiModificationHandler() {
         return guiModificationHandler;

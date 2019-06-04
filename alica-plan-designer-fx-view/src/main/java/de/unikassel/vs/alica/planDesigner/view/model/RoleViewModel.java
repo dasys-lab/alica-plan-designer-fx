@@ -24,7 +24,7 @@ public class RoleViewModel extends PlanElementViewModel {
             public void onChanged(Change<? extends CharacteristicViewModel> c) {
                 ObservableList<? extends CharacteristicViewModel> list = c.getList();
                 CharacteristicViewModel model = list.get(list.size()-1);
-                System.out.println("RVM: add characteristic view model: " + model.nameProperty());
+//                System.out.println("RVM: add characteristic view model: " + model.nameProperty());
                 updateView();
             }
         });
