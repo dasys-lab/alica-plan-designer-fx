@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
@@ -29,8 +30,6 @@ public class BehaviourParametersTab extends Tab {
 
     private final ObjectProperty<BehaviourViewModel> selectedBehaviour = new SimpleObjectProperty<>();
 
-    private static final int CELL_SIZE = 27;
-    private static final int CELL_OFFSET = 5;
 
     private TableView<Map.Entry<String, String>> parameterTableView;
     private ParameterListener parameterListener;
@@ -41,7 +40,7 @@ public class BehaviourParametersTab extends Tab {
         // Table
         ObservableList<Map.Entry<String, String>> items = FXCollections.observableArrayList();
         parameterTableView = new TableView<>(items);
-        parameterTableView.setFixedCellSize(CELL_SIZE);
+        parameterTableView.setFixedCellSize(ParameterListener.CELL_SIZE);
         parameterTableView.setPlaceholder(new Text());
         parameterTableView.setEditable(true);
 
@@ -52,9 +51,10 @@ public class BehaviourParametersTab extends Tab {
         keyColumn.setEditable(true);
         keyColumn.setOnEditCommit(event -> {
 //            System.out.println("BehaviourParametersTab: Key RowValue: " + event.getRowValue() + " OldValue: " + event.getOldValue() + " NewValue: " + event.getNewValue());
-            fireEvent(new AbstractMap.SimpleEntry<String,String>(event.getNewValue(), event.getRowValue().getValue()), event.getRowValue());
+            if (!fireEvent(new AbstractMap.SimpleEntry<String,String>(event.getNewValue(), event.getRowValue().getValue()), event.getRowValue())) {
+                parameterTableView.refresh();
+            }
             event.consume();
-            resizeTableView();
         });
         parameterTableView.getColumns().add(keyColumn);
 
@@ -65,9 +65,10 @@ public class BehaviourParametersTab extends Tab {
         valueColumn.setEditable(true);
         valueColumn.setOnEditCommit(event -> {
 //            System.out.println("BehaviourParametersTab: Value RowValue: " + event.getRowValue() + " OldValue: " + event.getOldValue() + " NewValue: " + event.getNewValue());
-            fireEvent(new AbstractMap.SimpleEntry<String,String>(event.getRowValue().getKey(), event.getNewValue()), event.getRowValue());
+            if (!fireEvent(new AbstractMap.SimpleEntry<String,String>(event.getRowValue().getKey(), event.getNewValue()), event.getRowValue())) {
+                parameterTableView.refresh();
+            }
             event.consume();
-            resizeTableView();
         });
         parameterTableView.getColumns().add(valueColumn);
 
@@ -98,10 +99,12 @@ public class BehaviourParametersTab extends Tab {
             }
         });
 
-        parameterTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        HBox.setHgrow(parameterTableView, Priority.ALWAYS);
+        this.parameterTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        this.setContent(parameterTableView);
+        VBox vbox = new VBox();
+        vbox.setFillWidth(true);
+        vbox.getChildren().add(this.parameterTableView);
+        this.setContent(vbox);
 
         // listener object for updating tableview
         this.parameterListener = new ParameterListener(this.parameterTableView);
@@ -118,30 +121,23 @@ public class BehaviourParametersTab extends Tab {
         this.selectedBehaviour.get().getParameters().addListener(this.parameterListener);
     }
 
-    private void resizeTableView() {
-        int itemsAndHeaderSize = 2;
-        if (selectedBehaviour.get() != null) {
-            itemsAndHeaderSize = selectedBehaviour.get().getParameters().size() + 1;
-        }
-
-        parameterTableView.setPrefHeight(itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
-        parameterTableView.setMinHeight(itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
-        parameterTableView.setMaxHeight(itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
-//        parameterTableView.setMinWidth(parameterTableView.getWidth() - CELL_OFFSET);
-        parameterTableView.refresh();
-    }
-
-    private void fireEvent(Map.Entry<String, String> newValue, Map.Entry<String, String> oldValue) {
+    private boolean fireEvent(Map.Entry<String, String> newValue, Map.Entry<String, String> oldValue) {
         GuiChangeAttributeEvent addKeyValueEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.BEHAVIOUR, selectedBehaviour.get().getName());
         addKeyValueEvent.setElementId(selectedBehaviour.get().getId());
         addKeyValueEvent.setAttributeType(Map.Entry.class.getSimpleName());
         addKeyValueEvent.setAttributeName("parameters");
-        if (newValue.getKey() != "") {
+        if (!newValue.getKey().equals("")) {
             addKeyValueEvent.setNewValue(newValue);
         }
-        if (oldValue.getKey() != "") {
+        if (!oldValue.getKey().equals ("")) {
             addKeyValueEvent.setOldValue(oldValue);
         }
+        if (addKeyValueEvent.getNewValue() == null && addKeyValueEvent.getOldValue() == null)
+        {
+            return false;
+        }
+
         MainWindowController.getInstance().getGuiModificationHandler().handle(addKeyValueEvent);
+        return true;
     }
 }

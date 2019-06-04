@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class ParameterListener<T> implements ChangeListener<T>, MapChangeListener {
 
+    // height of a row in px 
+    public static final int CELL_SIZE = 28;
     private TableView<Map.Entry<String, String>> parametersTableView;
 
     ParameterListener(TableView<Map.Entry<String, String>> parametersTableView) {
@@ -29,5 +31,18 @@ public class ParameterListener<T> implements ChangeListener<T>, MapChangeListene
     private void updateTable(Map<String, String> newParameterMap) {
         this.parametersTableView.getItems().clear();
         this.parametersTableView.getItems().addAll(newParameterMap.entrySet());
+        this.resizeTableView(newParameterMap);
+    }
+
+    private void resizeTableView(Map<String, String> newParameterMap) {
+        int itemsAndHeaderSize = 2;
+        if (newParameterMap != null) {
+            itemsAndHeaderSize = newParameterMap.size() + 1;
+        }
+
+        parametersTableView.setPrefHeight(itemsAndHeaderSize * CELL_SIZE);
+        parametersTableView.setMinHeight(itemsAndHeaderSize * CELL_SIZE);
+        parametersTableView.setMaxHeight(itemsAndHeaderSize * CELL_SIZE);
+        parametersTableView.refresh();
     }
 }
