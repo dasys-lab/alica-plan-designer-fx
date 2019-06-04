@@ -1061,6 +1061,8 @@ public class ModelManager implements Observer {
                 switch (mmq.getElementType()) {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
+                    case Types.PLANTYPE:
+                    case Types.BEHAVIOUR:
                         if(this.getPlanElement(mmq.getParentId()) instanceof State) {
                             cmd = new AddAbstractPlan(this, mmq);
                         } else {
@@ -1069,10 +1071,6 @@ public class ModelManager implements Observer {
                             mmq.setElementType(Types.ANNOTATEDPLAN);
                             cmd = new CreateAnnotatedPlan(this, mmq);
                         }
-                        break;
-                    case Types.PLANTYPE:
-                    case Types.CONFIGURATION:
-                        cmd = new AddAbstractPlan(this, mmq);
                         break;
                     case Types.TASK:
                         cmd =  new AddTaskToEntryPoint(this, mmq);
@@ -1133,7 +1131,6 @@ public class ModelManager implements Observer {
                     case Types.MASTERPLAN:
                     case Types.PLAN:
                     case Types.PLANTYPE:
-                    case Types.CONFIGURATION:
                         cmd = new RemoveAbstractPlanFromState(this, mmq);
                         break;
                     default:
