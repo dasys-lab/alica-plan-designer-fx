@@ -4,10 +4,7 @@ import de.unikassel.vs.alica.generator.Codegenerator;
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
-import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
@@ -613,6 +610,21 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     @Override
     public RepositoryViewModel getRepoViewModel() {
         return repoViewModel;
+    }
+
+    @Override
+    public void storeAll() {
+        for (Plan plan: modelManager.getPlans()) {
+            modelManager.storePlanElement(Types.PLAN, plan, true);
+        }
+        for (Behaviour behaviour: modelManager.getBehaviours()) {
+            modelManager.storePlanElement(Types.BEHAVIOUR, behaviour, true);
+        }
+        for (PlanType planType: modelManager.getPlanTypes()) {
+            modelManager.storePlanElement(Types.PLANTYPE, planType, true);
+        }
+        modelManager.storePlanElement(Types.TASKREPOSITORY, modelManager.getTaskRepository(), true);
+        modelManager.storePlanElement(Types.ROLESET, modelManager.getRoleSet(), true);
     }
 
     @Override
