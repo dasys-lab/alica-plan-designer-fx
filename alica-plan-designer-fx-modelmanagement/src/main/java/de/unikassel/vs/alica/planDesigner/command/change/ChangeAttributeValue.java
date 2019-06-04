@@ -24,7 +24,7 @@ public class ChangeAttributeValue extends ChangeAttributeCommand {
         try {
             newValue = mmq.getNewValue();
             // Using PropertyUtils instead of BeanUtils to get the actual Object and not just its String-representation
-            if (mmq.getOldValue() == null) {
+            if (attribute != "parameters") {
                 this.oldValue = PropertyUtils.getProperty(planElement, attribute);
             } else {
                 this.oldValue = mmq.getOldValue();

@@ -29,7 +29,7 @@ public class BehaviourParametersTab extends Tab {
 
     private final ObjectProperty<BehaviourViewModel> selectedBehaviour = new SimpleObjectProperty<>();
 
-    private static final int CELL_SIZE = 30;
+    private static final int CELL_SIZE = 27;
     private static final int CELL_OFFSET = 5;
 
     private TableView<Map.Entry<String, String>> parameterTableView;
@@ -41,7 +41,6 @@ public class BehaviourParametersTab extends Tab {
         // Table
         ObservableList<Map.Entry<String, String>> items = FXCollections.observableArrayList();
         parameterTableView = new TableView<>(items);
-        parameterTableView.getItems().add(new AbstractMap.SimpleEntry<String,String>("",""));
         parameterTableView.setFixedCellSize(CELL_SIZE);
         parameterTableView.setPlaceholder(new Text());
         parameterTableView.setEditable(true);
@@ -122,12 +121,12 @@ public class BehaviourParametersTab extends Tab {
     private void resizeTableView() {
         int itemsAndHeaderSize = 2;
         if (selectedBehaviour.get() != null) {
-            itemsAndHeaderSize = selectedBehaviour.get().getParameters().size() + 2;
+            itemsAndHeaderSize = selectedBehaviour.get().getParameters().size() + 1;
         }
 
         parameterTableView.setPrefHeight(itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
-        parameterTableView.setMinHeight( itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
-        parameterTableView.setMaxHeight( itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
+        parameterTableView.setMinHeight(itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
+        parameterTableView.setMaxHeight(itemsAndHeaderSize * CELL_SIZE + CELL_OFFSET);
 //        parameterTableView.setMinWidth(parameterTableView.getWidth() - CELL_OFFSET);
         parameterTableView.refresh();
     }
@@ -137,8 +136,12 @@ public class BehaviourParametersTab extends Tab {
         addKeyValueEvent.setElementId(selectedBehaviour.get().getId());
         addKeyValueEvent.setAttributeType(Map.Entry.class.getSimpleName());
         addKeyValueEvent.setAttributeName("parameters");
-        addKeyValueEvent.setNewValue(newValue);
-        addKeyValueEvent.setOldValue(oldValue);
+        if (newValue.getKey() != "") {
+            addKeyValueEvent.setNewValue(newValue);
+        }
+        if (oldValue.getKey() != "") {
+            addKeyValueEvent.setOldValue(oldValue);
+        }
         MainWindowController.getInstance().getGuiModificationHandler().handle(addKeyValueEvent);
     }
 }

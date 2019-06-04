@@ -25,6 +25,8 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
+
+        this.parameters.put("","");
     }
 
     public void registerListener(IGuiModificationHandler handler) {
@@ -98,21 +100,50 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
     }
 
     public ObservableMap<String, String> getParameters() {
-        return parameters;
+        return FXCollections.unmodifiableObservableMap(parameters);
     }
 
-    public void replaceParameter(Map.Entry<String, String> newEntry, Map.Entry<String, String> oldEntry) {
-        if (oldEntry == null || (newEntry != null && newEntry.getKey() == oldEntry.getKey())) {
-            this.parameters.put(newEntry.getKey(), newEntry.getValue());
+    /**
+     * Used for any kind of modification of the parameters: Insert, Change, Remove, etc.
+     *
+     * Never insert/remove parameter with empty key - its a special parameter for entering new parameters in the UI.
+     * @param newEntry
+     * @param oldEntry
+     */
+    public void modifyParameter(Map.Entry<String, String> newEntry, Map.Entry<String, String> oldEntry) {
+        // Insert new entry (no old entry)
+        if (oldEntry == null) {
+            if (newEntry.getKey() != "") {
+                this.parameters.put(newEntry.getKey(), newEntry.getValue());
+            }
             return;
         }
 
+        // Remove parameter (no new entry)
         if (newEntry == null) {
-            this.parameters.remove(oldEntry.getKey());
+            if (oldEntry.getKey() != "") {
+                this.parameters.remove(oldEntry.getKey());
+            }
             return;
         }
 
-        this.parameters.remove(oldEntry.getKey());
-        this.parameters.put(newEntry.getKey(), newEntry.getValue());
+        // Modify existing parameter (old and new entry given)
+        if (newEntry.getKey() == oldEntry.getKey()) {
+            if (newEntry.getKey() != "") {
+                this.parameters.put(newEntry.getKey(), newEntry.getValue());
+            }
+            return;
+        } else {
+            if (oldEntry.getKey() != "") {
+                this.parameters.remove(oldEntry.getKey());
+            }
+            if (newEntry.getKey() != "") {
+                this.parameters.put(newEntry.getKey(), newEntry.getValue());
+            }
+        }
+
+        if (!this.parameters.containsKey("")) {
+            this.parameters.put("","");
+        }
     }
 }

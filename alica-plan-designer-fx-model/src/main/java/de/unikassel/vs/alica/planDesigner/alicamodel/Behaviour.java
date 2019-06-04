@@ -89,21 +89,34 @@ public class Behaviour extends AbstractPlan {
         return parameters.remove(key);
     }
 
-    public void replaceParameter(Map.Entry<String, String> newEntry, Map.Entry<String, String> oldEntry) {
+    /**
+     * Used for any kind of modification of the parameters: Insert, Change, Remove, etc.
+     *
+     * @param newEntry
+     * @param oldEntry
+     */
+    public void modifyParameter(Map.Entry<String, String> newEntry, Map.Entry<String, String> oldEntry) {
         setDirty(true);
 
-        if (oldEntry == null || (newEntry != null) && oldEntry.getKey() == newEntry.getKey()) {
+        // Insert new entry (no old entry)
+        if (oldEntry == null) {
             this.parameters.put(newEntry.getKey(), newEntry.getValue());
             return;
         }
 
+        // Remove parameter (no new entry)
         if (newEntry == null) {
             this.parameters.remove(oldEntry.getKey());
             return;
         }
 
-        this.parameters.remove(oldEntry.getKey());
-        this.parameters.put(newEntry.getKey(), newEntry.getValue());
+        // Modify existing parameter (old and new entry given)
+        if (newEntry.getKey() == oldEntry.getKey()) {
+            this.parameters.put(newEntry.getKey(), newEntry.getValue());
+        } else {
+            this.parameters.remove(oldEntry.getKey());
+            this.parameters.put(newEntry.getKey(), newEntry.getValue());
+        }
     }
 
     @Override

@@ -178,7 +178,7 @@ public class ViewModelManager {
         }
 
         for (Map.Entry<String, String> keyValuePair : behaviour.getParameters().entrySet()) {
-            behaviourViewModel.getParameters().put(keyValuePair.getKey(), keyValuePair.getValue());
+            behaviourViewModel.modifyParameter(keyValuePair, null);
         }
 
         if (behaviour.getPreCondition() != null) {
@@ -789,7 +789,7 @@ public class ViewModelManager {
         try {
             if (newValue instanceof Map.Entry || (viewModelElement instanceof  BehaviourViewModel && changedAttribute.equals("parameters"))) {
                 BehaviourViewModel behaviour = (BehaviourViewModel) viewModelElement;
-                behaviour.replaceParameter((Map.Entry<String, String>)newValue, (Map.Entry<String, String>)oldValue);
+                behaviour.modifyParameter((Map.Entry<String, String>)newValue, (Map.Entry<String, String>)oldValue);
             } else {
                 BeanUtils.setProperty(viewModelElement, changedAttribute, newValue);
             }
