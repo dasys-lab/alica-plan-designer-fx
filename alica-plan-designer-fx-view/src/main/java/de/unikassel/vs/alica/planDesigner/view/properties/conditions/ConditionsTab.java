@@ -135,12 +135,18 @@ public class ConditionsTab extends Tab {
         TitledPane variablesSection = new TitledPane(variablesTitle, variables);
         variablesSection.setExpanded(false);
 
-        String quantifiersTitle = I18NRepo.getInstance().getString("label.caption.quantifiers");
-        quantifiers = createQuantifierTable();
-        TitledPane quantifierSection = new TitledPane(quantifiersTitle, quantifiers);
-        quantifierSection.setExpanded(false);
+        VBox vBox;
+        //None Quatifiers for Behaviours
+        if(!(this.parentElement instanceof BehaviourViewModel)) {
+            String quantifiersTitle = I18NRepo.getInstance().getString("label.caption.quantifiers");
+            quantifiers = createQuantifierTable();
+            TitledPane quantifierSection = new TitledPane(quantifiersTitle, quantifiers);
+            quantifierSection.setExpanded(false);
+            vBox = new VBox(propertySection, variablesSection, quantifierSection, pluginSection);
+        } else {
+            vBox = new VBox(propertySection, variablesSection, pluginSection);
 
-        VBox vBox = new VBox(propertySection, variablesSection, quantifierSection, pluginSection);
+        }
         this.hideableView = new ScrollPane(vBox);
         hideableView.setFitToWidth(true);
 
@@ -319,7 +325,9 @@ public class ConditionsTab extends Tab {
 
         this.properties.getItems().clear();
         this.variables.clear();
-        this.quantifiers.clear();
+        if(!(this.parentElement instanceof BehaviourViewModel)){
+            this.quantifiers.clear();
+        }
         if(condition != null) {
             this.properties.getItems().addAll(BeanPropertyUtils.getProperties(this.condition, relevantProperties));
             for(VariableViewModel variable : variablesHoldingParent.getVariables()){
