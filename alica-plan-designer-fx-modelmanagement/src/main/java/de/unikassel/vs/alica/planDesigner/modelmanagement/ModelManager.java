@@ -427,7 +427,10 @@ public class ModelManager implements Observer {
         for (UiExtension uiExtension : uiExtensionMap.values()) {
             uiExtension.setPlan(planMap.get(uiExtension.getPlan().getId()));
         }
+
+        if (roleSet != null) {
         roleSet.getRoles().forEach(role -> resolveReferences(role));
+        }
     }
 
     private void resolveReferences(Role role) {

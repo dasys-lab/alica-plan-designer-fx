@@ -2,6 +2,12 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.characteristi
 
 import de.unikassel.vs.alica.planDesigner.view.model.CharacteristicViewModel;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Control;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.PickResult;
+
+import java.util.ArrayList;
 
 public class CharacteristicsTableElement {
     private CharacteristicsTableView tableView;
