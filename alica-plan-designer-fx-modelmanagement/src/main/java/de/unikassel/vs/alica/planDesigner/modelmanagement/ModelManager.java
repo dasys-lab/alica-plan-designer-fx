@@ -101,6 +101,7 @@ public class ModelManager implements Observer {
         objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
         objectMapper.addMixIn(UiExtension.class, UiExtensionMixIn.class);
         objectMapper.addMixIn(BendPoint.class, BendPointMixIn.class);
+        objectMapper.addMixIn(Behaviour.class, BehaviourMixIn.class);
     }
 
     public void setPlansPath(String plansPath) {
