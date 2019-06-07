@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.characteristics;
 
+import com.sun.javafx.scene.control.skin.LabeledText;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.roles.RoleTableView;
@@ -7,16 +8,35 @@ import de.unikassel.vs.alica.planDesigner.view.model.CharacteristicViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.RoleSetViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.RoleViewModel;
 import de.unikassel.vs.alica.planDesigner.view.properties.PropertiesTable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.*;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.PickResult;
+import javafx.scene.layout.VBox;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
+import org.controlsfx.control.PopOver;
+import org.omg.CORBA.OBJ_ADAPTER;
 
+import javax.swing.text.TableView;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTableElement> {
 
+    private PopOver popOver;
     private ObservableList<CharacteristicsTableElement> characteristicsTableElements;
+    private ContextMenu contextMenu;
 
     private RoleTableView        roleTableView;
     private RoleSetViewModel    roleSetViewModel;
@@ -26,7 +46,6 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
     private PropertyChangeListener  eventListener;
 
     private String defaultValue;
-
 
     public CharacteristicsTableView(RoleSetViewModel roleSetViewModel, RoleTableView roleTableView) {
         super();
@@ -48,6 +67,116 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
 //                System.out.println("CTV: selected role changed: " + ((RoleListLabel)evt.getNewValue()).getViewModelElement().getName());
 //            }
 //        });
+
+        setOnMouseClicked(e -> {
+//            System.out.println(e.getTarget());
+            int index = getSelectionModel().selectedIndexProperty().get();
+
+            if ( popOver != null && popOver.isShowing()) {
+                popOver.hide();
+                return;
+            }
+            PickResult pickResult = e.getPickResult();
+            ObservableList<RoleViewModel> roleViewModels = roleSetViewModel.getRoleViewModels();
+
+            ListView listView = new ListView();
+            listView.getStyleClass().addAll("combo-box-popup");
+            for (RoleViewModel roleViewModel:roleViewModels) {
+                ObservableList<CharacteristicViewModel> characteristicViewModels = roleViewModel.getCharacteristicViewModels();
+
+                for (CharacteristicViewModel characteristicViewModel :characteristicViewModels) {
+                    if (!characteristicExists(characteristicViewModel.getName())) {
+                        addToListView(characteristicViewModel.getName(), listView);
+                    }
+                }
+            }
+            popOver = new PopOver(listView);
+            popOver.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
+            popOver.setArrowSize(0.0);
+            popOver.setAutoFix(true);
+            popOver.setAutoHide(true);
+            popOver.setHideOnEscape(true);
+            popOver.setDetachable(true);
+            popOver.show(pickResult.getIntersectedNode());
+            listView.addEventHandler(EventType.ROOT, new EventHandler<Event>() {
+//            listView.addEventHandler(MouseEvent.ANY, new EventHandler<Event>() {
+                @Override
+                public void handle(Event event) {
+//                    System.out.println(event.getEventType().getName());
+                    switch (event.getEventType().toString()) {
+                        case "MOUSE_EXITED":
+                            popOver.hide();
+                            event.consume();
+                            break;
+                        case "MOUSE_CLICKED":
+                            setCharacteristicName((String) listView.getSelectionModel().getSelectedItem());
+                            event.consume();
+                            popOver.hide();
+                            break;
+                    }
+                }
+            });
+
+//            Bounds bounds = pickResult.getIntersectedNode().localToScreen(pickResult.getIntersectedNode().getBoundsInLocal());
+//            ArrayList<MenuItem> selection = new ArrayList<>();
+//            listView.cellFactoryProperty().bind(control.cellFactoryProperty());
+//
+//            for (RoleViewModel roleViewModel:roleViewModels) {
+//                ObservableList<CharacteristicViewModel> characteristicViewModels = roleViewModel.getCharacteristicViewModels();
+//
+//                for (CharacteristicViewModel characteristicViewModel :characteristicViewModels) {
+//                    MenuItem menuItem = new MenuItem(index + " " + characteristicViewModel.getName());
+//                    menuItem.setStyle("-fx-pref-width: "+ (bounds.getWidth()-20) +";");
+//                    selection.add(menuItem);
+//                }
+//            }
+////            contextMenu = new ContextMenu(selection.toArray(new MenuItem[selection.size()]));
+//            contextMenu.show(CharacteristicsTableView.this, bounds.getMinX(), bounds.getMaxY());
+//            contextMenu.setOnAction(new EventHandler<ActionEvent>() {
+//                @Override
+//                public void handle(ActionEvent event) {
+//                    String text = ((MenuItem) event.getTarget()).getText();
+//                    System.out.println();
+//                }
+//            });
+//            pickResult.getIntersectedNode().setOnMouseExited(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent event) {
+//                    contextMenu.hide();
+//                }
+//            });
+//
+//            e.consume();
+        });
+    }
+
+    private void addToListView(Object object, ListView listView) {
+
+        for (Object item:listView.getItems()) {
+            if (item.equals(object))
+                return;
+        }
+        listView.getItems().add(object);
+    }
+
+    private void setCharacteristicName(String name) {
+
+        if (characteristicExists(name))
+            return;
+        TableViewSelectionModel<CharacteristicsTableElement> selectionModel = getSelectionModel().getTableView().getSelectionModel();
+        CharacteristicsTableElement selectedItem = selectionModel.getSelectedItem();
+        selectedItem.nameProperty().setValue(name);
+    }
+
+    private boolean characteristicExists(String name) {
+        ObservableList<CharacteristicViewModel> characteristicViewModels = getCurrentRole().getCharacteristicViewModels();
+
+        for (CharacteristicViewModel model: characteristicViewModels) {
+
+            if (model.nameProperty().getValue().equals(name))
+                return true;
+        }
+        return false;
     }
 
     public void updateSelectedRole(RoleViewModel roleViewModel) {
@@ -177,5 +306,45 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
     }
     public void setGuiModificationHandler(IGuiModificationHandler guiModificationHandler) {
         this.guiModificationHandler = guiModificationHandler;
+    }
+
+    @Override
+    public <T> void addColumn(String title, String propertyName, StringConverter<T> converter, boolean editable, EventHandler<TableColumn.CellEditEvent<CharacteristicsTableElement, T>> listener) {
+        TableColumn<CharacteristicsTableElement, T> column = new TableColumn<CharacteristicsTableElement, T>(title);
+
+
+//        column.setCellFactory(col -> {
+//
+//            TableCell<CharacteristicsTableElement, StringProperty> c = new TableCell<>();
+//
+//                    final ComboBox<String> comboBox = new ComboBox(characteristicsTableElements);
+//
+//                    c.itemProperty().addListener((observable, oldValue, newValue) -> {
+//                        if (oldValue != null) {
+//                            comboBox.valueProperty().unbindBidirectional(oldValue);
+//                        }
+//                        if (newValue != null) {
+//                            comboBox.valueProperty().bindBidirectional(newValue);
+//                        }
+//                    });
+//                    c.graphicProperty().bind(Bindings.when(c.emptyProperty()).then((Node) null).otherwise(comboBox));
+//                    return (TableCell<CharacteristicsTableElement, T>) c;
+//        });
+
+
+
+        column.setCellValueFactory(new PropertyValueFactory<CharacteristicsTableElement, T>(propertyName));
+        Callback<TableColumn<CharacteristicsTableElement, T>, TableCell<CharacteristicsTableElement, T>> defaultTextFieldCellFactory
+                = TextFieldTableCell.<CharacteristicsTableElement, T>forTableColumn(converter);
+        column.setCellFactory(col -> {
+            TableCell<CharacteristicsTableElement, T> cell = defaultTextFieldCellFactory.call(col);
+            cell.setEditable(editable);
+            return cell;
+        });
+        getColumns().add(column);
+        if (listener != null) {
+            column.setOnEditCommit(listener);
+        }
+        resizeTable();
     }
 }

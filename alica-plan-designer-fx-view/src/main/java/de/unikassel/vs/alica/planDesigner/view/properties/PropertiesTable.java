@@ -49,7 +49,7 @@ public class PropertiesTable<S> extends TableView<S> {
         resizeTable();
     }
 
-    private void resizeTable() {
+    protected void resizeTable() {
         int elements = this.getItems().size();
         double fontSize = Font.getDefault().getSize() * 2;
 
