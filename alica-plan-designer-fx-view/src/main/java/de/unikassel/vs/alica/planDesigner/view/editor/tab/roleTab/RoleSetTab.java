@@ -31,7 +31,6 @@ import java.util.ArrayList;
 public class RoleSetTab extends EditorTab {
 
     protected RoleSetViewModel          roleSetViewModel;
-//    protected RoleListView              roleListView;
     protected RoleTableView             roleTableView;
     protected TaskPriorityTableView     taskTableView;
     protected CharacteristicsTableView  characteristicsTableView;
@@ -90,8 +89,6 @@ public class RoleSetTab extends EditorTab {
     }
 
     private void createVisuals() {
-//        HBox createRoleVisual = createRoleButtonVisual();
-//        TitledPane roleListVisual = createRoleListVisual();
         VBox roleTableVisual = createRoleTableVisual();
         TaskPriorityTableView taskPriorityTableView = createTaskPriorityTableVisual();
         CharacteristicsTableView characteristicsTableView = createCharacteristicsTableVisual();
@@ -115,6 +112,7 @@ public class RoleSetTab extends EditorTab {
     private VBox createRoleTableVisual() {
         roleTableView.addColumn(i18NRepo.getString("label.caption.roles"), "name", new DefaultStringConverter(), true);
         roleTableView.getColumns().get(roleTableView.getColumns().size()-1).setMinWidth(100.0);
+        roleTableView.getColumns().get(roleTableView.getColumns().size()-1).setSortable(false);
         roleTableView.prefHeightProperty().bind(splitPane.heightProperty());
         roleTableView.setMinWidth(121.0);
         roleTableView.setEditable(true);
@@ -130,10 +128,12 @@ public class RoleSetTab extends EditorTab {
         taskTableView = new TaskPriorityTableView(roleSetViewModel.getDefaultPriority());
         taskTableView.addColumn(i18NRepo.getString("label.caption.tasks"), "taskName",new DefaultStringConverter(), false);
         taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setMinWidth(150.0);
+        taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setSortable(false);
         taskTableView.addColumn(i18NRepo.getString("label.caption.priorities"), "priority",new DefaultStringConverter(), true);
         taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setStyle("-fx-alignment: CENTER;");
         taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setMaxWidth(150.0);
         taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setMinWidth(100.0);
+        taskTableView.getColumns().get(taskTableView.getColumns().size()-1).setSortable(false);
         taskTableView.prefHeightProperty().bind(splitPane.heightProperty());
         taskTableView.prefWidthProperty().bind(splitPane.widthProperty());
         taskTableView.setEditable(true);
@@ -158,12 +158,15 @@ public class RoleSetTab extends EditorTab {
         characteristicsTableView = new CharacteristicsTableView(roleSetViewModel, roleTableView);
         characteristicsTableView.addColumn(i18NRepo.getString("label.caption.characteristics"), "name",new DefaultStringConverter(), true);
         characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(200.0);
+        characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setSortable(false);
         characteristicsTableView.addColumn(i18NRepo.getString("label.caption.value"), "value",new DefaultStringConverter(), true);
         characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(100.0);
+        characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setSortable(false);
         characteristicsTableView.addColumn(i18NRepo.getString("label.caption.weight"), "weight",new DefaultStringConverter(), true);
         characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setStyle("-fx-alignment: CENTER;");
         characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMaxWidth(250.0);
         characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setMinWidth(100.0);
+        characteristicsTableView.getColumns().get(characteristicsTableView.getColumns().size()-1).setSortable(false);
         characteristicsTableView.prefHeightProperty().bind(splitPane.heightProperty());
         characteristicsTableView.prefWidthProperty().bind(splitPane.widthProperty());
         characteristicsTableView.setEditable(true);

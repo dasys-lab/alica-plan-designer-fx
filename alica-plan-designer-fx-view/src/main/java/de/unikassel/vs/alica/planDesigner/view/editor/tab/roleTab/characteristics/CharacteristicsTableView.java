@@ -339,6 +339,15 @@ public class CharacteristicsTableView extends PropertiesTable<CharacteristicsTab
         column.setCellFactory(col -> {
             TableCell<CharacteristicsTableElement, T> cell = defaultTextFieldCellFactory.call(col);
             cell.setEditable(editable);
+//            cell.addEventHandler(EventType.ROOT, new  EventHandler<Event>() {
+            cell.addEventHandler(MouseEvent.MOUSE_CLICKED, new  EventHandler<Event>() {
+                @Override
+                public void handle(Event event) {
+                    System.out.println(cell.getTableView().getSelectionModel().getSelectedItem().getViewModel().getName() + "  " + cell.isEditing());
+                    if(cell.isEditing())
+                        popOver.hide();
+                }
+            });
             return cell;
         });
         getColumns().add(column);
