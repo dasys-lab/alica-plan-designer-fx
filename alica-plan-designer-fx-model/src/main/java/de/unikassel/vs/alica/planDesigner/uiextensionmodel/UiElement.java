@@ -29,6 +29,10 @@ public class UiElement extends PositionedElement {
         bendPoints.add(bendPoint);
     }
 
+    public void addBendpoint(int index, BendPoint bendPoint) {
+        bendPoints.add(index, bendPoint);
+    }
+
     public void removeBendpoint(BendPoint bendPoint) {
         bendPoints.remove(bendPoint);
     }

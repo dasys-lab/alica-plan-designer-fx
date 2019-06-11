@@ -19,7 +19,7 @@ public class PotentialBendPointContainer extends BendpointContainer {
 
     @Override
     protected Color getVisualisationColor() {
-        return Color.WHITE;
+        return Color.GREY;
     }
 
     @Override

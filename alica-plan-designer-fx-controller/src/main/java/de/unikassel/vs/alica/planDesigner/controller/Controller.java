@@ -268,7 +268,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         switch (event.getEventType()) {
             case ELEMENT_DELETED:
             case ELEMENT_REMOVED:
-                viewModelManager.removeElement(event.getParentId(), viewModelElement);
+                viewModelManager.removeElement(event.getParentId(), viewModelElement, event.getRelatedObjects());
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue());
@@ -405,6 +405,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
                 mmq.setElementId(event.getElementId());
                 mmq.setParentId(event.getParentId());
+                mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
             case SAVE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());

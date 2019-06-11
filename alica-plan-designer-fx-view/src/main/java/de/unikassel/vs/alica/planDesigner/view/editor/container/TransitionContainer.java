@@ -17,15 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransitionContainer extends Container implements Observable {
+    private TransitionViewModel containedElement;
     private StateContainer fromState;
     private StateContainer toState;
-    private List<Node> draggableNodes;
+    private List<Node> bendPoints;
     private List<Node> potentialDraggableNodes;
     private List<InvalidationListener> invalidationListeners = new ArrayList<>();
 
     public TransitionContainer(TransitionViewModel transition,
                                StateContainer fromState, StateContainer toState, PlanTab planTab) {
         super(transition, null, planTab);
+        this.setContainedElement(transition);
         this.fromState = fromState;
         this.toState = toState;
         InvalidationListener invalidationListener = new InvalidationListener() {
@@ -36,7 +38,7 @@ public class TransitionContainer extends Container implements Observable {
         };
         fromState.addListener(invalidationListener);
         toState.addListener(invalidationListener);
-        draggableNodes = new ArrayList<>();
+        bendPoints = new ArrayList<>();
         potentialDraggableNodes = new ArrayList<>();
         setupContainer();
 
@@ -52,7 +54,7 @@ public class TransitionContainer extends Container implements Observable {
     public void setupContainer() {
         //setBackground(new Background(new BackgroundFill(Color.GREEN,null,null)));
         getChildren().clear();
-        draggableNodes.clear();
+        bendPoints.clear();
         potentialDraggableNodes.clear();
 
         Polygon polygon = new Polygon();
@@ -79,10 +81,11 @@ public class TransitionContainer extends Container implements Observable {
         if (size == 0) {
             visualRepresentation = new Line(_fromX, _fromY, _toX, _toY);
 
-            /* TODO create possible new bendpoint
-            Bendpoint bendpoint = createBendpointInMiddle(_toX, _toY, _fromX, _fromY);
-            potentialDraggableNodes.add(makePotentialBendpoint(bendpoint));
-            */
+            //TODO create possible new bendpoint
+//            Bendpoint bendpoint = createBendpointInMiddle(_toX, _toY, _fromX, _fromY);
+//            potentialDraggableNodes.add(makePotentialBendpoint(bendpoint));
+
+            //BendPointViewModel potentialBendPoint = new BendPointViewModel();
 
             polygon = new Polygon(_toX - 5*(vecX/vecLen)+5*(triangleSpanVecX/triangleSpanLen),
                     _toY - 5*(vecY/vecLen) + 5*(triangleSpanVecY/triangleSpanLen),
@@ -106,7 +109,7 @@ public class TransitionContainer extends Container implements Observable {
                 points[j + 1] = currentBendpoint.getY();
                 BendpointContainer bendpointContainer = new BendpointContainer(currentBendpoint, getPlanElementViewModel(), planTab, this);
                 //bendpointContainer.setVisible(false);
-                draggableNodes.add(bendpointContainer);
+                bendPoints.add(bendpointContainer);
                 _fromX = points[j];
                 _fromY = points[j+1];
                 vecX = _toX - _fromX;
@@ -153,7 +156,7 @@ public class TransitionContainer extends Container implements Observable {
         visualRepresentation.setPickOnBounds(false);
         this.getChildren().add(visualRepresentation);
         this.getChildren().add(polygon);
-        this.getChildren().addAll(draggableNodes);
+        this.getChildren().addAll(bendPoints);
         this.getChildren().addAll(potentialDraggableNodes);
         invalidationListeners.forEach(e-> e.invalidated(this));
     }
@@ -176,11 +179,11 @@ public class TransitionContainer extends Container implements Observable {
     }
 
     public void setBendpointContainerVisibility(boolean isVisible) {
-        getDraggableNodes().forEach(d -> d.setVisible(isVisible));
+        getBendPoints().forEach(d -> d.setVisible(isVisible));
     }
 
-    public List<Node> getDraggableNodes() {
-        return draggableNodes;
+    public List<Node> getBendPoints() {
+        return bendPoints;
     }
 
     public void setPotentialDraggableNodesVisible(boolean visible) {
@@ -207,5 +210,13 @@ public class TransitionContainer extends Container implements Observable {
     @Override
     public void setEffectToStandard() {
         this.setEffect(null);
+    }
+
+    public TransitionViewModel getContainedElement() {
+        return containedElement;
+    }
+
+    public void setContainedElement(TransitionViewModel containedElement) {
+        this.containedElement = containedElement;
     }
 }

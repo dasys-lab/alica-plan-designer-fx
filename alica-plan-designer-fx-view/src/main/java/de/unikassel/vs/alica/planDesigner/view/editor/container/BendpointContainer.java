@@ -1,7 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
-import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
-import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
@@ -32,7 +30,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
         this.containedElement = containedElement;
         this.parent = parent;
         this.planTab = planTab;
-        this.transitionContainer = transitionContainer;
+        this.setTransitionContainer(transitionContainer);
         init();
     }
 
@@ -113,7 +111,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     public void redrawElement() {
         //System.out.println(this.getParent());
         //((TransitionContainer) this.getParent()).redrawElement();
-        transitionContainer.redrawElement();
+        getTransitionContainer().redrawElement();
     }
 
     @Override
@@ -124,5 +122,13 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     @Override
     public boolean wasDragged() {
         return dragged;
+    }
+
+    public TransitionContainer getTransitionContainer() {
+        return transitionContainer;
+    }
+
+    public void setTransitionContainer(TransitionContainer transitionContainer) {
+        this.transitionContainer = transitionContainer;
     }
 }

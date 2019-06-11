@@ -5,7 +5,9 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.BendpointContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
@@ -50,16 +52,28 @@ public class TransitionTool extends AbstractTool {
                     Parent parent = target.getParent();
                     if (parent instanceof StateContainer) {
                         setCursor(addCursor);
-                    } else if (target instanceof StackPane){
+                    } else if (target instanceof StackPane) {
                         if (inState != null) {
                             setCursor(bendPointCursor);
-                        }
-                        else {
+                        } else {
                             setCursor(imageCursor);
+                        }
+                    }else if (target instanceof BendpointContainer){
+                        if (inState == null) {
+                            setCursor(bendPointCursor);
+                        } else {
+                            setCursor(forbiddenCursor);
+                        }
+                    }else if (parent instanceof TransitionContainer){
+                        if (inState == null) {
+                            setCursor(bendPointCursor);
+                        } else {
+                            setCursor(forbiddenCursor);
                         }
                     } else {
                         setCursor(forbiddenCursor);
                     }
+                    //System.out.println(target.getClass().getName());
                 }
             });
 
@@ -73,13 +87,12 @@ public class TransitionTool extends AbstractTool {
 
                     Node target = (Node) event.getTarget();
                     Node parent = target.getParent();
+                    IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
                     if (inState != null) {
                         if (parent instanceof StateContainer) {
                             // SET ENDPOINT
                             StateViewModel outState = ((StateContainer) parent).getState();
-
-                            IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
                             GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.TRANSITION, null);
 
@@ -112,7 +125,7 @@ public class TransitionTool extends AbstractTool {
 
                             TransitionTool.this.reset();
                         } else {
-                            // ADD BENDPOINT
+                            // ADD BENDPOINT ON CREATE
                             Point2D eventTargetCoordinates = TransitionTool.this.getLocalCoordinatesFromEvent(event);
                             if (eventTargetCoordinates == null) {
                                 event.consume();
@@ -120,13 +133,43 @@ public class TransitionTool extends AbstractTool {
                             bendPoints.add(eventTargetCoordinates);
                         }
                     } else {
-                        try {
-                            if (parent instanceof StateContainer) {
-                                // SET STARTPOINT
-                                inState = ((StateContainer) parent).getState();
+                        if (target instanceof BendpointContainer) {
+                            // REMOVE BENDPOINT
+                            BendpointContainer bpC = (BendpointContainer) target;
+                            TransitionContainer tC = bpC.getTransitionContainer();
+
+                            GuiModificationEvent deleteBendPointEvent = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.BENDPOINT, null);
+                            deleteBendPointEvent.setElementId(tC.getContainedElement().getId());
+                            HashMap<String, Long> bendpoint = new HashMap<String, Long>();
+                            bendpoint.put(bpC.getContainedElement().getType(), bpC.getContainedElement().getId());
+                            deleteBendPointEvent.setRelatedObjects(bendpoint);
+                            deleteBendPointEvent.setParentId(TransitionTool.this.planTab.getSerializableViewModel().getId());
+                            handler.handle(deleteBendPointEvent);
+
+                        }else if (parent instanceof TransitionContainer){
+                            // ADD BENDPOINT
+                            Point2D point = TransitionTool.this.getLocalCoordinatesFromEvent(event);
+                            if (point == null) {
+                                event.consume();
                             }
-                        } catch (ClassCastException e) {
-                            e.printStackTrace();
+
+                            GuiModificationEvent bendEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.BENDPOINT, null);
+                            bendEvent.setX((int) point.getX());
+                            bendEvent.setY((int) point.getY());
+                            bendEvent.setParentId(TransitionTool.this.planTab.getSerializableViewModel().getId());
+                            HashMap<String, Long> related = new HashMap<>();
+                            related.put(Types.TRANSITION, ((TransitionContainer) parent).getContainedElement().getId());
+                            bendEvent.setRelatedObjects(related);
+                            handler.handle(bendEvent);
+                        } else {
+                            try {
+                                if (parent instanceof StateContainer) {
+                                    // SET STARTPOINT
+                                    inState = ((StateContainer) parent).getState();
+                                }
+                            } catch (ClassCastException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
