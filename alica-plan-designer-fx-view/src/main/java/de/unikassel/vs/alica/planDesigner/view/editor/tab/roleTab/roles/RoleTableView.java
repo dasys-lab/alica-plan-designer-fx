@@ -29,6 +29,7 @@ public class RoleTableView extends PropertiesTable<RoleTableElement> {
 
     public RoleTableView(RoleSetViewModel roleSetViewModel) {
         super();
+        setId("RoleTableView");
         this.roleSetViewModel        = roleSetViewModel;
         this.roleTableElements       = FXCollections.observableArrayList();
         this.listeners               = new ArrayList<>();

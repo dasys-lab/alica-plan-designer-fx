@@ -40,8 +40,12 @@ public class SavePlanTests extends ApplicationTest {
     @Test
     public void testCreatePlan() {
         // init
+        openPlansView();
         createPlan();
         createBehaviour();
+
+        closeFileThreeElements();
+        openRolesView();
         createRoleSet();
 
         // modify roleset and roles
@@ -149,6 +153,8 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#nameTextField");
         write(planName);
         clickOn("#createButton");
+
+        assertExists(planNameExtension);
     }
 
     private void createBehaviour() {
@@ -159,6 +165,8 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#nameTextField");
         write(behaviourName);
         clickOn("#createButton");
+
+        assertExists(behaviourNameExtension);
     }
 
     private void createRoleSet() {
@@ -169,10 +177,11 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#nameTextField");
         write(roleSetName);
         clickOn("#createButton");
+
+        assertExists(roleSetNameExtension);
     }
 
     private void openRoleSet() {
-        openRolesView();
         doubleClickOn(roleSetNameExtension);
     }
 
@@ -188,6 +197,9 @@ public class SavePlanTests extends ApplicationTest {
         type(KeyCode.ENTER);
         write(roleName2);
         type(KeyCode.ENTER);
+
+        assertExists(roleName1);
+        assertExists(roleName2);
     }
 
     private void openPlan() {
@@ -225,11 +237,24 @@ public class SavePlanTests extends ApplicationTest {
         type(KeyCode.RIGHT);
     }
 
+    private void closeFileThreeElements() {
+        clickOn("#fileTreeView");
+        type(KeyCode.PAGE_UP);
+        for (int i = 0; i < 5; i++) {
+            type(KeyCode.LEFT);
+            type(KeyCode.DOWN);
+        }
+    }
+
     private void openRolesView() {
         clickOn("#fileTreeView");
         type(KeyCode.PAGE_UP);
         type(KeyCode.DOWN);
         type(KeyCode.RIGHT);
+    }
+
+    private void assertExists(String query) {
+        Assert.assertEquals(1, lookup(query).queryAll().size());
     }
 
     private void assertNotExists(String query) {
