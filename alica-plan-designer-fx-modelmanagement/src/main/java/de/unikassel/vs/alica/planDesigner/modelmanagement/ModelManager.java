@@ -23,18 +23,15 @@ import de.unikassel.vs.alica.planDesigner.modelMixIns.*;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ModelManager implements Observer {
 
@@ -104,6 +101,7 @@ public class ModelManager implements Observer {
         objectMapper.addMixIn(Transition.class, TransitionMixIn.class);
         objectMapper.addMixIn(UiExtension.class, UiExtensionMixIn.class);
         objectMapper.addMixIn(BendPoint.class, BendPointMixIn.class);
+        objectMapper.addMixIn(Behaviour.class, BehaviourMixIn.class);
     }
 
     public void setPlansPath(String plansPath) {
@@ -429,7 +427,10 @@ public class ModelManager implements Observer {
         for (UiExtension uiExtension : uiExtensionMap.values()) {
             uiExtension.setPlan(planMap.get(uiExtension.getPlan().getId()));
         }
+
+        if (roleSet != null) {
         roleSet.getRoles().forEach(role -> resolveReferences(role));
+        }
     }
 
     private void resolveReferences(Role role) {
@@ -642,6 +643,9 @@ public class ModelManager implements Observer {
                 roleSet = (RoleSet) planElement;
                 for(Role role : roleSet.getRoles()) {
                     planElementMap.put(role.getId(), role);
+                    for (Characteristic characteristic:role.getCharacteristics()) {
+                        planElementMap.put(characteristic.getId(), characteristic);
+                    }
                 }
                 break;
             default:
@@ -1018,6 +1022,9 @@ public class ModelManager implements Observer {
                     case Types.ROLE:
                         cmd = new CreateRole(this, mmq);
                         break;
+                    case Types.ROLE_CHARACTERISTIC:
+                        cmd = new CreateCharacteristic(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
                         return;
@@ -1201,6 +1208,9 @@ public class ModelManager implements Observer {
                         break;
                     case Types.ROLE_TASK_PROPERTY:
                         cmd = new ChangeTaskPriority(this, mmq);
+                        break;
+                    case Types.ROLE_CHARACTERISTIC:
+                        cmd = new ChangeRoleCharacteristic(this, mmq);
                         break;
                     case Types.CONFIGURATION:
                         try {

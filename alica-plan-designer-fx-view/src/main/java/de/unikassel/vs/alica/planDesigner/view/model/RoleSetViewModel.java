@@ -1,19 +1,24 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class RoleSetViewModel extends SerializableViewModel {
 
-    private ObservableList<RoleViewModel> roles;
+    private TaskRepositoryViewModel taskRepository;
     private FloatProperty defaultPriority;
     private BooleanProperty defaultRoleSet;
-    private TaskRepositoryViewModel taskRepository;
+    private ObservableList<RoleViewModel> roleViewModels;
 
     public RoleSetViewModel(long id, String name, String type, float defaultPriority, boolean defaultRoleSet) {
         super(id, name, type);
@@ -24,7 +29,16 @@ public class RoleSetViewModel extends SerializableViewModel {
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "defaultPriority", "defaultRoleSet"));
 
-        roles = FXCollections.observableArrayList(new ArrayList<>());
+        roleViewModels = FXCollections.observableArrayList(new ArrayList<>());
+//        roleViewModels.addListener(new ListChangeListener<RoleViewModel>() {
+//            @Override
+//            public void onChanged(Change<? extends RoleViewModel> c) {
+//                if(!c.next())
+//                    return;
+//                List<? extends RoleViewModel> addedSubList = c.getAddedSubList();
+//                System.out.println("RSVM: (debugging) role model list changed: " + addedSubList.get(0));
+//            }
+//        });
     }
 
     public void registerListener(IGuiModificationHandler handler) {
@@ -32,18 +46,21 @@ public class RoleSetViewModel extends SerializableViewModel {
         defaultPriority.addListener((observable, oldValue, newValue) -> {
             fireGUIAttributeChangeEvent(handler, newValue, defaultPriority.getClass().getSimpleName(), defaultPriority.getName());
         });
+        defaultRoleSet.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, defaultRoleSet.getClass().getSimpleName(), defaultRoleSet.getName());
+        });
     }
 
     public void addRole(RoleViewModel role) {
-        if (!this.roles.contains(role)) {
-            this.roles.add(role);
+        if (!this.roleViewModels.contains(role)) {
+            this.roleViewModels.add(role);
         }
     }
 
     public void removeRole(long id) {
-        for(ViewModelElement role : roles) {
+        for(ViewModelElement role : roleViewModels) {
             if(role.getId() == id) {
-                this.roles.remove(role);
+                this.roleViewModels.remove(role);
                 break;
             }
         }
@@ -69,7 +86,7 @@ public class RoleSetViewModel extends SerializableViewModel {
 
 
     public ObservableList<RoleViewModel> getRoleViewModels() {
-        return roles;
+        return roleViewModels;
     }
 
     public TaskRepositoryViewModel getTaskRepository() {

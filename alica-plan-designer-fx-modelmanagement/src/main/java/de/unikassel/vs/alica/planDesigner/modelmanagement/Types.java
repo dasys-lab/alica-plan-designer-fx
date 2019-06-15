@@ -11,6 +11,7 @@ public class Types {
     public static final String ROLESET = "roleset";
     public static final String ROLE = "role";
     public static final String ROLE_TASK_PROPERTY = "roletaskproperty";
+    public static final String ROLE_CHARACTERISTIC = "rolecharacteristic";
     public static final String VARIABLE = "variable";
     public static final String FOLDER = "folder";
     public static final String ANNOTATEDPLAN = "annotatedplan";
