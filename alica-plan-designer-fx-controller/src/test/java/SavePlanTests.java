@@ -16,28 +16,40 @@ import org.testfx.service.query.PointQuery;
 import java.util.ArrayList;
 import java.util.List;
 
- public class SavePlanTests extends ApplicationTest {
-    private PlanDesignerApplication planDesignerApplication;
+public class SavePlanTests extends ApplicationTest {
     private String taskRepository = "ServiceRobotsTasks";
     private String taskRepositoryExtension = taskRepository + "." + Extensions.TASKREPOSITORY;
     private String taskName = "testfxTask";
     private String planName = "testfxPlan";
     private String planNameExtension = planName + "." + Extensions.PLAN;
     private String behaviourName = "testfxBehaviour";
+    private String roleSetName = "testfxRoleSet";
+    private String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
+    private String roleName1 = "testfxRole1";
+    private String roleName2 = "testfxRole2";
     private String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
 
     @Override
     public void start(Stage stage) throws Exception {
         PlanDesigner.init();
 
-        planDesignerApplication = new PlanDesignerApplication();
+        PlanDesignerApplication planDesignerApplication = new PlanDesignerApplication();
         planDesignerApplication.start(stage);
     }
 
     @Test
     public void testCreatePlan() {
+        // init
         createPlan();
         createBehaviour();
+        createRoleSet();
+
+        // modify roleset and roles
+        openRoleSet();
+        createRoles();
+        saveCurrentData();
+
+        // modify plan
         openPlan();
         placeEntryPoint();
         placeState();
@@ -47,9 +59,14 @@ import java.util.List;
         placeBehaviour();
         saveCurrentData();
         saveTask();
+
+        // check saved data
         checkConfig();
+
+        // clean
         deletePlan();
         deleteBehaviour();
+        deleteRoleSet();
     }
 
     private void placeBehaviour() {
@@ -144,6 +161,35 @@ import java.util.List;
         clickOn("#createButton");
     }
 
+    private void createRoleSet() {
+        rightClickOn("roles");
+        clickOn("New");
+        moveTo("Plan");  // avoid closing menu if mouse is outside of menu dialog
+        clickOn("RoleSet");
+        clickOn("#nameTextField");
+        write(roleSetName);
+        clickOn("#createButton");
+    }
+
+    private void openRoleSet() {
+        openRolesView();
+        doubleClickOn(roleSetNameExtension);
+    }
+
+    private void createRoles() {
+        Node firstListElement = lookup("#RoleTableView").lookup("").selectAt(1).queryFirst();
+
+        // create first role
+        clickOn(firstListElement);
+        write(roleName1);
+        type(KeyCode.ENTER);
+
+        // create second role
+        type(KeyCode.ENTER);
+        write(roleName2);
+        type(KeyCode.ENTER);
+    }
+
     private void openPlan() {
         openPlansView();
         doubleClickOn(planNameExtension);
@@ -161,9 +207,22 @@ import java.util.List;
         type(KeyCode.DELETE);
     }
 
+    private void deleteRoleSet() {
+        openRolesView();
+        clickOn(roleSetNameExtension);
+        type(KeyCode.DELETE);
+    }
+
     private void openPlansView() {
         clickOn("#fileTreeView");
         type(KeyCode.PAGE_UP);
+        type(KeyCode.RIGHT);
+    }
+
+    private void openRolesView() {
+        clickOn("#fileTreeView");
+        type(KeyCode.PAGE_UP);
+        type(KeyCode.DOWN);
         type(KeyCode.RIGHT);
     }
 
