@@ -272,84 +272,84 @@ public class SavePlanTests extends ApplicationTest {
 
         // test plan
         Assert.assertNotNull(plan.getId());
-        Assert.assertEquals(plan.getName(), planName);
-        Assert.assertEquals(plan.getComment(), "");
-        Assert.assertEquals(plan.getRelativeDirectory(), "");
-        Assert.assertEquals(plan.getVariables().size(), 0);
+        Assert.assertEquals(planName, plan.getName());
+        Assert.assertEquals("", plan.getComment());
+        Assert.assertEquals("", plan.getRelativeDirectory());
+        Assert.assertEquals(0, plan.getVariables().size());
         Assert.assertFalse(plan.getMasterPlan());
-        Assert.assertEquals(plan.getUtilityThreshold(), 0.0, 0.0);
+        Assert.assertEquals(0.0, plan.getUtilityThreshold(), 0.0);
         Assert.assertNull(plan.getPreCondition());
         Assert.assertNull(plan.getRuntimeCondition());
 
         // test entrypoint
-        Assert.assertEquals(entryPoints.size(), 1);
+        Assert.assertEquals(1, entryPoints.size());
         Assert.assertNotNull(entryPoint.getId());
-        Assert.assertEquals(entryPoint.getName(), String.valueOf(entryPoint.getId()));
-        Assert.assertEquals(entryPoint.getComment(), "");
+        Assert.assertEquals(String.valueOf(entryPoint.getId()), entryPoint.getName());
+        Assert.assertEquals("", entryPoint.getComment());
         Assert.assertFalse(entryPoint.getSuccessRequired());
-        Assert.assertEquals(entryPoint.getMinCardinality(), 0);
-        Assert.assertEquals(entryPoint.getMaxCardinality(), 0);
-        Assert.assertEquals(entryPoint.getTask().getId(), task.getId());
-        Assert.assertEquals(entryPoint.getState().getId(), state.getId());
-        Assert.assertEquals(entryPoint.getPlan().getId(), plan.getId());
+        Assert.assertEquals(0, entryPoint.getMinCardinality());
+        Assert.assertEquals(0, entryPoint.getMaxCardinality());
+        Assert.assertEquals(task.getId(), entryPoint.getTask().getId());
+        Assert.assertEquals(state.getId(), entryPoint.getState().getId());
+        Assert.assertEquals(plan.getId(), entryPoint.getPlan().getId());
 
         // test state
         // missing: type
         Assert.assertNotNull(state.getId());
-        Assert.assertEquals(state.getName(), "Default Name");
-        Assert.assertEquals(state.getComment(), "");
-        Assert.assertEquals(state.getEntryPoint().getId(), entryPoint.getId());
-        Assert.assertEquals(state.getParentPlan().getId(), plan.getId());
-        Assert.assertEquals(state.getAbstractPlans().size(), 1);
-        Assert.assertEquals(state.getAbstractPlans().get(0).getId(), configuration.getId());
-        Assert.assertEquals(state.getVariableBindings().size(), 0);
-        Assert.assertEquals(state.getOutTransitions().get(0).getId(), transition.getId());
-        Assert.assertEquals(state.getInTransitions().size(), 0);
+        Assert.assertEquals("Default Name", state.getName());
+        Assert.assertEquals("", state.getComment());
+        Assert.assertEquals(entryPoint.getId(), state.getEntryPoint().getId());
+        Assert.assertEquals(plan.getId(), state.getParentPlan().getId());
+        Assert.assertEquals(1, state.getAbstractPlans().size());
+        Assert.assertEquals(configuration.getId(), state.getAbstractPlans().get(0).getId());
+        Assert.assertEquals(0, state.getVariableBindings().size());
+        Assert.assertEquals(transition.getId(), state.getOutTransitions().get(0).getId());
+        Assert.assertEquals(0, state.getInTransitions().size());
 
         // test terminalState
         // missing: type
         Assert.assertNotNull(terminalState.getId());
-        Assert.assertEquals(terminalState.getName(), "Default Name");
-        Assert.assertEquals(terminalState.getComment(), "");
+        Assert.assertEquals("Default Name", terminalState.getName());
+        Assert.assertEquals("", terminalState.getComment());
         Assert.assertNull(terminalState.getEntryPoint());
-        Assert.assertEquals(terminalState.getParentPlan().getId(), plan.getId());
-        Assert.assertEquals(terminalState.getAbstractPlans().size(), 0);
-        Assert.assertEquals(terminalState.getVariableBindings().size(), 0);
-        Assert.assertEquals(terminalState.getOutTransitions().size(), 0);
-        Assert.assertEquals(terminalState.getInTransitions().get(0).getId(), transition.getId());
+        Assert.assertEquals(plan.getId(), terminalState.getParentPlan().getId());
+        Assert.assertEquals(0, terminalState.getAbstractPlans().size());
+        Assert.assertEquals(0, terminalState.getVariableBindings().size());
+        Assert.assertEquals(0, terminalState.getOutTransitions().size());
+        Assert.assertEquals(transition.getId(), terminalState.getInTransitions().get(0).getId());
         // missing: success
         // missing: postCondition
 
         // test transition
         Assert.assertNotNull(transition.getId());
-        Assert.assertEquals(transition.getName(), "FromDefault NameToDefault Name");
-        Assert.assertEquals(transition.getComment(), "MISSING_COMMENT");
-        Assert.assertEquals(transition.getInState().getId(), state.getId());
-        Assert.assertEquals(transition.getOutState().getId(), terminalState.getId());
+        Assert.assertEquals("FromDefault NameToDefault Name", transition.getName());
+        Assert.assertEquals("MISSING_COMMENT", transition.getComment());
+        Assert.assertEquals(state.getId(), transition.getInState().getId());
+        Assert.assertEquals(terminalState.getId(), transition.getOutState().getId());
         Assert.assertNull(transition.getPreCondition());
         Assert.assertNull(transition.getSynchronisation());
 
         // test synchronisations
-        Assert.assertEquals(plan.getSynchronisations().size(), 0);
+        Assert.assertEquals(0, plan.getSynchronisations().size());
 
         // test behaviour
         Assert.assertNotNull(behaviour.getId());
-        Assert.assertEquals(behaviour.getName(), behaviourName);
-        Assert.assertEquals(behaviour.getComment(), "");
-        Assert.assertEquals(behaviour.getRelativeDirectory(), "");
-        Assert.assertEquals(behaviour.getVariables().size(), 0);
-        Assert.assertEquals(behaviour.getFrequency(), 0);
-        Assert.assertEquals(behaviour.getDeferring(), 0);
+        Assert.assertEquals(behaviourName, behaviour.getName());
+        Assert.assertEquals("", behaviour.getComment());
+        Assert.assertEquals("", behaviour.getRelativeDirectory());
+        Assert.assertEquals(0, behaviour.getVariables().size());
+        Assert.assertEquals(0, behaviour.getFrequency());
+        Assert.assertEquals(0, behaviour.getDeferring());
         Assert.assertNull(behaviour.getPreCondition());
         Assert.assertNull(behaviour.getRuntimeCondition());
         Assert.assertNull(behaviour.getPostCondition());
 
         Assert.assertNotNull(configuration.getId());
-        Assert.assertEquals(configuration.getName(), "default");
-        Assert.assertEquals(configuration.getComment(), "");
-        Assert.assertEquals(configuration.getRelativeDirectory(), "");
-        Assert.assertEquals(configuration.getVariables().size(), 0);
-        Assert.assertEquals(configuration.getBehaviour().getId(), behaviour.getId());
-        Assert.assertEquals(configuration.getKeyValuePairs().size(), 0);
+        Assert.assertEquals("default", configuration.getName());
+        Assert.assertEquals("", configuration.getComment());
+        Assert.assertEquals("", configuration.getRelativeDirectory());
+        Assert.assertEquals(0, configuration.getVariables().size());
+        Assert.assertEquals(behaviour.getId(), configuration.getBehaviour().getId());
+        Assert.assertEquals(0, configuration.getKeyValuePairs().size());
     }
 }
