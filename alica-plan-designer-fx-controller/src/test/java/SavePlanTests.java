@@ -17,17 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SavePlanTests extends ApplicationTest {
+    private int randomNum = (int) (Math.random() * 1000);
     private String taskRepository = "ServiceRobotsTasks";
-    private String taskRepositoryExtension = taskRepository + "." + Extensions.TASKREPOSITORY;
     private String taskName = "testfxTask";
-    private String planName = "testfxPlan";
-    private String planNameExtension = planName + "." + Extensions.PLAN;
-    private String behaviourName = "testfxBehaviour";
-    private String roleSetName = "testfxRoleSet";
-    private String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
+    private String planName = "testfxPlan" + randomNum;
+    private String behaviourName = "testfxBehaviour" + randomNum;
+    private String roleSetName = "testfxRoleSet" + randomNum;
     private String roleName1 = "testfxRole1";
     private String roleName2 = "testfxRole2";
+    private String taskRepositoryExtension = taskRepository + "." + Extensions.TASKREPOSITORY;
+    private String planNameExtension = planName + "." + Extensions.PLAN;
     private String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
+    private String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
 
     @Override
     public void start(Stage stage) throws Exception {
