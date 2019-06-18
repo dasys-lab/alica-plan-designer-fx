@@ -36,6 +36,7 @@ public class TransitionTool extends AbstractTool {
 
     private StateViewModel inState = null;
     private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition, 8, 8);
+    private Cursor bendPointDeleteCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition_delete, 8, 8);
 
     public TransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
@@ -58,9 +59,9 @@ public class TransitionTool extends AbstractTool {
                         } else {
                             setCursor(imageCursor);
                         }
-                    }else if (target instanceof BendpointContainer){
+                    }else if (parent instanceof BendpointContainer){
                         if (inState == null) {
-                            setCursor(bendPointCursor);
+                            setCursor(bendPointDeleteCursor);
                         } else {
                             setCursor(forbiddenCursor);
                         }
@@ -133,9 +134,9 @@ public class TransitionTool extends AbstractTool {
                             bendPoints.add(eventTargetCoordinates);
                         }
                     } else {
-                        if (target instanceof BendpointContainer) {
+                        if (parent instanceof BendpointContainer) {
                             // REMOVE BENDPOINT
-                            BendpointContainer bpC = (BendpointContainer) target;
+                            BendpointContainer bpC = (BendpointContainer) parent;
                             TransitionContainer tC = bpC.getTransitionContainer();
 
                             GuiModificationEvent deleteBendPointEvent = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.BENDPOINT, null);

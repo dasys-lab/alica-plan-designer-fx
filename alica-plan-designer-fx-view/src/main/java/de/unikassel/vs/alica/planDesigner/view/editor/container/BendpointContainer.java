@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.model.BendPointViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -15,7 +16,7 @@ import javafx.scene.shape.Rectangle;
  * It also containsPlan an object of elementType {@link} to hold modifications to it.
  * This modifications are later written back to the actual Resource.
  */
-public class BendpointContainer extends Rectangle implements DraggableEditorElement {
+public class BendpointContainer extends Container implements DraggableEditorElement {
     public static final double WIDTH = 10.0;
     public static final double HEIGHT = 10.0;
 
@@ -25,23 +26,16 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
     private PlanTab planTab;
     private TransitionContainer transitionContainer;
 
-    public BendpointContainer(ViewModelElement containedElement, ViewModelElement parent, PlanTab planTab, TransitionContainer transitionContainer) {
-        super(0, 0, WIDTH, HEIGHT);
+    public BendpointContainer(PlanElementViewModel containedElement, ViewModelElement parent, PlanTab planTab, TransitionContainer transitionContainer) {
+        super(containedElement, null, planTab);
         this.containedElement = containedElement;
         this.parent = parent;
         this.planTab = planTab;
         this.setTransitionContainer(transitionContainer);
-        init();
+        setupContainer();
     }
 
-    protected void init() {
-        this.setLayoutX(((BendPointViewModel)containedElement).getX() - (WIDTH/2.0));
-        this.setLayoutY(((BendPointViewModel)containedElement).getY() - (HEIGHT/2.0));
-        setFill(getVisualisationColor());
-        makeDraggable(this);
-    }
-
-    protected Color getVisualisationColor() {
+    public Color getVisualisationColor() {
         return Color.BLACK;
     }
 
@@ -94,13 +88,27 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
                 //getCommandStackForDrag().storeAndExecute(createMoveElementCommand());
                 mouseEvent.consume();
                 redrawElement();
+                setDragged(false);
             }
         });
     }
+//
+//    @Override
+//    public PlanElementViewModel getPlanElementViewModel() {
+//        return containedElement;
+//    }
 
     @Override
-    public ViewModelElement getPlanElementViewModel() {
-        return containedElement;
+    public void setupContainer() {
+        getChildren().clear();
+        visualRepresentation = new Rectangle(0, 0, WIDTH, HEIGHT);
+        setEffectToStandard();
+        getChildren().add(visualRepresentation);
+        visualRepresentation = new Rectangle(0, 0, WIDTH, HEIGHT);
+
+        this.setLayoutX(((BendPointViewModel)containedElement).getX() - (WIDTH/2.0));
+        this.setLayoutY(((BendPointViewModel)containedElement).getY() - (HEIGHT/2.0));
+        makeDraggable(this);
     }
 
     public ViewModelElement getContainedElement() {
@@ -109,8 +117,7 @@ public class BendpointContainer extends Rectangle implements DraggableEditorElem
 
     @Override
     public void redrawElement() {
-        //System.out.println(this.getParent());
-        //((TransitionContainer) this.getParent()).redrawElement();
+        setupContainer();
         getTransitionContainer().redrawElement();
     }
 

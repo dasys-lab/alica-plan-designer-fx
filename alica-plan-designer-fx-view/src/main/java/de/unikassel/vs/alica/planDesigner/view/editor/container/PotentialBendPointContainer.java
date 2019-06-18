@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.event.EventHandler;
@@ -11,23 +12,15 @@ public class PotentialBendPointContainer extends BendpointContainer {
 
     private TransitionContainer transitionContainer;
 
-    public PotentialBendPointContainer(ViewModelElement containedElement, PlanViewModel parent, PlanTab planTab,
+    public PotentialBendPointContainer(PlanElementViewModel containedElement, PlanViewModel parent, PlanTab planTab,
                                        TransitionContainer transitionContainer) {
         super(containedElement, parent, planTab, transitionContainer);
         this.transitionContainer = transitionContainer;
     }
 
     @Override
-    protected Color getVisualisationColor() {
+    public Color getVisualisationColor() {
         return Color.GREY;
-    }
-
-    @Override
-    protected void init() {
-//        this.setLayoutX(containedElement.getXPos());
-//        this.setLayoutY(containedElement.getYPos());
-        setFill(getVisualisationColor());
-        addEventHandler(MouseEvent.MOUSE_PRESSED, new OnClickCreateHandler());
     }
 
     private class OnClickCreateHandler implements EventHandler<MouseEvent> {
