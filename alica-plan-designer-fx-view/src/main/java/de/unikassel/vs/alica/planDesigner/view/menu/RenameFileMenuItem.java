@@ -1,8 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.menu;
 
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeCell;
+import javafx.scene.control.*;
 
 import java.io.File;
 
@@ -13,14 +12,7 @@ public class RenameFileMenuItem extends MenuItem {
         setOnAction(e -> onRename());
     }
 
-    public void onRename() {
-        treeCell.startEdit();
-    }
+    public void onRename() { treeCell.startEdit(); }
 
-    public void setTreeCell(TreeCell<File> treeCell) {
-        this.treeCell = treeCell;
-        if (treeCell.getTreeItem().getValue().isDirectory()) {
-            this.setDisable(true);
-        }
-    }
+    public void setTreeCell(TreeCell<File> treeCell) { this.treeCell = treeCell; }
 }
