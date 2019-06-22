@@ -81,6 +81,9 @@ public class SavePlanTests extends ApplicationTest {
         createRoles();
         saveCurrentData();
 
+        // create task
+        createTask();
+
         // modify plan
         openPlan();
         placeEntryPoint();
@@ -90,7 +93,6 @@ public class SavePlanTests extends ApplicationTest {
         transitionFromStateToSuccessState();
         placeBehaviour();
         saveCurrentData();
-        saveTask();
 
         // check saved data
         checkConfig();
@@ -183,6 +185,20 @@ public class SavePlanTests extends ApplicationTest {
         }
     }
 
+    private void createTask() {
+        // open taskrepo
+        openTasksView();
+        doubleClickOn(taskRepositoryExtension);
+        sleep(1000);
+
+        // create task
+        clickOn("#newTaskNameTextField");
+        write(taskName);
+        clickOn("#createTaskButton");
+
+        saveCurrentData();
+    }
+
     private void placeBehaviour() {
         clickOn("#behavioursTab");
         type(KeyCode.TAB);
@@ -195,14 +211,6 @@ public class SavePlanTests extends ApplicationTest {
     private void saveCurrentData() {
         press(KeyCode.CONTROL, KeyCode.S);
         release(KeyCode.CONTROL, KeyCode.S);
-    }
-
-    private void saveTask() {
-        clickOn("#fileTreeView");
-        type(KeyCode.PAGE_DOWN);
-        type(KeyCode.RIGHT);
-        doubleClickOn(taskRepositoryExtension);
-        saveCurrentData();
     }
 
     private void initTransitionFromEntryPointToState() {
@@ -223,18 +231,12 @@ public class SavePlanTests extends ApplicationTest {
         // place entryPoint
         clickOn("#EntryPointToolButton");
         clickOn(freePlanContentPos());
-        // create task
-        clickOn("#newTaskNameTextField");
-        write(taskName);
-        clickOn("#createTaskButton");
+
         // choose created task
         clickOn("#taskComboBox");
-
-        sleep(5000);
-
-        Node taskComboBoxTaskName = lookup(taskName).selectAt(1).queryFirst();  // ignore the taskName in the textField
-        clickOn(taskComboBoxTaskName);
+        clickOn(taskName);
         clickOn("#confirmTaskChoiceButton");
+
         dropElement();
     }
 
@@ -365,6 +367,12 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#fileTreeView");
         type(KeyCode.PAGE_UP);
         type(KeyCode.DOWN);
+        type(KeyCode.RIGHT);
+    }
+
+    private void openTasksView() {
+        clickOn("#fileTreeView");
+        type(KeyCode.PAGE_DOWN);
         type(KeyCode.RIGHT);
     }
 
