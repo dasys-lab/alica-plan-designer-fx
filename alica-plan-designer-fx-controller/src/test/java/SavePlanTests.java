@@ -53,9 +53,9 @@ public class SavePlanTests extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // clean config
-        deleteConfig();
-        deleteconfigFolder();
+//        // clean config
+//        deleteConfig();
+//        deleteconfigFolder();
 
         PlanDesigner.init();
 
@@ -65,17 +65,15 @@ public class SavePlanTests extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
-        // create new configuration
-        createConfigFolders();
-        createConfiguration();
-
-        // init
-        openPlansView();
+//        // create new configuration
+//        createConfigFolders();
+//        createConfiguration();
+//
+//        // init
         createPlan();
         createBehaviour();
 
         closeFileThreeElements();
-        openRolesView();
         createRoleSet();
 
         // modify roleset and roles
@@ -231,6 +229,9 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#createTaskButton");
         // choose created task
         clickOn("#taskComboBox");
+
+        sleep(5000);
+
         Node taskComboBoxTaskName = lookup(taskName).selectAt(1).queryFirst();  // ignore the taskName in the textField
         clickOn(taskComboBoxTaskName);
         clickOn("#confirmTaskChoiceButton");
@@ -266,6 +267,7 @@ public class SavePlanTests extends ApplicationTest {
         write(planName);
         clickOn("#createButton");
 
+        openPlansView();
         assertExists(planNameExtension);
     }
 
@@ -290,6 +292,7 @@ public class SavePlanTests extends ApplicationTest {
         write(roleSetName);
         clickOn("#createButton");
 
+        openRolesView();
         assertExists(roleSetNameExtension);
     }
 
@@ -366,10 +369,12 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void assertExists(String query) {
+        sleep(1000);
         Assert.assertEquals(1, lookup(query).queryAll().size());
     }
 
     private void assertNotExists(String query) {
+        sleep(1000);
         Assert.assertEquals(0, lookup(query).queryAll().size());
     }
 
