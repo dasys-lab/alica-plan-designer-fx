@@ -89,7 +89,16 @@ public class SavePlanTests extends ApplicationTest {
 
     private void createConfigDir() {
         deleteConfigDir();
-        new File(configDir).mkdirs();
+
+        ArrayList<String> dirs = new ArrayList<>();
+        dirs.add(configDir);
+        dirs.add(configDir + "/plans");
+        dirs.add(configDir + "/roles");
+        dirs.add(configDir + "/tasks");
+        dirs.add(configDir + "/src");
+        for (String dir: dirs) {
+            new File(dir).mkdir();
+        }
     }
 
     private void deleteConfigDir() {
