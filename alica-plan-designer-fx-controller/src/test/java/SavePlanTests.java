@@ -27,13 +27,11 @@ import java.util.List;
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
 
 public class SavePlanTests extends ApplicationTest {
-    private int randomNum = (int) (Math.random() * 1000);
-
     private String taskRepository = "testfxTaskRepo";
     private String taskName = "testfxTask";
-    private String planName = "testfxPlan" + randomNum;
-    private String behaviourName = "testfxBehaviour" + randomNum;
-    private String roleSetName = "testfxRoleSet" + randomNum;
+    private String planName = "testfxPlan";
+    private String behaviourName = "testfxBehaviour";
+    private String roleSetName = "testfxRoleSet";
     private String roleName1 = "testfxRole1";
     private String roleName2 = "testfxRole2";
 
