@@ -13,7 +13,13 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.service.query.PointQuery;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class SavePlanTests extends ApplicationTest {
@@ -79,6 +85,24 @@ public class SavePlanTests extends ApplicationTest {
         String root = ConfigurationManager.getInstance().getPlanDesignerConfigFolder().getPath();
         String configDir = root + "/testfx";
         return configDir;
+    }
+
+    private void createConfigDir() {
+        deleteConfigDir();
+        new File(configDir).mkdirs();
+    }
+
+    private void deleteConfigDir() {
+        // deletes an old config dir to start clean
+        Path path = Paths.get(configDir);
+        try {
+            Files.walk(path)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        } catch (IOException e) {
+            System.out.println("Config dir can not be deleted");
+        }
     }
 
     private void placeBehaviour() {
