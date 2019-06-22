@@ -223,6 +223,7 @@ public class MainWindowController implements Initializable {
 
         // ---- EDIT MENU ----
         editMenu = new EditMenu(fileTreeView, editorTabPane, repositoryTabPane, configWindowController);
+        editMenu.setId("editMenu");
         editMenu.setGuiModificationHandler(this.guiModificationHandler);
         menus.add(editMenu);
 

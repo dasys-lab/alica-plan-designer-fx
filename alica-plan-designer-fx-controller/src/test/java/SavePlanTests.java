@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Assert;
 import org.junit.Test;
+import org.testfx.api.FxAssert;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.service.query.PointQuery;
 
@@ -19,11 +20,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
+
 public class SavePlanTests extends ApplicationTest {
     private int randomNum = (int) (Math.random() * 1000);
+
     private String taskRepository = "ServiceRobotsTasks";
     private String taskName = "testfxTask";
     private String planName = "testfxPlan" + randomNum;
@@ -31,11 +36,19 @@ public class SavePlanTests extends ApplicationTest {
     private String roleSetName = "testfxRoleSet" + randomNum;
     private String roleName1 = "testfxRole1";
     private String roleName2 = "testfxRole2";
+
     private String taskRepositoryExtension = taskRepository + "." + Extensions.TASKREPOSITORY;
     private String planNameExtension = planName + "." + Extensions.PLAN;
     private String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
     private String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
-    private String configDir = getConfigDir();
+
+    private String configName = "testfxConfig";
+    private String configFolder = getconfigFolder();
+    private String configFolderPlans = configFolder + "/plans";
+    private String configFolderRoles = configFolder + "/roles";
+    private String configFolderTasks = configFolder + "/tasks";
+    private String configFolderSrc = configFolder + "/src";
+    private String configFolderPlugin = getPluginsFolder();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -47,6 +60,10 @@ public class SavePlanTests extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
+        // create new configuration
+        createConfigFolders();
+        createConfiguration();
+
         // init
         openPlansView();
         createPlan();
@@ -81,36 +98,79 @@ public class SavePlanTests extends ApplicationTest {
         deleteRoleSet();
     }
 
-    private String getConfigDir() {
-        String root = ConfigurationManager.getInstance().getPlanDesignerConfigFolder().getPath();
-        String configDir = root + "/testfx";
-        return configDir;
+    private void createConfiguration() {
+        // open configuration dialog
+        clickOn("#editMenu");
+        clickOn("Configure");
+        sleep(1000);
+
+        // click on first free config field
+        Node firstListElement = lookup("#availableWorkspacesListView").lookup("").selectAt(0).queryFirst();
+        clickOn(firstListElement);
+
+        // enter config name
+        type(KeyCode.ENTER);
+        write(configName);
+        type(KeyCode.ENTER);
+        sleep(1000);
+
+        // enter folders
+        for(String folder: Arrays.asList(configFolderPlans, configFolderRoles, configFolderTasks, configFolderSrc, configFolderPlugin)) {
+            type(KeyCode.TAB);
+            write(folder);
+            type(KeyCode.TAB);
+        }
+
+        // plugins folder selector have to be opened to reload the default plugin drop down menu
+        clickOn("#pluginsFolderFileButton");
+        type(KeyCode.ESCAPE);
+
+        // activate default plugin
+        clickOn("#defaultPluginComboBox");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+
+        // save and activate
+        clickOn("#saveButton");
+        clickOn("#activeButton");
+
+        FxAssert.verifyThat("#activeConfLabel", hasText(configName));
+
+        // exit
+        clickOn("#saveAndExitButton");
     }
 
-    private void createConfigDir() {
-        deleteConfigDir();
+    private String getconfigFolder() {
+        String root = ConfigurationManager.getInstance().getPlanDesignerConfigFolder().getPath();
+        String configFolder = root + "/testfx";
+        return configFolder;
+    }
 
-        ArrayList<String> dirs = new ArrayList<>();
-        dirs.add(configDir);
-        dirs.add(configDir + "/plans");
-        dirs.add(configDir + "/roles");
-        dirs.add(configDir + "/tasks");
-        dirs.add(configDir + "/src");
-        for (String dir: dirs) {
-            new File(dir).mkdir();
+    private String getPluginsFolder() {
+        Path currentRelativePath = Paths.get("");
+        String projectRoot = currentRelativePath.toAbsolutePath().getParent().toString();
+        String pluginsFolder = projectRoot + "/alica-plan-designer-fx-default-plugin";
+        return pluginsFolder;
+    }
+
+    private void createConfigFolders() {
+        deleteconfigFolder();
+
+        for (String folder: Arrays.asList(configFolder, configFolderPlans, configFolderRoles, configFolderTasks, configFolderSrc)) {
+            new File(folder).mkdir();
         }
     }
 
-    private void deleteConfigDir() {
-        // deletes an old config dir to start clean
-        Path path = Paths.get(configDir);
+    private void deleteconfigFolder() {
+        // deletes an old config folder to start clean
+        Path path = Paths.get(configFolder);
         try {
             Files.walk(path)
                     .sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     .forEach(File::delete);
         } catch (IOException e) {
-            System.out.println("Config dir can not be deleted");
+            System.out.println("Config folder can not be deleted");
         }
     }
 

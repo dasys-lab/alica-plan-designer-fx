@@ -302,6 +302,7 @@ public class ConfigurationWindowController implements Initializable {
     }
 
     private void setupAvailableConfigurationsListView() {
+        availableWorkspacesListView.setId("availableWorkspacesListView");
         availableWorkspacesListView.setItems(FXCollections.observableArrayList());
         availableWorkspacesListView.setEditable(true);
         availableWorkspacesListView.setCellFactory(TextFieldListCell.forListView());
@@ -364,6 +365,7 @@ public class ConfigurationWindowController implements Initializable {
      **/
     public void selectActiveConfig(String selectedConfName) {
         activeConfLabel.setText(selectedConfName);
+        activeConfLabel.setId("activeConfLabel");
         //availableWorkspacesListView.getSelectionModel().select(selectedConfName);
     }
 
