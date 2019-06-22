@@ -29,7 +29,7 @@ import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
 public class SavePlanTests extends ApplicationTest {
     private int randomNum = (int) (Math.random() * 1000);
 
-    private String taskRepository = "ServiceRobotsTasks";
+    private String taskRepository = "testfxTaskRepo";
     private String taskName = "testfxTask";
     private String planName = "testfxPlan" + randomNum;
     private String behaviourName = "testfxBehaviour" + randomNum;
@@ -43,7 +43,8 @@ public class SavePlanTests extends ApplicationTest {
     private String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
 
     private String configName = "testfxConfig";
-    private String configFolder = getconfigFolder();
+    private String rootConfigFolder = ConfigurationManager.getInstance().getPlanDesignerConfigFolder().getPath();
+    private String configFolder = rootConfigFolder + "/testfx";
     private String configFolderPlans = configFolder + "/plans";
     private String configFolderRoles = configFolder + "/roles";
     private String configFolderTasks = configFolder + "/tasks";
@@ -52,6 +53,10 @@ public class SavePlanTests extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
+        // clean config
+        deleteConfig();
+        deleteconfigFolder();
+
         PlanDesigner.init();
 
         PlanDesignerApplication planDesignerApplication = new PlanDesignerApplication();
@@ -98,6 +103,12 @@ public class SavePlanTests extends ApplicationTest {
         deleteRoleSet();
     }
 
+    private void deleteConfig() {
+        String propertyFileName = rootConfigFolder + "/" + configName + ".properties";
+        File propertyFile = new File(propertyFileName);
+        propertyFile.delete();
+    }
+
     private void createConfiguration() {
         // open configuration dialog
         clickOn("#editMenu");
@@ -134,16 +145,18 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#saveButton");
         clickOn("#activeButton");
 
+        // create TaskRepo
+        clickOn("Create TaskRepository");
+        sleep(1000);
+        clickOn("#nameTextField");
+        write(taskRepository);
+        clickOn("#createButton");
+        sleep(1000);
+
         FxAssert.verifyThat("#activeConfLabel", hasText(configName));
 
         // exit
         clickOn("#saveAndExitButton");
-    }
-
-    private String getconfigFolder() {
-        String root = ConfigurationManager.getInstance().getPlanDesignerConfigFolder().getPath();
-        String configFolder = root + "/testfx";
-        return configFolder;
     }
 
     private String getPluginsFolder() {
@@ -154,8 +167,6 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void createConfigFolders() {
-        deleteconfigFolder();
-
         for (String folder: Arrays.asList(configFolder, configFolderPlans, configFolderRoles, configFolderTasks, configFolderSrc)) {
             new File(folder).mkdir();
         }
