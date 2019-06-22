@@ -29,6 +29,7 @@ public class SavePlanTests extends ApplicationTest {
     private String planNameExtension = planName + "." + Extensions.PLAN;
     private String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
     private String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
+    private String configDir = getConfigDir();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -72,6 +73,12 @@ public class SavePlanTests extends ApplicationTest {
         deletePlan();
         deleteBehaviour();
         deleteRoleSet();
+    }
+
+    private String getConfigDir() {
+        String root = ConfigurationManager.getInstance().getPlanDesignerConfigFolder().getPath();
+        String configDir = root + "/testfx";
+        return configDir;
     }
 
     private void placeBehaviour() {
