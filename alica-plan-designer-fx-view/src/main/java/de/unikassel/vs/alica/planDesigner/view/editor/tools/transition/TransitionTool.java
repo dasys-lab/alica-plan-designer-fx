@@ -31,6 +31,8 @@ import javafx.scene.layout.StackPane;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import static java.lang.Math.*;
+
 public class TransitionTool extends AbstractTool {
 
     private LinkedList<Point2D> bendPoints = new LinkedList<>();
@@ -168,12 +170,11 @@ public class TransitionTool extends AbstractTool {
                             if(transition.getBendpoints().size()==0){
 
                             } else {
-                                com.sun.javafx.geom.Point2D p1 = new com.sun.javafx.geom.Point2D(transition.getContainedElement().getInState().getXPosition(), transition.getContainedElement().getInState().getYPosition());
-                                com.sun.javafx.geom.Point2D p2 = new com.sun.javafx.geom.Point2D((float) transition.getBendpoints().get(0).getLayoutX(),(float) transition.getBendpoints().get(0).getLayoutY());
-                                com.sun.javafx.geom.Point2D p3 = new com.sun.javafx.geom.Point2D((float) point.getX(), (float) point.getY());
-                                Line2D line = new Line2D(p1, p2);
-                                float distance = line.ptLineDist(p3);
-                                if(distance < 5){
+                                Point2D p1 = new Point2D(transition.getContainedElement().getInState().getXPosition(), transition.getContainedElement().getInState().getYPosition());
+                                Point2D p2 = new Point2D(transition.getBendpoints().get(0).getLayoutX(), transition.getBendpoints().get(0).getLayoutY());
+                                Point2D p3 = new Point2D((float) point.getX(), (float) point.getY());
+                                double distance = distancePointToLineSegment(p1, p3, p2);
+                                if(distance < 10){
 
                                 } else {
                                     if(transition.getBendpoints().size() == 1){
@@ -181,10 +182,8 @@ public class TransitionTool extends AbstractTool {
                                     } else {
                                         for (int i = 1; i < transition.getBendpoints().size(); i++) {
                                             p1 = p2;
-                                            p2 = new com.sun.javafx.geom.Point2D((float) transition.getBendpoints().get(i).getLayoutX(), (float) transition.getBendpoints().get(i).getLayoutY());
-                                            Line2D linee = new Line2D(p1, p2);
-                                            float distancee = linee.ptLineDist(p3);
-                                            System.out.println(distancee);
+                                            p2 = new Point2D(transition.getBendpoints().get(i).getLayoutX(), transition.getBendpoints().get(i).getLayoutY());
+                                            double distancee = distancePointToLineSegment(p1, p3, p2);
                                             if (distancee < 10) {
                                                 index = i;
                                                 break;
@@ -199,7 +198,6 @@ public class TransitionTool extends AbstractTool {
 
                             HashMap<String, Long> related = new HashMap<>();
                             related.put(Types.TRANSITION, ((TransitionContainer) parent).getContainedElement().getId());
-                            System.out.println(index);
                             related.put("index", index);
                             bendEvent.setRelatedObjects(related);
                             handler.handle(bendEvent);
@@ -216,6 +214,39 @@ public class TransitionTool extends AbstractTool {
                     }
                 }
             });
+        }
+    }
+
+    private double distancePointToLineSegment(Point2D a, Point2D p, Point2D b) {
+
+        //Vector A-B
+        double abx = b.getX() - a.getX();
+        double aby = b.getY() - a.getY();
+
+        //Vector A-P
+        double apx = p.getX() - a.getX();
+        double apy = p.getY() - a.getY();
+
+        double angle1 = atan2(apy, apx);
+        double angle2 = atan2(aby, abx);
+
+        double alpha = angle1 - angle2;
+        if(alpha < -PI){
+            alpha += 2.0*PI;
+        } else if(alpha > PI){
+            alpha -= 2.0*PI;
+        }
+
+        double distanceAtoP = sqrt(apx*apx + apy*apy);
+        if(alpha >PI/2 || alpha < -PI/2){
+            return distanceAtoP;
+        }
+
+        double dist1 = cos(alpha) *distanceAtoP;
+        if(dist1 > sqrt(abx*abx + aby*aby)){
+            return sqrt(pow(p.getX() - b.getY(), 2)+ pow(p.getY() - b.getY(), 2));
+        } else {
+            return abs(sin(alpha)) * distanceAtoP;
         }
     }
 
