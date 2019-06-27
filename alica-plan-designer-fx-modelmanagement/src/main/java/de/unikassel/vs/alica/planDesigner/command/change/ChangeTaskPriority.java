@@ -32,7 +32,7 @@ public class ChangeTaskPriority extends Command {
         String value = this.relatedObjects.keySet().iterator().next();
         Task task = (Task) this.modelManager.getPlanElement(this.relatedObjects.get(value));
         this.newValue = new Pair<>(task, value);
-        String oldPriority = ""+ this.role.getPriority(task);
+        String oldPriority = String.valueOf(this.role.getPriority(task));
         this.oldValue = new Pair<>(task, oldPriority);
     }
 

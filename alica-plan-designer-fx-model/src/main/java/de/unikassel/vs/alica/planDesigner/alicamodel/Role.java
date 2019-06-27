@@ -31,6 +31,7 @@ public class Role extends PlanElement {
         this.taskPriorities = taskPriorities;
 //        this.atributeChangedListener.setDirty();
     }
+
     public HashMap<Task, Float> getTaskPriorities() {
         return this.taskPriorities;
     }
@@ -64,5 +65,23 @@ public class Role extends PlanElement {
         this.name.addListener(listener);
         this.comment.addListener(listener);
         this.characteristics.forEach(c -> c.addListener(listener));
+    }
+
+    public Characteristic getCharacteristic(String characteristicName) {
+
+        for (Characteristic characteristic : characteristics) {
+
+            if (characteristic.getName().equals(characteristicName))
+                return characteristic;
+        }
+        return null;
+    }
+    public void addCharacteristic(Characteristic characteristic) {
+        this.characteristics.add(characteristic);
+    }
+
+    public void removeCharacteristic(Characteristic characteristic) {
+        characteristic.setRole(null);
+        this.characteristics.remove(characteristic);
     }
 }

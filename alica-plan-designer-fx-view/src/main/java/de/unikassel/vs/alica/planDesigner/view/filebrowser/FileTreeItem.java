@@ -53,7 +53,7 @@ public class FileTreeItem extends TreeItem<File> {
             }
         }
 
-        getChildren().sort(Comparator.comparing(o -> o.getValue().toURI().toString()));
+        getChildren().sort(Comparator.comparing(TreeItem::getValue));
     }
 
     public ViewModelElement getViewModelElement() {
