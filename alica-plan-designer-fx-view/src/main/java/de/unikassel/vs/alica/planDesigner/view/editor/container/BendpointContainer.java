@@ -104,7 +104,6 @@ public class BendpointContainer extends Container implements DraggableEditorElem
         visualRepresentation = new Rectangle(0, 0, WIDTH, HEIGHT);
         setEffectToStandard();
         getChildren().add(visualRepresentation);
-        visualRepresentation = new Rectangle(0, 0, WIDTH, HEIGHT);
 
         this.setLayoutX(((BendPointViewModel)containedElement).getX() - (WIDTH/2.0));
         this.setLayoutY(((BendPointViewModel)containedElement).getY() - (HEIGHT/2.0));
@@ -117,7 +116,6 @@ public class BendpointContainer extends Container implements DraggableEditorElem
 
     @Override
     public void redrawElement() {
-        setupContainer();
         getTransitionContainer().redrawElement();
     }
 

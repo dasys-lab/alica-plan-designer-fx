@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
+import com.sun.javafx.geom.Line2D;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
@@ -154,12 +155,52 @@ public class TransitionTool extends AbstractTool {
                                 event.consume();
                             }
 
+                            TransitionContainer transition = (TransitionContainer) parent;
+
                             GuiModificationEvent bendEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.BENDPOINT, null);
                             bendEvent.setX((int) point.getX());
                             bendEvent.setY((int) point.getY());
                             bendEvent.setParentId(TransitionTool.this.planTab.getSerializableViewModel().getId());
+
+                            // get the index of the bendpoint
+                            long index = 0;
+
+                            if(transition.getBendpoints().size()==0){
+
+                            } else {
+                                com.sun.javafx.geom.Point2D p1 = new com.sun.javafx.geom.Point2D(transition.getContainedElement().getInState().getXPosition(), transition.getContainedElement().getInState().getYPosition());
+                                com.sun.javafx.geom.Point2D p2 = new com.sun.javafx.geom.Point2D((float) transition.getBendpoints().get(0).getLayoutX(),(float) transition.getBendpoints().get(0).getLayoutY());
+                                com.sun.javafx.geom.Point2D p3 = new com.sun.javafx.geom.Point2D((float) point.getX(), (float) point.getY());
+                                Line2D line = new Line2D(p1, p2);
+                                float distance = line.ptLineDist(p3);
+                                if(distance < 5){
+
+                                } else {
+                                    if(transition.getBendpoints().size() == 1){
+                                        index = 1;
+                                    } else {
+                                        for (int i = 1; i < transition.getBendpoints().size(); i++) {
+                                            p1 = p2;
+                                            p2 = new com.sun.javafx.geom.Point2D((float) transition.getBendpoints().get(i).getLayoutX(), (float) transition.getBendpoints().get(i).getLayoutY());
+                                            Line2D linee = new Line2D(p1, p2);
+                                            float distancee = linee.ptLineDist(p3);
+                                            System.out.println(distancee);
+                                            if (distancee < 10) {
+                                                index = i;
+                                                break;
+                                            }
+                                        }
+                                        if (index == 0) {
+                                            index = transition.getBendpoints().size();
+                                        }
+                                    }
+                                }
+                            }
+
                             HashMap<String, Long> related = new HashMap<>();
                             related.put(Types.TRANSITION, ((TransitionContainer) parent).getContainedElement().getId());
+                            System.out.println(index);
+                            related.put("index", index);
                             bendEvent.setRelatedObjects(related);
                             handler.handle(bendEvent);
                         } else {

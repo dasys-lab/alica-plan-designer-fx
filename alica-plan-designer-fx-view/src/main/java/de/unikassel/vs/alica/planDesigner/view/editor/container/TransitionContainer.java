@@ -20,8 +20,8 @@ public class TransitionContainer extends Container implements Observable {
     private TransitionViewModel containedElement;
     private StateContainer fromState;
     private StateContainer toState;
-    private List<Node> bendpoints;
-    private List<Node> potentialBendpoints;
+    private List<BendpointContainer> bendpoints;
+    private List<PotentialBendPointContainer> potentialBendpoints;
     private List<InvalidationListener> invalidationListeners = new ArrayList<>();
 
     public TransitionContainer(TransitionViewModel transition,
@@ -182,7 +182,7 @@ public class TransitionContainer extends Container implements Observable {
         getBendpoints().forEach(d -> d.setVisible(isVisible));
     }
 
-    public List<Node> getBendpoints() {
+    public List<BendpointContainer> getBendpoints() {
         return bendpoints;
     }
 

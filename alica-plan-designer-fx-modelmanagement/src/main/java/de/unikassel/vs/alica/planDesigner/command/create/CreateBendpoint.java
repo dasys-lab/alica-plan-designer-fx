@@ -13,14 +13,18 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 
 import java.util.HashMap;
 
-public class CreateBendPoint extends UiPositionCommand {
+public class CreateBendpoint extends UiPositionCommand {
 
     protected BendPoint bendPoint;
+    protected int index = -1;
 
-    public CreateBendPoint(ModelManager modelManager, ModelModificationQuery mmq) {
+    public CreateBendpoint(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
         this.bendPoint = createBendPoint();
         this.uiElement = modelManager.getPlanUIExtensionPair(mmq.getParentId()).getUiElement(this.bendPoint.getTransition().getId());
+        if(mmq.getRelatedObjects().containsKey("index")){
+            this.index = Math.toIntExact(mmq.getRelatedObjects().get("index"));
+        }
     }
 
     protected BendPoint createBendPoint() {
@@ -34,39 +38,7 @@ public class CreateBendPoint extends UiPositionCommand {
     @Override
     public void doCommand() {
         Transition transition = bendPoint.getTransition();
-//        transition.getInState().
-        int index = (uiElement.getBendPoints().size());
-        float min = 100;
-
-        if(uiElement.getBendPoints().size() >= 2) {
-            for (int i = 0; i < uiElement.getBendPoints().size() - 1; i++) {
-                Point2D p1 = new Point2D(uiElement.getBendPoints().get(i).getX(), uiElement.getBendPoints().get(i).getY());
-                Point2D p2 = new Point2D(uiElement.getBendPoints().get(i + 1).getX(), uiElement.getBendPoints().get(i + 1).getY());
-
-                Point2D p3 = new Point2D(bendPoint.getX(), bendPoint.getY());
-
-                Line2D line = new Line2D(p1, p2);
-
-                float distance = line.ptLineDist(p3);
-
-                if (distance < 1.5 && distance <= min) {
-                    min = distance;
-                    index = i+1;
-//                    System.out.println(line.ptLineDist(p3));
-//                    System.out.println("Zwischen " + i + " und " + (i + 1));
-                }
-            }
-     //       System.out.println(min);
-     //       System.out.println(index);
-            this.uiElement.addBendpoint(index, bendPoint);
-
-            if(!uiElement.getBendPoints().contains(bendPoint)){
-                System.out.println("Sonderfall");
-            }
-
-        } else {
-            this.uiElement.addBendpoint(this.bendPoint);
-        }
+        this.uiElement.addBendpoint(index, bendPoint);
 
         this.modelManager.storePlanElement(mmq.getElementType(), bendPoint, false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.bendPoint.getTransition());

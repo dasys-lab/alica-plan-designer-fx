@@ -20,18 +20,15 @@ import de.unikassel.vs.alica.planDesigner.modelMixIns.*;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ModelManager implements Observer {
 
@@ -1116,7 +1113,7 @@ public class ModelManager implements Observer {
                         cmd = new CreateTransition(this, mmq);
                         break;
                     case Types.BENDPOINT:
-                        cmd = new CreateBendPoint(this, mmq);
+                        cmd = new CreateBendpoint(this, mmq);
                         break;
                     case Types.SYNCTRANSITION:
                         cmd = new ConnectSynchronizationWithTransition(this, mmq);
