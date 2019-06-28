@@ -62,12 +62,7 @@ public class SavePlanTests extends ApplicationTest {
         // process possible taskrepository not exists warning
         Thread thread = new Thread(() -> {
             sleep(2000);
-            String warningMessage = i18NRepo.getString("label.error.missing.taskrepository");
-            Node warning = lookup(warningMessage).queryFirst();
-            if (warning != null) {
-                // warning dialog needs to be closed
-                clickOn(i18NRepo.getString("action.openanyway"));
-            }
+            handleNewTaskRepositoryDialog();
         });
         thread.setDaemon(true);
         thread.start();
@@ -173,12 +168,16 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void handleNewTaskRepositoryDialog() {
-        clickOn(i18NRepo.getString("action.create.taskrepository"));
-        sleep(1000);
-        clickOn("#nameTextField");
-        write(taskRepository);
-        clickOn("#createButton");
-        sleep(1000);
+        String warningMessage = i18NRepo.getString("label.error.missing.taskrepository");
+        Node warning = lookup(warningMessage).queryFirst();
+        if (warning != null) {
+            clickOn(i18NRepo.getString("action.create.taskrepository"));
+            sleep(1000);
+            clickOn("#nameTextField");
+            write(taskRepository);
+            clickOn("#createButton");
+            sleep(1000);
+        }
     }
 
     private String getPluginsFolder() {
