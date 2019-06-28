@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -21,7 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
@@ -48,26 +48,48 @@ public class SavePlanTests extends ApplicationTest {
     private String configFolderTasks = configFolder + "/tasks";
     private String configFolderSrc = configFolder + "/src";
     private String configFolderPlugin = getPluginsFolder();
+    private String configFile = rootConfigFolder + "/" + configName + ".properties";
+    private String backupFolder = rootConfigFolder + "/.backup";
+
+    private boolean configCreated = false;
 
     @Override
     public void start(Stage stage) throws Exception {
-//        // clean config
-//        deleteConfig();
-//        deleteconfigFolder();
+        // clean config
+        deleteConfig();
+        deleteconfigFolder();
+        createConfigFolders();
 
         PlanDesigner.init();
 
         PlanDesignerApplication planDesignerApplication = new PlanDesignerApplication();
+
+        // process possible taskrepository not exists warning
+        Thread thread = new Thread(() -> {
+            sleep(2000);
+            I18NRepo i18NRepo = I18NRepo.getInstance();
+            String warningMessage = i18NRepo.getString("label.error.missing.taskrepository");
+            Node warning = lookup(warningMessage).queryFirst();
+            if (warning != null) {
+                // warning dialog needs to be handled
+                configCreated = true;
+                handleNewTaskRepositoryDialog();
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+
         planDesignerApplication.start(stage);
     }
 
     @Test
     public void testCreatePlan() {
-//        // create new configuration
-//        createConfigFolders();
-//        createConfiguration();
-//
-//        // init
+        // check if configuration is already present
+        if (!configCreated) {
+            createConfiguration();
+        }
+
+        // init
         createPlan();
         createBehaviour();
 
@@ -102,9 +124,8 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void deleteConfig() {
-        String propertyFileName = rootConfigFolder + "/" + configName + ".properties";
-        File propertyFile = new File(propertyFileName);
-        propertyFile.delete();
+        File file = new File(configFile);
+        file.delete();
     }
 
     private void createConfiguration() {
@@ -144,17 +165,21 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#activeButton");
 
         // create TaskRepo
+        handleNewTaskRepositoryDialog();
+
+        FxAssert.verifyThat("#activeConfLabel", hasText(configName));
+
+        // exit
+        clickOn("#saveAndExitButton");
+    }
+
+    private void handleNewTaskRepositoryDialog() {
         clickOn("Create TaskRepository");
         sleep(1000);
         clickOn("#nameTextField");
         write(taskRepository);
         clickOn("#createButton");
         sleep(1000);
-
-        FxAssert.verifyThat("#activeConfLabel", hasText(configName));
-
-        // exit
-        clickOn("#saveAndExitButton");
     }
 
     private String getPluginsFolder() {
@@ -175,7 +200,6 @@ public class SavePlanTests extends ApplicationTest {
         Path path = Paths.get(configFolder);
         try {
             Files.walk(path)
-                    .sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     .forEach(File::delete);
         } catch (IOException e) {
@@ -207,6 +231,7 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void saveCurrentData() {
+        sleep(2000);
         press(KeyCode.CONTROL, KeyCode.S);
         release(KeyCode.CONTROL, KeyCode.S);
     }
