@@ -49,9 +49,8 @@ public class SavePlanTests extends ApplicationTest {
     private String configFolderSrc = configFolder + "/src";
     private String configFolderPlugin = getPluginsFolder();
     private String configFile = rootConfigFolder + "/" + configName + ".properties";
-    private String backupFolder = rootConfigFolder + "/.backup";
 
-    private boolean configCreated = false;
+    private I18NRepo i18NRepo = I18NRepo.getInstance();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -60,34 +59,32 @@ public class SavePlanTests extends ApplicationTest {
         deleteconfigFolder();
         createConfigFolders();
 
-        PlanDesigner.init();
-
-        PlanDesignerApplication planDesignerApplication = new PlanDesignerApplication();
-
         // process possible taskrepository not exists warning
         Thread thread = new Thread(() -> {
             sleep(2000);
-            I18NRepo i18NRepo = I18NRepo.getInstance();
             String warningMessage = i18NRepo.getString("label.error.missing.taskrepository");
             Node warning = lookup(warningMessage).queryFirst();
             if (warning != null) {
-                // warning dialog needs to be handled
-                configCreated = true;
-                handleNewTaskRepositoryDialog();
+                // warning dialog needs to be closed
+                clickOn(i18NRepo.getString("action.openanyway"));
             }
         });
         thread.setDaemon(true);
         thread.start();
 
+        startApplication(stage);
+    }
+
+    private void startApplication(Stage stage) throws IOException {
+        PlanDesigner.init();
+        PlanDesignerApplication planDesignerApplication = new PlanDesignerApplication();
         planDesignerApplication.start(stage);
     }
 
     @Test
     public void testCreatePlan() {
         // check if configuration is already present
-        if (!configCreated) {
-            createConfiguration();
-        }
+        createConfiguration();
 
         // init
         createPlan();
@@ -174,7 +171,7 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void handleNewTaskRepositoryDialog() {
-        clickOn("Create TaskRepository");
+        clickOn(i18NRepo.getString("action.create.taskrepository"));
         sleep(1000);
         clickOn("#nameTextField");
         write(taskRepository);
