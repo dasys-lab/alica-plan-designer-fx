@@ -121,8 +121,10 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void deleteConfig() {
-        File file = new File(configFile);
-        file.delete();
+        // delete from ConfigurationManager
+        ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+        configurationManager.removeConfiguration(configName);
+        configurationManager.writeToDisk();
     }
 
     private void createConfiguration() {
