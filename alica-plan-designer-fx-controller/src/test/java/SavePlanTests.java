@@ -51,21 +51,22 @@ public class SavePlanTests extends ApplicationTest {
     private String configFile = rootConfigFolder + "/" + configName + ".properties";
 
     private I18NRepo i18NRepo = I18NRepo.getInstance();
+    private int planElementsCounter = 0;
 
     @Override
     public void start(Stage stage) throws Exception {
-        // clean config
-        deleteConfig();
-        deleteconfigFolder();
-        createConfigFolders();
-
-        // process possible taskrepository not exists warning
-        Thread thread = new Thread(() -> {
-            sleep(2000);
-            handleNewTaskRepositoryDialog();
-        });
-        thread.setDaemon(true);
-        thread.start();
+//        // clean config
+//        deleteConfig();
+//        deleteconfigFolder();
+//        createConfigFolders();
+//
+//        // process possible taskrepository not exists warning
+//        Thread thread = new Thread(() -> {
+//            sleep(2000);
+//            handleNewTaskRepositoryDialog();
+//        });
+//        thread.setDaemon(true);
+//        thread.start();
 
         startApplication(stage);
     }
@@ -78,41 +79,71 @@ public class SavePlanTests extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
-        // check if configuration is already present
-        createConfiguration();
-
-        // init
+//        // check if configuration is already present
+//        createConfiguration();
+//
+//        // init
         createPlan();
         createBehaviour();
-
-        closeFileThreeElements();
-        createRoleSet();
-
-        // modify roleset and roles
-        openRoleSet();
-        createRoles();
-        saveCurrentData();
-
-        // create task
-        createTask();
+//
+//        closeFileThreeElements();
+//        createRoleSet();
+//
+//        // modify roleset and roles
+//        openRoleSet();
+//        createRoles();
+//        saveCurrentData();
+//
+//        // create task
+//        createTask();
 
         // modify plan
         openPlan();
+        setMasterPlan();
+
         placeEntryPoint();
+        setCardinality();
+
+        placeState();
+        placeState();
         placeState();
         placeSuccessState();
+
         initTransitionFromEntryPointToState();
-        transitionFromStateToSuccessState();
         placeBehaviour();
-        saveCurrentData();
 
-        // check saved data
-        checkConfig();
+        transitionFromStateToSuccessState();
 
-        // clean
-        deletePlan();
-        deleteBehaviour();
-        deleteRoleSet();
+//
+//
+//        placeSuccessState();
+//
+//
+//
+//        saveCurrentData();
+//
+//        // check saved data
+//        checkConfig();
+//
+//        // clean
+//        deletePlan();
+//        deleteBehaviour();
+//        deleteRoleSet();
+    }
+
+    private void setCardinality() {
+        doubleClickOn("#EntryPointContainer");
+        moveTo("minCardinality");
+        clickOn("0");
+        write("1");
+        moveTo("maxCardinality");
+        clickOn("0");
+        write("10");
+    }
+
+    private void setMasterPlan() {
+        moveTo("masterPlan");
+        clickOn(".check-box");
     }
 
     private void deleteConfig() {
@@ -243,7 +274,10 @@ public class SavePlanTests extends ApplicationTest {
 
     private void transitionFromStateToSuccessState() {
         clickOn("#TransitionToolButton");
-        clickOn("#StateContainer");
+
+        Node stateContainer = lookup("#StateContainer").selectAt(1).queryFirst();
+
+        clickOn(stateContainer);
         clickOn("#SuccessStateContainer");
         dropElement();
     }
@@ -262,7 +296,7 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private PointQuery freePlanContentPos() {
-        return offset("#PlanTabPlanContent", 200, 0);
+        return offset("#PlanTabPlanContent", ++planElementsCounter * 80, 0);
     }
 
     private void placeState() {
@@ -290,6 +324,7 @@ public class SavePlanTests extends ApplicationTest {
         write(planName);
         clickOn("#createButton");
 
+        closeFileThreeElements();
         openPlansView();
         assertExists(planNameExtension);
     }
@@ -303,6 +338,8 @@ public class SavePlanTests extends ApplicationTest {
         write(behaviourName);
         clickOn("#createButton");
 
+        closeFileThreeElements();
+        openPlansView();
         assertExists(behaviourNameExtension);
     }
 
