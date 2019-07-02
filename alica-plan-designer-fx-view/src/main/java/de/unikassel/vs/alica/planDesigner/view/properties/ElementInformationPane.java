@@ -100,6 +100,7 @@ public class ElementInformationPane extends TitledPane {
             case Types.ROLESET:
             case Types.ENTRYPOINT:
             case Types.SYNCHRONISATION:
+            case Types.BENDPOINT:
                 this.setContent(propertySheet);
                 break;
             case Types.ROLE:
@@ -153,7 +154,7 @@ public class ElementInformationPane extends TitledPane {
             default:
                 System.err.println("ElementInformationPane: Unknown element type '" + elementShown.getType() + "' choosen for showing properties stuff!");
                 this.setContent(tabPane);
-                this.tabPane.getTabs().addAll(propertiesTab, variablesTab, preConditionTab, runtimeConditionTab, postConditionTab);
+                this.tabPane.getTabs().clear();
                 break;
         }
     }

@@ -465,7 +465,7 @@ public class ViewModelManager {
         return configurationViewModel;
     }
 
-    public void removeElement(long parentId, ViewModelElement viewModelElement) {
+    public void removeElement(long parentId, ViewModelElement viewModelElement, Map<String, Long> relatedObjects) {
         switch (viewModelElement.getType()) {
             case Types.TASK:
                 ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
@@ -490,9 +490,18 @@ public class ViewModelManager {
                 break;
             case Types.TRANSITION:
                 TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
-                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                if(!relatedObjects.containsKey(Types.BENDPOINT)) {
+                    planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                    planViewModel.getTransitions().remove(transitionViewModel);
+                } else {
+                    for( BendPointViewModel bPoint : transitionViewModel.getBendpoints()){
+                        if(bPoint.getId() == relatedObjects.get(Types.BENDPOINT)){
+                            transitionViewModel.getBendpoints().remove(bPoint);
+                            break;
+                        }
+                    }
 
-                planViewModel.getTransitions().remove(transitionViewModel);
+                }
                 break;
             case Types.ANNOTATEDPLAN:
                 AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) viewModelElement;
@@ -599,7 +608,9 @@ public class ViewModelManager {
                 //TODO: maybe handle other types
         }
 
-        viewModelElements.remove(viewModelElement.getId());
+        if(viewModelElement.getType() != Types.TRANSITION && relatedObjects.isEmpty()) {
+            viewModelElements.remove(viewModelElement.getId());
+        }
     }
 
     public void addElement(ModelEvent event) {
