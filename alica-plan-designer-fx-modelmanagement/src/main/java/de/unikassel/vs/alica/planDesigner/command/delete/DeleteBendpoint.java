@@ -11,7 +11,7 @@ import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 
 import java.util.HashMap;
 
-public class DeleteBendPoint extends UiPositionCommand {
+public class DeleteBendpoint extends UiPositionCommand {
 
     protected BendPoint bendPoint;
     protected Transition transition;
@@ -19,7 +19,7 @@ public class DeleteBendPoint extends UiPositionCommand {
     protected int index;
 
 
-    public DeleteBendPoint(ModelManager modelManager, ModelModificationQuery mmq) {
+    public DeleteBendpoint(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
         this.transition = (Transition) modelManager.getPlanElement(mmq.getElementId());
         this.uiElement = this.createUiElement(mmq.getParentId(), transition);

@@ -1107,7 +1107,7 @@ public class ModelManager implements Observer {
                         cmd = new DeleteConfiguration(this, mmq);
                         break;
                     case Types.BENDPOINT:
-                        cmd = new DeleteBendPoint(this, mmq);
+                        cmd = new DeleteBendpoint(this, mmq);
                         break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
