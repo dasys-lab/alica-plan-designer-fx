@@ -4,6 +4,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.debugTab.DebugTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTypeTab.PlanTypeTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.RoleSetTab;
@@ -56,6 +57,8 @@ public class EditorTabPane extends TabPane {
                 return new BehaviourTab(serializableViewModel, this);
             case Types.PLANTYPE:
                 return new PlanTypeTab(serializableViewModel, this);
+            case Types.DEBUG:
+                return new DebugTab(serializableViewModel, this);
             default:
                 System.err.println("EditorTabPane: Opening tab of elementType " + serializableViewModel.getType() + " not implemented!");
                 return null;

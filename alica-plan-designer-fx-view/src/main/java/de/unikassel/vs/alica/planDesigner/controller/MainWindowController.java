@@ -13,6 +13,7 @@ import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.menu.EditMenu;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
+import de.unikassel.vs.alica.planDesigner.view.model.DebugViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
@@ -219,6 +220,13 @@ public class MainWindowController implements Initializable {
         saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
         fileMenu.setDisable(true);
+
+        // -- DEBUG MENU --
+        MenuItem debugItem = new MenuItem("Debug");
+        debugItem.setOnAction(event -> {
+            openFile(new DebugViewModel(123912381, "Debug", Types.DEBUG));
+        });
+        fileMenu.getItems().addAll(debugItem);
         menus.add(fileMenu);
 
         // ---- EDIT MENU ----
