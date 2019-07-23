@@ -10,6 +10,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -59,11 +60,16 @@ public class SavePlanTests extends ApplicationTest {
     private final String state2Name = "State2";
     private final String state3Name = "State3";
     private final String successStateName = "SuccessState";
+    private final String precondition1Name = "Precondition1";
+    private final String precondition2Name = "Precondition2";
+    private final String precondition3Name = "Precondition3";
+    private final String precondition4Name = "Precondition4";
 
     private final String entryPointContainerId = "#EntryPointContainerCircle";
     private final String stateContainerId = "#StateContainer";
     private final String successStateContainerId = "#SuccessStateContainer";
     private final String transitionContainerId = "#TransitionContainer";
+    private final String propertySheetId = "#PropertySheet";
 
     private I18NRepo i18NRepo = I18NRepo.getInstance();
     private int planElementsCounter = 0;
@@ -151,7 +157,12 @@ public class SavePlanTests extends ApplicationTest {
         repositionPlanElement(getStateContainer3(), -0.3, 0);
         repositionPlanElement(getSuccessStateContainer(), 0, -0.5);
 
-        createBendpoint(getStateContainer3(), getStateContainer2());
+//        createBendpoint(getStateContainer3(), getStateContainer2());
+
+        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer3()), precondition1Name);
+        setPrecondition(getTransitionLine(getStateContainer3(), getStateContainer2()), precondition2Name);
+        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer2()), precondition3Name);
+        setPrecondition(getTransitionLine(getStateContainer2(), getSuccessStateContainer()), precondition4Name);
 
 //        saveCurrentData();
 //
@@ -234,7 +245,25 @@ public class SavePlanTests extends ApplicationTest {
         double resY = origY + (planHeight * factY);
 
         drag(container).dropTo(resX, resY);
-        System.out.println();
+    }
+
+    private void setPrecondition(Node transition, String name) {
+        clickOn(transition);
+
+        moveTo(propertySheetId);
+        clickOn(i18NRepo.getString("label.caption.preCondtions"));
+
+        clickOn("NONE");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+
+        moveTo("enabled");
+        Node enabledCheckBox = lookup(n -> n instanceof CheckBox).queryFirst();
+        clickOn(enabledCheckBox);
+
+        Node conditionStringText = lookup(n -> n instanceof TextField).selectAt(1).queryFirst();
+        clickOn(conditionStringText);
+        write(name);
     }
 
     private void deleteConfig() {
@@ -403,7 +432,7 @@ public class SavePlanTests extends ApplicationTest {
     private void setContainerName(String containerId, String oldName, String newName) {
         Node container = getContainerNode(containerId, oldName);
         doubleClickOn(container);
-        moveTo("#PropertySheet");
+        moveTo(propertySheetId);
         Node nameField = lookup(oldName).queryAll().stream()
                 .filter(n -> n instanceof TextField)
                 .findAny()
