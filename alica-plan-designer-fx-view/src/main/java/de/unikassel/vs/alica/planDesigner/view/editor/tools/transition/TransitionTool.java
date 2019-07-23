@@ -1,11 +1,14 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
+import com.sun.javafx.geom.Line2D;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.BendpointContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.ToolButton;
@@ -28,12 +31,15 @@ import javafx.scene.layout.StackPane;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import static java.lang.Math.*;
+
 public class TransitionTool extends AbstractTool {
 
     private LinkedList<Point2D> bendPoints = new LinkedList<>();
 
     private StateViewModel inState = null;
     private Cursor bendPointCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition, 8, 8);
+    private Cursor bendPointDeleteCursor = new AlicaCursor(AlicaCursor.Type.bendpoint_transition_delete, 8, 8);
 
     public TransitionTool(TabPane workbench, PlanTab planTab, ToggleGroup group) {
         super(workbench, planTab, group);
@@ -50,16 +56,28 @@ public class TransitionTool extends AbstractTool {
                     Parent parent = target.getParent();
                     if (parent instanceof StateContainer) {
                         setCursor(addCursor);
-                    } else if (target instanceof StackPane){
+                    } else if (target instanceof StackPane) {
                         if (inState != null) {
                             setCursor(bendPointCursor);
-                        }
-                        else {
+                        } else {
                             setCursor(imageCursor);
+                        }
+                    }else if (parent instanceof BendpointContainer){
+                        if (inState == null) {
+                            setCursor(bendPointDeleteCursor);
+                        } else {
+                            setCursor(forbiddenCursor);
+                        }
+                    }else if (parent instanceof TransitionContainer){
+                        if (inState == null) {
+                            setCursor(bendPointCursor);
+                        } else {
+                            setCursor(forbiddenCursor);
                         }
                     } else {
                         setCursor(forbiddenCursor);
                     }
+                    //System.out.println(target.getClass().getName());
                 }
             });
 
@@ -73,13 +91,12 @@ public class TransitionTool extends AbstractTool {
 
                     Node target = (Node) event.getTarget();
                     Node parent = target.getParent();
+                    IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
                     if (inState != null) {
                         if (parent instanceof StateContainer) {
                             // SET ENDPOINT
                             StateViewModel outState = ((StateContainer) parent).getState();
-
-                            IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
                             GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.TRANSITION, null);
 
@@ -112,7 +129,7 @@ public class TransitionTool extends AbstractTool {
 
                             TransitionTool.this.reset();
                         } else {
-                            // ADD BENDPOINT
+                            // ADD BENDPOINT ON CREATE
                             Point2D eventTargetCoordinates = TransitionTool.this.getLocalCoordinatesFromEvent(event);
                             if (eventTargetCoordinates == null) {
                                 event.consume();
@@ -120,17 +137,116 @@ public class TransitionTool extends AbstractTool {
                             bendPoints.add(eventTargetCoordinates);
                         }
                     } else {
-                        try {
-                            if (parent instanceof StateContainer) {
-                                // SET STARTPOINT
-                                inState = ((StateContainer) parent).getState();
+                        if (parent instanceof BendpointContainer) {
+                            // REMOVE BENDPOINT
+                            BendpointContainer bpC = (BendpointContainer) parent;
+                            TransitionContainer tC = bpC.getTransitionContainer();
+
+                            GuiModificationEvent deleteBendPointEvent = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.BENDPOINT, null);
+                            deleteBendPointEvent.setElementId(tC.getContainedElement().getId());
+                            HashMap<String, Long> bendpoint = new HashMap<String, Long>();
+                            bendpoint.put(bpC.getContainedElement().getType(), bpC.getContainedElement().getId());
+                            deleteBendPointEvent.setRelatedObjects(bendpoint);
+                            deleteBendPointEvent.setParentId(TransitionTool.this.planTab.getSerializableViewModel().getId());
+                            handler.handle(deleteBendPointEvent);
+
+                        }else if (parent instanceof TransitionContainer){
+                            // ADD BENDPOINT
+                            Point2D point = TransitionTool.this.getLocalCoordinatesFromEvent(event);
+                            if (point == null) {
+                                event.consume();
                             }
-                        } catch (ClassCastException e) {
-                            e.printStackTrace();
+
+                            TransitionContainer transition = (TransitionContainer) parent;
+
+                            GuiModificationEvent bendEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.BENDPOINT, null);
+                            bendEvent.setX((int) point.getX());
+                            bendEvent.setY((int) point.getY());
+                            bendEvent.setParentId(TransitionTool.this.planTab.getSerializableViewModel().getId());
+
+                            // get the index of the bendpoint
+                            long index = 0;
+
+                            if(transition.getBendpoints().size()==0){
+
+                            } else {
+                                Point2D p1 = new Point2D(transition.getContainedElement().getInState().getXPosition(), transition.getContainedElement().getInState().getYPosition());
+                                Point2D p2 = new Point2D(transition.getBendpoints().get(0).getLayoutX(), transition.getBendpoints().get(0).getLayoutY());
+                                Point2D p3 = new Point2D((float) point.getX(), (float) point.getY());
+                                double distance = distancePointToLineSegment(p1, p3, p2);
+                                if(distance < 10){
+
+                                } else {
+                                    if(transition.getBendpoints().size() == 1){
+                                        index = 1;
+                                    } else {
+                                        for (int i = 1; i < transition.getBendpoints().size(); i++) {
+                                            p1 = p2;
+                                            p2 = new Point2D(transition.getBendpoints().get(i).getLayoutX(), transition.getBendpoints().get(i).getLayoutY());
+                                            double distancee = distancePointToLineSegment(p1, p3, p2);
+                                            if (distancee < 10) {
+                                                index = i;
+                                                break;
+                                            }
+                                        }
+                                        if (index == 0) {
+                                            index = transition.getBendpoints().size();
+                                        }
+                                    }
+                                }
+                            }
+
+                            HashMap<String, Long> related = new HashMap<>();
+                            related.put(Types.TRANSITION, ((TransitionContainer) parent).getContainedElement().getId());
+                            related.put("index", index);
+                            bendEvent.setRelatedObjects(related);
+                            handler.handle(bendEvent);
+                        } else {
+                            try {
+                                if (parent instanceof StateContainer) {
+                                    // SET STARTPOINT
+                                    inState = ((StateContainer) parent).getState();
+                                }
+                            } catch (ClassCastException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
             });
+        }
+    }
+
+    private double distancePointToLineSegment(Point2D a, Point2D p, Point2D b) {
+
+        //Vector A-B
+        double abx = b.getX() - a.getX();
+        double aby = b.getY() - a.getY();
+
+        //Vector A-P
+        double apx = p.getX() - a.getX();
+        double apy = p.getY() - a.getY();
+
+        double angle1 = atan2(apy, apx);
+        double angle2 = atan2(aby, abx);
+
+        double alpha = angle1 - angle2;
+        if(alpha < -PI){
+            alpha += 2.0*PI;
+        } else if(alpha > PI){
+            alpha -= 2.0*PI;
+        }
+
+        double distanceAtoP = sqrt(apx*apx + apy*apy);
+        if(alpha >PI/2 || alpha < -PI/2){
+            return distanceAtoP;
+        }
+
+        double dist1 = cos(alpha) *distanceAtoP;
+        if(dist1 > sqrt(abx*abx + aby*aby)){
+            return sqrt(pow(p.getX() - b.getY(), 2)+ pow(p.getY() - b.getY(), 2));
+        } else {
+            return abs(sin(alpha)) * distanceAtoP;
         }
     }
 
