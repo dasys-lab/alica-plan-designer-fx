@@ -220,4 +220,12 @@ public class TransitionContainer extends Container implements Observable {
     public void setContainedElement(TransitionViewModel containedElement) {
         this.containedElement = containedElement;
     }
+
+    public StateContainer getFromState() {
+        return fromState;
+    }
+
+    public StateContainer getToState() {
+        return toState;
+    }
 }

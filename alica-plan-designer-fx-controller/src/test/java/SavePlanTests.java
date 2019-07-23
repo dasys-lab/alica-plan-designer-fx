@@ -7,6 +7,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -62,6 +63,7 @@ public class SavePlanTests extends ApplicationTest {
     private final String entryPointContainerId = "#EntryPointContainerCircle";
     private final String stateContainerId = "#StateContainer";
     private final String successStateContainerId = "#SuccessStateContainer";
+    private final String transitionContainerId = "#TransitionContainer";
 
     private I18NRepo i18NRepo = I18NRepo.getInstance();
     private int planElementsCounter = 0;
@@ -143,11 +145,13 @@ public class SavePlanTests extends ApplicationTest {
 //        drawTransition(getStateContainer3(), getStateContainer2());
 //        drawTransition(getStateContainer2(), getSuccessStateContainer());
 
-        repositionContainer(getEntryPointContainer(), 0, -0.5);
-        repositionContainer(getStateContainer1(), 0, -0.5);
-        repositionContainer(getStateContainer2(), 0, -0.5);
-        repositionContainer(getStateContainer3(), -0.3, 0);
-        repositionContainer(getSuccessStateContainer(), 0, -0.5);
+        repositionPlanElement(getEntryPointContainer(), 0, -0.5);
+        repositionPlanElement(getStateContainer1(), 0, -0.5);
+        repositionPlanElement(getStateContainer2(), 0, -0.5);
+        repositionPlanElement(getStateContainer3(), -0.3, 0);
+        repositionPlanElement(getSuccessStateContainer(), 0, -0.5);
+
+        createBendpoint(getStateContainer3(), getStateContainer2());
 
 //        saveCurrentData();
 //
@@ -158,6 +162,13 @@ public class SavePlanTests extends ApplicationTest {
 //        deletePlan();
 //        deleteBehaviour();
 //        deleteRoleSet();
+    }
+
+    private void createBendpoint(Node fromState, Node toState) {
+        pickTransitionTool();
+        clickOn(getTransitionLine(fromState, toState));
+        dropElement();
+        repositionPlanElement(getTransitionLine(fromState, toState), 0.2, 0);
     }
 
     private Node getStateContainer1() {
@@ -181,6 +192,19 @@ public class SavePlanTests extends ApplicationTest {
         return getContainerNode(successStateContainerId);
     }
 
+    private Node getTransitionLine(Node fromState, Node toState) {
+        return lookup(transitionContainerId).queryAll().stream()
+                .filter(n -> {
+                    TransitionContainer c = (TransitionContainer) n;
+                    StateContainer from = c.getFromState();
+                    StateContainer to = c.getToState();
+                    return from.equals(fromState) && to.equals(toState);
+                })
+                .findAny()
+                .map(n -> ((TransitionContainer) n).getVisualRepresentation())
+                .get();
+    }
+
     private void setCardinality() {
         doubleClickOn(entryPointContainerId);
         moveTo("minCardinality");
@@ -196,7 +220,7 @@ public class SavePlanTests extends ApplicationTest {
         clickOn(".check-box");
     }
 
-    private void repositionContainer(Node container, double factX, double factY) {
+    private void repositionPlanElement(Node container, double factX, double factY) {
         Node planContent = lookup("#PlanTabPlanContent").queryFirst();
         Bounds planBounds = planContent.getBoundsInLocal();
         double planWidth = planBounds.getWidth();
@@ -337,9 +361,14 @@ public class SavePlanTests extends ApplicationTest {
         drawTransitionHelper(from, to);
     }
 
+
     private void drawTransition(Node from, Node to) {
-        clickOn("#TransitionToolButton");
+        pickTransitionTool();
         drawTransitionHelper(from, to);
+    }
+
+    private void pickTransitionTool() {
+        clickOn("#TransitionToolButton");
     }
 
     private void drawTransitionHelper(Node from, Node to) {
