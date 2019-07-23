@@ -6,10 +6,13 @@ import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import javafx.scene.Node;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit.ApplicationTest;
@@ -27,39 +30,42 @@ import java.util.List;
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
 
 public class SavePlanTests extends ApplicationTest {
-    private String taskRepository = "testfxTaskRepo";
-    private String taskName = "testfxTask";
-    private String planName = "testfxPlan";
-    private String behaviourName = "testfxBehaviour";
-    private String roleSetName = "testfxRoleSet";
-    private String roleName1 = "testfxRole1";
-    private String roleName2 = "testfxRole2";
+    private final String taskRepository = "testfxTaskRepo";
+    private final String taskName = "testfxTask";
+    private final String planName = "testfxPlan";
+    private final String behaviourName = "testfxBehaviour";
+    private final String roleSetName = "testfxRoleSet";
+    private final String roleName1 = "testfxRole1";
+    private final String roleName2 = "testfxRole2";
 
-    private String taskRepositoryExtension = taskRepository + "." + Extensions.TASKREPOSITORY;
-    private String planNameExtension = planName + "." + Extensions.PLAN;
-    private String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
-    private String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
+    private final String taskRepositoryExtension = taskRepository + "." + Extensions.TASKREPOSITORY;
+    private final String planNameExtension = planName + "." + Extensions.PLAN;
+    private final String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
+    private final String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
 
-    private String configName = "testfxConfig";
-    private String rootConfigFolder = ConfigurationManager.getInstance().getPlanDesignerConfigFolder().getPath();
-    private String configFolder = rootConfigFolder + "/testfx";
-    private String configFolderPlans = configFolder + "/plans";
-    private String configFolderRoles = configFolder + "/roles";
-    private String configFolderTasks = configFolder + "/tasks";
-    private String configFolderSrc = configFolder + "/src";
-    private String configFolderPlugin = getPluginsFolder();
-    private String configFile = rootConfigFolder + "/" + configName + ".properties";
+    private final String configName = "testfxConfig";
+    private final String rootConfigFolder = ConfigurationManager.getInstance().getPlanDesignerConfigFolder().getPath();
+    private final String configFolder = rootConfigFolder + "/testfx";
+    private final String configFolderPlans = configFolder + "/plans";
+    private final String configFolderRoles = configFolder + "/roles";
+    private final String configFolderTasks = configFolder + "/tasks";
+    private final String configFolderSrc = configFolder + "/src";
+    private final String configFolderPlugin = getPluginsFolder();
+    private final String configFile = rootConfigFolder + "/" + configName + ".properties";
 
     private I18NRepo i18NRepo = I18NRepo.getInstance();
     private int planElementsCounter = 0;
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    @BeforeClass
+    public static void beforeClass() {
 //        // clean config
 //        deleteConfig();
 //        deleteconfigFolder();
 //        createConfigFolders();
-//
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
 //        // process possible taskrepository not exists warning
 //        Thread thread = new Thread(() -> {
 //            sleep(2000);
@@ -84,7 +90,7 @@ public class SavePlanTests extends ApplicationTest {
 //
 //        // init
         createPlan();
-        createBehaviour();
+//        createBehaviour();
 //
 //        closeFileThreeElements();
 //        createRoleSet();
@@ -105,8 +111,13 @@ public class SavePlanTests extends ApplicationTest {
         setCardinality();
 
         placeState();
+        String oldName = i18NRepo.getString("label.state.defaultName");
+        setStateContainerName(oldName, "ST 2");
+
         placeState();
+
         placeState();
+
         placeSuccessState();
 
         initTransitionFromEntryPointToState();
@@ -114,13 +125,13 @@ public class SavePlanTests extends ApplicationTest {
 
         transitionFromStateToSuccessState();
 
-//
-//
+
+
 //        placeSuccessState();
-//
-//
-//
-//        saveCurrentData();
+
+
+
+        saveCurrentData();
 //
 //        // check saved data
 //        checkConfig();
@@ -303,6 +314,29 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#StateToolButton");
         clickOn(freePlanContentPos());
         dropElement();
+    }
+
+    private void setContainerName(String containerId, String oldName, String newName) {
+        Node container = lookup(containerId).queryAll().stream()
+                .filter(n -> {
+                    StateContainer st = (StateContainer) n;
+                    String stName = st.getState().getName();
+                    return stName.equals(oldName);
+                })
+                .findAny()
+                .get();
+        doubleClickOn(container);
+        moveTo("#PropertySheet");
+        Node nameField = lookup(oldName).queryAll().stream()
+                .filter(n -> n instanceof TextField)
+                .findAny()
+                .get();
+        clickOn(nameField);
+        write(newName);
+    }
+
+    private void setStateContainerName(String oldName, String newName) {
+        setContainerName("#StateContainer", oldName, newName);
     }
 
     private void placeSuccessState() {

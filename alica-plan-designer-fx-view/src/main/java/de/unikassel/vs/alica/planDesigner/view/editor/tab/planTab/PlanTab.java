@@ -148,7 +148,7 @@ public class PlanTab extends AbstractPlanTab {
                 TransitionContainer tC = bpC.getTransitionContainer();
                 event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.BENDPOINT, null);
                 event.setElementId(tC.getContainedElement().getId());
-                HashMap<String, Long> bendpoint = new HashMap<String, Long>();
+                HashMap<String, Long> bendpoint = new HashMap<>();
                 bendpoint.put(bpC.getContainedElement().getType(), bpC.getContainedElement().getId());
                 event.setRelatedObjects(bendpoint);
                 event.setParentId(getSerializableViewModel().getId());
