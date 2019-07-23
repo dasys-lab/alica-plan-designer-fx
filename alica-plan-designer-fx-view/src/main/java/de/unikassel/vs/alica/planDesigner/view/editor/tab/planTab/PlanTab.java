@@ -5,12 +5,11 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
-import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanContainer;
-import de.unikassel.vs.alica.planDesigner.view.editor.container.Container;
-import de.unikassel.vs.alica.planDesigner.view.editor.container.DraggableEditorElement;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.*;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.EditorToolBar;
+import de.unikassel.vs.alica.planDesigner.view.editor.tools.transition.TransitionTool;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
@@ -143,6 +142,16 @@ public class PlanTab extends AbstractPlanTab {
                 event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, planElementViewModel.getType(), planElementViewModel.getName());
                 event.setParentId(planElementViewModel.getParentId());
                 event.setElementId(planElementViewModel.getId());
+                return event;
+            case Types.BENDPOINT:
+                BendpointContainer bpC = (BendpointContainer) selectedContainer;
+                TransitionContainer tC = bpC.getTransitionContainer();
+                event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.BENDPOINT, null);
+                event.setElementId(tC.getContainedElement().getId());
+                HashMap<String, Long> bendpoint = new HashMap<String, Long>();
+                bendpoint.put(bpC.getContainedElement().getType(), bpC.getContainedElement().getId());
+                event.setRelatedObjects(bendpoint);
+                event.setParentId(getSerializableViewModel().getId());
                 return event;
             default:
                 System.err.println("PlanTab: Selected element type " + planElementViewModel.getType() + " is not handled!");

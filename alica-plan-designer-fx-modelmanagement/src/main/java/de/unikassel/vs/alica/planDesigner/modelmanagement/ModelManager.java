@@ -1106,6 +1106,9 @@ public class ModelManager implements Observer {
                     case Types.CONFIGURATION:
                         cmd = new DeleteConfiguration(this, mmq);
                         break;
+                    case Types.BENDPOINT:
+                        cmd = new DeleteBendpoint(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
                         return;
@@ -1152,7 +1155,7 @@ public class ModelManager implements Observer {
                         cmd = new CreateTransition(this, mmq);
                         break;
                     case Types.BENDPOINT:
-                        cmd = new CreateBendPoint(this, mmq);
+                        cmd = new CreateBendpoint(this, mmq);
                         break;
                     case Types.SYNCTRANSITION:
                         cmd = new ConnectSynchronizationWithTransition(this, mmq);

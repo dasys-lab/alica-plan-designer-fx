@@ -10,6 +10,7 @@ public class AlicaCursor extends ImageCursor {
         forbidden_transition,
         add_transition,
         bendpoint_transition,
+        bendpoint_transition_delete,
 
         // state
         state,
