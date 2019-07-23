@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit.ApplicationTest;
@@ -74,29 +73,28 @@ public class SavePlanTests extends ApplicationTest {
     private final String successStateContainerId = "#SuccessStateContainer";
     private final String transitionContainerId = "#TransitionContainer";
     private final String propertySheetId = "#PropertySheet";
+    private final String planContentId = "#PlanTabPlanContent";
 
     private I18NRepo i18NRepo = I18NRepo.getInstance();
     private int planElementsCounter = 0;
 
     private final String defaultName = i18NRepo.getString("label.state.defaultName");
 
-    @BeforeClass
-    public static void beforeClass() {
-//        // clean config
-//        deleteConfig();
-//        deleteconfigFolder();
-//        createConfigFolders();
-    }
 
     @Override
     public void start(Stage stage) throws Exception {
-//        // process possible taskrepository not exists warning
-//        Thread thread = new Thread(() -> {
-//            sleep(2000);
-//            handleNewTaskRepositoryDialog();
-//        });
-//        thread.setDaemon(true);
-//        thread.start();
+        // clean config
+        deleteConfig();
+        deleteconfigFolder();
+        createConfigFolders();
+
+        // process possible taskrepository not exists warning
+        Thread thread = new Thread(() -> {
+            sleep(2000);
+            handleNewTaskRepositoryDialog();
+        });
+        thread.setDaemon(true);
+        thread.start();
 
         startApplication(stage);
     }
@@ -109,51 +107,51 @@ public class SavePlanTests extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
-//        // check if configuration is already present
-//        createConfiguration();
-//
-//        // init
-//        createPlan(planName);
-//        createBehaviour();
-//
-//        closeFileThreeElements();
-//        createRoleSet();
-//
-//        // modify roleset and roles
-//        openRoleSet();
-//        createRoles();
-//        saveCurrentData();
-//
-//        // create task
-//        createTask();
+        // check if configuration is already present
+        createConfiguration();
+
+        // init
+        createPlan(planName);
+        createBehaviour();
+
+        closeFileThreeElements();
+        createRoleSet();
+
+        // modify roleset and roles
+        openRoleSet();
+        createRoles();
+        saveCurrentData();
+
+        // create task
+        createTask();
 
         // modify plan
         openPlan();
-//        setMasterPlan();
-//
-//        placeEntryPoint();
-//        setCardinality();
-//
-//        placeState();
-//        setStateContainerName(defaultName, state1Name);
-//
-//        placeState();
-//        setStateContainerName(defaultName, state2Name);
-//
-//        placeState();
-//        setStateContainerName(defaultName, state3Name);
-//
-//        placeSuccessState();
-//        setSuccessStateContainerName(defaultName, successStateName);
-//
-//        placeBehaviour(getStateContainer1());
-//
-//        drawInitTransition(getEntryPointContainer(), getStateContainer1());
-//
-//        drawTransition(getStateContainer1(), getStateContainer2());
-//        drawTransition(getStateContainer1(), getStateContainer3());
-//        drawTransition(getStateContainer3(), getStateContainer2());
-//        drawTransition(getStateContainer2(), getSuccessStateContainer());
+        setMasterPlan();
+
+        placeEntryPoint();
+        setCardinality();
+
+        placeState();
+        setStateContainerName(defaultName, state1Name);
+
+        placeState();
+        setStateContainerName(defaultName, state2Name);
+
+        placeState();
+        setStateContainerName(defaultName, state3Name);
+
+        placeSuccessState();
+        setSuccessStateContainerName(defaultName, successStateName);
+
+        placeBehaviour(getStateContainer1());
+
+        drawInitTransition(getEntryPointContainer(), getStateContainer1());
+
+        drawTransition(getStateContainer1(), getStateContainer2());
+        drawTransition(getStateContainer1(), getStateContainer3());
+        drawTransition(getStateContainer3(), getStateContainer2());
+        drawTransition(getStateContainer2(), getSuccessStateContainer());
 
         repositionPlanElement(getEntryPointContainer(), -0.2, -0.5);
         repositionPlanElement(getStateContainer1(), -0.1, -0.5);
@@ -161,28 +159,28 @@ public class SavePlanTests extends ApplicationTest {
         repositionPlanElement(getStateContainer3(), -0.3, 0);
         repositionPlanElement(getSuccessStateContainer(), 0, -0.5);
 
-//        createPlanType();
-//        placePlanType(getStateContainer2());
+        createPlanType();
+        placePlanType(getStateContainer2());
 
         createPlan(planName2);
         placePlan(getStateContainer3());
 
-//        createBendpoint(getStateContainer3(), getStateContainer2());
+        createBendpoint(getStateContainer3(), getStateContainer2());
 
-//        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer3()), precondition1Name);
-//        setPrecondition(getTransitionLine(getStateContainer3(), getStateContainer2()), precondition2Name);
-//        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer2()), precondition3Name);
-//        setPrecondition(getTransitionLine(getStateContainer2(), getSuccessStateContainer()), precondition4Name);
+        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer3()), precondition1Name);
+        setPrecondition(getTransitionLine(getStateContainer3(), getStateContainer2()), precondition2Name);
+        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer2()), precondition3Name);
+        setPrecondition(getTransitionLine(getStateContainer2(), getSuccessStateContainer()), precondition4Name);
 
-//        saveCurrentData();
-//
-//        // check saved data
-//        checkConfig();
-//
-//        // clean
-//        deletePlan();
-//        deleteBehaviour();
-//        deleteRoleSet();
+        saveCurrentData();
+
+        // check saved data
+        checkConfig();
+
+        // clean
+        deletePlan();
+        deleteBehaviour();
+        deleteRoleSet();
     }
 
     private Node getStateContainer1() {
@@ -211,6 +209,7 @@ public class SavePlanTests extends ApplicationTest {
         clickOn(getTransitionLine(fromState, toState));
         dropElement();
         repositionPlanElement(getTransitionLine(fromState, toState), 0.2, 0);
+        dropElement();
     }
 
     private Node getTransitionLine(Node fromState, Node toState) {
@@ -258,7 +257,7 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void setPrecondition(Node transition, String name) {
-        clickOn(transition);
+        doubleClickOn(transition);
 
         moveTo(propertySheetId);
         clickOn(i18NRepo.getString("label.caption.preCondtions"));
@@ -442,7 +441,7 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private PointQuery freePlanContentPos() {
-        return offset("#PlanTabPlanContent", ++planElementsCounter * 80, 0);
+        return offset(planContentId, ++planElementsCounter * 80, 0);
     }
 
     private void placeState() {
