@@ -143,11 +143,11 @@ public class SavePlanTests extends ApplicationTest {
 //        drawTransition(getStateContainer3(), getStateContainer2());
 //        drawTransition(getStateContainer2(), getSuccessStateContainer());
 
-        repositionContainer(getEntryPointContainer(), 0, -250);
-        repositionContainer(getStateContainer1(), 0, -250);
-        repositionContainer(getStateContainer2(), 0, -250);
-        repositionContainer(getStateContainer3(), -300, 0);
-        repositionContainer(getSuccessStateContainer(), 0, -250);
+        repositionContainer(getEntryPointContainer(), 0, -0.5);
+        repositionContainer(getStateContainer1(), 0, -0.5);
+        repositionContainer(getStateContainer2(), 0, -0.5);
+        repositionContainer(getStateContainer3(), -0.3, 0);
+        repositionContainer(getSuccessStateContainer(), 0, -0.5);
 
 //        saveCurrentData();
 //
@@ -196,19 +196,20 @@ public class SavePlanTests extends ApplicationTest {
         clickOn(".check-box");
     }
 
-    private void repositionContainer(Node container, double diffX, double diffY) {
-        Bounds boundsInLocal = container.getBoundsInLocal();
-        Bounds boundsInScreen = container.localToScreen(boundsInLocal);
+    private void repositionContainer(Node container, double factX, double factY) {
+        Node planContent = lookup("#PlanTabPlanContent").queryFirst();
+        Bounds planBounds = planContent.getBoundsInLocal();
+        double planWidth = planBounds.getWidth();
+        double planHeight = planBounds.getHeight();
 
-        double minX = boundsInScreen.getMinX();
-        double minY = boundsInScreen.getMinY();
-        double height = boundsInScreen.getHeight();
-        double width = boundsInScreen.getWidth();
+        Bounds containerBounds = container.localToScreen(container.getBoundsInLocal());
+        double origX = containerBounds.getMinX() + containerBounds.getWidth() / 2;
+        double origY = containerBounds.getMinY() + containerBounds.getHeight() / 2;
 
-        double origX = minX + width / 2;
-        double origY = minY + height / 2;
+        double resX = origX + (planWidth * factX);
+        double resY = origY + (planHeight * factY);
 
-        drag(container).dropTo(origX + diffX, origY + diffY);
+        drag(container).dropTo(resX, resY);
         System.out.println();
     }
 
