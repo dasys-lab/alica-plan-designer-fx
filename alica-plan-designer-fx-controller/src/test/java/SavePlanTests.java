@@ -36,6 +36,7 @@ public class SavePlanTests extends ApplicationTest {
     private final String taskRepository = "testfxTaskRepo";
     private final String taskName = "testfxTask";
     private final String planName = "testfxPlan";
+    private final String planName2 = "testfxPlan2";
     private final String planTypeName = "testfxPlanType";
     private final String behaviourName = "testfxBehaviour";
     private final String roleSetName = "testfxRoleSet";
@@ -44,6 +45,7 @@ public class SavePlanTests extends ApplicationTest {
 
     private final String taskRepositoryExtension = taskRepository + "." + Extensions.TASKREPOSITORY;
     private final String planNameExtension = planName + "." + Extensions.PLAN;
+    private final String planNameExtension2 = planName2 + "." + Extensions.PLAN;
     private final String planTypeNameExtension = planTypeName + "." + Extensions.PLANTYPE;
     private final String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
     private final String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
@@ -111,7 +113,7 @@ public class SavePlanTests extends ApplicationTest {
 //        createConfiguration();
 //
 //        // init
-//        createPlan();
+//        createPlan(planName);
 //        createBehaviour();
 //
 //        closeFileThreeElements();
@@ -159,8 +161,11 @@ public class SavePlanTests extends ApplicationTest {
         repositionPlanElement(getStateContainer3(), -0.3, 0);
         repositionPlanElement(getSuccessStateContainer(), 0, -0.5);
 
-        createPlanType();
-        placePlanType(getStateContainer2());
+//        createPlanType();
+//        placePlanType(getStateContainer2());
+
+        createPlan(planName2);
+        placePlan(getStateContainer3());
 
 //        createBendpoint(getStateContainer3(), getStateContainer2());
 
@@ -383,6 +388,10 @@ public class SavePlanTests extends ApplicationTest {
         placeTabElementHelper("#planTypesTab", planTypeName, destination);
     }
 
+    private void placePlan(Node destination) {
+        placeTabElementHelper("#plansTab", planName2, destination);
+    }
+
     private void placeTabElementHelper(String tabQuery, String elemenQuery, Node destination) {
         clickOn(tabQuery);
         type(KeyCode.TAB);
@@ -489,7 +498,7 @@ public class SavePlanTests extends ApplicationTest {
         type(KeyCode.ESCAPE);
     }
 
-    private void createPlan() {
+    private void createPlan(String planName) {
         createPlansElementHelper("Plan", planName, planNameExtension);
     }
 
