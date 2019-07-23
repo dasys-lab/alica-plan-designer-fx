@@ -36,6 +36,7 @@ public class SavePlanTests extends ApplicationTest {
     private final String taskRepository = "testfxTaskRepo";
     private final String taskName = "testfxTask";
     private final String planName = "testfxPlan";
+    private final String planTypeName = "testfxPlanType";
     private final String behaviourName = "testfxBehaviour";
     private final String roleSetName = "testfxRoleSet";
     private final String roleName1 = "testfxRole1";
@@ -43,6 +44,7 @@ public class SavePlanTests extends ApplicationTest {
 
     private final String taskRepositoryExtension = taskRepository + "." + Extensions.TASKREPOSITORY;
     private final String planNameExtension = planName + "." + Extensions.PLAN;
+    private final String planTypeNameExtension = planTypeName + "." + Extensions.PLANTYPE;
     private final String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
     private final String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
 
@@ -151,18 +153,21 @@ public class SavePlanTests extends ApplicationTest {
 //        drawTransition(getStateContainer3(), getStateContainer2());
 //        drawTransition(getStateContainer2(), getSuccessStateContainer());
 
-        repositionPlanElement(getEntryPointContainer(), 0, -0.5);
-        repositionPlanElement(getStateContainer1(), 0, -0.5);
+        repositionPlanElement(getEntryPointContainer(), -0.2, -0.5);
+        repositionPlanElement(getStateContainer1(), -0.1, -0.5);
         repositionPlanElement(getStateContainer2(), 0, -0.5);
         repositionPlanElement(getStateContainer3(), -0.3, 0);
         repositionPlanElement(getSuccessStateContainer(), 0, -0.5);
 
+        createPlanType();
+        placePlanType(getStateContainer2());
+
 //        createBendpoint(getStateContainer3(), getStateContainer2());
 
-        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer3()), precondition1Name);
-        setPrecondition(getTransitionLine(getStateContainer3(), getStateContainer2()), precondition2Name);
-        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer2()), precondition3Name);
-        setPrecondition(getTransitionLine(getStateContainer2(), getSuccessStateContainer()), precondition4Name);
+//        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer3()), precondition1Name);
+//        setPrecondition(getTransitionLine(getStateContainer3(), getStateContainer2()), precondition2Name);
+//        setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer2()), precondition3Name);
+//        setPrecondition(getTransitionLine(getStateContainer2(), getSuccessStateContainer()), precondition4Name);
 
 //        saveCurrentData();
 //
@@ -173,13 +178,6 @@ public class SavePlanTests extends ApplicationTest {
 //        deletePlan();
 //        deleteBehaviour();
 //        deleteRoleSet();
-    }
-
-    private void createBendpoint(Node fromState, Node toState) {
-        pickTransitionTool();
-        clickOn(getTransitionLine(fromState, toState));
-        dropElement();
-        repositionPlanElement(getTransitionLine(fromState, toState), 0.2, 0);
     }
 
     private Node getStateContainer1() {
@@ -201,6 +199,13 @@ public class SavePlanTests extends ApplicationTest {
 
     private Node getSuccessStateContainer() {
         return getContainerNode(successStateContainerId);
+    }
+
+    private void createBendpoint(Node fromState, Node toState) {
+        pickTransitionTool();
+        clickOn(getTransitionLine(fromState, toState));
+        dropElement();
+        repositionPlanElement(getTransitionLine(fromState, toState), 0.2, 0);
     }
 
     private Node getTransitionLine(Node fromState, Node toState) {
@@ -370,13 +375,21 @@ public class SavePlanTests extends ApplicationTest {
         saveCurrentData();
     }
 
-    private void placeBehaviour(Node place) {
-        clickOn("#behavioursTab");
+    private void placeBehaviour(Node destination) {
+        placeTabElementHelper("#behavioursTab", behaviourName, destination);
+    }
+
+    private void placePlanType(Node destination) {
+        placeTabElementHelper("#planTypesTab", planTypeName, destination);
+    }
+
+    private void placeTabElementHelper(String tabQuery, String elemenQuery, Node destination) {
+        clickOn(tabQuery);
         type(KeyCode.TAB);
         for (int i = 0; i < 5; i++) {
             type(KeyCode.PAGE_DOWN);
         }
-        drag(behaviourName).dropTo(place);
+        drag(elemenQuery).dropTo(destination);
     }
 
     private void saveCurrentData() {
@@ -477,31 +490,29 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void createPlan() {
-        // open create plan dialog
+        createPlansElementHelper("Plan", planName, planNameExtension);
+    }
+
+    private void createPlanType() {
+        createPlansElementHelper("PlanType", planTypeName, planTypeNameExtension);
+    }
+
+    private void createBehaviour() {
+        createPlansElementHelper("Behaviour", behaviourName, behaviourNameExtension);
+    }
+
+    private void createPlansElementHelper(String type, String name, String nameExtension) {
         rightClickOn("plans");
         clickOn("New");
-        clickOn("Plan");
+        moveTo("Plan");  // avoid closing menu if mouse is outside of menu dialog
+        clickOn(type);
         clickOn("#nameTextField");
-        write(planName);
+        write(name);
         clickOn("#createButton");
 
         closeFileThreeElements();
         openPlansView();
         assertExists(planNameExtension);
-    }
-
-    private void createBehaviour() {
-        rightClickOn("plans");
-        clickOn("New");
-        moveTo("Plan");  // avoid closing menu if mouse is outside of menu dialog
-        clickOn("Behaviour");
-        clickOn("#nameTextField");
-        write(behaviourName);
-        clickOn("#createButton");
-
-        closeFileThreeElements();
-        openPlansView();
-        assertExists(behaviourNameExtension);
     }
 
     private void createRoleSet() {
