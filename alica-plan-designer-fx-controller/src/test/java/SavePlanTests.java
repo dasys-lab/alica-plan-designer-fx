@@ -53,8 +53,19 @@ public class SavePlanTests extends ApplicationTest {
     private final String configFolderPlugin = getPluginsFolder();
     private final String configFile = rootConfigFolder + "/" + configName + ".properties";
 
+    private final String state1Name = "State 1";
+    private final String state2Name = "State 2";
+    private final String state3Name = "State 3";
+    private final String successStateName = "Success State";
+
+    private final String entryPointContainerId = "#EntryPointContainer";
+    private final String stateContainerId = "#StateContainer";
+    private final String successStateContainerId = "#SuccessStateContainer";
+
     private I18NRepo i18NRepo = I18NRepo.getInstance();
     private int planElementsCounter = 0;
+
+    private final String defaultName = i18NRepo.getString("label.state.defaultName");
 
     @BeforeClass
     public static void beforeClass() {
@@ -111,25 +122,25 @@ public class SavePlanTests extends ApplicationTest {
         setCardinality();
 
         placeState();
-        String oldName = i18NRepo.getString("label.state.defaultName");
-        setStateContainerName(oldName, "ST 2");
+        setStateContainerName(defaultName, state1Name);
 
         placeState();
+        setStateContainerName(defaultName, state2Name);
 
         placeState();
+        setStateContainerName(defaultName, state3Name);
 
         placeSuccessState();
+        setSuccessStateContainerName(defaultName, successStateName);
 
-        initTransitionFromEntryPointToState();
-        placeBehaviour();
+        placeBehaviour(getStateContainer1());
 
-        transitionFromStateToSuccessState();
+        drawInitTransition(getEntryPointContainer(), getStateContainer1());
 
-
-
-//        placeSuccessState();
-
-
+        drawTransition(getStateContainer1(), getStateContainer2());
+        drawTransition(getStateContainer1(), getStateContainer3());
+        drawTransition(getStateContainer3(), getStateContainer2());
+        drawTransition(getStateContainer2(), getSuccessStateContainer());
 
         saveCurrentData();
 //
@@ -142,8 +153,29 @@ public class SavePlanTests extends ApplicationTest {
 //        deleteRoleSet();
     }
 
+    private Node getStateContainer1() {
+        // sometimes the containers lose her scenes so we can not cache the node safely
+        return getContainerNode(stateContainerId, state1Name);
+    }
+
+    private Node getStateContainer2() {
+        return getContainerNode(stateContainerId, state2Name);
+    }
+
+    private Node getStateContainer3() {
+        return getContainerNode(stateContainerId, state3Name);
+    }
+
+    private Node getEntryPointContainer() {
+        return getContainerNode(entryPointContainerId);
+    }
+
+    private Node getSuccessStateContainer() {
+        return getContainerNode(successStateContainerId);
+    }
+
     private void setCardinality() {
-        doubleClickOn("#EntryPointContainer");
+        doubleClickOn(entryPointContainerId);
         moveTo("minCardinality");
         clickOn("0");
         write("1");
@@ -261,13 +293,13 @@ public class SavePlanTests extends ApplicationTest {
         saveCurrentData();
     }
 
-    private void placeBehaviour() {
+    private void placeBehaviour(Node place) {
         clickOn("#behavioursTab");
         type(KeyCode.TAB);
         for (int i = 0; i < 5; i++) {
             type(KeyCode.PAGE_DOWN);
         }
-        drag(behaviourName).dropTo("#StateContainer");
+        drag(behaviourName).dropTo(place);
     }
 
     private void saveCurrentData() {
@@ -276,20 +308,19 @@ public class SavePlanTests extends ApplicationTest {
         release(KeyCode.CONTROL, KeyCode.S);
     }
 
-    private void initTransitionFromEntryPointToState() {
+    private void drawInitTransition(Node from, Node to) {
         clickOn("#InitTransitionToolButton");
-        clickOn("#EntryPointContainer");
-        clickOn("#StateContainer");
-        dropElement();
+        drawTransitionHelper(from, to);
     }
 
-    private void transitionFromStateToSuccessState() {
+    private void drawTransition(Node from, Node to) {
         clickOn("#TransitionToolButton");
+        drawTransitionHelper(from, to);
+    }
 
-        Node stateContainer = lookup("#StateContainer").selectAt(1).queryFirst();
-
-        clickOn(stateContainer);
-        clickOn("#SuccessStateContainer");
+    private void drawTransitionHelper(Node from, Node to) {
+        clickOn(from);
+        clickOn(to);
         dropElement();
     }
 
@@ -317,14 +348,7 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void setContainerName(String containerId, String oldName, String newName) {
-        Node container = lookup(containerId).queryAll().stream()
-                .filter(n -> {
-                    StateContainer st = (StateContainer) n;
-                    String stName = st.getState().getName();
-                    return stName.equals(oldName);
-                })
-                .findAny()
-                .get();
+        Node container = getContainerNode(containerId, oldName);
         doubleClickOn(container);
         moveTo("#PropertySheet");
         Node nameField = lookup(oldName).queryAll().stream()
@@ -335,8 +359,29 @@ public class SavePlanTests extends ApplicationTest {
         write(newName);
     }
 
+    private Node getContainerNode(String containerId) {
+        return lookup(containerId).queryAll().stream()
+                .findAny()
+                .get();
+    }
+
+    private Node getContainerNode(String containerId, String name) {
+        return lookup(containerId).queryAll().stream()
+                .filter(n -> {
+                    StateContainer st = (StateContainer) n;
+                    String stName = st.getState().getName();
+                    return stName.equals(name);
+                })
+                .findAny()
+                .get();
+    }
+
     private void setStateContainerName(String oldName, String newName) {
-        setContainerName("#StateContainer", oldName, newName);
+        setContainerName(stateContainerId, oldName, newName);
+    }
+
+    private void setSuccessStateContainerName(String oldName, String newName) {
+        setContainerName(successStateContainerId, oldName, newName);
     }
 
     private void placeSuccessState() {
