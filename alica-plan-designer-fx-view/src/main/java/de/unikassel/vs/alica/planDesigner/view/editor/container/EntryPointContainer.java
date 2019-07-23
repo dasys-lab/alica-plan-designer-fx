@@ -40,7 +40,6 @@ public class EntryPointContainer extends Container {
     public EntryPointContainer(EntryPointViewModel containedElement, /*PmlUiExtension pmlUiExtension,*/
                                StateContainer stateContainer, PlanTab planTab) {
         super(containedElement, null, planTab);
-        this.setId("EntryPointContainer");
         if (stateContainer != null) {
             setStateContainer(stateContainer);
         }
@@ -79,6 +78,7 @@ public class EntryPointContainer extends Container {
         getChildren().clear();
         visualRepresentation = new Circle(EntryPointContainer.ENTRYPOINT_RADIUS,
                 getVisualisationColor());
+        visualRepresentation.setId("EntryPointContainerCircle");
         setEffectToStandard();
 
         if (stateContainer != null) {

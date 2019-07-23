@@ -7,6 +7,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -53,12 +54,12 @@ public class SavePlanTests extends ApplicationTest {
     private final String configFolderPlugin = getPluginsFolder();
     private final String configFile = rootConfigFolder + "/" + configName + ".properties";
 
-    private final String state1Name = "State 1";
-    private final String state2Name = "State 2";
-    private final String state3Name = "State 3";
-    private final String successStateName = "Success State";
+    private final String state1Name = "State1";
+    private final String state2Name = "State2";
+    private final String state3Name = "State3";
+    private final String successStateName = "SuccessState";
 
-    private final String entryPointContainerId = "#EntryPointContainer";
+    private final String entryPointContainerId = "#EntryPointContainerCircle";
     private final String stateContainerId = "#StateContainer";
     private final String successStateContainerId = "#SuccessStateContainer";
 
@@ -100,7 +101,7 @@ public class SavePlanTests extends ApplicationTest {
 //        createConfiguration();
 //
 //        // init
-        createPlan();
+//        createPlan();
 //        createBehaviour();
 //
 //        closeFileThreeElements();
@@ -116,33 +117,39 @@ public class SavePlanTests extends ApplicationTest {
 
         // modify plan
         openPlan();
-        setMasterPlan();
+//        setMasterPlan();
+//
+//        placeEntryPoint();
+//        setCardinality();
+//
+//        placeState();
+//        setStateContainerName(defaultName, state1Name);
+//
+//        placeState();
+//        setStateContainerName(defaultName, state2Name);
+//
+//        placeState();
+//        setStateContainerName(defaultName, state3Name);
+//
+//        placeSuccessState();
+//        setSuccessStateContainerName(defaultName, successStateName);
+//
+//        placeBehaviour(getStateContainer1());
+//
+//        drawInitTransition(getEntryPointContainer(), getStateContainer1());
+//
+//        drawTransition(getStateContainer1(), getStateContainer2());
+//        drawTransition(getStateContainer1(), getStateContainer3());
+//        drawTransition(getStateContainer3(), getStateContainer2());
+//        drawTransition(getStateContainer2(), getSuccessStateContainer());
 
-        placeEntryPoint();
-        setCardinality();
+        repositionContainer(getEntryPointContainer(), 0, -250);
+        repositionContainer(getStateContainer1(), 0, -250);
+        repositionContainer(getStateContainer2(), 0, -250);
+        repositionContainer(getStateContainer3(), -300, 0);
+        repositionContainer(getSuccessStateContainer(), 0, -250);
 
-        placeState();
-        setStateContainerName(defaultName, state1Name);
-
-        placeState();
-        setStateContainerName(defaultName, state2Name);
-
-        placeState();
-        setStateContainerName(defaultName, state3Name);
-
-        placeSuccessState();
-        setSuccessStateContainerName(defaultName, successStateName);
-
-        placeBehaviour(getStateContainer1());
-
-        drawInitTransition(getEntryPointContainer(), getStateContainer1());
-
-        drawTransition(getStateContainer1(), getStateContainer2());
-        drawTransition(getStateContainer1(), getStateContainer3());
-        drawTransition(getStateContainer3(), getStateContainer2());
-        drawTransition(getStateContainer2(), getSuccessStateContainer());
-
-        saveCurrentData();
+//        saveCurrentData();
 //
 //        // check saved data
 //        checkConfig();
@@ -154,7 +161,7 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private Node getStateContainer1() {
-        // sometimes the containers lose her scenes so we can not cache the node safely
+        // sometimes the nodes lose their scenes so we can not cache them safely
         return getContainerNode(stateContainerId, state1Name);
     }
 
@@ -187,6 +194,22 @@ public class SavePlanTests extends ApplicationTest {
     private void setMasterPlan() {
         moveTo("masterPlan");
         clickOn(".check-box");
+    }
+
+    private void repositionContainer(Node container, double diffX, double diffY) {
+        Bounds boundsInLocal = container.getBoundsInLocal();
+        Bounds boundsInScreen = container.localToScreen(boundsInLocal);
+
+        double minX = boundsInScreen.getMinX();
+        double minY = boundsInScreen.getMinY();
+        double height = boundsInScreen.getHeight();
+        double width = boundsInScreen.getWidth();
+
+        double origX = minX + width / 2;
+        double origY = minY + height / 2;
+
+        drag(container).dropTo(origX + diffX, origY + diffY);
+        System.out.println();
     }
 
     private void deleteConfig() {
