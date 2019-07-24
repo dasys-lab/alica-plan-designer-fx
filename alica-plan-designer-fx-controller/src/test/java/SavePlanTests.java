@@ -121,7 +121,6 @@ public class SavePlanTests extends ApplicationTest {
         createRoleSet();
         openRoleSet();
         createRoles();
-        saveCurrentData();
 
         // create task
         createTask();
@@ -173,6 +172,10 @@ public class SavePlanTests extends ApplicationTest {
 
         // check saved data
         checkConfig();
+
+        // check cpp code generation
+        generateCppCode();
+        checkCppCode();
 
         // clean
         deletePlan();
@@ -410,7 +413,7 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void saveCurrentData() {
-        sleep(2000);
+        sleep(1000);
         press(KeyCode.CONTROL, KeyCode.S);
         release(KeyCode.CONTROL, KeyCode.S);
     }
@@ -561,6 +564,7 @@ public class SavePlanTests extends ApplicationTest {
         assertExists(roleName1);
         assertExists(roleName2);
 
+        saveCurrentData();
         closeFileThreeElements();
     }
 
@@ -631,7 +635,65 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertEquals(0, lookup(query).queryAll().size());
     }
 
-    private void checkConfig() {
+    private void generateCppCode() {
+        clickOn("#codeGenerationMenu");
+        clickOn("#generateItem");
+        sleep(6000);  // wait for cpp code generation
+    }
+
+    private void checkCppCode() {
+        ArrayList<String> files = new ArrayList<>();
+        Path path = Paths.get(configFolderSrc);
+
+        try {
+            Files.walk(path)
+                    .filter(Files::isRegularFile)
+                    .forEach(f -> {
+                        Path relativePath = path.relativize(f);
+                        files.add(relativePath.toString());
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Plan plan = getPlanByName(planName);
+        String planNameId = plan.getName() + plan.getId();
+        Plan plan2 = getPlanByName(planName2);
+        String plan2NameId = plan2.getName() + plan2.getId();
+
+        List<String> expectedFiles = Arrays.asList(
+                "include/constraints/" + planNameId + "Constraints.h",
+                "include/constraints/" + plan2NameId + "Constraints.h",
+                "include/DomainBehaviour.h",
+                "include/DomainCondition.h",
+                "include/UtilityFunctionCreator.h",
+                "include/BehaviourCreator.h",
+                "include/ConditionCreator.h",
+                "include/ConstraintCreator.h",
+                "include/" + planNameId + ".h",
+                "include/" + plan2NameId + ".h",
+                "include/" + behaviourName + ".h",
+                "src/constraints/" + planNameId + "Constraints.cpp",
+                "src/constraints/" + plan2NameId + "Constraints.cpp",
+                "src/DomainBehaviour.cpp",
+                "src/DomainCondition.cpp",
+                "src/UtilityFunctionCreator.cpp",
+                "src/BehaviourCreator.cpp",
+                "src/ConditionCreator.cpp",
+                "src/ConstraintCreator.cpp",
+                "src/" + planNameId + ".cpp",
+                "src/" + plan2NameId + ".cpp",
+                "src/" + behaviourName + ".cpp"
+        );
+
+        Assert.assertEquals(expectedFiles.size(), files.size());
+
+        for (String file: expectedFiles) {
+            Assert.assertTrue(files.contains(file));
+        }
+    }
+
+    private ModelManager getModelManager() {
         ModelManager modelManager = new ModelManager();
         Configuration activeConfiguration = ConfigurationManager.getInstance().getActiveConfiguration();
         String plansPath = activeConfiguration.getPlansPath();
@@ -641,17 +703,24 @@ public class SavePlanTests extends ApplicationTest {
         modelManager.setTasksPath(tasksPath);
         modelManager.setRolesPath(rolesPath);
         modelManager.loadModelFromDisk();
+        return modelManager;
+    }
+
+    private Plan getPlanByName(String name) {
+        ModelManager modelManager = getModelManager();
+        ArrayList<Plan> plans = modelManager.getPlans();
+        return plans.stream()
+                .filter(p -> p.getName().equals(name))
+                .findAny()
+                .get();
+    }
+
+    private void checkConfig() {
+        ModelManager modelManager = getModelManager();
 
         // get root elements
-        ArrayList<Plan> plans = modelManager.getPlans();
-        Plan plan = plans.stream()
-                .filter(p -> p.getName().equals(planName))
-                .findAny()
-                .get();
-        Plan plan2 = plans.stream()
-                .filter(p -> p.getName().equals(planName2))
-                .findAny()
-                .get();
+        Plan plan = getPlanByName(planName);
+        Plan plan2 = getPlanByName(planName2);
 
         ArrayList<PlanType> planTypes = modelManager.getPlanTypes();
         PlanType planType = planTypes.stream()
