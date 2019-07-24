@@ -43,7 +43,7 @@ public class SavePlanTests extends ApplicationTest {
 
     private final String taskRepositoryExtension = taskRepository + "." + Extensions.TASKREPOSITORY;
     private final String planNameExtension = planName + "." + Extensions.PLAN;
-    private final String planNameExtension2 = planName2 + "." + Extensions.PLAN;
+    private final String planName2Extension = planName2 + "." + Extensions.PLAN;
     private final String planTypeNameExtension = planTypeName + "." + Extensions.PLANTYPE;
     private final String behaviourNameExtension = behaviourName + "." + Extensions.BEHAVIOUR;
     private final String roleSetNameExtension = roleSetName + "." + Extensions.ROLESET;
@@ -80,6 +80,7 @@ public class SavePlanTests extends ApplicationTest {
     private int planElementsCounter = 0;
 
     private final String defaultName = i18NRepo.getString("label.state.defaultName");
+    private ModelManager modelManager;
 
 
     @Override
@@ -144,18 +145,17 @@ public class SavePlanTests extends ApplicationTest {
         placeSuccessState();
         setSuccessStateContainerName(defaultName, successStateName);
 
-        drawInitTransition(getEntryPointContainer(), getStateContainer1());
-
-        drawTransition(getStateContainer1(), getStateContainer2());
-        drawTransition(getStateContainer1(), getStateContainer3());
-        drawTransition(getStateContainer3(), getStateContainer2());
-        drawTransition(getStateContainer2(), getSuccessStateContainer());
-
         repositionPlanElement(getEntryPointContainer(), -0.2, -0.5);
         repositionPlanElement(getStateContainer1(), -0.1, -0.5);
         repositionPlanElement(getStateContainer2(), 0, -0.5);
         repositionPlanElement(getStateContainer3(), -0.3, 0);
         repositionPlanElement(getSuccessStateContainer(), 0, -0.5);
+
+        drawInitTransition(getEntryPointContainer(), getStateContainer1());
+        drawTransition(getStateContainer1(), getStateContainer2());
+        drawTransition(getStateContainer1(), getStateContainer3());
+        drawTransition(getStateContainer3(), getStateContainer2());
+        drawTransition(getStateContainer2(), getSuccessStateContainer());
 
         placeBehaviour(getStateContainer1());
         placePlanType(getStateContainer2());
@@ -178,8 +178,11 @@ public class SavePlanTests extends ApplicationTest {
         checkCppCode();
 
         // clean
-        deletePlan();
+        deletePlan(planNameExtension);
+        deletePlan(planName2Extension);
+        deletePlanType();
         deleteBehaviour();
+        deleteTaskRepo();
         deleteRoleSet();
     }
 
@@ -573,28 +576,38 @@ public class SavePlanTests extends ApplicationTest {
         doubleClickOn(planNameExtension);
     }
 
-    private void deletePlan() {
-        openPlansView();
-        clickOn(planNameExtension);
-        type(KeyCode.DELETE);
+    private void deletePlan(String name) {
+        deleteElementHelper("plans", name);
+    }
 
-        assertNotExists(planNameExtension);
+    private void deletePlanType() {
+        deleteElementHelper("plans", planTypeNameExtension);
     }
 
     private void deleteBehaviour() {
-        openPlansView();
-        clickOn(behaviourNameExtension);
-        type(KeyCode.DELETE);
+        deleteElementHelper("plans", behaviourNameExtension);
+    }
 
-        assertNotExists(behaviourNameExtension);
+    private void deleteTaskRepo() {
+        deleteElementHelper("tasks", taskRepositoryExtension);
     }
 
     private void deleteRoleSet() {
-        openRolesView();
-        clickOn(roleSetNameExtension);
-        type(KeyCode.DELETE);
+        deleteElementHelper("roles", roleSetNameExtension);
+    }
 
-        assertNotExists(roleSetNameExtension);
+    private void deleteElementHelper(String rootElementName, String nameExtension) {
+        if (rootElementName.equals("plans")) {
+            openPlansView();
+        } else if (rootElementName.equals("roles")) {
+            openRolesView();
+        } else {
+            openTasksView();
+        }
+        clickOn(nameExtension);
+        type(KeyCode.DELETE);
+        assertNotExists(nameExtension);
+        closeFileThreeElements();
     }
 
     private void openPlansView() {
@@ -694,15 +707,17 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private ModelManager getModelManager() {
-        ModelManager modelManager = new ModelManager();
-        Configuration activeConfiguration = ConfigurationManager.getInstance().getActiveConfiguration();
-        String plansPath = activeConfiguration.getPlansPath();
-        String tasksPath = activeConfiguration.getTasksPath();
-        String rolesPath = activeConfiguration.getRolesPath();
-        modelManager.setPlansPath(plansPath);
-        modelManager.setTasksPath(tasksPath);
-        modelManager.setRolesPath(rolesPath);
-        modelManager.loadModelFromDisk();
+        if (modelManager == null) {
+            modelManager = new ModelManager();
+            Configuration activeConfiguration = ConfigurationManager.getInstance().getActiveConfiguration();
+            String plansPath = activeConfiguration.getPlansPath();
+            String tasksPath = activeConfiguration.getTasksPath();
+            String rolesPath = activeConfiguration.getRolesPath();
+            modelManager.setPlansPath(plansPath);
+            modelManager.setTasksPath(tasksPath);
+            modelManager.setRolesPath(rolesPath);
+            modelManager.loadModelFromDisk();
+        }
         return modelManager;
     }
 
