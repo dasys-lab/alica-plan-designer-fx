@@ -10,7 +10,6 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -74,6 +73,8 @@ public class SavePlanTests extends ApplicationTest {
     private final String transitionContainerId = "#TransitionContainer";
     private final String propertySheetId = "#PropertySheet";
     private final String planContentId = "#PlanTabPlanContent";
+    private final int EpMinCardinality = 1;
+    private final int EpMaxCardinality = 10;
 
     private I18NRepo i18NRepo = I18NRepo.getInstance();
     private int planElementsCounter = 0;
@@ -112,12 +113,12 @@ public class SavePlanTests extends ApplicationTest {
 
         // init
         createPlan(planName);
+        createPlan(planName2);
         createBehaviour();
+        createPlanType();
 
-        closeFileThreeElements();
+        // create roleset and roles
         createRoleSet();
-
-        // modify roleset and roles
         openRoleSet();
         createRoles();
         saveCurrentData();
@@ -144,8 +145,6 @@ public class SavePlanTests extends ApplicationTest {
         placeSuccessState();
         setSuccessStateContainerName(defaultName, successStateName);
 
-        placeBehaviour(getStateContainer1());
-
         drawInitTransition(getEntryPointContainer(), getStateContainer1());
 
         drawTransition(getStateContainer1(), getStateContainer2());
@@ -159,18 +158,16 @@ public class SavePlanTests extends ApplicationTest {
         repositionPlanElement(getStateContainer3(), -0.3, 0);
         repositionPlanElement(getSuccessStateContainer(), 0, -0.5);
 
-        createPlanType();
+        placeBehaviour(getStateContainer1());
         placePlanType(getStateContainer2());
-
-        createPlan(planName2);
         placePlan(getStateContainer3());
-
-        createBendpoint(getStateContainer3(), getStateContainer2());
 
         setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer3()), precondition1Name);
         setPrecondition(getTransitionLine(getStateContainer3(), getStateContainer2()), precondition2Name);
         setPrecondition(getTransitionLine(getStateContainer1(), getStateContainer2()), precondition3Name);
         setPrecondition(getTransitionLine(getStateContainer2(), getSuccessStateContainer()), precondition4Name);
+
+        createBendpoint(getStateContainer3(), getStateContainer2());
 
         saveCurrentData();
 
@@ -229,10 +226,10 @@ public class SavePlanTests extends ApplicationTest {
         doubleClickOn(entryPointContainerId);
         moveTo("minCardinality");
         clickOn("0");
-        write("1");
+        write(String.valueOf(EpMinCardinality));
         moveTo("maxCardinality");
         clickOn("0");
-        write("10");
+        write(String.valueOf(EpMaxCardinality));
     }
 
     private void setMasterPlan() {
@@ -267,11 +264,22 @@ public class SavePlanTests extends ApplicationTest {
         type(KeyCode.ENTER);
 
         moveTo("enabled");
-        Node enabledCheckBox = lookup(n -> n instanceof CheckBox).queryFirst();
-        clickOn(enabledCheckBox);
+        clickOn(".check-box");
 
-        Node conditionStringText = lookup(n -> n instanceof TextField).selectAt(1).queryFirst();
-        clickOn(conditionStringText);
+        TransitionContainer transitionContainer = (TransitionContainer) transition.getParent();
+        long transitionId = transitionContainer.getContainedElement().getPreCondition().getId();
+
+        Node nameField = lookup(n -> {
+            if (!(n instanceof TextField) || n.isDisabled()) {
+                return false;
+            }
+            TextField textField = (TextField) n;
+            if (textField.getText() == null) {
+                return false;
+            }
+            return textField.getText().equals(String.valueOf(transitionId));
+        }).queryFirst();
+        clickOn(nameField);
         write(name);
     }
 
@@ -377,6 +385,7 @@ public class SavePlanTests extends ApplicationTest {
         clickOn("#createTaskButton");
 
         saveCurrentData();
+        closeFileThreeElements();
     }
 
     private void placeBehaviour(Node destination) {
@@ -498,19 +507,23 @@ public class SavePlanTests extends ApplicationTest {
     }
 
     private void createPlan(String planName) {
-        createPlansElementHelper("Plan", planName, planNameExtension);
+        createElemtentHelper("plans", "Plan", planName, planNameExtension);
     }
 
     private void createPlanType() {
-        createPlansElementHelper("PlanType", planTypeName, planTypeNameExtension);
+        createElemtentHelper("plans", "PlanType", planTypeName, planTypeNameExtension);
     }
 
     private void createBehaviour() {
-        createPlansElementHelper("Behaviour", behaviourName, behaviourNameExtension);
+        createElemtentHelper("plans", "Behaviour", behaviourName, behaviourNameExtension);
     }
 
-    private void createPlansElementHelper(String type, String name, String nameExtension) {
-        rightClickOn("plans");
+    private void createRoleSet() {
+        createElemtentHelper("roles", "RoleSet", roleSetName, roleSetNameExtension);
+    }
+
+    private void createElemtentHelper(String rootElementName, String type, String name, String nameExtension) {
+        rightClickOn(rootElementName);
         clickOn("New");
         moveTo("Plan");  // avoid closing menu if mouse is outside of menu dialog
         clickOn(type);
@@ -518,25 +531,17 @@ public class SavePlanTests extends ApplicationTest {
         write(name);
         clickOn("#createButton");
 
+        if (rootElementName.equals("plans")) {
+            openPlansView();
+        } else {
+            openRolesView();
+        }
+        assertExists(nameExtension);
         closeFileThreeElements();
-        openPlansView();
-        assertExists(planNameExtension);
-    }
-
-    private void createRoleSet() {
-        rightClickOn("roles");
-        clickOn("New");
-        moveTo("Plan");  // avoid closing menu if mouse is outside of menu dialog
-        clickOn("RoleSet");
-        clickOn("#nameTextField");
-        write(roleSetName);
-        clickOn("#createButton");
-
-        openRolesView();
-        assertExists(roleSetNameExtension);
     }
 
     private void openRoleSet() {
+        openRolesView();
         doubleClickOn(roleSetNameExtension);
     }
 
@@ -555,6 +560,8 @@ public class SavePlanTests extends ApplicationTest {
 
         assertExists(roleName1);
         assertExists(roleName2);
+
+        closeFileThreeElements();
     }
 
     private void openPlan() {
@@ -637,26 +644,96 @@ public class SavePlanTests extends ApplicationTest {
 
         // get root elements
         ArrayList<Plan> plans = modelManager.getPlans();
-        Plan plan = plans.stream().filter(p -> p.getName().equals(planName)).findFirst().get();
+        Plan plan = plans.stream()
+                .filter(p -> p.getName().equals(planName))
+                .findAny()
+                .get();
+        Plan plan2 = plans.stream()
+                .filter(p -> p.getName().equals(planName2))
+                .findAny()
+                .get();
+
+        ArrayList<PlanType> planTypes = modelManager.getPlanTypes();
+        PlanType planType = planTypes.stream()
+                .filter(p -> p.getName().equals(planTypeName))
+                .findAny()
+                .get();
 
         List<EntryPoint> entryPoints = plan.getEntryPoints();
         EntryPoint entryPoint = entryPoints.get(0);
 
         List<State> states = plan.getStates();
-        State terminalState = states.stream().filter(s -> s instanceof TerminalState).findFirst().get();
-        State state = states.stream().filter(s -> !s.equals(terminalState)).findFirst().get();
+        State successState = states.stream()
+                .filter(s -> s.getName().equals(successStateName))
+                .findAny()
+                .get();
+        State state1 = states.stream()
+                .filter(s -> s.getName().equals(state1Name))
+                .findAny()
+                .get();
+        State state2 = states.stream()
+                .filter(s -> s.getName().equals(state2Name))
+                .findAny()
+                .get();
+        State state3 = states.stream()
+                .filter(s -> s.getName().equals(state3Name))
+                .findAny()
+                .get();
 
         List<Transition> transitions = plan.getTransitions();
-        Transition transition = transitions.get(0);
+        Transition transitionState1ToState2 = transitions.stream()
+                .filter(t -> t.getInState().equals(state1))
+                .filter(t -> t.getOutState().equals(state2))
+                .findAny()
+                .get();
+        Transition transitionState1ToState3 = transitions.stream()
+                .filter(t -> t.getInState().equals(state1))
+                .filter(t -> t.getOutState().equals(state3))
+                .findAny()
+                .get();
+        Transition transitionState3ToState2 = transitions.stream()
+                .filter(t -> t.getInState().equals(state3))
+                .filter(t -> t.getOutState().equals(state2))
+                .findAny()
+                .get();
+        Transition transitionState2ToSuccessState = transitions.stream()
+                .filter(t -> t.getInState().equals(state2))
+                .filter(t -> t.getOutState().equals(successState))
+                .findAny()
+                .get();
+
+        ArrayList<Condition> conditions = modelManager.getConditions();
+        PreCondition precondition1 = (PreCondition) conditions.stream()
+                .filter(c -> c.getName().equals(precondition1Name))
+                .findAny()
+                .get();
+        PreCondition precondition2 = (PreCondition) conditions.stream()
+                .filter(c -> c.getName().equals(precondition2Name))
+                .findAny()
+                .get();
+        PreCondition precondition3 = (PreCondition) conditions.stream()
+                .filter(c -> c.getName().equals(precondition3Name))
+                .findAny()
+                .get();
+        PreCondition precondition4 = (PreCondition) conditions.stream()
+                .filter(c -> c.getName().equals(precondition4Name))
+                .findAny()
+                .get();
 
         ArrayList<Behaviour> behaviours = modelManager.getBehaviours();
-        Behaviour behaviour = behaviours.stream().filter(b -> b.getName().equals(behaviourName)).findFirst().get();
+        Behaviour behaviour = behaviours.stream()
+                .filter(b -> b.getName().equals(behaviourName))
+                .findAny()
+                .get();
 
         List<de.unikassel.vs.alica.planDesigner.alicamodel.Configuration> configurations = behaviour.getConfigurations();
-        de.unikassel.vs.alica.planDesigner.alicamodel.Configuration configuration = configurations.get(0);
+        de.unikassel.vs.alica.planDesigner.alicamodel.Configuration behaviourConfiguration = configurations.get(0);
 
         List<Task> tasks = modelManager.getTasks();
-        Task task = tasks.stream().filter(t -> t.getName().equals(taskName)).findFirst().get();
+        Task task = tasks.stream()
+                .filter(t -> t.getName().equals(taskName))
+                .findAny()
+                .get();
 
         // test plan
         Assert.assertNotNull(plan.getId());
@@ -664,7 +741,7 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertEquals("", plan.getComment());
         Assert.assertEquals("", plan.getRelativeDirectory());
         Assert.assertEquals(0, plan.getVariables().size());
-        Assert.assertFalse(plan.getMasterPlan());
+        Assert.assertTrue(plan.getMasterPlan());
         Assert.assertEquals(0.0, plan.getUtilityThreshold(), 0.0);
         Assert.assertNull(plan.getPreCondition());
         Assert.assertNull(plan.getRuntimeCondition());
@@ -675,47 +752,107 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertEquals(String.valueOf(entryPoint.getId()), entryPoint.getName());
         Assert.assertEquals("", entryPoint.getComment());
         Assert.assertFalse(entryPoint.getSuccessRequired());
-        Assert.assertEquals(0, entryPoint.getMinCardinality());
-        Assert.assertEquals(0, entryPoint.getMaxCardinality());
+        Assert.assertEquals(EpMinCardinality, entryPoint.getMinCardinality());
+        Assert.assertEquals(EpMaxCardinality, entryPoint.getMaxCardinality());
         Assert.assertEquals(task.getId(), entryPoint.getTask().getId());
-        Assert.assertEquals(state.getId(), entryPoint.getState().getId());
+        Assert.assertEquals(state1.getId(), entryPoint.getState().getId());
         Assert.assertEquals(plan.getId(), entryPoint.getPlan().getId());
 
-        // test state
+        // test state1
         // missing: type
-        Assert.assertNotNull(state.getId());
-        Assert.assertEquals("Default Name", state.getName());
-        Assert.assertEquals("", state.getComment());
-        Assert.assertEquals(entryPoint.getId(), state.getEntryPoint().getId());
-        Assert.assertEquals(plan.getId(), state.getParentPlan().getId());
-        Assert.assertEquals(1, state.getAbstractPlans().size());
-        Assert.assertEquals(configuration.getId(), state.getAbstractPlans().get(0).getId());
-        Assert.assertEquals(0, state.getVariableBindings().size());
-        Assert.assertEquals(transition.getId(), state.getOutTransitions().get(0).getId());
-        Assert.assertEquals(0, state.getInTransitions().size());
+        Assert.assertNotNull(state1.getId());
+        Assert.assertEquals(state1Name, state1.getName());
+        Assert.assertEquals("", state1.getComment());
+        Assert.assertEquals(entryPoint.getId(), state1.getEntryPoint().getId());
+        Assert.assertEquals(plan.getId(), state1.getParentPlan().getId());
+        Assert.assertEquals(1, state1.getAbstractPlans().size());
+        Assert.assertEquals(behaviourConfiguration.getId(), state1.getAbstractPlans().get(0).getId());
+        Assert.assertEquals(0, state1.getVariableBindings().size());
+        Assert.assertEquals(2, state1.getOutTransitions().size());
+        Assert.assertTrue(state1.getOutTransitions().contains(transitionState1ToState2));
+        Assert.assertTrue(state1.getOutTransitions().contains(transitionState1ToState3));
+        Assert.assertEquals(0, state1.getInTransitions().size());
 
-        // test terminalState
+        // test state2
         // missing: type
-        Assert.assertNotNull(terminalState.getId());
-        Assert.assertEquals("Default Name", terminalState.getName());
-        Assert.assertEquals("", terminalState.getComment());
-        Assert.assertNull(terminalState.getEntryPoint());
-        Assert.assertEquals(plan.getId(), terminalState.getParentPlan().getId());
-        Assert.assertEquals(0, terminalState.getAbstractPlans().size());
-        Assert.assertEquals(0, terminalState.getVariableBindings().size());
-        Assert.assertEquals(0, terminalState.getOutTransitions().size());
-        Assert.assertEquals(transition.getId(), terminalState.getInTransitions().get(0).getId());
+        Assert.assertNotNull(state2.getId());
+        Assert.assertEquals(state2Name, state2.getName());
+        Assert.assertEquals("", state2.getComment());
+        Assert.assertNull(state2.getEntryPoint());
+        Assert.assertEquals(plan.getId(), state2.getParentPlan().getId());
+        Assert.assertEquals(1, state2.getAbstractPlans().size());
+        Assert.assertEquals(planType.getId(), state2.getAbstractPlans().get(0).getId());
+        Assert.assertEquals(0, state2.getVariableBindings().size());
+        Assert.assertEquals(1, state2.getOutTransitions().size());
+        Assert.assertTrue(state2.getOutTransitions().contains(transitionState2ToSuccessState));
+        Assert.assertEquals(2, state2.getInTransitions().size());
+        Assert.assertTrue(state2.getInTransitions().contains(transitionState1ToState2));
+        Assert.assertTrue(state2.getInTransitions().contains(transitionState3ToState2));
+
+        // test state3
+        // missing: type
+        Assert.assertNotNull(state3.getId());
+        Assert.assertEquals(state3Name, state3.getName());
+        Assert.assertEquals("", state3.getComment());
+        Assert.assertNull(state3.getEntryPoint());
+        Assert.assertEquals(plan.getId(), state3.getParentPlan().getId());
+        Assert.assertEquals(1, state3.getAbstractPlans().size());
+        Assert.assertEquals(plan2.getId(), state3.getAbstractPlans().get(0).getId());
+        Assert.assertEquals(0, state3.getVariableBindings().size());
+        Assert.assertEquals(1, state3.getOutTransitions().size());
+        Assert.assertTrue(state3.getOutTransitions().contains(transitionState3ToState2));
+        Assert.assertEquals(1, state3.getInTransitions().size());
+        Assert.assertTrue(state3.getInTransitions().contains(transitionState1ToState3));
+
+        // test successState
+        // missing: type
+        Assert.assertNotNull(successState.getId());
+        Assert.assertEquals(successStateName, successState.getName());
+        Assert.assertEquals("", successState.getComment());
+        Assert.assertNull(successState.getEntryPoint());
+        Assert.assertEquals(plan.getId(), successState.getParentPlan().getId());
+        Assert.assertEquals(0, successState.getAbstractPlans().size());
+        Assert.assertEquals(0, successState.getVariableBindings().size());
+        Assert.assertEquals(0, successState.getOutTransitions().size());
+        Assert.assertEquals(transitionState2ToSuccessState.getId(), successState.getInTransitions().get(0).getId());
         // missing: success
         // missing: postCondition
 
-        // test transition
-        Assert.assertNotNull(transition.getId());
-        Assert.assertEquals("FromDefault NameToDefault Name", transition.getName());
-        Assert.assertEquals("MISSING_COMMENT", transition.getComment());
-        Assert.assertEquals(state.getId(), transition.getInState().getId());
-        Assert.assertEquals(terminalState.getId(), transition.getOutState().getId());
-        Assert.assertNull(transition.getPreCondition());
-        Assert.assertNull(transition.getSynchronisation());
+        // test transitionState1ToState2
+        Assert.assertNotNull(transitionState1ToState2.getId());
+        Assert.assertEquals("From" + state1.getName() + "To" + state2.getName(), transitionState1ToState2.getName());
+        Assert.assertEquals("MISSING_COMMENT", transitionState1ToState2.getComment());
+        Assert.assertEquals(state1.getId(), transitionState1ToState2.getInState().getId());
+        Assert.assertEquals(state2.getId(), transitionState1ToState2.getOutState().getId());
+        Assert.assertEquals(precondition3, transitionState1ToState2.getPreCondition());
+        Assert.assertNull(transitionState1ToState2.getSynchronisation());
+
+        // test transitionState1ToState3
+        Assert.assertNotNull(transitionState1ToState3.getId());
+        Assert.assertEquals("From" + state1.getName() + "To" + state3.getName(), transitionState1ToState3.getName());
+        Assert.assertEquals("MISSING_COMMENT", transitionState1ToState3.getComment());
+        Assert.assertEquals(state1.getId(), transitionState1ToState3.getInState().getId());
+        Assert.assertEquals(state3.getId(), transitionState1ToState3.getOutState().getId());
+        Assert.assertEquals(precondition1, transitionState1ToState3.getPreCondition());
+        Assert.assertNull(transitionState1ToState3.getSynchronisation());
+
+        // test transitionState2ToSuccessState
+        Assert.assertNotNull(transitionState2ToSuccessState.getId());
+        Assert.assertEquals("From" + state2.getName() + "To" + successState.getName(), transitionState2ToSuccessState.getName());
+        Assert.assertEquals("MISSING_COMMENT", transitionState2ToSuccessState.getComment());
+        Assert.assertEquals(state2.getId(), transitionState2ToSuccessState.getInState().getId());
+        Assert.assertEquals(successState.getId(), transitionState2ToSuccessState.getOutState().getId());
+        Assert.assertEquals(precondition4, transitionState2ToSuccessState.getPreCondition());
+        Assert.assertNull(transitionState2ToSuccessState.getSynchronisation());
+
+        // test transitionState3ToState2
+        Assert.assertNotNull(transitionState3ToState2.getId());
+        Assert.assertEquals("From" + state3.getName() + "To" + state2.getName(), transitionState3ToState2.getName());
+        Assert.assertEquals("MISSING_COMMENT", transitionState3ToState2.getComment());
+        Assert.assertEquals(state3.getId(), transitionState3ToState2.getInState().getId());
+        Assert.assertEquals(state2.getId(), transitionState3ToState2.getOutState().getId());
+        Assert.assertEquals(precondition2, transitionState3ToState2.getPreCondition());
+        Assert.assertNull(transitionState3ToState2.getSynchronisation());
 
         // test synchronisations
         Assert.assertEquals(0, plan.getSynchronisations().size());
@@ -732,12 +869,12 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertNull(behaviour.getRuntimeCondition());
         Assert.assertNull(behaviour.getPostCondition());
 
-        Assert.assertNotNull(configuration.getId());
-        Assert.assertEquals("default", configuration.getName());
-        Assert.assertEquals("", configuration.getComment());
-        Assert.assertEquals("", configuration.getRelativeDirectory());
-        Assert.assertEquals(0, configuration.getVariables().size());
-        Assert.assertEquals(behaviour.getId(), configuration.getBehaviour().getId());
-        Assert.assertEquals(0, configuration.getKeyValuePairs().size());
+        Assert.assertNotNull(behaviourConfiguration.getId());
+        Assert.assertEquals("default", behaviourConfiguration.getName());
+        Assert.assertEquals("", behaviourConfiguration.getComment());
+        Assert.assertEquals("", behaviourConfiguration.getRelativeDirectory());
+        Assert.assertEquals(0, behaviourConfiguration.getVariables().size());
+        Assert.assertEquals(behaviour.getId(), behaviourConfiguration.getBehaviour().getId());
+        Assert.assertEquals(0, behaviourConfiguration.getKeyValuePairs().size());
     }
 }
