@@ -14,9 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.testfx.api.FxAssert;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
@@ -35,6 +33,8 @@ import java.util.concurrent.Semaphore;
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
 
 public class SavePlanTests extends ApplicationTest {
+    private static String activeUserConfig;
+
     private final String taskRepository = "testfxTaskRepo";
     private final String taskName = "testfxTask";
     private final String planName = "testfxPlan";
@@ -87,6 +87,21 @@ public class SavePlanTests extends ApplicationTest {
     private ModelManager modelManager;
     private Stage stage;
 
+
+    @BeforeClass
+    public static void beforeClass() {
+        ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+        activeUserConfig = configurationManager.getActiveConfiguration().getName();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+        configurationManager.setController(null);  // to avoid Platform.runLater
+        configurationManager.setActiveConfiguration(activeUserConfig);
+        configurationManager.writeToDisk();
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
@@ -107,18 +122,6 @@ public class SavePlanTests extends ApplicationTest {
         startApplication(stage);
     }
 
-    private void startApplication(Stage stage) throws Exception {
-        PlanDesigner.init();
-        PlanDesignerApplication planDesignerApplication = new PlanDesignerApplication();
-        planDesignerApplication.start(stage);
-    }
-
-    private static void waitForRunLater() throws InterruptedException {
-        Semaphore semaphore = new Semaphore(0);
-        Platform.runLater(semaphore::release);
-        semaphore.acquire();
-    }
-
     @Before
     public void before() throws InterruptedException {
         // check if configuration is already present
@@ -135,6 +138,18 @@ public class SavePlanTests extends ApplicationTest {
             }
         });
         waitForRunLater();
+    }
+
+    private void startApplication(Stage stage) throws Exception {
+        PlanDesigner.init();
+        PlanDesignerApplication planDesignerApplication = new PlanDesignerApplication();
+        planDesignerApplication.start(stage);
+    }
+
+    private static void waitForRunLater() throws InterruptedException {
+        Semaphore semaphore = new Semaphore(0);
+        Platform.runLater(semaphore::release);
+        semaphore.acquire();
     }
 
     @Test
