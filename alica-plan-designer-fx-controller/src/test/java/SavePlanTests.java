@@ -8,14 +8,17 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.testfx.api.FxAssert;
+import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.service.query.PointQuery;
 
@@ -27,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
 
@@ -81,10 +85,12 @@ public class SavePlanTests extends ApplicationTest {
 
     private final String defaultName = i18NRepo.getString("label.state.defaultName");
     private ModelManager modelManager;
-
+    private Stage stage;
 
     @Override
     public void start(Stage stage) throws Exception {
+        this.stage = stage;
+
         // clean config
         deleteConfig();
         deleteconfigFolder();
@@ -101,17 +107,38 @@ public class SavePlanTests extends ApplicationTest {
         startApplication(stage);
     }
 
-    private void startApplication(Stage stage) throws IOException {
+    private void startApplication(Stage stage) throws Exception {
         PlanDesigner.init();
         PlanDesignerApplication planDesignerApplication = new PlanDesignerApplication();
         planDesignerApplication.start(stage);
     }
 
-    @Test
-    public void testCreatePlan() {
+    private static void waitForRunLater() throws InterruptedException {
+        Semaphore semaphore = new Semaphore(0);
+        Platform.runLater(semaphore::release);
+        semaphore.acquire();
+    }
+
+    @Before
+    public void before() throws InterruptedException {
         // check if configuration is already present
         createConfiguration();
 
+        // Restart the application.
+        // Without a restart, the problem occurs that it is not possible to save the created elements.
+        Platform.runLater(() -> {
+            try {
+                FxToolkit.cleanupStages();
+                startApplication(stage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        waitForRunLater();
+    }
+
+    @Test
+    public void testCreatePlan() {
         // init
         createPlan(planName);
         createPlan(planName2);
@@ -145,10 +172,10 @@ public class SavePlanTests extends ApplicationTest {
         placeSuccessState();
         setSuccessStateContainerName(defaultName, successStateName);
 
-        repositionPlanElement(getEntryPointContainer(), -0.2, -0.5);
+        repositionPlanElement(getEntryPointContainer(), -0.1, -0.5);
         repositionPlanElement(getStateContainer1(), -0.1, -0.5);
         repositionPlanElement(getStateContainer2(), 0, -0.5);
-        repositionPlanElement(getStateContainer3(), -0.3, 0);
+        repositionPlanElement(getStateContainer3(), -0.2, 0);
         repositionPlanElement(getSuccessStateContainer(), 0, -0.5);
 
         drawInitTransition(getEntryPointContainer(), getStateContainer1());
