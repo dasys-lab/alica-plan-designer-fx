@@ -20,14 +20,14 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.service.query.PointQuery;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
@@ -60,7 +60,6 @@ public class SavePlanTests extends ApplicationTest {
     private final String configFolderTasks = configFolder + "/tasks";
     private final String configFolderSrc = configFolder + "/src";
     private final String configFolderPlugin = getPluginsFolder();
-    private final String configFile = rootConfigFolder + "/" + configName + ".properties";
 
     private final String state1Name = "State1";
     private final String state2Name = "State2";
@@ -91,15 +90,21 @@ public class SavePlanTests extends ApplicationTest {
     @BeforeClass
     public static void beforeClass() {
         ConfigurationManager configurationManager = ConfigurationManager.getInstance();
-        activeUserConfig = configurationManager.getActiveConfiguration().getName();
+        Configuration activeConfiguration = configurationManager.getActiveConfiguration();
+        if (activeConfiguration != null) {
+            // a configuration is active
+            activeUserConfig = activeConfiguration.getName();
+        }
     }
 
     @AfterClass
     public static void afterClass() {
-        ConfigurationManager configurationManager = ConfigurationManager.getInstance();
-        configurationManager.setController(null);  // to avoid Platform.runLater
-        configurationManager.setActiveConfiguration(activeUserConfig);
-        configurationManager.writeToDisk();
+        if (activeUserConfig != null) {
+            ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+            configurationManager.setController(null);  // to avoid Platform.runLater
+            configurationManager.setActiveConfiguration(activeUserConfig);
+            configurationManager.writeToDisk();
+        }
     }
 
     @Override
@@ -217,7 +222,8 @@ public class SavePlanTests extends ApplicationTest {
 
         // check cpp code generation
         generateCppCode();
-        checkCppCode();
+        checkCppCodeStructure();
+        checkCppCodeContent();
 
         // clean
         deletePlan(planNameExtension);
@@ -696,7 +702,7 @@ public class SavePlanTests extends ApplicationTest {
         sleep(6000);  // wait for cpp code generation
     }
 
-    private void checkCppCode() {
+    private void checkCppCodeStructure() {
         ArrayList<String> files = new ArrayList<>();
         Path path = Paths.get(configFolderSrc);
 
@@ -746,6 +752,30 @@ public class SavePlanTests extends ApplicationTest {
         for (String file: expectedFiles) {
             Assert.assertTrue(files.contains(file));
         }
+    }
+
+    private void checkCppCodeContent() {
+        InputStream behaviourCreatorHExpectedStream = this.getClass().getResourceAsStream("BehaviourCreator.h");
+        String behaviourCreatorHExpected = readStream(behaviourCreatorHExpectedStream);
+        String behaviourCreatorHActualPath = configFolderSrc + "/include/BehaviourCreator.h";
+        String behaviourCreatorHActual = readFile(behaviourCreatorHActualPath);
+
+        Assert.assertEquals(behaviourCreatorHExpected, behaviourCreatorHActual);
+    }
+
+    private String readStream(InputStream inputStream) {
+        Scanner scanner = new java.util.Scanner(inputStream).useDelimiter("\\A");
+        return scanner.hasNext() ? scanner.next() : "";
+    }
+
+    private String readFile(String path) {
+        try {
+            InputStream inputStream = new FileInputStream(new File(path));
+            return readStream(inputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private ModelManager getModelManager() {
@@ -874,7 +904,6 @@ public class SavePlanTests extends ApplicationTest {
 
         // test entrypoint
         Assert.assertEquals(1, entryPoints.size());
-        Assert.assertNotNull(entryPoint.getId());
         Assert.assertEquals(String.valueOf(entryPoint.getId()), entryPoint.getName());
         Assert.assertEquals("", entryPoint.getComment());
         Assert.assertFalse(entryPoint.getSuccessRequired());
@@ -885,8 +914,6 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertEquals(plan.getId(), entryPoint.getPlan().getId());
 
         // test state1
-        // missing: type
-        Assert.assertNotNull(state1.getId());
         Assert.assertEquals(state1Name, state1.getName());
         Assert.assertEquals("", state1.getComment());
         Assert.assertEquals(entryPoint.getId(), state1.getEntryPoint().getId());
@@ -900,8 +927,6 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertEquals(0, state1.getInTransitions().size());
 
         // test state2
-        // missing: type
-        Assert.assertNotNull(state2.getId());
         Assert.assertEquals(state2Name, state2.getName());
         Assert.assertEquals("", state2.getComment());
         Assert.assertNull(state2.getEntryPoint());
@@ -916,8 +941,6 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertTrue(state2.getInTransitions().contains(transitionState3ToState2));
 
         // test state3
-        // missing: type
-        Assert.assertNotNull(state3.getId());
         Assert.assertEquals(state3Name, state3.getName());
         Assert.assertEquals("", state3.getComment());
         Assert.assertNull(state3.getEntryPoint());
@@ -931,8 +954,6 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertTrue(state3.getInTransitions().contains(transitionState1ToState3));
 
         // test successState
-        // missing: type
-        Assert.assertNotNull(successState.getId());
         Assert.assertEquals(successStateName, successState.getName());
         Assert.assertEquals("", successState.getComment());
         Assert.assertNull(successState.getEntryPoint());
@@ -945,7 +966,6 @@ public class SavePlanTests extends ApplicationTest {
         // missing: postCondition
 
         // test transitionState1ToState2
-        Assert.assertNotNull(transitionState1ToState2.getId());
         Assert.assertEquals("From" + state1.getName() + "To" + state2.getName(), transitionState1ToState2.getName());
         Assert.assertEquals("MISSING_COMMENT", transitionState1ToState2.getComment());
         Assert.assertEquals(state1.getId(), transitionState1ToState2.getInState().getId());
@@ -954,7 +974,6 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertNull(transitionState1ToState2.getSynchronisation());
 
         // test transitionState1ToState3
-        Assert.assertNotNull(transitionState1ToState3.getId());
         Assert.assertEquals("From" + state1.getName() + "To" + state3.getName(), transitionState1ToState3.getName());
         Assert.assertEquals("MISSING_COMMENT", transitionState1ToState3.getComment());
         Assert.assertEquals(state1.getId(), transitionState1ToState3.getInState().getId());
@@ -963,7 +982,6 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertNull(transitionState1ToState3.getSynchronisation());
 
         // test transitionState2ToSuccessState
-        Assert.assertNotNull(transitionState2ToSuccessState.getId());
         Assert.assertEquals("From" + state2.getName() + "To" + successState.getName(), transitionState2ToSuccessState.getName());
         Assert.assertEquals("MISSING_COMMENT", transitionState2ToSuccessState.getComment());
         Assert.assertEquals(state2.getId(), transitionState2ToSuccessState.getInState().getId());
@@ -972,7 +990,6 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertNull(transitionState2ToSuccessState.getSynchronisation());
 
         // test transitionState3ToState2
-        Assert.assertNotNull(transitionState3ToState2.getId());
         Assert.assertEquals("From" + state3.getName() + "To" + state2.getName(), transitionState3ToState2.getName());
         Assert.assertEquals("MISSING_COMMENT", transitionState3ToState2.getComment());
         Assert.assertEquals(state3.getId(), transitionState3ToState2.getInState().getId());
@@ -984,7 +1001,6 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertEquals(0, plan.getSynchronisations().size());
 
         // test behaviour
-        Assert.assertNotNull(behaviour.getId());
         Assert.assertEquals(behaviourName, behaviour.getName());
         Assert.assertEquals("", behaviour.getComment());
         Assert.assertEquals("", behaviour.getRelativeDirectory());
@@ -995,7 +1011,6 @@ public class SavePlanTests extends ApplicationTest {
         Assert.assertNull(behaviour.getRuntimeCondition());
         Assert.assertNull(behaviour.getPostCondition());
 
-        Assert.assertNotNull(behaviourConfiguration.getId());
         Assert.assertEquals("default", behaviourConfiguration.getName());
         Assert.assertEquals("", behaviourConfiguration.getComment());
         Assert.assertEquals("", behaviourConfiguration.getRelativeDirectory());
