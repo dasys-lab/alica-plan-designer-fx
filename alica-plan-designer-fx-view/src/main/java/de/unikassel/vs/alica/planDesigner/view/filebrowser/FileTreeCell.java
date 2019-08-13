@@ -60,25 +60,33 @@ public class FileTreeCell extends TreeCell<File> {
         if (!isEditing()) return;
 
         int fileEndingPosition = newValue.getName().lastIndexOf(".");
+        //If the rename file is a folder
         if (fileEndingPosition < 0) {
-            getTreeView()
+            GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, "folder", newValue.getName());
+            guiChangeAttributeEvent.setAttributeName(this.getTreeItem().getValue().toString());
+            guiChangeAttributeEvent.setNewValue(newValue);
+            controller.getGuiModificationHandler().handle(guiChangeAttributeEvent);
+
+            /*     getTreeView()
+
                     .fireEvent(new TreeView.EditEvent<>(getTreeView(),
                             TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));
             ErrorWindowController.createErrorWindow(
                     I18NRepo.getInstance().getString("label.error.rename.illegalEnding"), null);
             return;
+
+              */
+        } else {
+            ViewModelElement element = ((FileTreeItem) getTreeItem()).getViewModelElement();
+            GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, element.getType(), element.getName());
+
+            guiChangeAttributeEvent.setElementId(element.getId());
+            guiChangeAttributeEvent.setParentId(element.getId());
+            guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
+            guiChangeAttributeEvent.setAttributeName("name");
+            guiChangeAttributeEvent.setNewValue(newValue.getName().substring(0, fileEndingPosition));
+            controller.getGuiModificationHandler().handle(guiChangeAttributeEvent);
         }
-
-        ViewModelElement element = ((FileTreeItem)getTreeItem()).getViewModelElement();
-        GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, element.getType(), element.getName());
-
-        guiChangeAttributeEvent.setElementId(element.getId());
-        guiChangeAttributeEvent.setParentId(element.getId());
-        guiChangeAttributeEvent.setAttributeType(String.class.getSimpleName());
-        guiChangeAttributeEvent.setAttributeName("name");
-        guiChangeAttributeEvent.setNewValue(newValue.getName().substring(0, fileEndingPosition));
-        controller.getGuiModificationHandler().handle(guiChangeAttributeEvent);
-
 
         final TreeItem<File> treeItem = getTreeItem();
         final TreeView<File> tree = getTreeView();

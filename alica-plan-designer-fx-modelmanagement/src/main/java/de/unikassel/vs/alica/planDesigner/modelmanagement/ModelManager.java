@@ -1247,7 +1247,11 @@ public class ModelManager implements Observer {
                         }
                         break;
                     default:
-                        cmd = new ChangeAttributeValue(this, mmq);
+                        if(mmq.getElementType().equals("folder")){
+                            cmd = new RenameFileTreeFolder(this, mmq);
+                        } else {
+                            cmd = new ChangeAttributeValue(this, mmq);
+                        }
                         break;
                 }
                 break;
