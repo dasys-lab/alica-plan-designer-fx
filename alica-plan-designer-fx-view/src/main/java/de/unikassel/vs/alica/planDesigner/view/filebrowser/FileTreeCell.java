@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiChangeAttributeEvent;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.application.Platform;
@@ -62,20 +63,10 @@ public class FileTreeCell extends TreeCell<File> {
         int fileEndingPosition = newValue.getName().lastIndexOf(".");
         //If the rename file is a folder
         if (fileEndingPosition < 0) {
-            GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, "folder", newValue.getName());
+            GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.FOLDER, newValue.getName());
             guiChangeAttributeEvent.setAttributeName(this.getTreeItem().getValue().toString());
             guiChangeAttributeEvent.setNewValue(newValue);
             controller.getGuiModificationHandler().handle(guiChangeAttributeEvent);
-
-            /*     getTreeView()
-
-                    .fireEvent(new TreeView.EditEvent<>(getTreeView(),
-                            TreeView.editCancelEvent(), getTreeItem(), getItem(), getItem()));
-            ErrorWindowController.createErrorWindow(
-                    I18NRepo.getInstance().getString("label.error.rename.illegalEnding"), null);
-            return;
-
-              */
         } else {
             ViewModelElement element = ((FileTreeItem) getTreeItem()).getViewModelElement();
             GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, element.getType(), element.getName());

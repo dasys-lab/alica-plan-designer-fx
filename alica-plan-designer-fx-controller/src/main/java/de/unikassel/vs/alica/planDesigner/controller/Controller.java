@@ -189,6 +189,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * @param event Object that describes the purpose/context of the fired event.
      */
     public void handleModelEvent(ModelEvent event) {
+        if(event.getEventType().equals(ModelEventType.ELEMENT_FOLDER_DELETED)){
+            updateFileTreeView(event, null);
+            return;
+        }
         PlanElement modelElement = event.getElement();
         ViewModelElement viewModelElement = viewModelManager.getViewModelElement(modelElement);
 
@@ -254,6 +258,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
                     mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
                 }
+                break;
+            case ELEMENT_FOLDER_DELETED:
+                mainWindowController.getFileTreeView().removeFolder(event.getChangedAttribute());
                 break;
         }
     }

@@ -6,10 +6,11 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeItem;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeCell;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 
 import java.util.ArrayList;
 
@@ -27,25 +28,31 @@ public class DeleteFileMenuItem extends MenuItem {
     }
 
     public void deleteFile() {
-        ViewModelElement elementToDelete = ((FileTreeItem)toDelete.getTreeItem()).getViewModelElement();
-        if (!isElementUsed(elementToDelete)) {
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, elementToDelete.getType(), elementToDelete.getName());
-            event.setElementId(elementToDelete.getId());
+        if(((FileTreeItem)toDelete.getTreeItem()).getViewModelElement() instanceof ViewModelElement) {
+            ViewModelElement elementToDelete = ((FileTreeItem)toDelete.getTreeItem()).getViewModelElement();
+            if (!isElementUsed(elementToDelete)) {
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, elementToDelete.getType(), elementToDelete.getName());
+                event.setElementId(elementToDelete.getId());
+                guiModificationHandler.handle(event);
+            }
+        } else {
+            //Stop pop up Window, if the folder is not empty
+            if(!toDelete.getTreeItem().isLeaf()) {
+                Dialog dialog = new Dialog();
+                dialog.setTitle("Folder delete fail");
+                DialogPane dialogPane = dialog.getDialogPane();
+                dialogPane.setStyle("-fx-background-color: #fff;");
+                dialogPane.setContentText("Cannot delete folders if they are not empty or the root folder!!!");
+                ButtonType okButtonType = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().add(okButtonType);
+                Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);
+                okButton.setAlignment(Pos.CENTER);
+                dialog.showAndWait();
+                return;
+            }
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.FOLDER, toDelete.getTreeItem().getValue().toString());
             guiModificationHandler.handle(event);
         }
-//        // Folders
-//        if (toDelete.isDirectory()) {
-//            for (File alsoDelete : toDelete.listFiles()) {
-//                DeleteFileMenuItem deleteFileMenuItem = new DeleteFileMenuItem(alsoDelete);
-//                deleteFileMenuItem.setCommandStack(commandStack);
-//                deleteFileMenuItem.deleteFile();
-//            }
-//            try {
-//                Files.onRemoveElement(toDelete.toPath());
-//            } catch (IOException e) {
-//                throw new RuntimeException("");
-//            }
-//        }
     }
 
     private boolean isElementUsed(ViewModelElement elementToDelete) {
