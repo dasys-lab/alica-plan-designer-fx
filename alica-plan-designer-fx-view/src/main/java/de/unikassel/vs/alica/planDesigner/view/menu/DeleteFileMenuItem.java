@@ -36,13 +36,22 @@ public class DeleteFileMenuItem extends MenuItem {
                 guiModificationHandler.handle(event);
             }
         } else {
-            //Stop pop up Window, if the folder is not empty
-            if(!toDelete.getTreeItem().isLeaf()) {
+            //Stop pop up Window, if the folder is not empty or is the root folder
+            boolean root = false;
+            for (Object object : toDelete.getTreeView().getRoot().getChildren())
+            {
+                TreeItem treeItem = (TreeItem) object;
+                if(treeItem.getValue().toString().equals(toDelete.getTreeItem().getValue().toString())){
+                    root = true;
+                }
+            }
+            if(!toDelete.getTreeItem().isLeaf() || root) {
                 Dialog dialog = new Dialog();
                 dialog.setTitle("Folder delete fail");
                 DialogPane dialogPane = dialog.getDialogPane();
                 dialogPane.setStyle("-fx-background-color: #fff;");
-                dialogPane.setContentText("Cannot delete folders if they are not empty or the root folder!!!");
+                dialogPane.setMinWidth(500);
+                dialogPane.setContentText("Cannot delete folders if they are not empty or is the root folder!!!");
                 ButtonType okButtonType = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
                 dialog.getDialogPane().getButtonTypes().add(okButtonType);
                 Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);

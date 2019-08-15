@@ -10,10 +10,8 @@ import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -62,6 +60,23 @@ public class FileTreeCell extends TreeCell<File> {
 
         int fileEndingPosition = newValue.getName().lastIndexOf(".");
         //If the rename file is a folder
+        for (Object object : getTreeView().getRoot().getChildren())
+        {
+            TreeItem treeItem = (TreeItem) object;
+            if(treeItem.getValue().toString().equals(getTreeItem().getValue().toString())){
+                Dialog dialog = new Dialog();
+                dialog.setTitle("Folder rename fail");
+                DialogPane dialogPane = dialog.getDialogPane();
+                dialogPane.setStyle("-fx-background-color: #fff;");
+                dialogPane.setContentText("Cannot rename the root folder!!!");
+                ButtonType okButtonType = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().add(okButtonType);
+                Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);
+                okButton.setAlignment(Pos.CENTER);
+                dialog.showAndWait();
+                return;
+            }
+        }
         if (fileEndingPosition < 0) {
             GuiChangeAttributeEvent guiChangeAttributeEvent = new GuiChangeAttributeEvent(GuiEventType.CHANGE_ELEMENT, Types.FOLDER, newValue.getName());
             guiChangeAttributeEvent.setAttributeName(this.getTreeItem().getValue().toString());
