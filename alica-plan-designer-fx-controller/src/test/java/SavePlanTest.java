@@ -32,7 +32,7 @@ import java.util.concurrent.Semaphore;
 
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
 
-public class SavePlanTests extends ApplicationTest {
+public class SavePlanTest extends ApplicationTest {
     private static String activeUserConfig;
 
     private final String taskRepository = "testfxTaskRepo";

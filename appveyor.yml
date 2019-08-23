@@ -8,12 +8,8 @@ environment:
 
 shallow_clone: true
 
-build:
-  verbosity: detailed
-
 build_script:
-  - cmd: java -version
-  - cmd: mvn --version
+  - mvn clean install -DskipTests'
 
 test_script:
   - mvn test -B
