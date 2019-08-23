@@ -9,7 +9,7 @@ environment:
 shallow_clone: true
 
 build_script:
-  - mvn clean install -DskipTests'
+  - mvn clean install -DskipTests
 
 test_script:
   - mvn test -B
