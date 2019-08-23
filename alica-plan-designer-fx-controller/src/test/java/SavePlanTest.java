@@ -129,6 +129,22 @@ public class SavePlanTest extends ApplicationTest {
 
     @Before
     public void before() throws InterruptedException {
+        // log fields
+        System.out.println("taskRepositoryExtension: " + taskRepositoryExtension);
+        System.out.println("planNameExtension: " + planNameExtension);
+        System.out.println("planName2Extension: " + planName2Extension);
+        System.out.println("planTypeNameExtension: " + planTypeNameExtension);
+        System.out.println("behaviourNameExtension: " + behaviourNameExtension);
+        System.out.println("roleSetNameExtension: " + roleSetNameExtension);
+
+        System.out.println("rootConfigFolder: " + rootConfigFolder);
+        System.out.println("configFolder: " + configFolder);
+        System.out.println("configFolderPlans: " + configFolderPlans);
+        System.out.println("configFolderRoles: " + configFolderRoles);
+        System.out.println("configFolderTasks: " + configFolderTasks);
+        System.out.println("configFolderSrc: " + configFolderSrc);
+        System.out.println("configFolderPlugin: " + configFolderPlugin);
+
         // check if configuration is already present
         createConfiguration();
 
