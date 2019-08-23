@@ -60,6 +60,7 @@ public class SavePlanTest extends ApplicationTest {
     private final String configFolderTasks = configFolder + File.separator + "tasks";
     private final String configFolderSrc = configFolder + File.separator + "src";
     private final String configFolderPlugin = getPluginsFolder();
+    private final String configWindowProperties = rootConfigFolder + File.separator + "windowConfig.properties";
 
     private final String state1Name = "State1";
     private final String state2Name = "State2";
@@ -110,6 +111,11 @@ public class SavePlanTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
+
+        File windowConfigFile = new File(configWindowProperties);
+        if (!windowConfigFile.exists()) {
+            ConfigurationManager.getInstance().saveWindowPreferences(800.0, 1200.0, 0.0, 0.0);
+        }
 
         // clean config
         deleteConfig();
@@ -175,7 +181,7 @@ public class SavePlanTest extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
-        sleep(1000000000);
+//        sleep(1000000000);
 
         // init
         createPlan(planName);
