@@ -6,6 +6,9 @@
     <groupId>de.unikassel.vs.alica</groupId>
     <artifactId>alica-plan-designer-fx-default-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <build>
         <plugins>
@@ -25,6 +28,9 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
