@@ -327,4 +327,8 @@ public final class ConfigurationManager {
     public Properties getWindowPreferences() {
         return windowConfigProperties;
     }
+
+    public File getPlanDesignerConfigFolder() {
+        return planDesignerConfigFolder;
+    }
 }

@@ -28,6 +28,7 @@ public class TransitionContainer extends Container implements Observable {
                                StateContainer fromState, StateContainer toState, PlanTab planTab) {
         super(transition, null, planTab);
         this.setContainedElement(transition);
+        this.setId("TransitionContainer");
         this.fromState = fromState;
         this.toState = toState;
         InvalidationListener invalidationListener = new InvalidationListener() {
@@ -218,5 +219,13 @@ public class TransitionContainer extends Container implements Observable {
 
     public void setContainedElement(TransitionViewModel containedElement) {
         this.containedElement = containedElement;
+    }
+
+    public StateContainer getFromState() {
+        return fromState;
+    }
+
+    public StateContainer getToState() {
+        return toState;
     }
 }

@@ -280,11 +280,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue());
-                if(event.getChangedAttribute() == "name") {
+                if(event.getChangedAttribute().equals("name")) {
                     viewModelElement.setName(planElement.getName());
                     updateFileTreeView(event, viewModelElement);
                 }
-                if(event.getChangedAttribute() == "masterPlan") {
+                if(event.getChangedAttribute().equals("masterPlan")) {
                     updateFileTreeView(event, viewModelElement);
                 }
                 break;

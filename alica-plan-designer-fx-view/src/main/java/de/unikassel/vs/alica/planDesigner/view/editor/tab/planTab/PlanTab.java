@@ -52,6 +52,7 @@ public class PlanTab extends AbstractPlanTab {
     private void draw() {
         planEditorGroup = new PlanEditorGroup((PlanViewModel) serializableViewModel, this);
         planContent = new StackPane(planEditorGroup);
+        planContent.setId("PlanTabPlanContent");
         planContent.setPadding(new Insets(50, 50, 50, 50));
         planContent.setManaged(true);
         planEditorGroup.setManaged(true);
@@ -147,7 +148,7 @@ public class PlanTab extends AbstractPlanTab {
                 TransitionContainer tC = bpC.getTransitionContainer();
                 event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.BENDPOINT, null);
                 event.setElementId(tC.getContainedElement().getId());
-                HashMap<String, Long> bendpoint = new HashMap<String, Long>();
+                HashMap<String, Long> bendpoint = new HashMap<>();
                 bendpoint.put(bpC.getContainedElement().getType(), bpC.getContainedElement().getId());
                 event.setRelatedObjects(bendpoint);
                 event.setParentId(getSerializableViewModel().getId());

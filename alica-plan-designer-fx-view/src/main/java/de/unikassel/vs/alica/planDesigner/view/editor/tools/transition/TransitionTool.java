@@ -267,6 +267,7 @@ public class TransitionTool extends AbstractTool {
         Tooltip tooltip = new Tooltip(Types.TRANSITION);
         toolButton.setTooltip(tooltip);
         toolButton.setIcon(Types.TRANSITION);
+        toolButton.setId("TransitionToolButton");
         setToolButton(toolButton);
 
         imageCursor = new AlicaCursor(AlicaCursor.Type.transition, 8, 8);

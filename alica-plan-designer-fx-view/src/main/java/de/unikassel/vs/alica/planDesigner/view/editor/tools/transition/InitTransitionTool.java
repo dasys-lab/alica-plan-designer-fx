@@ -42,6 +42,7 @@ public class InitTransitionTool extends AbstractTool {
         Tooltip tooltip = new Tooltip(Types.INITSTATECONNECTION);
         toolButton.setTooltip(tooltip);
         toolButton.setIcon(Types.INITSTATECONNECTION);
+        toolButton.setId("InitTransitionToolButton");
         setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.initstateconnection, 8, 8);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_initstateconnection, 8, 8);

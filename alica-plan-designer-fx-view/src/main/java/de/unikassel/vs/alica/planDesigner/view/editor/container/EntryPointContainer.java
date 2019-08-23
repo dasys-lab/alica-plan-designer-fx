@@ -78,6 +78,7 @@ public class EntryPointContainer extends Container {
         getChildren().clear();
         visualRepresentation = new Circle(EntryPointContainer.ENTRYPOINT_RADIUS,
                 getVisualisationColor());
+        visualRepresentation.setId("EntryPointContainerCircle");
         setEffectToStandard();
 
         if (stateContainer != null) {

@@ -223,12 +223,15 @@ public class MainWindowController implements Initializable {
 
         // ---- EDIT MENU ----
         editMenu = new EditMenu(fileTreeView, editorTabPane, repositoryTabPane, configWindowController);
+        editMenu.setId("editMenu");
         editMenu.setGuiModificationHandler(this.guiModificationHandler);
         menus.add(editMenu);
 
         // ---- CODE GENERATION MENU ----
         codeGenerationMenu = new Menu(i18NRepo.getString("label.menu.generation"));
+        codeGenerationMenu.setId("codeGenerationMenu");
         MenuItem generateItem = new MenuItem(i18NRepo.getString("label.menu.generation.generate"));
+        generateItem.setId("generateItem");
         MenuItem generateCurrentFile = new MenuItem(i18NRepo.getString("label.menu.generation.file"));
         generateCurrentFile.setDisable(true);
         editorTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
