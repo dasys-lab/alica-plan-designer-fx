@@ -385,6 +385,7 @@ public class SavePlanTest extends ApplicationTest {
 
         // plugins folder selector have to be opened to reload the default plugin drop down menu
         clickOn("#pluginsFolderFileButton");
+        sleep(5000);
         type(KeyCode.ESCAPE);
 
         // activate default plugin
