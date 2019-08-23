@@ -380,13 +380,9 @@ public class SavePlanTest extends ApplicationTest {
         for(String folder: Arrays.asList(configFolderPlans, configFolderRoles, configFolderTasks, configFolderSrc, configFolderPlugin)) {
             type(KeyCode.TAB);
             write(folder);
+            type(KeyCode.ENTER);
             type(KeyCode.TAB);
         }
-
-        // plugins folder selector have to be opened to reload the default plugin drop down menu
-        clickOn("#pluginsFolderFileButton");
-        sleep(5000);
-        type(KeyCode.ESCAPE);
 
         // activate default plugin
         clickOn("#defaultPluginComboBox");

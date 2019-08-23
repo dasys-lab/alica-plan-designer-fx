@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.KeyCode;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -319,6 +320,15 @@ public class ConfigurationWindowController implements Initializable {
         defaultPluginComboBox.setItems(FXCollections.observableArrayList());
         defaultPluginComboBox.getSelectionModel().selectedItemProperty().addListener(pluginEventHandler);
         defaultPluginComboBox.valueProperty().addListener(pluginEventHandler);
+        pluginsFolderTextField.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                String path = pluginsFolderTextField.getText();
+                File file = new File(path);
+                if (file.exists() && file.isDirectory()) {
+                    updateAvailablePlugins();
+                }
+            }
+        });
         updateAvailablePlugins();
     }
 
