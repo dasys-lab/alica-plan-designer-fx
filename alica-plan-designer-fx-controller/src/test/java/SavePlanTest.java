@@ -54,11 +54,11 @@ public class SavePlanTest extends ApplicationTest {
 
     private final String configName = "testfxConfig";
     private final String rootConfigFolder = ConfigurationManager.getInstance().getPlanDesignerConfigFolder().getPath();
-    private final String configFolder = rootConfigFolder + "/testfx";
-    private final String configFolderPlans = configFolder + "/plans";
-    private final String configFolderRoles = configFolder + "/roles";
-    private final String configFolderTasks = configFolder + "/tasks";
-    private final String configFolderSrc = configFolder + "/src";
+    private final String configFolder = rootConfigFolder + File.separator + "testfx";
+    private final String configFolderPlans = configFolder + File.separator + "plans";
+    private final String configFolderRoles = configFolder + File.separator + "roles";
+    private final String configFolderTasks = configFolder + File.separator + "tasks";
+    private final String configFolderSrc = configFolder + File.separator + "src";
     private final String configFolderPlugin = getPluginsFolder();
 
     private final String state1Name = "State1";
@@ -421,7 +421,7 @@ public class SavePlanTest extends ApplicationTest {
     private String getPluginsFolder() {
         Path currentRelativePath = Paths.get("");
         String projectRoot = currentRelativePath.toAbsolutePath().getParent().toString();
-        String pluginsFolder = projectRoot + "/alica-plan-designer-fx-default-plugin";
+        String pluginsFolder = projectRoot + File.separator + "alica-plan-designer-fx-default-plugin";
         return pluginsFolder;
     }
 
@@ -739,28 +739,28 @@ public class SavePlanTest extends ApplicationTest {
         String plan2NameId = plan2.getName() + plan2.getId();
 
         List<String> expectedFiles = Arrays.asList(
-                "include/constraints/" + planNameId + "Constraints.h",
-                "include/constraints/" + plan2NameId + "Constraints.h",
-                "include/DomainBehaviour.h",
-                "include/DomainCondition.h",
-                "include/UtilityFunctionCreator.h",
-                "include/BehaviourCreator.h",
-                "include/ConditionCreator.h",
-                "include/ConstraintCreator.h",
-                "include/" + planNameId + ".h",
-                "include/" + plan2NameId + ".h",
-                "include/" + behaviourName + ".h",
-                "src/constraints/" + planNameId + "Constraints.cpp",
-                "src/constraints/" + plan2NameId + "Constraints.cpp",
-                "src/DomainBehaviour.cpp",
-                "src/DomainCondition.cpp",
-                "src/UtilityFunctionCreator.cpp",
-                "src/BehaviourCreator.cpp",
-                "src/ConditionCreator.cpp",
-                "src/ConstraintCreator.cpp",
-                "src/" + planNameId + ".cpp",
-                "src/" + plan2NameId + ".cpp",
-                "src/" + behaviourName + ".cpp"
+                "include" + File.separator + "constraints" + File.separator + planNameId + "Constraints.h",
+                "include" + File.separator + "constraints" + File.separator + plan2NameId + "Constraints.h",
+                "include" + File.separator + "DomainBehaviour.h",
+                "include" + File.separator + "DomainCondition.h",
+                "include" + File.separator + "UtilityFunctionCreator.h",
+                "include" + File.separator + "BehaviourCreator.h",
+                "include" + File.separator + "ConditionCreator.h",
+                "include" + File.separator + "ConstraintCreator.h",
+                "include" + File.separator + planNameId + ".h",
+                "include" + File.separator + plan2NameId + ".h",
+                "include" + File.separator + behaviourName + ".h",
+                "src" + File.separator + "constraints" + File.separator + planNameId + "Constraints.cpp",
+                "src" + File.separator + "constraints" + File.separator + plan2NameId + "Constraints.cpp",
+                "src" + File.separator + "DomainBehaviour.cpp",
+                "src" + File.separator + "DomainCondition.cpp",
+                "src" + File.separator + "UtilityFunctionCreator.cpp",
+                "src" + File.separator + "BehaviourCreator.cpp",
+                "src" + File.separator + "ConditionCreator.cpp",
+                "src" + File.separator + "ConstraintCreator.cpp",
+                "src" + File.separator + planNameId + ".cpp",
+                "src" + File.separator + plan2NameId + ".cpp",
+                "src" + File.separator + behaviourName + ".cpp"
         );
 
         Assert.assertEquals(expectedFiles.size(), files.size());
@@ -773,7 +773,7 @@ public class SavePlanTest extends ApplicationTest {
     private void checkCppCodeContent() {
         InputStream behaviourCreatorHExpectedStream = this.getClass().getResourceAsStream("BehaviourCreator.h");
         String behaviourCreatorHExpected = readStream(behaviourCreatorHExpectedStream);
-        String behaviourCreatorHActualPath = configFolderSrc + "/include/BehaviourCreator.h";
+        String behaviourCreatorHActualPath = configFolderSrc + File.separator + "include" + File.separator + "BehaviourCreator.h";
         String behaviourCreatorHActual = readFile(behaviourCreatorHActualPath);
 
         Assert.assertEquals(behaviourCreatorHExpected, behaviourCreatorHActual);
