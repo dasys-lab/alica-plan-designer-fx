@@ -175,6 +175,8 @@ public class SavePlanTest extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
+        sleep(1000000000);
+
         // init
         createPlan(planName);
         createPlan(planName2);
