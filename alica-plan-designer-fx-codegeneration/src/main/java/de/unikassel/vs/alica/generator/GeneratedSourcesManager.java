@@ -87,6 +87,16 @@ public class GeneratedSourcesManager {
         return generatedFiles;
     }
 
+    public List<File> getGeneratedConstraintFilesForBehaviour(Behaviour behaviour) {
+        List<File> generatedFiles = new ArrayList<>();
+        String destinationPath = trimFileFromPath(behaviour.getRelativeDirectory());
+        String constraintHeaderFileName = behaviour.getName() + behaviour.getId() + "Constraints.h";
+        String constraintSourceFileName = behaviour.getName() + behaviour.getId() + "Constraints.cpp";
+        generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, "constraints", constraintHeaderFileName).toFile());
+        generatedFiles.add(Paths.get(getSrcDir(), destinationPath, "constraints", constraintSourceFileName).toFile());
+        return generatedFiles;
+    }
+
     private String trimFileFromPath(String destinationPath) {
         if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
             return destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
@@ -118,5 +128,4 @@ public class GeneratedSourcesManager {
             return 0;
         }
     }
-
 }
