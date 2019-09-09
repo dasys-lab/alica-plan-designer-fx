@@ -16,6 +16,7 @@ import de.unikassel.vs.alica.planDesigner.converter.CustomPlanElementConverter;
 import de.unikassel.vs.alica.planDesigner.converter.CustomStringConverter;
 import de.unikassel.vs.alica.planDesigner.events.*;
 import de.unikassel.vs.alica.planDesigner.filebrowser.FileSystemEventHandler;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaMessageHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
@@ -24,8 +25,10 @@ import de.unikassel.vs.alica.planDesigner.plugin.PluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
@@ -57,7 +60,7 @@ import java.util.List;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler {
+public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, IAlicaMessageHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -89,6 +92,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
         mainWindowController.setGuiModificationHandler(this);
+        mainWindowController.setAlicaMessageHandler(this);
 
         setupConfigGuiStuff();
 
@@ -662,4 +666,49 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 abstractPlan.getName()), mainWindowController.getStatusText()));
     }
 
+    @Override
+    public void handleAlicaMessageReceived(long senderId, String masterPlan, String currentPlan, String currentState,
+                                           String currentRole, String currentTask, long[] agentIdsWithMe) {
+        System.out.println("Loading Plan " + currentPlan + " and highlighting state " + currentState + "...");
+
+        System.out.println("RepoViewModel.getPlans()");
+        for (ViewModelElement rvw : getRepoViewModel().getPlans()) {
+            System.out.println(rvw.getName());
+        }
+
+        // Find the plan from the repository that matches the name of the given currentPlan
+        ViewModelElement currentPlanViewModelElement = getRepoViewModel().getPlans().stream()
+                .filter(v -> v.getName().equals(currentPlan))
+                .findFirst()
+                .orElse(null);
+
+        if (currentPlanViewModelElement != null) {
+            // Open the plan if it was found
+            SerializableViewModel svm = (SerializableViewModel) currentPlanViewModelElement;
+            mainWindowController.openFile(svm);
+
+            for (Tab t : mainWindowController.getEditorTabPane().getTabs()) {
+                if (t instanceof PlanTab) {
+                    PlanTab tab = (PlanTab) t;
+                    System.out.println("===== PlanTab StateContainers State names =====");
+                    for (StateContainer c : tab.getPlanEditorGroup().getStateContainers().values()) {
+                        System.out.println(c.getState().getName());
+
+                    }
+
+                    // Find the StateContainer that represents the given currentState within the opened Tab
+                    StateContainer currentlyActiveStateContainer = tab.getPlanEditorGroup().getStateContainers().values().stream()
+                            .filter(sc -> sc.getState().getName().equals(currentState))
+                            .findFirst()
+                            .orElse(null);
+
+                    // and select it
+                    if (currentlyActiveStateContainer != null) {
+                        tab.setSelectedContainer(currentlyActiveStateContainer, true);
+                    }
+
+                }
+            }
+        }
+    }
 }

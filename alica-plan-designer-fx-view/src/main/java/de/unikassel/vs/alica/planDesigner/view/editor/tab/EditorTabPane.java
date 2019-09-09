@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab;
 
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaMessageHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.behaviourTab.BehaviourTab;
@@ -16,6 +17,7 @@ import javafx.scene.control.TabPane;
 public class EditorTabPane extends TabPane {
 
     private IGuiModificationHandler guiModificationHandler;
+    private IAlicaMessageHandler alicaMessageHandler;
 
     public EditorTabPane() {
         super();
@@ -58,7 +60,7 @@ public class EditorTabPane extends TabPane {
             case Types.PLANTYPE:
                 return new PlanTypeTab(serializableViewModel, this);
             case Types.DEBUG:
-                return new DebugTab(serializableViewModel, this);
+                return new DebugTab(serializableViewModel, this, alicaMessageHandler);
             default:
                 System.err.println("EditorTabPane: Opening tab of elementType " + serializableViewModel.getType() + " not implemented!");
                 return null;
@@ -80,5 +82,9 @@ public class EditorTabPane extends TabPane {
         }
 
         return ((EditorTab) selectedTab).handleDelete();
+    }
+
+    public void setAlicaMessageHandler(IAlicaMessageHandler alicaMessageHandler) {
+        this.alicaMessageHandler = alicaMessageHandler;
     }
 }
