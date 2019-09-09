@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaMessageHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
@@ -108,6 +109,7 @@ public class MainWindowController implements Initializable {
     private ConfigurationWindowController configWindowController;
     private IGuiStatusHandler guiStatusHandler;
     private IGuiModificationHandler guiModificationHandler;
+    private IAlicaMessageHandler alicaMessageHandler;
 
     //--------------------------------------------------------------------------------------------
 //  GETTER & SETTER
@@ -137,6 +139,10 @@ public class MainWindowController implements Initializable {
         return guiModificationHandler;
     }
 
+    public IAlicaMessageHandler getAlicaMessageHandler() {
+        return alicaMessageHandler;
+    }
+
     public EditorTabPane getEditorTabPane() {
         return editorTabPane;
     }
@@ -162,6 +168,9 @@ public class MainWindowController implements Initializable {
         this.guiModificationHandler = creationHandler;
     }
 
+    public void setAlicaMessageHandler(IAlicaMessageHandler alicaMessageHandler) {
+        this.alicaMessageHandler = alicaMessageHandler;
+    }
 
     public Text getStatusText() {
         return statusText;
@@ -183,6 +192,7 @@ public class MainWindowController implements Initializable {
 
         repositoryTabPane.setGuiModificationHandler(guiModificationHandler);
         editorTabPane.setGuiModificationHandler(guiModificationHandler);
+        editorTabPane.setAlicaMessageHandler(alicaMessageHandler);
 
         // propertyAndStatusTabPane.init(editorTabPane);
 

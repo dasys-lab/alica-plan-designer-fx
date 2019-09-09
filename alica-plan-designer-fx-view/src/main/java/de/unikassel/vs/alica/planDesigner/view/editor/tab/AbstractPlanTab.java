@@ -29,7 +29,7 @@ public abstract class AbstractPlanTab extends EditorTab {
         this.elementInformationPane.setViewModelElement(plan);
     }
 
-    public void setSelectedContainer(Container containerToSelect) {
+    public void setSelectedContainer(Container containerToSelect, boolean debug) {
         // reset effect of former selected container
         Container container = this.selectedContainer.get();
         if (container != null) {
@@ -39,17 +39,24 @@ public abstract class AbstractPlanTab extends EditorTab {
         selectedContainer.set(containerToSelect);
         if (containerToSelect != null) {
             // set selected effect on new selected container
-            containerToSelect.setCustomEffect(createSelectedEffect());
+            containerToSelect.setCustomEffect(createSelectedEffect(debug));
         }
 
         // update properties gui
         this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
     }
 
-    private DropShadow createSelectedEffect() {
-        DropShadow value = new DropShadow(20, new Color(0, 0.4, 0.9, 0.9));
-        value.setBlurType(BlurType.ONE_PASS_BOX);
-        value.setSpread(0.45);
+    private DropShadow createSelectedEffect(boolean debug) {
+        DropShadow value;
+        if (debug) {
+            value = new DropShadow(30, new Color(0.9, 0.2, 0.45, 0.95));
+            value.setBlurType(BlurType.THREE_PASS_BOX);
+            value.setSpread(0.6);
+        } else {
+            value = new DropShadow(20, new Color(0, 0.4, 0.9, 0.9));
+            value.setBlurType(BlurType.ONE_PASS_BOX);
+            value.setSpread(0.45);
+        }
         return value;
     }
 }
