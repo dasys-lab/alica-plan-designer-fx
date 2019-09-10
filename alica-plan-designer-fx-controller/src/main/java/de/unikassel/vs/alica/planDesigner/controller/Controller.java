@@ -272,7 +272,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.removeElement(event.getParentId(), viewModelElement, event.getRelatedObjects());
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
-                viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue());
+                viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue(), event.getOldValue());
                 if(event.getChangedAttribute() == "name") {
                     viewModelElement.setName(planElement.getName());
                     updateFileTreeView(event, viewModelElement);
@@ -287,25 +287,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 viewModelManager.addElement(event);
                 break;
             case ELEMENT_CONNECTED:
-                switch (viewModelElement.getType()) {
-                    case Types.CONFIGURATION:
-                        String key = event.getChangedAttribute();
-                        String value = (String) event.getNewValue();
-                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().put(key, value);
-                        break;
-                    default:
-                        viewModelManager.connectElement(event);
-                }
+                viewModelManager.connectElement(event);
                 break;
             case ELEMENT_DISCONNECTED:
-                switch (viewModelElement.getType()) {
-                    case Types.CONFIGURATION:
-                        String key = event.getChangedAttribute();
-                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().remove(key);
-                        break;
-                    default:
-                        viewModelManager.disconnectElement(event);
-                }
+                viewModelManager.disconnectElement(event);
                 break;
             case ELEMENT_CHANGED_POSITION:
                 viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
@@ -407,6 +392,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case CREATE_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
                 mmq.setParentId(event.getParentId());
+                mmq.setComment(event.getComment());
                 mmq.setRelatedObjects(event.getRelatedObjects());
                 break;
             case DELETE_ELEMENT:
@@ -457,12 +443,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq.setParentId(event.getParentId());
                 mmq.setElementId(event.getElementId());
                 mmq.setRelatedObjects(event.getRelatedObjects());
-                mmq.setAttributeName(event.getName());
                 if (event instanceof GuiChangeAttributeEvent) {
                     GuiChangeAttributeEvent guiChangeAttributeEvent = (GuiChangeAttributeEvent) event;
-                    mmq.setAttributeName(guiChangeAttributeEvent.getAttributeName());
                     mmq.setAttributeType(guiChangeAttributeEvent.getAttributeType());
+                    mmq.setAttributeName(guiChangeAttributeEvent.getAttributeName());
                     mmq.setNewValue(guiChangeAttributeEvent.getNewValue());
+                    mmq.setOldValue(guiChangeAttributeEvent.getOldValue());
                 }
                 break;
             case CHANGE_POSITION:

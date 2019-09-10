@@ -1,7 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Configuration;
 import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
@@ -21,13 +20,6 @@ public class CreateBehaviour extends Command {
         Behaviour behaviour = new Behaviour();
         behaviour.setName(mmq.getName());
         behaviour.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), behaviour.getName()+ "." + Extensions.BEHAVIOUR));
-
-        Configuration defaultConfiguration = new Configuration();
-        defaultConfiguration.setName("default");
-        defaultConfiguration.setBehaviour(behaviour);
-        defaultConfiguration.setRelativeDirectory(behaviour.getRelativeDirectory());
-        behaviour.addConfiguration(defaultConfiguration);
-
         behaviour.registerDirtyFlag();
         return behaviour;
     }

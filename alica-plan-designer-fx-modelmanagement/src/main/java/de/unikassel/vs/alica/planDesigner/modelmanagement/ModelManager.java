@@ -618,9 +618,6 @@ public class ModelManager implements Observer {
                 for(Variable variable: behaviour.getVariables()) {
                     planElementMap.put(variable.getId(), variable);
                 }
-                for(Configuration configuration : behaviour.getConfigurations()) {
-                    planElementMap.put(configuration.getId(), configuration);
-                }
                 storeCondition(behaviour.getPreCondition());
                 storeCondition(behaviour.getRuntimeCondition());
                 storeCondition(behaviour.getPostCondition());
@@ -630,13 +627,6 @@ public class ModelManager implements Observer {
                 taskRepository = (TaskRepository) planElement;
                 for(Task task : taskRepository.getTasks()) {
                     planElementMap.put(task.getId(), task);
-                }
-                break;
-            case Types.CONFIGURATION:
-                Configuration configuration = (Configuration) planElement;
-                behaviour = configuration.getBehaviour();
-                if(!behaviour.getConfigurations().contains(configuration)) {
-                    behaviour.addConfiguration(configuration);
                 }
                 break;
             case Types.ROLESET:
@@ -709,10 +699,6 @@ public class ModelManager implements Observer {
             case Types.BEHAVIOUR:
                 behaviourMap.remove(planElement.getId());
                 break;
-            case Types.CONFIGURATION:
-                Configuration configuration = (Configuration) planElement;
-                configuration.getBehaviour().removeConfiguration(configuration);
-                break;
             default:
                 throw new RuntimeException("ModelManager: ");
         }
@@ -720,7 +706,12 @@ public class ModelManager implements Observer {
 
     public void changeAttribute(PlanElement planElement, String elementType, String attribute, Object newValue, Object oldValue) {
         try {
-            BeanUtils.setProperty(planElement, attribute, newValue);
+            if (planElement instanceof Behaviour && attribute.equals("parameters")) {
+                Behaviour behaviour = (Behaviour) planElement;
+                behaviour.modifyParameter((Map.Entry<String, String>) newValue, (Map.Entry<String, String>) oldValue);
+            } else {
+                BeanUtils.setProperty(planElement, attribute, newValue);
+            }
 
             if (attribute.equals("name")) {
                 String ending = "";
@@ -1037,9 +1028,6 @@ public class ModelManager implements Observer {
                     case Types.TASKREPOSITORY:
                         cmd = new CreateTaskRepository(this, mmq);
                         break;
-                    case Types.CONFIGURATION:
-                        cmd = new CreateConfiguration(this, mmq);
-                        break;
                     case Types.ROLESET:
                         cmd = new CreateRoleSet(this, mmq);
                         break;
@@ -1103,9 +1091,6 @@ public class ModelManager implements Observer {
                     case Types.VARIABLEBINDING:
                         cmd = new DeleteVariableBinding(this, mmq);
                         break;
-                    case Types.CONFIGURATION:
-                        cmd = new DeleteConfiguration(this, mmq);
-                        break;
                     case Types.BENDPOINT:
                         cmd = new DeleteBendpoint(this, mmq);
                         break;
@@ -1121,6 +1106,8 @@ public class ModelManager implements Observer {
                 switch (mmq.getElementType()) {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
+                    case Types.PLANTYPE:
+                    case Types.BEHAVIOUR:
                         if(this.getPlanElement(mmq.getParentId()) instanceof State) {
                             cmd = new AddAbstractPlan(this, mmq);
                         } else {
@@ -1129,10 +1116,6 @@ public class ModelManager implements Observer {
                             mmq.setElementType(Types.ANNOTATEDPLAN);
                             cmd = new CreateAnnotatedPlan(this, mmq);
                         }
-                        break;
-                    case Types.PLANTYPE:
-                    case Types.CONFIGURATION:
-                        cmd = new AddAbstractPlan(this, mmq);
                         break;
                     case Types.TASK:
                         cmd =  new AddTaskToEntryPoint(this, mmq);
@@ -1210,7 +1193,6 @@ public class ModelManager implements Observer {
                     case Types.MASTERPLAN:
                     case Types.PLAN:
                     case Types.PLANTYPE:
-                    case Types.CONFIGURATION:
                         cmd = new RemoveAbstractPlanFromState(this, mmq);
                         break;
                     default:
@@ -1238,13 +1220,6 @@ public class ModelManager implements Observer {
                         break;
                     case Types.ROLE_CHARACTERISTIC:
                         cmd = new ChangeRoleCharacteristic(this, mmq);
-                        break;
-                    case Types.CONFIGURATION:
-                        try {
-                            cmd = new KeyValuePairConfiguration(this, mmq, (boolean) mmq.newValue);
-                        } catch (ClassCastException e) {
-                            cmd = new ChangeAttributeValue(this, mmq);
-                        }
                         break;
                     default:
                         cmd = new ChangeAttributeValue(this, mmq);
@@ -1285,16 +1260,17 @@ public class ModelManager implements Observer {
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
-                for (State state : ((Plan) planElement).getStates()) {
-                    for (AbstractPlan aPlan: state.getAbstractPlans()) {
-                        if (aPlan instanceof Configuration) {
-                            Behaviour behaviour = ((Configuration) aPlan).getBehaviour();
-                            if (behaviour.getDirty()) {
-                                serialize(behaviour, Types.BEHAVIOUR);
-                            }
-                        }
-                    }
-                }
+                // Why should we automatically store behaviours in a plan? No reason? Then delete it
+//                for (State state : ((Plan) planElement).getStates()) {
+//                    for (AbstractPlan abstractPlan: state.getAbstractPlans()) {
+//                        if (abstractPlan instanceof Behaviour) {
+//                            Behaviour behaviour = (Behaviour) abstractPlan;
+//                            if (behaviour.getDirty()) {
+//                                serialize(behaviour, Types.BEHAVIOUR);
+//                            }
+//                        }
+//                    }
+//                }
                 serializeToDisk(planElement, false);
                 break;
             case Types.BEHAVIOUR:

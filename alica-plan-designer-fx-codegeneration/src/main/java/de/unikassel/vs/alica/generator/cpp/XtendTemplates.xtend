@@ -39,7 +39,7 @@ namespace alica
         public:
             BehaviourCreator();
             virtual ~BehaviourCreator();
-            virtual std::shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);
+            virtual std::shared_ptr<BasicBehaviour> createBehaviour(long behaviourId);
     };
 
 } /* namespace alica */
@@ -67,9 +67,9 @@ namespace alica
     {
     }
 
-    std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
+    std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourId)
     {
-        switch(behaviourConfId)
+        switch(behaviourId)
         {
             «FOR beh : behaviours»
                 case «beh.id»:
@@ -77,7 +77,7 @@ namespace alica
                 break;
             «ENDFOR»
             default:
-            std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourConfId << std::endl;
+            std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;
             throw new std::exception();
             break;
         }

@@ -4,7 +4,6 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.AbstractPlanContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.Container;
-import de.unikassel.vs.alica.planDesigner.view.model.ConfigurationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
@@ -44,13 +43,7 @@ public abstract class AbstractPlanTab extends EditorTab {
         }
 
         // update properties gui
-        if (containerToSelect.getPlanElementViewModel().getType().equals(Types.CONFIGURATION)) {
-            ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) containerToSelect.getPlanElementViewModel();
-            StateViewModel stateViewModel = (StateViewModel) ((AbstractPlanContainer) containerToSelect).getParentStateContainer().getPlanElementViewModel();
-            this.elementInformationPane.setViewModelElement(configurationViewModel, stateViewModel);
-        } else {
-            this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
-        }
+        this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
     }
 
     private DropShadow createSelectedEffect() {
