@@ -212,6 +212,7 @@ class DefaultTemplate {
 
     def String constraintBehaviourCheckingMethods(Behaviour behaviour) '''
         «IF (behaviour.runtimeCondition !== null && behaviour.runtimeCondition.pluginName == "DefaultPlugin")»
+        «IF (behaviour.runtimeCondition.variables.size > 0) || (behaviour.runtimeCondition.quantifiers.size > 0)»
             /*
              * RuntimeCondition - (Name): «behaviour.runtimeCondition.name»
              * (ConditionString): «behaviour.runtimeCondition.conditionString»
@@ -239,7 +240,9 @@ class DefaultTemplate {
                 /*PROTECTED REGION END*/
             }
         «ENDIF»
+        «ENDIF»
         «IF (behaviour.preCondition !== null && behaviour.preCondition.pluginName == "DefaultPlugin")»
+        «IF (behaviour.preCondition.variables.size > 0) || (behaviour.preCondition.quantifiers.size > 0)»
             /*
              * PreCondition - (Name): «behaviour.preCondition.name»
              * (ConditionString): «behaviour.preCondition.conditionString»
@@ -265,7 +268,9 @@ class DefaultTemplate {
                 /*PROTECTED REGION END*/
             }
         «ENDIF»
+        «ENDIF»
         «IF (behaviour.postCondition !== null && behaviour.postCondition.pluginName == "DefaultPlugin")»
+         «IF (behaviour.postCondition.variables.size > 0) || (behaviour.postCondition.quantifiers.size > 0)»
             /*
              * PostCondition - (Name): «behaviour.postCondition.name»
              * (ConditionString): «behaviour.postCondition.conditionString»
@@ -292,6 +297,7 @@ class DefaultTemplate {
                 «ENDIF»
                 /*PROTECTED REGION END*/
             }
+        «ENDIF»
         «ENDIF»
 
     '''
