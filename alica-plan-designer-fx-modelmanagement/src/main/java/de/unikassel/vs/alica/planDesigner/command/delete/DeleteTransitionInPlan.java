@@ -52,11 +52,21 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlan().getTransitions().add(transition);
+        parentOfElement.getPlan().addTransition(transition);
         this.uiElement = parentOfElement.getUiElement(this.transition.getId());
         this.uiElement.setX(this.x);
         this.uiElement.setY(this.y);
         transition.setInState(inState);
         transition.setOutState(outState);
+        for (State state: parentOfElement.getPlan().getStates()) {
+            if(state.getId() == inState.getId()) {
+                state.addOutTransition(transition);
+            }
+            if(state.getId() == outState.getId()){
+                state.addInTransition(transition);
+            }
+        }
+        modelManager.storePlanElement(mmq.getElementType(), transition,false);
+        this.fireEvent(ModelEventType.ELEMENT_CREATED, transition);
     }
 }
