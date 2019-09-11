@@ -15,8 +15,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <build>
@@ -24,7 +24,7 @@
             <plugin>
                 <groupId>org.eclipse.xtend</groupId>
                 <artifactId>xtend-maven-plugin</artifactId>
-                <version>2.16.0</version>
+                <version>2.19.0.M2</version>
                 <executions>
                     <execution>
                         <goals>
@@ -44,8 +44,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>11</source>
+                    <target>11</target>
                     <excludes>
                         <exclude>xtend-gen/**</exclude>
                     </excludes>
@@ -54,6 +54,7 @@
             <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
             <executions>
                 <execution>
                     <id>add-sources-xtend</id>
