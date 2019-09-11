@@ -490,17 +490,24 @@ public class ViewModelManager {
                 break;
             case Types.TRANSITION:
                 TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
-                if(!relatedObjects.containsKey(Types.BENDPOINT)) {
-                    planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
-                    planViewModel.getTransitions().remove(transitionViewModel);
+                if(relatedObjects == null){
+                    //Delete Transition
+                    if(transitionViewModel.getBendpoints().size() == 0) {
+                        planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                        planViewModel.getTransitions().remove(transitionViewModel);
+                    } else {
+                        transitionViewModel.getBendpoints().clear();
+                        planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                        planViewModel.getTransitions().remove(transitionViewModel);
+                    }
                 } else {
+                    //Delete only BendPoints in Transition
                     for( BendPointViewModel bPoint : transitionViewModel.getBendpoints()){
                         if(bPoint.getId() == relatedObjects.get(Types.BENDPOINT)){
                             transitionViewModel.getBendpoints().remove(bPoint);
                             break;
                         }
                     }
-
                 }
                 break;
             case Types.ANNOTATEDPLAN:

@@ -152,6 +152,12 @@ public class PlanTab extends AbstractPlanTab {
                 event.setRelatedObjects(bendpoint);
                 event.setParentId(getSerializableViewModel().getId());
                 return event;
+            case Types.TRANSITION:
+                tC = (TransitionContainer) selectedContainer;
+                event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.TRANSITION, null);
+                event.setElementId(tC.getContainedElement().getId());
+                event.setParentId(getSerializableViewModel().getId());
+                return event;
             default:
                 System.err.println("PlanTab: Selected element type " + planElementViewModel.getType() + " is not handled!");
                 return null;
