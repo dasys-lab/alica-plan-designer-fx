@@ -9,7 +9,8 @@ environment:
 shallow_clone: true
 
 build_script:
-  - mvn clean install -DskipTests
+  - cd alica-plan-designer-fx-default-plugin && mvn clean install -DskipTests && cd ..  # install default-plugin
+  - mvn clean install -DskipTests  # install remaining modules
 
 test_script:
   - mvn test -B
