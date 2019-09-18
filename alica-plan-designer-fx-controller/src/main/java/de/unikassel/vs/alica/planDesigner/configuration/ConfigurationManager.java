@@ -309,13 +309,16 @@ public final class ConfigurationManager {
     }
 
     // WINDOW TOOLS
-    public void saveWindowPreferences(Double height, Double width, Double x, Double y) {
-        try {
-            windowConfigProperties.setProperty(WINDOW_HEIGHT, String.valueOf(height));
-            windowConfigProperties.setProperty(WINDOW_WIDTH, String.valueOf(width));
-            windowConfigProperties.setProperty(WINDOW_X, String.valueOf(x));
-            windowConfigProperties.setProperty(WINDOW_Y, String.valueOf(y));
+    public void setWindowPreferences(Double height, Double width, Double x, Double y) {
+        windowConfigProperties.setProperty(WINDOW_HEIGHT, String.valueOf(height));
+        windowConfigProperties.setProperty(WINDOW_WIDTH, String.valueOf(width));
+        windowConfigProperties.setProperty(WINDOW_X, String.valueOf(x));
+        windowConfigProperties.setProperty(WINDOW_Y, String.valueOf(y));
+    }
 
+    public void saveWindowPreferences(Double height, Double width, Double x, Double y) {
+        setWindowPreferences(height, width, x, y);
+        try {
             // actual write to file
             windowConfigProperties.store(new FileOutputStream(windowConfigFile), " Plan Designer - window configuration file");
         } catch (IOException e) {

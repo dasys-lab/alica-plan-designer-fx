@@ -10,9 +10,11 @@ import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.container.TransitionContainer;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.junit.*;
 import org.testfx.api.FxAssert;
@@ -20,14 +22,13 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.service.query.PointQuery;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
@@ -86,6 +87,8 @@ public class SavePlanTest extends ApplicationTest {
     private final String defaultName = i18NRepo.getString("label.state.defaultName");
     private ModelManager modelManager;
     private Stage stage;
+    private double windowHeight;
+    private double windowWidth;
 
 
     @BeforeClass
@@ -111,11 +114,7 @@ public class SavePlanTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-
-        File windowConfigFile = new File(configWindowProperties);
-        if (!windowConfigFile.exists()) {
-            ConfigurationManager.getInstance().saveWindowPreferences(800.0, 1200.0, 0.0, 0.0);
-        }
+        setWindowSize();
 
         // clean config
         deleteConfig();
@@ -165,6 +164,13 @@ public class SavePlanTest extends ApplicationTest {
             }
         });
         waitForRunLater();
+    }
+
+    private void setWindowSize() {
+        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+        windowHeight = visualBounds.getHeight();
+        windowWidth = visualBounds.getWidth();
+        ConfigurationManager.getInstance().setWindowPreferences(windowHeight, windowWidth, 0.0, 0.0);
     }
 
     private void startApplication(Stage stage) throws Exception {
@@ -525,7 +531,8 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private PointQuery freePlanContentPos() {
-        return offset(planContentId, ++planElementsCounter * 80, 0);
+        int elementDistance = (int) (windowWidth / 2) / 5;
+        return offset(planContentId, ++planElementsCounter * elementDistance, 0);
     }
 
     private void placeState() {
