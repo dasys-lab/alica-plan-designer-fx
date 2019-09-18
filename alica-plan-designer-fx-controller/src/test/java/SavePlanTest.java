@@ -22,7 +22,10 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.service.query.PointQuery;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Stream;
 
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
 
@@ -188,8 +192,6 @@ public class SavePlanTest extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
-        sleep(1000000000);
-
         // init
         createPlan(planName);
         createPlan(planName2);
@@ -797,13 +799,16 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private String readFile(String path) {
-        try {
-            InputStream inputStream = new FileInputStream(new File(path));
-            return readStream(inputStream);
-        } catch (FileNotFoundException e) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (Stream stream = Files.lines( Paths.get(path), StandardCharsets.UTF_8))
+        {
+            stream.forEach(s -> stringBuilder.append(s).append("\n"));
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
-        return null;
+        return stringBuilder.toString();
     }
 
     private ModelManager getModelManager() {
