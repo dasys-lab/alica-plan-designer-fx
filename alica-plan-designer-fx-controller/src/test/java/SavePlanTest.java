@@ -63,7 +63,6 @@ public class SavePlanTest extends ApplicationTest {
     private final String configFolderTasks = configFolder + File.separator + "tasks";
     private final String configFolderSrc = configFolder + File.separator + "src";
     private final String configFolderPlugin = getPluginsFolder();
-    private final String configWindowProperties = rootConfigFolder + File.separator + "windowConfig.properties";
 
     private final String state1Name = "State1";
     private final String state2Name = "State2";
@@ -173,8 +172,8 @@ public class SavePlanTest extends ApplicationTest {
         boolean runsOnAppVeyor = getEnvironmentVariable("APPVEYOR").toLowerCase().equals("true");
         if (runsOnAppVeyor) {
             System.out.println("AppVeyor environment detected");
-            height = 1400.0;
-            width = 900.0;
+            height = 900.0;
+            width = 1400.0;
         } else {
             Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
             height = visualBounds.getHeight();
