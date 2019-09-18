@@ -22,13 +22,14 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.service.query.PointQuery;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
@@ -87,8 +88,6 @@ public class SavePlanTest extends ApplicationTest {
     private final String defaultName = i18NRepo.getString("label.state.defaultName");
     private ModelManager modelManager;
     private Stage stage;
-    private double windowHeight;
-    private double windowWidth;
 
 
     @BeforeClass
@@ -168,9 +167,9 @@ public class SavePlanTest extends ApplicationTest {
 
     private void setWindowSize() {
         Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
-        windowHeight = visualBounds.getHeight();
-        windowWidth = visualBounds.getWidth();
-        ConfigurationManager.getInstance().setWindowPreferences(windowHeight, windowWidth, 0.0, 0.0);
+        double height = visualBounds.getHeight();
+        double width = visualBounds.getWidth();
+        ConfigurationManager.getInstance().setWindowPreferences(height, width, 0.0, 0.0);
     }
 
     private void startApplication(Stage stage) throws Exception {
@@ -187,8 +186,6 @@ public class SavePlanTest extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
-//        sleep(1000000000);
-
         // init
         createPlan(planName);
         createPlan(planName2);
@@ -322,7 +319,7 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private void repositionPlanElement(Node container, double factX, double factY) {
-        Node planContent = lookup("#PlanTabPlanContent").queryFirst();
+        Node planContent = lookup(planContentId).queryFirst();
         Bounds planBounds = planContent.getBoundsInLocal();
         double planWidth = planBounds.getWidth();
         double planHeight = planBounds.getHeight();
@@ -531,8 +528,7 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private PointQuery freePlanContentPos() {
-        int elementDistance = (int) (windowWidth / 2) / 5;
-        return offset(planContentId, ++planElementsCounter * elementDistance, 0);
+        return offset(planContentId, ++planElementsCounter * 60, 0);
     }
 
     private void placeState() {
