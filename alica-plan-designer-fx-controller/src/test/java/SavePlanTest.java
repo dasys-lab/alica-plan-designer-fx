@@ -169,6 +169,8 @@ public class SavePlanTest extends ApplicationTest {
         Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
         double height = visualBounds.getHeight();
         double width = visualBounds.getWidth();
+        System.out.println("Set window height to " + height);
+        System.out.println("Set window width to " + width);
         ConfigurationManager.getInstance().setWindowPreferences(height, width, 0.0, 0.0);
     }
 
@@ -186,6 +188,8 @@ public class SavePlanTest extends ApplicationTest {
 
     @Test
     public void testCreatePlan() {
+        sleep(1000000000);
+
         // init
         createPlan(planName);
         createPlan(planName2);
