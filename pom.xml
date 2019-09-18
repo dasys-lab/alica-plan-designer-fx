@@ -32,6 +32,7 @@
         <module>alica-plan-designer-fx-controller</module>
         <module>alica-plan-designer-fx-codegeneration</module>
         <module>alica-plan-designer-fx-modelmanagement</module>
+        <module>alica-plan-designer-fx-default-plugin</module>
     </modules>
     <dependencies>
         <dependency>
