@@ -29,10 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Stream;
 
@@ -170,12 +167,28 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private void setWindowSize() {
-        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
-        double height = visualBounds.getHeight();
-        double width = visualBounds.getWidth();
+        double height;
+        double width;
+
+        boolean runsOnAppVeyor = getEnvironmentVariable("APPVEYOR").toLowerCase().equals("true");
+        if (runsOnAppVeyor) {
+            System.out.println("AppVeyor environment detected");
+            height = 1400.0;
+            width = 900.0;
+        } else {
+            Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+            height = visualBounds.getHeight();
+            width = visualBounds.getWidth();
+        }
+
         System.out.println("Set window height to " + height);
         System.out.println("Set window width to " + width);
         ConfigurationManager.getInstance().setWindowPreferences(height, width, 0.0, 0.0);
+    }
+
+    private String getEnvironmentVariable(String name) {
+        Map<String, String> env = System.getenv();
+        return env.getOrDefault(name, "");
     }
 
     private void startApplication(Stage stage) throws Exception {
