@@ -1115,6 +1115,9 @@ public class ModelManager implements Observer {
                     case Types.FOLDER:
                         cmd = new DeleteFolder(this, mmq);
                         break;
+                    case Types.TRANSITION:
+                        cmd = new DeleteTransitionInPlan(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
                         return;

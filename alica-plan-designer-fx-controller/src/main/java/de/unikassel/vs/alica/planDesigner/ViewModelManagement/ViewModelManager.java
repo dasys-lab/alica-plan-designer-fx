@@ -80,7 +80,7 @@ public class ViewModelManager {
         } else if (planElement instanceof VariableBinding) {
             element = createParametrisationViewModel((VariableBinding) planElement);
         } else if (planElement instanceof Transition) {
-             element = createTransitionViewModel((Transition) planElement);
+            element = createTransitionViewModel((Transition) planElement);
         } else if (planElement instanceof Synchronisation) {
             element = createSynchronizationViewModel((Synchronisation) planElement);
         } else if (planElement instanceof Quantifier) {
@@ -181,7 +181,7 @@ public class ViewModelManager {
 
     private CharacteristicViewModel createCharacteristicViewModel(Characteristic characteristic) {
         CharacteristicViewModel characteristicViewModel = new CharacteristicViewModel(characteristic.getId(), characteristic.getName(),
-                                                        Types.ROLE_CHARCTERISTIC, null);
+                Types.ROLE_CHARCTERISTIC, null);
 
         characteristicViewModel.setParentId(characteristic.getRole().getId());
         characteristicViewModel.setValue(characteristic.getValue());
@@ -490,17 +490,24 @@ public class ViewModelManager {
                 break;
             case Types.TRANSITION:
                 TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
-                if(!relatedObjects.containsKey(Types.BENDPOINT)) {
-                    planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
-                    planViewModel.getTransitions().remove(transitionViewModel);
+                if(relatedObjects == null){
+                    //Delete Transition
+                    if(transitionViewModel.getBendpoints().size() == 0) {
+                        planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                        planViewModel.getTransitions().remove(transitionViewModel);
+                    } else {
+                        transitionViewModel.getBendpoints().clear();
+                        planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                        planViewModel.getTransitions().remove(transitionViewModel);
+                    }
                 } else {
+                    //Delete only BendPoints in Transition
                     for( BendPointViewModel bPoint : transitionViewModel.getBendpoints()){
                         if(bPoint.getId() == relatedObjects.get(Types.BENDPOINT)){
                             transitionViewModel.getBendpoints().remove(bPoint);
                             break;
                         }
                     }
-
                 }
                 break;
             case Types.ANNOTATEDPLAN:
@@ -608,7 +615,7 @@ public class ViewModelManager {
                 //TODO: maybe handle other types
         }
 
-        if(viewModelElement.getType() != Types.TRANSITION && relatedObjects.isEmpty()) {
+        if(viewModelElement.getType() != Types.TRANSITION && relatedObjects != null) {
             viewModelElements.remove(viewModelElement.getId());
         }
     }
@@ -680,7 +687,7 @@ public class ViewModelManager {
                 State state = (State) event.getNewValue();
                 for (StateViewModel stateViewModel: planViewModel.getStates()) {
                     if(stateViewModel.getId() == state.getId()){
-                       stateViewModel.addAbstractPlan((PlanElementViewModel) parentViewModel);
+                        stateViewModel.addAbstractPlan((PlanElementViewModel) parentViewModel);
                     }
                 }
                 break;
@@ -772,6 +779,10 @@ public class ViewModelManager {
                 transitionViewModel.setInState((StateViewModel) getViewModelElement(transition.getInState()));
                 transitionViewModel.setOutState((StateViewModel) getViewModelElement(transition.getOutState()));
                 parentPlan.getTransitions().add((TransitionViewModel) element);
+                if(transition.getSynchronisation() != null) {
+                    SynchronisationViewModel sViewModel = (SynchronisationViewModel) getViewModelElement(transition.getSynchronisation());
+                    sViewModel.getTransitions().add(transitionViewModel);
+                }
                 break;
             case Types.ENTRYPOINT:
                 EntryPointViewModel entryPointViewModel = (EntryPointViewModel) element;
@@ -846,9 +857,9 @@ public class ViewModelManager {
             case Types.SYNCTRANSITION:
                 ((SynchronisationViewModel) parentViewModel).getTransitions().add((TransitionViewModel) viewModelElement);
                 break;
-                default:
-                    System.err.println("ViewModelManager: Connect Element not supported for type: " + event.getElementType());
-                    break;
+            default:
+                System.err.println("ViewModelManager: Connect Element not supported for type: " + event.getElementType());
+                break;
         }
 
     }

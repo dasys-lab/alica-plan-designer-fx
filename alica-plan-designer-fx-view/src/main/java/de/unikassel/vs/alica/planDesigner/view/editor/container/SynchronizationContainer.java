@@ -74,13 +74,15 @@ public class SynchronizationContainer extends Container implements Observable {
                             }
                         }
                     } else if(c.wasRemoved()){
+                        TransitionContainer removeTransitionContainer = null;
                         for(TransitionViewModel transitionViewModel : c.getRemoved()){
                             for (TransitionContainer transitionContainer : transitionContainers) {
                                 if (transitionContainer.getPlanElementViewModel() == transitionViewModel) {
-                                    transitionContainers.remove(transitionContainer);
+                                    removeTransitionContainer = transitionContainer;
                                 }
                             }
                         }
+                        transitionContainers.remove(removeTransitionContainer);
                     }
                 }
                 Platform.runLater(SynchronizationContainer.this::redrawElement);
