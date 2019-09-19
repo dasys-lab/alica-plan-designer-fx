@@ -587,7 +587,15 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private void dropElement() {
+        // drop floating element
         type(KeyCode.ESCAPE);
+
+        // deselect currently selected element
+        Node node = lookup(planContentId).queryFirst();
+        Bounds boundsInScreen = node.localToScreen(node.getBoundsInLocal());
+        double x = boundsInScreen.getMinX() + 10;
+        double y = boundsInScreen.getMinY() + 10;
+        clickOn(x, y);
     }
 
     private void createPlan(String planName) {
