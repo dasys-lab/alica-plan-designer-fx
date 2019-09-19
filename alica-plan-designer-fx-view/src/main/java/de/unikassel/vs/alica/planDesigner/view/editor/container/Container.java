@@ -95,7 +95,7 @@ public abstract class Container extends Pane implements DraggableEditorElement {
     }
 
     protected void handleMouseClickedEvent(MouseEvent event) {
-        Container.this.planTab.setSelectedContainer(Container.this, false);
+        Container.this.planTab.setSelectedContainer(Container.this);
         event.consume();
     }
 
