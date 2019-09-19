@@ -169,16 +169,16 @@ public class SavePlanTest extends ApplicationTest {
         double height;
         double width;
 
-        boolean runsOnAppVeyor = getEnvironmentVariable("APPVEYOR").toLowerCase().equals("true");
-        if (runsOnAppVeyor) {
-            System.out.println("AppVeyor environment detected");
-            height = 900.0;
-            width = 1400.0;
-        } else {
+//        boolean runsOnAppVeyor = getEnvironmentVariable("APPVEYOR").toLowerCase().equals("true");
+//        if (runsOnAppVeyor) {
+//            System.out.println("AppVeyor environment detected");
+//            height = 900.0;
+//            width = 1400.0;
+//        } else {
             Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
             height = visualBounds.getHeight();
             width = visualBounds.getWidth();
-        }
+//        }
 
         System.out.println("Set window height to " + height);
         System.out.println("Set window width to " + width);
