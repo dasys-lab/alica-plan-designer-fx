@@ -488,17 +488,6 @@ public class ViewModelManager {
                     entryState.setEntryPoint(null);
                 }
                 break;
-            case Types.SYNCTRANSITION:
-            case Types.SYNCHRONISATION:
-                SynchronisationViewModel synchronisationViewModel = (SynchronisationViewModel) viewModelElement;
-                TransitionViewModel transitionModel = null;
-                for (TransitionViewModel transitionViewModel: synchronisationViewModel.getTransitions()) {
-                    if(modelManager.getPlanElement(transitionViewModel.getId()) == null) {
-                        transitionModel = transitionViewModel;
-                    }
-                }
-                synchronisationViewModel.getTransitions().remove(transitionModel);
-                break;
             case Types.TRANSITION:
                 TransitionViewModel transitionViewModel = (TransitionViewModel) viewModelElement;
                 if(relatedObjects == null){

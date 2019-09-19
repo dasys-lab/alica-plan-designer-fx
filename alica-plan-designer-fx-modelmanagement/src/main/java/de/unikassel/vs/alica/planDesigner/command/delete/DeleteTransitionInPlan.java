@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
+import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
@@ -39,6 +40,7 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
         saveForLaterRetrieval();
         parentOfElement.remove(transition.getId());
         parentOfElement.getPlan().removeTransition(transition);
+
         for (State state: parentOfElement.getPlan().getStates()) {
             if(state.getId() == inState.getId()) {
                 state.removeOutTransition(transition);
@@ -47,18 +49,23 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
                 state.removeInTransition(transition);
             }
         }
+
         preCondition = transition.getPreCondition();
         transition.setPreCondition(null);
         transition.setInState(null);
         transition.setOutState(null);
-        this.modelManager.dropPlanElement(Types.TRANSITION, transition, true);
-        this.fireEvent(ModelEventType.ELEMENT_DELETED, transition);
+
         if(transition.getSynchronisation() != null) {
             synchronisation = transition.getSynchronisation();
             synchronisation.removeSyncedTransition(transition);
             this.transition.setSynchronisation(null);
-            this.fireEvent(ModelEventType.ELEMENT_DELETED, synchronisation);
+            ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_DISCONNECTED, transition, Types.SYNCTRANSITION);
+            event.setParentId(synchronisation.getId());
+            this.modelManager.fireEvent(event);
         }
+
+        this.modelManager.dropPlanElement(Types.TRANSITION, transition, true);
+        this.fireEvent(ModelEventType.ELEMENT_DELETED, transition);
     }
 
     @Override
@@ -71,6 +78,7 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
         transition.setPreCondition(preCondition);
         transition.setInState(inState);
         transition.setOutState(outState);
+
         for (State state: parentOfElement.getPlan().getStates()) {
             if(state.getId() == inState.getId()) {
                 state.addOutTransition(transition);
@@ -79,10 +87,12 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
                 state.addInTransition(transition);
             }
         }
+
         if(synchronisation != null) {
             transition.setSynchronisation(synchronisation);
             synchronisation.addSyncedTransition(transition);
         }
+
         modelManager.storePlanElement(mmq.getElementType(), transition,false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, transition);
     }
