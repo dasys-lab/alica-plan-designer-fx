@@ -166,19 +166,9 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private void setWindowSize() {
-        double height;
-        double width;
-
-//        boolean runsOnAppVeyor = getEnvironmentVariable("APPVEYOR").toLowerCase().equals("true");
-//        if (runsOnAppVeyor) {
-//            System.out.println("AppVeyor environment detected");
-//            height = 900.0;
-//            width = 1400.0;
-//        } else {
-            Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
-            height = visualBounds.getHeight();
-            width = visualBounds.getWidth();
-//        }
+        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+        double height = visualBounds.getHeight();
+        double width = visualBounds.getWidth();
 
         System.out.println("Set window height to " + height);
         System.out.println("Set window width to " + width);
@@ -276,7 +266,7 @@ public class SavePlanTest extends ApplicationTest {
         deletePlanType();
         deleteBehaviour();
         deleteTaskRepo();
-        deleteRoleSet();
+        // deleteRoleSet();  TODO: uncomment this line if roleSet deletion is supported
     }
 
     private Node getStateContainer1() {
