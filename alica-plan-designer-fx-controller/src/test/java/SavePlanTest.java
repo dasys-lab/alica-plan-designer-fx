@@ -29,7 +29,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Stream;
 
@@ -173,11 +176,6 @@ public class SavePlanTest extends ApplicationTest {
         System.out.println("Set window height to " + height);
         System.out.println("Set window width to " + width);
         ConfigurationManager.getInstance().setWindowPreferences(height, width, 0.0, 0.0);
-    }
-
-    private String getEnvironmentVariable(String name) {
-        Map<String, String> env = System.getenv();
-        return env.getOrDefault(name, "");
     }
 
     private void startApplication(Stage stage) throws Exception {
@@ -593,22 +591,22 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private void createPlan(String planName) {
-        createElemtentHelper("plans", "Plan", planName, planNameExtension);
+        createElementHelper("plans", "Plan", planName, planNameExtension);
     }
 
     private void createPlanType() {
-        createElemtentHelper("plans", "PlanType", planTypeName, planTypeNameExtension);
+        createElementHelper("plans", "PlanType", planTypeName, planTypeNameExtension);
     }
 
     private void createBehaviour() {
-        createElemtentHelper("plans", "Behaviour", behaviourName, behaviourNameExtension);
+        createElementHelper("plans", "Behaviour", behaviourName, behaviourNameExtension);
     }
 
     private void createRoleSet() {
-        createElemtentHelper("roles", "RoleSet", roleSetName, roleSetNameExtension);
+        createElementHelper("roles", "RoleSet", roleSetName, roleSetNameExtension);
     }
 
-    private void createElemtentHelper(String rootElementName, String type, String name, String nameExtension) {
+    private void createElementHelper(String rootElementName, String type, String name, String nameExtension) {
         rightClickOn(rootElementName);
         clickOn("New");
         moveTo("Plan");  // avoid closing menu if mouse is outside of menu dialog
@@ -696,15 +694,6 @@ public class SavePlanTest extends ApplicationTest {
         type(KeyCode.RIGHT);
     }
 
-    private void closeFileThreeElements() {
-        clickOn("#fileTreeView");
-        type(KeyCode.PAGE_UP);
-        for (int i = 0; i < 5; i++) {
-            type(KeyCode.LEFT);
-            type(KeyCode.DOWN);
-        }
-    }
-
     private void openRolesView() {
         clickOn("#fileTreeView");
         type(KeyCode.PAGE_UP);
@@ -716,6 +705,15 @@ public class SavePlanTest extends ApplicationTest {
         clickOn("#fileTreeView");
         type(KeyCode.PAGE_DOWN);
         type(KeyCode.RIGHT);
+    }
+
+    private void closeFileThreeElements() {
+        clickOn("#fileTreeView");
+        type(KeyCode.PAGE_UP);
+        for (int i = 0; i < 5; i++) {
+            type(KeyCode.LEFT);
+            type(KeyCode.DOWN);
+        }
     }
 
     private void assertExists(String query) {
