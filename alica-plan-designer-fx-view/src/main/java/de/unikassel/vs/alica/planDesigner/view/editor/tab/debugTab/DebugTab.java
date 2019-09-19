@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -68,13 +69,76 @@ public class DebugTab extends EditorTab {
         // Simulates a AlicaEngineInfo message:
         //(senderId = (value = "\x02\x00\x00\x00", type = wildcard), masterPlan = "ServeMaster", currentPlan = "ServeMaster", currentState = "Stop", currentRole = "Assistant", currentTask = "DefaultTask", agentIdsWithMe = [(value = "\x02\x00\x00\x00", type = wildcard)])
 
-        alicaMessageHandler.handleAlicaMessageReceived(8765,
-                "ServeMaster",
-                "ServeMaster",
-                "Stop",
-                "Assistant",
-                "DefaultTask",
-                new long[]{8765});
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                        "ServeMaster",
+                        "ServeMaster",
+                        "Stop",
+                        "Assistant",
+                        "DefaultTask",
+                        new long[]{8765});
+                Thread.sleep(10);
+                alicaMessageHandler.handleAlicaMessageReceived(5678,
+                        "ServeMaster",
+                        "PutDown",
+                        "DriveToPoint",
+                        "Assistant",
+                        "DefaultTask",
+                        new long[]{5678});
+                Thread.sleep(2500);
+                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                        "ServeMaster",
+                        "ServeMaster",
+                        "Serve",
+                        "Assistant",
+                        "DefaultTask",
+                        new long[]{8765});
+                Thread.sleep(2500);
+                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                        "ServeMaster",
+                        "ServeMaster",
+                        "Charge",
+                        "Assistant",
+                        "DefaultTask",
+                        new long[]{8765});
+                Thread.sleep(2500);
+                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                        "ServeMaster",
+                        "Serve",
+                        "WaitForTask",
+                        "Assistant",
+                        "DefaultTask",
+                        new long[]{8765});
+                Thread.sleep(2500);
+                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                        "ServeMaster",
+                        "Serve",
+                        "DriveToPOI",
+                        "Assistant",
+                        "DefaultTask",
+                        new long[]{8765});
+                Thread.sleep(2500);
+                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                        "ServeMaster",
+                        "Serve",
+                        "WaitForTask",
+                        "Assistant",
+                        "DefaultTask",
+                        new long[]{8765});
+                Thread.sleep(2500);
+                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                        "ServeMaster",
+                        "Serve",
+                        "SearchFor",
+                        "Assistant",
+                        "DefaultTask",
+                        new long[]{8765});
+                return null;
+            }
+        };
+        new Thread(task).start();
     }
 
     @Override

@@ -25,7 +25,7 @@ public abstract class EditorTab extends Tab {
     protected SplitPane splitPane;
 
     public EditorTab (SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
-        super(serializableViewModel.getName());
+        super(serializableViewModel.getDebugSenderId() + serializableViewModel.getName());
         serializableViewModel.nameProperty().addListener((observable, oldValue, newValue) -> this.setText(newValue));
         setGraphic(new ImageView(new AlicaIcon(serializableViewModel.getType(), AlicaIcon.Size.SMALL)));
         // The type might change later (Plan -> MasterPlan)
