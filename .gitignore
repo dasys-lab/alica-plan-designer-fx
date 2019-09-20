@@ -44,6 +44,7 @@ log/
 
 
 # not nessecary project files
+.vscode
 .project
 .settings
 alica-plan-designer-fx-codegeneration/.classpath
