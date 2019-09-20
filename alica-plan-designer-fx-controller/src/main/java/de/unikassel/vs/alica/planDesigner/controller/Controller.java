@@ -206,6 +206,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 updateRepos(event.getEventType(), viewModelElement);
                 updateFileTreeView(event, viewModelElement);
                 break;
+            case Types.DEBUG_MESSAGE:
             case Types.TASK:
                 updateRepos(event.getEventType(), viewModelElement);
                 break;

@@ -23,6 +23,7 @@ public class RepositoryTabPane extends TabPane {
     RepositoryTab planTypesTab;
     RepositoryTab behavioursTab;
     RepositoryTab tasksTab;
+    RepositoryTab debugTab;
 
     public RepositoryTabPane() {
         TabPane planEditorTabPane = MainWindowController.getInstance().getEditorTabPane();
@@ -30,13 +31,15 @@ public class RepositoryTabPane extends TabPane {
         RepositoryTool behaviourTool = new RepositoryTool(planEditorTabPane);
         RepositoryTool planTypeTool = new RepositoryTool(planEditorTabPane);
         RepositoryTool taskTool = new RepositoryTool(planEditorTabPane);
+        RepositoryTool debugTool = new RepositoryTool(planEditorTabPane);
 
         plansTab = new RepositoryTab("Plans", planTool);
         planTypesTab = new RepositoryTab("PlanTypes", planTypeTool);
         behavioursTab = new RepositoryTab("Behaviours", behaviourTool);
         tasksTab = new RepositoryTab("Tasks", taskTool);
+        debugTab = new RepositoryTab("Debug", debugTool);
 
-        getTabs().addAll(plansTab, planTypesTab, behavioursTab, tasksTab);
+        getTabs().addAll(plansTab, planTypesTab, behavioursTab, tasksTab, debugTab);
     }
 
     public void setGuiModificationHandler(IGuiModificationHandler usageHandler) {
@@ -44,6 +47,7 @@ public class RepositoryTabPane extends TabPane {
         planTypesTab.setGuiModificationHandler(usageHandler);
         behavioursTab.setGuiModificationHandler(usageHandler);
         tasksTab.setGuiModificationHandler(usageHandler);
+        debugTab.setGuiModificationHandler(usageHandler);
     }
 
     public void addPlan(ViewModelElement plan) {
@@ -78,6 +82,16 @@ public class RepositoryTabPane extends TabPane {
         tasksTab.addElements(tasks);
     }
 
+    public void addDebugEntry( ViewModelElement debugEntry)
+    {
+        debugTab.addElement(debugEntry);
+    }
+
+    public void addDebugEntries( List<ViewModelElement> debugEntries)
+    {
+        debugTab.addElements(debugEntries);
+    }
+
     public void clearGuiContent() {
         plansTab.clearGuiContent();
         planTypesTab.clearGuiContent();
@@ -99,6 +113,11 @@ public class RepositoryTabPane extends TabPane {
 
     public void clearTasksTab() {
         tasksTab.clearGuiContent();
+    }
+
+    public void clearDebugMessageTab()
+    {
+        debugTab.clearGuiContent();
     }
 
     public GuiModificationEvent handleDelete() {

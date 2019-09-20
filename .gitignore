@@ -43,3 +43,26 @@ bin/
 log/
 
 
+# not nessecary project files
+.project
+.settings
+alica-plan-designer-fx-codegeneration/.classpath
+alica-plan-designer-fx-codegeneration/.factorypath
+alica-plan-designer-fx-codegeneration/.project
+alica-plan-designer-fx-codegeneration/.settings
+alica-plan-designer-fx-controller/.classpath
+alica-plan-designer-fx-controller/.factorypath
+alica-plan-designer-fx-controller/.project
+alica-plan-designer-fx-controller/.settings
+alica-plan-designer-fx-model/.classpath
+alica-plan-designer-fx-model/.factorypath
+alica-plan-designer-fx-model/.project
+alica-plan-designer-fx-model/.settings/
+alica-plan-designer-fx-modelmanagement/.classpath
+alica-plan-designer-fx-modelmanagement/.factorypath
+alica-plan-designer-fx-modelmanagement/.project
+alica-plan-designer-fx-modelmanagement/.settings/
+alica-plan-designer-fx-view/.classpath
+alica-plan-designer-fx-view/.project
+alica-plan-designer-fx-view/.settings/
+

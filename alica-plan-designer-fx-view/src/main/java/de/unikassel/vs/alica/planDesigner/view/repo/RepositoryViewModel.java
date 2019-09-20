@@ -22,6 +22,7 @@ public final class RepositoryViewModel {
     private ObservableList<ViewModelElement> behaviours;
     private ObservableList<ViewModelElement> tasks;
     private ObservableList<ViewModelElement> roles;
+    private ObservableList<ViewModelElement> debugMessages;
 
     private RepositoryTabPane repositoryTabPane;
 
@@ -31,6 +32,7 @@ public final class RepositoryViewModel {
         behaviours = FXCollections.observableArrayList(new ArrayList<>());
         tasks = FXCollections.observableArrayList(new ArrayList<>());
         roles = FXCollections.observableArrayList(new ArrayList<>());
+        debugMessages = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public void initGuiContent() {
@@ -43,6 +45,7 @@ public final class RepositoryViewModel {
         repositoryTabPane.addPlanTypes(planTypes);
         repositoryTabPane.addTasks(tasks);
         repositoryTabPane.addBehaviours(behaviours);
+        repositoryTabPane.addDebugEntries(debugMessages);
         initListeners();
     }
 
@@ -52,6 +55,7 @@ public final class RepositoryViewModel {
         behaviours.clear();
         tasks.clear();
         roles.clear();
+        debugMessages.clear();
     }
 
     public void initListeners() {
@@ -81,6 +85,14 @@ public final class RepositoryViewModel {
             public void onChanged(Change<? extends ViewModelElement> c) {
                 repositoryTabPane.clearTasksTab();
                 repositoryTabPane.addTasks(tasks);
+            }
+        });
+        debugMessages.addListener(new ListChangeListener<ViewModelElement>() {
+            @Override
+            public void onChanged( Change<? extends ViewModelElement> change )
+            {
+                repositoryTabPane.clearDebugMessageTab();
+                repositoryTabPane.addDebugEntries(debugMessages);
             }
         });
     }
@@ -159,6 +171,9 @@ public final class RepositoryViewModel {
             case Types.TASK:
                 this.tasks.add(viewModelElement);
                 break;
+            case Types.DEBUG_MESSAGE:
+                this.debugMessages.add(viewModelElement);
+                break;
             case Types.TASKREPOSITORY:
                 this.tasks.clear();
                 for (ViewModelElement task : ((TaskRepositoryViewModel) viewModelElement).getTaskViewModels()) {
@@ -188,6 +203,9 @@ public final class RepositoryViewModel {
                 break;
             case Types.TASK:
                 this.tasks.remove(viewModelElement);
+                break;
+            case Types.DEBUG_MESSAGE:
+                this.debugMessages.remove(viewModelElement);
                 break;
             case Types.TASKREPOSITORY:
                 this.tasks.clear();
