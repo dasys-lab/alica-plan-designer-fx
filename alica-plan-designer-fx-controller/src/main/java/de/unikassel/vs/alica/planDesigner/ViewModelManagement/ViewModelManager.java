@@ -581,7 +581,7 @@ public class ViewModelManager {
                 //TODO: maybe handle other types
         }
 
-        if(viewModelElement.getType() != Types.TRANSITION && relatedObjects.isEmpty()) {
+        if(viewModelElement.getType() != Types.TRANSITION && (relatedObjects == null || relatedObjects.isEmpty())) {
             viewModelElements.remove(viewModelElement.getId());
         }
     }
