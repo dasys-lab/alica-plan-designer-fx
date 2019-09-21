@@ -1,7 +1,6 @@
 version: "{build}"
 
 environment:
-  ARTIFACT_PATH: .\alica-plan-designer-fx-controller\target\PlanDesigner-*.jar
   GITHUB_TAG_NAME: v$(APPVEYOR_BUILD_VERSION)
   matrix:
     - JAVA_VERSION: "8"
@@ -21,11 +20,14 @@ before_build:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/set-screenresolution.ps1'))
   - ps: Set-ScreenResolution 1920 1080
 
+artifacts:
+  - path: alica-plan-designer-fx-controller\target\PlanDesigner-*.jar
+
 deploy:
   - provider: GitHub
     auth_token:
       secure: gC8oWOphLjwUFQfByUJQ/sS+LGl4xBUhOkORvwUIb1mrstwWRAHaidskrSOLnHhF
-    artifact: $(ARTIFACT_PATH)
+    artifact: /.*\.jar/
     tag: $(GITHUB_TAG_NAME)
     release: $(GITHUB_TAG_NAME)
     description: ''
@@ -36,7 +38,7 @@ deploy:
       appveyor_repo_tag: false
 
 after_build:
-  - ps: Get-ChildItem $(ARTIFACT_PATH) | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: Get-ChildItem .\alica-plan-designer-fx-controller\target\PlanDesigner-*.jar | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
 notifications:
   - provider: Slack
