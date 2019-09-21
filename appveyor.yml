@@ -27,18 +27,10 @@ deploy:
   - provider: GitHub
     auth_token:
       secure: gC8oWOphLjwUFQfByUJQ/sS+LGl4xBUhOkORvwUIb1mrstwWRAHaidskrSOLnHhF
-    artifact: App
-    tag: $(GITHUB_TAG_NAME)
-    release: $(GITHUB_TAG_NAME)
-    description: ''
-    draft: false
-    prerelease: false
+    force_update: true
     on:
       branch: master
-      appveyor_repo_tag: true
-
-#after_build:
-#  - ps: Get-ChildItem .\alica-plan-designer-fx-controller\target\PlanDesigner-*.jar | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+      APPVEYOR_REPO_TAG: true
 
 notifications:
   - provider: Slack
