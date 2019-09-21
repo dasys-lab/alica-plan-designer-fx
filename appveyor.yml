@@ -18,16 +18,16 @@ before_build:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/set-screenresolution.ps1'))
   - ps: Set-ScreenResolution 1920 1080
 
-deploy:
-  - provider: GitHub
-    release: PlanDesigner-v$(appveyor_build_version)
-    description: ''
-    auth_token:
-      secure: gC8oWOphLjwUFQfByUJQ/sS+LGl4xBUhOkORvwUIb1mrstwWRAHaidskrSOLnHhF
-    artifact: .\alica-plan-designer-fx-controller\target\PlanDesigner-*.jar
-    on:
-      branch: master
-      APPVEYOR_REPO_TAG: true  # deploy on tag push only
+#deploy:
+#  - provider: GitHub
+#    release: PlanDesigner-v$(appveyor_build_version)
+#    description: ''
+#    auth_token:
+#      secure: gC8oWOphLjwUFQfByUJQ/sS+LGl4xBUhOkORvwUIb1mrstwWRAHaidskrSOLnHhF
+#    artifact: .\alica-plan-designer-fx-controller\target\PlanDesigner-*.jar
+#    on:
+#      branch: master
+#      APPVEYOR_REPO_TAG: true  # deploy on tag push only
 
 after_build:
   - ps: Get-ChildItem .\alica-plan-designer-fx-controller\target\PlanDesigner-*.jar | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
