@@ -1,29 +1,38 @@
 version: "{build}"
 
 environment:
-  GITHUB_TAG_NAME: v$(APPVEYOR_BUILD_VERSION)
   matrix:
     - JAVA_VERSION: "8"
       JAVA_HOME: C:\Program Files\Java\jdk1.8.0
       _JAVA_OPTIONS: "-Dtestfx.robot=awt"
 
+# fetch repository as zip archive
 shallow_clone: true
 
+# install without run tests
 build_script:
   - mvn clean install -DskipTests
 
+# run tests
 test_script:
   - mvn test -B
 
+# increase screen size
 before_build:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/set-screenresolution.ps1'))
   - ps: Set-ScreenResolution 1920 1080
 
+# build cache
+cache:
+  - C:\maven\ -> appveyor.yml
+  - C:\Users\appveyor\.m2\ -> **\pom.xml
+
+# files that will be uploaded
 artifacts:
   - path: alica-plan-designer-fx-controller\target\PlanDesigner-*.jar
-    name: App
 
 deploy:
+  # github artifact upload to tag/release
   - provider: GitHub
     auth_token:
       secure: gC8oWOphLjwUFQfByUJQ/sS+LGl4xBUhOkORvwUIb1mrstwWRAHaidskrSOLnHhF
@@ -33,6 +42,7 @@ deploy:
       APPVEYOR_REPO_TAG: true
 
 notifications:
+  # slack notification
   - provider: Slack
     auth_token:
       secure: 6fgzuwD9QHg2w6I1Q9cVPwSH6ZXt4gcSLSMFkglW0bVA4NhTHNPPyHj6lTrt+dFYpQw0WvXEMuY4BXCPf68hlLJr8duS4Qwzn5zc/DONxIM=
