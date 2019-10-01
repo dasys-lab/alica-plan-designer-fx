@@ -31,6 +31,9 @@ import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
+import de.uniks.vs.capnzero.monitoring.MonitorClient;
+import de.uniks.vs.capnzero.monitoring.handler.DebugEventHandler;
+import de.uniks.vs.capnzero.monitoring.proxy.DummyEventProxy;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -53,11 +56,12 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Central class that synchronizes model and view.
- * It is THE CONTROLLER regarding the Model-View-Controller pattern,
- * implemented in the Plan Designer.
+ * Central class that synchronizes model and view. It is THE CONTROLLER
+ * regarding the Model-View-Controller pattern, implemented in the Plan
+ * Designer.
  */
-public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler {
+public final class Controller
+        implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, DebugEventHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -79,6 +83,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     // Code Generation Objects
     private GeneratedSourcesManager generatedSourcesManager;
+    private MonitorClient debugMonitorClient;
 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
@@ -103,6 +108,16 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         repoViewModel = viewModelManager.createRepositoryViewModel();
 
         setupBeanConverters();
+
+        setupDebugMonitorClient();
+    }
+
+    private void setupDebugMonitorClient() {
+        DummyEventProxy eventProxy = new DummyEventProxy();
+        eventProxy.addEventHandler(this);
+
+        this.debugMonitorClient = new MonitorClient(eventProxy);
+        debugMonitorClient.start();
     }
 
     protected void setupGeneratedSourcesManager() {
@@ -162,24 +177,20 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * @param event
      */
     public void generateCode(GuiModificationEvent event, Text generatingText) {
-        Codegenerator codegenerator = new Codegenerator(
-                modelManager.getPlans(),
-                modelManager.getBehaviours(),
-                modelManager.getConditions(),
-                configurationManager.getClangFormatPath(),
-                configurationManager.getActiveConfiguration().getGenSrcPath(),
-                generatedSourcesManager);
+        Codegenerator codegenerator = new Codegenerator(modelManager.getPlans(), modelManager.getBehaviours(),
+                modelManager.getConditions(), configurationManager.getClangFormatPath(),
+                configurationManager.getActiveConfiguration().getGenSrcPath(), generatedSourcesManager);
         Platform.runLater(() -> generatingText.textProperty().bind(codegenerator.currentFile));
         switch (event.getEventType()) {
-            case GENERATE_ELEMENT:
-                codegenerator.generate((AbstractPlan) modelManager.getPlanElement(event.getElementId()));
-                break;
-            case GENERATE_ALL_ELEMENTS:
-                codegenerator.generate();
-                break;
-            default:
-                System.out.println("Controller.generateCode(): Event type " + event.getEventType() + " is not handled.");
-                break;
+        case GENERATE_ELEMENT:
+            codegenerator.generate((AbstractPlan) modelManager.getPlanElement(event.getElementId()));
+            break;
+        case GENERATE_ALL_ELEMENTS:
+            codegenerator.generate();
+            break;
+        default:
+            System.out.println("Controller.generateCode(): Event type " + event.getEventType() + " is not handled.");
+            break;
         }
     }
 
@@ -189,7 +200,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * @param event Object that describes the purpose/context of the fired event.
      */
     public void handleModelEvent(ModelEvent event) {
-        if(event.getEventType().equals(ModelEventType.ELEMENT_FOLDER_DELETED)){
+        if (event.getEventType().equals(ModelEventType.ELEMENT_FOLDER_DELETED)) {
             updateFileTreeView(event, null);
             return;
         }
@@ -197,24 +208,26 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         ViewModelElement viewModelElement = viewModelManager.getViewModelElement(modelElement);
 
         switch (event.getElementType()) {
-            case Types.MASTERPLAN:
-            case Types.PLAN:
-            case Types.PLANTYPE:
-            case Types.BEHAVIOUR:
-            case Types.ROLESET:
-            case Types.TASKREPOSITORY:
-                updateRepos(event.getEventType(), viewModelElement);
-                updateFileTreeView(event, viewModelElement);
-                break;
-            case Types.DEBUG_MESSAGE:
-            case Types.TASK:
-                updateRepos(event.getEventType(), viewModelElement);
-                break;
+        case Types.MASTERPLAN:
+        case Types.PLAN:
+        case Types.PLANTYPE:
+        case Types.BEHAVIOUR:
+        case Types.ROLESET:
+        case Types.TASKREPOSITORY:
+            updateRepos(event.getEventType(), viewModelElement);
+            updateFileTreeView(event, viewModelElement);
+            break;
+        case Types.DEBUG_MESSAGE:
+        case Types.TASK:
+            updateRepos(event.getEventType(), viewModelElement);
+            break;
         }
         // Generate files for moved code
-        if(event.getEventType() == ModelEventType.ELEMENT_ATTRIBUTE_CHANGED  && "relativeDirectory".equals(event.getChangedAttribute())) {
-            mainWindowController.waitOnProgressLabel(() -> generateCode(new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, event.getElementType(),
-                    modelElement.getName()), mainWindowController.getStatusText()));
+        if (event.getEventType() == ModelEventType.ELEMENT_ATTRIBUTE_CHANGED
+                && "relativeDirectory".equals(event.getChangedAttribute())) {
+            mainWindowController
+                    .waitOnProgressLabel(() -> generateCode(new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS,
+                            event.getElementType(), modelElement.getName()), mainWindowController.getStatusText()));
         }
         updateViewModel(event, viewModelElement, modelElement);
     }
@@ -227,13 +240,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      */
     private void updateRepos(ModelEventType eventType, ViewModelElement viewModelElement) {
         switch (eventType) {
-            case ELEMENT_PARSED:
-            case ELEMENT_CREATED:
-                repoViewModel.addElement(viewModelElement);
-                break;
-            case ELEMENT_DELETED:
-                repoViewModel.removeElement(viewModelElement);
-                break;
+        case ELEMENT_PARSED:
+        case ELEMENT_CREATED:
+            repoViewModel.addElement(viewModelElement);
+            break;
+        case ELEMENT_DELETED:
+            repoViewModel.removeElement(viewModelElement);
+            break;
         }
     }
 
@@ -245,24 +258,23 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      */
     private void updateFileTreeView(ModelEvent event, ViewModelElement viewModelElement) {
         switch (event.getEventType()) {
-            case ELEMENT_PARSED:
-            case ELEMENT_CREATED:
-                mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
-                break;
-            case ELEMENT_DELETED:
+        case ELEMENT_PARSED:
+        case ELEMENT_CREATED:
+            mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
+            break;
+        case ELEMENT_DELETED:
+            mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
+            break;
+        case ELEMENT_ATTRIBUTE_CHANGED:
+            if (event.getChangedAttribute().equals("relativeDirectory") || event.getChangedAttribute().equals("name")
+                    || event.getChangedAttribute().equals("masterPlan")) {
                 mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
-                break;
-            case ELEMENT_ATTRIBUTE_CHANGED:
-                if(event.getChangedAttribute().equals("relativeDirectory") ||
-                        event.getChangedAttribute().equals("name") ||
-                        event.getChangedAttribute().equals("masterPlan")) {
-                    mainWindowController.getFileTreeView().removeViewModelElement(viewModelElement);
-                    mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
-                }
-                break;
-            case ELEMENT_FOLDER_DELETED:
-                mainWindowController.getFileTreeView().removeFolder(event.getChangedAttribute());
-                break;
+                mainWindowController.getFileTreeView().addViewModelElement(viewModelElement);
+            }
+            break;
+        case ELEMENT_FOLDER_DELETED:
+            mainWindowController.getFileTreeView().removeFolder(event.getChangedAttribute());
+            break;
         }
     }
 
@@ -275,59 +287,60 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      */
     private void updateViewModel(ModelEvent event, ViewModelElement viewModelElement, PlanElement planElement) {
         switch (event.getEventType()) {
-            case ELEMENT_DELETED:
-            case ELEMENT_REMOVED:
-                viewModelManager.removeElement(event.getParentId(), viewModelElement, event.getRelatedObjects());
-                break;
-            case ELEMENT_ATTRIBUTE_CHANGED:
-                viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue());
-                if(event.getChangedAttribute() == "name") {
-                    viewModelElement.setName(planElement.getName());
-                    updateFileTreeView(event, viewModelElement);
-                }
-                if(event.getChangedAttribute() == "masterPlan") {
-                    updateFileTreeView(event, viewModelElement);
-                }
-                break;
-            case ELEMENT_PARSED:
-            case ELEMENT_CREATED:
-            case ELEMENT_ADDED:
-                viewModelManager.addElement(event);
-                break;
-            case ELEMENT_CONNECTED:
-                switch (viewModelElement.getType()) {
-                    case Types.CONFIGURATION:
-                        String key = event.getChangedAttribute();
-                        String value = (String) event.getNewValue();
-                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().put(key, value);
-                        break;
-                    default:
-                        viewModelManager.connectElement(event);
-                }
-                break;
-            case ELEMENT_DISCONNECTED:
-                switch (viewModelElement.getType()) {
-                    case Types.CONFIGURATION:
-                        String key = event.getChangedAttribute();
-                        ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().remove(key);
-                        break;
-                    default:
-                        viewModelManager.disconnectElement(event);
-                }
-                break;
-            case ELEMENT_CHANGED_POSITION:
-                viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
+        case ELEMENT_DELETED:
+        case ELEMENT_REMOVED:
+            viewModelManager.removeElement(event.getParentId(), viewModelElement, event.getRelatedObjects());
+            break;
+        case ELEMENT_ATTRIBUTE_CHANGED:
+            viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue());
+            if (event.getChangedAttribute() == "name") {
+                viewModelElement.setName(planElement.getName());
+                updateFileTreeView(event, viewModelElement);
+            }
+            if (event.getChangedAttribute() == "masterPlan") {
+                updateFileTreeView(event, viewModelElement);
+            }
+            break;
+        case ELEMENT_PARSED:
+        case ELEMENT_CREATED:
+        case ELEMENT_ADDED:
+            viewModelManager.addElement(event);
+            break;
+        case ELEMENT_CONNECTED:
+            switch (viewModelElement.getType()) {
+            case Types.CONFIGURATION:
+                String key = event.getChangedAttribute();
+                String value = (String) event.getNewValue();
+                ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().put(key, value);
                 break;
             default:
-                System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
+                viewModelManager.connectElement(event);
+            }
+            break;
+        case ELEMENT_DISCONNECTED:
+            switch (viewModelElement.getType()) {
+            case Types.CONFIGURATION:
+                String key = event.getChangedAttribute();
+                ((ConfigurationViewModel) viewModelElement).getKeyValuePairs().remove(key);
                 break;
+            default:
+                viewModelManager.disconnectElement(event);
+            }
+            break;
+        case ELEMENT_CHANGED_POSITION:
+            viewModelManager.changePosition((PlanElementViewModel) viewModelElement, event);
+            break;
+        default:
+            System.out.println("Controller.updateViewModel(): Event type " + event.getEventType() + " is not handled.");
+            break;
         }
 
         if (event.getUiElement() != null && event.getUiElement().getBendPoints().size() != 0) {
             TransitionViewModel transition = (TransitionViewModel) viewModelElement;
             transition.getBendpoints().clear();
             for (BendPoint bendPoint : event.getUiElement().getBendPoints()) {
-                BendPointViewModel bendPointViewModel = (BendPointViewModel) viewModelManager.getViewModelElement(bendPoint);
+                BendPointViewModel bendPointViewModel = (BendPointViewModel) viewModelManager
+                        .getViewModelElement(bendPoint);
                 transition.addBendpoint(bendPointViewModel);
             }
             ModelEvent modelEvent = new ModelEvent(ModelEventType.ELEMENT_CREATED, planElement, Types.BENDPOINT);
@@ -372,8 +385,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         editorTabPane.getTabs().clear();
         repoTabPane.clearGuiContent();
         repoViewModel.clear();
-        ((FileTreeViewContextMenu) mainWindowController.getFileTreeView().getContextMenu()).showTaskrepositoryItem(true);
-        mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
+        ((FileTreeViewContextMenu) mainWindowController.getFileTreeView().getContextMenu())
+                .showTaskrepositoryItem(true);
+        mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(),
+                activeConfiguration.getTasksPath());
 
         // load model from path
         modelManager.setPlansPath(activeConfiguration.getPlansPath());
@@ -393,7 +408,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         editorTabPane = mainWindowController.getEditorTabPane();
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
-            mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
+            mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(),
+                    activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
             new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
             modelManager.loadModelFromDisk();
         }
@@ -412,86 +428,91 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     public void handle(GuiModificationEvent event) {
         ModelModificationQuery mmq;
         switch (event.getEventType()) {
-            case CREATE_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.CREATE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
-                mmq.setParentId(event.getParentId());
-                mmq.setRelatedObjects(event.getRelatedObjects());
-                break;
-            case DELETE_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
-                mmq.setElementId(event.getElementId());
-                mmq.setParentId(event.getParentId());
-                mmq.setRelatedObjects(event.getRelatedObjects());
-                break;
-            case SAVE_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
-                mmq.setElementId(event.getElementId());
-                break;
-            case ADD_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
-                mmq.setElementId(event.getElementId());
-                mmq.setElementType(event.getElementType());
-                mmq.setParentId(event.getParentId());
-                mmq.setName(event.getName());
-                mmq.setComment(event.getComment());
-                mmq.setX(event.getX());
-                mmq.setY(event.getY());
-                mmq.setRelatedObjects(event.getRelatedObjects());
-                break;
-            case COPY_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.COPY_ELEMENT, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
-                mmq.setElementId(event.getElementId());
-                mmq.setParentId(event.getParentId());
-                break;
-            case REMOVE_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ELEMENT);
-                mmq.setElementId(event.getElementId());
-                mmq.setElementType(event.getElementType());
-                mmq.setParentId(event.getParentId());
-                break;
-            case REMOVE_ALL_ELEMENTS:
-                mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ALL_ELEMENTS);
-                mmq.setElementType(event.getElementType());
-                mmq.setElementId(event.getElementId());
-                break;
-            case RELOAD_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.RELOAD_ELEMENT);
-                mmq.setElementId(event.getElementId());
-                mmq.setElementType(event.getElementType());
-                break;
-            case CHANGE_ELEMENT:
-                mmq = new ModelModificationQuery(ModelQueryType.CHANGE_ELEMENT);
-                mmq.setElementType(event.getElementType());
-                mmq.setParentId(event.getParentId());
-                mmq.setElementId(event.getElementId());
-                mmq.setRelatedObjects(event.getRelatedObjects());
-                mmq.setAttributeName(event.getName());
-                if (event instanceof GuiChangeAttributeEvent) {
-                    GuiChangeAttributeEvent guiChangeAttributeEvent = (GuiChangeAttributeEvent) event;
-                    mmq.setAttributeName(guiChangeAttributeEvent.getAttributeName());
-                    mmq.setAttributeType(guiChangeAttributeEvent.getAttributeType());
-                    mmq.setNewValue(guiChangeAttributeEvent.getNewValue());
-                }
-                break;
-            case CHANGE_POSITION:
-                mmq = new ModelModificationQuery(ModelQueryType.CHANGE_POSITION);
-                mmq.setElementType(event.getElementType());
-                mmq.setElementId(event.getElementId());
-                mmq.setParentId(event.getParentId());
-                mmq.setX(event.getX());
-                mmq.setY(event.getY());
-                mmq.setRelatedObjects(event.getRelatedObjects());
-                break;
-            case MOVE_FILE:
-                mmq = new ModelModificationQuery(ModelQueryType.MOVE_FILE, event.getAbsoluteDirectory(), event.getElementType(), event.getName());
-                mmq.setElementId(event.getElementId());
-                break;
-            case GENERATE_ELEMENT:
-            case GENERATE_ALL_ELEMENTS:
-                mmq = null;
-                break;
-            default:
-                mmq = null;
+        case CREATE_ELEMENT:
+            mmq = new ModelModificationQuery(ModelQueryType.CREATE_ELEMENT, event.getAbsoluteDirectory(),
+                    event.getElementType(), event.getName());
+            mmq.setParentId(event.getParentId());
+            mmq.setRelatedObjects(event.getRelatedObjects());
+            break;
+        case DELETE_ELEMENT:
+            mmq = new ModelModificationQuery(ModelQueryType.DELETE_ELEMENT, event.getAbsoluteDirectory(),
+                    event.getElementType(), event.getName());
+            mmq.setElementId(event.getElementId());
+            mmq.setParentId(event.getParentId());
+            mmq.setRelatedObjects(event.getRelatedObjects());
+            break;
+        case SAVE_ELEMENT:
+            mmq = new ModelModificationQuery(ModelQueryType.SAVE_ELEMENT, event.getAbsoluteDirectory(),
+                    event.getElementType(), event.getName());
+            mmq.setElementId(event.getElementId());
+            break;
+        case ADD_ELEMENT:
+            mmq = new ModelModificationQuery(ModelQueryType.ADD_ELEMENT);
+            mmq.setElementId(event.getElementId());
+            mmq.setElementType(event.getElementType());
+            mmq.setParentId(event.getParentId());
+            mmq.setName(event.getName());
+            mmq.setComment(event.getComment());
+            mmq.setX(event.getX());
+            mmq.setY(event.getY());
+            mmq.setRelatedObjects(event.getRelatedObjects());
+            break;
+        case COPY_ELEMENT:
+            mmq = new ModelModificationQuery(ModelQueryType.COPY_ELEMENT, event.getAbsoluteDirectory(),
+                    event.getElementType(), event.getName());
+            mmq.setElementId(event.getElementId());
+            mmq.setParentId(event.getParentId());
+            break;
+        case REMOVE_ELEMENT:
+            mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ELEMENT);
+            mmq.setElementId(event.getElementId());
+            mmq.setElementType(event.getElementType());
+            mmq.setParentId(event.getParentId());
+            break;
+        case REMOVE_ALL_ELEMENTS:
+            mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ALL_ELEMENTS);
+            mmq.setElementType(event.getElementType());
+            mmq.setElementId(event.getElementId());
+            break;
+        case RELOAD_ELEMENT:
+            mmq = new ModelModificationQuery(ModelQueryType.RELOAD_ELEMENT);
+            mmq.setElementId(event.getElementId());
+            mmq.setElementType(event.getElementType());
+            break;
+        case CHANGE_ELEMENT:
+            mmq = new ModelModificationQuery(ModelQueryType.CHANGE_ELEMENT);
+            mmq.setElementType(event.getElementType());
+            mmq.setParentId(event.getParentId());
+            mmq.setElementId(event.getElementId());
+            mmq.setRelatedObjects(event.getRelatedObjects());
+            mmq.setAttributeName(event.getName());
+            if (event instanceof GuiChangeAttributeEvent) {
+                GuiChangeAttributeEvent guiChangeAttributeEvent = (GuiChangeAttributeEvent) event;
+                mmq.setAttributeName(guiChangeAttributeEvent.getAttributeName());
+                mmq.setAttributeType(guiChangeAttributeEvent.getAttributeType());
+                mmq.setNewValue(guiChangeAttributeEvent.getNewValue());
+            }
+            break;
+        case CHANGE_POSITION:
+            mmq = new ModelModificationQuery(ModelQueryType.CHANGE_POSITION);
+            mmq.setElementType(event.getElementType());
+            mmq.setElementId(event.getElementId());
+            mmq.setParentId(event.getParentId());
+            mmq.setX(event.getX());
+            mmq.setY(event.getY());
+            mmq.setRelatedObjects(event.getRelatedObjects());
+            break;
+        case MOVE_FILE:
+            mmq = new ModelModificationQuery(ModelQueryType.MOVE_FILE, event.getAbsoluteDirectory(),
+                    event.getElementType(), event.getName());
+            mmq.setElementId(event.getElementId());
+            break;
+        case GENERATE_ELEMENT:
+        case GENERATE_ALL_ELEMENTS:
+            mmq = null;
+            break;
+        default:
+            mmq = null;
         }
         this.modelManager.handleModelModificationQuery(mmq);
     }
@@ -503,11 +524,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * @param path
      */
     public void handleFileSystemEvent(WatchEvent event, Path path) {
-        // A change in a sub-directory also creates an event for the parent-directory. This event must be ignored,
+        // A change in a sub-directory also creates an event for the parent-directory.
+        // This event must be ignored,
         // because its filename is only the name of the subdirectory
-        /*if (!path.toFile().isFile()) {
-            return;
-        }*/
+        /*
+         * if (!path.toFile().isFile()) { return; }
+         */
 
         WatchEvent.Kind kind = event.kind();
         ModelModificationQuery mmq;
@@ -543,8 +565,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         alert.setTitle(i18NRepo.getString("label.warn"));
         alert.setHeaderText(i18NRepo.getString("label.error.missing.taskrepository"));
         alert.setContentText(i18NRepo.getString("label.error.missing.taskrepository.choice"));
-        alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2 - alert.getDialogPane().getWidth() * 1.5);
-        alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2 - alert.getDialogPane().getHeight() * 1.5);
+        alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2
+                - alert.getDialogPane().getWidth() * 1.5);
+        alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2
+                - alert.getDialogPane().getHeight() * 1.5);
 
         ButtonType createTaskRepositoryBtn = new ButtonType(i18NRepo.getString("action.create.taskrepository"));
         ButtonType confirmBtn = new ButtonType(i18NRepo.getString("action.openanyway"));
@@ -561,13 +585,17 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         } else if (alert.getResult() == createTaskRepositoryBtn) {
             CreateNewDialogController createNewDialogController;
             if (configurationManager.getActiveConfiguration() != null) {
-                createNewDialogController = ((FileTreeViewContextMenu) MainWindowController.getInstance().getFileTreeView()
-                        .getContextMenu()).getNewResourceMenu().createFileDialog(new File(configurationManager.getActiveConfiguration().getTasksPath()), Types.TASKREPOSITORY);
+                createNewDialogController = ((FileTreeViewContextMenu) MainWindowController.getInstance()
+                        .getFileTreeView().getContextMenu()).getNewResourceMenu().createFileDialog(
+                                new File(configurationManager.getActiveConfiguration().getTasksPath()),
+                                Types.TASKREPOSITORY);
             } else {
-                createNewDialogController = ((FileTreeViewContextMenu) MainWindowController.getInstance().getFileTreeView()
-                        .getContextMenu()).getNewResourceMenu().createFileDialog(null, Types.TASKREPOSITORY);
+                createNewDialogController = ((FileTreeViewContextMenu) MainWindowController.getInstance()
+                        .getFileTreeView().getContextMenu()).getNewResourceMenu().createFileDialog(null,
+                                Types.TASKREPOSITORY);
             }
-            createNewDialogController.getStage().setX(alert.getX() + createNewDialogController.getMainVBox().getPrefWidth() / 2);
+            createNewDialogController.getStage()
+                    .setX(alert.getX() + createNewDialogController.getMainVBox().getPrefWidth() / 2);
             createNewDialogController.getStage().setY(alert.getY());
             createNewDialogController.showAndWait();
         }
@@ -580,9 +608,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(i18NRepo.getString("label.warn"));
         alert.setHeaderText(i18NRepo.getString("label.error.wrong.taskrepository") + " " + taskID + "  "
-                + i18NRepo.getString("label.error.wrong.taskrepository2") + " " + planName+ ".");
-        alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2 - alert.getDialogPane().getWidth());
-        alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2 - alert.getDialogPane().getHeight());
+                + i18NRepo.getString("label.error.wrong.taskrepository2") + " " + planName + ".");
+        alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2
+                - alert.getDialogPane().getWidth());
+        alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2
+                - alert.getDialogPane().getHeight());
 
         ButtonType closeBtn = new ButtonType(i18NRepo.getString("action.close"), ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(closeBtn);
@@ -654,7 +684,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
-        if(abstractPlan instanceof Behaviour) {
+        if (abstractPlan instanceof Behaviour) {
             return generatedSourcesManager.getGeneratedFilesForBehaviour((Behaviour) abstractPlan);
         } else if (abstractPlan instanceof Plan) {
             List<File> fileList = generatedSourcesManager.getGeneratedConditionFilesForPlan(abstractPlan);
@@ -664,10 +694,18 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             return new ArrayList<>();
         }
     }
+
     @Override
-    public void generateAutoGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan){
-        mainWindowController.waitOnProgressLabel(() -> generateCode(new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, "behaviour",
-                abstractPlan.getName()), mainWindowController.getStatusText()));
+    public void generateAutoGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
+        mainWindowController.waitOnProgressLabel(() -> generateCode(
+                new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, "behaviour", abstractPlan.getName()),
+                mainWindowController.getStatusText()));
     }
 
+    @Override
+    public void handleDebugEvent(de.uniks.vs.capnzero.monitoring.event.Event event) {
+        System.out.println("Got debug event: " + event);
+        // repoViewModel.addElement(new ViewModelElement(9999, event.toString(),
+        // Types.DEBUG_MESSAGE));
+    }
 }
