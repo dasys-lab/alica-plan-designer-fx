@@ -32,8 +32,10 @@ import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import de.uniks.vs.capnzero.monitoring.MonitorClient;
+import de.uniks.vs.capnzero.monitoring.YamlEventParser;
+import de.uniks.vs.capnzero.monitoring.config.DebugConfiguration;
 import de.uniks.vs.capnzero.monitoring.handler.DebugEventHandler;
-import de.uniks.vs.capnzero.monitoring.proxy.DummyEventProxy;
+import de.uniks.vs.capnzero.monitoring.proxy.CapnzeroEventProxy;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -113,11 +115,12 @@ public final class Controller
     }
 
     private void setupDebugMonitorClient() {
-        DummyEventProxy eventProxy = new DummyEventProxy();
-        eventProxy.addEventHandler(this);
+        DebugConfiguration config = new DebugConfiguration();
+        YamlEventParser parser = new YamlEventParser();
+        CapnzeroEventProxy proxy = new CapnzeroEventProxy(this, parser, config);
 
-        this.debugMonitorClient = new MonitorClient(eventProxy);
-        debugMonitorClient.start();
+        this.debugMonitorClient = new MonitorClient(proxy);
+        this.debugMonitorClient.start();
     }
 
     protected void setupGeneratedSourcesManager() {
@@ -217,7 +220,6 @@ public final class Controller
             updateRepos(event.getEventType(), viewModelElement);
             updateFileTreeView(event, viewModelElement);
             break;
-        case Types.DEBUG_MESSAGE:
         case Types.TASK:
             updateRepos(event.getEventType(), viewModelElement);
             break;
@@ -705,7 +707,5 @@ public final class Controller
     @Override
     public void handleDebugEvent(de.uniks.vs.capnzero.monitoring.event.Event event) {
         System.out.println("Got debug event: " + event);
-        // repoViewModel.addElement(new ViewModelElement(9999, event.toString(),
-        // Types.DEBUG_MESSAGE));
     }
 }

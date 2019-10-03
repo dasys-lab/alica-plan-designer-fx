@@ -14,8 +14,9 @@ import javafx.scene.control.TabPane;
 import java.util.List;
 
 /**
- * Parent object for the tabs of the Repository View. Is created by loading
- * the mainWindow.fxml file and initialized by the corresponding MainWindowController.
+ * Parent object for the tabs of the Repository View. Is created by loading the
+ * mainWindow.fxml file and initialized by the corresponding
+ * MainWindowController.
  */
 public class RepositoryTabPane extends TabPane {
 
@@ -23,7 +24,6 @@ public class RepositoryTabPane extends TabPane {
     RepositoryTab planTypesTab;
     RepositoryTab behavioursTab;
     RepositoryTab tasksTab;
-    RepositoryTab debugTab;
 
     public RepositoryTabPane() {
         TabPane planEditorTabPane = MainWindowController.getInstance().getEditorTabPane();
@@ -31,15 +31,13 @@ public class RepositoryTabPane extends TabPane {
         RepositoryTool behaviourTool = new RepositoryTool(planEditorTabPane);
         RepositoryTool planTypeTool = new RepositoryTool(planEditorTabPane);
         RepositoryTool taskTool = new RepositoryTool(planEditorTabPane);
-        RepositoryTool debugTool = new RepositoryTool(planEditorTabPane);
 
         plansTab = new RepositoryTab("Plans", planTool);
         planTypesTab = new RepositoryTab("PlanTypes", planTypeTool);
         behavioursTab = new RepositoryTab("Behaviours", behaviourTool);
         tasksTab = new RepositoryTab("Tasks", taskTool);
-        debugTab = new RepositoryTab("Debug", debugTool);
 
-        getTabs().addAll(plansTab, planTypesTab, behavioursTab, tasksTab, debugTab);
+        getTabs().addAll(plansTab, planTypesTab, behavioursTab, tasksTab);
     }
 
     public void setGuiModificationHandler(IGuiModificationHandler usageHandler) {
@@ -47,7 +45,6 @@ public class RepositoryTabPane extends TabPane {
         planTypesTab.setGuiModificationHandler(usageHandler);
         behavioursTab.setGuiModificationHandler(usageHandler);
         tasksTab.setGuiModificationHandler(usageHandler);
-        debugTab.setGuiModificationHandler(usageHandler);
     }
 
     public void addPlan(ViewModelElement plan) {
@@ -82,16 +79,6 @@ public class RepositoryTabPane extends TabPane {
         tasksTab.addElements(tasks);
     }
 
-    public void addDebugEntry( ViewModelElement debugEntry)
-    {
-        debugTab.addElement(debugEntry);
-    }
-
-    public void addDebugEntries( List<ViewModelElement> debugEntries)
-    {
-        debugTab.addElements(debugEntries);
-    }
-
     public void clearGuiContent() {
         plansTab.clearGuiContent();
         planTypesTab.clearGuiContent();
@@ -115,32 +102,28 @@ public class RepositoryTabPane extends TabPane {
         tasksTab.clearGuiContent();
     }
 
-    public void clearDebugMessageTab()
-    {
-        debugTab.clearGuiContent();
-    }
-
     public GuiModificationEvent handleDelete() {
         RepositoryTab selectedTab = (RepositoryTab) this.getSelectionModel().getSelectedItem();
-        boolean focused = this.isFocused()
-                || selectedTab.getContent().isFocused();
-        if(!focused) {
+        boolean focused = this.isFocused() || selectedTab.getContent().isFocused();
+        if (!focused) {
             return null;
         }
 
         ViewModelElement selectedItem = selectedTab.getSelectedItem();
-        if(selectedItem.getType().equals(Types.TASK)) {
+        if (selectedItem.getType().equals(Types.TASK)) {
             // TODO: Implement deletion of Tasks
             return null;
-        }else {
-            IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance().getGuiModificationHandler();
+        } else {
+            IGuiModificationHandler guiModificationHandler = MainWindowController.getInstance()
+                    .getGuiModificationHandler();
             List<ViewModelElement> usages = guiModificationHandler.getUsages(selectedItem);
-            if(!usages.isEmpty()) {
-                UsagesWindowController.createUsagesWindow(usages
-                        , I18NRepo.getInstance().getString("label.usage.nodelete"), guiModificationHandler);
+            if (!usages.isEmpty()) {
+                UsagesWindowController.createUsagesWindow(usages,
+                        I18NRepo.getInstance().getString("label.usage.nodelete"), guiModificationHandler);
                 return null;
             }
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, selectedItem.getType(), selectedItem.getName());
+            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, selectedItem.getType(),
+                    selectedItem.getName());
             event.setElementId(selectedItem.getId());
             return event;
         }
