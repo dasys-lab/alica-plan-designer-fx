@@ -13,7 +13,8 @@ import java.util.ArrayList;
 /**
  * This class functions as backend for the repository view.
  * <p>
- * This class containsPlan Lists of all Plans, PlanTypes, Behaviours and Tasks as ViewModelElement
+ * This class containsPlan Lists of all Plans, PlanTypes, Behaviours and Tasks
+ * as ViewModelElement
  */
 public final class RepositoryViewModel {
 
@@ -22,7 +23,6 @@ public final class RepositoryViewModel {
     private ObservableList<ViewModelElement> behaviours;
     private ObservableList<ViewModelElement> tasks;
     private ObservableList<ViewModelElement> roles;
-    private ObservableList<ViewModelElement> debugMessages;
 
     private RepositoryTabPane repositoryTabPane;
 
@@ -32,7 +32,6 @@ public final class RepositoryViewModel {
         behaviours = FXCollections.observableArrayList(new ArrayList<>());
         tasks = FXCollections.observableArrayList(new ArrayList<>());
         roles = FXCollections.observableArrayList(new ArrayList<>());
-        debugMessages = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public void initGuiContent() {
@@ -45,7 +44,6 @@ public final class RepositoryViewModel {
         repositoryTabPane.addPlanTypes(planTypes);
         repositoryTabPane.addTasks(tasks);
         repositoryTabPane.addBehaviours(behaviours);
-        repositoryTabPane.addDebugEntries(debugMessages);
         initListeners();
     }
 
@@ -55,7 +53,6 @@ public final class RepositoryViewModel {
         behaviours.clear();
         tasks.clear();
         roles.clear();
-        debugMessages.clear();
     }
 
     public void initListeners() {
@@ -87,19 +84,11 @@ public final class RepositoryViewModel {
                 repositoryTabPane.addTasks(tasks);
             }
         });
-        debugMessages.addListener(new ListChangeListener<ViewModelElement>() {
-            @Override
-            public void onChanged( Change<? extends ViewModelElement> change )
-            {
-                repositoryTabPane.clearDebugMessageTab();
-                repositoryTabPane.addDebugEntries(debugMessages);
-            }
-        });
     }
 
     public void removePlan(long id) {
-        for(ViewModelElement plan : plans) {
-            if(plan.getId() == id) {
+        for (ViewModelElement plan : plans) {
+            if (plan.getId() == id) {
                 this.plans.remove(plan);
                 break;
             }
@@ -107,8 +96,8 @@ public final class RepositoryViewModel {
     }
 
     public void removeBehaviour(long id) {
-        for(ViewModelElement behaviour : behaviours) {
-            if(behaviour.getId() == id) {
+        for (ViewModelElement behaviour : behaviours) {
+            if (behaviour.getId() == id) {
                 this.behaviours.remove(behaviour);
                 break;
             }
@@ -116,8 +105,8 @@ public final class RepositoryViewModel {
     }
 
     public void removePlanType(long id) {
-        for(ViewModelElement planType : planTypes) {
-            if(planType.getId() == id) {
+        for (ViewModelElement planType : planTypes) {
+            if (planType.getId() == id) {
                 this.planTypes.remove(planType);
                 break;
             }
@@ -125,8 +114,8 @@ public final class RepositoryViewModel {
     }
 
     public void removeTask(long id) {
-        for(ViewModelElement task : tasks) {
-            if(task.getId() == id) {
+        for (ViewModelElement task : tasks) {
+            if (task.getId() == id) {
                 this.tasks.remove(task);
                 break;
             }
@@ -134,8 +123,8 @@ public final class RepositoryViewModel {
     }
 
     public void removeRole(long id) {
-        for(ViewModelElement role : roles) {
-            if(role.getId() == id) {
+        for (ViewModelElement role : roles) {
+            if (role.getId() == id) {
                 this.tasks.remove(role);
                 break;
             }
@@ -149,70 +138,66 @@ public final class RepositoryViewModel {
     public ObservableList<ViewModelElement> getPlans() {
         return plans;
     }
-    public ObservableList<ViewModelElement> getTasks(){
+
+    public ObservableList<ViewModelElement> getTasks() {
         return tasks;
     }
-    public ObservableList<ViewModelElement> getRoles(){
+
+    public ObservableList<ViewModelElement> getRoles() {
         return roles;
     }
 
     public void addElement(ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {
-            case Types.MASTERPLAN:
-            case Types.PLAN:
-                this.plans.add(viewModelElement);
-                break;
-            case Types.BEHAVIOUR:
-                this.behaviours.add(viewModelElement);
-                break;
-            case Types.PLANTYPE:
-                this.planTypes.add(viewModelElement);
-                break;
-            case Types.TASK:
-                this.tasks.add(viewModelElement);
-                break;
-            case Types.DEBUG_MESSAGE:
-                this.debugMessages.add(viewModelElement);
-                break;
-            case Types.TASKREPOSITORY:
-                this.tasks.clear();
-                for (ViewModelElement task : ((TaskRepositoryViewModel) viewModelElement).getTaskViewModels()) {
-                    this.tasks.add(task);
-                }
-                break;
-            case Types.ROLESET:
-                this.roles.clear();
-                for (ViewModelElement role : ((RoleSetViewModel) viewModelElement).getRoleViewModels()) {
-                    this.roles.add(role);
-                }
-                break;
+        case Types.MASTERPLAN:
+        case Types.PLAN:
+            this.plans.add(viewModelElement);
+            break;
+        case Types.BEHAVIOUR:
+            this.behaviours.add(viewModelElement);
+            break;
+        case Types.PLANTYPE:
+            this.planTypes.add(viewModelElement);
+            break;
+        case Types.TASK:
+            this.tasks.add(viewModelElement);
+            break;
+        case Types.TASKREPOSITORY:
+            this.tasks.clear();
+            for (ViewModelElement task : ((TaskRepositoryViewModel) viewModelElement).getTaskViewModels()) {
+                this.tasks.add(task);
+            }
+            break;
+        case Types.ROLESET:
+            this.roles.clear();
+            for (ViewModelElement role : ((RoleSetViewModel) viewModelElement).getRoleViewModels()) {
+                this.roles.add(role);
+            }
+            break;
         }
     }
 
     public void removeElement(ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {
-            case Types.MASTERPLAN:
-            case Types.PLAN:
-                this.plans.remove(viewModelElement);
-                break;
-            case Types.BEHAVIOUR:
-                this.behaviours.remove(viewModelElement);
-                break;
-            case Types.PLANTYPE:
-                this.planTypes.remove(viewModelElement);
-                break;
-            case Types.TASK:
-                this.tasks.remove(viewModelElement);
-                break;
-            case Types.DEBUG_MESSAGE:
-                this.debugMessages.remove(viewModelElement);
-                break;
-            case Types.TASKREPOSITORY:
-                this.tasks.clear();
-                break;
-            case Types.ROLESET:
-                this.roles.clear();
-                break;
+        case Types.MASTERPLAN:
+        case Types.PLAN:
+            this.plans.remove(viewModelElement);
+            break;
+        case Types.BEHAVIOUR:
+            this.behaviours.remove(viewModelElement);
+            break;
+        case Types.PLANTYPE:
+            this.planTypes.remove(viewModelElement);
+            break;
+        case Types.TASK:
+            this.tasks.remove(viewModelElement);
+            break;
+        case Types.TASKREPOSITORY:
+            this.tasks.clear();
+            break;
+        case Types.ROLESET:
+            this.roles.clear();
+            break;
         }
     }
 }

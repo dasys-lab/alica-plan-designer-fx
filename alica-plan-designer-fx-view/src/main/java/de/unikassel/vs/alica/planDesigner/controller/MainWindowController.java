@@ -38,9 +38,9 @@ import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
 
-    //--------------------------------------------------------------------------------------------
-//  SINGLETON INSTANCE
-//--------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // SINGLETON INSTANCE
+    // --------------------------------------------------------------------------------------------
     private static volatile MainWindowController instance;
 
     public static MainWindowController getInstance() {
@@ -59,15 +59,15 @@ public class MainWindowController implements Initializable {
         this.i18NRepo = I18NRepo.getInstance();
     }
 
-    //--------------------------------------------------------------------------------------------
-//  CONSTANTS AND STATICS
-//--------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // CONSTANTS AND STATICS
+    // --------------------------------------------------------------------------------------------
     private static final Logger LOG = LogManager.getLogger(MainWindowController.class);
     public static Cursor FORBIDDEN_CURSOR = new AlicaCursor(AlicaCursor.Type.forbidden);
 
-    //--------------------------------------------------------------------------------------------
-//  FXML INJECTED
-//--------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // FXML INJECTED
+    // --------------------------------------------------------------------------------------------
     @FXML
     private FileTreeView fileTreeView;
 
@@ -89,9 +89,9 @@ public class MainWindowController implements Initializable {
     @FXML
     private HBox statusBox;
 
-    //--------------------------------------------------------------------------------------------
-//  FIELDS
-//--------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // FIELDS
+    // --------------------------------------------------------------------------------------------
     // ---- GUI STUFF ----
     private I18NRepo i18NRepo;
     private Menu fileMenu;
@@ -108,9 +108,9 @@ public class MainWindowController implements Initializable {
     private IGuiStatusHandler guiStatusHandler;
     private IGuiModificationHandler guiModificationHandler;
 
-    //--------------------------------------------------------------------------------------------
-//  GETTER & SETTER
-//--------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // GETTER & SETTER
+    // --------------------------------------------------------------------------------------------
     // ---- GETTER ----
     public String getPlansPath() {
         return plansPath;
@@ -161,20 +161,20 @@ public class MainWindowController implements Initializable {
         this.guiModificationHandler = creationHandler;
     }
 
-
     public Text getStatusText() {
         return statusText;
     }
 
-    //--------------------------------------------------------------------------------------------
-//  INTERFACE IMPLEMENTATIONS
-//--------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // INTERFACE IMPLEMENTATIONS
+    // --------------------------------------------------------------------------------------------
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.setController(this);
 
         if (configWindowController == null) {
-            throw new RuntimeException("The member configWindowController need to be set through the public setter, before calling initialize()!");
+            throw new RuntimeException(
+                    "The member configWindowController need to be set through the public setter, before calling initialize()!");
         }
 
         // clear
@@ -192,9 +192,9 @@ public class MainWindowController implements Initializable {
 
     }
 
-    //--------------------------------------------------------------------------------------------
-//  SETUP
-//--------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // SETUP
+    // --------------------------------------------------------------------------------------------
 
     private void setUpCodeGenerationProgressIndicator() {
         double menuItemsWidth = 250;
@@ -206,7 +206,7 @@ public class MainWindowController implements Initializable {
 
         // ---- FILE MENU ----
         fileMenu = new Menu(i18NRepo.getString("label.menu.file"));
-        fileMenu.getItems().add(((FileTreeViewContextMenu)fileTreeView.getContextMenu()).getNewResourceMenu());
+        fileMenu.getItems().add(((FileTreeViewContextMenu) fileTreeView.getContextMenu()).getNewResourceMenu());
 
         // -- SAVE MENU --
         MenuItem saveItem = new MenuItem(i18NRepo.getString("label.menu.file.save"));
@@ -236,11 +236,8 @@ public class MainWindowController implements Initializable {
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
                 if (newValue != null) {
                     String type = ((EditorTab) newValue).getSerializableViewModel().getType();
-                    if (type.equals(Types.BEHAVIOUR) ||
-                            type.equals(Types.PLAN) ||
-                            type.equals(Types.MASTERPLAN) ||
-                            type.equals(Types.PLANTYPE) ||
-                            type.equals(Types.TASKREPOSITORY)) {
+                    if (type.equals(Types.BEHAVIOUR) || type.equals(Types.PLAN) || type.equals(Types.MASTERPLAN)
+                            || type.equals(Types.PLANTYPE) || type.equals(Types.TASKREPOSITORY)) {
                         generateCurrentFile.setDisable(false);
                     }
                 } else {
@@ -250,10 +247,11 @@ public class MainWindowController implements Initializable {
         });
 
         generateCurrentFile.setOnAction(e -> {
-            ViewModelElement modelElement = ((AbstractPlanTab) editorTabPane
-                    .getSelectionModel().getSelectedItem()).getSerializableViewModel();
+            ViewModelElement modelElement = ((AbstractPlanTab) editorTabPane.getSelectionModel().getSelectedItem())
+                    .getSerializableViewModel();
             try {
-                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ELEMENT, modelElement.getType(), modelElement.getName());
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.GENERATE_ELEMENT,
+                        modelElement.getType(), modelElement.getName());
                 event.setElementId(modelElement.getId());
                 waitOnProgressLabel(() -> this.guiModificationHandler.generateCode(event, statusText));
             } catch (RuntimeException ex) {
@@ -288,9 +286,9 @@ public class MainWindowController implements Initializable {
         fileTreeView.setupTaskPath(this.tasksPath);
     }
 
-//--------------------------------------------------------------------------------------------
-//  MENU STUFF
-//--------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // MENU STUFF
+    // --------------------------------------------------------------------------------------------
 
     public void enableMenuBar() {
         codeGenerationMenu.setDisable(false);
@@ -320,30 +318,30 @@ public class MainWindowController implements Initializable {
 
     public void waitOnProgressLabel(Runnable toWaitOn) {
         new Thread(() -> {
-            //Ping
+            // Ping
             Platform.runLater(() -> statusText.setVisible(true));
-            //Run generation
+            // Run generation
             toWaitOn.run();
             // Show Message
             Platform.runLater(() -> statusText.setVisible(false));
         }).start();
     }
 
-    //	public void closeTabIfOpen (long modelElementId) {
-    //        Optional<AbstractPlanTab> tabOptional = editorTabPane
-    //                .getTabs()
-    //                .stream()
-    //                .map(e -> (AbstractPlanTab) e)
-    //                .filter(e -> e.getEditable().equals(modelElementId))
-    //                .findFirst();
-    //        tabOptional.ifPresent(abstractEditorTab -> editorTabPane.getTabs().remove(abstractEditorTab));
-    //    }
+    // public void closeTabIfOpen (long modelElementId) {
+    // Optional<AbstractPlanTab> tabOptional = editorTabPane
+    // .getTabs()
+    // .stream()
+    // .map(e -> (AbstractPlanTab) e)
+    // .filter(e -> e.getEditable().equals(modelElementId))
+    // .findFirst();
+    // tabOptional.ifPresent(abstractEditorTab ->
+    // editorTabPane.getTabs().remove(abstractEditorTab));
+    // }
 
-    //    public void closePropertyAndStatusTabIfOpen() {
-    //        if(propertyAndStatusTabPane != null) {
-    //            propertyAndStatusTabPane.getTabs().clear();
-    //        }
-    //    }
-
+    // public void closePropertyAndStatusTabIfOpen() {
+    // if(propertyAndStatusTabPane != null) {
+    // propertyAndStatusTabPane.getTabs().clear();
+    // }
+    // }
 
 }

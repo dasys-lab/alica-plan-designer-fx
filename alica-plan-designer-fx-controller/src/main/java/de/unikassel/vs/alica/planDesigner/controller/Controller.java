@@ -35,6 +35,7 @@ import de.uniks.vs.capnzero.monitoring.MonitorClient;
 import de.uniks.vs.capnzero.monitoring.YamlEventParser;
 import de.uniks.vs.capnzero.monitoring.config.DebugConfiguration;
 import de.uniks.vs.capnzero.monitoring.handler.DebugEventHandler;
+import de.uniks.vs.capnzero.monitoring.handler.PrintDebugEventHandler;
 import de.uniks.vs.capnzero.monitoring.proxy.CapnzeroEventProxy;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -62,8 +63,7 @@ import java.util.List;
  * regarding the Model-View-Controller pattern, implemented in the Plan
  * Designer.
  */
-public final class Controller
-        implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, DebugEventHandler {
+public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -85,6 +85,8 @@ public final class Controller
 
     // Code Generation Objects
     private GeneratedSourcesManager generatedSourcesManager;
+
+    // Debugging Client
     private MonitorClient debugMonitorClient;
 
     public Controller() {
@@ -117,7 +119,8 @@ public final class Controller
     private void setupDebugMonitorClient() {
         DebugConfiguration config = new DebugConfiguration();
         YamlEventParser parser = new YamlEventParser();
-        CapnzeroEventProxy proxy = new CapnzeroEventProxy(this, parser, config);
+        DebugEventHandler handler = new PrintDebugEventHandler();
+        CapnzeroEventProxy proxy = new CapnzeroEventProxy(handler, parser, config);
 
         this.debugMonitorClient = new MonitorClient(proxy);
         this.debugMonitorClient.start();
@@ -702,10 +705,5 @@ public final class Controller
         mainWindowController.waitOnProgressLabel(() -> generateCode(
                 new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, "behaviour", abstractPlan.getName()),
                 mainWindowController.getStatusText()));
-    }
-
-    @Override
-    public void handleDebugEvent(de.uniks.vs.capnzero.monitoring.event.Event event) {
-        System.out.println("Got debug event: " + event);
     }
 }
