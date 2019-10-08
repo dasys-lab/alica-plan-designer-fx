@@ -31,8 +31,8 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
 
     private void saveForLaterRetrieval() {
         uiElement = parentOfElement.getUiElement(transition.getId());
-        inState = transition.getOutState();
-        outState = transition.getInState();
+        outState = transition.getOutState();
+        inState = transition.getInState();
     }
 
     @Override
@@ -70,8 +70,8 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
         this.uiElement.setY(this.y);
 
         transition.setPreCondition(preCondition);
-        transition.setInState(outState);
-        transition.setOutState(inState);
+        transition.setInState(inState);
+        transition.setOutState(outState);
 
         inState.addOutTransition(transition);
         outState.addInTransition(transition);

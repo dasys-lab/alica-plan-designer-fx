@@ -384,6 +384,10 @@ public class ViewModelManager {
         transitionViewModel.setInState((StateViewModel) getViewModelElement(transition.getInState()));
         transitionViewModel.setOutState((StateViewModel) getViewModelElement(transition.getOutState()));
         transitionViewModel.setParentId(transition.getInState().getParentPlan().getId());
+        StateViewModel inStateViewModel = transitionViewModel.getInState();
+        StateViewModel outStateViewModel = transitionViewModel.getOutState();
+        inStateViewModel.getOutTransitions().add(transitionViewModel);
+        outStateViewModel.getInTransitions().add(transitionViewModel);
         if (transition.getPreCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(transition.getPreCondition());
             conditionViewModel.setParentId(transition.getId());
@@ -811,6 +815,10 @@ public class ViewModelManager {
                 transitionViewModel.setInState((StateViewModel) getViewModelElement(transition.getInState()));
                 transitionViewModel.setOutState((StateViewModel) getViewModelElement(transition.getOutState()));
                 parentPlan.getTransitions().add((TransitionViewModel) element);
+                StateViewModel outStateViewModel = transitionViewModel.getOutState();
+                StateViewModel inStateViewModel = transitionViewModel.getInState();
+                inStateViewModel.getOutTransitions().add(transitionViewModel);
+                outStateViewModel.getInTransitions().add(transitionViewModel);
                 if(transition.getSynchronisation() != null) {
                     SynchronisationViewModel sViewModel = (SynchronisationViewModel) getViewModelElement(transition.getSynchronisation());
                     sViewModel.getTransitions().add(transitionViewModel);

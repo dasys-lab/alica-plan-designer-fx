@@ -1,6 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tools.transition;
 
-import com.sun.javafx.geom.Line2D;
 import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
@@ -24,7 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -48,14 +47,26 @@ public class TransitionTool extends AbstractTool {
     @Override
     protected void initHandlerMap() {
         if (customHandlerMap.isEmpty()) {
-
             customHandlerMap.put(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     Node target = (Node) event.getTarget();
                     Parent parent = target.getParent();
-                    if (parent instanceof StateContainer) {
-                        setCursor(addCursor);
+                    if (parent instanceof StateContainer)  {
+                        //no transition to itself
+                        if(inState == ((StateContainer) parent).getState()){
+                            setCursor(forbiddenCursor);
+                        } else { setCursor(addCursor); }
+                        //no duplicate transition allowed
+                        if (inState != null) {
+                            if (((StateContainer) parent).getState().getInTransitions().size() != 0 && inState.getOutTransitions().size() != 0) {
+                                for (TransitionViewModel transitionViewModel : ((StateContainer) parent).getState().getInTransitions()) {
+                                    if (transitionViewModel.getInState() == inState) {
+                                        setCursor(forbiddenCursor);
+                                    }
+                                }
+                            }
+                        } else { setCursor(addCursor); }
                     } else if (target instanceof StackPane) {
                         if (inState != null) {
                             setCursor(bendPointCursor);
@@ -81,11 +92,11 @@ public class TransitionTool extends AbstractTool {
                 }
             });
 
-
             customHandlerMap.put(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (event.getTarget() instanceof ToolButton || !(event.getTarget() instanceof Node)) {
+                    if (event.getTarget() instanceof ToolButton || !(event.getTarget() instanceof Node) ||
+                            event.getButton() == MouseButton.SECONDARY) {
                         return;
                     }
 
@@ -93,11 +104,16 @@ public class TransitionTool extends AbstractTool {
                     Node parent = target.getParent();
                     IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
-                    if (inState != null) {
+                    if (inState != null && inState != ((StateContainer) parent).getState()) {
                         if (parent instanceof StateContainer) {
                             // SET ENDPOINT
                             StateViewModel outState = ((StateContainer) parent).getState();
-
+                            //no duplicate transition allowed
+                            for (TransitionViewModel transitionViewModel: outState.getInTransitions()) {
+                                if(inState.getOutTransitions().contains(transitionViewModel)){
+                                    return;
+                                }
+                            }
                             GuiModificationEvent guiEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.TRANSITION, null);
 
                             HashMap<String, Long> relatedObjects = new HashMap<>();
