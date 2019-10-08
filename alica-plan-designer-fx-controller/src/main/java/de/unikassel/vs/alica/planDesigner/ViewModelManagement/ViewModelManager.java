@@ -475,7 +475,19 @@ public class ViewModelManager {
             case Types.FAILURESTATE:
                 StateViewModel stateViewModel = (StateViewModel) viewModelElement;
                 PlanViewModel planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
-
+                if(stateViewModel.getEntryPoint() != null) {
+                    EntryPointViewModel entryPointVM = null;
+                    for (EntryPointViewModel entryPointViewModel: planViewModel.getEntryPoints()) {
+                        if(stateViewModel.getEntryPoint().getId() == entryPointViewModel.getId()) {
+                            entryPointViewModel.setState(null);
+                            entryPointVM = entryPointViewModel;
+                            stateViewModel.setEntryPoint(null);
+                        }
+                    }
+                    //to update gui
+                    planViewModel.getEntryPoints().remove(entryPointVM);
+                    planViewModel.getEntryPoints().add(entryPointVM);
+                }
                 planViewModel.getStates().remove(stateViewModel);
                 break;
             case Types.ENTRYPOINT:
@@ -769,9 +781,29 @@ public class ViewModelManager {
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
                 StateViewModel stateViewModel = (StateViewModel) element;
-                stateViewModel.setXPosition(event.getUiElement().getX());
-                stateViewModel.setYPosition(event.getUiElement().getY());
+                if(event.getUiElement() != null) {
+                    stateViewModel.setXPosition(event.getUiElement().getX());
+                    stateViewModel.setYPosition(event.getUiElement().getY());
+                } else {
+                    stateViewModel.setXPosition(((StateViewModel) element).getXPosition());
+                    stateViewModel.setYPosition(((StateViewModel) element).getYPosition());
+                }
                 parentPlan.getStates().add(stateViewModel);
+
+                State statePlanElement = (State) modelManager.getPlanElement(stateViewModel.getId());
+                if(statePlanElement.getEntryPoint() != null){
+                    EntryPointViewModel updateEntryPoint = null;
+                    for (EntryPointViewModel entryPointViewModel: parentPlan.getEntryPoints()) {
+                        if(statePlanElement.getEntryPoint().getId() == entryPointViewModel.getId()){
+                            stateViewModel.setEntryPoint(entryPointViewModel);
+                            entryPointViewModel.setState(stateViewModel);
+                            updateEntryPoint = entryPointViewModel;
+                        }
+                    }
+                    //update gui
+                    parentPlan.getEntryPoints().remove(updateEntryPoint);
+                    parentPlan.getEntryPoints().add(updateEntryPoint);
+                }
                 break;
             case Types.TRANSITION:
                 Transition transition = (Transition) event.getElement();

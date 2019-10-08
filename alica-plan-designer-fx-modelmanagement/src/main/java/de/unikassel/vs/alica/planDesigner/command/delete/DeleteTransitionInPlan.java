@@ -31,8 +31,8 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
 
     private void saveForLaterRetrieval() {
         uiElement = parentOfElement.getUiElement(transition.getId());
-        outState = transition.getOutState();
-        inState = transition.getInState();
+        inState = transition.getOutState();
+        outState = transition.getInState();
     }
 
     @Override
@@ -41,14 +41,8 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
         parentOfElement.remove(transition.getId());
         parentOfElement.getPlan().removeTransition(transition);
 
-        for (State state: parentOfElement.getPlan().getStates()) {
-            if(state.getId() == inState.getId()) {
-                state.removeOutTransition(transition);
-            }
-            if(state.getId() == outState.getId()){
-                state.removeInTransition(transition);
-            }
-        }
+        inState.removeOutTransition(transition);
+        outState.removeInTransition(transition);
 
         preCondition = transition.getPreCondition();
         transition.setPreCondition(null);
@@ -76,24 +70,18 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
         this.uiElement.setY(this.y);
 
         transition.setPreCondition(preCondition);
-        transition.setInState(inState);
-        transition.setOutState(outState);
+        transition.setInState(outState);
+        transition.setOutState(inState);
 
-        for (State state: parentOfElement.getPlan().getStates()) {
-            if(state.getId() == inState.getId()) {
-                state.addOutTransition(transition);
-            }
-            if(state.getId() == outState.getId()){
-                state.addInTransition(transition);
-            }
-        }
+        inState.addOutTransition(transition);
+        outState.addInTransition(transition);
 
         if(synchronisation != null) {
             transition.setSynchronisation(synchronisation);
             synchronisation.addSyncedTransition(transition);
         }
 
-        modelManager.storePlanElement(mmq.getElementType(), transition,false);
+        modelManager.storePlanElement(Types.TRANSITION, transition,false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, transition);
     }
 }

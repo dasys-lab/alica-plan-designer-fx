@@ -1,55 +1,126 @@
 package de.unikassel.vs.alica.planDesigner.command.delete;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.State;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
+import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
+import de.unikassel.vs.alica.planDesigner.command.remove.RemoveAbstractPlanFromState;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeleteStateInPlan extends UiPositionCommand {
 
     protected State state;
     protected Plan plan;
+    private UiElement uiElement;
+    private final UiExtension parentOfElement;
+    private EntryPoint entryPoint;
+    private List<DeleteTransitionInPlan> deleteTransitionInPlansList = new ArrayList<>();
+    private List<DeleteVariableBinding> deleteVariableBindingList = new ArrayList<>();
+    private List<RemoveAbstractPlanFromState> removeAbstractPlanFromStateList = new ArrayList<>();
 
     public DeleteStateInPlan(ModelManager modelManager, ModelModificationQuery mmq) {
         super(modelManager, mmq);
         this.state = (State) modelManager.getPlanElement(mmq.getElementId());
-        if (!isSafeToDelete(this.state)) {
-            state = null;
-            return;
-        }
         this.plan = (Plan) modelManager.getPlanElement(mmq.getParentId());
-        createUiElement(mmq.getParentId(), this.state);
-    }
-
-    private boolean isSafeToDelete(State state) {
-        if (state.getOutTransitions().isEmpty()
-                && state.getInTransitions().isEmpty()
-                && state.getAbstractPlans().isEmpty())  {
-            return true;
-        }
-        return false;
+        this.parentOfElement = this.modelManager.getPlanUIExtensionPair(mmq.getParentId());
     }
 
     @Override
     public void doCommand() {
-        if (state == null) {
-            return;
+        uiElement = parentOfElement.getUiElement(state.getId());
+        if(state.getVariableBindings().size() != 0){
+            deleteVariableBindings(state.getVariableBindings());
         }
-        plan.removeState(state);
+        if(state.getInTransitions().size() !=0 || state.getOutTransitions().size() != 0){
+            if(state.getInTransitions().size() != 0){
+                deleteTransitions(state.getInTransitions());
+            }
+            if(state.getOutTransitions().size() !=0) {
+                deleteTransitions(state.getOutTransitions());
+            }
+            for (DeleteTransitionInPlan d: deleteTransitionInPlansList) { d.doCommand(); }
+        }
+
+        if(state.getAbstractPlans().size() != 0) {
+            deleteAbstractPlans(state.getAbstractPlans());
+        }
+
+        if(state.getEntryPoint() != null) {
+            entryPoint = state.getEntryPoint();
+            state.setEntryPoint(null);
+            entryPoint.setState(null);
+        }
+
+        mmq.setElementId(state.getId());
+        mmq.setParentId(plan.getId());
+        parentOfElement.getPlan().removeState(state);
+        this.fireEvent(ModelEventType.ELEMENT_DELETED, state);
     }
 
     @Override
     public void undoCommand() {
-        if (state == null) {
-            return;
+        parentOfElement.getPlan().addState(state);
+        this.uiElement = parentOfElement.getUiElement(this.state.getId());
+        this.uiElement.setX(this.x);
+        this.uiElement.setY(this.y);
+        if(entryPoint != null){
+            state.setEntryPoint(entryPoint);
+            entryPoint.setState(state);
         }
-        plan.addState(state);
+        this.fireEvent(ModelEventType.ELEMENT_CREATED, state);
+
+        if(deleteTransitionInPlansList != null) {
+            mmq.setElementType(Types.TRANSITION);
+            mmq.setParentId(plan.getId());
+            for (DeleteTransitionInPlan d: deleteTransitionInPlansList) { d.undoCommand(); }
+        }
+        if(deleteVariableBindingList != null){
+            mmq.setElementType(Types.VARIABLEBINDING);
+            mmq.setParentId(state.getId());
+            for (DeleteVariableBinding d: deleteVariableBindingList) { d.undoCommand(); }
+        }
+        if(removeAbstractPlanFromStateList != null) {
+            mmq.setElementType(Types.PLAN);
+            mmq.setParentId(state.getId());
+            for (RemoveAbstractPlanFromState d: removeAbstractPlanFromStateList) { d.undoCommand(); }
+        }
+    }
+
+    private void deleteVariableBindings(List<VariableBinding> variableBindings) {
+        for (VariableBinding variableBinding: variableBindings) {
+            ModelModificationQuery variableBindingMMQ = mmq;
+            variableBindingMMQ.setParentId(state.getId());
+            variableBindingMMQ.setElementId(variableBinding.getId());
+            DeleteVariableBinding deleteVariableBinding = new DeleteVariableBinding(modelManager, variableBindingMMQ);
+            deleteVariableBindingList.add(deleteVariableBinding);
+        }
+        for (DeleteVariableBinding d: deleteVariableBindingList) { d.doCommand(); }
+    }
+
+    private void deleteAbstractPlans(List<AbstractPlan> abstractPlans) {
+        for (AbstractPlan abstractPlan: abstractPlans) {
+            ModelModificationQuery abstractPlanMMQ = mmq;
+            abstractPlanMMQ.setParentId(state.getId());
+            abstractPlanMMQ.setElementId(abstractPlan.getId());
+            RemoveAbstractPlanFromState removeAbstractPlanFromState = new RemoveAbstractPlanFromState(modelManager, abstractPlanMMQ);
+            removeAbstractPlanFromStateList.add(removeAbstractPlanFromState);
+        }
+        for (RemoveAbstractPlanFromState d: removeAbstractPlanFromStateList) { d.doCommand(); }
+    }
+
+    private void deleteTransitions(List<Transition> transitions) {
+        for (Transition transition: transitions) {
+            ModelModificationQuery transitionMMQ = mmq;
+            transitionMMQ.setParentId(plan.getId());
+            transitionMMQ.setElementId(transition.getId());
+            DeleteTransitionInPlan deleteTransitionInPlan = new DeleteTransitionInPlan(modelManager, transitionMMQ);
+            deleteTransitionInPlansList.add(deleteTransitionInPlan);
+        }
     }
 }
