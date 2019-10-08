@@ -1118,6 +1118,9 @@ public class ModelManager implements Observer {
                     case Types.TRANSITION:
                         cmd = new DeleteTransitionInPlan(this, mmq);
                         break;
+                    case Types.SYNCHRONISATION:
+                        cmd = new DeleteSynchronisationFromPlan(this, mmq);
+                        break;
                     default:
                         System.err.println("ModelManager: Deletion of unknown model element eventType " + mmq.getElementType() + " gets ignored!");
                         return;

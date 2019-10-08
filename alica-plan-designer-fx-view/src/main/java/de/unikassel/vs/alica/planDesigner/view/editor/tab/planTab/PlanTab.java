@@ -158,6 +158,12 @@ public class PlanTab extends AbstractPlanTab {
                 event.setElementId(tC.getContainedElement().getId());
                 event.setParentId(getSerializableViewModel().getId());
                 return event;
+            case Types.SYNCHRONISATION:
+                SynchronizationContainer sC = (SynchronizationContainer) selectedContainer;
+                event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.SYNCHRONISATION, null);
+                event.setElementId(sC.getPlanElementViewModel().getId());
+                event.setParentId(getSerializableViewModel().getId());
+                return event;
             default:
                 System.err.println("PlanTab: Selected element type " + planElementViewModel.getType() + " is not handled!");
                 return null;

@@ -526,6 +526,11 @@ public class ViewModelManager {
                     }
                 }
                 break;
+            case Types.SYNCHRONISATION:
+                SynchronisationViewModel synchronisationViewModel = (SynchronisationViewModel) viewModelElement;
+                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                planViewModel.getSynchronisations().remove(synchronisationViewModel);
+                break;
             case Types.ANNOTATEDPLAN:
                 AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) viewModelElement;
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
@@ -838,9 +843,21 @@ public class ViewModelManager {
                 break;
             case Types.SYNCHRONISATION: {
                 SynchronisationViewModel syncViewModel = (SynchronisationViewModel) element;
-                syncViewModel.setXPosition(event.getUiElement().getX());
-                syncViewModel.setYPosition(event.getUiElement().getY());
+                if(event.getUiElement() != null) {
+                    syncViewModel.setXPosition(event.getUiElement().getX());
+                    syncViewModel.setYPosition(event.getUiElement().getY());
+                } else {
+                    syncViewModel.setXPosition(((SynchronisationViewModel) element).getXPosition());
+                    syncViewModel.setYPosition(((SynchronisationViewModel) element).getYPosition());
+                }
                 parentPlan.getSynchronisations().add(syncViewModel);
+                Synchronisation synchronisation = (Synchronisation) modelManager.getPlanElement(syncViewModel.getId());
+                if(synchronisation.getSyncedTransitions().size() != 0) {
+                    for (Transition transition1: synchronisation.getSyncedTransitions()) {
+                        TransitionViewModel transitionViewModel1 = (TransitionViewModel) getViewModelElement(transition1);
+                        syncViewModel.getTransitions().add(transitionViewModel1);
+                    }
+                }
             } break;
             case Types.INITSTATECONNECTION:
                 Plan plan = (Plan) event.getElement();
