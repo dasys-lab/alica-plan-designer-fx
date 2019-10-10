@@ -4,21 +4,21 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHand
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     protected SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
     protected SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
 
-    protected ObservableList<ConfigurationViewModel> configurations;
-
     protected final SimpleObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
     protected final SimpleObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
     protected final SimpleObjectProperty<ConditionViewModel> postCondition = new SimpleObjectProperty<>(this, Types.POSTCONDITION, null);
+
+    protected final ObservableMap<String, String> parameters = FXCollections.observableHashMap();
 
     public BehaviourViewModel(long id, String name, String type) {
         super(id, name, type);
@@ -26,7 +26,7 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
         this.uiPropertyList.clear();
         this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
 
-        configurations = FXCollections.observableArrayList(new ArrayList<>());
+        this.parameters.put("","");
     }
 
     public void registerListener(IGuiModificationHandler handler) {
@@ -63,10 +63,6 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
         return frequency;
     }
 
-    public ObservableList<ConfigurationViewModel> getConfigurations() {
-        return configurations;
-    }
-
     public ObjectProperty<ConditionViewModel> preConditionProperty(){
         return preCondition;
     }
@@ -101,5 +97,53 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     public void setPostCondition(ConditionViewModel conditionViewModel) {
         this.postCondition.set(conditionViewModel);
+    }
+
+    public ObservableMap<String, String> getParameters() {
+        return FXCollections.unmodifiableObservableMap(parameters);
+    }
+
+    /**
+     * Used for any kind of modification of the parameters: Insert, Change, Remove, etc.
+     *
+     * Never insert/remove parameter with empty key - its a special parameter for entering new parameters in the UI.
+     * @param newEntry
+     * @param oldEntry
+     */
+    public void modifyParameter(Map.Entry<String, String> newEntry, Map.Entry<String, String> oldEntry) {
+        // Insert new entry (no old entry)
+        if (oldEntry == null) {
+            if (newEntry.getKey() != "") {
+                this.parameters.put(newEntry.getKey(), newEntry.getValue());
+            }
+            return;
+        }
+
+        // Remove parameter (no new entry)
+        if (newEntry == null) {
+            if (oldEntry.getKey() != "") {
+                this.parameters.remove(oldEntry.getKey());
+            }
+            return;
+        }
+
+        // Modify existing parameter (old and new entry given)
+        if (newEntry.getKey() == oldEntry.getKey()) {
+            if (newEntry.getKey() != "") {
+                this.parameters.put(newEntry.getKey(), newEntry.getValue());
+            }
+            return;
+        } else {
+            if (oldEntry.getKey() != "") {
+                this.parameters.remove(oldEntry.getKey());
+            }
+            if (newEntry.getKey() != "") {
+                this.parameters.put(newEntry.getKey(), newEntry.getValue());
+            }
+        }
+
+        if (!this.parameters.containsKey("")) {
+            this.parameters.put("","");
+        }
     }
 }

@@ -13,6 +13,7 @@ public class ModelEvent {
 
     protected String changedAttribute;
     protected Object newValue;
+    protected Object oldValue;
 
     protected Map<String, Long> relatedObjects;
     protected UiElement uiElement;
@@ -57,6 +58,14 @@ public class ModelEvent {
 
     public Object getNewValue() {
         return this.newValue;
+    }
+
+    public void setOldValue(Object oldValue) {
+        this.oldValue = oldValue;
+    }
+
+    public Object getOldValue() {
+        return this.oldValue;
     }
 
     public Map<String, Long> getRelatedObjects() {

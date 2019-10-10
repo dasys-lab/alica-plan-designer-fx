@@ -19,6 +19,7 @@ public class ModelModificationQuery {
 
     protected String attributeName;
     protected Object newValue;
+    protected Object oldValue;
     protected String attributeType;
     protected String comment;
     protected Map<String, Long> relatedObjects;
@@ -139,6 +140,14 @@ public class ModelModificationQuery {
         this.newValue = newValue;
     }
 
+    public Object getOldValue() {
+        return oldValue;
+    }
+
+    public void setOldValue (Object oldValue) {
+        this.oldValue = oldValue;
+    }
+
     public String getAttributeType() {
         return attributeType;
     }
@@ -158,7 +167,7 @@ public class ModelModificationQuery {
     public String getComment(){
         if (comment == null) {
             return "MISSING_COMMENT";
-        }else {
+        } else {
             return comment;
         }
     }
