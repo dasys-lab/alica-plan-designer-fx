@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.defaultPlugin;
 
 import de.unikassel.vs.alica.generator.IConstraintCodeGenerator;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.defaultPlugin.DefaultTemplate;
 /**
@@ -30,8 +31,16 @@ public class DefaultConstraintCodeGenerator implements IConstraintCodeGenerator 
         return defaultTemplate.constraintPlanCheckingMethods(plan);
     }
 
+    public String constraintBehaviourCheckingMethods(Behaviour behaviour) {
+        return defaultTemplate.constraintBehaviourCheckingMethods(behaviour);
+    }
+
     public String expressionsPlanCheckingMethods(Plan plan) {
         return defaultTemplate.expressionsPlanCheckingMethods(plan);
+    }
+
+    public String expressionsBehaviourCheckingMethods(Behaviour behaviour) {
+        return defaultTemplate.expressionsBehaviourCheckingMethods(behaviour);
     }
 
     public String constraintStateCheckingMethods(State state) {

@@ -100,14 +100,15 @@ public class Codegenerator {
 
         languageSpecificGenerator.createUtilityFunctionCreator(plans);
         languageSpecificGenerator.createBehaviourCreator(behaviours);
-        languageSpecificGenerator.createConditionCreator(plans, conditions);
-        languageSpecificGenerator.createConstraintCreator(plans, conditions);
+        languageSpecificGenerator.createConditionCreator(plans, behaviours, conditions);
+        languageSpecificGenerator.createConstraintCreator(plans, behaviours, conditions);
 
         languageSpecificGenerator.createConstraints(plans);
         languageSpecificGenerator.createPlans(plans);
 
         for (Behaviour behaviour : behaviours) {
             languageSpecificGenerator.createBehaviour(behaviour);
+            languageSpecificGenerator.createConstraintsForBehaviour(behaviour);
         }
         LOG.info("Generated all files successfully");
     }
@@ -140,16 +141,18 @@ public class Codegenerator {
         List<File> generatedFiles = generatedSourcesManager.getGeneratedConditionFilesForPlan(plan);
         generatedFiles.addAll(generatedSourcesManager.getGeneratedConstraintFilesForPlan(plan));
         collectProtectedRegions(generatedFiles);
-        languageSpecificGenerator.createConstraintsForPlan( plan);
+        languageSpecificGenerator.createConstraintsForPlan(plan);
         languageSpecificGenerator.createPlan(plan);
-        languageSpecificGenerator.createConditionCreator(plans, conditions);
+        languageSpecificGenerator.createConditionCreator(plans, behaviours, conditions);
         languageSpecificGenerator.createUtilityFunctionCreator(plans);
     }
 
     public void generate(Behaviour behaviour) {
         List<File> generatedFiles = generatedSourcesManager.getGeneratedFilesForBehaviour(behaviour);
+        generatedFiles.addAll(generatedSourcesManager.getGeneratedConstraintFilesForBehaviour(behaviour));
         collectProtectedRegions(generatedFiles);
         languageSpecificGenerator.createBehaviourCreator(behaviours);
+        languageSpecificGenerator.createConstraintsForBehaviour(behaviour);
         languageSpecificGenerator.createBehaviour(behaviour);
     }
 

@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.defaultPlugin;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan
+import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour
 import de.unikassel.vs.alica.planDesigner.alicamodel.State
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition
 import de.unikassel.vs.alica.planDesigner.alicamodel.Variable
@@ -94,6 +95,62 @@ class DefaultTemplate {
         «ENDIF»
     '''
 
+    def String expressionsBehaviourCheckingMethods(Behaviour behaviour) '''
+        «IF (behaviour.runtimeCondition !== null && behaviour.runtimeCondition.pluginName == "DefaultPlugin")»
+            //Check of RuntimeCondition - (Name): «behaviour.runtimeCondition.name», (ConditionString): «behaviour.runtimeCondition.conditionString», (Comment) : «behaviour.runtimeCondition.comment»
+
+            /*
+             * Available Vars:«var  List<Variable> variables = behaviour.runtimeCondition.variables»«FOR variable : variables»
+             *	- «variable.name» («variable.id»)«ENDFOR»
+             */
+            bool RunTimeCondition«behaviour.runtimeCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp) {
+                /*PROTECTED REGION ID(«behaviour.runtimeCondition.id») ENABLED START*/
+                «IF (protectedRegions.containsKey(behaviour.runtimeCondition.id + ""))»
+                    «protectedRegions.get(behaviour.runtimeCondition.id + "")»
+                «ELSE»
+                    return please_implement_me_«behaviour.runtimeCondition.id»;
+                «ENDIF»
+                /*PROTECTED REGION END*/
+            }
+        «ENDIF»
+        «IF (behaviour.preCondition !== null && behaviour.preCondition.pluginName == "DefaultPlugin")»
+            //Check of PreCondition - (Name): «behaviour.preCondition.name», (ConditionString): «behaviour.preCondition.conditionString» , (Comment) : «behaviour.preCondition.comment»
+
+            /*
+             * Available Vars:«var  List<Variable> variables =  behaviour.preCondition.variables»«FOR variable :variables»
+             *	- «variable.name» («variable.id»)«ENDFOR»
+             */
+            bool PreCondition«behaviour.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp)
+            {
+                /*PROTECTED REGION ID(«behaviour.preCondition.id») ENABLED START*/
+                «IF (protectedRegions.containsKey(behaviour.preCondition.id + ""))»
+                    «protectedRegions.get(behaviour.preCondition.id + "")»
+                «ELSE»
+                    return please_implement_me_«behaviour.preCondition.id»;
+                «ENDIF»
+                /*PROTECTED REGION END*/
+            }
+        «ENDIF»
+        «IF (behaviour.postCondition !== null && behaviour.postCondition.pluginName == "DefaultPlugin")»
+            //Check of PostCondition - (Name): «behaviour.postCondition.name», (ConditionString): «behaviour.postCondition.conditionString» , (Comment) : «behaviour.postCondition.comment»
+
+            /*
+             * Available Vars:«var  List<Variable> variables =  behaviour.postCondition.variables»«FOR variable :variables»
+             *	- «variable.name» («variable.id»)«ENDFOR»
+             */
+            bool PostCondition«behaviour.postCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp)
+            {
+                /*PROTECTED REGION ID(«behaviour.postCondition.id») ENABLED START*/
+                «IF (protectedRegions.containsKey(behaviour.postCondition.id + ""))»
+                    «protectedRegions.get(behaviour.postCondition.id + "")»
+                «ELSE»
+                    return please_implement_me_«behaviour.postCondition.id»;
+                «ENDIF»
+                /*PROTECTED REGION END*/
+            }
+        «ENDIF»
+    '''
+
     def String constraintPlanCheckingMethods(Plan plan) '''
         «IF (plan.runtimeCondition !== null && plan.runtimeCondition.pluginName == "DefaultPlugin")»
             /*
@@ -149,6 +206,98 @@ class DefaultTemplate {
                 «ENDIF»
                 /*PROTECTED REGION END*/
             }
+        «ENDIF»
+
+    '''
+
+    def String constraintBehaviourCheckingMethods(Behaviour behaviour) '''
+        «IF (behaviour.runtimeCondition !== null && behaviour.runtimeCondition.pluginName == "DefaultPlugin")»
+        «IF (behaviour.runtimeCondition.variables.size > 0) || (behaviour.runtimeCondition.quantifiers.size > 0)»
+            /*
+             * RuntimeCondition - (Name): «behaviour.runtimeCondition.name»
+             * (ConditionString): «behaviour.runtimeCondition.conditionString»
+            «var  List<Variable> variables =  behaviour.runtimeCondition.variables»
+            «IF (variables !== null)»
+                 * Static Variables: «FOR variable : variables»«variable.name» «ENDFOR»
+            «ENDIF»
+             * Domain Variables:
+            «var  List<Quantifier> quantifiers =  behaviour.runtimeCondition.quantifiers»
+            «IF (quantifiers !== null)»
+                «FOR q : quantifiers»
+                    «var  List<String> sorts=  q.sorts»
+                    * forall agents in «q.scope.name» let v = «sorts»
+                «ENDFOR»
+            «ENDIF»
+            *
+            */
+            void Constraint«behaviour.runtimeCondition.id»::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) {
+                /*PROTECTED REGION ID(cc«behaviour.runtimeCondition.id») ENABLED START*/
+                «IF (protectedRegions.containsKey("cc" + behaviour.runtimeCondition.id))»
+                    «protectedRegions.get("cc" + behaviour.runtimeCondition.id)»
+                «ELSE»
+                    //Please describe your runtime constraint here
+                «ENDIF»
+                /*PROTECTED REGION END*/
+            }
+        «ENDIF»
+        «ENDIF»
+        «IF (behaviour.preCondition !== null && behaviour.preCondition.pluginName == "DefaultPlugin")»
+        «IF (behaviour.preCondition.variables.size > 0) || (behaviour.preCondition.quantifiers.size > 0)»
+            /*
+             * PreCondition - (Name): «behaviour.preCondition.name»
+             * (ConditionString): «behaviour.preCondition.conditionString»
+            «var  List<Variable> variables =  behaviour.preCondition.variables»
+             * Static Variables: «FOR variable : variables»«variable.name» «ENDFOR»
+             * Domain Variables:
+            «var  List<Quantifier> quantifiers =  behaviour.preCondition.quantifiers»
+            «IF (quantifiers !== null)»
+                «FOR q : quantifiers»
+                    «var  List<String> sorts=  q.sorts»
+                    * forall agents in «q.scope.name» let v = «sorts»
+                «ENDFOR»
+            «ENDIF»
+             *
+             */
+            void Constraint«behaviour.preCondition.id»::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) {
+                /*PROTECTED REGION ID(cc«behaviour.preCondition.id») ENABLED START*/
+                «IF (protectedRegions.containsKey("cc" + behaviour.preCondition.id))»
+                    «protectedRegions.get("cc" + behaviour.preCondition.id)»
+                «ELSE»
+                    //Please describe your precondition constraint here
+                «ENDIF»
+                /*PROTECTED REGION END*/
+            }
+        «ENDIF»
+        «ENDIF»
+        «IF (behaviour.postCondition !== null && behaviour.postCondition.pluginName == "DefaultPlugin")»
+         «IF (behaviour.postCondition.variables.size > 0) || (behaviour.postCondition.quantifiers.size > 0)»
+            /*
+             * PostCondition - (Name): «behaviour.postCondition.name»
+             * (ConditionString): «behaviour.postCondition.conditionString»
+            «var  List<Variable> variables =  behaviour.postCondition.variables»
+            «IF (variables !== null)»
+                 * Static Variables: «FOR variable : variables»«variable.name» «ENDFOR»
+            «ENDIF»
+             * Domain Variables:
+            «var  List<Quantifier> quantifiers =  behaviour.postCondition.quantifiers»
+            «IF (quantifiers !== null)»
+                «FOR q : quantifiers»
+                    «var  List<String> sorts=  q.sorts»
+                    * forall agents in «q.scope.name» let v = «sorts»
+                «ENDFOR»
+            «ENDIF»
+            *
+            */
+            void Constraint«behaviour.postCondition.id»::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) {
+                /*PROTECTED REGION ID(cc«behaviour.postCondition.id») ENABLED START*/
+                «IF (protectedRegions.containsKey("cc" + behaviour.postCondition.id))»
+                    «protectedRegions.get("cc" + behaviour.postCondition.id)»
+                «ELSE»
+                    //Please describe your runtime constraint here
+                «ENDIF»
+                /*PROTECTED REGION END*/
+            }
+        «ENDIF»
         «ENDIF»
 
     '''

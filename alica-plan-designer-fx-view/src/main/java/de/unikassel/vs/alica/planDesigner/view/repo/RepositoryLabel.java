@@ -88,16 +88,10 @@ public class RepositoryLabel extends Label {
                 try {
                     if (parent instanceof StateContainer) {
                         if (viewModelElement instanceof TaskViewModel) { return; }
+
                         StateContainer stateContainer = (StateContainer) parent;
-                        GuiModificationEvent guiModificationEvent;
-                        if(viewModelElement instanceof BehaviourViewModel) {
-                            ConfigurationViewModel defaultConfiguration = ((BehaviourViewModel) viewModelElement).getConfigurations().get(0);
-                            guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, Types.CONFIGURATION, defaultConfiguration.getName());
-                            guiModificationEvent.setElementId(defaultConfiguration.getId());
-                        } else {
-                            guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName());
-                            guiModificationEvent.setElementId(viewModelElement.getId());
-                        }
+                        GuiModificationEvent guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, viewModelElement.getType(), viewModelElement.getName());
+                        guiModificationEvent.setElementId(viewModelElement.getId());
                         guiModificationEvent.setParentId(stateContainer.getState().getId());
                         guiModificationHandler.handle(guiModificationEvent);
                     }
@@ -108,7 +102,7 @@ public class RepositoryLabel extends Label {
                         guiModificationEvent.setElementId(viewModelElement.getId());
                         guiModificationHandler.handle(guiModificationEvent);
                     }
-                }catch (RuntimeException excp){
+                } catch (RuntimeException excp){
                     // Exception might get thrown, because the element can't be added, because this would cause a loop
                     // in the model
                     ErrorWindowController.createErrorWindow(excp.getMessage(), null);
