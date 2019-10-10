@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -20,9 +21,20 @@ public class SynchronisationViewModel extends PlanElementViewModel {
         this.transitions = FXCollections.observableArrayList(new ArrayList<>());
 
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "talkTimeout", "syncTimeout", "failOnSyncTimeout"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "talkTimeout", "syncTimeout", "failOnSyncTimeout"));
     }
-
+    public void registerListener(IGuiModificationHandler handler) {
+        super.registerListener(handler);
+        talkTimeout.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, talkTimeout.getClass().getSimpleName(), talkTimeout.getName());
+        });
+        syncTimeout.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, syncTimeout.getClass().getSimpleName(), syncTimeout.getName());
+        });
+        failOnSyncTimeout.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, failOnSyncTimeout.getClass().getSimpleName(), failOnSyncTimeout.getName());
+        });
+    }
     public ObservableList<TransitionViewModel> getTransitions() {
         return transitions;
     }
