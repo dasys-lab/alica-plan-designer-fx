@@ -1532,4 +1532,12 @@ public class ModelManager implements Observer {
     public boolean hasTaskRepository() {
         return taskRepository != null;
     }
+
+    public TaskRepository getTaskRepository() {
+        return taskRepository;
+    }
+
+    public RoleSet getRoleSet() {
+        return roleSet;
+    }
 }
