@@ -86,7 +86,8 @@ public class PluginManager {
                 // anyways)
                 className = className.replaceAll("[/\\\\]", ".");
                 try {
-                    URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+
+                    //URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 
                     /**
                      * Adding the jar as source for the Class Loader:
@@ -94,13 +95,16 @@ public class PluginManager {
                      *
                      * If you know a way to avoid using reflection, go for it.
                      */
-                    Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+                    URL url = new File( currentFile.getAbsolutePath() ).toURI().toURL();
+                    URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
+                    Class sysClass = URLClassLoader.class;
+                    Method method = sysClass.getDeclaredMethod("addURL", URL.class);
                     method.setAccessible(true);
                     method.invoke(classLoader, currentFile.toURI().toURL());
 
                     // Load the class through the class loader.
                     Class c = classLoader.loadClass(className);
-                    Object o = c.newInstance();
+                    Object o = c.getDeclaredConstructor().newInstance();
 
                     // Only put the class, if it an instance of IPlugin.
                     if (o instanceof IPlugin) {
