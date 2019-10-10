@@ -138,6 +138,7 @@ public class PlanTab extends AbstractPlanTab {
             case Types.STATE:
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
+            case Types.ENTRYPOINT:
                 event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, planElementViewModel.getType(), planElementViewModel.getName());
                 event.setParentId(planElementViewModel.getParentId());
                 event.setElementId(planElementViewModel.getId());

@@ -831,9 +831,21 @@ public class ViewModelManager {
                 break;
             case Types.ENTRYPOINT:
                 EntryPointViewModel entryPointViewModel = (EntryPointViewModel) element;
-                entryPointViewModel.setXPosition(event.getUiElement().getX());
-                entryPointViewModel.setYPosition(event.getUiElement().getY());
+                if (event.getUiElement() != null) {
+                    entryPointViewModel.setXPosition(event.getUiElement().getX());
+                    entryPointViewModel.setYPosition(event.getUiElement().getY());
+                } else {
+                    entryPointViewModel.setXPosition(((EntryPointViewModel) element).getXPosition());
+                    entryPointViewModel.setYPosition(((EntryPointViewModel) element).getYPosition());
+                }
                 parentPlan.getEntryPoints().add((EntryPointViewModel) element);
+
+                EntryPoint ePoint = (EntryPoint) modelManager.getPlanElement(entryPointViewModel.getId());
+                if (ePoint.getState() != null) {
+                    stateViewModel = (StateViewModel) getViewModelElement(ePoint.getState());
+                    stateViewModel.setEntryPoint(entryPointViewModel);
+                    entryPointViewModel.setState(stateViewModel);
+                }
                 break;
             case Types.BENDPOINT:
                 transitionViewModel = (TransitionViewModel) element;

@@ -1103,6 +1103,9 @@ public class ModelManager implements Observer {
                     case Types.FAILURESTATE:
                         cmd = new DeleteStateInPlan(this, mmq);
                         break;
+                    case Types.ENTRYPOINT:
+                        cmd = new DeleteEntryPoint(this, mmq);
+                        break;
                     case Types.VARIABLEBINDING:
                         cmd = new DeleteVariableBinding(this, mmq);
                         break;
