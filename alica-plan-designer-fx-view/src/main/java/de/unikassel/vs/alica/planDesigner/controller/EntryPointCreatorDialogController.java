@@ -54,7 +54,11 @@ public class EntryPointCreatorDialogController implements Initializable {
         taskComboBox.setConverter(new StringConverter<ViewModelElement>() {
             @Override
             public String toString(ViewModelElement object) {
-                return object.getName();
+                if (object == null) {
+                    return "Nothing Selected!";
+                } else {
+                    return object.getName();
+                }
             }
 
             @Override
