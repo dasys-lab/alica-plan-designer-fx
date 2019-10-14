@@ -31,17 +31,11 @@ public class DebugWindowController implements DebugEventHandler
 
   private Scene buildScene()
   {
-    AnchorPane root = new AnchorPane();
-    ScrollPane scrollPane = new ScrollPane();
     this.textArea = new TextArea();
-    this.textArea.autosize();
+    this.textArea.setPrefWidth(600);
+    this.textArea.setPrefHeight(370);
 
-    scrollPane.setFitToWidth(true);
-    scrollPane.setFitToHeight(true);
-    scrollPane.setContent(textArea);
-
-    root.getChildren().add(scrollPane);
-    return new Scene(root, 600, 370);
+    return new Scene(textArea, 600, 370);
   }
 
   public void showDebugWindow()
@@ -70,7 +64,7 @@ public class DebugWindowController implements DebugEventHandler
   {
     if(this.stage.isShowing())
     {
-      this.textArea.appendText(debugEvent.toString() + "\n----------------------\n");
+      this.textArea.appendText(debugEvent.toString() + "\n");
     }
   }
 }
