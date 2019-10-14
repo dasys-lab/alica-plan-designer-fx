@@ -7,8 +7,8 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
-import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.menu.EditMenu;
@@ -16,13 +16,6 @@ import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
-import de.uniks.vs.capnzero.monitoring.EventParser;
-import de.uniks.vs.capnzero.monitoring.MonitorClient;
-import de.uniks.vs.capnzero.monitoring.YamlEventParser;
-import de.uniks.vs.capnzero.monitoring.config.DebugConfiguration;
-import de.uniks.vs.capnzero.monitoring.handler.DebugEventHandler;
-import de.uniks.vs.capnzero.monitoring.handler.PrintDebugEventHandler;
-import de.uniks.vs.capnzero.monitoring.proxy.CapnzeroEventProxy;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -65,11 +58,7 @@ public class MainWindowController implements Initializable {
     private MainWindowController() {
         this.i18NRepo = I18NRepo.getInstance();
 
-        DebugEventHandler handler = new PrintDebugEventHandler();
-        EventParser parser = new YamlEventParser();
-        DebugConfiguration config = new DebugConfiguration();
-        CapnzeroEventProxy proxy = new CapnzeroEventProxy(handler, parser, config);
-        this.debugMonitorClient = new MonitorClient(proxy);
+        this.debugWindowController = new DebugWindowController();
     }
 
     // --------------------------------------------------------------------------------------------
@@ -121,7 +110,7 @@ public class MainWindowController implements Initializable {
     private ConfigurationWindowController configWindowController;
     private IGuiStatusHandler guiStatusHandler;
     private IGuiModificationHandler guiModificationHandler;
-    private MonitorClient debugMonitorClient;
+    private DebugWindowController debugWindowController;
 
     // --------------------------------------------------------------------------------------------
     // GETTER & SETTER
@@ -293,12 +282,12 @@ public class MainWindowController implements Initializable {
         debugMenu = new Menu("Debug");
         MenuItem startDebuggingItem = new MenuItem("Start traffic listener");
         startDebuggingItem.setOnAction(event -> {
-            debugMonitorClient.start();
+            this.debugWindowController.showDebugWindow();
         });
 
         MenuItem stopDebuggingItem = new MenuItem("Stop traffic listener");
         stopDebuggingItem.setOnAction(event -> {
-            debugMonitorClient.stop();
+            this.debugWindowController.closeDebugWindow();
         });
 
         debugMenu.getItems().addAll(startDebuggingItem, stopDebuggingItem);
