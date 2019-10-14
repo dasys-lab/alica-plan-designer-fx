@@ -31,12 +31,6 @@ import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
-import de.uniks.vs.capnzero.monitoring.MonitorClient;
-import de.uniks.vs.capnzero.monitoring.YamlEventParser;
-import de.uniks.vs.capnzero.monitoring.config.DebugConfiguration;
-import de.uniks.vs.capnzero.monitoring.handler.DebugEventHandler;
-import de.uniks.vs.capnzero.monitoring.handler.PrintDebugEventHandler;
-import de.uniks.vs.capnzero.monitoring.proxy.CapnzeroEventProxy;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -86,9 +80,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     // Code Generation Objects
     private GeneratedSourcesManager generatedSourcesManager;
 
-    // Debugging Client
-    private MonitorClient debugMonitorClient;
-
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
         configurationManager.setController(this);
@@ -112,18 +103,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         repoViewModel = viewModelManager.createRepositoryViewModel();
 
         setupBeanConverters();
-
-        setupDebugMonitorClient();
-    }
-
-    private void setupDebugMonitorClient() {
-        DebugConfiguration config = new DebugConfiguration();
-        YamlEventParser parser = new YamlEventParser();
-        DebugEventHandler handler = new PrintDebugEventHandler();
-        CapnzeroEventProxy proxy = new CapnzeroEventProxy(handler, parser, config);
-
-        this.debugMonitorClient = new MonitorClient(proxy);
-        this.debugMonitorClient.start();
     }
 
     protected void setupGeneratedSourcesManager() {

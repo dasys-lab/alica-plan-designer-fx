@@ -60,5 +60,10 @@
             <artifactId>javafx-fxml</artifactId>
             <version>12.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>de.uniks.vs.capnzero.monitoring</groupId>
+            <artifactId>capnzero-monitoring-client</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
