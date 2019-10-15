@@ -33,7 +33,6 @@ public class DeleteStateInPlan extends UiPositionCommand {
 
     @Override
     public void doCommand() {
-        uiElement = parentOfElement.getUiElement(state.getId());
         if(state.getVariableBindings().size() != 0){
             deleteVariableBindings(state.getVariableBindings());
         }
@@ -59,6 +58,9 @@ public class DeleteStateInPlan extends UiPositionCommand {
 
         mmq.setElementId(state.getId());
         mmq.setParentId(plan.getId());
+
+        uiElement = parentOfElement.getUiElement(state.getId());
+        parentOfElement.remove(state.getId());
         parentOfElement.getPlan().removeState(state);
         this.fireEvent(ModelEventType.ELEMENT_DELETED, state);
     }
@@ -66,9 +68,8 @@ public class DeleteStateInPlan extends UiPositionCommand {
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().addState(state);
-        this.uiElement = parentOfElement.getUiElement(this.state.getId());
-        this.uiElement.setX(this.x);
-        this.uiElement.setY(this.y);
+        parentOfElement.add(state.getId(), uiElement);
+
         if(entryPoint != null){
             state.setEntryPoint(entryPoint);
             entryPoint.setState(state);

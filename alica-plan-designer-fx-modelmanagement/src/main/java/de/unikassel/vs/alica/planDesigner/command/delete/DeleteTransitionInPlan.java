@@ -65,9 +65,7 @@ public class DeleteTransitionInPlan extends UiPositionCommand {
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().addTransition(transition);
-        this.uiElement = parentOfElement.getUiElement(this.transition.getId());
-        this.uiElement.setX(this.x);
-        this.uiElement.setY(this.y);
+        parentOfElement.add(transition.getId(), uiElement);
 
         transition.setPreCondition(preCondition);
         transition.setInState(inState);

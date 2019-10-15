@@ -30,6 +30,7 @@ public class DeleteSynchronisationFromPlan extends UiPositionCommand {
         parentOfElement.getPlan().removeSynchronisation(synchronisation);
         uiElement = parentOfElement.getUiElement(synchronisation.getId());
         parentOfElement.remove(synchronisation.getId());
+
         transitionList = synchronisation.getSyncedTransitions();
         for (Transition transition: transitionList) {
             transition.setSynchronisation(null);
@@ -42,8 +43,7 @@ public class DeleteSynchronisationFromPlan extends UiPositionCommand {
     public void undoCommand() {
         parentOfElement.getPlan().addSynchronisation(synchronisation);
         parentOfElement.add(synchronisation.getId(), this.uiElement);
-        this.uiElement.setX(this.x);
-        this.uiElement.setY(this.y);
+
         for (Transition transition: transitionList) {
             transition.setSynchronisation(synchronisation);
         }

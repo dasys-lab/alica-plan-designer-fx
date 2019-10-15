@@ -28,6 +28,7 @@ public class DeleteEntryPoint extends UiPositionCommand {
     public void doCommand() {
         parentOfElement.getPlan().removeEntryPoint(entryPoint);
         parentOfElement.remove(entryPoint.getId());
+
         if (associatedState != null) {
             associatedState.setEntryPoint(null);
         }
@@ -37,9 +38,7 @@ public class DeleteEntryPoint extends UiPositionCommand {
     @Override
     public void undoCommand() {
         parentOfElement.getPlan().addEntryPoint(entryPoint);
-        uiElement = parentOfElement.getUiElement(entryPoint.getId());
-        uiElement.setX(this.x);
-        uiElement.setY(this.y);
+        parentOfElement.add(entryPoint.getId(), uiElement);
         if (associatedState != null) {
             associatedState.setEntryPoint(entryPoint);
         }
