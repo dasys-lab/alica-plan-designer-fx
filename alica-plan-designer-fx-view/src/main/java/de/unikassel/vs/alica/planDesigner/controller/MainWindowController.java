@@ -285,12 +285,7 @@ public class MainWindowController implements Initializable {
             this.debugWindowController.showDebugWindow();
         });
 
-        MenuItem stopDebuggingItem = new MenuItem("Stop traffic listener");
-        stopDebuggingItem.setOnAction(event -> {
-            this.debugWindowController.closeDebugWindow();
-        });
-
-        debugMenu.getItems().addAll(startDebuggingItem, stopDebuggingItem);
+        debugMenu.getItems().add(startDebuggingItem);
         menus.add(debugMenu);
 
         return menus;

@@ -10,14 +10,12 @@ import javafx.stage.Stage;
 
 public class DebugWindowController implements DebugEventHandler
 {
-  private MonitorClient debugMonitorClient;
   private TextArea textArea;
   private Stage stage;
 
 
   public DebugWindowController()
   {
-    this.debugMonitorClient = new MonitorClient(this);
   }
 
   private Scene buildScene()
@@ -31,23 +29,16 @@ public class DebugWindowController implements DebugEventHandler
 
   public void showDebugWindow()
   {
+    MonitorClient debugMonitorClient = new MonitorClient(this);
     this.stage = new Stage();
-    this.stage.setOnCloseRequest((e) -> this.debugMonitorClient.stop());
+    this.stage.setOnCloseRequest((e) -> debugMonitorClient.stop());
 
     this.stage.setScene(buildScene());
     this.stage.setTitle("CapnZero Debug Messages");
 
     this.stage.show();
 
-    this.debugMonitorClient.start();
-  }
-
-  public void closeDebugWindow()
-  {
-    this.debugMonitorClient.stop();
-
-    this.stage.hide();
-    this.stage.close();
+    debugMonitorClient.start();
   }
 
   @Override
