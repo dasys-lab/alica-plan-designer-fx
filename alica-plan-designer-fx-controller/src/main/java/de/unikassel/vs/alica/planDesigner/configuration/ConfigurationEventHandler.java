@@ -154,6 +154,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     @Override
     public void save(String confName) {
         storeConfiguration(confName);
+        configManager.updateConfigurationForGui(confName);
         configManager.writeToDisk();
     }
 

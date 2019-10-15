@@ -258,6 +258,21 @@ public final class ConfigurationManager {
         return activeConfiguration;
     }
 
+    public void updateConfigurationForGui(String confName){
+        if (confName != null && !confName.isEmpty() && activeConfiguration.getName().equals(confName)) {
+            for (Configuration conf : configurations) {
+                if (conf.getName().equals(confName)) {
+                    activeConfiguration = conf;
+                    PluginManager.getInstance().updateAvailablePlugins(conf.getPluginsPath());
+                    PluginManager.getInstance().setDefaultPlugin(conf.getDefaultPluginName());
+                    if (controller != null) {
+                        controller.handleConfigurationChanged();
+                    }
+                }
+            }
+        }
+    }
+
     public boolean setActiveConfiguration(String confName) {
         if (activeConfiguration != null && activeConfiguration.getName().equals(confName)) {
             LOG.info("Active configuration already set to " + confName);
