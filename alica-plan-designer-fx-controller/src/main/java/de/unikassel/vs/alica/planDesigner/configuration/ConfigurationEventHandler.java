@@ -159,6 +159,15 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     }
 
     @Override
+    public void delete(String confName) {
+        boolean active = configManager.checkActive(confName);
+        if(!active) {
+            configManager.removeConfiguration(confName);
+            updateAvailableConfigurations();
+        }
+    }
+
+    @Override
     public void setEditorExecutablePath(String editorExecutablePath) {
         configManager.setEditorExecutablePath(editorExecutablePath);
     }

@@ -272,6 +272,12 @@ public final class ConfigurationManager {
             }
         }
     }
+    public boolean checkActive(String confName) {
+        if(activeConfiguration.getName().equals(confName)){
+            return true;
+        }
+        return false;
+    }
 
     public boolean setActiveConfiguration(String confName) {
         if (activeConfiguration != null && activeConfiguration.getName().equals(confName)) {

@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 public interface IConfigurationEventHandler<T extends ListView.EditEvent<String>> extends EventHandler<Event>, ChangeListener<String> {
     public void save(String confName);
+    public void delete(String confName);
     public void setEditorExecutablePath(String editorExecutablePath);
     public void setClangFormatPath(String clangFormatPath);
     public void showSelectedConfiguration();

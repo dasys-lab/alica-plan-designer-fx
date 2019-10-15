@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.KeyCode;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -308,6 +309,14 @@ public class ConfigurationWindowController implements Initializable {
         availableWorkspacesListView.setOnEditCommit(configEventHandler);
         availableWorkspacesListView.setOnMouseClicked(configEventHandler);
         availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configEventHandler);
+
+        availableWorkspacesListView.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.DELETE){
+                ListView listView = (ListView) e.getTarget();
+                String confName = listView.getSelectionModel().getSelectedItems().get(0).toString();
+                configEventHandler.delete(confName);
+            }
+        });
 
         configEventHandler.updateAvailableConfigurations();
         configEventHandler.showSelectedConfiguration();
