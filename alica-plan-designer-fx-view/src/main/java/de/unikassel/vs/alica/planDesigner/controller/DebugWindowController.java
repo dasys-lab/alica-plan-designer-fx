@@ -1,16 +1,10 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
-import de.uniks.vs.capnzero.monitoring.EventParser;
 import de.uniks.vs.capnzero.monitoring.MonitorClient;
-import de.uniks.vs.capnzero.monitoring.YamlEventParser;
-import de.uniks.vs.capnzero.monitoring.config.DebugConfiguration;
 import de.uniks.vs.capnzero.monitoring.event.DebugEvent;
 import de.uniks.vs.capnzero.monitoring.handler.DebugEventHandler;
-import de.uniks.vs.capnzero.monitoring.proxy.CapnzeroEventProxy;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 
@@ -23,10 +17,7 @@ public class DebugWindowController implements DebugEventHandler
 
   public DebugWindowController()
   {
-    EventParser parser = new YamlEventParser();
-    DebugConfiguration config = new DebugConfiguration();
-    CapnzeroEventProxy proxy = new CapnzeroEventProxy(this, parser, config);
-    this.debugMonitorClient = new MonitorClient(proxy);
+    this.debugMonitorClient = new MonitorClient(this);
   }
 
   private Scene buildScene()
