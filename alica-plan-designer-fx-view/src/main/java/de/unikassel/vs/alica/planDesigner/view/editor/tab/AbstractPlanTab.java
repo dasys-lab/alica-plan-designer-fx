@@ -73,6 +73,38 @@ public abstract class AbstractPlanTab extends EditorTab {
         this.elementInformationPane.setViewModelElement(container.getPlanElementViewModel());
     }
 
+    public void setCurrentDebugContainer(Container container, String senderId) {
+        if (container == currentDebugContainer.get()) return;
+
+        // reset effect from former active debug container
+        Container c = currentDebugContainer.get();
+        if (c != null) {
+            c.setEffectToStandard();
+        }
+
+        // remember new active debug container
+        currentDebugContainer.set(container);
+        if (container != null) {
+            // set effect
+            container.setCustomEffect(createActiveDebugEffect());
+
+//            Label senderIdLabel = new Label(senderId);
+//            senderIdLabel.setTranslateX(-50);
+//            senderIdLabel.setTranslateY(-50);
+//            senderIdLabel.setUnderline(true);
+//            container.getChildren().add(senderIdLabel);
+        }
+
+        // update properties gui
+        if (container.getPlanElementViewModel().getType().equals(Types.CONFIGURATION)) {
+            ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) container.getPlanElementViewModel();
+            StateViewModel stateViewModel = (StateViewModel) ((AbstractPlanContainer) container).getParentStateContainer().getPlanElementViewModel();
+            this.elementInformationPane.setViewModelElement(configurationViewModel, stateViewModel);
+        } else {
+            this.elementInformationPane.setViewModelElement(container.getPlanElementViewModel());
+        }
+    }
+
     private DropShadow createSelectedEffect() {
         DropShadow value = new DropShadow(20, new Color(0, 0.4, 0.9, 0.9));
         value.setBlurType(BlurType.ONE_PASS_BOX);
