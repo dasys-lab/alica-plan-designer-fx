@@ -70,13 +70,7 @@ public abstract class AbstractPlanTab extends EditorTab {
         }
 
         // update properties gui
-        if (container.getPlanElementViewModel().getType().equals(Types.CONFIGURATION)) {
-            ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) container.getPlanElementViewModel();
-            StateViewModel stateViewModel = (StateViewModel) ((AbstractPlanContainer) container).getParentStateContainer().getPlanElementViewModel();
-            this.elementInformationPane.setViewModelElement(configurationViewModel, stateViewModel);
-        } else {
-            this.elementInformationPane.setViewModelElement(container.getPlanElementViewModel());
-        }
+        this.elementInformationPane.setViewModelElement(container.getPlanElementViewModel());
     }
 
     private DropShadow createSelectedEffect() {

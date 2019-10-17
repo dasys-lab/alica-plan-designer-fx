@@ -7,6 +7,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -20,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -89,8 +91,11 @@ public class DebugTab extends EditorTab {
         runButton.setMaxWidth(Double.MAX_VALUE);
         runButton.setOnAction(this::onRunClicked);
 
+        Button simulateButton = new Button("Simulate");
+        simulateButton.setOnAction(this::simulate);
+
         VBox vBox = new VBox(SPACING);
-        vBox.getChildren().addAll(allAgentsVBox, runButton);
+        vBox.getChildren().addAll(allAgentsVBox, runButton, simulateButton);
 
         HBox hbox = new HBox(SPACING);
         hbox.getChildren().addAll(debugTextArea, vBox);
@@ -124,9 +129,6 @@ public class DebugTab extends EditorTab {
     }
 
     private void onRunClicked(ActionEvent event) {
-        // Simulates a AlicaEngineInfo message:
-        //(senderId = (value = "\x02\x00\x00\x00", type = wildcard), masterPlan = "ServeMaster", currentPlan = "ServeMaster", currentState = "Stop", currentRole = "Assistant", currentTask = "DefaultTask", agentIdsWithMe = [(value = "\x02\x00\x00\x00", type = wildcard)])
-
         if (pdAlicaRunnerProcess == null || roscoreProcess == null) {
             try {
                 // start roscore, because we still need it
@@ -170,7 +172,12 @@ public class DebugTab extends EditorTab {
             runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/run16x16.png"))));
         }
 
-        /*
+    }
+
+    private void simulate(ActionEvent event) {
+        // Simulates a AlicaEngineInfo message:
+        //(senderId = (value = "\x02\x00\x00\x00", type = wildcard), masterPlan = "ServeMaster", currentPlan = "ServeMaster", currentState = "Stop", currentRole = "Assistant", currentTask = "DefaultTask", agentIdsWithMe = [(value = "\x02\x00\x00\x00", type = wildcard)])
+
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -241,8 +248,6 @@ public class DebugTab extends EditorTab {
             }
         };
         new Thread(task).start();
-
-         */
     }
 
     @Override
@@ -261,6 +266,5 @@ public class DebugTab extends EditorTab {
     @Override
     public void setOnCloseRequest(EventHandler<Event> value) {
         super.setOnCloseRequest(value);
-        System.out.println("Closing..........");
     }
 }
