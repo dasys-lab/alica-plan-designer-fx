@@ -259,7 +259,7 @@ public final class ConfigurationManager {
     }
 
     public void updateConfigurationForGui(String confName){
-        if (confName != null && !confName.isEmpty() && activeConfiguration.getName().equals(confName)) {
+        if (confName != null && !confName.isEmpty() && activeConfiguration != null && activeConfiguration.getName().equals(confName)) {
             for (Configuration conf : configurations) {
                 if (conf.getName().equals(confName)) {
                     activeConfiguration = conf;
@@ -272,6 +272,7 @@ public final class ConfigurationManager {
             }
         }
     }
+
     public boolean checkActive(String confName) {
         if(activeConfiguration.getName().equals(confName)){
             return true;

@@ -1,3 +1,4 @@
+import com.sun.javafx.scene.control.LabeledText;
 import de.unikassel.vs.alica.planDesigner.PlanDesigner;
 import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
@@ -29,14 +30,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Stream;
 
-import static org.testfx.service.query.impl.NodeQueryUtils.hasText;
+import static org.testfx.util.NodeQueryUtils.hasText;
 
 public class SavePlanTest extends ApplicationTest {
     private static String activeUserConfig;
@@ -325,7 +323,7 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private void repositionPlanElement(Node container, double factX, double factY) {
-        Node planContent = lookup(planContentId).queryFirst();
+        Node planContent = lookup(planContentId).query();
         Bounds planBounds = planContent.getBoundsInLocal();
         double planWidth = planBounds.getWidth();
         double planHeight = planBounds.getHeight();
@@ -365,7 +363,7 @@ public class SavePlanTest extends ApplicationTest {
                 return false;
             }
             return textField.getText().equals(String.valueOf(transitionId));
-        }).queryFirst();
+        }).query();
         clickOn(nameField);
         write(name);
     }
@@ -384,7 +382,7 @@ public class SavePlanTest extends ApplicationTest {
         sleep(1000);
 
         // click on first free config field
-        Node firstListElement = lookup("#availableWorkspacesListView").lookup("").selectAt(0).queryFirst();
+        Node firstListElement = lookup("#availableWorkspacesListView").lookup("").query();
         clickOn(firstListElement);
 
         // enter config name
@@ -421,8 +419,8 @@ public class SavePlanTest extends ApplicationTest {
 
     private void handleNewTaskRepositoryDialog() {
         String warningMessage = i18NRepo.getString("label.error.missing.taskrepository");
-        Node warning = lookup(warningMessage).queryFirst();
-        if (warning != null) {
+        Set<Node> nodes = lookup(warningMessage).queryAll();
+        if (nodes.size() > 0) {
             clickOn(i18NRepo.getString("action.create.taskrepository"));
             sleep(1000);
             clickOn("#nameTextField");
@@ -591,7 +589,7 @@ public class SavePlanTest extends ApplicationTest {
         type(KeyCode.ESCAPE);
 
         // deselect currently selected element
-        Node node = lookup(planContentId).queryFirst();
+        Node node = lookup(planContentId).query();
         Bounds boundsInScreen = node.localToScreen(node.getBoundsInLocal());
         double x = boundsInScreen.getMinX() + 10;
         double y = boundsInScreen.getMinY() + 10;
@@ -638,7 +636,11 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private void createRoles() {
-        Node firstListElement = lookup("#RoleTableView").lookup("").selectAt(1).queryFirst();
+        Node firstListElement = lookup("#RoleTableView").lookup("").queryAll().stream()
+                .filter(n -> n instanceof LabeledText)
+                .skip(1)
+                .findFirst()
+                .get();
 
         // create first role
         clickOn(firstListElement);
@@ -726,12 +728,12 @@ public class SavePlanTest extends ApplicationTest {
 
     private void assertExists(String query) {
         sleep(1000);
-        Assert.assertEquals(1, lookup(query).queryAll().size());
+        Assert.assertTrue(lookup(query).tryQuery().isPresent());
     }
 
     private void assertNotExists(String query) {
         sleep(1000);
-        Assert.assertEquals(0, lookup(query).queryAll().size());
+        Assert.assertFalse(lookup(query).tryQuery().isPresent());
     }
 
     private void generateCppCode() {
