@@ -69,9 +69,6 @@ public class VariableBindingTab extends Tab {
         if (parentViewModel.getType() == Types.STATE) {
             variableBindingTable.setVariablesDropDownContent(((PlanViewModel) guiModificationHandler.getViewModelElement(this.parentViewModel.getParentId())).getVariables());
             for (PlanElementViewModel abstractPlanViewModel : ((StateViewModel) this.parentViewModel).getAbstractPlans()) {
-                if (abstractPlanViewModel.getType().equals(Types.CONFIGURATION)) {
-                    abstractPlanViewModel = ((ConfigurationViewModel) abstractPlanViewModel).getBehaviour();
-                }
                 hasVariablesViewArrayList.add((AbstractPlanViewModel) abstractPlanViewModel);
             }
             variableBindingTable.setSubPlanDropDownContent(hasVariablesViewArrayList);

@@ -1,6 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.characteristics;
 
-import com.sun.javafx.scene.control.skin.LabeledText;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.roleTab.roles.RoleTableView;
@@ -25,7 +24,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.controlsfx.control.PopOver;
-import org.omg.CORBA.OBJ_ADAPTER;
 
 import javax.swing.text.TableView;
 import java.beans.PropertyChangeListener;

@@ -311,6 +311,14 @@ public class ConfigurationWindowController implements Initializable {
         availableWorkspacesListView.setOnMouseClicked(configEventHandler);
         availableWorkspacesListView.getSelectionModel().selectedItemProperty().addListener(configEventHandler);
 
+        availableWorkspacesListView.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.DELETE){
+                ListView listView = (ListView) e.getTarget();
+                String confName = listView.getSelectionModel().getSelectedItems().get(0).toString();
+                configEventHandler.delete(confName);
+            }
+        });
+
         configEventHandler.updateAvailableConfigurations();
         configEventHandler.showSelectedConfiguration();
         availableWorkspacesListView.requestFocus();

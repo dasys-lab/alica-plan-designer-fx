@@ -6,7 +6,11 @@ import javafx.util.StringConverter;
 public class VariableStringConverter extends StringConverter<VariableViewModel> {
     @Override
     public String toString(VariableViewModel object) {
-        return object.getName();
+        if (object == null) {
+            return "Nothing Selected!";
+        } else {
+            return object.getName();
+        }
     }
 
     @Override

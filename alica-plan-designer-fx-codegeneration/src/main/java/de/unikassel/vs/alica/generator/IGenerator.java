@@ -3,6 +3,7 @@ package de.unikassel.vs.alica.generator;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 
 import java.util.List;
 import java.util.Map;
@@ -17,10 +18,11 @@ public interface IGenerator {
     void setProtectedRegions(Map<String, String> protectedRegions);
     void createBehaviourCreator(List<Behaviour> behaviours);
     void createBehaviour(Behaviour behaviour);
-    void createConditionCreator(List<Plan> plans, List<Condition> conditions);
-    void createConstraintCreator(List<Plan> plans, List<Condition> conditions);
+    void createConditionCreator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions);
+    void createConstraintCreator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions);
     void createConstraints(List<Plan> plans);
     void createConstraintsForPlan(Plan plan);
+    void createConstraintsForBehaviour(Behaviour behaviour);
     void createPlans(List<Plan> plans);
     void createPlan(Plan plan);
     void createUtilityFunctionCreator(List<Plan> plans);

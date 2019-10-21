@@ -13,6 +13,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.log4j.Level;
@@ -89,6 +92,12 @@ public class PlanDesignerApplication extends Application {
         scene.getStylesheets().add(cssPath);
         PlanDesignerApplication.primaryStage = primaryStage;
         PlanDesignerApplication.primaryStage.setScene(scene);
+
+        KeyCombination keys = new KeyCodeCombination(KeyCode.S, KeyCombination.SHIFT_DOWN, KeyCombination.CONTROL_DOWN);
+        scene.getAccelerators().put(keys, () -> {
+            mainWindowController.getGuiModificationHandler().storeAll();
+        });
+
 
         /**
          * Just for setting the divider default position to a certain position, after all resize events

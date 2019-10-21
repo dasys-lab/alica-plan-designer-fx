@@ -3,6 +3,7 @@ package de.unikassel.vs.alica.planDesigner.command.delete;
 import de.unikassel.vs.alica.planDesigner.alicamodel.EntryPoint;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
+import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
@@ -25,21 +26,22 @@ public class DeleteEntryPoint extends UiPositionCommand {
 
     @Override
     public void doCommand() {
-        parentOfElement.getPlan().getEntryPoints().remove(entryPoint);
+        parentOfElement.getPlan().removeEntryPoint(entryPoint);
         parentOfElement.remove(entryPoint.getId());
+
         if (associatedState != null) {
             associatedState.setEntryPoint(null);
         }
+        this.fireEvent(ModelEventType.ELEMENT_DELETED, entryPoint);
     }
 
     @Override
     public void undoCommand() {
-        parentOfElement.getPlan().getEntryPoints().add(entryPoint);
-        uiElement = parentOfElement.getUiElement(entryPoint.getId());
-        uiElement.setX(this.x);
-        uiElement.setY(this.y);
+        parentOfElement.getPlan().addEntryPoint(entryPoint);
+        parentOfElement.add(entryPoint.getId(), uiElement);
         if (associatedState != null) {
             associatedState.setEntryPoint(entryPoint);
         }
+        this.fireEvent(ModelEventType.ELEMENT_CREATED, entryPoint);
     }
 }

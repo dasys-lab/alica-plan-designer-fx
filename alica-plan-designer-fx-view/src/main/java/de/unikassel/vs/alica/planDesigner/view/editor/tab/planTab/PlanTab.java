@@ -139,6 +139,7 @@ public class PlanTab extends AbstractPlanTab {
             case Types.STATE:
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
+            case Types.ENTRYPOINT:
                 event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, planElementViewModel.getType(), planElementViewModel.getName());
                 event.setParentId(planElementViewModel.getParentId());
                 event.setElementId(planElementViewModel.getId());
@@ -157,6 +158,12 @@ public class PlanTab extends AbstractPlanTab {
                 tC = (TransitionContainer) selectedContainer;
                 event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.TRANSITION, null);
                 event.setElementId(tC.getContainedElement().getId());
+                event.setParentId(getSerializableViewModel().getId());
+                return event;
+            case Types.SYNCHRONISATION:
+                SynchronizationContainer sC = (SynchronizationContainer) selectedContainer;
+                event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.SYNCHRONISATION, null);
+                event.setElementId(sC.getPlanElementViewModel().getId());
                 event.setParentId(getSerializableViewModel().getId());
                 return event;
             default:

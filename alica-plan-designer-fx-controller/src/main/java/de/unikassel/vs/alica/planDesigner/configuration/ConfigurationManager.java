@@ -112,7 +112,7 @@ public final class ConfigurationManager {
             mainConfigProperties.setProperty(DOMAIN_CONFIGS, "");
             mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, "");
         } else {
-            // loadFromDisk values from mainConfig.properties file in $HOME/.planDesigner/configurations.properties
+            // loadFromDisk values from mainConfig.properties file in $HOME/.planDesigner/behaviourConfigurations.properties
             try {
                 InputStream is = new FileInputStream(mainConfigFile);
                 mainConfigProperties.load(is);
@@ -147,7 +147,7 @@ public final class ConfigurationManager {
             windowConfigProperties.setProperty(WINDOW_X, "0");
             windowConfigProperties.setProperty(WINDOW_Y, "0");
         } else {
-            // loadFromDisk values from mainConfig.properties file in $HOME/.planDesigner/configurations.properties
+            // loadFromDisk values from mainConfig.properties file in $HOME/.planDesigner/behaviourConfigurations.properties
             try {
                 InputStream is = new FileInputStream(windowConfigFile);
                 windowConfigProperties.load(is);
@@ -256,6 +256,27 @@ public final class ConfigurationManager {
 
     public Configuration getActiveConfiguration() {
         return activeConfiguration;
+    }
+
+    public void updateConfigurationForGui(String confName){
+        if (confName != null && !confName.isEmpty() && activeConfiguration.getName().equals(confName)) {
+            for (Configuration conf : configurations) {
+                if (conf.getName().equals(confName)) {
+                    activeConfiguration = conf;
+                    PluginManager.getInstance().updateAvailablePlugins(conf.getPluginsPath());
+                    PluginManager.getInstance().setDefaultPlugin(conf.getDefaultPluginName());
+                    if (controller != null) {
+                        controller.handleConfigurationChanged();
+                    }
+                }
+            }
+        }
+    }
+    public boolean checkActive(String confName) {
+        if(activeConfiguration.getName().equals(confName)){
+            return true;
+        }
+        return false;
     }
 
     public boolean setActiveConfiguration(String confName) {

@@ -21,6 +21,6 @@ protected_region_end : '/*PROTECTED REGION END*/';
 regionid : ((TEXT+ NUMBER*) | (TEXT* NUMBER+))+;
 
 SIGNS : '*' | '+' | '-' | '/' | '\\' | '#' | '~' | '|' | '\'' | '"' | '[' | ']' | '=' | ';' | ',' | '&' | '$' | '.' | '(' | ')' | '{' | '}' | '!' | '?' | '<' | '>' | ':' | '@' | '_' | '%' | 'ä' | 'ü' | 'ß' | 'ö';
-TEXT : [ a-zA-Z$ ];
+TEXT : [a-zA-Z$];
 NUMBER : '0'..'9'+;
 WHITESPACE : ( '\t' | '\r' | '\n' | '\u000C' )+;

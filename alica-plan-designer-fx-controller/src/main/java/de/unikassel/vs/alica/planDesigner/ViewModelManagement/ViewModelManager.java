@@ -89,8 +89,6 @@ public class ViewModelManager {
             element = createConditionViewModel((Condition) planElement);
         } else if (planElement instanceof BendPoint) {
             element = createBendPointViewModel((BendPoint) planElement);
-        } else if (planElement instanceof Configuration) {
-            element = createConfigurationViewModel((Configuration) planElement);
         } else {
             System.err.println("ViewModelManager: getSerializableViewModel for type " + planElement.getClass().toString() + " not implemented!");
         }
@@ -209,10 +207,8 @@ public class ViewModelManager {
             behaviourViewModel.getVariables().add((VariableViewModel) getViewModelElement(variable));
         }
 
-        for (Configuration configuration : behaviour.getConfigurations()) {
-            ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) getViewModelElement(configuration);
-            behaviourViewModel.getConfigurations().add(configurationViewModel);
-            configurationViewModel.setBehaviour(behaviourViewModel);
+        for (Map.Entry<String, String> keyValuePair : behaviour.getParameters().entrySet()) {
+            behaviourViewModel.modifyParameter(keyValuePair, null);
         }
 
         if (behaviour.getPreCondition() != null) {
@@ -384,6 +380,10 @@ public class ViewModelManager {
         transitionViewModel.setInState((StateViewModel) getViewModelElement(transition.getInState()));
         transitionViewModel.setOutState((StateViewModel) getViewModelElement(transition.getOutState()));
         transitionViewModel.setParentId(transition.getInState().getParentPlan().getId());
+        StateViewModel inStateViewModel = transitionViewModel.getInState();
+        StateViewModel outStateViewModel = transitionViewModel.getOutState();
+        inStateViewModel.getOutTransitions().add(transitionViewModel);
+        outStateViewModel.getInTransitions().add(transitionViewModel);
         if (transition.getPreCondition() != null) {
             ConditionViewModel conditionViewModel = (ConditionViewModel) getViewModelElement(transition.getPreCondition());
             conditionViewModel.setParentId(transition.getId());
@@ -455,17 +455,8 @@ public class ViewModelManager {
         return planViewModel;
     }
 
-    private ViewModelElement createConfigurationViewModel(Configuration configuration) {
-        ConfigurationViewModel configurationViewModel = new ConfigurationViewModel(configuration.getId()
-                , configuration.getName(), Types.CONFIGURATION);
-        // Accessing map directly to prevent endless recursion
-        configurationViewModel.setBehaviour((BehaviourViewModel) viewModelElements.get(configuration.getBehaviour().getId()));
-        configurationViewModel.getKeyValuePairs().putAll(configuration.getKeyValuePairs());
-
-        return configurationViewModel;
-    }
-
     public void removeElement(long parentId, ViewModelElement viewModelElement, Map<String, Long> relatedObjects) {
+
         switch (viewModelElement.getType()) {
             case Types.TASK:
                 ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
@@ -475,7 +466,19 @@ public class ViewModelManager {
             case Types.FAILURESTATE:
                 StateViewModel stateViewModel = (StateViewModel) viewModelElement;
                 PlanViewModel planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
-
+                if(stateViewModel.getEntryPoint() != null) {
+                    EntryPointViewModel entryPointVM = null;
+                    for (EntryPointViewModel entryPointViewModel: planViewModel.getEntryPoints()) {
+                        if(stateViewModel.getEntryPoint().getId() == entryPointViewModel.getId()) {
+                            entryPointViewModel.setState(null);
+                            entryPointVM = entryPointViewModel;
+                            stateViewModel.setEntryPoint(null);
+                        }
+                    }
+                    //to update gui
+                    planViewModel.getEntryPoints().remove(entryPointVM);
+                    planViewModel.getEntryPoints().add(entryPointVM);
+                }
                 planViewModel.getStates().remove(stateViewModel);
                 break;
             case Types.ENTRYPOINT:
@@ -510,6 +513,11 @@ public class ViewModelManager {
                     }
                 }
                 break;
+            case Types.SYNCHRONISATION:
+                SynchronisationViewModel synchronisationViewModel = (SynchronisationViewModel) viewModelElement;
+                planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
+                planViewModel.getSynchronisations().remove(synchronisationViewModel);
+                break;
             case Types.ANNOTATEDPLAN:
                 AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) viewModelElement;
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
@@ -532,20 +540,6 @@ public class ViewModelManager {
                     planViewModel.getStates().add(stateViewModel);
                 }else if(viewModelElement.getType().equals(Types.PLAN) || viewModelElement.getType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
-                }
-                break;
-            case Types.CONFIGURATION:
-                parentPlanElement = modelManager.getPlanElement(parentId);
-                ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) viewModelElement;
-                if(parentPlanElement instanceof State) {
-                    stateViewModel = (StateViewModel) getViewModelElement(parentPlanElement);
-                    stateViewModel.removeAbstractPlan(configurationViewModel);
-                    planViewModel = (PlanViewModel) getViewModelElement(modelManager.getPlanElement((stateViewModel.getParentId())));
-                    planViewModel.getStates().remove(stateViewModel);
-                    planViewModel.getStates().add(stateViewModel);
-                }else if(parentPlanElement instanceof Behaviour) {
-                    BehaviourViewModel behaviourViewModel = (BehaviourViewModel) getViewModelElement(parentPlanElement);
-                    behaviourViewModel.getConfigurations().remove(configurationViewModel);
                 }
                 break;
             case Types.VARIABLE:
@@ -612,10 +606,9 @@ public class ViewModelManager {
                 break;
             default:
                 System.err.println("ViewModelManager: Remove Element not supported for type: " + viewModelElement.getType());
-                //TODO: maybe handle other types
         }
 
-        if(viewModelElement.getType() != Types.TRANSITION && relatedObjects != null) {
+        if(viewModelElement.getType() != Types.TRANSITION && (relatedObjects == null || relatedObjects.isEmpty())) {
             viewModelElements.remove(viewModelElement.getId());
         }
     }
@@ -660,16 +653,6 @@ public class ViewModelManager {
                     stateViewModel.addAbstractPlan(abstractPlanViewModel);
                 } else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
-                }
-                break;
-            case Types.CONFIGURATION:
-                ConfigurationViewModel configurationViewModel = (ConfigurationViewModel) viewModelElement;
-                if (parentPlanElement instanceof State) {
-                    StateViewModel stateViewModel = (StateViewModel) parentViewModel;
-                    stateViewModel.addAbstractPlan(configurationViewModel);
-                }else if(parentPlanElement instanceof Behaviour) {
-                    BehaviourViewModel behaviourViewModel = (BehaviourViewModel) parentViewModel;
-                    behaviourViewModel.getConfigurations().add(configurationViewModel);
                 }
                 break;
             case Types.VARIABLE:
@@ -769,9 +752,29 @@ public class ViewModelManager {
             case Types.SUCCESSSTATE:
             case Types.FAILURESTATE:
                 StateViewModel stateViewModel = (StateViewModel) element;
-                stateViewModel.setXPosition(event.getUiElement().getX());
-                stateViewModel.setYPosition(event.getUiElement().getY());
+                if(event.getUiElement() != null) {
+                    stateViewModel.setXPosition(event.getUiElement().getX());
+                    stateViewModel.setYPosition(event.getUiElement().getY());
+                } else {
+                    stateViewModel.setXPosition(((StateViewModel) element).getXPosition());
+                    stateViewModel.setYPosition(((StateViewModel) element).getYPosition());
+                }
                 parentPlan.getStates().add(stateViewModel);
+
+                State statePlanElement = (State) modelManager.getPlanElement(stateViewModel.getId());
+                if(statePlanElement.getEntryPoint() != null){
+                    EntryPointViewModel updateEntryPoint = null;
+                    for (EntryPointViewModel entryPointViewModel: parentPlan.getEntryPoints()) {
+                        if(statePlanElement.getEntryPoint().getId() == entryPointViewModel.getId()){
+                            stateViewModel.setEntryPoint(entryPointViewModel);
+                            entryPointViewModel.setState(stateViewModel);
+                            updateEntryPoint = entryPointViewModel;
+                        }
+                    }
+                    //update gui
+                    parentPlan.getEntryPoints().remove(updateEntryPoint);
+                    parentPlan.getEntryPoints().add(updateEntryPoint);
+                }
                 break;
             case Types.TRANSITION:
                 Transition transition = (Transition) event.getElement();
@@ -779,6 +782,10 @@ public class ViewModelManager {
                 transitionViewModel.setInState((StateViewModel) getViewModelElement(transition.getInState()));
                 transitionViewModel.setOutState((StateViewModel) getViewModelElement(transition.getOutState()));
                 parentPlan.getTransitions().add((TransitionViewModel) element);
+                StateViewModel outStateViewModel = transitionViewModel.getOutState();
+                StateViewModel inStateViewModel = transitionViewModel.getInState();
+                inStateViewModel.getOutTransitions().add(transitionViewModel);
+                outStateViewModel.getInTransitions().add(transitionViewModel);
                 if(transition.getSynchronisation() != null) {
                     SynchronisationViewModel sViewModel = (SynchronisationViewModel) getViewModelElement(transition.getSynchronisation());
                     sViewModel.getTransitions().add(transitionViewModel);
@@ -786,9 +793,21 @@ public class ViewModelManager {
                 break;
             case Types.ENTRYPOINT:
                 EntryPointViewModel entryPointViewModel = (EntryPointViewModel) element;
-                entryPointViewModel.setXPosition(event.getUiElement().getX());
-                entryPointViewModel.setYPosition(event.getUiElement().getY());
+                if (event.getUiElement() != null) {
+                    entryPointViewModel.setXPosition(event.getUiElement().getX());
+                    entryPointViewModel.setYPosition(event.getUiElement().getY());
+                } else {
+                    entryPointViewModel.setXPosition(((EntryPointViewModel) element).getXPosition());
+                    entryPointViewModel.setYPosition(((EntryPointViewModel) element).getYPosition());
+                }
                 parentPlan.getEntryPoints().add((EntryPointViewModel) element);
+
+                EntryPoint ePoint = (EntryPoint) modelManager.getPlanElement(entryPointViewModel.getId());
+                if (ePoint.getState() != null) {
+                    stateViewModel = (StateViewModel) getViewModelElement(ePoint.getState());
+                    stateViewModel.setEntryPoint(entryPointViewModel);
+                    entryPointViewModel.setState(stateViewModel);
+                }
                 break;
             case Types.BENDPOINT:
                 transitionViewModel = (TransitionViewModel) element;
@@ -798,9 +817,21 @@ public class ViewModelManager {
                 break;
             case Types.SYNCHRONISATION: {
                 SynchronisationViewModel syncViewModel = (SynchronisationViewModel) element;
-                syncViewModel.setXPosition(event.getUiElement().getX());
-                syncViewModel.setYPosition(event.getUiElement().getY());
+                if(event.getUiElement() != null) {
+                    syncViewModel.setXPosition(event.getUiElement().getX());
+                    syncViewModel.setYPosition(event.getUiElement().getY());
+                } else {
+                    syncViewModel.setXPosition(((SynchronisationViewModel) element).getXPosition());
+                    syncViewModel.setYPosition(((SynchronisationViewModel) element).getYPosition());
+                }
                 parentPlan.getSynchronisations().add(syncViewModel);
+                Synchronisation synchronisation = (Synchronisation) modelManager.getPlanElement(syncViewModel.getId());
+                if(synchronisation.getSyncedTransitions().size() != 0) {
+                    for (Transition transition1: synchronisation.getSyncedTransitions()) {
+                        TransitionViewModel transitionViewModel1 = (TransitionViewModel) getViewModelElement(transition1);
+                        syncViewModel.getTransitions().add(transitionViewModel1);
+                    }
+                }
             } break;
             case Types.INITSTATECONNECTION:
                 Plan plan = (Plan) event.getElement();
@@ -895,15 +926,18 @@ public class ViewModelManager {
         }
     }
 
-    public void changeElementAttribute(ViewModelElement viewModelElement, String changedAttribute, Object newValue) {
+    public void changeElementAttribute(ViewModelElement viewModelElement, String changedAttribute, Object newValue, Object oldValue) {
         try {
-            BeanUtils.setProperty(viewModelElement, changedAttribute, newValue);
+            if (newValue instanceof Map.Entry || (viewModelElement instanceof  BehaviourViewModel && changedAttribute.equals("parameters"))) {
+                BehaviourViewModel behaviour = (BehaviourViewModel) viewModelElement;
+                behaviour.modifyParameter((Map.Entry<String, String>)newValue, (Map.Entry<String, String>)oldValue);
+            } else {
+                BeanUtils.setProperty(viewModelElement, changedAttribute, newValue);
+            }
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
-
-
 
     private void updatePlansInPlanViewModels(PlanViewModel planViewModel, ModelEventType type) {
         for(PlanType planType : modelManager.getPlanTypes()) {
@@ -913,7 +947,7 @@ public class ViewModelManager {
                 // Prevent double inclusions
                 if (type == ModelEventType.ELEMENT_ADDED && !planTypeViewModel.getAllPlans().contains(planViewModel)) {
                     planTypeViewModel.addPlanToAllPlans(planViewModel);
-                }else if(type == ModelEventType.ELEMENT_REMOVED) {
+                } else if(type == ModelEventType.ELEMENT_REMOVED) {
                     planTypeViewModel.removePlanFromAllPlans(planViewModel.getId());
                 }
             }

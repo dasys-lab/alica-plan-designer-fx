@@ -15,4 +15,5 @@ public interface IGuiModificationHandler {
     void handleUndo();
     void handleRedo();
     RepositoryViewModel getRepoViewModel();
+    void storeAll();
 }

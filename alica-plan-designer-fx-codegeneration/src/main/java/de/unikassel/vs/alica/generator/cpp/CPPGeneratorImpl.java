@@ -71,15 +71,42 @@ public class CPPGeneratorImpl implements IGenerator {
     @Override
     public void createBehaviour(Behaviour behaviour) {
         String destinationPath = cutDestinationPathToDirectory(behaviour);
-        useTemplateAndSaveResults(Paths.get(generatedSourcesManager.getSrcDir(), destinationPath, behaviour.getName() + ".cpp").toString(),
-                Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, behaviour.getName() + ".h").toString(),
-                behaviour,
-                xtendTemplates::behaviourHeader,
-                xtendTemplates::behaviourSource);
+
+        //DomainBehaviour
+        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, behaviour.getName() + behaviour.getId() + ".h").toString();
+        String fileContentHeader = xtendTemplates.behaviourConditionHeader(behaviour);
+        writeSourceFile(headerPath, fileContentHeader);
+
+        formatFile(headerPath);
+
+        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), destinationPath, behaviour.getName() + behaviour.getId() + ".cpp").toString();
+        String fileContentSource = xtendTemplates.behaviourConditionSource(behaviour, getActiveConstraintCodeGenerator());
+        writeSourceFile(srcPath, fileContentSource);
+
+        formatFile(srcPath);
+
+        //Behaviour
+        String headerPath2 = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, behaviour.getName()+ ".h").toString();
+        String fileContentHeader2 = xtendTemplates.behaviourHeader(behaviour);
+        writeSourceFile(headerPath2, fileContentHeader2);
+
+        formatFile(headerPath2);
+
+        String srcPath2 = Paths.get(generatedSourcesManager.getSrcDir(), destinationPath, behaviour.getName()+ ".cpp").toString();
+        String fileContentSource2 = xtendTemplates.behaviourSource(behaviour);
+        writeSourceFile(srcPath2, fileContentSource2);
+
+        formatFile(srcPath2);
+
+//        useTemplateAndSaveResults(Paths.get(generatedSourcesManager.getSrcDir(), destinationPath, behaviour.getName() + ".cpp").toString(),
+//                Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, behaviour.getName() + ".h").toString(),
+//                behaviour,
+//                xtendTemplates::behaviourHeader,
+//                xtendTemplates::behaviourSource);
     }
 
     @Override
-    public void createConditionCreator(List<Plan> plans, List<Condition> conditions) {
+    public void createConditionCreator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions) {
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "ConditionCreator.h").toString();
         String fileContentHeader = xtendTemplates.conditionCreatorHeader();
         writeSourceFile(headerPath, fileContentHeader);
@@ -87,7 +114,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "ConditionCreator.cpp").toString();
-        String fileContentSource = xtendTemplates.conditionCreatorSource(plans, conditions);
+        String fileContentSource = xtendTemplates.conditionCreatorSource(plans, behaviours, conditions);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -115,7 +142,7 @@ public class CPPGeneratorImpl implements IGenerator {
     }
 
     @Override
-    public void createConstraintCreator(List<Plan> plans, List<Condition> conditions) {
+    public void createConstraintCreator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions) {
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "ConstraintCreator.h").toString();
         String fileContentHeader = xtendTemplates.constraintCreatorHeader();
         writeSourceFile(headerPath, fileContentHeader);
@@ -123,7 +150,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "ConstraintCreator.cpp").toString();
-        String fileContentSource = xtendTemplates.constraintCreatorSource(plans, conditions);
+        String fileContentSource = xtendTemplates.constraintCreatorSource(plans, behaviours, conditions);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -182,6 +209,33 @@ public class CPPGeneratorImpl implements IGenerator {
                 LOG.error("Could not open/read lines for " + srcPath, e);
             }
         }
+    }
+
+    @Override
+    public void createConstraintsForBehaviour(Behaviour behaviour) {
+        String destinationPathWithoutName = cutDestinationPathToDirectory(behaviour);
+        String constraintHeaderPath = Paths.get(generatedSourcesManager.getIncludeDir(),
+                destinationPathWithoutName, "constraints").toString();
+        File cstrIncPathOnDisk = new File(constraintHeaderPath);
+        if (cstrIncPathOnDisk.exists() == false) {
+            cstrIncPathOnDisk.mkdir();
+        }
+        String headerPath = Paths.get(constraintHeaderPath, behaviour.getName() + behaviour.getId() + "Constraints.h").toString();
+        String fileContentHeader = xtendTemplates.constraintsHeader(behaviour);
+        writeSourceFile(headerPath, fileContentHeader);
+
+        formatFile(headerPath);
+
+        String constraintSourcePath = Paths.get(generatedSourcesManager.getSrcDir(), destinationPathWithoutName, "constraints").toString();
+        File cstrSrcPathOnDisk = new File(constraintSourcePath);
+        if (cstrSrcPathOnDisk.exists() == false) {
+            cstrSrcPathOnDisk.mkdir();
+        }
+
+        String srcPath = Paths.get(constraintSourcePath, behaviour.getName() + behaviour.getId() + "Constraints.cpp").toString();
+        String fileContentSource = xtendTemplates.constraintsSource(behaviour, getActiveConstraintCodeGenerator());
+        writeSourceFile(srcPath, fileContentSource);
+        formatFile(srcPath);
     }
 
     /**

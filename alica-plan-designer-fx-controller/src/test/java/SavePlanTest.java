@@ -923,8 +923,8 @@ public class SavePlanTest extends ApplicationTest {
                 .findAny()
                 .get();
 
-        List<de.unikassel.vs.alica.planDesigner.alicamodel.Configuration> configurations = behaviour.getConfigurations();
-        de.unikassel.vs.alica.planDesigner.alicamodel.Configuration behaviourConfiguration = configurations.get(0);
+//        List<de.unikassel.vs.alica.planDesigner.alicamodel.Configuration> configurations = behaviour.getConfigurations();
+//        de.unikassel.vs.alica.planDesigner.alicamodel.Configuration behaviourConfiguration = configurations.get(0);
 
         List<Task> tasks = modelManager.getTasks();
         Task task = tasks.stream()
@@ -960,7 +960,7 @@ public class SavePlanTest extends ApplicationTest {
         Assert.assertEquals(entryPoint.getId(), state1.getEntryPoint().getId());
         Assert.assertEquals(plan.getId(), state1.getParentPlan().getId());
         Assert.assertEquals(1, state1.getAbstractPlans().size());
-        Assert.assertEquals(behaviourConfiguration.getId(), state1.getAbstractPlans().get(0).getId());
+//        Assert.assertEquals(behaviourConfiguration.getId(), state1.getAbstractPlans().get(0).getId());
         Assert.assertEquals(0, state1.getVariableBindings().size());
         Assert.assertEquals(2, state1.getOutTransitions().size());
         Assert.assertTrue(state1.getOutTransitions().contains(transitionState1ToState2));
@@ -1052,11 +1052,11 @@ public class SavePlanTest extends ApplicationTest {
         Assert.assertNull(behaviour.getRuntimeCondition());
         Assert.assertNull(behaviour.getPostCondition());
 
-        Assert.assertEquals("default", behaviourConfiguration.getName());
-        Assert.assertEquals("", behaviourConfiguration.getComment());
-        Assert.assertEquals("", behaviourConfiguration.getRelativeDirectory());
-        Assert.assertEquals(0, behaviourConfiguration.getVariables().size());
-        Assert.assertEquals(behaviour.getId(), behaviourConfiguration.getBehaviour().getId());
-        Assert.assertEquals(0, behaviourConfiguration.getKeyValuePairs().size());
+//        Assert.assertEquals("default", behaviourConfiguration.getName());
+//        Assert.assertEquals("", behaviourConfiguration.getComment());
+//        Assert.assertEquals("", behaviourConfiguration.getRelativeDirectory());
+//        Assert.assertEquals(0, behaviourConfiguration.getVariables().size());
+//        Assert.assertEquals(behaviour.getId(), behaviourConfiguration.getBehaviour().getId());
+//        Assert.assertEquals(0, behaviourConfiguration.getKeyValuePairs().size());
     }
 }

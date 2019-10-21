@@ -51,7 +51,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
      */
     public void handleEditCommit(ListView.EditEvent<String> event) {
         if (event.getNewValue().matches(PlanElement.forbiddenCharacters)) {
-            LOG.info("Configuration name is not valid! Value is '" + event.getNewValue() + "'");
+            LOG.info("BehaviourConfiguration name is not valid! Value is '" + event.getNewValue() + "'");
             return;
         }
         if (!event.getNewValue().isEmpty()) {
@@ -154,7 +154,17 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     @Override
     public void save(String confName) {
         storeConfiguration(confName);
+        configManager.updateConfigurationForGui(confName);
         configManager.writeToDisk();
+    }
+
+    @Override
+    public void delete(String confName) {
+        boolean active = configManager.checkActive(confName);
+        if(!active) {
+            configManager.removeConfiguration(confName);
+            updateAvailableConfigurations();
+        }
     }
 
     @Override

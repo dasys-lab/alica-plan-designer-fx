@@ -6,6 +6,9 @@ import javafx.util.StringConverter;
 public class HasVariablesViewStringConverter extends StringConverter<AbstractPlanViewModel> {
     @Override
     public String toString(AbstractPlanViewModel object) {
+        if (object == null) {
+            return "Nothing Selected!";
+        }
         return object.getName();
     }
 

@@ -5,7 +5,6 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.BehaviourViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ConfigurationViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import javafx.beans.InvalidationListener;
@@ -45,20 +44,11 @@ public class AbstractPlanContainer extends Container {
     public void setupContainer() {
         Label label = new Label();
 
-        if(planElementViewModel.getType() == Types.CONFIGURATION) {
-            BehaviourViewModel parentBehaviour = ((ConfigurationViewModel) planElementViewModel).getBehaviour();
+        label.setText(planElementViewModel.getName());
+        this.planElementViewModel.nameProperty().addListener((observable, oldValue, newName) -> {
+            label.setText(newName);
+        });
 
-            label.setText(parentBehaviour.getName() + " - " + planElementViewModel.getName());
-            InvalidationListener updateName = obs
-                    -> label.setText(parentBehaviour.getName() + " - " + planElementViewModel.getName());
-            parentBehaviour.nameProperty().addListener(updateName);
-            planElementViewModel.nameProperty().addListener(updateName);
-        }else {
-            label.setText(planElementViewModel.getName());
-            this.planElementViewModel.nameProperty().addListener((observable, oldValue, newName) -> {
-                label.setText(newName);
-            });
-        }
 
         label.setGraphic(getGraphic(planElementViewModel.getType()));
         this.planElementViewModel.typeProperty().addListener((observable, oldValue, newType) -> {
