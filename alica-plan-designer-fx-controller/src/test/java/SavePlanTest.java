@@ -759,10 +759,13 @@ public class SavePlanTest extends ApplicationTest {
         String planNameId = plan.getName() + plan.getId();
         Plan plan2 = getPlanByName(planName2);
         String plan2NameId = plan2.getName() + plan2.getId();
+        Behaviour behaviour = getBehaviourById(behaviourName);
+        String behaviourNameId = behaviour.getName() + behaviour.getId();
 
         List<String> expectedFiles = Arrays.asList(
                 "include" + File.separator + "constraints" + File.separator + planNameId + "Constraints.h",
                 "include" + File.separator + "constraints" + File.separator + plan2NameId + "Constraints.h",
+                "include" + File.separator + "constraints" + File.separator + behaviourNameId + "Constraints.h",
                 "include" + File.separator + "DomainBehaviour.h",
                 "include" + File.separator + "DomainCondition.h",
                 "include" + File.separator + "UtilityFunctionCreator.h",
@@ -771,9 +774,11 @@ public class SavePlanTest extends ApplicationTest {
                 "include" + File.separator + "ConstraintCreator.h",
                 "include" + File.separator + planNameId + ".h",
                 "include" + File.separator + plan2NameId + ".h",
+                "include" + File.separator + behaviourNameId + ".h",
                 "include" + File.separator + behaviourName + ".h",
                 "src" + File.separator + "constraints" + File.separator + planNameId + "Constraints.cpp",
                 "src" + File.separator + "constraints" + File.separator + plan2NameId + "Constraints.cpp",
+                "src" + File.separator + "constraints" + File.separator + behaviourNameId + "Constraints.cpp",
                 "src" + File.separator + "DomainBehaviour.cpp",
                 "src" + File.separator + "DomainCondition.cpp",
                 "src" + File.separator + "UtilityFunctionCreator.cpp",
@@ -782,6 +787,7 @@ public class SavePlanTest extends ApplicationTest {
                 "src" + File.separator + "ConstraintCreator.cpp",
                 "src" + File.separator + planNameId + ".cpp",
                 "src" + File.separator + plan2NameId + ".cpp",
+                "src" + File.separator + behaviourNameId + ".cpp",
                 "src" + File.separator + behaviourName + ".cpp"
         );
 
@@ -839,6 +845,15 @@ public class SavePlanTest extends ApplicationTest {
         ArrayList<Plan> plans = modelManager.getPlans();
         return plans.stream()
                 .filter(p -> p.getName().equals(name))
+                .findAny()
+                .get();
+    }
+
+    private Behaviour getBehaviourById(String name) {
+        ModelManager modelManager = getModelManager();
+        ArrayList<Behaviour> behaviours = modelManager.getBehaviours();
+        return behaviours.stream()
+                .filter(b -> b.getName().equals(name))
                 .findAny()
                 .get();
     }
@@ -923,9 +938,6 @@ public class SavePlanTest extends ApplicationTest {
                 .findAny()
                 .get();
 
-//        List<de.unikassel.vs.alica.planDesigner.alicamodel.Configuration> configurations = behaviour.getConfigurations();
-//        de.unikassel.vs.alica.planDesigner.alicamodel.Configuration behaviourConfiguration = configurations.get(0);
-
         List<Task> tasks = modelManager.getTasks();
         Task task = tasks.stream()
                 .filter(t -> t.getName().equals(taskName))
@@ -960,7 +972,7 @@ public class SavePlanTest extends ApplicationTest {
         Assert.assertEquals(entryPoint.getId(), state1.getEntryPoint().getId());
         Assert.assertEquals(plan.getId(), state1.getParentPlan().getId());
         Assert.assertEquals(1, state1.getAbstractPlans().size());
-//        Assert.assertEquals(behaviourConfiguration.getId(), state1.getAbstractPlans().get(0).getId());
+        Assert.assertEquals(behaviour.getId(), state1.getAbstractPlans().get(0).getId());
         Assert.assertEquals(0, state1.getVariableBindings().size());
         Assert.assertEquals(2, state1.getOutTransitions().size());
         Assert.assertTrue(state1.getOutTransitions().contains(transitionState1ToState2));
@@ -1051,12 +1063,6 @@ public class SavePlanTest extends ApplicationTest {
         Assert.assertNull(behaviour.getPreCondition());
         Assert.assertNull(behaviour.getRuntimeCondition());
         Assert.assertNull(behaviour.getPostCondition());
-
-//        Assert.assertEquals("default", behaviourConfiguration.getName());
-//        Assert.assertEquals("", behaviourConfiguration.getComment());
-//        Assert.assertEquals("", behaviourConfiguration.getRelativeDirectory());
-//        Assert.assertEquals(0, behaviourConfiguration.getVariables().size());
-//        Assert.assertEquals(behaviour.getId(), behaviourConfiguration.getBehaviour().getId());
-//        Assert.assertEquals(0, behaviourConfiguration.getKeyValuePairs().size());
+        Assert.assertEquals(Collections.<String, String>emptyMap(), behaviour.getParameters());
     }
 }
