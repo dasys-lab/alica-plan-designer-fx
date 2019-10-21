@@ -309,6 +309,7 @@ public class SavePlanTest extends ApplicationTest {
 
     private void setCardinality() {
         doubleClickOn(entryPointContainerId);
+        sleep(500);
         moveTo("minCardinality");
         clickOn("0");
         write(String.valueOf(EpMinCardinality));
@@ -340,6 +341,7 @@ public class SavePlanTest extends ApplicationTest {
 
     private void setPrecondition(Node transition, String name) {
         doubleClickOn(transition);
+        sleep(500);
 
         moveTo(propertySheetId);
         clickOn(i18NRepo.getString("label.caption.preCondtions"));
@@ -525,7 +527,8 @@ public class SavePlanTest extends ApplicationTest {
 
         // choose created task
         clickOn("#taskComboBox");
-        clickOn(taskName);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         clickOn("#confirmTaskChoiceButton");
 
         dropElement();
@@ -544,6 +547,7 @@ public class SavePlanTest extends ApplicationTest {
     private void setContainerName(String containerId, String oldName, String newName) {
         Node container = getContainerNode(containerId, oldName);
         doubleClickOn(container);
+        sleep(500);
         moveTo(propertySheetId);
         Node nameField = lookup(oldName).queryAll().stream()
                 .filter(n -> n instanceof TextField)
