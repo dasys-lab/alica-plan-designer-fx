@@ -24,6 +24,7 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
         </plugins>
@@ -34,6 +35,7 @@
         <module>alica-plan-designer-fx-controller</module>
         <module>alica-plan-designer-fx-codegeneration</module>
         <module>alica-plan-designer-fx-modelmanagement</module>
+        <module>alica-plan-designer-fx-default-plugin</module>
     </modules>
     <dependencies>
         <dependency>
@@ -62,5 +64,4 @@
             <version>11</version>
         </dependency>
     </dependencies>
-
 </project>

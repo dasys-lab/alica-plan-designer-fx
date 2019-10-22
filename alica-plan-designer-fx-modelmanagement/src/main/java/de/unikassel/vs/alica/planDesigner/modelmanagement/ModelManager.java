@@ -171,7 +171,7 @@ public class ModelManager implements Observer {
                 return taskRepository;
             }
         } else if (split[split.length - 1].equals(Extensions.ROLESET)) {
-            if (roleSet.getName().equals(split[0])) {
+            if (roleSet != null && roleSet.getName().equals(split[0])) {
                 return roleSet;
             }
         } else {
@@ -364,7 +364,7 @@ public class ModelManager implements Observer {
     }
 
     public <T> T parseFile(File modelFile, Class<T> type) {
-        if (modelFile.length() == 0 || modelFile.isDirectory() || !modelFile.exists() || !fileMatchesFolder(modelFile)) {
+        if (modelFile == null || modelFile.isDirectory() || !modelFile.exists() || !fileMatchesFolder(modelFile)) {
             throw new RuntimeException("ModelManager: The file " + modelFile + " does not exist!");
         }
         T planElement;

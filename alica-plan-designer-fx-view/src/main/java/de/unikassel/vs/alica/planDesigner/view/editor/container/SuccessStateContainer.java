@@ -8,6 +8,7 @@ public class SuccessStateContainer extends StateContainer {
 
     public SuccessStateContainer(StateViewModel state, PlanTab planTab) {
         super(state, planTab);
+        this.setId("SuccessStateContainer");
     }
 
     @Override

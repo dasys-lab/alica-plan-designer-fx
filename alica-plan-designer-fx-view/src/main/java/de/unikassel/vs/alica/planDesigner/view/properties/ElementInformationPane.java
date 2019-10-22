@@ -49,6 +49,7 @@ public class ElementInformationPane extends TitledPane {
         guiModificationHandler = handler;
 
         propertySheet = new PropertySheet();
+        propertySheet.setId("PropertySheet");
         propertySheet.setModeSwitcherVisible(false);
 
         propertiesTab = new Tab(i18NRepo.getString("label.caption.properties"));

@@ -303,6 +303,7 @@ public class ConfigurationWindowController implements Initializable {
     }
 
     private void setupAvailableConfigurationsListView() {
+        availableWorkspacesListView.setId("availableWorkspacesListView");
         availableWorkspacesListView.setItems(FXCollections.observableArrayList());
         availableWorkspacesListView.setEditable(true);
         availableWorkspacesListView.setCellFactory(TextFieldListCell.forListView());
@@ -327,6 +328,15 @@ public class ConfigurationWindowController implements Initializable {
         defaultPluginComboBox.setItems(FXCollections.observableArrayList());
         defaultPluginComboBox.getSelectionModel().selectedItemProperty().addListener(pluginEventHandler);
         defaultPluginComboBox.valueProperty().addListener(pluginEventHandler);
+        pluginsFolderTextField.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                String path = pluginsFolderTextField.getText();
+                File file = new File(path);
+                if (file.exists() && file.isDirectory()) {
+                    updateAvailablePlugins();
+                }
+            }
+        });
         updateAvailablePlugins();
     }
 
@@ -373,6 +383,7 @@ public class ConfigurationWindowController implements Initializable {
      **/
     public void selectActiveConfig(String selectedConfName) {
         activeConfLabel.setText(selectedConfName);
+        activeConfLabel.setId("activeConfLabel");
         //availableWorkspacesListView.getSelectionModel().select(selectedConfName);
     }
 

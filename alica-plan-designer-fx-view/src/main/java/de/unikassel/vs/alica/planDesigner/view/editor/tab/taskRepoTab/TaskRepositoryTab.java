@@ -81,8 +81,10 @@ public class TaskRepositoryTab extends EditorTab {
         // create Button and Label for creating new Task
         HBox createTaskHBox = new HBox();
         Button createTaskButton = new Button();
+        createTaskButton.setId("createTaskButton");
         createTaskButton.setText(i18NRepo.getString("action.create.task"));
         TextField taskNameField = new TextField();
+        taskNameField.setId("newTaskNameTextField");
         createTaskButton.setOnAction(e -> {
             if (taskNameField.getText() != null && !taskNameField.getText().isEmpty()) {
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.TASK, taskNameField.getText());

@@ -257,7 +257,7 @@ public final class ConfigurationManager {
     }
 
     public void updateConfigurationForGui(String confName){
-        if (confName != null && !confName.isEmpty() && activeConfiguration.getName().equals(confName)) {
+        if (confName != null && !confName.isEmpty() && activeConfiguration != null && activeConfiguration.getName().equals(confName)) {
             for (Configuration conf : configurations) {
                 if (conf.getName().equals(confName)) {
                     activeConfiguration = conf;
@@ -270,6 +270,7 @@ public final class ConfigurationManager {
             }
         }
     }
+
     public boolean checkActive(String confName) {
         if(activeConfiguration.getName().equals(confName)){
             return true;
@@ -328,13 +329,16 @@ public final class ConfigurationManager {
     }
 
     // WINDOW TOOLS
-    public void saveWindowPreferences(Double height, Double width, Double x, Double y) {
-        try {
-            windowConfigProperties.setProperty(WINDOW_HEIGHT, String.valueOf(height));
-            windowConfigProperties.setProperty(WINDOW_WIDTH, String.valueOf(width));
-            windowConfigProperties.setProperty(WINDOW_X, String.valueOf(x));
-            windowConfigProperties.setProperty(WINDOW_Y, String.valueOf(y));
+    public void setWindowPreferences(Double height, Double width, Double x, Double y) {
+        windowConfigProperties.setProperty(WINDOW_HEIGHT, String.valueOf(height));
+        windowConfigProperties.setProperty(WINDOW_WIDTH, String.valueOf(width));
+        windowConfigProperties.setProperty(WINDOW_X, String.valueOf(x));
+        windowConfigProperties.setProperty(WINDOW_Y, String.valueOf(y));
+    }
 
+    public void saveWindowPreferences(Double height, Double width, Double x, Double y) {
+        setWindowPreferences(height, width, x, y);
+        try {
             // actual write to file
             windowConfigProperties.store(new FileOutputStream(windowConfigFile), " Plan Designer - window configuration file");
         } catch (IOException e) {
@@ -345,5 +349,9 @@ public final class ConfigurationManager {
 
     public Properties getWindowPreferences() {
         return windowConfigProperties;
+    }
+
+    public File getPlanDesignerConfigFolder() {
+        return planDesignerConfigFolder;
     }
 }

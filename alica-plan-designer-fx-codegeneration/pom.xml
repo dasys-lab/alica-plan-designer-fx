@@ -5,12 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-            <groupId>de.unikassel.vs.alica</groupId>
-            <artifactId>plan_designer</artifactId>
-            <version>1.0-SNAPSHOT</version>
+        <groupId>de.unikassel.vs.alica</groupId>
+        <artifactId>plan_designer</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>de.unikassel.vs.alica</groupId>
     <artifactId>codegeneration</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -148,11 +147,6 @@
             <groupId>org.eclipse.xtext</groupId>
             <artifactId>org.eclipse.xtext.xbase.lib</artifactId>
             <version>2.12.0.M1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.xtend</groupId>
-            <artifactId>org.eclipse.xtend.lib</artifactId>
-            <version>2.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.antlr</groupId>

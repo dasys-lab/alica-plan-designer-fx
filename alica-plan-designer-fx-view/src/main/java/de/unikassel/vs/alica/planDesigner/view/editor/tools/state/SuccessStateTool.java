@@ -27,6 +27,7 @@ public class SuccessStateTool extends StateTool {
         Tooltip tooltip = new Tooltip(stateType);
         toolButton.setTooltip(tooltip);
         toolButton.setIcon(stateType);
+        toolButton.setId("SuccessStateToolButton");
         setToolButton(toolButton);
         imageCursor = new AlicaCursor(AlicaCursor.Type.successstate, 8, 8);
         forbiddenCursor = new AlicaCursor(AlicaCursor.Type.forbidden_successstate, 8, 8);

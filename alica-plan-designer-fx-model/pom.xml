@@ -9,6 +9,7 @@
         <groupId>de.unikassel.vs.alica</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>model</artifactId>
     <version>1.0-SNAPSHOT</version>
 
