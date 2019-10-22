@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.events.ConfigEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IConfigurationEventHandler;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -52,6 +53,13 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     public void handleEditCommit(ListView.EditEvent<String> event) {
         if (event.getNewValue().matches(PlanElement.forbiddenCharacters)) {
             LOG.info("BehaviourConfiguration name is not valid! Value is '" + event.getNewValue() + "'");
+
+            //InfoBox for not valid Input
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Not valid Input");
+            alert.setHeaderText(null);
+            alert.setContentText("Special characters are not allowed!");
+            alert.showAndWait();
             return;
         }
         if (!event.getNewValue().isEmpty()) {
