@@ -1,51 +1,59 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.tab.debugTab;
 
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaMessageHandler;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
-import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DebugTab extends EditorTab {
 
     public static final int SPACING = 10;
 
-    private IAlicaMessageHandler alicaMessageHandler;
+    private IAlicaHandler alicaHandler;
 
     // JavaFX stuff
-    private final VBox allAgentsVBox;
-    private final TextArea debugTextArea;
-    private final Button runButton;
+    private VBox allAgentsVBox;
+    private TextArea debugTextArea;
+    private Button runButton;
 
-    // Processes
-    private Process roscoreProcess;
-    private Process pdAlicaRunnerProcess;
+    // Process indicator
+    private boolean isRunning;
 
-    public DebugTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane, IAlicaMessageHandler handler) {
+    // Globals.conf parsed
+    private Map<Agent, Boolean> availableAgents;
+
+    public DebugTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane, IAlicaHandler handler) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
-        alicaMessageHandler = handler;
+        alicaHandler = handler;
 
+        availableAgents = new HashMap<>();
+        parseGlobals(Path.of("/opt/pd-debug/cnc-turtlebots/etc/Globals.conf")); // TODO no hardcoded paths
 
+        draw();
+    }
+
+    private void draw() {
         debugTextArea = new TextArea();
         debugTextArea.setEditable(false);
 
@@ -58,11 +66,20 @@ public class DebugTab extends EditorTab {
         };
         System.setOut(new PrintStream(stream, true));
 
-        Button addAgentButton = new Button("Add Agent");
-        addAgentButton.setOnAction(this::onAddAgentClicked);
-
         allAgentsVBox = new VBox(SPACING);
-        allAgentsVBox.getChildren().add(addAgentButton);
+
+        for (Agent agent : availableAgents.keySet()) {
+            HBox hBox = new HBox(SPACING);
+
+            Label nameLabel = new Label(agent.name + " (id=" + agent.id + "; defaultRole=" + agent.defaultRole + "; speed=" + agent.speed + ")");
+            CheckBox checkBox = new CheckBox();
+            checkBox.setSelected(availableAgents.get(agent));
+
+            checkBox.selectedProperty().addListener((observableValue, oldValue, newValue) -> availableAgents.put(agent, newValue));
+
+            hBox.getChildren().addAll(checkBox, nameLabel);
+            allAgentsVBox.getChildren().addAll(hBox);
+        }
 
         runButton = new Button("Run");
         runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/run16x16.png"))));
@@ -83,73 +100,19 @@ public class DebugTab extends EditorTab {
         this.elementInformationPane.setContent(hbox);
     }
 
-    private void onAddAgentClicked(ActionEvent event) {
-
-        TextField textFieldName = new TextField();
-        textFieldName.setPromptText("Agent Name");
-
-        ComboBox<String> comboBox = new ComboBox<>(FXCollections.observableArrayList("Assistant", "Transporter"));
-        comboBox.getSelectionModel().clearAndSelect(0);
-        // TODO get roles from repository
-
-        Button deleteButton = new Button("X");
-        HBox hBox = new HBox(SPACING);
-
-        deleteButton.setOnAction(e -> this.onAgentHBoxDeleted(e, hBox));
-        hBox.getChildren().addAll(deleteButton, textFieldName, comboBox);
-
-        allAgentsVBox.getChildren().add(allAgentsVBox.getChildrenUnmodifiable().size() - 1, hBox);
-
-    }
-
-    private void onAgentHBoxDeleted(ActionEvent event, HBox hBox) {
-        allAgentsVBox.getChildren().remove(hBox);
-    }
-
     private void onRunClicked(ActionEvent event) {
-        if (pdAlicaRunnerProcess == null || roscoreProcess == null) {
-            try {
-                // start roscore, because we still need it
-                ProcessBuilder pb = new ProcessBuilder("bash", "-c", "echo 'Sourcing setup.bash'; source /opt/ros/melodic/setup.bash; echo 'Starting roscore...'; roscore");
-                pb.environment().put("PATH", pb.environment().get("PATH") + ":/opt/ros/melodic/bin");
-                pb.inheritIO();
-                roscoreProcess = pb.start();
-
-                // Load pd_alica_runner
-                pb = new ProcessBuilder("bash", "-c", "echo Starting pd_alica_runner...; /opt/pd-debug/ttb-ws/devel/lib/pd_alica_runner/pd_alica_runner -m ServeMaster -rd  /opt/pd-debug/cnc-turtlebots/etc/roles/ -r ServiceRobotsRoleSet -sim");
-                pb.directory(new File("/opt/pd-debug/cnc-turtlebots"));
-                pb.environment().put("PATH", pb.environment().getOrDefault("PATH", "") + ":/opt/ros/melodic/bin");
-                pb.environment().put("ROBOT", "donatello");
-                pb.environment().put("LD_LIBRARY_PATH", "/opt/pd-debug/ttb-ws/devel/lib:/opt/ros/melodic/lib" + pb.environment().getOrDefault("LD_LIBRARY_PATH", ""));
-                pb.environment().put("ROS_MASTER_URI", "http://localhost:11311");
-                pb.inheritIO();
-                pdAlicaRunnerProcess = pb.start();
-
-                // if everything worked, change the run button to a stop button
+        if (!isRunning) {
+            isRunning = alicaHandler.runAlica();
+            if (isRunning) {
                 runButton.setText("Stop");
                 runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/stop16x16.png"))));
-
-            } catch (Exception e) {
-                System.err.println("Could not load roscore :(");
-                e.printStackTrace();
             }
         } else {
-            try {
-                pdAlicaRunnerProcess.destroyForcibly();
-                pdAlicaRunnerProcess.waitFor();
-                roscoreProcess.destroyForcibly();
-                roscoreProcess.waitFor();
-
-                System.out.println("Destroyed both processes.");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            // change the stop button to a start button
+            alicaHandler.stopAlica();
+            isRunning = false;
             runButton.setText("Run");
             runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/run16x16.png"))));
         }
-
     }
 
     private void simulate(ActionEvent event) {
@@ -159,7 +122,7 @@ public class DebugTab extends EditorTab {
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
-                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                alicaHandler.handleAlicaMessageReceived(8765,
                         "ServeMaster",
                         "ServeMaster",
                         "Stop",
@@ -167,7 +130,7 @@ public class DebugTab extends EditorTab {
                         "DefaultTask",
                         new long[]{8765});
                 Thread.sleep(10);
-                alicaMessageHandler.handleAlicaMessageReceived(5678,
+                alicaHandler.handleAlicaMessageReceived(5678,
                         "ServeMaster",
                         "PutDown",
                         "DriveToPoint",
@@ -175,7 +138,7 @@ public class DebugTab extends EditorTab {
                         "DefaultTask",
                         new long[]{5678});
                 Thread.sleep(2500);
-                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                alicaHandler.handleAlicaMessageReceived(8765,
                         "ServeMaster",
                         "ServeMaster",
                         "Serve",
@@ -183,7 +146,7 @@ public class DebugTab extends EditorTab {
                         "DefaultTask",
                         new long[]{8765});
                 Thread.sleep(2500);
-                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                alicaHandler.handleAlicaMessageReceived(8765,
                         "ServeMaster",
                         "ServeMaster",
                         "Charge",
@@ -191,7 +154,7 @@ public class DebugTab extends EditorTab {
                         "DefaultTask",
                         new long[]{8765});
                 Thread.sleep(2500);
-                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                alicaHandler.handleAlicaMessageReceived(8765,
                         "ServeMaster",
                         "Serve",
                         "WaitForTask",
@@ -199,7 +162,7 @@ public class DebugTab extends EditorTab {
                         "DefaultTask",
                         new long[]{8765});
                 Thread.sleep(2500);
-                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                alicaHandler.handleAlicaMessageReceived(8765,
                         "ServeMaster",
                         "Serve",
                         "DriveToPOI",
@@ -207,7 +170,7 @@ public class DebugTab extends EditorTab {
                         "DefaultTask",
                         new long[]{8765});
                 Thread.sleep(2500);
-                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                alicaHandler.handleAlicaMessageReceived(8765,
                         "ServeMaster",
                         "Serve",
                         "WaitForTask",
@@ -215,7 +178,7 @@ public class DebugTab extends EditorTab {
                         "DefaultTask",
                         new long[]{8765});
                 Thread.sleep(2500);
-                alicaMessageHandler.handleAlicaMessageReceived(8765,
+                alicaHandler.handleAlicaMessageReceived(8765,
                         "ServeMaster",
                         "Serve",
                         "SearchFor",
@@ -228,6 +191,56 @@ public class DebugTab extends EditorTab {
         new Thread(task).start();
     }
 
+    private void parseGlobals(Path pathToGlobals) {
+        try {
+            List<String> globals = Files.readAllLines(pathToGlobals);
+
+            globals.replaceAll(s -> s.strip());
+            globals.removeIf(s -> s.isEmpty());
+            globals.removeIf(s -> s.startsWith("#"));
+
+            List<String> teams = globals.subList(globals.indexOf("[Team]") + 1, globals.indexOf("[!Team]"));
+
+            while (!teams.isEmpty())
+            {
+                String name = teams.get(0).replace("[", "").replace("]", "");
+                Agent agent = new Agent();
+                agent.name = name;
+                List<String> agentAttributes = teams.subList(0, teams.indexOf("[!" + name + "]") + 1);
+
+                // Get the id, which is given like 'ID = 1', or else set it to 0
+                agent.id = Short.parseShort(agentAttributes.stream()
+                        .filter(s -> s.startsWith("ID"))
+                        .map(s -> s.replaceAll(" ", ""))
+                        .findFirst()
+                        .orElse("ID=0").split("=")[1]);
+
+                agent.defaultRole = agentAttributes.stream()
+                        .filter(s -> s.startsWith("DefaultRole"))
+                        .map(s -> s.replaceAll(" ", ""))
+                        .findFirst()
+                        .orElse("DefaultRole=None").split("=")[1];
+
+                agent.speed = agentAttributes.stream()
+                        .filter(s -> s.startsWith("Speed"))
+                        .map(s -> s.replaceAll(" ", ""))
+                        .findFirst()
+                        .orElse("Speed=Fast").split("=")[1];
+
+                availableAgents.put(agent, false);
+
+                // Delete this agent from team
+                while (!teams.get(0).equals("[!" + name + "]")) {
+                    teams.remove(0);
+                }
+                // Delete [!name] tag
+                teams.remove(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void save() {
     }
@@ -237,14 +250,22 @@ public class DebugTab extends EditorTab {
         return null;
     }
 
-
-
-    public void setAlicaMessageHandler(IAlicaMessageHandler alicaMessageHandler) {
-        this.alicaMessageHandler = alicaMessageHandler;
+    public void setAlicaHandler(IAlicaHandler alicaHandler) {
+        this.alicaHandler = alicaHandler;
     }
 
     @Override
     public void setOnCloseRequest(EventHandler<Event> value) {
         super.setOnCloseRequest(value);
+    }
+
+    private static class Agent {
+        short id;
+        String name, defaultRole, speed;
+
+        @Override
+        public String toString() {
+            return "Agent(name=" + name + ";id=" + id + ";defaultRole=" + defaultRole + ";speed=" + speed + ")";
+        }
     }
 }

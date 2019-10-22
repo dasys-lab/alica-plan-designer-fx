@@ -2,7 +2,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaMessageHandler;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
@@ -109,7 +109,7 @@ public class MainWindowController implements Initializable {
     private ConfigurationWindowController configWindowController;
     private IGuiStatusHandler guiStatusHandler;
     private IGuiModificationHandler guiModificationHandler;
-    private IAlicaMessageHandler alicaMessageHandler;
+    private IAlicaHandler alicaHandler;
 
     //--------------------------------------------------------------------------------------------
 //  GETTER & SETTER
@@ -139,8 +139,8 @@ public class MainWindowController implements Initializable {
         return guiModificationHandler;
     }
 
-    public IAlicaMessageHandler getAlicaMessageHandler() {
-        return alicaMessageHandler;
+    public IAlicaHandler getAlicaHandler() {
+        return alicaHandler;
     }
 
     public EditorTabPane getEditorTabPane() {
@@ -168,8 +168,8 @@ public class MainWindowController implements Initializable {
         this.guiModificationHandler = creationHandler;
     }
 
-    public void setAlicaMessageHandler(IAlicaMessageHandler alicaMessageHandler) {
-        this.alicaMessageHandler = alicaMessageHandler;
+    public void setAlicaHandler(IAlicaHandler alicaHandler) {
+        this.alicaHandler = alicaHandler;
     }
 
     public Text getStatusText() {
@@ -192,7 +192,7 @@ public class MainWindowController implements Initializable {
 
         repositoryTabPane.setGuiModificationHandler(guiModificationHandler);
         editorTabPane.setGuiModificationHandler(guiModificationHandler);
-        editorTabPane.setAlicaMessageHandler(alicaMessageHandler);
+        editorTabPane.setAlicaHandler(alicaHandler);
 
         // propertyAndStatusTabPane.init(editorTabPane);
 
@@ -234,7 +234,7 @@ public class MainWindowController implements Initializable {
         // -- DEBUG MENU --
         MenuItem debugItem = new MenuItem("Debug");
         debugItem.setOnAction(event -> {
-            openFile(new DebugViewModel(123912381, "Debug", Types.DEBUG));
+            openFile(new DebugViewModel(123912381, "Debug", Types.DEBUG, ""));
         });
         fileMenu.getItems().addAll(debugItem);
         menus.add(fileMenu);

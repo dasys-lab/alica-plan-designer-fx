@@ -13,7 +13,7 @@ import de.unikassel.vs.alica.planDesigner.converter.CustomPlanElementConverter;
 import de.unikassel.vs.alica.planDesigner.converter.CustomStringConverter;
 import de.unikassel.vs.alica.planDesigner.events.*;
 import de.unikassel.vs.alica.planDesigner.filebrowser.FileSystemEventHandler;
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaMessageHandler;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
@@ -46,6 +46,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ import java.util.Map;
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, IAlicaMessageHandler {
+public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, IAlicaHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -90,7 +91,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
         mainWindowController.setGuiModificationHandler(this);
-        mainWindowController.setAlicaMessageHandler(this);
+        mainWindowController.setAlicaHandler(this);
 
         setupConfigGuiStuff();
 
@@ -734,5 +735,55 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         });
 
+    }
+
+    private Process roscoreProcess;
+    private Process pdAlicaRunnerProcess; // needs more than one process
+
+    @Override
+    public boolean runAlica() {
+        String alicaEnginePath = configurationManager.getAlicaEnginePath();
+        // TODO change hardcoded paths to path from config
+        try {
+            // start roscore, because we still need it
+            ProcessBuilder pb = new ProcessBuilder("bash", "-c", "echo 'Sourcing setup.bash'; source /opt/ros/melodic/setup.bash; echo 'Starting roscore...'; roscore");
+            pb.environment().put("PATH", pb.environment().get("PATH") + ":/opt/ros/melodic/bin");
+            pb.inheritIO();
+            roscoreProcess = pb.start();
+
+            // Load pd_alica_runner
+            pb = new ProcessBuilder("bash", "-c", "echo Starting pd_alica_runner...; /opt/pd-debug/ttb-ws/devel/lib/pd_alica_runner/pd_alica_runner -m ServeMaster -rd  /opt/pd-debug/cnc-turtlebots/etc/roles/ -r ServiceRobotsRoleSet -sim");
+            pb.directory(new File("/opt/pd-debug/cnc-turtlebots"));
+            pb.environment().put("PATH", pb.environment().getOrDefault("PATH", "") + ":/opt/ros/melodic/bin");
+            pb.environment().put("ROBOT", "donatello");
+            pb.environment().put("LD_LIBRARY_PATH", "/opt/pd-debug/ttb-ws/devel/lib:/opt/ros/melodic/lib" + pb.environment().getOrDefault("LD_LIBRARY_PATH", ""));
+            pb.environment().put("ROS_MASTER_URI", "http://localhost:11311");
+            pb.inheritIO();
+            pdAlicaRunnerProcess = pb.start();
+
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("Could not load roscore :(");
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public void stopAlica() {
+        if (roscoreProcess == null || pdAlicaRunnerProcess == null) {
+            return;
+        } else {
+            if (pdAlicaRunnerProcess != null) {
+                pdAlicaRunnerProcess.destroyForcibly();
+                pdAlicaRunnerProcess = null;
+            }
+            if (roscoreProcess != null) {
+                roscoreProcess.destroyForcibly();
+                roscoreProcess = null;
+            }
+        }
     }
 }
