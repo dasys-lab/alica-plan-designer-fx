@@ -524,7 +524,7 @@ public class SavePlanTest extends ApplicationTest {
         // place entryPoint
         clickOn("#EntryPointToolButton");
         clickOn(freePlanContentPos());
-
+        sleep(500);
         // choose created task
         clickOn("#taskComboBox");
         type(KeyCode.DOWN);
