@@ -790,14 +790,14 @@ public class ModelManager implements Observer {
                 makeRelativeDirectory(newAbsoluteDirectory, elementToMove.getName() + "." + ending), previousPath);
 
         // 4. Serialize file to file system
-        serializeToDisk(elementToMove, true);
+        serializeToDisk(elementToMove, false);
 
         // 5. Update external references to file
         ArrayList<PlanElement> usages = getUsages(elementToMove.getId());
         for (PlanElement planElement : usages) {
             if (planElement instanceof SerializablePlanElement) {
                 SerializablePlanElement serializablePlanElement = (SerializablePlanElement) planElement;
-                serializeToDisk(serializablePlanElement, true);
+                serializeToDisk(serializablePlanElement, false);
             }
         }
 
