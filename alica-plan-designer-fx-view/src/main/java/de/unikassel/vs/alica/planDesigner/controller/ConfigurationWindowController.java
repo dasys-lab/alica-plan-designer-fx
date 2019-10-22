@@ -46,6 +46,13 @@ public class ConfigurationWindowController implements Initializable {
     @FXML
     private Button clangFormatFileButton;
 
+    @FXML
+    private Label alicaEngineRunnerLabel;
+    @FXML
+    private TextField alicaEngineRunnerTextField;
+    @FXML
+    private Button alicaEngineRunnerFileButton;
+
 
     // ---- CONFIGURATION MANAGEMENT ----
     @FXML
@@ -180,6 +187,10 @@ public class ConfigurationWindowController implements Initializable {
         sourceCodeEditorTextField.setText(sourceCodeEditorPath);
     }
 
+    public void setAlicaEngineExecutable(String alicaEngineExecutable) {
+        alicaEngineRunnerTextField.setText(alicaEngineExecutable);
+    }
+
     public void setHandler(IConfigurationEventHandler configEventHandler) {
         this.configEventHandler = configEventHandler;
     }
@@ -264,6 +275,7 @@ public class ConfigurationWindowController implements Initializable {
         externalToolsTitledPane.setText(i18NRepo.getString("label.config.externalTools"));
         clangFormatLabel.setText(i18NRepo.getString("label.config.clangFormatter") + ":");
         sourceCodeEditorLabel.setText(i18NRepo.getString("label.config.sourceCodeEditor") + ":");
+        alicaEngineRunnerLabel.setText(i18NRepo.getString("label.config.alicaEngineExecutable") + ":");
 
         workspaceManagementTitledPane.setText(i18NRepo.getString("label.config.configurationManagement"));
         availableWorkspacesLabel.setText(i18NRepo.getString("label.config.availableConfigurations") + ":");
@@ -296,6 +308,7 @@ public class ConfigurationWindowController implements Initializable {
         genSourceFolderFileButton.setOnAction(e -> makeDirectoryChooserField(genSourceFolderTextField));
         sourceCodeEditorFileButton.setOnAction(e -> makeFileChooserField(sourceCodeEditorTextField));
         clangFormatFileButton.setOnAction(e -> makeFileChooserField(clangFormatTextField));
+        alicaEngineRunnerFileButton.setOnAction(e -> makeFileChooserField(alicaEngineRunnerTextField));
         pluginsFolderFileButton.setOnAction(e -> {
             makeDirectoryChooserField(pluginsFolderTextField);
             updateAvailablePlugins();

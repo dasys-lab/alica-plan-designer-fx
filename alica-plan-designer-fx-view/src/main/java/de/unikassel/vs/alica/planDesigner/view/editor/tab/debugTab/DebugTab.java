@@ -21,7 +21,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,16 +29,22 @@ import java.io.PrintStream;
 public class DebugTab extends EditorTab {
 
     public static final int SPACING = 10;
+
     private IAlicaMessageHandler alicaMessageHandler;
+
+    // JavaFX stuff
     private final VBox allAgentsVBox;
     private final TextArea debugTextArea;
+    private final Button runButton;
+
+    // Processes
     private Process roscoreProcess;
     private Process pdAlicaRunnerProcess;
-    private final Button runButton;
 
     public DebugTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane, IAlicaMessageHandler handler) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
         alicaMessageHandler = handler;
+
 
         debugTextArea = new TextArea();
         debugTextArea.setEditable(false);
@@ -52,33 +57,6 @@ public class DebugTab extends EditorTab {
             }
         };
         System.setOut(new PrintStream(stream, true));
-
-//        HBox topic = new HBox();
-//        Label labelTopic = new Label("Topic:");
-//        TextField textfieldTopic = new TextField();
-//        topic.getChildren().addAll(labelTopic, textfieldTopic);
-//        topic.setSpacing(10);
-//        HBox.setHgrow(textfieldTopic, Priority.ALWAYS);
-//
-//        HBox message = new HBox();
-//        Label labelMessage = new Label("Message:");
-//        TextField textfieldMessage = new TextField();
-//        message.getChildren().addAll(labelMessage, textfieldMessage);
-//        message.setSpacing(10);
-//        HBox.setHgrow(textfieldMessage, Priority.ALWAYS);
-//
-//        Button pubButton = new Button("Publish");
-//        Button subButton = new Button("Subscribe");
-//
-//        pubButton.setMaxWidth(Double.MAX_VALUE);
-//        subButton.setMaxWidth(Double.MAX_VALUE);
-//
-//        VBox vbox = new VBox();
-//        vbox.getChildren().addAll(topic, message, pubButton, subButton);
-//        VBox.setVgrow(vbox, Priority.ALWAYS);
-//        vbox.setMaxWidth(Double.MAX_VALUE);
-//        vbox.setSpacing(10);
-
 
         Button addAgentButton = new Button("Add Agent");
         addAgentButton.setOnAction(this::onAddAgentClicked);
@@ -258,6 +236,8 @@ public class DebugTab extends EditorTab {
     public GuiModificationEvent handleDelete() {
         return null;
     }
+
+
 
     public void setAlicaMessageHandler(IAlicaMessageHandler alicaMessageHandler) {
         this.alicaMessageHandler = alicaMessageHandler;
