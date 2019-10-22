@@ -738,33 +738,41 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     private Process roscoreProcess;
-    private Process pdAlicaRunnerProcess; // needs more than one process
+    private List<Process> pdAlicaRunnerProcesses; // needs more than one process
 
     @Override
-    public boolean runAlica() {
+    public boolean runAlica(String name, String masterplan, String roleset) {
         String alicaEnginePath = configurationManager.getAlicaEnginePath();
-        // TODO change hardcoded paths to path from config
+        String rolesPath = configurationManager.getActiveConfiguration().getRolesPath();
         try {
-            // start roscore, because we still need it
-            ProcessBuilder pb = new ProcessBuilder("bash", "-c", "echo 'Sourcing setup.bash'; source /opt/ros/melodic/setup.bash; echo 'Starting roscore...'; roscore");
-            pb.environment().put("PATH", pb.environment().get("PATH") + ":/opt/ros/melodic/bin");
-            pb.inheritIO();
-            roscoreProcess = pb.start();
+            if (roscoreProcess == null) {
+                // start roscore, because we still need it
+                ProcessBuilder pb = new ProcessBuilder("bash", "-c", "echo 'Sourcing setup.bash'; source /opt/ros/melodic/setup.bash; echo 'Starting roscore...'; roscore");
+                pb.environment().put("PATH", pb.environment().get("PATH") + ":/opt/ros/melodic/bin");
+                //pb.inheritIO();
+                roscoreProcess = pb.start();
+            }
 
+            if (pdAlicaRunnerProcesses == null) pdAlicaRunnerProcesses = new ArrayList<>();
             // Load pd_alica_runner
-            pb = new ProcessBuilder("bash", "-c", "echo Starting pd_alica_runner...; /opt/pd-debug/ttb-ws/devel/lib/pd_alica_runner/pd_alica_runner -m ServeMaster -rd  /opt/pd-debug/cnc-turtlebots/etc/roles/ -r ServiceRobotsRoleSet -sim");
-            pb.directory(new File("/opt/pd-debug/cnc-turtlebots"));
+            ProcessBuilder pb = new ProcessBuilder("bash", "-c", "echo Starting pd_alica_runner...; " +
+                    alicaEnginePath +
+                    " -m " + masterplan +
+                    " -rd " + rolesPath +
+                    " -r " + roleset +
+                    " -sim");
+            pb.directory(Paths.get(rolesPath).getParent().toFile());
             pb.environment().put("PATH", pb.environment().getOrDefault("PATH", "") + ":/opt/ros/melodic/bin");
-            pb.environment().put("ROBOT", "donatello");
+            pb.environment().put("ROBOT", name);
             pb.environment().put("LD_LIBRARY_PATH", "/opt/pd-debug/ttb-ws/devel/lib:/opt/ros/melodic/lib" + pb.environment().getOrDefault("LD_LIBRARY_PATH", ""));
             pb.environment().put("ROS_MASTER_URI", "http://localhost:11311");
-            pb.inheritIO();
-            pdAlicaRunnerProcess = pb.start();
+            //pb.inheritIO();
+            System.out.println("Starting Agent with name = " + name);
+            pdAlicaRunnerProcesses.add(pb.start());
 
             return true;
 
         } catch (Exception e) {
-            System.err.println("Could not load roscore :(");
             e.printStackTrace();
         }
 
@@ -773,12 +781,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void stopAlica() {
-        if (roscoreProcess == null || pdAlicaRunnerProcess == null) {
+        if (roscoreProcess == null || pdAlicaRunnerProcesses == null) {
             return;
         } else {
-            if (pdAlicaRunnerProcess != null) {
-                pdAlicaRunnerProcess.destroyForcibly();
-                pdAlicaRunnerProcess = null;
+            if (pdAlicaRunnerProcesses != null) {
+                for (Process p : pdAlicaRunnerProcesses) {
+                    p.destroyForcibly();
+                }
+                pdAlicaRunnerProcesses.clear();
             }
             if (roscoreProcess != null) {
                 roscoreProcess.destroyForcibly();

@@ -5,14 +5,21 @@ import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
+import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -22,9 +29,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class DebugTab extends EditorTab {
 
@@ -68,18 +74,61 @@ public class DebugTab extends EditorTab {
 
         allAgentsVBox = new VBox(SPACING);
 
-        for (Agent agent : availableAgents.keySet()) {
-            HBox hBox = new HBox(SPACING);
+        // Setup the GridPane where all agents are listed
+        GridPane gridPane = new GridPane();
+        gridPane.setVgap(SPACING);
+        gridPane.setHgap(SPACING);
+        CheckBox checkBoxDummy = new CheckBox();
+        checkBoxDummy.setAllowIndeterminate(false);
+        checkBoxDummy.setDisable(true);
+        Label labelRobot = new Label("Robot Name");
+        Label labelMasterPlan = new Label("MasterPlan");
+        Label labelRoleSet = new Label("RoleSet");
 
-            Label nameLabel = new Label(agent.name + " (id=" + agent.id + "; defaultRole=" + agent.defaultRole + "; speed=" + agent.speed + ")");
+        GridPane.setConstraints(checkBoxDummy, 0, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
+        GridPane.setConstraints(labelRobot, 1, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
+        GridPane.setConstraints(labelMasterPlan, 2, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
+        GridPane.setConstraints(labelRoleSet, 3, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
+
+        gridPane.getChildren().addAll(checkBoxDummy, labelRobot, labelMasterPlan, labelRoleSet);
+
+        // Iterate over parsed Agents from Globals.conf and create a GridView, where the user can check or uncheck the
+        // parsed agents
+        List<Agent> sortedAgents = new ArrayList<>(availableAgents.keySet());
+        sortedAgents.sort(Comparator.comparingInt(c -> c.id));
+
+
+        int i = 1;
+        for (Agent agent : sortedAgents) {
+            Label nameLabel = new Label(agent.name + "\t(id=" + agent.id + "; defaultRole=" + agent.defaultRole + "; speed=" + agent.speed + ")");
             CheckBox checkBox = new CheckBox();
             checkBox.setSelected(availableAgents.get(agent));
-
             checkBox.selectedProperty().addListener((observableValue, oldValue, newValue) -> availableAgents.put(agent, newValue));
 
-            hBox.getChildren().addAll(checkBox, nameLabel);
-            allAgentsVBox.getChildren().addAll(hBox);
+            // Get all the Masterplans
+            ObservableList<String> plans = FXCollections.observableArrayList(guiModificationHandler.getRepoViewModel().getPlans().stream()
+                    .filter(p -> p instanceof PlanViewModel)
+                    .filter(p -> ((PlanViewModel) p).isMasterPlan())
+                    .map(ViewModelElement::getName)
+                    .collect(Collectors.toList()));
+            ComboBox<String> comboBoxMasterPlans = new ComboBox<>(plans);
+            comboBoxMasterPlans.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> agent.masterplan = newValue);
+            comboBoxMasterPlans.getSelectionModel().clearAndSelect(0);
+
+            ComboBox<String> comboBoxRoleSets = new ComboBox<>(FXCollections.observableArrayList("ServiceRobots"));
+            comboBoxRoleSets.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> agent.roleset = newValue);
+            comboBoxRoleSets.getSelectionModel().clearAndSelect(0);
+
+            GridPane.setConstraints(checkBox, 0, i);
+            GridPane.setConstraints(nameLabel, 1, i);
+            GridPane.setConstraints(comboBoxMasterPlans, 2, i);
+            GridPane.setConstraints(comboBoxRoleSets, 3, i);
+
+            gridPane.getChildren().addAll(checkBox, nameLabel, comboBoxMasterPlans, comboBoxRoleSets);
+
+            i -=- 1;
         }
+        allAgentsVBox.getChildren().addAll(gridPane);
 
         runButton = new Button("Run");
         runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/run16x16.png"))));
@@ -102,11 +151,15 @@ public class DebugTab extends EditorTab {
 
     private void onRunClicked(ActionEvent event) {
         if (!isRunning) {
-            isRunning = alicaHandler.runAlica();
-            if (isRunning) {
-                runButton.setText("Stop");
-                runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/stop16x16.png"))));
+            for (Agent agent : availableAgents.keySet()) {
+                if (availableAgents.get(agent)) {
+                    alicaHandler.runAlica(agent.name, agent.masterplan, agent.roleset);
+                }
             }
+            isRunning = true;
+
+            runButton.setText("Stop");
+            runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/stop16x16.png"))));
         } else {
             alicaHandler.stopAlica();
             isRunning = false;
@@ -262,6 +315,7 @@ public class DebugTab extends EditorTab {
     private static class Agent {
         short id;
         String name, defaultRole, speed;
+        String masterplan, roleset;
 
         @Override
         public String toString() {
