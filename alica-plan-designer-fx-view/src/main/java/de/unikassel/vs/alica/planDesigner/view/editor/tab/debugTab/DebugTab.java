@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.RoleSetViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.collections.FXCollections;
@@ -97,6 +98,9 @@ public class DebugTab extends EditorTab {
         List<Agent> sortedAgents = new ArrayList<>(availableAgents.keySet());
         sortedAgents.sort(Comparator.comparingInt(c -> c.id));
 
+        // Get the RoleSets
+        RoleSetViewModel rsvm = (RoleSetViewModel) guiModificationHandler.getViewModelElement(1554970055692L);
+        String roleset = rsvm.getName();
 
         int i = 1;
         for (Agent agent : sortedAgents) {
@@ -115,7 +119,8 @@ public class DebugTab extends EditorTab {
             comboBoxMasterPlans.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> agent.masterplan = newValue);
             comboBoxMasterPlans.getSelectionModel().clearAndSelect(0);
 
-            ComboBox<String> comboBoxRoleSets = new ComboBox<>(FXCollections.observableArrayList("ServiceRobots"));
+
+            ComboBox<String> comboBoxRoleSets = new ComboBox<>(FXCollections.observableArrayList(roleset));
             comboBoxRoleSets.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> agent.roleset = newValue);
             comboBoxRoleSets.getSelectionModel().clearAndSelect(0);
 
