@@ -79,19 +79,15 @@ public class DebugTab extends EditorTab {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(SPACING);
         gridPane.setHgap(SPACING);
-        CheckBox checkBoxDummy = new CheckBox();
-        checkBoxDummy.setAllowIndeterminate(false);
-        checkBoxDummy.setDisable(true);
         Label labelRobot = new Label("Robot Name");
         Label labelMasterPlan = new Label("MasterPlan");
         Label labelRoleSet = new Label("RoleSet");
 
-        GridPane.setConstraints(checkBoxDummy, 0, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
-        GridPane.setConstraints(labelRobot, 1, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
-        GridPane.setConstraints(labelMasterPlan, 2, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
-        GridPane.setConstraints(labelRoleSet, 3, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
+        GridPane.setConstraints(labelRobot, 0, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
+        GridPane.setConstraints(labelMasterPlan, 1, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
+        GridPane.setConstraints(labelRoleSet, 2, 0, 1, 1, HPos.CENTER, VPos.BASELINE);
 
-        gridPane.getChildren().addAll(checkBoxDummy, labelRobot, labelMasterPlan, labelRoleSet);
+        gridPane.getChildren().addAll(labelRobot, labelMasterPlan, labelRoleSet);
 
         // Iterate over parsed Agents from Globals.conf and create a GridView, where the user can check or uncheck the
         // parsed agents
@@ -104,8 +100,7 @@ public class DebugTab extends EditorTab {
 
         int i = 1;
         for (Agent agent : sortedAgents) {
-            Label nameLabel = new Label(agent.name + "\t(id=" + agent.id + "; defaultRole=" + agent.defaultRole + "; speed=" + agent.speed + ")");
-            CheckBox checkBox = new CheckBox();
+            CheckBox checkBox = new CheckBox(agent.name + "\t(id=" + agent.id + "; defaultRole=" + agent.defaultRole + "; speed=" + agent.speed + ")");
             checkBox.setSelected(availableAgents.get(agent));
             checkBox.selectedProperty().addListener((observableValue, oldValue, newValue) -> availableAgents.put(agent, newValue));
 
@@ -125,11 +120,10 @@ public class DebugTab extends EditorTab {
             comboBoxRoleSets.getSelectionModel().clearAndSelect(0);
 
             GridPane.setConstraints(checkBox, 0, i);
-            GridPane.setConstraints(nameLabel, 1, i);
-            GridPane.setConstraints(comboBoxMasterPlans, 2, i);
-            GridPane.setConstraints(comboBoxRoleSets, 3, i);
+            GridPane.setConstraints(comboBoxMasterPlans, 1, i);
+            GridPane.setConstraints(comboBoxRoleSets, 2, i);
 
-            gridPane.getChildren().addAll(checkBox, nameLabel, comboBoxMasterPlans, comboBoxRoleSets);
+            gridPane.getChildren().addAll(checkBox, comboBoxMasterPlans, comboBoxRoleSets);
 
             i -=- 1;
         }
