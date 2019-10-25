@@ -37,6 +37,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -551,6 +552,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             }
             createNewDialogController.getStage().setX(alert.getX() + createNewDialogController.getMainVBox().getPrefWidth() / 2);
             createNewDialogController.getStage().setY(alert.getY());
+            createNewDialogController.getStage().setAlwaysOnTop(true);
             createNewDialogController.showAndWait();
         }
     }
