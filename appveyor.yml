@@ -35,7 +35,7 @@ deploy:
   # github artifact upload to tag/release
   - provider: GitHub
     auth_token:
-      secure: gC8oWOphLjwUFQfByUJQ/sS+LGl4xBUhOkORvwUIb1mrstwWRAHaidskrSOLnHhF
+      secure: /GqIUIFjaJtRIncBGDG7Ws2lkrEDnaOncyh6Nt4i9EQJ4DHWlvyywQt2PEWsREd1
     force_update: true
     on:
       branch: master
