@@ -3,7 +3,6 @@ package de.unikassel.vs.alica.generator;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 
 import java.util.List;
 import java.util.Map;
