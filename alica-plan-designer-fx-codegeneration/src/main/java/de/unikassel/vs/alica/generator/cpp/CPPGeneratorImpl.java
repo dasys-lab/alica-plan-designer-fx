@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -407,9 +408,12 @@ public class CPPGeneratorImpl implements IGenerator {
      */
     private void formatFile(String fileName) {
         if (formatter != null && formatter.length() > 0) {
+            URL clangFormatStyle = CPPGeneratorImpl.class.getResource(".clang-format");
+            String command = formatter +
+                    " -style=" + clangFormatStyle +
+                    " -i " + fileName;
             try {
-                Runtime.getRuntime().exec(formatter + " -i "
-                        + fileName).waitFor();
+                Runtime.getRuntime().exec(command).waitFor();
             } catch (IOException | InterruptedException e) {
                 LOG.error("An error occurred while formatting generated sources", e);
                 throw new RuntimeException(e);
