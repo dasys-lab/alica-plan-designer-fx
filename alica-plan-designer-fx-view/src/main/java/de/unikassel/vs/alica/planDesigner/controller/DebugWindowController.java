@@ -13,7 +13,6 @@ public class DebugWindowController implements DebugEventHandler
   private TextArea textArea;
   private Stage stage;
 
-
   public DebugWindowController()
   {
   }
