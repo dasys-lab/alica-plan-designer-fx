@@ -45,7 +45,7 @@ notifications:
   # slack notification
   - provider: Slack
     auth_token:
-      secure: 6fgzuwD9QHg2w6I1Q9cVPwSH6ZXt4gcSLSMFkglW0bVA4NhTHNPPyHj6lTrt+dFYpQw0WvXEMuY4BXCPf68hlLJr8duS4Qwzn5zc/DONxIM=
+      secure: 4I8oygZLR1cqE09mnJfYc9hjgxgXFX4pBFsBl18fFLr21WmGaZt3O3jVqJELrR23
     channel: '#alica-plan-designer-fx'
     on_build_success: true  # TODO: set to false later
 
