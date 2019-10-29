@@ -796,7 +796,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 pdAlicaRunnerProcesses.clear();
             }
             if (roscoreProcess != null) {
-                roscoreProcess.destroyForcibly();
+                try {
+                    ProcessBuilder pb = new ProcessBuilder("bash", "-c", "kill `pgrep -f ros`");
+                    pb.start().waitFor();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 roscoreProcess = null;
             }
         }
