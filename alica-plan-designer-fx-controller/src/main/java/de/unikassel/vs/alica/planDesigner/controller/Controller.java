@@ -45,6 +45,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
@@ -761,14 +762,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     " -rd " + rolesPath +
                     " -r " + roleset +
                     " -sim");
-            pb.directory(Paths.get(rolesPath).getParent().toFile());
+            pb.directory(Paths.get(rolesPath).getParent().getParent().toFile());
             pb.environment().put("PATH", pb.environment().getOrDefault("PATH", "") + ":/opt/ros/melodic/bin");
             pb.environment().put("ROBOT", name);
             pb.environment().put("LD_LIBRARY_PATH", "/opt/pd-debug/ttb-ws/devel/lib:/opt/ros/melodic/lib" + pb.environment().getOrDefault("LD_LIBRARY_PATH", ""));
             pb.environment().put("ROS_MASTER_URI", "http://localhost:11311");
-            //pb.inheritIO();
+            pb.inheritIO();
             System.out.println("Starting Agent with name = " + name);
             pdAlicaRunnerProcesses.add(pb.start());
+
 
             return true;
 
@@ -780,13 +782,16 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     @Override
-    public void stopAlica() {
+    public void stopAlica() throws InterruptedException {
         if (roscoreProcess == null || pdAlicaRunnerProcesses == null) {
             return;
         } else {
             if (pdAlicaRunnerProcesses != null) {
-                for (Process p : pdAlicaRunnerProcesses) {
-                    p.destroyForcibly();
+                try {
+                    ProcessBuilder pb = new ProcessBuilder("bash", "-c", "kill `pgrep -f pd_alica_runner`");
+                    pb.start().waitFor();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 pdAlicaRunnerProcesses.clear();
             }

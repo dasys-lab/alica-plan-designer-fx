@@ -65,13 +65,13 @@ public class DebugTab extends EditorTab {
         debugTextArea.setEditable(false);
 
         // redirect System.out to the debugTextArea
-        OutputStream stream = new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {
-                debugTextArea.appendText(String.valueOf((char) b));
-            }
-        };
-        System.setOut(new PrintStream(stream, true));
+//        OutputStream stream = new OutputStream() {
+//            @Override
+//            public void write(int b) throws IOException {
+//                debugTextArea.appendText(String.valueOf((char) b));
+//            }
+//        };
+//        System.setOut(new PrintStream(stream, true));
 
         allAgentsVBox = new VBox(SPACING);
 
@@ -160,7 +160,11 @@ public class DebugTab extends EditorTab {
             runButton.setText("Stop");
             runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/stop16x16.png"))));
         } else {
-            alicaHandler.stopAlica();
+            try {
+                alicaHandler.stopAlica();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             isRunning = false;
             runButton.setText("Run");
             runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/run16x16.png"))));
