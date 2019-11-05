@@ -16,4 +16,5 @@ public interface IGuiModificationHandler {
     void handleRedo();
     RepositoryViewModel getRepoViewModel();
     void storeAll();
+    long getTaskRepositoryID();
 }

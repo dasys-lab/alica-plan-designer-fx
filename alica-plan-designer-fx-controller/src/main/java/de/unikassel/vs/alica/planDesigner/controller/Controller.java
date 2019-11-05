@@ -37,7 +37,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -614,6 +613,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     @Override
     public RepositoryViewModel getRepoViewModel() {
         return repoViewModel;
+    }
+
+    @Override
+    public long getTaskRepositoryID() {
+        return modelManager.getTaskRepository().getId();
     }
 
     @Override

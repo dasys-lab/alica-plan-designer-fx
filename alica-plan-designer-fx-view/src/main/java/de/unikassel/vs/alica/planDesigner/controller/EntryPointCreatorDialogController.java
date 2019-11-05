@@ -83,7 +83,7 @@ public class EntryPointCreatorDialogController implements Initializable {
     private void createTask() {
         if (newTaskNameTextField.getText() != null && !newTaskNameTextField.getText().isEmpty()) {
             GuiModificationEvent event = new GuiModificationEvent(GuiEventType.CREATE_ELEMENT, Types.TASK, newTaskNameTextField.getText());
-            event.setParentId(MainWindowController.getInstance().getGuiModificationHandler().getRepoViewModel().getTasks().get(0).getParentId());
+            event.setParentId(MainWindowController.getInstance().getGuiModificationHandler().getTaskRepositoryID());
             MainWindowController.getInstance().getGuiModificationHandler().handle(event);
         }
     }
