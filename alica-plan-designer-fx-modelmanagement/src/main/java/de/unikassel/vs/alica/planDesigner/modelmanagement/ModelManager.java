@@ -236,7 +236,8 @@ public class ModelManager implements Observer {
             for(IModelEventHandler handler : eventHandlerList) {
                 handler.handleNoTaskRepositoryNotification();
             }
-            return;
+        } else {
+            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, taskRepository, Types.TASKREPOSITORY));
         }
         loadModelFromDisk(plansPath);
         loadModelFromDisk(rolesPath);
@@ -263,7 +264,6 @@ public class ModelManager implements Observer {
         }
 
         if (taskRepository != null) {
-            fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, taskRepository, Types.TASKREPOSITORY));
         }
 
         if (roleSet != null) {
