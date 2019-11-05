@@ -33,6 +33,7 @@ artifacts:
 
 deploy:
   # github artifact upload to tag/release
+  # auth_token: "Generate new token" at https://github.com/settings/tokens
   - provider: GitHub
     auth_token:
       secure: /GqIUIFjaJtRIncBGDG7Ws2lkrEDnaOncyh6Nt4i9EQJ4DHWlvyywQt2PEWsREd1
@@ -43,11 +44,14 @@ deploy:
 
 notifications:
   # slack notification
+  # "Create New App" at https://api.slack.com/apps
+  # auth_token: "OAuth Access Token" from https://api.slack.com/apps/<ID>/oauth
   - provider: Slack
     auth_token:
-      secure: 4I8oygZLR1cqE09mnJfYc9hjgxgXFX4pBFsBl18fFLr21WmGaZt3O3jVqJELrR23
+      secure: sQ5XjjBlOx8DYbuBh7sjsVTqY69K9XnypJucajuCAQHjXNSJJLr2k/s4zC4qX7HvadmbnqlSvTr83o8dRjnR6AHQ7L7ZUw0ZOPjRCwknEyU=
     channel: '#alica-plan-designer-fx'
     on_build_success: true  # TODO: set to false later
 
-#init:
-#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# RDP for debugging
+# init:
+#   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
