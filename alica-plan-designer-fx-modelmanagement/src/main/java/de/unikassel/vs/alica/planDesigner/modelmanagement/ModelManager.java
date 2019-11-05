@@ -167,6 +167,9 @@ public class ModelManager implements Observer {
                 }
             }
         } else if (split[split.length - 1].equals(Extensions.TASKREPOSITORY)) {
+            if (taskRepository == null) {
+                return null;
+            }
             if (taskRepository.getName().equals(split[0])) {
                 return taskRepository;
             }
@@ -1364,7 +1367,12 @@ public class ModelManager implements Observer {
         if (ignoreEventCounter > 0 ) {
             elementDeletedMap.put(planElement.getId(), ignoreEventCounter);
         }
-        File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + extension).toFile();
+        File outfile;
+        if (planElement instanceof TaskRepository) {
+             outfile = Paths.get(tasksPath, planElement.getRelativeDirectory(), planElement.getName() + "." + extension).toFile();
+        } else {
+             outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + extension).toFile();
+        }
         outfile.delete();
 
         // A plans uiExtension has to be deleted as well

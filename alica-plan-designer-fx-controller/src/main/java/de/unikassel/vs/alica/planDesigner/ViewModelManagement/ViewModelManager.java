@@ -458,6 +458,8 @@ public class ViewModelManager {
     public void removeElement(long parentId, ViewModelElement viewModelElement, Map<String, Long> relatedObjects) {
 
         switch (viewModelElement.getType()) {
+            case Types.TASKREPOSITORY:
+                break;
             case Types.TASK:
                 ((TaskViewModel) viewModelElement).getTaskRepositoryViewModel().removeTask(viewModelElement.getId());
                 break;
