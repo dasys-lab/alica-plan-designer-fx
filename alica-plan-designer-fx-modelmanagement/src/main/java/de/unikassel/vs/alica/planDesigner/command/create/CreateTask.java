@@ -1,5 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.alicamodel.SerializablePlanElement;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Task;
 import de.unikassel.vs.alica.planDesigner.alicamodel.TaskRepository;
 import de.unikassel.vs.alica.planDesigner.command.Command;
@@ -30,6 +32,10 @@ public class CreateTask extends Command {
         this.taskRepository.addTask(task);
         modelManager.storePlanElement(Types.TASK, this.task,  false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.task);
+
+        // Save the new Task directly
+        PlanElement planElement = modelManager.getPlanElement(task.getTaskRepository().getId());
+        this.modelManager.serialize((SerializablePlanElement) planElement, mmq.getElementType());
     }
 
     @Override
