@@ -143,6 +143,9 @@ public final class RepositoryViewModel {
     public ObservableList<ViewModelElement> getRoles(){
         return roles;
     }
+    public ObservableList<ViewModelElement> getBehaviours() {return behaviours; }
+    public ObservableList<ViewModelElement> getPlanTypes() {return planTypes; }
+
 
     public void addElement(ViewModelElement viewModelElement) {
         switch (viewModelElement.getType()) {

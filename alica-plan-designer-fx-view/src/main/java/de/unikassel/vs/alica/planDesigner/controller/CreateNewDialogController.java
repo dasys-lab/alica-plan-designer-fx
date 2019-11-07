@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -135,6 +136,26 @@ public class CreateNewDialogController implements Initializable {
             }
             ((Stage) pathTextField.getScene().getWindow()).close();
             return;
+        }
+
+        // Same name are not allowed
+        for (ViewModelElement viewModelElement: this.guiModificationHandler.getRepoViewModel().getPlans()) {
+            if(viewModelElement.getType().equals(this.type) && viewModelElement.getName().equals(name)) {
+                ErrorWindowController.createErrorWindow("This " + type + " name is already taken! Please enter a valid " + type + " name.", null);
+                return;
+            }
+        }
+        for (ViewModelElement viewModelElement: this.guiModificationHandler.getRepoViewModel().getBehaviours()) {
+            if(viewModelElement.getType().equals(this.type) && viewModelElement.getName().equals(name)) {
+                ErrorWindowController.createErrorWindow("This " + type + " name is already taken! Please enter a valid " + type + " name.", null);
+                return;
+            }
+        }
+        for (ViewModelElement viewModelElement: this.guiModificationHandler.getRepoViewModel().getPlanTypes()) {
+            if(viewModelElement.getType().equals(this.type) && viewModelElement.getName().equals(name)) {
+                ErrorWindowController.createErrorWindow("This " + type + " name is already taken! Please enter a valid " + type + " name.", null);
+                return;
+            }
         }
 
         // Notification of guiModificationHandler for creating plans, plantypes, etc...
