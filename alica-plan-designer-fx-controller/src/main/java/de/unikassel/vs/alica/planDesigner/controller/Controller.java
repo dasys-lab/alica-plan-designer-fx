@@ -435,6 +435,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 mmq = new ModelModificationQuery(ModelQueryType.REMOVE_ALL_ELEMENTS);
                 mmq.setElementType(event.getElementType());
                 mmq.setElementId(event.getElementId());
+                mmq.setParentId(event.getParentId());
                 break;
             case RELOAD_ELEMENT:
                 mmq = new ModelModificationQuery(ModelQueryType.RELOAD_ELEMENT);
