@@ -18,6 +18,15 @@ public class PlanType extends AbstractPlan {
         variableBindings.remove(variableBinding);
         this.changeListenerForDirtyFlag.setDirty();
     }
+    public void addVariableBinding(VariableBinding binding) {
+        this.variableBindings.add(binding);
+        binding.registerDirtyFlag(this.changeListenerForDirtyFlag);
+        this.changeListenerForDirtyFlag.setDirty();
+    }
+    public void removeVariableBinding(VariableBinding binding) {
+        this.variableBindings.remove(binding);
+        this.changeListenerForDirtyFlag.setDirty();
+    }
     public List<VariableBinding> getVariableBindings() {
         return Collections.unmodifiableList(variableBindings);
     }

@@ -125,7 +125,10 @@ public class PlanTypeTab extends AbstractPlanTab {
         });
 
         removeAllPlansButton.setOnAction(e -> {
-            fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, serializableViewModel);
+            if(planTypeTableView.getItems().size() > 0) {
+                fireModificationEvent(GuiEventType.REMOVE_ALL_ELEMENTS, planTypeTableView.getItems().get(0));
+            }
+            e.consume();
         });
     }
 

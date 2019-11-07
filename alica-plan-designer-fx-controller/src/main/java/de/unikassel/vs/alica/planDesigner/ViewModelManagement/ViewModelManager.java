@@ -524,6 +524,13 @@ public class ViewModelManager {
                 AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) viewModelElement;
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) getViewModelElement(modelManager.getPlanElement(parentId));
                 planTypeViewModel.getPlansInPlanType().remove(annotatedPlanView);
+
+                List<VariableBindingViewModel> variableBindingViewModelList = new ArrayList<>(planTypeViewModel.getVariableBindings());
+                for (VariableBindingViewModel variableBindingViewModel: variableBindingViewModelList) {
+                    if (variableBindingViewModel.getSubPlan().getId() == annotatedPlanView.getPlanId()) {
+                        planTypeViewModel.removeVariableBinding(variableBindingViewModel);
+                    }
+                }
                 break;
             case Types.PLAN:
             case Types.MASTERPLAN:
@@ -634,6 +641,17 @@ public class ViewModelManager {
                 AnnotatedPlanView annotatedPlanView = (AnnotatedPlanView) viewModelElement;
                 PlanTypeViewModel planTypeViewModel = (PlanTypeViewModel) parentViewModel;
                 planTypeViewModel.getPlansInPlanType().add(annotatedPlanView);
+
+                PlanType planType = (PlanType) modelManager.getPlanElement(planTypeViewModel.getId());
+                for (VariableBinding variableBinding : planType.getVariableBindings()) {
+                    if (variableBinding.getSubPlan().getId() == annotatedPlanView.getPlanId()) {
+                        VariableBindingViewModel variableBindingViewModel = new VariableBindingViewModel(variableBinding.getId(), variableBinding.getName(), Types.VARIABLEBINDING);
+                        variableBindingViewModel.setSubPlan((AbstractPlanViewModel) getViewModelElement(variableBinding.getSubPlan()));
+                        variableBindingViewModel.setSubVariable((VariableViewModel) getViewModelElement(variableBinding.getSubVariable()));
+                        variableBindingViewModel.setVariable((VariableViewModel) getViewModelElement(variableBinding.getVariable()));
+                        planTypeViewModel.addVariableBinding(variableBindingViewModel);
+                    }
+                }
                 break;
             case Types.TASK:
                 TaskViewModel taskViewModel = (TaskViewModel) viewModelElement;
