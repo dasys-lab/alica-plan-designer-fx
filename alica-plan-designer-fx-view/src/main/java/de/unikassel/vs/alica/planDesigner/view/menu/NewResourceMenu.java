@@ -21,6 +21,7 @@ public class NewResourceMenu extends Menu {
     private I18NRepo i18NRepo;
     private File initialDirectoryHint;
     private MenuItem newTaskRepositoryMenuItem;
+    private MenuItem newRoleSetMenuItem;
 
     public NewResourceMenu(File initialDirectoryHint) {
         super(I18NRepo.getInstance().getString("label.menu.new"));
@@ -35,9 +36,9 @@ public class NewResourceMenu extends Menu {
         MenuItem newBehaviourMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.behaviour"));
         newBehaviourMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.BEHAVIOUR).showAndWait());
         getItems().add(newBehaviourMenuItem);
-        MenuItem newRolesetMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.roleset"));
-        newRolesetMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.ROLESET).showAndWait());
-        getItems().add(newRolesetMenuItem);
+        newRoleSetMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.roleset"));
+        newRoleSetMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.ROLESET).showAndWait());
+        getItems().add(newRoleSetMenuItem);
         newTaskRepositoryMenuItem = new MenuItem(i18NRepo.getString("label.menu.new.taskrepository"));
         newTaskRepositoryMenuItem.setOnAction(e -> createFileDialog(this.initialDirectoryHint, Types.TASKREPOSITORY).showAndWait());
         getItems().add(newTaskRepositoryMenuItem);
@@ -52,6 +53,10 @@ public class NewResourceMenu extends Menu {
 
     public void showTaskRepositoryItem(boolean show) {
         newTaskRepositoryMenuItem.setDisable(!show);
+    }
+
+    public void showRoleSetItem(boolean show){
+        newRoleSetMenuItem.setDisable(!show);
     }
 
     public CreateNewDialogController createFileDialog(File initialDirectoryHint, String type) {

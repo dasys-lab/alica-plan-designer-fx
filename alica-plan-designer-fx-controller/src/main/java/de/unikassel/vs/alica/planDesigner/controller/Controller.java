@@ -354,6 +354,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         repoTabPane.clearGuiContent();
         repoViewModel.clear();
         ((FileTreeViewContextMenu) mainWindowController.getFileTreeView().getContextMenu()).showTaskrepositoryItem(true);
+        ((FileTreeViewContextMenu) mainWindowController.getFileTreeView().getContextMenu()).showRoleSetItem(true);
+
         mainWindowController.setUpFileTreeView(activeConfiguration.getPlansPath(), activeConfiguration.getRolesPath(), activeConfiguration.getTasksPath());
 
         // load model from path

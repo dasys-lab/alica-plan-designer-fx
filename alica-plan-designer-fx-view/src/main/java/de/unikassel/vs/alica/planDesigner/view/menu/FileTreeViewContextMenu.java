@@ -29,6 +29,8 @@ public class FileTreeViewContextMenu extends ContextMenu {
         newResourceMenu.setInitialDirectoryHint(hintFile);
     }
 
+    public void showRoleSetItem(boolean show) { newResourceMenu.showRoleSetItem(show); }
+
     public void showTaskrepositoryItem(boolean show) {
         newResourceMenu.showTaskRepositoryItem(show);
     }

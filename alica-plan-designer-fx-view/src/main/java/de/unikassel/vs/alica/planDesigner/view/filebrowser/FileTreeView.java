@@ -111,6 +111,9 @@ public final class FileTreeView extends TreeView<File> {
         if(viewModelElement.getType() == Types.TASKREPOSITORY) {
             ((FileTreeViewContextMenu)this.getContextMenu()).showTaskrepositoryItem(false);
         }
+        if(viewModelElement.getType() == Types.ROLESET){
+            ((FileTreeViewContextMenu)this.getContextMenu()).showRoleSetItem(false);
+        }
 
         FileTreeItem folder = findFolder(viewModelElement, topLevelFolder, 0);
         if (folder != null) {
@@ -131,6 +134,9 @@ public final class FileTreeView extends TreeView<File> {
         }
         if(viewModelElement.getType() == Types.TASKREPOSITORY) {
             ((FileTreeViewContextMenu)this.getContextMenu()).showTaskrepositoryItem(true);
+        }
+        if(viewModelElement.getType() == Types.ROLESET){
+            ((FileTreeViewContextMenu)this.getContextMenu()).showRoleSetItem(true);
         }
         removeModelElementFromFolder(viewModelElement, topLevelFolder);
     }
