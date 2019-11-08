@@ -13,6 +13,7 @@
     <artifactId>controller</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -21,6 +22,33 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+                    <prefix>git</prefix>
+                    <verbose>false</verbose>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.directory}/../../target/git.properties</generateGitPropertiesFilename>
+                    <format>json</format>
+                    <gitDescribe>
+                        <skip>false</skip>
+                        <always>false</always>
+                        <dirty>-dirty</dirty>
+                    </gitDescribe>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -35,7 +63,7 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <finalName>PlanDesigner-${project.version}</finalName>
+                    <finalName>PlanDesignerFX-1.0.${git.total.commit.count}</finalName>
                 </configuration>
                 <executions>
                     <execution>
@@ -44,6 +72,11 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/../../target
+                            </outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
