@@ -140,9 +140,10 @@
     <dependencies>
         <dependency>
             <groupId>de.unikassel.vs.alica</groupId>
-            <artifactId>modelmanagement</artifactId>
+            <artifactId>codegen-modelmanagement</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.eclipse.xtext</groupId>
             <artifactId>org.eclipse.xtext.xbase.lib</artifactId>
