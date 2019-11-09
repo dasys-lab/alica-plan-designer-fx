@@ -1,8 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
-import de.unikassel.vs.alica.generator.Codegenerator;
-import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
-import de.unikassel.vs.alica.generator.plugin.PluginManager;
+import de.unikassel.vs.alica.codegen.CodegeneratorCpp;
+import de.unikassel.vs.alica.codegen.GeneratedSourcesManagerCpp;
+import de.unikassel.vs.alica.codegen.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
@@ -75,7 +75,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private ViewModelManager viewModelManager;
 
     // Code Generation Objects
-    private GeneratedSourcesManager generatedSourcesManager;
+    private GeneratedSourcesManagerCpp generatedSourcesManager;
 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
@@ -103,7 +103,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     protected void setupGeneratedSourcesManager() {
-        generatedSourcesManager = new GeneratedSourcesManager();
+        generatedSourcesManager = new GeneratedSourcesManagerCpp();
         generatedSourcesManager.setEditorExecutablePath(configurationManager.getEditorExecutablePath());
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
@@ -159,7 +159,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * @param event
      */
     public void generateCode(GuiModificationEvent event, Text generatingText) {
-        Codegenerator codegenerator = new Codegenerator(
+        CodegeneratorCpp codegenerator = new CodegeneratorCpp(
                 modelManager.getPlans(),
                 modelManager.getBehaviours(),
                 modelManager.getConditions(),

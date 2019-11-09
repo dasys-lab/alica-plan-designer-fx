@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.plugin;
 
-import de.unikassel.vs.alica.generator.plugin.PluginManager;
+import de.unikassel.vs.alica.codegen.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.controller.ConfigurationWindowController;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
 import javafx.beans.value.ObservableValue;

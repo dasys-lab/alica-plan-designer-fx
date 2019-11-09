@@ -1,6 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.configuration;
 
-import de.unikassel.vs.alica.generator.plugin.PluginManager;
+import de.unikassel.vs.alica.codegen.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.controller.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

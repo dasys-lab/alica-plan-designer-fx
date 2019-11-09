@@ -77,8 +77,15 @@
 
     <dependencies>
         <dependency>
+            <!-- https://github.com/dasys-lab/alica-codegen -->
             <groupId>de.unikassel.vs.alica</groupId>
-            <artifactId>codegeneration</artifactId>
+            <artifactId>codegen-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <!-- https://github.com/dasys-lab/alica-plan-designer-fx -->
+            <groupId>de.unikassel.vs.alica</groupId>
+            <artifactId>codegen-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

@@ -9,6 +9,7 @@ environment:
 # fetch repository as zip archive
 shallow_clone: true
 
+# install dependencies
 install:
   - cmd: |
       cd ..

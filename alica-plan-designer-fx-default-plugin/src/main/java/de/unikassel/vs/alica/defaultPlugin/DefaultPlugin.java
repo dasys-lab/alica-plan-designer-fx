@@ -1,7 +1,7 @@
 package de.unikassel.vs.alica.defaultPlugin;
 
-import de.unikassel.vs.alica.generator.IConstraintCodeGenerator;
-import de.unikassel.vs.alica.generator.plugin.IPlugin;
+import de.unikassel.vs.alica.codegen.IConstraintCodeGenerator;
+import de.unikassel.vs.alica.codegen.plugin.IPlugin;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
