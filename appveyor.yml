@@ -1,8 +1,10 @@
 version: "{build}"
 
-#branches:
-#  only:
-#    - master
+# build if branch is master or branch contains "withci" (ex.: feature-xyz-withci, dev_withci, withci-dev)
+branches:
+  only:
+    - master
+    - /.*withci.*/
 
 environment:
   matrix:
