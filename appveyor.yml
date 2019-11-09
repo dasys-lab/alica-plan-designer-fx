@@ -14,12 +14,12 @@ install:
       cd ..
       git clone --depth 1 https://github.com/dasys-lab/alica-codegen
       cd alica-codegen
-      mvn clean install -DskipTests
+      mvn clean install -B -ntp -DskipTests
       cd alica-plan-designer-fx
 
 # install without run tests
 build_script:
-  - mvn clean install -DskipTests
+  - mvn clean install -B -ntp -DskipTests
 
 # run tests
 test_script:
