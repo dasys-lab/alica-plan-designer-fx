@@ -32,13 +32,8 @@
                         <goals>
                             <goal>revision</goal>
                         </goals>
-                    </execution>
-                    <configuration>
-                           <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
-                           <!-- more config here as you see fit -->
-                   </configuration>     
+                    </execution>     
                 </executions>
-
                 <configuration>
                     <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
                     <prefix>git</prefix>
