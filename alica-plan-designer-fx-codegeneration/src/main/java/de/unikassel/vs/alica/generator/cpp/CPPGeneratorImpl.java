@@ -14,10 +14,7 @@ import de.unikassel.vs.alica.generator.cpp.XtendTemplates;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -408,10 +405,8 @@ public class CPPGeneratorImpl implements IGenerator {
      */
     private void formatFile(String fileName) {
         if (formatter != null && formatter.length() > 0) {
-            URL clangFormatStyle = CPPGeneratorImpl.class.getResource(".clang-format");
-            String command = formatter +
-                    " -style=" + clangFormatStyle +
-                    " -i " + fileName;
+//            URL clangFormatStyle = CPPGeneratorImpl.class.getResource(".clang-format");
+            String command = formatter + " -style=file -i " + fileName;
             try {
                 Runtime.getRuntime().exec(command).waitFor();
             } catch (IOException | InterruptedException e) {
