@@ -7,7 +7,7 @@ environment:
       _JAVA_OPTIONS: "-Dtestfx.robot=awt"
 
 # fetch repository as zip archive
-shallow_clone: true
+shallow_clone: false
 
 # list of build branches
 branches:
