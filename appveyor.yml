@@ -9,6 +9,11 @@ environment:
 # fetch repository as zip archive
 shallow_clone: true
 
+# list of build branches
+branches:
+  only:
+    - master
+
 # install without run tests
 build_script:
   - mvn clean install -DskipTests
