@@ -35,6 +35,7 @@
                     </execution>     
                 </executions>
                 <configuration>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
                     <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
                     <prefix>git</prefix>
                     <verbose>false</verbose>
