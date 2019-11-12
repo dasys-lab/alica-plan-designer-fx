@@ -26,13 +26,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// TODO: periodically checking if agents are still running
 public class DebugTab extends EditorTab {
 
     public static final int SPACING = 10;
@@ -50,6 +49,10 @@ public class DebugTab extends EditorTab {
     // Globals.conf parsed
     private Map<Agent, Boolean> availableAgents;
 
+    // DebugTab Name
+    public static final String DEBUGVIEWNAME = "Debug";
+    private GridPane gridPane;
+
     public DebugTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane, IAlicaHandler handler) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
         alicaHandler = handler;
@@ -57,7 +60,19 @@ public class DebugTab extends EditorTab {
         availableAgents = new HashMap<>();
         parseGlobals(Path.of("/opt/pd-debug/cnc-turtlebots/etc/Globals.conf")); // TODO no hardcoded paths
 
+        setOnClosed(this::onClosed);
+
         draw();
+    }
+
+    private void onClosed(Event event) {
+        if (isRunning) {
+            try {
+                alicaHandler.stopAlica();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void draw() {
@@ -76,7 +91,8 @@ public class DebugTab extends EditorTab {
         allAgentsVBox = new VBox(SPACING);
 
         // Setup the GridPane where all agents are listed
-        GridPane gridPane = new GridPane();
+        this.gridPane = new GridPane();
+        GridPane gridPane = this.gridPane;
         gridPane.setVgap(SPACING);
         gridPane.setHgap(SPACING);
         Label labelRobot = new Label("Robot Name");
@@ -150,22 +166,35 @@ public class DebugTab extends EditorTab {
 
     private void onRunClicked(ActionEvent event) {
         if (!isRunning) {
+            // No agent has started yet
             for (Agent agent : availableAgents.keySet()) {
                 if (availableAgents.get(agent)) {
-                    alicaHandler.runAlica(agent.name, agent.masterplan, agent.roleset);
+                    isRunning |= alicaHandler.runAlica(agent.name, agent.masterplan, agent.roleset);
                 }
             }
-            isRunning = true;
 
-            runButton.setText("Stop");
-            runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/stop16x16.png"))));
+            if (isRunning) {
+                // When at least one of the agents started running, change the TabName and disable everything other
+                // than the stop button
+                serializableViewModel.setName(DEBUGVIEWNAME + " [running...]");
+
+                gridPane.setDisable(true);
+
+                runButton.setText("Stop");
+                runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/stop16x16.png"))));
+            }
         } else {
+            // There are agents running, stop them
             try {
                 alicaHandler.stopAlica();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             isRunning = false;
+
+            gridPane.setDisable(false);
+
+            serializableViewModel.setName(DEBUGVIEWNAME);
             runButton.setText("Run");
             runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/run16x16.png"))));
         }
@@ -312,7 +341,6 @@ public class DebugTab extends EditorTab {
 
     @Override
     public void setOnCloseRequest(EventHandler<Event> value) {
-        super.setOnCloseRequest(value);
     }
 
     private static class Agent {

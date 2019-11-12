@@ -771,7 +771,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             System.out.println("Starting Agent with name = " + name);
             pdAlicaRunnerProcesses.add(pb.start());
 
-
             return true;
 
         } catch (Exception e) {

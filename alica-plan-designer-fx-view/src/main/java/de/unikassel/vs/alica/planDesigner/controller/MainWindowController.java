@@ -10,6 +10,7 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.debugTab.DebugTab;
 import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.menu.EditMenu;
@@ -234,7 +235,7 @@ public class MainWindowController implements Initializable {
         // -- DEBUG MENU --
         MenuItem debugItem = new MenuItem("Debug");
         debugItem.setOnAction(event -> {
-            openFile(new DebugViewModel(123912381, "Debug", Types.DEBUG, ""));
+            openFile(new DebugViewModel(123912381, DebugTab.DEBUGVIEWNAME, Types.DEBUG, ""));
         });
         fileMenu.getItems().addAll(debugItem);
         menus.add(fileMenu);
