@@ -1,7 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
-import de.unikassel.vs.alica.codegen.CodegeneratorCpp;
-import de.unikassel.vs.alica.codegen.GeneratedSourcesManagerCpp;
+//import de.unikassel.vs.alica.codegen.CodegeneratorCpp;
+//import de.unikassel.vs.alica.codegen.GeneratedSourcesManagerCpp;
+import de.unikassel.vs.alica.codegen.CodegeneratorJava;
+import de.unikassel.vs.alica.codegen.GeneratedSourcesManagerJava;
 import de.unikassel.vs.alica.codegen.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
@@ -75,7 +77,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private ViewModelManager viewModelManager;
 
     // Code Generation Objects
-    private GeneratedSourcesManagerCpp generatedSourcesManager;
+//    private GeneratedSourcesManagerCpp generatedSourcesManager;
+    private GeneratedSourcesManagerJava generatedSourcesManager;
 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
@@ -103,7 +106,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     protected void setupGeneratedSourcesManager() {
-        generatedSourcesManager = new GeneratedSourcesManagerCpp();
+//        generatedSourcesManager = new GeneratedSourcesManagerCpp();
+        generatedSourcesManager = new GeneratedSourcesManagerJava();
         generatedSourcesManager.setEditorExecutablePath(configurationManager.getEditorExecutablePath());
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
@@ -159,11 +163,17 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * @param event
      */
     public void generateCode(GuiModificationEvent event, Text generatingText) {
-        CodegeneratorCpp codegenerator = new CodegeneratorCpp(
+//        CodegeneratorCpp codegenerator = new CodegeneratorCpp(
+//                modelManager.getPlans(),
+//                modelManager.getBehaviours(),
+//                modelManager.getConditions(),
+//                configurationManager.getClangFormatPath(),
+//                configurationManager.getActiveConfiguration().getGenSrcPath(),
+//                generatedSourcesManager);
+        CodegeneratorJava codegenerator = new CodegeneratorJava(
                 modelManager.getPlans(),
                 modelManager.getBehaviours(),
                 modelManager.getConditions(),
-                configurationManager.getClangFormatPath(),
                 configurationManager.getActiveConfiguration().getGenSrcPath(),
                 generatedSourcesManager);
         Platform.runLater(() -> generatingText.textProperty().bind(codegenerator.currentFile));
