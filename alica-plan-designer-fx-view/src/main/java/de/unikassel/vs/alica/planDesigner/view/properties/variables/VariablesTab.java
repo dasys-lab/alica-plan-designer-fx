@@ -7,8 +7,12 @@ import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import javafx.collections.ListChangeListener;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.util.converter.DefaultStringConverter;
+
+import java.util.Optional;
 
 public class VariablesTab extends Tab {
 
@@ -36,6 +40,48 @@ public class VariablesTab extends Tab {
                 VariableViewModel selectedVariable = variablesTable.getSelectedItem();
                 if (selectedVariable == null) {
                     return;
+                }
+
+                boolean used = false;
+                long variableBindingsID = 0;
+                // If the Variable is used in VariableBindings
+                if (parentViewModel instanceof PlanTypeViewModel) {
+                    for (VariableBindingViewModel variableBindingViewModel :  ((PlanTypeViewModel) parentViewModel).getVariableBindings()) {
+                        if (variableBindingViewModel.getVariable().getId() == selectedVariable.getId()) {
+                            used = true;
+                            variableBindingsID = variableBindingViewModel.getId();
+                        }
+                    }
+                }
+                if(parentViewModel instanceof PlanViewModel){
+                    ((PlanViewModel) parentViewModel).getStates();
+                    for (StateViewModel stateViewModel:((PlanViewModel) parentViewModel).getStates()) {
+                        for (Object object:stateViewModel.getVariableBindings()) {
+                            VariableBindingViewModel variableBindingViewModel = (VariableBindingViewModel) object;
+                            if(variableBindingViewModel.getVariable().getId() == selectedVariable.getId()){
+                                used = true;
+                                variableBindingsID = variableBindingViewModel.getId();
+                            }
+                        }
+                    }
+                }
+
+                if(used){
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("The Variable is still used in VariableBindings!");
+                    alert.setHeaderText("If you delete the Variable, the VariableBinding deleted, too.");
+                    alert.setContentText("Delete Variable?");
+
+                    Optional<ButtonType> result = alert.showAndWait();
+                    // Delete the VariableBindings Event
+                    if (result.get() == ButtonType.OK){
+                        GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.VARIABLEBINDING, "Variable Binding");
+                        event.setParentId(parentViewModel.getId());
+                        event.setElementId(variableBindingsID);
+                        guiModificationHandler.handle(event);
+                    } else {
+                        return;
+                    }
                 }
 
                 GuiModificationEvent event = new GuiModificationEvent(GuiEventType.DELETE_ELEMENT, Types.VARIABLE, selectedVariable.getName());
