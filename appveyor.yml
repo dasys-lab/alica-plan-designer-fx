@@ -7,7 +7,12 @@ environment:
       _JAVA_OPTIONS: "-Dtestfx.robot=awt"
 
 # fetch repository as zip archive
-shallow_clone: true
+shallow_clone: false
+
+# list of build branches
+branches:
+  only:
+    - master
 
 # install without run tests
 build_script:
@@ -29,7 +34,7 @@ cache:
 
 # files that will be uploaded
 artifacts:
-  - path: alica-plan-designer-fx-controller\target\PlanDesigner-*.jar
+  - path: target\PlanDesignerFX-*.jar
 
 deploy:
   # github artifact upload to tag/release
