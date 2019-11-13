@@ -49,6 +49,13 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>de.unikassel.vs.alica</groupId>
@@ -64,6 +71,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dasys-lab</groupId>
+            <artifactId>capnzero4j</artifactId>
+            <version>45217cc4cb</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

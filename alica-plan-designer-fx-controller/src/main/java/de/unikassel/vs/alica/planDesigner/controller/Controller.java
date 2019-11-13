@@ -31,6 +31,8 @@ import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
+import de.unikassel.vs.pdDebug.Protocol;
+import de.unikassel.vs.pdDebug.Subscriber;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -46,10 +48,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -193,7 +192,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * @param event Object that describes the purpose/context of the fired event.
      */
     public void handleModelEvent(ModelEvent event) {
-        if(event.getEventType().equals(ModelEventType.ELEMENT_FOLDER_DELETED)){
+        if (event.getEventType().equals(ModelEventType.ELEMENT_FOLDER_DELETED)) {
             updateFileTreeView(event, null);
             return;
         }
@@ -215,7 +214,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
         }
         // Generate files for moved code
-        if(event.getEventType() == ModelEventType.ELEMENT_ATTRIBUTE_CHANGED  && "relativeDirectory".equals(event.getChangedAttribute())) {
+        if (event.getEventType() == ModelEventType.ELEMENT_ATTRIBUTE_CHANGED && "relativeDirectory".equals(event.getChangedAttribute())) {
             mainWindowController.waitOnProgressLabel(() -> generateCode(new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, event.getElementType(),
                     modelElement.getName()), mainWindowController.getStatusText()));
         }
@@ -284,11 +283,11 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue(), event.getOldValue());
-                if(event.getChangedAttribute() == "name") {
+                if (event.getChangedAttribute() == "name") {
                     viewModelElement.setName(planElement.getName());
                     updateFileTreeView(event, viewModelElement);
                 }
-                if(event.getChangedAttribute() == "masterPlan") {
+                if (event.getChangedAttribute() == "masterPlan") {
                     updateFileTreeView(event, viewModelElement);
                 }
                 break;
@@ -569,7 +568,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(i18NRepo.getString("label.warn"));
         alert.setHeaderText(i18NRepo.getString("label.error.wrong.taskrepository") + " " + taskID + "  "
-                + i18NRepo.getString("label.error.wrong.taskrepository2") + " " + planName+ ".");
+                + i18NRepo.getString("label.error.wrong.taskrepository2") + " " + planName + ".");
         alert.setX(params.get("x") + Screen.getPrimary().getVisualBounds().getWidth() / 2 - alert.getDialogPane().getWidth());
         alert.setY(params.get("y") + Screen.getPrimary().getVisualBounds().getHeight() / 2 - alert.getDialogPane().getHeight());
 
@@ -623,13 +622,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public void storeAll() {
-        for (Plan plan: modelManager.getPlans()) {
+        for (Plan plan : modelManager.getPlans()) {
             modelManager.storePlanElement(Types.PLAN, plan, true);
         }
-        for (Behaviour behaviour: modelManager.getBehaviours()) {
+        for (Behaviour behaviour : modelManager.getBehaviours()) {
             modelManager.storePlanElement(Types.BEHAVIOUR, behaviour, true);
         }
-        for (PlanType planType: modelManager.getPlanTypes()) {
+        for (PlanType planType : modelManager.getPlanTypes()) {
             modelManager.storePlanElement(Types.PLANTYPE, planType, true);
         }
         modelManager.storePlanElement(Types.TASKREPOSITORY, modelManager.getTaskRepository(), true);
@@ -658,7 +657,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     @Override
     public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
-        if(abstractPlan instanceof Behaviour) {
+        if (abstractPlan instanceof Behaviour) {
             return generatedSourcesManager.getGeneratedFilesForBehaviour((Behaviour) abstractPlan);
         } else if (abstractPlan instanceof Plan) {
             List<File> fileList = generatedSourcesManager.getGeneratedConditionFilesForPlan(abstractPlan);
@@ -668,6 +667,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             return new ArrayList<>();
         }
     }
+
     @Override
     public void generateAutoGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
         mainWindowController.waitOnProgressLabel(() -> generateCode(new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, "behaviour",
@@ -767,9 +767,56 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             pb.environment().put("ROBOT", name);
             pb.environment().put("LD_LIBRARY_PATH", "/opt/pd-debug/ttb-ws/devel/lib:/opt/ros/melodic/lib" + pb.environment().getOrDefault("LD_LIBRARY_PATH", ""));
             pb.environment().put("ROS_MASTER_URI", "http://localhost:11311");
-            pb.inheritIO();
+            //pb.inheritIO();
             System.out.println("Starting Agent with name = " + name);
             pdAlicaRunnerProcesses.add(pb.start());
+
+            // get settings for Subscriber from AlicaCapnzProxy.conf
+            List<String> alicaCapnzeroProxy = Files.readAllLines(Paths.get(Paths.get(rolesPath).getParent().toString(), "AlicaCapnzProxy.conf"));
+            alicaCapnzeroProxy.replaceAll(String::strip);
+            alicaCapnzeroProxy.removeIf(String::isEmpty);
+
+            List<String> topics = alicaCapnzeroProxy.subList(
+                    alicaCapnzeroProxy.indexOf("[Topics]") + 1,
+                    alicaCapnzeroProxy.indexOf("[!Topics]"));
+
+            String alicaEngineInfoTopic = topics.stream()
+                    .filter(s -> s.startsWith("AlicaEngineInfoTopic"))
+                    .findFirst()
+                    .orElse("alicaEngineInfoTopic=\"AlicaEngineInfo\"")
+                    .split("=")[1]
+                    .replaceAll("\"", "");
+
+            List<String> comm = alicaCapnzeroProxy.subList(
+                    alicaCapnzeroProxy.indexOf("[Communication]") + 1,
+                    alicaCapnzeroProxy.indexOf("[!Communication]"));
+            String url = comm.stream()
+                    .filter(s -> s.startsWith("URL"))
+                    .findFirst()
+                    .orElse("URL=224.0.0.2:5555")
+                    .split("=")[1].strip();
+            int commType = Integer.parseInt(comm.stream()
+                    .filter(s -> s.startsWith("transport"))
+                    .findFirst()
+                    .orElse("transport=0")
+                    .split("=")[1].strip());
+
+
+            // start listening
+            new Thread(() -> {
+                Subscriber sub = new Subscriber();
+                sub.setGroupName(alicaEngineInfoTopic);
+                sub.subscribe(Protocol.values()[commType], url);
+
+                while (true) {
+                    try {
+                        Thread.sleep(2000);
+                        System.out.println(sub.getSerializedMessage());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
 
             return true;
 

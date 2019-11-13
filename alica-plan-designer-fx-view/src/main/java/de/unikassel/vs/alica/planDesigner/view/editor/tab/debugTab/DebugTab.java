@@ -280,12 +280,11 @@ public class DebugTab extends EditorTab {
         try {
             List<String> globals = Files.readAllLines(pathToGlobals);
 
-            globals.replaceAll(s -> s.strip());
-            globals.removeIf(s -> s.isEmpty());
+            globals.replaceAll(String::strip);
+            globals.removeIf(String::isEmpty);
             globals.removeIf(s -> s.startsWith("#"));
 
             List<String> teams = globals.subList(globals.indexOf("[Team]") + 1, globals.indexOf("[!Team]"));
-
             while (!teams.isEmpty())
             {
                 String name = teams.get(0).replace("[", "").replace("]", "");
