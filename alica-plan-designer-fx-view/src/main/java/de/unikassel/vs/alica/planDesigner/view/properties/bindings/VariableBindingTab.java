@@ -86,7 +86,7 @@ public class VariableBindingTab extends Tab {
                     });
                 }
             });
-            
+
             // Listener: Update SubPlan in Variable BindingsTab
             ((PlanTypeViewModel) this.parentViewModel).getPlansInPlanType().addListener((InvalidationListener) change -> {
                 hasVariablesViewArrayList.clear();
