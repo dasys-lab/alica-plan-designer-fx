@@ -69,7 +69,7 @@ public class VariablesTab extends Tab {
                 if(used){
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("The Variable is still used in VariableBindings!");
-                    alert.setHeaderText("If you delete the Variable, the VariableBinding deleted, too.");
+                    alert.setHeaderText("If you delete the Variable, the VariableBinding is deleted, too.");
                     alert.setContentText("Delete Variable?");
 
                     Optional<ButtonType> result = alert.showAndWait();

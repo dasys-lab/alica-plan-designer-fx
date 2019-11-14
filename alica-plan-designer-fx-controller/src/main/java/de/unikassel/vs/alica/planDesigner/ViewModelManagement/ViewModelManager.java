@@ -557,7 +557,25 @@ public class ViewModelManager {
                 break;
             case Types.VARIABLEBINDING:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
-                ((HasVariableBinding) parentViewModel).getVariableBindings().remove(viewModelElement);
+                if(parentViewModel instanceof PlanTypeViewModel){
+                    ((HasVariableBinding) parentViewModel).getVariableBindings().remove(viewModelElement);
+                }
+                if(parentViewModel instanceof PlanViewModel) {
+                    VariableBindingViewModel var = null;
+                    for (StateViewModel stateViewModel1:((PlanViewModel) parentViewModel).getStates()) {
+                        for (Object object: stateViewModel1.getVariableBindings()) {
+                            if(((VariableBindingViewModel) object).getId() == viewModelElement.getId()){
+                                var = (VariableBindingViewModel) object;
+                            }
+                        }
+                        if(var != null) {
+                            stateViewModel1.removeVariableBinding(var);
+                        }
+                    }
+                }
+                if(parentViewModel instanceof StateViewModel) {
+                    ((StateViewModel) parentViewModel).removeVariableBinding((VariableBindingViewModel) viewModelElement);
+                }
                 break;
             case Types.PRECONDITION:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
@@ -892,6 +910,21 @@ public class ViewModelManager {
             case Types.PRECONDITION:
             case Types.RUNTIMECONDITION:
                 // NO-OP
+                break;
+            case Types.VARIABLEBINDING:
+                // Return Variable Bindings by undo
+                VariableBindingViewModel var = null;
+                for (StateViewModel stateViewModel1:parentPlan.getStates()) {
+                    State state1 = (State) modelManager.getPlanElement(stateViewModel1.getId());
+                    for (Object object: state1.getVariableBindings()) {
+                        if(((VariableBinding) object).getId() == element.getId()){
+                            var = (VariableBindingViewModel) element;
+                        }
+                    }
+                    if(var != null) {
+                        stateViewModel1.addVariableBinding(var);
+                    }
+                }
                 break;
             default:
                 System.err.println("ViewModelManager: Add Element to plan not supported for type: " + element.getType());
