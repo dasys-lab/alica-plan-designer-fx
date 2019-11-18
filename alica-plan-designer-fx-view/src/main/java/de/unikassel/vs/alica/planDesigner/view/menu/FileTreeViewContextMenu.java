@@ -25,7 +25,14 @@ public class FileTreeViewContextMenu extends ContextMenu {
 
     public void setHintFile(File hintFile) {
         this.hintFile = hintFile;
-//        deleteFileMenuItem.setToDelete(hintFile);
+
+        // Copy isDisable for Folders
+        if(hintFile.isDirectory()){
+            copyFileMenuItem.setDisable(true);
+        } else {
+            copyFileMenuItem.setDisable(false);
+        }
+
         newResourceMenu.setInitialDirectoryHint(hintFile);
     }
 
