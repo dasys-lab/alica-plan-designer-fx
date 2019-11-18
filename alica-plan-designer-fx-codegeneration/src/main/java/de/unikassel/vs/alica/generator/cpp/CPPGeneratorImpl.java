@@ -405,14 +405,34 @@ public class CPPGeneratorImpl implements IGenerator {
      */
     private void formatFile(String fileName) {
         if (formatter != null && formatter.length() > 0) {
-//            URL clangFormatStyle = CPPGeneratorImpl.class.getResource(".clang-format");
-            String command = formatter + " -style=file -i " + fileName;
+            // clang-format will look for a file called .clang-format in the directory of the target file.
+            // If it doesn't find any it will cd .. and try again.
+            // https://stackoverflow.com/a/46374122
+            String clangFormatName = ".clang-format";
+            URL clangFormatUrl = CPPGeneratorImpl.class.getResource(clangFormatName);
+            File clangFormatFile = new File(clangFormatUrl.getFile());
+
+            // copy .clang-format to file dir
+            String clangFormatDstStr = fileName.substring(0, fileName.lastIndexOf(File.separator)) + File.separator + clangFormatName;
+            File clangFormatDstFile = new File(clangFormatDstStr);
+            try {
+                Files.copy(clangFormatFile.toPath(), clangFormatDstFile.toPath());
+            } catch (IOException e) {
+                LOG.error("An error occurred while copying format style to destination", e);
+                throw new RuntimeException(e);
+            }
+
+            // run formatter
+            String command = formatter + " -style=file -i \"" + fileName + "\"";
             try {
                 Runtime.getRuntime().exec(command).waitFor();
             } catch (IOException | InterruptedException e) {
                 LOG.error("An error occurred while formatting generated sources", e);
                 throw new RuntimeException(e);
             }
+
+            // remove .clang-format from file dir
+            clangFormatDstFile.delete();
         } else {
             LOG.warn("Generated files are not formatted because no formatter is configured");
         }
