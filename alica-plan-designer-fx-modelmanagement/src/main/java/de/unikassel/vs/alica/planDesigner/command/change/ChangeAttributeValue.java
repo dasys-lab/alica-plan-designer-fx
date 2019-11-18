@@ -6,6 +6,7 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import org.apache.commons.beanutils.PropertyUtils;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 public class ChangeAttributeValue extends ChangeAttributeCommand {
@@ -36,6 +37,24 @@ public class ChangeAttributeValue extends ChangeAttributeCommand {
 
     @Override
     public void doCommand() {
+        // only move a planElement if the Path exists 
+        String path = this.modelManager.getAbsoluteDirectory(planElement);
+        if(oldValue.toString().length() > newValue.toString().length()){
+            if (newValue.toString().length() == 0){
+                path = path.substring(0, path.length() - oldValue.toString().length());
+            } else {
+                path = path.substring(0, path.length() - oldValue.toString().length());
+                path = path + newValue;
+            }
+        } else if (oldValue.toString().length() < newValue.toString().length()){
+            path = path.substring(0, path.length() - oldValue.toString().length());
+            path = path + "/" + newValue;
+        }
+
+        File file = new File(path);
+        if(!file.exists()){
+            return;
+        }
         this.modelManager.changeAttribute(planElement, elementType, attribute, newValue, oldValue);
         fireEvent(planElement, elementType, attribute, newValue, oldValue);
     }
