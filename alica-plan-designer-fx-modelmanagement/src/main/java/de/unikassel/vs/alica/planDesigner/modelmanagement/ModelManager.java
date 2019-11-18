@@ -1239,6 +1239,9 @@ public class ModelManager implements Observer {
                     case Types.ROLE_CHARACTERISTIC:
                         cmd = new ChangeRoleCharacteristic(this, mmq);
                         break;
+                    case Types.FOLDER:
+                        cmd = new RenameFileTreeFolder(this, mmq);
+                        break;
                     default:
                         cmd = new ChangeAttributeValue(this, mmq);
                         break;
