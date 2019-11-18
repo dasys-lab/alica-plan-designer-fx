@@ -1,7 +1,9 @@
 package de.unikassel.vs.alica.planDesigner.command.change;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.alicamodel.SerializablePlanElement;
 import de.unikassel.vs.alica.planDesigner.command.ChangeAttributeCommand;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.FileSystemUtil;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -37,24 +39,31 @@ public class ChangeAttributeValue extends ChangeAttributeCommand {
 
     @Override
     public void doCommand() {
-        // only move a planElement if the Path exists 
-        String path = this.modelManager.getAbsoluteDirectory(planElement);
-        if(oldValue.toString().length() > newValue.toString().length()){
-            if (newValue.toString().length() == 0){
+        if(attribute == "relativeDirectory") {
+            // only move a planElement if the Path exists
+            String path = this.modelManager.getAbsoluteDirectory(planElement);
+            if (oldValue.toString().length() > newValue.toString().length()) {
+                if (newValue.toString().length() == 0) {
+                    path = path.substring(0, path.length() - oldValue.toString().length());
+                } else {
+                    path = path.substring(0, path.length() - oldValue.toString().length());
+                    path = path + newValue;
+                }
+            } else if (oldValue.toString().length() < newValue.toString().length()) {
                 path = path.substring(0, path.length() - oldValue.toString().length());
-            } else {
-                path = path.substring(0, path.length() - oldValue.toString().length());
-                path = path + newValue;
+                path = path + "/" + newValue;
             }
-        } else if (oldValue.toString().length() < newValue.toString().length()){
-            path = path.substring(0, path.length() - oldValue.toString().length());
-            path = path + "/" + newValue;
+
+            File file = new File(path);
+            if (!file.exists()) {
+                return;
+            }
+            SerializablePlanElement elementToMove = (SerializablePlanElement) planElement;
+            String ending = FileSystemUtil.getExtension(elementToMove);
+
+            this.modelManager.moveFile(elementToMove, elementType, path, ending);
         }
 
-        File file = new File(path);
-        if(!file.exists()){
-            return;
-        }
         this.modelManager.changeAttribute(planElement, elementType, attribute, newValue, oldValue);
         fireEvent(planElement, elementType, attribute, newValue, oldValue);
     }
