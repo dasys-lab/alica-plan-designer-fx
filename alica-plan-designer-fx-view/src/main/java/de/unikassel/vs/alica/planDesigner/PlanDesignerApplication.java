@@ -6,7 +6,6 @@ import de.unikassel.vs.alica.planDesigner.events.ConfigEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IConfigurationEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -18,11 +17,11 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
 
-import javax.swing.ImageIcon;
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -53,7 +52,7 @@ public class PlanDesignerApplication extends Application {
     public void start(Stage primaryStage) throws IOException {
         running = true;
 
-        Logger.getRootLogger().setLevel(Level.WARN);
+        Configurator.setRootLevel(Level.WARN);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("mainWindow.fxml"));
         // The next two lines replace this attribute in mainWindow.fxml::AnchorPane "fx:controller="MainWindowController"

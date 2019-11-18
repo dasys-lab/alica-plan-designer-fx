@@ -22,9 +22,10 @@
     <build>
         <plugins>
             <plugin>
+                <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -48,6 +49,7 @@
                 </executions>
             </plugin>
             <plugin>
+                <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -93,23 +95,27 @@
         </dependency>
 
         <dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
+            <version>3.9</version>
         </dependency>
         <dependency>
+            <!-- https://mvnrepository.com/artifact/junit/junit -->
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- https://mvnrepository.com/artifact/org.testfx/testfx-core -->
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
             <version>4.0.16-alpha</version>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- https://mvnrepository.com/artifact/org.testfx/testfx-junit -->
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
             <version>4.0.15-alpha</version>

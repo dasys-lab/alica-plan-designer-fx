@@ -40,8 +40,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -144,15 +145,15 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         CustomPlanElementConverter customPlanElementConverter = new CustomPlanElementConverter(this.modelManager);
 
         // Temporarily setting the log-level to prevent unnecessary output
-        Level logLevel = Logger.getRootLogger().getLevel();
-        Logger.getRootLogger().setLevel(Level.WARN);
+        Level logLevel = LogManager.getRootLogger().getLevel();
+        Configurator.setRootLevel(Level.WARN);
 
         ConvertUtils.register(customStringConverter, String.class);
         ConvertUtils.register(customLongConverter, Long.class);
         ConvertUtils.register(customPlanElementConverter, PlanElement.class);
 
         // Setting the log-level to its previous level
-        Logger.getRootLogger().setLevel(logLevel);
+        Configurator.setRootLevel(logLevel);
     }
 
     // HANDLER EVENT METHODS

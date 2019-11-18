@@ -1,7 +1,9 @@
 package de.unikassel.vs.alica.planDesigner;
 
 import de.unikassel.vs.alica.planDesigner.controller.Controller;
-import org.apache.log4j.BasicConfigurator;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.DefaultConfiguration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,7 +19,8 @@ public class PlanDesigner {
 
     public static void init() {
         // setup log4j correctly
-        BasicConfigurator.configure();
+        Configurator.initialize(new DefaultConfiguration());
+        Configurator.setRootLevel(Level.INFO);
 
         // initialisation before GUI is going to start
         Controller controller = new Controller();

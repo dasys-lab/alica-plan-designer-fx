@@ -2,10 +2,7 @@ package de.unikassel.vs.alica.planDesigner.view.editor.tools;
 
 import de.unikassel.vs.alica.planDesigner.controller.EntryPointCreatorDialogController;
 import de.unikassel.vs.alica.planDesigner.controller.ErrorWindowController;
-import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
-import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
@@ -21,8 +18,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 
