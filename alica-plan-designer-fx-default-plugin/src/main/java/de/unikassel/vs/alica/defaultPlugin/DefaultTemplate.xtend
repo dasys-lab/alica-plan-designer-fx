@@ -23,25 +23,28 @@ class DefaultTemplate {
         «var  List<Transition> outTransitions = state.outTransitions»
         «FOR transition : outTransitions»
             «IF (transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin")»
-                /*
+                /**
+                * Outgoing transition:
+                *   - Name: «transition.preCondition.name», ConditionString: «transition.preCondition.conditionString», Comment: «transition.comment»
                 *
-                * Transition:
-                *   - Name: «transition.preCondition.name», ConditionString: «transition.preCondition.conditionString», Comment : «transition.comment»
+                * Abstractplans in current state: «var  List<AbstractPlan> plans = state.abstractPlans»
+                «FOR plan : plans»
+                *   - «plan.name» («plan.id»)
+                «ENDFOR»
                 *
-                * Plans in State: «var  List<AbstractPlan> plans = state.abstractPlans»
-                *     «FOR plan : plans»
-                *   - Plan - (Name): «plan.name», (PlanID): «plan.id» «ENDFOR»
-                *
-                * Tasks: «var  List<EntryPoint> entryPoints = state.parentPlan.entryPoints»
-                *     «FOR planEntryPoint : entryPoints»
+                * Tasks in plan: «var  List<EntryPoint> entryPoints = state.parentPlan.entryPoints»
+                «FOR planEntryPoint : entryPoints»
                 *   - «planEntryPoint.task.name» («planEntryPoint.task.id») (Entrypoint: «planEntryPoint.id»)«ENDFOR»
                 *
-                * States: «var  List<State> states = state.parentPlan.states»
-                *     «FOR stateOfInPlan : states»
-                *   - «stateOfInPlan.name» («stateOfInPlan.id»)«ENDFOR»
+                * States in plan: «var  List<State> states = state.parentPlan.states»
+                «FOR stateOfInPlan : states»
+                *   - «stateOfInPlan.name» («stateOfInPlan.id»)
+                «ENDFOR»
                 *
-                * Vars:«var  List<Variable> variables = transition.preCondition.variables»«FOR variable : variables»
-                *	- «variable.name» («variable.id») «ENDFOR»
+                * Variables of plan:«var  List<Variable> variables = transition.preCondition.variables»
+                «FOR variable : variables»
+                *	- «variable.name» («variable.id»)
+                «ENDFOR»
                 */
                 bool PreCondition«transition.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
                  {
@@ -243,7 +246,7 @@ class DefaultTemplate {
         «ENDIF»
         «IF (behaviour.preCondition !== null && behaviour.preCondition.pluginName == "DefaultPlugin")»
         «IF (behaviour.preCondition.variables.size > 0) || (behaviour.preCondition.quantifiers.size > 0)»
-            /*
+            /**
              * PreCondition - (Name): «behaviour.preCondition.name»
              * (ConditionString): «behaviour.preCondition.conditionString»
             «var  List<Variable> variables =  behaviour.preCondition.variables»
@@ -271,7 +274,7 @@ class DefaultTemplate {
         «ENDIF»
         «IF (behaviour.postCondition !== null && behaviour.postCondition.pluginName == "DefaultPlugin")»
          «IF (behaviour.postCondition.variables.size > 0) || (behaviour.postCondition.quantifiers.size > 0)»
-            /*
+            /**
              * PostCondition - (Name): «behaviour.postCondition.name»
              * (ConditionString): «behaviour.postCondition.conditionString»
             «var  List<Variable> variables =  behaviour.postCondition.variables»
@@ -306,10 +309,10 @@ class DefaultTemplate {
         // State: «state.name»
         «var  List<Transition> outTransitions = state.outTransitions»
         «FOR transition : outTransitions»
-            «IF transition.preCondition != null»
+            «IF transition.preCondition !== null»
                 «var  List<Variable> variables = transition.preCondition.variables»
                 «IF (transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin" && variables.size > 0)»
-                    /*
+                    /**
                     * Transition:
                     * - Name: «transition.preCondition.name»
                     * - Comment: «transition.preCondition.comment»

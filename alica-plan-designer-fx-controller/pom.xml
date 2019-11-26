@@ -40,7 +40,7 @@
                     <prefix>git</prefix>
                     <verbose>false</verbose>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>${project.build.directory}/../../target/git.properties</generateGitPropertiesFilename>
+                    <generateGitPropertiesFilename>${project.basedir}/../target/git.properties</generateGitPropertiesFilename>
                     <format>json</format>
                     <gitDescribe>
                         <skip>false</skip>
@@ -73,9 +73,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>
-                                ${project.build.directory}/../../target
-                            </outputDirectory>
+                            <outputDirectory>${project.build.directory}/../../target</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
