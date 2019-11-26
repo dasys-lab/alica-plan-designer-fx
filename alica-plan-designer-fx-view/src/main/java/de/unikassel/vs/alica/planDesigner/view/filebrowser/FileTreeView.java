@@ -341,24 +341,31 @@ public final class FileTreeView extends TreeView<File> {
             draggedItem = (FileTreeItem) ((FileTreeCell) node).getTreeItem();
             startFolder = draggedItem.getValue().getAbsolutePath();
             startFolder = startFolder.substring(0, startFolder.lastIndexOf(File.separator));
-            switch (draggedItem.getViewModelElement().getType()) {
-                case Types.BEHAVIOUR:
-                    FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.behaviour));
-                    break;
-                case Types.PLAN:
-                    FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.plan));
-                    break;
-                case Types.MASTERPLAN:
-                    FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.masterplan));
-                    break;
-                case Types.PLANTYPE:
-                    FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.plantype));
-                    break;
-                case Types.TASKREPOSITORY:
-                    FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.tasks));
-                    break;
-                default:
-                    System.err.println("FileTreeView: " + draggedItem.getViewModelElement().getType() + " not handled!");
+
+            if(draggedItem.getViewModelElement() != null) {
+                switch (draggedItem.getViewModelElement().getType()) {
+                    case Types.BEHAVIOUR:
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.behaviour));
+                        break;
+                    case Types.PLAN:
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.plan));
+                        break;
+                    case Types.MASTERPLAN:
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.masterplan));
+                        break;
+                    case Types.PLANTYPE:
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.plantype));
+                        break;
+                    case Types.TASKREPOSITORY:
+                        FileTreeView.this.getScene().setCursor(new AlicaCursor(AlicaCursor.Type.tasks));
+                        break;
+                    default:
+                        System.err.println("FileTreeView: " + draggedItem.getViewModelElement().getType() + " not handled!");
+                }
+            } else {
+                //For move Folder
+                AlicaCursor folderCursor = new AlicaCursor(AlicaCursor.Type.folder, null);
+                FileTreeView.this.getScene().setCursor(folderCursor);
             }
             wasDragged = true;
             event.consume();
@@ -405,13 +412,21 @@ public final class FileTreeView extends TreeView<File> {
                 e.consume();
                 return;
             }
-
-            GuiModificationEvent event = new GuiModificationEvent(GuiEventType.MOVE_FILE, draggedItem.getViewModelElement().getType(),
-                    draggedItem.getViewModelElement().getName());
-            event.setElementId(draggedItem.getViewModelElement().getId());
-            event.setAbsoluteDirectory(parent.toString());
-            controller.getGuiModificationHandler().handle(event);
-            e.consume();
+            if(draggedItem.getViewModelElement() != null) {
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.MOVE_FILE, draggedItem.getViewModelElement().getType(),
+                        draggedItem.getViewModelElement().getName());
+                event.setElementId(draggedItem.getViewModelElement().getId());
+                event.setAbsoluteDirectory(parent.toString());
+                controller.getGuiModificationHandler().handle(event);
+                e.consume();
+            } else {
+                //for folder
+                GuiModificationEvent event = new GuiModificationEvent(GuiEventType.MOVE_FILE, Types.FOLDER,
+                        draggedItem.getAbsolutepath());
+                event.setAbsoluteDirectory(parent.toString());
+                controller.getGuiModificationHandler().handle(event);
+                e.consume();
+            }
         }
     }
 }

@@ -66,7 +66,10 @@ public class AlicaCursor extends ImageCursor {
 
         //common
         add,
-        forbidden
+        forbidden,
+
+        //folder
+        folder
     }
 
     public AlicaCursor(Type type) {
@@ -75,5 +78,10 @@ public class AlicaCursor extends ImageCursor {
 
     public AlicaCursor(Type type, int x, int y) {
         super(new AlicaIcon(type.name(), AlicaIcon.Size.SMALL), x, y);
+    }
+
+    //For get BigIcon
+    public AlicaCursor(Type type, String string) {
+        super(new AlicaIcon(type.name(), AlicaIcon.Size.BIG));
     }
 }

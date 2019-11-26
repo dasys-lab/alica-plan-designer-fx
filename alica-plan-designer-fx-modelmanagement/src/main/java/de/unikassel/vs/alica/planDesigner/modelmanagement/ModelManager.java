@@ -1251,7 +1251,11 @@ public class ModelManager implements Observer {
                 cmd = new ChangePosition(this, mmq);
                 break;
             case MOVE_FILE:
-                cmd = new MoveFile(this, mmq);
+                if(!mmq.elementType.equals(Types.FOLDER)){
+                    cmd = new MoveFile(this, mmq);
+                } else {
+                    cmd = new MoveFolder(this, mmq);
+                }
                 break;
             default:
                 System.err.println("ModelManager: Unknown model modification query gets ignored!");
