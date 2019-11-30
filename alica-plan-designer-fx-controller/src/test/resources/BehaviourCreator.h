@@ -1,20 +1,20 @@
 #pragma once
 #include <engine/IBehaviourCreator.h>
 
-#include <memory>
 #include <iostream>
+#include <memory>
 
 namespace alica
 {
 
-    class BasicBehaviour;
+class BasicBehaviour;
 
-    class BehaviourCreator : public IBehaviourCreator
-    {
-        public:
-            BehaviourCreator();
-            virtual ~BehaviourCreator();
-            virtual std::shared_ptr<BasicBehaviour> createBehaviour(long behaviourId);
-    };
+class BehaviourCreator : public IBehaviourCreator
+{
+public:
+    BehaviourCreator();
+    virtual ~BehaviourCreator();
+    virtual std::shared_ptr<BasicBehaviour> createBehaviour(long behaviourId);
+};
 
 } /* namespace alica */

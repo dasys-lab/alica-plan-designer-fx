@@ -254,8 +254,6 @@ public class SavePlanTest extends ApplicationTest {
         // check cpp code generation
         generateCppCode();
 
-        sleep(1000000000);
-
         checkCppCodeStructure();
         checkCppCodeContent();
 

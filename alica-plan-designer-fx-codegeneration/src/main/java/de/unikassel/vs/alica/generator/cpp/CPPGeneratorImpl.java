@@ -412,18 +412,20 @@ public class CPPGeneratorImpl implements IGenerator {
             URL clangFormatUrl = CPPGeneratorImpl.class.getResource(clangFormatName);
             File clangFormatFile = new File(clangFormatUrl.getFile());
 
-            // copy .clang-format to file dir
+            // copy .clang-format to file dir if not exists
             String clangFormatDstStr = fileName.substring(0, fileName.lastIndexOf(File.separator)) + File.separator + clangFormatName;
             File clangFormatDstFile = new File(clangFormatDstStr);
-            try {
-                Files.copy(clangFormatFile.toPath(), clangFormatDstFile.toPath());
-            } catch (IOException e) {
-                LOG.error("An error occurred while copying format style to destination", e);
-                throw new RuntimeException(e);
+            if (!clangFormatDstFile.exists()) {
+                try {
+                    Files.copy(clangFormatFile.toPath(), clangFormatDstFile.toPath());
+                } catch (IOException e) {
+                    LOG.error("An error occurred while copying format style to destination", e);
+                    throw new RuntimeException(e);
+                }
             }
 
             // run formatter
-            String command = formatter + " -style=file -i \"" + fileName + "\"";
+            String command = formatter + " --style=file -i " + fileName;
             try {
                 Runtime.getRuntime().exec(command).waitFor();
             } catch (IOException | InterruptedException e) {
