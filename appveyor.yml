@@ -58,5 +58,8 @@ notifications:
     on_build_success: true  # TODO: set to false later
 
 # RDP for debugging
+# requires encrypted environment variable "APPVEYOR_RDP_PASSWORD"
+# The password must meet the Windows Server requirements
+# more info: https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
 #init:
 #  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
