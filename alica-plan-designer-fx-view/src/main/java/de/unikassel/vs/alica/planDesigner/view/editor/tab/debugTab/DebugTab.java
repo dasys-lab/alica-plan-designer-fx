@@ -53,6 +53,9 @@ public class DebugTab extends EditorTab {
     public static final String DEBUGVIEWNAME = "Debug";
     private GridPane gridPane;
 
+    // Checking if pd_alica_runners are still running
+    private Thread checkForAPDR;
+
     public DebugTab(SerializableViewModel serializableViewModel, EditorTabPane editorTabPane, IAlicaHandler handler) {
         super(serializableViewModel, editorTabPane.getGuiModificationHandler());
         alicaHandler = handler;
@@ -182,6 +185,13 @@ public class DebugTab extends EditorTab {
 
                 runButton.setText("Stop");
                 runButton.setGraphic(new ImageView(new Image(AlicaIcon.class.getClassLoader().getResourceAsStream("images/stop16x16.png"))));
+
+                // We need to react to when runners crashed or were not at all
+                if (checkForAPDR == null) {
+                    checkForAPDR = new Thread(() -> {
+
+                    });
+                }
             }
         } else {
             // There are agents running, stop them

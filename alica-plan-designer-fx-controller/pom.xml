@@ -75,7 +75,7 @@
         <dependency>
             <groupId>com.github.dasys-lab</groupId>
             <artifactId>capnzero4j</artifactId>
-            <version>45217cc4cb</version>
+            <version>347cbd4ded</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

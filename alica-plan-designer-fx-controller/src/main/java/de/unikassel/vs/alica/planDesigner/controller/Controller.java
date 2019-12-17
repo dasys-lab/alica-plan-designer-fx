@@ -43,16 +43,16 @@ import javafx.scene.control.Tab;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Central class that synchronizes model and view.
@@ -81,6 +81,18 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     // Code Generation Objects
     private GeneratedSourcesManager generatedSourcesManager;
+
+    // ALICA Engine and DebugView stuff
+
+    private Map<Long, String> currentAgents;
+    private Map<Long, Long> agentsTabs;
+
+    private Process roscoreProcess;
+    private List<Process> pdAlicaRunnerProcesses; // needs more than one process
+
+    private String lastAEIMessage;
+    private Thread messageReceiver;
+
 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
@@ -674,9 +686,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 abstractPlan.getName()), mainWindowController.getStatusText()));
     }
 
-    private Map<Long, String> currentAgents;
-    private Map<Long, Long> agentsTabs;
-
     @Override
     public void handleAlicaMessageReceived(long senderId, String masterPlan, String currentPlan, String currentState,
                                            String currentRole, String currentTask, long[] agentIdsWithMe) {
@@ -738,17 +747,24 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     }
 
-    private Process roscoreProcess;
-    private List<Process> pdAlicaRunnerProcesses; // needs more than one process
-
     @Override
     public boolean runAlica(String name, String masterplan, String roleset) {
         String alicaEnginePath = configurationManager.getAlicaEnginePath();
         String rolesPath = configurationManager.getActiveConfiguration().getRolesPath();
         try {
-            if (roscoreProcess == null) {
+            // first determine if roscore is already runnig
+            ProcessBuilder pb = new ProcessBuilder("bash", "-c", "pgrep -f roscore");
+            Process rcRunning = pb.start();
+            String rcRunningOutput = "";
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(rcRunning.getInputStream()));
+            boolean isRCRunning = reader.lines().count() > 0;
+            rcRunning.waitFor();
+            rcRunning.destroy();
+            reader.close();
+
+            if (!isRCRunning) {
                 // start roscore, because we still need it
-                ProcessBuilder pb = new ProcessBuilder("bash", "-c", "echo 'Sourcing setup.bash'; source /opt/ros/melodic/setup.bash; echo 'Starting roscore...'; roscore");
+                pb = new ProcessBuilder("bash", "-c", "echo 'Sourcing setup.bash'; source /opt/ros/melodic/setup.bash; echo 'Starting roscore...'; roscore");
                 pb.environment().put("PATH", pb.environment().get("PATH") + ":/opt/ros/melodic/bin");
                 //pb.inheritIO();
                 roscoreProcess = pb.start();
@@ -756,7 +772,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
             if (pdAlicaRunnerProcesses == null) pdAlicaRunnerProcesses = new ArrayList<>();
             // Load pd_alica_runner
-            ProcessBuilder pb = new ProcessBuilder("bash", "-c", "echo Starting pd_alica_runner...; " +
+            pb = new ProcessBuilder("bash", "-c", "echo Starting pd_alica_runner...; " +
                     alicaEnginePath +
                     " -m " + masterplan +
                     " -rd " + rolesPath +
@@ -803,7 +819,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
 
             // start listening
-            new Thread(() -> {
+            messageReceiver = new Thread(() -> {
                 Subscriber sub = new Subscriber();
                 sub.setGroupName(alicaEngineInfoTopic);
                 sub.subscribe(Protocol.values()[commType], url);
@@ -811,12 +827,13 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 while (true) {
                     try {
                         Thread.sleep(2000);
-                        System.out.println(sub.getSerializedMessage());
+                        onAlicaEngineInfoReceived(sub.getSerializedMessage());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-            }).start();
+            });
+            messageReceiver.start();
 
             return true;
 
@@ -827,6 +844,77 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         return false;
     }
 
+    /**
+     * Checks the received message and if it changed from previous call, shows the
+     * appropriate plan.
+     *
+     * @param msg The message received from the ALICA engine, topic AlicaEngineInfo.
+     */
+    private void onAlicaEngineInfoReceived(String msg) {
+        if (msg.length() == 0) return;
+        if (!msg.equals(lastAEIMessage)) {
+            lastAEIMessage = msg;
+            /*
+            msg =
+            (senderId = (value = "\x01\x00\x00\x00", type = 1),
+            masterPlan = "ServeMaster",
+            currentPlan = "ServeMaster",
+            currentState = "Stop",
+            currentRole = "Assistant",
+            currentTask = "DefaultTask",
+            agentIdsWithMe = [(value = "\x01\x00\x00\x00", type = 1)])
+             */
+
+            long senderId = 0;
+            String masterPlan = "", currentPlan = "", currentState = "", currentRole = "", currentTask = "";
+            long[] agentsWithMe = {0};
+            msg = msg.replaceAll(" ", "");
+
+            int endSenderId = msg.indexOf(")");
+
+            String senderKeyValue = msg.substring(1, endSenderId + 1);
+            String senderIdString = senderKeyValue.split("senderId=")[1].split(",")[0].split("=")[1].replaceAll("\"", "");
+            senderIdString = StringEscapeUtils.unescapeJava(senderIdString.replace("\\x", "#"));
+            StringBuilder str = new StringBuilder();
+            List<String> hexes = Arrays.asList(senderIdString.split("#"));
+            Collections.reverse(hexes);
+            for (String hex : hexes) {
+                str.append(hex);
+            }
+            senderId = Long.parseLong(str.toString(), 16);
+
+            System.out.println(senderId);
+
+            String keyvalues = msg.substring(endSenderId + 2, msg.lastIndexOf("[") - ",agentIdsWithMe=".length());
+
+            for (String keyValue : keyvalues.split(",")) {
+                String[] split = keyValue.split("=");
+                switch (split[0]) {
+                    case "masterPlan":
+                        masterPlan = split[1].replaceAll("\"", "");
+                        break;
+                    case "currentPlan":
+                        currentPlan = split[1].replaceAll("\"", "");
+                        break;
+                    case "currentState":
+                        currentState = split[1].replaceAll("\"", "");
+                        break;
+                    case "currentRole":
+                        currentRole = split[1].replaceAll("\"", "");
+                        break;
+                    case "currentTask":
+                        currentTask = split[1].replaceAll("\"", "");
+                        break;
+                }
+            }
+
+            handleAlicaMessageReceived(senderId, masterPlan, currentPlan, currentState, currentRole, currentTask, agentsWithMe);
+
+        } else {
+            // Message has not changed, do nothing
+        }
+    }
+
     @Override
     public void stopAlica() throws InterruptedException {
         if (roscoreProcess == null || pdAlicaRunnerProcesses == null) {
@@ -834,8 +922,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         } else {
             if (pdAlicaRunnerProcesses != null) {
                 try {
+                    // stop the message receiver thread
+                    messageReceiver.stop();
+
+                    // kill all pd_alica_runners
                     ProcessBuilder pb = new ProcessBuilder("bash", "-c", "kill `pgrep -f pd_alica_runner`");
-                    pb.start().waitFor();
+                    Process p = pb.start();
+                    p.waitFor();
+                    p.destroy();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -844,7 +938,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             if (roscoreProcess != null) {
                 try {
                     ProcessBuilder pb = new ProcessBuilder("bash", "-c", "kill `pgrep -f ros`");
-                    pb.start().waitFor();
+                    Process p = pb.start();
+                    p.waitFor();
+                    p.destroy();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
