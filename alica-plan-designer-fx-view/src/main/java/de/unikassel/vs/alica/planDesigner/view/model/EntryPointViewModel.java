@@ -9,7 +9,8 @@ public class EntryPointViewModel extends PlanElementViewModel {
 
     protected final SimpleBooleanProperty successRequired = new SimpleBooleanProperty(this, "successRequired", false);
     protected final SimpleIntegerProperty minCardinality = new SimpleIntegerProperty(this, "minCardinality", 0);
-    protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty(this, "maxCardinality", 0);
+    //maxCardinality change to StringProperty, you can set * for Integer.Max
+    protected final SimpleStringProperty maxCardinality = new SimpleStringProperty(this, "maxCardinality", "");
     protected final SimpleObjectProperty<TaskViewModel> task = new SimpleObjectProperty<>(this, "task", null);
     protected final SimpleObjectProperty<StateViewModel> state = new SimpleObjectProperty<>(this, "state", null);
     protected final SimpleObjectProperty<PlanViewModel> plan = new SimpleObjectProperty<>(this, "plan", null);
@@ -31,7 +32,24 @@ public class EntryPointViewModel extends PlanElementViewModel {
             fireGUIAttributeChangeEvent(handler, newValue, minCardinality.getClass().getSimpleName(), minCardinality.getName());
         });
         maxCardinality.addListener((observable, oldValue, newValue) -> {
-            fireGUIAttributeChangeEvent(handler, newValue, maxCardinality.getClass().getSimpleName(), maxCardinality.getName());
+            //Only numbers and * for Integer.Max as Input for MaxCardinality
+            int maxCardinalityInt;
+            if(newValue.length() > 0 ){
+                if(newValue.matches("[*]")){
+                    maxCardinalityInt = Integer.MAX_VALUE;
+                    this.maxCardinality.set("*");
+                    fireGUIAttributeChangeEvent(handler, maxCardinalityInt, maxCardinality.getClass().getSimpleName(), maxCardinality.getName());
+                }
+                if(newValue.matches("^[0-9]*$")) {
+                    if(newValue.length() > 10){
+                        maxCardinalityInt = Integer.MAX_VALUE;
+                        this.maxCardinality.set("*");
+                    } else {
+                        maxCardinalityInt = Integer.parseInt(newValue);
+                    }
+                    fireGUIAttributeChangeEvent(handler, maxCardinalityInt, maxCardinality.getClass().getSimpleName(), maxCardinality.getName());
+                }
+            }
         });
     }
 
@@ -61,7 +79,7 @@ public class EntryPointViewModel extends PlanElementViewModel {
     public void setMinCardinality(int minCardinality) {this.minCardinality.setValue(minCardinality);}
     public int getMinCardinality() {return minCardinality.get();}
 
-    public final SimpleIntegerProperty maxCardinalityProperty() {return maxCardinality; }
-    public void setMaxCardinality(int maxCardinality) {this.maxCardinality.setValue(maxCardinality);}
-    public int getMaxCardinality() {return maxCardinality.get();}
+    public final SimpleStringProperty maxCardinalityProperty() {return maxCardinality; }
+    public void setMaxCardinality(String maxCardinality) {this.maxCardinality.setValue(maxCardinality);}
+    public String getMaxCardinality() {return maxCardinality.get();}
 }

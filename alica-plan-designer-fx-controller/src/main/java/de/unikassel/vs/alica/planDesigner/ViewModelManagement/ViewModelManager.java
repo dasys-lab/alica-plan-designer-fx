@@ -365,8 +365,12 @@ public class ViewModelManager {
         if (ep.getTask() != null) {
             entryPointViewModel.setTask((TaskViewModel) getViewModelElement(ep.getTask()));
         }
+        if(ep.getMaxCardinality() == Integer.MAX_VALUE){
+            entryPointViewModel.setMaxCardinality("*");
+        } else {
+            entryPointViewModel.setMaxCardinality(Integer.toString(ep.getMaxCardinality()));
+        }
         entryPointViewModel.setMinCardinality(ep.getMinCardinality());
-        entryPointViewModel.setMaxCardinality(ep.getMaxCardinality());
         entryPointViewModel.setSuccessRequired(ep.getSuccessRequired());
         entryPointViewModel.setParentId(ep.getPlan().getId());
         UiElement uiElement = modelManager.getPlanUIExtensionPair(ep.getPlan().getId()).getUiElement(ep.getId());
