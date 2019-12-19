@@ -1,6 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.PreCondition;
+import de.unikassel.vs.alica.planDesigner.alicamodel.RuntimeCondition;
 import de.unikassel.vs.alica.planDesigner.command.Command;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
@@ -27,6 +29,14 @@ public class CreatePlan extends Command {
 
     @Override
     public void doCommand() {
+        PreCondition preCondition = new PreCondition();
+        preCondition.setEnabled(true);
+        plan.setPreCondition(preCondition);
+
+        RuntimeCondition runtimeCondition = new RuntimeCondition();
+        runtimeCondition.setEnabled(true);
+        plan.setRuntimeCondition(runtimeCondition);
+
         modelManager.storePlanElement(Types.PLAN, this.plan, true);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.plan);
     }

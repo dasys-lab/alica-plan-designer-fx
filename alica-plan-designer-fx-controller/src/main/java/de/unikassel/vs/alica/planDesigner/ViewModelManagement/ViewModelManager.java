@@ -1,9 +1,11 @@
 package de.unikassel.vs.alica.planDesigner.ViewModelManagement;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.controller.MainWindowController;
 import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IPluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
@@ -657,6 +659,8 @@ public class ViewModelManager {
             addToPlan((PlanViewModel) parentViewModel, viewModelElement, event);
             return;
         }
+        IPluginEventHandler pluginHandler = MainWindowController.getInstance().getConfigWindowController().getPluginEventHandler();
+        ConditionViewModel conditionViewModel;
 
         switch (event.getElementType()) {
             case Types.ANNOTATEDPLAN:
@@ -695,6 +699,41 @@ public class ViewModelManager {
                     stateViewModel.addAbstractPlan(abstractPlanViewModel);
                 } else if(event.getElementType().equals(Types.PLAN) || event.getElementType().equals(Types.MASTERPLAN)) {
                     updatePlansInPlanViewModels((PlanViewModel) viewModelElement, ModelEventType.ELEMENT_ADDED);
+
+                    Plan plan = (Plan) modelManager.getPlanElement(((PlanViewModel) viewModelElement).getId());
+                    if (plan.getPreCondition() != null){
+                        conditionViewModel = createConditionViewModel(plan.getPreCondition());
+                        conditionViewModel.setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                        ((PlanViewModel) viewModelElement).setPreCondition(conditionViewModel);
+                        plan.getPreCondition().setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                    }
+                    if (plan.getRuntimeCondition() != null){
+                        conditionViewModel = createConditionViewModel(plan.getRuntimeCondition());
+                        conditionViewModel.setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                        ((PlanViewModel) viewModelElement).setRuntimeCondition(conditionViewModel);
+                        plan.getRuntimeCondition().setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                    }
+                }
+                if (viewModelElement instanceof BehaviourViewModel){
+                    Behaviour behaviour = (Behaviour) modelManager.getPlanElement(((BehaviourViewModel) viewModelElement).getId());
+                    if(behaviour.getPreCondition() != null) {
+                        conditionViewModel = createConditionViewModel(behaviour.getPreCondition());
+                        conditionViewModel.setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                        ((BehaviourViewModel) viewModelElement).setPreCondition(conditionViewModel);
+                        behaviour.getPreCondition().setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                    }
+                    if(behaviour.getRuntimeCondition() != null) {
+                        conditionViewModel = createConditionViewModel(behaviour.getRuntimeCondition());
+                        conditionViewModel.setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                        ((BehaviourViewModel) viewModelElement).setRuntimeCondition(conditionViewModel);
+                        behaviour.getRuntimeCondition().setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                    }
+                    if(behaviour.getPostCondition() != null) {
+                        conditionViewModel = createConditionViewModel(behaviour.getPostCondition());
+                        conditionViewModel.setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                        ((BehaviourViewModel) viewModelElement).setPostCondition(conditionViewModel);
+                        behaviour.getPostCondition().setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                    }
                 }
                 break;
             case Types.VARIABLE:
@@ -759,7 +798,7 @@ public class ViewModelManager {
                 }
                 break;
             case Types.QUANTIFIER:
-                ConditionViewModel conditionViewModel = (ConditionViewModel) parentViewModel;
+                conditionViewModel = (ConditionViewModel) parentViewModel;
                 conditionViewModel.getQuantifiers().add((QuantifierViewModel) viewModelElement);
                 break;
             case Types.TASKREPOSITORY:
@@ -789,6 +828,8 @@ public class ViewModelManager {
     }
 
     private void addToPlan(PlanViewModel parentPlan, ViewModelElement element, ModelEvent event) {
+        IPluginEventHandler pluginHandler = MainWindowController.getInstance().getConfigWindowController().getPluginEventHandler();
+        ConditionViewModel conditionViewModel;
         switch (event.getElementType()) {
             case Types.STATE:
             case Types.SUCCESSSTATE:
@@ -817,6 +858,14 @@ public class ViewModelManager {
                     parentPlan.getEntryPoints().remove(updateEntryPoint);
                     parentPlan.getEntryPoints().add(updateEntryPoint);
                 }
+                if ( statePlanElement instanceof TerminalState){
+                    if(((TerminalState) statePlanElement).getPostCondition() != null){
+                        conditionViewModel = createConditionViewModel(((TerminalState) statePlanElement).getPostCondition());
+                        stateViewModel.setPostCondition(conditionViewModel);
+                        stateViewModel.getPostConditionViewModel().setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                        ((TerminalState) statePlanElement).getPostCondition().setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                    }
+                }
                 break;
             case Types.TRANSITION:
                 Transition transition = (Transition) event.getElement();
@@ -828,6 +877,13 @@ public class ViewModelManager {
                 StateViewModel inStateViewModel = transitionViewModel.getInState();
                 inStateViewModel.getOutTransitions().add(transitionViewModel);
                 outStateViewModel.getInTransitions().add(transitionViewModel);
+
+                if(transition.getPreCondition() != null){
+                    conditionViewModel = createConditionViewModel(transition.getPreCondition());
+                    transitionViewModel.setPreCondition(conditionViewModel);
+                    transitionViewModel.getPreCondition().setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                    transition.getPreCondition().setPluginName(pluginHandler.getAvailablePlugins().get(0));
+                }
                 if(transition.getSynchronisation() != null) {
                     SynchronisationViewModel sViewModel = (SynchronisationViewModel) getViewModelElement(transition.getSynchronisation());
                     sViewModel.getTransitions().add(transitionViewModel);

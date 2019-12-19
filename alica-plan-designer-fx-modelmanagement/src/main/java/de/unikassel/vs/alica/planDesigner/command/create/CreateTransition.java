@@ -1,17 +1,12 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
-import de.unikassel.vs.alica.planDesigner.alicamodel.State;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
-import de.unikassel.vs.alica.planDesigner.command.Command;
+import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiExtension;
-import de.unikassel.vs.alica.planDesigner.uiextensionmodel.UiElement;
+
 
 public class CreateTransition extends UiPositionCommand {
     protected State in;
@@ -33,7 +28,7 @@ public class CreateTransition extends UiPositionCommand {
         transition.setInState(this.in);
         transition.setOutState(this.out);
         if (mmq.getName() == PlanElement.NO_NAME) {
-            transition.setName("From" + this.in.getName() + "To" + this.out.getName());
+            transition.setName("From" + this.in.getName() + "To " + this.out.getName());
         } else {
             transition.setName(mmq.getName());
         }
@@ -46,6 +41,11 @@ public class CreateTransition extends UiPositionCommand {
         this.plan.addTransition(this.transition);
         this.in.addOutTransition(this.transition);
         this.out.addInTransition(this.transition);
+
+        PreCondition preCondition = new PreCondition();
+        preCondition.setEnabled(true);
+        this.transition.setPreCondition(preCondition);
+
         this.modelManager.storePlanElement(Types.TRANSITION, this.transition,false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.transition);
     }
