@@ -37,13 +37,11 @@ public class EntryPointViewModel extends PlanElementViewModel {
             if(newValue.length() > 0 ){
                 if(newValue.matches("[*]")){
                     maxCardinalityInt = Integer.MAX_VALUE;
-                    this.maxCardinality.set("*");
                     fireGUIAttributeChangeEvent(handler, maxCardinalityInt, maxCardinality.getClass().getSimpleName(), maxCardinality.getName());
                 }
                 if(newValue.matches("^[0-9]*$")) {
-                    if(newValue.length() > 10){
+                    if(newValue.length() >= 10){
                         maxCardinalityInt = Integer.MAX_VALUE;
-                        this.maxCardinality.set("*");
                     } else {
                         maxCardinalityInt = Integer.parseInt(newValue);
                     }

@@ -367,7 +367,7 @@ public class ViewModelManager {
         if (ep.getTask() != null) {
             entryPointViewModel.setTask((TaskViewModel) getViewModelElement(ep.getTask()));
         }
-        if(ep.getMaxCardinality() == Integer.MAX_VALUE){
+        if(ep.getMaxCardinality() >= Integer.MAX_VALUE){
             entryPointViewModel.setMaxCardinality("*");
         } else {
             entryPointViewModel.setMaxCardinality(Integer.toString(ep.getMaxCardinality()));
