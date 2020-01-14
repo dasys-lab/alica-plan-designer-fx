@@ -52,7 +52,8 @@ class DefaultTemplate {
                     «IF (protectedRegions.containsKey(transition.id + ""))»
                         «protectedRegions.get(transition.id + "")»
                     «ELSE»
-                        return implement_me_«transition.id»;
+                    std::cout << "The PreCondition «transition.preCondition.id» in Transition «transition.getName» is not implement yet!" << std::endl;
+                    return false;
                     «ENDIF»
                     /*PROTECTED REGION END*/
                 }
@@ -73,7 +74,8 @@ class DefaultTemplate {
                 «IF (protectedRegions.containsKey(plan.runtimeCondition.id + ""))»
                     «protectedRegions.get(plan.runtimeCondition.id + "")»
                 «ELSE»
-                    return please_implement_me_«plan.runtimeCondition.id»;
+                    std::cout << "The RunTimeCondition «plan.runtimeCondition.id» in Plan «plan.getName» is not implement yet!" << std::endl;
+                    return false;
                 «ENDIF»
                 /*PROTECTED REGION END*/
             }
@@ -91,7 +93,8 @@ class DefaultTemplate {
                 «IF (protectedRegions.containsKey(plan.preCondition.id + ""))»
                     «protectedRegions.get(plan.preCondition.id + "")»
                 «ELSE»
-                    return please_implement_me_«plan.preCondition.id»;
+                    std::cout << "The PreCondition «plan.preCondition.id» in Plan «plan.getName» is not implement yet!" << std::endl;
+                    return false;
                 «ENDIF»
                 /*PROTECTED REGION END*/
             }
@@ -111,7 +114,8 @@ class DefaultTemplate {
                 «IF (protectedRegions.containsKey(behaviour.runtimeCondition.id + ""))»
                     «protectedRegions.get(behaviour.runtimeCondition.id + "")»
                 «ELSE»
-                    return please_implement_me_«behaviour.runtimeCondition.id»;
+                    std::cout << "The RuntimeCondition «behaviour.runtimeCondition.id» in Behaviour «behaviour.getName» is not implement yet!" << std::endl;
+                    return false;
                 «ENDIF»
                 /*PROTECTED REGION END*/
             }
@@ -129,7 +133,8 @@ class DefaultTemplate {
                 «IF (protectedRegions.containsKey(behaviour.preCondition.id + ""))»
                     «protectedRegions.get(behaviour.preCondition.id + "")»
                 «ELSE»
-                    return please_implement_me_«behaviour.preCondition.id»;
+                    std::cout << "The PreCondition «behaviour.preCondition.id» in Behaviour «behaviour.getName» is not implement yet!" << std::endl;
+                    return false;
                 «ENDIF»
                 /*PROTECTED REGION END*/
             }
@@ -147,7 +152,8 @@ class DefaultTemplate {
                 «IF (protectedRegions.containsKey(behaviour.postCondition.id + ""))»
                     «protectedRegions.get(behaviour.postCondition.id + "")»
                 «ELSE»
-                    return please_implement_me_«behaviour.postCondition.id»;
+                    std::cout << "The PostCondition «behaviour.postCondition.id» in Behaviour «behaviour.getName» is not implement yet!" << std::endl;
+                    return false;
                 «ENDIF»
                 /*PROTECTED REGION END*/
             }

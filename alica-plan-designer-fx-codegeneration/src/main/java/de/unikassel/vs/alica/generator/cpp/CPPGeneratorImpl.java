@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -419,8 +420,11 @@ public class CPPGeneratorImpl implements IGenerator {
                 try {
                     Files.copy(clangFormatFile.toPath(), clangFormatDstFile.toPath());
                 } catch (IOException e) {
-                    LOG.error("An error occurred while copying format style to destination", e);
-                    throw new RuntimeException(e);
+                    // intercept a bug, by move a File
+                    if(!(e instanceof FileAlreadyExistsException)) {
+                        LOG.error("An error occurred while copying format style to destination", e);
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
