@@ -661,7 +661,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     @Override
     public List<File> getGeneratedFilesForAbstractPlan(AbstractPlan abstractPlan) {
         if(abstractPlan instanceof Behaviour) {
-            return generatedSourcesManager.getGeneratedFilesForBehaviour((Behaviour) abstractPlan);
+            List<File> fileList = generatedSourcesManager.getGeneratedFilesForBehaviour((Behaviour) abstractPlan);
+            fileList.addAll(generatedSourcesManager.getGeneratedConstraintFilesForBehaviour((Behaviour) abstractPlan));
+            return fileList;
         } else if (abstractPlan instanceof Plan) {
             List<File> fileList = generatedSourcesManager.getGeneratedConditionFilesForPlan(abstractPlan);
             fileList.addAll(generatedSourcesManager.getGeneratedConstraintFilesForPlan(abstractPlan));

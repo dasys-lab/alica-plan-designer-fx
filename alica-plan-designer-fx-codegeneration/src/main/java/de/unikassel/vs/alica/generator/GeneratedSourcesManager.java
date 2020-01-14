@@ -64,6 +64,8 @@ public class GeneratedSourcesManager {
         String destinationPath = trimFileFromPath(behaviour.getRelativeDirectory());
         generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, behaviour.getName() + ".h").toFile());
         generatedFiles.add(Paths.get(getSrcDir(), destinationPath, behaviour.getName() + ".cpp").toFile());
+        generatedFiles.add(Paths.get(getIncludeDir(), destinationPath, behaviour.getName() + behaviour.getId() + ".h").toFile());
+        generatedFiles.add(Paths.get(getSrcDir(), destinationPath, behaviour.getName() + behaviour.getId() + ".cpp").toFile());
         return generatedFiles;
     }
 
