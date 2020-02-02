@@ -1,3 +1,3 @@
-[submodule "capnzero-monitoring-java"]
-	path = capnzero-monitoring-java
-	url = git@github.com:dasys-lab/capnzero-monitoring-java.git
+[submodule "capnzero-monitoring-client"]
+	path = capnzero-monitoring-client
+	url = git@github.com:dasys-lab/capnzero-monitoring-client.git
