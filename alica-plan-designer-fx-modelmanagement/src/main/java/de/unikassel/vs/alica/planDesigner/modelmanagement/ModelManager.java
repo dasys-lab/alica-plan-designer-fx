@@ -1,8 +1,11 @@
 package de.unikassel.vs.alica.planDesigner.modelmanagement;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.command.*;
 import de.unikassel.vs.alica.planDesigner.command.add.AddAbstractPlan;
@@ -1308,11 +1311,30 @@ public class ModelManager implements Observer {
     }
 
     /**
+     * This is used to generate a JSON Schema for each of the classes that are derived from
+     * the SerializablePlanElement class: TaskRepository, Behaviour, Plan, PlanType, RoleSet
+     */
+    private void generateJsonSchema() {
+        JsonSchemaGenerator jsonSchemaGenerator = new JsonSchemaGenerator(objectMapper);
+        JsonNode jsonSchema = jsonSchemaGenerator.generateJsonSchema(TaskRepository.class);
+
+        try {
+            String jsonSchemaAsString = objectMapper.writeValueAsString(jsonSchema);
+            System.out.println(jsonSchemaAsString);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Serializes an SerializablePlanElement to disk.
      *
      * @param planElement
      */
     private void serializeToDisk(SerializablePlanElement planElement, boolean movedOrCreated) {
+        // for testing, delete if you see this uncommented
+//        generateJsonSchema();
+
         String fileExtension = FileSystemUtil.getExtension(planElement);
         try {
             // Setting the values in the elementsSaved map at the beginning,
