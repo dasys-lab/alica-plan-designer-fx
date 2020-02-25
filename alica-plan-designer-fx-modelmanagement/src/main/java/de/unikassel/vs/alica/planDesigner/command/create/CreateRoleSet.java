@@ -20,6 +20,7 @@ public class CreateRoleSet extends Command {
     protected RoleSet createRoleSet() {
         RoleSet roleSet = new RoleSet();
         roleSet.setName(mmq.getName());
+        roleSet.setDefaultRoleSet(true);
         roleSet.setRelativeDirectory(modelManager.makeRelativeDirectory(mmq.getAbsoluteDirectory(), roleSet.getName() + "." + Extensions.ROLESET));
         roleSet.registerDirtyFlag();
         return roleSet;
