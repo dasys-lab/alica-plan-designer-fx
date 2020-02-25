@@ -4,6 +4,8 @@ import de.unikassel.vs.alica.generator.Codegenerator;
 import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
 import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
+import de.unikassel.vs.alica.planDesigner.alicaConfiguration.AlicaConfigurationEventHandler;
+import de.unikassel.vs.alica.planDesigner.alicaConfiguration.AlicaConfigurationManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.configuration.Configuration;
 import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationEventHandler;
@@ -58,8 +60,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     // Common Objects
     private ConfigurationManager configurationManager;
+    private AlicaConfigurationManager alicaConfigurationManager;
     private FileSystemEventHandler fileSystemEventHandler;
     private ConfigurationEventHandler configEventHandler;
+    private AlicaConfigurationEventHandler alicaConfigurationEventHandler;
     private PluginManager pluginManager;
     private PluginEventHandler pluginEventHandler;
 
@@ -70,6 +74,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private RepositoryViewModel repoViewModel;
     private MainWindowController mainWindowController;
     private ConfigurationWindowController configWindowController;
+    private AlicaConfWindowController alicaConfWindowController;
     private RepositoryTabPane repoTabPane;
     private EditorTabPane editorTabPane;
     private ViewModelManager viewModelManager;
@@ -81,6 +86,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         configurationManager = ConfigurationManager.getInstance();
         configurationManager.setController(this);
 
+        alicaConfigurationManager = AlicaConfigurationManager.getInstance();
+        alicaConfigurationManager.setController(this);
+
         pluginManager = PluginManager.getInstance();
 
         mainWindowController = MainWindowController.getInstance();
@@ -88,6 +96,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         mainWindowController.setGuiModificationHandler(this);
 
         setupConfigGuiStuff();
+        setupAlicaConfGuiStuff();
 
         fileSystemEventHandler = new FileSystemEventHandler(this);
         new Thread(fileSystemEventHandler).start(); // <- will be stopped by the PlanDesigner.isRunning() flag
@@ -122,6 +131,14 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         }
     }
 
+    protected void setupAlicaConfGuiStuff() {
+        alicaConfWindowController = new AlicaConfWindowController();
+
+        alicaConfigurationEventHandler = new AlicaConfigurationEventHandler(alicaConfWindowController,alicaConfigurationManager);
+        alicaConfWindowController.setHandler(alicaConfigurationEventHandler);
+
+        mainWindowController.setAlicaConfWindowController(alicaConfWindowController);
+    }
     protected void setupConfigGuiStuff() {
         configWindowController = new ConfigurationWindowController();
 

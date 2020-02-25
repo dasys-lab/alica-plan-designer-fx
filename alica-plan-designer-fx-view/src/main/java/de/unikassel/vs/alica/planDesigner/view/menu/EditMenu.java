@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.menu;
 
 import de.unikassel.vs.alica.planDesigner.PlanDesignerApplication;
+import de.unikassel.vs.alica.planDesigner.controller.AlicaConfWindowController;
 import de.unikassel.vs.alica.planDesigner.controller.ConfigurationWindowController;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
@@ -25,22 +26,27 @@ public class EditMenu extends Menu {
     private DeleteElementMenuItem deleteMenuItem;
     private MenuItem undoItem;
     private MenuItem redoItem;
+    private MenuItem alicaConfItem;
     private final MenuItem configItem;
     private I18NRepo i18NRepo;
     private Stage configStage;
+    private Stage alicaConfStage;
 
     private FileTreeView fileTreeView;
     private EditorTabPane editorTabPane;
     private RepositoryTabPane repositoryTabPane;
     private ConfigurationWindowController configWindowController;
     private IGuiModificationHandler guiModificationHandler;
+    private AlicaConfWindowController alicaConfWindowController;
 
-    public EditMenu(FileTreeView fileTreeView, EditorTabPane editorTabPane, RepositoryTabPane repositoryTabPane, ConfigurationWindowController configWindowController) {
+    public EditMenu(FileTreeView fileTreeView, EditorTabPane editorTabPane, RepositoryTabPane repositoryTabPane,
+                    ConfigurationWindowController configWindowController, AlicaConfWindowController alicaConfWindowController) {
         super(I18NRepo.getInstance().getString("label.menu.edit"));
         this.fileTreeView = fileTreeView;
         this.editorTabPane = editorTabPane;
         this.repositoryTabPane = repositoryTabPane;
         this.configWindowController = configWindowController;
+        this.alicaConfWindowController = alicaConfWindowController;
 
         i18NRepo = I18NRepo.getInstance();
 
@@ -60,7 +66,10 @@ public class EditMenu extends Menu {
         configItem = new MenuItem(i18NRepo.getString("label.menu.edit.config"));
         configItem.setOnAction(event -> openConfigMenu());
 
-        getItems().addAll(undoItem, redoItem, deleteMenuItem, configItem);
+        alicaConfItem = new MenuItem("Alica Configuration");
+        alicaConfItem.setOnAction(event -> openAlicaConfMenu());
+
+        getItems().addAll(undoItem, redoItem, deleteMenuItem, configItem, alicaConfItem);
     }
 
     // TODO: call this methods from the controller - reacting to changes in the commandstack
@@ -90,6 +99,26 @@ public class EditMenu extends Menu {
         guiModificationHandler.handleRedo();
     }
 
+    private void openAlicaConfMenu() {
+        if (alicaConfStage == null) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("alicaConfWindow.fxml"));
+            fxmlLoader.setController(this.alicaConfWindowController);
+            Parent window;
+            try {
+                window = fxmlLoader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            alicaConfStage = new Stage();
+            alicaConfStage.setResizable(false);
+            alicaConfStage.setTitle(i18NRepo.getString("label.alicaConf.title"));
+            alicaConfStage.setScene(new Scene(window));
+            alicaConfStage.initOwner(PlanDesignerApplication.getPrimaryStage());
+        }
+        alicaConfStage.show();
+        alicaConfStage.toFront();
+    }
     private void openConfigMenu() {
         if (configStage == null) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("configurationWindow.fxml"));
