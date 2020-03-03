@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="388.0" minWidth="741.0" prefHeight="388.0" prefWidth="741.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <TabPane prefHeight="300.0" prefWidth="741.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab fx:id="configurationTab" text="Configuration">
+                    <content>
+                        <VBox fillWidth="false" prefHeight="224.0" prefWidth="741.0">
+                            <children>
+                                <HBox prefHeight="40.0" prefWidth="795.0" styleClass="cfgHbox">
+                                    <children>
+                                        <Label fx:id="activAlicaLabel" prefHeight="38.0" prefWidth="170.0" styleClass="cfgLabel" text="Alica Configuration: " />
+                                        <TextField fx:id="activAlicaTextField" prefHeight="30.0" prefWidth="430.0">
+                                            <HBox.margin>
+                                                <Insets top="4.0" />
+                                            </HBox.margin>
+                                            <font>
+                                                <Font size="10.0" />
+                                            </font>
+                                        </TextField>
+                                        <Button fx:id="activAlicaButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="...">
+                                            <HBox.margin>
+                                                <Insets left="10.0" top="4.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                    </children>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="795.0" styleClass="cfgHbox">
+                                    <children>
+                                        <Label fx:id="plansFolderLabel" prefHeight="38.0" prefWidth="170.0" styleClass="cfgLabel" text="Plans Folder:" />
+                                        <TextField fx:id="plansFolderTextField" prefHeight="30.0" prefWidth="430.0">
+                                            <HBox.margin>
+                                                <Insets top="4.0" />
+                                            </HBox.margin>
+                                            <font>
+                                                <Font size="10.0" />
+                                            </font>
+                                        </TextField>
+                                        <Button fx:id="plansFolderFileButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="...">
+                                            <HBox.margin>
+                                                <Insets left="10.0" top="4.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                    </children>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="795.0" styleClass="cfgHbox">
+                                    <children>
+                                        <Label fx:id="rolesFolderLabel" prefHeight="38.0" prefWidth="170.0" styleClass="cfgLabel" text="Roles Folder:" />
+                                        <TextField fx:id="rolesFolderTextField" prefHeight="30.0" prefWidth="430.0">
+                                            <HBox.margin>
+                                                <Insets top="4.0" />
+                                            </HBox.margin>
+                                            <font>
+                                                <Font size="10.0" />
+                                            </font>
+                                        </TextField>
+                                        <Button fx:id="rolesFolderFileButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="...">
+                                            <HBox.margin>
+                                                <Insets left="10.0" top="4.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                    </children>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="795.0" styleClass="cfgHbox">
+                                    <children>
+                                        <Label fx:id="tasksFolderLabel" prefHeight="38.0" prefWidth="170.0" styleClass="cfgLabel" text="Tasks Folder:" />
+                                        <TextField fx:id="tasksFolderTextField" prefHeight="30.0" prefWidth="430.0">
+                                            <HBox.margin>
+                                                <Insets top="4.0" />
+                                            </HBox.margin>
+                                            <font>
+                                                <Font size="10.0" />
+                                            </font>
+                                        </TextField>
+                                        <Button fx:id="tasksFolderFileButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="...">
+                                            <HBox.margin>
+                                                <Insets left="10.0" top="4.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                    </children>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="propertiesTab" text="Properties">
+                    <content>
+                        <VBox prefHeight="281.0" prefWidth="773.0">
+                            <children>
+                                <HBox prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="teamTimeOutLabel" prefHeight="38.0" prefWidth="191.0" text="TeamTimeOut:" />
+                                                <TextField fx:id="teamTimeOutTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="assignmentProtectionTimeLabel" prefHeight="38.0" prefWidth="210.0" text="AssignmentProtectionTime:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="assignmentProtectionTimeTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox layoutX="20.0" layoutY="20.0" prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="minBroadcastFrequencyLabel" prefHeight="38.0" prefWidth="191.0" text="MinBroadcastFrequency:" />
+                                                <TextField fx:id="minBroadcastFrequencyTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="maxBroadcastFrequencyLabel" prefHeight="38.0" prefWidth="210.0" text="MaxBroadcastFrequency:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="maxBroadcastFrequencyTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox layoutX="20.0" layoutY="58.0" prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="engineFrequencyLabel" prefHeight="38.0" prefWidth="191.0" text="EngineFrequency:" />
+                                                <TextField fx:id="engineFrequencyTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="maxRuleApplicationsLabel" prefHeight="38.0" prefWidth="210.0" text="MaxRuleApplications:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="maxRuleApplicationsTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox layoutX="20.0" layoutY="96.0" prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="silentStartLabel" prefHeight="38.0" prefWidth="217.0" text="SilentStart:" />
+                                                <CheckBox fx:id="silentStartCheckBox" mnemonicParsing="false" prefHeight="36.0" prefWidth="47.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="allowIdlingLabel" prefHeight="38.0" prefWidth="236.0" text="AllowIdling:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <CheckBox fx:id="allowIdlingCheckBox" mnemonicParsing="false" prefHeight="36.0" prefWidth="51.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox layoutX="20.0" layoutY="134.0" prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="useStaticRolesLabel" prefHeight="38.0" prefWidth="218.0" text="UseStaticRoles:" />
+                                                <CheckBox fx:id="useStaticRolesCheckBox" mnemonicParsing="false" prefHeight="36.0" prefWidth="47.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="maxEpsPerPlanLabel" prefHeight="38.0" prefWidth="210.0" text="MaxEpsPerPlan:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="maxEpsPerPlanTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets left="50.0" top="50.0" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="teamBlackListTab" text="TeamBlackList">
+                    <content>
+                        <HBox prefHeight="46.0" prefWidth="600.0">
+                            <children>
+                                <Label fx:id="initiallyFullLabel" prefHeight="38.0" prefWidth="129.0" text="InitiallyFull:" />
+                                <CheckBox fx:id="initiallyFullCheckBox" mnemonicParsing="false" prefHeight="36.0" prefWidth="61.0" />
+                            </children>
+                            <padding>
+                                <Insets left="50.0" top="50.0" />
+                            </padding>
+                        </HBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="statusMessagesTab" text="StatusMessages">
+                    <content>
+                        <HBox prefHeight="38.0" prefWidth="578.0">
+                            <children>
+                                <HBox prefHeight="38.0" prefWidth="289.0">
+                                    <children>
+                                        <Label fx:id="statusMessagesEnabledLabel" prefHeight="38.0" prefWidth="129.0" text="Enabled:" />
+                                        <CheckBox fx:id="statusMessagesEnabledCheckBox" mnemonicParsing="false" prefHeight="36.0" prefWidth="61.0" />
+                                    </children>
+                                </HBox>
+                                <HBox prefHeight="38.0" prefWidth="302.0">
+                                    <children>
+                                        <Label fx:id="frequencyLabel" prefHeight="38.0" prefWidth="210.0" text="Frequency:" textAlignment="CENTER">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                        </Label>
+                                        <TextField fx:id="frequencyTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                    </children>
+                                    <padding>
+                                        <Insets left="50.0" />
+                                    </padding>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets left="50.0" top="50.0" />
+                            </padding>
+                        </HBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="eventLoggingTab" text="EventLogging">
+                    <content>
+                        <VBox>
+                            <children>
+                                <HBox prefHeight="40.0" prefWidth="735.0">
+                                    <children>
+                                        <Label fx:id="eventLoggingEnabledLabel" prefHeight="38.0" prefWidth="129.0" text="Enabled:" />
+                                        <CheckBox fx:id="eventLoggingEnabledCheckBox" mnemonicParsing="false" prefHeight="36.0" prefWidth="50.0" />
+                                    </children>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="302.0">
+                                    <children>
+                                        <Label fx:id="logFolderLabel" prefHeight="38.0" prefWidth="79.0" text="LogFolder:" textAlignment="CENTER">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                        </Label>
+                                        <TextField fx:id="logFolderTextField" prefHeight="30.0" prefWidth="543.0">
+                                            <HBox.margin>
+                                                <Insets top="4.0" />
+                                            </HBox.margin>
+                                            <font>
+                                                <Font size="10.0" />
+                                            </font></TextField>
+                                        <Button fx:id="logFolderButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="...">
+                                            <HBox.margin>
+                                                <Insets left="10.0" top="4.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets left="50.0" top="50.0" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="cycleDetectionTab" text="CycleDetection">
+                    <content>
+                        <VBox prefHeight="360.0" prefWidth="693.0">
+                            <children>
+                                <HBox prefHeight="40.0" prefWidth="635.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="cycleDetectionEnabledLabel" prefHeight="38.0" prefWidth="129.0" text="Enabled:" />
+                                                <CheckBox fx:id="cycleDetectionEnabledCheckBox" mnemonicParsing="false" prefHeight="36.0" prefWidth="61.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="cycleCountLabel" prefHeight="38.0" prefWidth="210.0" text="CycleCount:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="cycleCountTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="minimalAuthorityTimeIntervalLabel" prefHeight="38.0" prefWidth="203.0" text="MinimalAuthorityTimeInterval:" />
+                                                <TextField fx:id="minimalAuthorityTimeIntervalTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="maximalAuthorityTimeIntervalLabel" prefHeight="38.0" prefWidth="210.0" text="MaximalAuthorityTimeInterval:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="maximalAuthorityTimeIntervalTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="intervalIncreaseFactorLabel" prefHeight="38.0" prefWidth="203.0" text="IntervalIncreaseFactor:" />
+                                                <TextField fx:id="intervalIncreaseFactorTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="intervalDecreaseFactorLabel" prefHeight="38.0" prefWidth="210.0" text="IntervalDecreaseFactor:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="intervalDecreaseFactorTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="messageTimeIntervalLabel" prefHeight="38.0" prefWidth="203.0" text="MessageTimeInterval:" />
+                                                <TextField fx:id="messageTimeIntervalTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="messageWaitTimeIntervalLabel" prefHeight="38.0" prefWidth="210.0" text="MessageWaitTimeInterval:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="messageWaitTimeIntervalTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="289.0">
+                                    <children>
+                                        <Label fx:id="historySizeLabel" prefHeight="38.0" prefWidth="203.0" text="HistorySize:" />
+                                        <TextField fx:id="historySizeTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets left="50.0" top="50.0" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab fx:id="cSPSolvingTab" text="CSPSolving">
+                    <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                            <children>
+                                <HBox prefHeight="40.0" prefWidth="635.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="enableCommunicationLabel" prefHeight="38.0" prefWidth="230.0" text="EnableCommunication:" />
+                                                <CheckBox fx:id="enableCommunicationCheckBox" mnemonicParsing="false" prefHeight="36.0" prefWidth="61.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="communicationFrequencyLabel" prefHeight="38.0" prefWidth="210.0" text="CommunicationFrequency:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="communicationFrequencyTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="seedMergingThresholdLabel" prefHeight="38.0" prefWidth="203.0" text="SeedMergingThreshold:" />
+                                                <TextField fx:id="seedMergingThresholdTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="conflictThresholdLabel" prefHeight="38.0" prefWidth="210.0" text="ConflictThreshold:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="conflictThresholdTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="seedTTL4CommunicationLabel" prefHeight="38.0" prefWidth="203.0" text="SeedTTL4Communication:" />
+                                                <TextField fx:id="seedTTL4CommunicationTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="seedTTL4UsageLabel" prefHeight="38.0" prefWidth="210.0" text="SeedTTL4Usage:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="seedTTL4UsageTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox prefHeight="40.0" prefWidth="578.0">
+                                    <children>
+                                        <HBox prefHeight="38.0" prefWidth="289.0">
+                                            <children>
+                                                <Label fx:id="maxSolveTimeLabel" prefHeight="38.0" prefWidth="203.0" text="MaxSolveTime:" />
+                                                <TextField fx:id="maxSolveTimeTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="75.0" />
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="38.0" prefWidth="302.0">
+                                            <children>
+                                                <Label fx:id="maxFunctionEvaluationsLabel" prefHeight="38.0" prefWidth="188.0" text="MaxFunctionEvaluations:" textAlignment="CENTER">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="maxFunctionEvaluationsTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="96.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets left="50.0" top="50.0" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+        <HBox layoutY="285.0" prefHeight="108.0" prefWidth="741.0">
+            <children>
+                <Button fx:id="setDefaultConfButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="190.0" text="Set Default Configuration">
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="190.0" text="Save">
+                    <HBox.margin>
+                        <Insets left="40.0" right="40.0" />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="190.0" text="Exit">
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </Button>
+            </children>
+            <padding>
+                <Insets left="50.0" right="50.0" top="20.0" />
+            </padding>
+        </HBox>
+    </children>
+</Pane>
