@@ -104,6 +104,10 @@ public class TransitionTool extends AbstractTool {
                     Node parent = target.getParent();
                     IGuiModificationHandler handler = MainWindowController.getInstance().getGuiModificationHandler();
 
+                    if(parent instanceof StackPane) {
+                        return;
+                    }
+
                     if (inState != null && inState != ((StateContainer) parent).getState()) {
                         if (parent instanceof StateContainer) {
                             // SET ENDPOINT
