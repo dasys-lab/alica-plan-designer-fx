@@ -307,6 +307,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             case ELEMENT_DELETED:
             case ELEMENT_REMOVED:
                 viewModelManager.removeElement(event.getParentId(), viewModelElement, event.getRelatedObjects());
+
+                //When Behaviour is deleted, regenerate the BehaviourCreator.
+                if(viewModelElement instanceof BehaviourViewModel && event.getEventType().equals(ModelEventType.ELEMENT_DELETED)) {
+                    mainWindowController.waitOnProgressLabel(() -> generateCode(new GuiModificationEvent(GuiEventType.GENERATE_ALL_ELEMENTS, event.getElementType(),
+                            event.getElement().getName()), mainWindowController.getStatusText()));
+                }
                 break;
             case ELEMENT_ATTRIBUTE_CHANGED:
                 viewModelManager.changeElementAttribute(viewModelElement, event.getChangedAttribute(), event.getNewValue(), event.getOldValue());
