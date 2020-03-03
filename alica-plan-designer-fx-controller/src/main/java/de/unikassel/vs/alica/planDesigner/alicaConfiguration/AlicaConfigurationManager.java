@@ -1,6 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.alicaConfiguration;
 
-import de.unikassel.vs.alica.planDesigner.configuration.ConfigurationManager;
 import de.unikassel.vs.alica.planDesigner.controller.Controller;
 
 public class AlicaConfigurationManager {

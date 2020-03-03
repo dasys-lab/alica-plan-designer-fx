@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="434.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <TabPane prefHeight="397.0" prefWidth="740.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Team settings">
+                    <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                            <children>
+                                <HBox prefHeight="63.0" prefWidth="740.0" styleClass="cfgHbox">
+                                    <children>
+                                        <Label fx:id="activeGlobalsLabel" prefHeight="38.0" prefWidth="170.0" styleClass="cfgLabel" text="Globals Configuration: " />
+                                        <TextField fx:id="activeGlobalsTextField" prefHeight="30.0" prefWidth="430.0">
+                                            <font>
+                                                <Font size="10.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets top="4.0" />
+                                            </HBox.margin>
+                                        </TextField>
+                                        <Button fx:id="activeGlobalsButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="...">
+                                            <HBox.margin>
+                                                <Insets left="10.0" top="4.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                    </children>
+                                    <padding>
+                                        <Insets left="50.0" right="50.0" top="20.0" />
+                                    </padding>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox prefHeight="222.0" prefWidth="640.0">
+                                    <children>
+                                        <TableView fx:id="teamTableView" editable="true" prefHeight="220.0" prefWidth="642.0">
+                                            <columns>
+                                                <TableColumn fx:id="teamIDTableColumn" prefWidth="66.0" text="ID" />
+                                                <TableColumn fx:id="teamNameTableColumn" prefWidth="156.0" text="Name" />
+                                                <TableColumn fx:id="teamDefaultRoleTableColumn" prefWidth="231.0" text="DefaultRole" />
+                                                <TableColumn fx:id="teamSpeedTableColumn" prefWidth="171.0" text="Speed" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets left="50.0" top="10.0" />
+                                    </VBox.margin>
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                </HBox>
+                                <HBox prefHeight="87.0" prefWidth="740.0">
+                                    <children>
+                                        <TextField fx:id="addIDTextField" prefHeight="36.0" prefWidth="64.0" promptText="ID">
+                                            <HBox.margin>
+                                                <Insets left="50.0" />
+                                            </HBox.margin>
+                                        </TextField>
+                                        <TextField fx:id="addNameTextField" prefHeight="36.0" prefWidth="137.0" promptText="Name">
+                                            <HBox.margin>
+                                                <Insets left="10.0" />
+                                            </HBox.margin>
+                                        </TextField>
+                                        <TextField fx:id="addDefaultRoleTextField" prefHeight="36.0" prefWidth="225.0" promptText="DefaultRole">
+                                            <HBox.margin>
+                                                <Insets left="10.0" />
+                                            </HBox.margin>
+                                        </TextField>
+                                        <TextField fx:id="addSpeedTextField" prefHeight="36.0" prefWidth="126.0" promptText="Speed">
+                                            <HBox.margin>
+                                                <Insets left="10.0" />
+                                            </HBox.margin>
+                                        </TextField>
+                                        <Button fx:id="addButton" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="+">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets left="10.0" top="2.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                        <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="-">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets left="10.0" top="2.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                    </children>
+                                    <padding>
+                                        <Insets top="20.0" />
+                                    </padding>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab text="Configuration">
+                    <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                            <children>
+                                <TitledPane collapsible="false" prefHeight="110.0" prefWidth="740.0" text="Dimensions">
+                                    <content>
+                                        <HBox prefHeight="42.0" prefWidth="738.0">
+                                            <children>
+                                                <Label fx:id="diameterRobotLabel" prefHeight="38.0" prefWidth="150.0" text="DiameterRobot:" />
+                                                <TextField fx:id="diameterRobotTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="150.0">
+                                                    <HBox.margin>
+                                                        <Insets top="5.0" />
+                                                    </HBox.margin>
+                                                </TextField>
+                                            </children>
+                                            <padding>
+                                                <Insets left="50.0" top="20.0" />
+                                            </padding>
+                                        </HBox>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane collapsible="false" prefHeight="110.0" prefWidth="740.0" text="TeamDefault">
+                                    <content>
+                                        <HBox prefHeight="0.0" prefWidth="578.0">
+                                            <children>
+                                                <HBox prefHeight="64.0" prefWidth="326.0">
+                                                    <children>
+                                                        <Label fx:id="defaultRoleLabel" prefHeight="38.0" prefWidth="150.0" text="DefaultRole:" />
+                                                        <TextField fx:id="defaultRoleTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="150.0">
+                                                            <HBox.margin>
+                                                                <Insets top="5.0" />
+                                                            </HBox.margin>
+                                                        </TextField>
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefHeight="64.0" prefWidth="357.0">
+                                                    <children>
+                                                        <Label fx:id="speedLabel" prefHeight="38.0" prefWidth="150.0" text="Speed:" textAlignment="CENTER">
+                                                            <HBox.margin>
+                                                                <Insets />
+                                                            </HBox.margin>
+                                                        </Label>
+                                                        <TextField fx:id="speedTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="150.0">
+                                                            <HBox.margin>
+                                                                <Insets top="5.0" />
+                                                            </HBox.margin>
+                                                        </TextField>
+                                                    </children>
+                                                    <HBox.margin>
+                                                        <Insets left="50.0" />
+                                                    </HBox.margin>
+                                                </HBox>
+                                            </children>
+                                            <padding>
+                                                <Insets left="50.0" top="20.0" />
+                                            </padding>
+                                        </HBox>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane collapsible="false" prefHeight="110.0" prefWidth="740.0" text="RolePriority">
+                                    <content>
+                                        <HBox prefHeight="0.0" prefWidth="738.0">
+                                            <children>
+                                                <Label fx:id="assistentLabel" prefHeight="38.0" prefWidth="150.0" text="Assistent:" />
+                                                <TextField fx:id="assistentTextField" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="150.0">
+                                                    <HBox.margin>
+                                                        <Insets top="5.0" />
+                                                    </HBox.margin>
+                                                </TextField>
+                                            </children>
+                                            <padding>
+                                                <Insets left="50.0" top="20.0" />
+                                            </padding>
+                                        </HBox>
+                                    </content>
+                                </TitledPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+        <HBox layoutY="365.0" prefHeight="71.0" prefWidth="740.0">
+            <children>
+                <Button fx:id="setDefaultConfButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="190.0" text="Set Default Configuration">
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="190.0" text="Save">
+                    <HBox.margin>
+                        <Insets left="40.0" right="40.0" />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="190.0" text="Exit">
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </Button>
+            </children>
+            <padding>
+                <Insets left="50.0" right="50.0" top="20.0" />
+            </padding>
+        </HBox>
+    </children>
+</Pane>

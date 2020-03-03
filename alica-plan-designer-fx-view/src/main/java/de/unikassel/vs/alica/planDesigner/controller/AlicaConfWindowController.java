@@ -588,7 +588,9 @@ public class AlicaConfWindowController implements Initializable {
     public void setMaxFunctionEvaluations(Integer maxFunctionEvaluations) {
         maxFunctionEvaluationsTextField.setText(maxFunctionEvaluations.toString());
     }
-
+    public void setHandler(IAlicaConfigurationEventHandler alicaConfigurationEventHandler) {
+        this.alicaConfigurationEventHandler = alicaConfigurationEventHandler;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -737,8 +739,10 @@ public class AlicaConfWindowController implements Initializable {
                 alicaConfigurationViewModel.getActiveAlicaConfViewModel().equals("Wrong File. Please load .conf File.")){
             alicaConfigurationViewModel.setActiveAlicaConfViewModel(activeAlicaFolder.getParentFile().getAbsolutePath() + "/Alica.conf");
         }
-        alicaConfigurationEventHandler.save(alicaConfigurationViewModel);
-        setActivAlica(alicaConfigurationViewModel.getActiveAlicaConfViewModel());
+        Boolean onlyIfSave = alicaConfigurationEventHandler.save(alicaConfigurationViewModel);
+        if(onlyIfSave){
+            setActivAlica(alicaConfigurationViewModel.getActiveAlicaConfViewModel());
+        }
     }
 
     private void loadDefaultAlicaConf() {
@@ -826,9 +830,5 @@ public class AlicaConfWindowController implements Initializable {
         if (file != null) {
             textField.setText(file.getAbsolutePath());
         }
-    }
-
-    public void setHandler(IAlicaConfigurationEventHandler alicaConfigurationEventHandler) {
-        this.alicaConfigurationEventHandler = alicaConfigurationEventHandler;
     }
 }

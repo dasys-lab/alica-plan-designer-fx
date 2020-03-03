@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.scene.control.ListView;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlicaConfigurationEventHandler  implements IAlicaConfigurationEventHandler<ListView.EditEvent<String>> {
+public class AlicaConfigurationEventHandler implements IAlicaConfigurationEventHandler<ListView.EditEvent<String>> {
     private AlicaConfWindowController alicaConfWindowController;
     private AlicaConfigurationManager alicaConfigurationManager;
     private AlicaConfiguration alicaConfiguration = new AlicaConfiguration();
@@ -138,9 +139,16 @@ public class AlicaConfigurationEventHandler  implements IAlicaConfigurationEvent
     }
 
     @Override
-    public void save(AlicaConfigurationViewModel alicaConfigurationViewModel) {
+    public boolean save(AlicaConfigurationViewModel alicaConfigurationViewModel) {
         updateModel(alicaConfigurationViewModel);
         File alicaConfFile = new File(alicaConfiguration.getActiveAlicaConf());
+        if(alicaConfFile.exists()) {
+            int input = JOptionPane.showConfirmDialog(null,
+                    "Do you want to overwrite it?", "File already exists!",JOptionPane.YES_NO_OPTION);
+            if(input == 1) {
+                return false;
+            }
+        }
         try {
             Files.deleteIfExists(alicaConfFile.toPath());
             alicaConfFile.createNewFile();
@@ -150,7 +158,7 @@ public class AlicaConfigurationEventHandler  implements IAlicaConfigurationEvent
         List<String> output = new ArrayList<>();
 
         output.add("[Alica]");
-
+        output.add("\r");
         // ---- Properties ----
         output.add("\tTeamTimeOut = " + alicaConfiguration.getTeamTimeOut());
         output.add("\tAssignmentProtectionTime = " + alicaConfiguration.getAssignmentProtectionTime());
@@ -165,24 +173,24 @@ public class AlicaConfigurationEventHandler  implements IAlicaConfigurationEvent
         output.add("\tPlanDir = " + alicaConfiguration.getPlansFolder());
         output.add("\tRoleDir = " + alicaConfiguration.getRolesFolder());
         output.add("\tTaskDir = " + alicaConfiguration.getTaskFolder());
-
+        output.add("\r");
         // ---- TeamBlackList ----
         output.add("\t[TeamBlackList]");
         output.add("\t\tInitiallyFull = " + alicaConfiguration.isInitiallyFull());
         output.add("\t[!TeamBlackList]");
-
+        output.add("\r");
         // ---- StatusMessages ----
         output.add("\t[StatusMessages]");
         output.add("\t\tEnabled = " + alicaConfiguration.isStatusMessagesEnabled());
         output.add("\t\tFrequency = " + alicaConfiguration.getFrequency());
         output.add("\t[!StatusMessages]");
-
+        output.add("\r");
         // ---- EventLogging ----
         output.add("\t[EventLogging]");
         output.add("\t\tEnabled = " + alicaConfiguration.isEventLoggingEnabled());
         output.add("\t\tLogFolder = " + alicaConfiguration.getLogFolder());
         output.add("\t[!EventLogging]");
-
+        output.add("\r");
         // ---- CycleDetection ----
         output.add("\t[CycleDetection]");
         output.add("\t\tEnabled = " + alicaConfiguration.isCycleDetectionEnabled());
@@ -195,7 +203,7 @@ public class AlicaConfigurationEventHandler  implements IAlicaConfigurationEvent
         output.add("\t\tMessageWaitTimeInterval = " + alicaConfiguration.getMessageWaitTimeInterval());
         output.add("\t\tHistorySize = " + alicaConfiguration.getHistorySize());
         output.add("\t[!CycleDetection]");
-
+        output.add("\r");
         // ---- CSPSolving ----
         output.add("\t[CSPSolving]");
         output.add("\t\tEnableCommunication = " + alicaConfiguration.isEnableCommunication());
@@ -220,6 +228,7 @@ public class AlicaConfigurationEventHandler  implements IAlicaConfigurationEvent
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
     @Override

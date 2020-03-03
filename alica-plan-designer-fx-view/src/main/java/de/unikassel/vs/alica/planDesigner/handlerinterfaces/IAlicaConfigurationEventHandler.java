@@ -13,7 +13,7 @@ public interface IAlicaConfigurationEventHandler <T extends ListView.EditEvent<S
 
     void updateModel(AlicaConfigurationViewModel alicaConfigurationViewModel);
 
-    void save(AlicaConfigurationViewModel alicaConfigurationViewModel);
+    boolean save(AlicaConfigurationViewModel alicaConfigurationViewModel);
 
     String loadAlicaConf(String confPath) throws IOException;
 }

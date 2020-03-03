@@ -106,6 +106,7 @@ public class MainWindowController implements Initializable {
     // ---- HANDLE & CONTROLLER ----
     private ConfigurationWindowController configWindowController;
     private AlicaConfWindowController alicaConfWindowController;
+    private GlobalsConfWindowController globalsConfWindowController;
     private IGuiStatusHandler guiStatusHandler;
     private IGuiModificationHandler guiModificationHandler;
 
@@ -151,7 +152,16 @@ public class MainWindowController implements Initializable {
 
     public AlicaConfWindowController getAlicaConfWindowController() { return alicaConfWindowController; }
 
+    public GlobalsConfWindowController getGlobalsConfWindowController() {
+        return globalsConfWindowController;
+    }
+
     // ---- SETTER ----
+
+    public void setGlobalsConfWindowController(GlobalsConfWindowController globalsConfWindowController) {
+        this.globalsConfWindowController = globalsConfWindowController;
+    }
+
     public void setAlicaConfWindowController(AlicaConfWindowController alicaConfWindowController){
         this.alicaConfWindowController = alicaConfWindowController;
     }
@@ -185,7 +195,10 @@ public class MainWindowController implements Initializable {
         }
 
         if (alicaConfWindowController == null) {
-            throw new RuntimeException("The member configWindowController need to be set through the public setter, before calling initialize()!");
+            throw new RuntimeException("The member alicaConfWindowController need to be set through the public setter, before calling initialize()!");
+        }
+        if (globalsConfWindowController == null) {
+            throw new RuntimeException("The member globalsConfWindowController need to be set through the public setter, before calling initialize()!");
         }
 
         // clear
@@ -233,7 +246,7 @@ public class MainWindowController implements Initializable {
         menus.add(fileMenu);
 
         // ---- EDIT MENU ----
-        editMenu = new EditMenu(fileTreeView, editorTabPane, repositoryTabPane, configWindowController, alicaConfWindowController);
+        editMenu = new EditMenu(fileTreeView, editorTabPane, repositoryTabPane, configWindowController, alicaConfWindowController, globalsConfWindowController);
         editMenu.setId("editMenu");
         editMenu.setGuiModificationHandler(this.guiModificationHandler);
         menus.add(editMenu);
