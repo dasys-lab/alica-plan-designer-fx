@@ -29,18 +29,6 @@ public class CreateBehaviour extends Command {
 
     @Override
     public void doCommand() {
-        PreCondition precondition = new PreCondition();
-        precondition.setEnabled(true);
-        behaviour.setPreCondition(precondition);
-
-        RuntimeCondition runtimeCondition = new RuntimeCondition();
-        runtimeCondition.setEnabled(true);
-        behaviour.setRuntimeCondition(runtimeCondition);
-
-        PostCondition postCondition = new PostCondition();
-        postCondition.setEnabled(true);
-        behaviour.setPostCondition(postCondition);
-
         modelManager.storePlanElement(Types.BEHAVIOUR, this.behaviour,true);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.behaviour);
     }

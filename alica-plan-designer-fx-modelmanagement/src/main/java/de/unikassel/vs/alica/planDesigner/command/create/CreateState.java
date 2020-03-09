@@ -41,11 +41,6 @@ public class CreateState extends UiPositionCommand {
 
     @Override
     public void doCommand() {
-        if(state instanceof TerminalState) {
-            PostCondition postCondition = new PostCondition();
-            postCondition.setEnabled(true);
-            ((TerminalState) state).setPostCondition(postCondition);
-        }
         this.plan.addState(state);
         this.uiExtension.add(state.getId(), uiElement);
         modelManager.storePlanElement(mmq.getElementType(), state,false);

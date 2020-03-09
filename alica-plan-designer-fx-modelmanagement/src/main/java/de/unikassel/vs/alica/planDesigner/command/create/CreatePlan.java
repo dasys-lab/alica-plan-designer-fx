@@ -29,14 +29,6 @@ public class CreatePlan extends Command {
 
     @Override
     public void doCommand() {
-        PreCondition preCondition = new PreCondition();
-        preCondition.setEnabled(true);
-        plan.setPreCondition(preCondition);
-
-        RuntimeCondition runtimeCondition = new RuntimeCondition();
-        runtimeCondition.setEnabled(true);
-        plan.setRuntimeCondition(runtimeCondition);
-
         modelManager.storePlanElement(Types.PLAN, this.plan, true);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.plan);
     }
