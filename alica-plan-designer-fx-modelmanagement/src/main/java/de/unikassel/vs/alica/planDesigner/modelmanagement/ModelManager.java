@@ -1344,7 +1344,7 @@ public class ModelManager implements Observer {
 
                 // the counter is set to 2 because, saving an element always creates two filesystem modified events
                 int counter = 2;
-                // w hen a plan is saved it needs to be 4 however, because the stateUiElement is saved as well
+                // when a plan is saved it needs to be 4 however, because the stateUiElement is saved as well
                 if (fileExtension.equals(Extensions.PLAN)) {
                     counter = 4;
                 }

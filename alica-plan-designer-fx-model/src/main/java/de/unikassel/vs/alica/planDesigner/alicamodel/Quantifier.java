@@ -21,18 +21,22 @@ public class Quantifier extends PlanElement {
     }
     public void setSorts(List<String> sorts) {
         this.sorts.removeAll(this.getSorts());
-            this.sorts.addAll(sorts);
-            if(changeListenerForDirtyFlag != null) {
-                changeListenerForDirtyFlag.setDirty();
-            }
+        this.sorts.addAll(sorts);
+        if(changeListenerForDirtyFlag != null) {
+            changeListenerForDirtyFlag.setDirty();
+        }
     }
     public void addSort(String sort) {
         sorts.add(sort);
-        changeListenerForDirtyFlag.setDirty();
+        if (this.changeListenerForDirtyFlag != null) {
+            changeListenerForDirtyFlag.setDirty();
+        }
     }
     public void removeSort(String sort) {
         sorts.remove(sort);
-        changeListenerForDirtyFlag.setDirty();
+        if (this.changeListenerForDirtyFlag != null) {
+            changeListenerForDirtyFlag.setDirty();
+        }
     }
 
     public PlanElement getScope() {
@@ -56,10 +60,12 @@ public class Quantifier extends PlanElement {
     }
 
     public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
+        if (listener == null) {
+            return;
+        }
         this.changeListenerForDirtyFlag = listener;
         this.name.addListener(listener);
         this.comment.addListener(listener);
-
         this.scope.addListener(listener);
         this.quantifierType.addListener(listener);
     }

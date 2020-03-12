@@ -1,6 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.view.model;
 
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
+import de.unikassel.vs.alica.planDesigner.view.Types;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class QuantifierViewModel extends PlanElementViewModel{
 
-    public static final String[] QUANTIFIER_TYPES = {"ALL"};
+    public static final String[] QUANTIFIER_TYPES = {Types.QUANTIFIER_FORALL};
 
     protected SimpleStringProperty quantifierType = new SimpleStringProperty(this, "quantifierType", "");
     protected SimpleLongProperty scope = new SimpleLongProperty(this, "scope", 0L);

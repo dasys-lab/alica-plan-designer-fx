@@ -1,11 +1,7 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,11 +51,15 @@ public class Condition extends PlanElement {
     }
     public void addVariable(Variable variable){
         variables.add(variable);
-        listenerForDirtyFlag.setDirty();
+        if (listenerForDirtyFlag != null) {
+            listenerForDirtyFlag.setDirty();
+        }
     }
     public void removeVariable(Variable variable){
         variables.remove(variable);
-        listenerForDirtyFlag.setDirty();
+        if (listenerForDirtyFlag != null) {
+            listenerForDirtyFlag.setDirty();
+        }
     }
 
     public List<Quantifier> getQuantifiers() {
@@ -68,11 +68,15 @@ public class Condition extends PlanElement {
     public void addQuantifier(Quantifier quantifier){
         quantifiers.add(quantifier);
         quantifier.registerDirtyFlag(listenerForDirtyFlag);
-        listenerForDirtyFlag.setDirty();
+        if (listenerForDirtyFlag != null) {
+            listenerForDirtyFlag.setDirty();
+        }
     }
     public void removeQuantifier(Quantifier quantifier){
         quantifiers.remove(quantifier);
-        listenerForDirtyFlag.setDirty();
+        if (listenerForDirtyFlag != null) {
+            listenerForDirtyFlag.setDirty();
+        }
     }
 
     public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
