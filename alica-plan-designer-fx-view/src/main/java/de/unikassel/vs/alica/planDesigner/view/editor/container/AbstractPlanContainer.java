@@ -18,7 +18,7 @@ public class AbstractPlanContainer extends Container {
     private StateContainer parentStateContainer;
 
     public AbstractPlanContainer(StateContainer parentStateContainer, PlanElementViewModel abstractPlanViewModel, PlanTab planTab) {
-        super(abstractPlanViewModel, null, planTab);
+        super(abstractPlanViewModel, planTab);
         this.parentStateContainer = parentStateContainer;
         this.createNameListener();
         this.setupContainer();

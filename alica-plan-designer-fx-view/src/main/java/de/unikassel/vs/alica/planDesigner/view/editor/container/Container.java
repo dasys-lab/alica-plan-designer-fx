@@ -1,14 +1,10 @@
 package de.unikassel.vs.alica.planDesigner.view.editor.container;
 
-
-import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IShowGeneratedSourcesEventHandler;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanEditorGroup;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tools.AbstractTool;
 import de.unikassel.vs.alica.planDesigner.view.menu.ShowGeneratedSourcesMenuItem;
-import de.unikassel.vs.alica.planDesigner.view.model.EntryPointViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.PlanElementViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
@@ -24,6 +20,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+
 /**
  * The {@link Container} is a base class for visual representations, with a alicamodel object to hold changes from the visualisation
  * that will be written back to resource later.
@@ -35,7 +32,6 @@ public abstract class Container extends Pane implements DraggableEditorElement {
             new Color(0,0,0,0.8), 10, 0, 0, 0);
 
     protected PlanElementViewModel planElementViewModel;
-    protected IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler;
     protected Node visualRepresentation;
     protected PlanTab planTab;
 
@@ -43,9 +39,8 @@ public abstract class Container extends Pane implements DraggableEditorElement {
      * @param planElementViewModel
      * @param planTab
      */
-    public Container(PlanElementViewModel planElementViewModel, IShowGeneratedSourcesEventHandler showGeneratedSourcesEventHandler, PlanTab planTab) {
+    public Container(PlanElementViewModel planElementViewModel, PlanTab planTab) {
         this.planElementViewModel = planElementViewModel;
-        this.showGeneratedSourcesEventHandler = showGeneratedSourcesEventHandler;
         this.planTab = planTab;
         setBackground(Background.EMPTY);
         setPickOnBounds(false);
@@ -53,7 +48,17 @@ public abstract class Container extends Pane implements DraggableEditorElement {
         setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
             public void handle(ContextMenuEvent e) {
-                ContextMenu contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem(Container.this.planElementViewModel.getId(), Container.this.showGeneratedSourcesEventHandler));
+                if(planElementViewModel instanceof StateViewModel || planElementViewModel instanceof PlanTypeViewModel
+                        || planElementViewModel instanceof SynchronisationViewModel) {
+                    return;
+                }
+
+                ContextMenu contextMenu;
+                if(planElementViewModel instanceof BehaviourViewModel || planElementViewModel instanceof PlanViewModel){
+                     contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem(planElementViewModel.getId()));
+                } else {
+                     contextMenu = new ContextMenu(new ShowGeneratedSourcesMenuItem(planElementViewModel.getParentId()));
+                }
                 contextMenu.show(Container.this, e.getScreenX(), e.getScreenY());
             }
         });

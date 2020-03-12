@@ -27,7 +27,7 @@ public class BendpointContainer extends Container implements DraggableEditorElem
     private TransitionContainer transitionContainer;
 
     public BendpointContainer(PlanElementViewModel containedElement, ViewModelElement parent, PlanTab planTab, TransitionContainer transitionContainer) {
-        super(containedElement, null, planTab);
+        super(containedElement, planTab);
         this.containedElement = containedElement;
         this.parent = parent;
         this.planTab = planTab;

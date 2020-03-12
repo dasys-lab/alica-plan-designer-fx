@@ -26,7 +26,7 @@ public class TransitionContainer extends Container implements Observable {
 
     public TransitionContainer(TransitionViewModel transition,
                                StateContainer fromState, StateContainer toState, PlanTab planTab) {
-        super(transition, null, planTab);
+        super(transition, planTab);
         this.setContainedElement(transition);
         this.setId("TransitionContainer");
         this.fromState = fromState;
