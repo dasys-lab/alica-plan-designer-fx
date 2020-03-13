@@ -33,8 +33,7 @@ public class SynchronizationContainer extends Container implements Observable {
      * @param containedElement
      */
     public SynchronizationContainer(SynchronisationViewModel containedElement, List<TransitionContainer> transitionContainers, PlanTab planTab) {
-        super(containedElement, null, planTab);
-
+        super(containedElement, planTab);
         invalidationListeners = new ArrayList<>();
         transitionToLineMap = new HashMap<>();
         this.synchronisation = containedElement;

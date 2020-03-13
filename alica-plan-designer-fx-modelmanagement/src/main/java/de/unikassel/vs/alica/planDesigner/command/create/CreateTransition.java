@@ -33,6 +33,11 @@ public class CreateTransition extends UiPositionCommand {
             transition.setName(mmq.getName());
         }
         transition.setComment(mmq.getComment());
+
+        PreCondition preCondition = new PreCondition();
+        preCondition.setEnabled(true);
+        transition.setPreCondition(preCondition);
+
         return transition;
     }
 
@@ -41,10 +46,6 @@ public class CreateTransition extends UiPositionCommand {
         this.plan.addTransition(this.transition);
         this.in.addOutTransition(this.transition);
         this.out.addInTransition(this.transition);
-
-        PreCondition preCondition = new PreCondition();
-        preCondition.setEnabled(true);
-        this.transition.setPreCondition(preCondition);
 
         this.modelManager.storePlanElement(Types.TRANSITION, this.transition,false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.transition);

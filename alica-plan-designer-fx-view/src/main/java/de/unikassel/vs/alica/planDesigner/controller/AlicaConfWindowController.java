@@ -294,8 +294,6 @@ public class AlicaConfWindowController implements Initializable {
         return alicaConfigurationEventHandler;
     }
 
-    ;
-
     public AlicaConfigurationViewModel getAlicaConfigurationViewModel() {
         return alicaConfigurationViewModel;
     }

@@ -717,4 +717,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 abstractPlan.getName()), mainWindowController.getStatusText()));
     }
 
+    @Override
+    public File showGeneratedSourceHandler(long modelElementId) {
+        AbstractPlan abstractPlan = (AbstractPlan) this.modelManager.getPlanElement(modelElementId);
+        List<File> generatedFilesList = getGeneratedFilesForAbstractPlan(abstractPlan);
+        return generatedFilesList.get(1);
+    }
 }

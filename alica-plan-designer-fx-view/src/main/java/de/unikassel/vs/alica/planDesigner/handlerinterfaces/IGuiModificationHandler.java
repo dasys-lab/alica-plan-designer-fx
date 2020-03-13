@@ -5,6 +5,7 @@ import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
 import javafx.scene.text.Text;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public interface IGuiModificationHandler {
@@ -17,4 +18,6 @@ public interface IGuiModificationHandler {
     RepositoryViewModel getRepoViewModel();
     void storeAll();
     long getTaskRepositoryID();
+
+    File showGeneratedSourceHandler(long modelElementId);
 }
