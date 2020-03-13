@@ -1350,9 +1350,13 @@ public class ModelManager implements Observer {
                 }
                 elementsSavedMap.put(planElement.getId(), counter);
             }
-            File outfile = Paths.get(plansPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
 
             if (Extensions.PLAN.equals(fileExtension)) {
+                File outdir = Paths.get(plansPath, planElement.getRelativeDirectory()).toFile();
+                if (!outdir.exists()) {
+                    outdir.mkdirs();
+                }
+                File outfile = Paths.get(outdir.toString(), planElement.getName() + "." + fileExtension).toFile();
                 objectMapper.writeValue(outfile, (Plan) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLAN));
 
@@ -1364,17 +1368,35 @@ public class ModelManager implements Observer {
                     objectMapper.writeValue(visualisationFile, uiExtension);
                 }
             } else if (Extensions.PLANTYPE.equals(fileExtension)) {
+                File outdir = Paths.get(plansPath, planElement.getRelativeDirectory()).toFile();
+                if (!outdir.exists()) {
+                    outdir.mkdirs();
+                }
+                File outfile = Paths.get(outdir.toString(), planElement.getName() + "." + fileExtension).toFile();
                 objectMapper.writeValue(outfile, (PlanType) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.PLANTYPE));
             } else if (Extensions.BEHAVIOUR.equals(fileExtension)) {
+                File outdir = Paths.get(plansPath, planElement.getRelativeDirectory()).toFile();
+                if (!outdir.exists()) {
+                    outdir.mkdirs();
+                }
+                File outfile = Paths.get(outdir.toString(), planElement.getName() + "." + fileExtension).toFile();
                 objectMapper.writeValue(outfile, (Behaviour) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.BEHAVIOUR));
             } else if (Extensions.TASKREPOSITORY.equals(fileExtension)) {
-                outfile = Paths.get(tasksPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
+                File outdir = Paths.get(tasksPath, planElement.getRelativeDirectory()).toFile();
+                if (!outdir.exists()) {
+                    outdir.mkdirs();
+                }
+                File outfile = Paths.get(outdir.toString(), planElement.getName() + "." + fileExtension).toFile();
                 objectMapper.writeValue(outfile, (TaskRepository) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.TASKREPOSITORY));
             } else if (Extensions.ROLESET.equals(fileExtension)) {
-                outfile = Paths.get(rolesPath, planElement.getRelativeDirectory(), planElement.getName() + "." + fileExtension).toFile();
+                File outdir = Paths.get(rolesPath, planElement.getRelativeDirectory()).toFile();
+                if (!outdir.exists()) {
+                    outdir.mkdirs();
+                }
+                File outfile = Paths.get(outdir.toString(), planElement.getName() + "." + fileExtension).toFile();
                 objectMapper.writeValue(outfile, (RoleSet) planElement);
                 fireEvent(new ModelEvent(ModelEventType.ELEMENT_SERIALIZED, planElement, Types.ROLESET));
             } else {

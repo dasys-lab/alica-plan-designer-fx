@@ -65,14 +65,14 @@ public class Condition extends PlanElement {
     public List<Quantifier> getQuantifiers() {
         return Collections.unmodifiableList(quantifiers);
     }
-    public void addQuantifier(Quantifier quantifier){
+    public void addQuantifier(Quantifier quantifier) {
         quantifiers.add(quantifier);
         quantifier.registerDirtyFlag(listenerForDirtyFlag);
         if (listenerForDirtyFlag != null) {
             listenerForDirtyFlag.setDirty();
         }
     }
-    public void removeQuantifier(Quantifier quantifier){
+    public void removeQuantifier(Quantifier quantifier) {
         quantifiers.remove(quantifier);
         if (listenerForDirtyFlag != null) {
             listenerForDirtyFlag.setDirty();

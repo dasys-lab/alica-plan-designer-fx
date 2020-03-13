@@ -23,7 +23,7 @@ public class DeleteVariableBinding extends Command {
         if (parent instanceof State) {
             ((State) this.parent).removeVariableBinding(variableBinding);
         } else if (parent instanceof PlanType) {
-            ((PlanType) this.parent).removeParametrisation(variableBinding);
+            ((PlanType) this.parent).removeVariableBinding(variableBinding);
         }
         this.modelManager.dropPlanElement(Types.VARIABLE, this.variableBinding, false);
         this.fireEvent(ModelEventType.ELEMENT_DELETED, this.variableBinding);
@@ -34,7 +34,7 @@ public class DeleteVariableBinding extends Command {
         if (parent instanceof State) {
             ((State) this.parent).addVariableBinding(variableBinding);
         } else if (parent instanceof PlanType) {
-            ((PlanType) this.parent).addParametrisation(variableBinding);
+            ((PlanType) this.parent).addVariableBinding(variableBinding);
         }
         this.modelManager.storePlanElement(Types.VARIABLEBINDING, this.variableBinding, false);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, this.variableBinding);

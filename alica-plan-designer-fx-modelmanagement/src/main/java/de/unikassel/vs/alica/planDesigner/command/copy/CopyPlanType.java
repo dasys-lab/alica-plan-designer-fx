@@ -54,7 +54,7 @@ public class CopyPlanType  extends Command {
                     newVariableBinding.setVariable(copyPlanType.getVariables().get(j));
                 }
             }
-            copyPlanType.addParametrisation(newVariableBinding);
+            copyPlanType.addVariableBinding(newVariableBinding);
         }
         this.modelManager.storePlanElement(Types.PLANTYPE, copyPlanType,true);
         this.fireEvent(ModelEventType.ELEMENT_CREATED, copyPlanType);
