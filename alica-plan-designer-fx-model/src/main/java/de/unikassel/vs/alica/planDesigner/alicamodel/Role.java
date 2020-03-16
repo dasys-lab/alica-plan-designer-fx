@@ -1,8 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -12,7 +9,7 @@ public class Role extends PlanElement {
     protected HashMap<Task, Float> taskPriorities = new HashMap<>();
     protected ArrayList<Characteristic> characteristics = new ArrayList<>();
     private RoleSet roleSet;
-    private ChangeListenerForDirtyFlag atributeChangedListener;
+    private ChangeListenerForDirtyFlag attributeChangedListener;
 
     public Role() {
         super();
@@ -29,7 +26,7 @@ public class Role extends PlanElement {
 
     public void setTaskPriorities(HashMap<Task, Float> taskPriorities) {
         this.taskPriorities = taskPriorities;
-//        this.atributeChangedListener.setDirty();
+//        this.attributeChangedListener.setDirty();
     }
 
     public HashMap<Task, Float> getTaskPriorities() {
@@ -38,12 +35,16 @@ public class Role extends PlanElement {
 
     public void removeTaskPriority(Task task) {
         this.taskPriorities.remove(task);
-        this.atributeChangedListener.setDirty();
+        if (attributeChangedListener != null) {
+            this.attributeChangedListener.setDirty();
+        }
     }
 
     public void addTaskPriority(Task task, float priority) {
         this.taskPriorities.put(task, priority);
-        this.atributeChangedListener.setDirty();
+        if (attributeChangedListener != null) {
+            this.attributeChangedListener.setDirty();
+        }
     }
 
     public ArrayList<Characteristic> getCharacteristics() {
@@ -61,7 +62,7 @@ public class Role extends PlanElement {
     }
 
     public void registerDirtyFlag(ChangeListenerForDirtyFlag listener) {
-        this.atributeChangedListener = listener;
+        this.attributeChangedListener = listener;
         this.name.addListener(listener);
         this.comment.addListener(listener);
         this.characteristics.forEach(c -> c.addListener(listener));
