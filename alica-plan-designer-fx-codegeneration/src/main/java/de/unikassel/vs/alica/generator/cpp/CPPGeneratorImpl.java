@@ -411,22 +411,23 @@ public class CPPGeneratorImpl implements IGenerator {
             // https://stackoverflow.com/a/46374122
             String clangFormatName = ".clang-format";
             URL clangFormatUrl = CPPGeneratorImpl.class.getResource(clangFormatName);
+//            System.out.println(clangFormatUrl.toString());
             File clangFormatFile = new File(clangFormatUrl.getFile());
 
             // copy .clang-format to file dir if not exists
-            String clangFormatDstStr = fileName.substring(0, fileName.lastIndexOf(File.separator)) + File.separator + clangFormatName;
-            File clangFormatDstFile = new File(clangFormatDstStr);
-            if (!clangFormatDstFile.exists()) {
-                try {
-                    Files.copy(clangFormatFile.toPath(), clangFormatDstFile.toPath());
-                } catch (IOException e) {
-                    // intercept a bug, by move a File
-                    if(!(e instanceof FileAlreadyExistsException)) {
-                        LOG.error("An error occurred while copying format style to destination", e);
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
+//            String clangFormatDstStr = fileName.substring(0, fileName.lastIndexOf(File.separator)) + File.separator + clangFormatName;
+//            File clangFormatDstFile = new File(clangFormatDstStr);
+//            if (!clangFormatDstFile.exists()) {
+//                try {
+//                    Files.copy(clangFormatFile.toPath(), clangFormatDstFile.toPath());
+//                } catch (IOException e) {
+//                    // intercept a bug, by move a File
+//                    if(!(e instanceof FileAlreadyExistsException)) {
+//                        LOG.error("An error occurred while copying format style to destination", e);
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//            }
 
             // run formatter
             String command = formatter + " --style=file -i " + fileName;
@@ -438,7 +439,7 @@ public class CPPGeneratorImpl implements IGenerator {
             }
 
             // remove .clang-format from file dir
-            clangFormatDstFile.delete();
+//            clangFormatDstFile.delete();
         } else {
             LOG.warn("Generated files are not formatted because no formatter is configured");
         }

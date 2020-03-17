@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 public class GeneratedSourcesManager {
 
-    private String genSrcPath;
+    private String codegenPath;
     private String editorExecutablePath;
     private Map<Long, Integer> linesForGeneratedElements;
 
@@ -17,16 +17,18 @@ public class GeneratedSourcesManager {
         linesForGeneratedElements = new HashMap<>();
     }
 
+    // Code generation path' getter and setter
+    public void setCodegenPath(String codegenPath) {
+        this.codegenPath = codegenPath;
+    }
+    public String getCodegenPath() {
+        return codegenPath;
+    }
     public String getIncludeDir() {
-        return Paths.get(genSrcPath, "include").toString();
+        return Paths.get(codegenPath, "include").toString();
     }
-
     public String getSrcDir() {
-        return Paths.get(genSrcPath, "src").toString();
-    }
-
-    public void setGenSrcPath(String genSrcPath) {
-        this.genSrcPath = genSrcPath;
+        return Paths.get(codegenPath, "src").toString();
     }
 
     public void setEditorExecutablePath(String editorExecutablePath) {

@@ -47,12 +47,12 @@ public class StandaloneCodegenerator {
         modelManager.loadModelFromDisk();
 
         GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager();
+        generatedSourcesManager.setCodegenPath(sourceGenPath);
 
         Codegenerator codegenerator = new Codegenerator(modelManager.getPlans(),
                 modelManager.getBehaviours(),
                 modelManager.getConditions(),
                 clangFormatPath,
-                sourceGenPath,
                 generatedSourcesManager);
         codegenerator.generate();
     }
