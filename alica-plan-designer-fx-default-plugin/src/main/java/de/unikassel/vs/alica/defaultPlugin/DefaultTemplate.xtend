@@ -27,7 +27,7 @@ class DefaultTemplate {
                 * Outgoing transition:
                 *   - Name: «transition.preCondition.name», ConditionString: «transition.preCondition.conditionString», Comment: «transition.comment»
                 *
-                * Abstractplans in current state: «var  List<AbstractPlan> plans = state.abstractPlans»
+                * Abstract plans in current state: «var  List<AbstractPlan> plans = state.abstractPlans»
                 «FOR plan : plans»
                 *   - «plan.name» («plan.id»)
                 «ENDFOR»
@@ -41,7 +41,7 @@ class DefaultTemplate {
                 *   - «stateOfInPlan.name» («stateOfInPlan.id»)
                 «ENDFOR»
                 *
-                * Variables of plan:«var  List<Variable> variables = transition.preCondition.variables»
+                * Variables of preconditon:«var  List<Variable> variables = transition.preCondition.variables»
                 «FOR variable : variables»
                 *	- «variable.name» («variable.id»)
                 «ENDFOR»
