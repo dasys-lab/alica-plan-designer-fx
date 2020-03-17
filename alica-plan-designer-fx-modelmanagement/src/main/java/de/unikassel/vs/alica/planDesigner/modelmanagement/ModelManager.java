@@ -1332,7 +1332,7 @@ public class ModelManager implements Observer {
      * @param planElement
      */
     private void serializeToDisk(SerializablePlanElement planElement, boolean movedOrCreated) {
-        // for testing, delete if you see this uncommented
+        // for testing, comment if you see this uncommented
 //        generateJsonSchema();
 
         String fileExtension = FileSystemUtil.getExtension(planElement);
