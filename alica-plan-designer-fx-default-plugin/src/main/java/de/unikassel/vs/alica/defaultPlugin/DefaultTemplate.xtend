@@ -3,6 +3,7 @@ package de.unikassel.vs.alica.defaultPlugin;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour
 import de.unikassel.vs.alica.planDesigner.alicamodel.State
+import de.unikassel.vs.alica.planDesigner.alicamodel.TerminalState
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition
 import de.unikassel.vs.alica.planDesigner.alicamodel.Variable
 import de.unikassel.vs.alica.planDesigner.alicamodel.Quantifier
@@ -46,7 +47,7 @@ class DefaultTemplate {
                 *	- «variable.name» («variable.id»)
                 «ENDFOR»
                 */
-                bool PreCondition«transition.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
+                bool PreCondition«transition.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp)
                  {
                     /*PROTECTED REGION ID(«transition.id») ENABLED START*/
                     «IF (protectedRegions.containsKey(transition.id + ""))»
@@ -62,32 +63,14 @@ class DefaultTemplate {
     '''
 
     def String expressionsPlanCheckingMethods(Plan plan) '''
-        «IF (plan.runtimeCondition !== null && plan.runtimeCondition.pluginName == "DefaultPlugin")»
-            //Check of RuntimeCondition - (Name): «plan.runtimeCondition.name», (ConditionString): «plan.runtimeCondition.conditionString», (Comment) : «plan.runtimeCondition.comment»
-
-            /*
-             * Available Vars:«var  List<Variable> variables = plan.runtimeCondition.variables»«FOR variable : variables»
-             *	- «variable.name» («variable.id»)«ENDFOR»
-             */
-            bool RunTimeCondition«plan.runtimeCondition.id»::evaluate(shared_ptr<RunningPlan> rp) {
-                /*PROTECTED REGION ID(«plan.runtimeCondition.id») ENABLED START*/
-                «IF (protectedRegions.containsKey(plan.runtimeCondition.id + ""))»
-                    «protectedRegions.get(plan.runtimeCondition.id + "")»
-                «ELSE»
-                    std::cout << "The RunTimeCondition «plan.runtimeCondition.id» in Plan «plan.getName» is not implement yet!" << std::endl;
-                    return false;
-                «ENDIF»
-                /*PROTECTED REGION END*/
-            }
-        «ENDIF»
         «IF (plan.preCondition !== null && plan.preCondition.pluginName == "DefaultPlugin")»
             //Check of PreCondition - (Name): «plan.preCondition.name», (ConditionString): «plan.preCondition.conditionString» , (Comment) : «plan.preCondition.comment»
 
-            /*
+            /**
              * Available Vars:«var  List<Variable> variables =  plan.preCondition.variables»«FOR variable :variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
-            bool PreCondition«plan.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
+            bool PreCondition«plan.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp)
             {
                 /*PROTECTED REGION ID(«plan.preCondition.id») ENABLED START*/
                 «IF (protectedRegions.containsKey(plan.preCondition.id + ""))»
@@ -99,13 +82,57 @@ class DefaultTemplate {
                 /*PROTECTED REGION END*/
             }
         «ENDIF»
+        «IF (plan.runtimeCondition !== null && plan.runtimeCondition.pluginName == "DefaultPlugin")»
+            //Check of RuntimeCondition - (Name): «plan.runtimeCondition.name», (ConditionString): «plan.runtimeCondition.conditionString», (Comment) : «plan.runtimeCondition.comment»
+
+            /**
+             * Available Vars:«var  List<Variable> variables = plan.runtimeCondition.variables»«FOR variable : variables»
+             *	- «variable.name» («variable.id»)«ENDFOR»
+             */
+            bool RunTimeCondition«plan.runtimeCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp) {
+                /*PROTECTED REGION ID(«plan.runtimeCondition.id») ENABLED START*/
+                «IF (protectedRegions.containsKey(plan.runtimeCondition.id + ""))»
+                    «protectedRegions.get(plan.runtimeCondition.id + "")»
+                «ELSE»
+                    std::cout << "The RunTimeCondition «plan.runtimeCondition.id» in Plan «plan.getName» is not implement yet!" << std::endl;
+                    return false;
+                «ENDIF»
+                /*PROTECTED REGION END*/
+            }
+        «ENDIF»
+        «var  List<State> states =  plan.states»
+        «FOR state : states»
+        «IF (state instanceof TerminalState)»
+        «var TerminalState terminalState = state as TerminalState»
+        «IF (terminalState.postCondition !== null && terminalState.postCondition.pluginName == "DefaultPlugin")»
+            //Check of PostCondition - (Name): «terminalState.postCondition.name», (ConditionString): «terminalState.postCondition.conditionString» , (Comment) : «terminalState.postCondition.comment»
+
+            /**
+             * Available Vars:«var  List<Variable> variables =  terminalState.postCondition.variables»«FOR variable :variables»
+             *	- «variable.name» («variable.id»)«ENDFOR»
+             */
+            bool PostCondition«terminalState.postCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp)
+            {
+                /*PROTECTED REGION ID(«terminalState.postCondition.id») ENABLED START*/
+                «IF (protectedRegions.containsKey(terminalState.postCondition.id + ""))»
+                    «protectedRegions.get(terminalState.postCondition.id + "")»
+                «ELSE»
+                    std::cout << "The PostCondition «terminalState.postCondition.id» in TerminalState «terminalState.getName» is not implement yet!" << std::endl;
+                    std::cout << "However, PostConditions are a feature that makes sense in the context of planning, which is not supported by ALICA, yet! So don't worry.'" << std::endl;
+                    return false;
+                «ENDIF»
+                /*PROTECTED REGION END*/
+            }
+        «ENDIF»
+        «ENDIF»
+        «ENDFOR»
     '''
 
     def String expressionsBehaviourCheckingMethods(Behaviour behaviour) '''
         «IF (behaviour.runtimeCondition !== null && behaviour.runtimeCondition.pluginName == "DefaultPlugin")»
             //Check of RuntimeCondition - (Name): «behaviour.runtimeCondition.name», (ConditionString): «behaviour.runtimeCondition.conditionString», (Comment) : «behaviour.runtimeCondition.comment»
 
-            /*
+            /**
              * Available Vars:«var  List<Variable> variables = behaviour.runtimeCondition.variables»«FOR variable : variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
@@ -123,7 +150,7 @@ class DefaultTemplate {
         «IF (behaviour.preCondition !== null && behaviour.preCondition.pluginName == "DefaultPlugin")»
             //Check of PreCondition - (Name): «behaviour.preCondition.name», (ConditionString): «behaviour.preCondition.conditionString» , (Comment) : «behaviour.preCondition.comment»
 
-            /*
+            /**
              * Available Vars:«var  List<Variable> variables =  behaviour.preCondition.variables»«FOR variable :variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
@@ -142,7 +169,7 @@ class DefaultTemplate {
         «IF (behaviour.postCondition !== null && behaviour.postCondition.pluginName == "DefaultPlugin")»
             //Check of PostCondition - (Name): «behaviour.postCondition.name», (ConditionString): «behaviour.postCondition.conditionString» , (Comment) : «behaviour.postCondition.comment»
 
-            /*
+            /**
              * Available Vars:«var  List<Variable> variables =  behaviour.postCondition.variables»«FOR variable :variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
@@ -162,7 +189,8 @@ class DefaultTemplate {
 
     def String constraintPlanCheckingMethods(Plan plan) '''
         «IF (plan.runtimeCondition !== null && plan.runtimeCondition.pluginName == "DefaultPlugin")»
-            /*
+        «IF (plan.runtimeCondition.variables.size > 0) || (plan.runtimeCondition.quantifiers.size > 0)»
+            /**
              * RuntimeCondition - (Name): «plan.runtimeCondition.name»
              * (ConditionString): «plan.runtimeCondition.conditionString»
             «var  List<Variable> variables =  plan.runtimeCondition.variables»
@@ -190,8 +218,10 @@ class DefaultTemplate {
             }
         «ENDIF»
 
+        «ENDIF»
         «IF (plan.preCondition !== null && plan.preCondition.pluginName == "DefaultPlugin")»
-            /*
+        «IF (plan.preCondition.variables.size > 0) || (plan.preCondition.quantifiers.size > 0)»
+            /**
              * PreCondition - (Name): «plan.preCondition.name»
              * (ConditionString): «plan.preCondition.conditionString»
             «var  List<Variable> variables =  plan.preCondition.variables»
@@ -216,13 +246,13 @@ class DefaultTemplate {
                 /*PROTECTED REGION END*/
             }
         «ENDIF»
-
+        «ENDIF»
     '''
 
     def String constraintBehaviourCheckingMethods(Behaviour behaviour) '''
         «IF (behaviour.runtimeCondition !== null && behaviour.runtimeCondition.pluginName == "DefaultPlugin")»
         «IF (behaviour.runtimeCondition.variables.size > 0) || (behaviour.runtimeCondition.quantifiers.size > 0)»
-            /*
+            /**
              * RuntimeCondition - (Name): «behaviour.runtimeCondition.name»
              * (ConditionString): «behaviour.runtimeCondition.conditionString»
             «var  List<Variable> variables =  behaviour.runtimeCondition.variables»
@@ -308,7 +338,6 @@ class DefaultTemplate {
             }
         «ENDIF»
         «ENDIF»
-
     '''
 
     def String constraintStateCheckingMethods(State state) '''
