@@ -48,7 +48,9 @@ public class State extends PlanElement {
     }
     public void addAbstractPlan(AbstractPlan abstractPlan) {
         abstractPlans.add(abstractPlan);
-        this.changeListener.setDirty();
+        if (this.changeListener != null) {
+            this.changeListener.setDirty();
+        }
     }
     public void removeAbstractPlan(AbstractPlan abstractPlan) {
         abstractPlans.remove(abstractPlan);
@@ -60,7 +62,10 @@ public class State extends PlanElement {
                 iterator.remove();
             }
         }
-        this.changeListener.setDirty();
+
+        if (this.changeListener != null) {
+            this.changeListener.setDirty();
+        }
     }
 
     public List<VariableBinding> getVariableBindings() {
@@ -68,12 +73,16 @@ public class State extends PlanElement {
     }
     public void addVariableBinding(VariableBinding binding) {
         this.variableBindings.add(binding);
-        binding.registerDirtyFlag(this.changeListener);
-        this.changeListener.setDirty();
+        if (this.changeListener != null) {
+            binding.registerDirtyFlag(this.changeListener);
+            this.changeListener.setDirty();
+        }
     }
     public void removeVariableBinding(VariableBinding binding) {
         this.variableBindings.remove(binding);
-        this.changeListener.setDirty();
+        if (this.changeListener != null) {
+            this.changeListener.setDirty();
+        }
     }
 
     public List<Transition> getOutTransitions() {
