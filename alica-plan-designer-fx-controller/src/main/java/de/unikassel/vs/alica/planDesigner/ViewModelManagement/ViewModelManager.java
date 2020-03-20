@@ -770,6 +770,7 @@ public class ViewModelManager {
                         break;
                     case Types.BEHAVIOUR:
                         ((BehaviourViewModel)parentViewModel).setPreCondition((ConditionViewModel) viewModelElement);
+                        viewModelElement.setParentId(parentViewModel.getId());
                         break;
                     case Types.TRANSITION:
                         ((TransitionViewModel)parentViewModel).setPreCondition((ConditionViewModel) viewModelElement);
@@ -788,6 +789,7 @@ public class ViewModelManager {
                         break;
                     case Types.BEHAVIOUR:
                         ((BehaviourViewModel)parentViewModel).setRuntimeCondition((ConditionViewModel) viewModelElement);
+                        viewModelElement.setParentId(parentViewModel.getId());
                         break;
                     default:
                         System.err.println("ViewModelManager: Add Element not supported for runtimeCondition and " + parentViewModel.getType());
@@ -797,6 +799,7 @@ public class ViewModelManager {
                 switch (parentViewModel.getType()){
                     case Types.BEHAVIOUR:
                         ((BehaviourViewModel)parentViewModel).setPostCondition((ConditionViewModel) viewModelElement);
+                        viewModelElement.setParentId(parentViewModel.getId());
                         break;
                     case Types.SUCCESSSTATE:
                     case Types.FAILURESTATE:
