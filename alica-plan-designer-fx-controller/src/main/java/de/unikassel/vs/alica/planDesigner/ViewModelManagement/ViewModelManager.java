@@ -627,6 +627,12 @@ public class ViewModelManager {
                 break;
             case Types.QUANTIFIER:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
+                PlanElement planElement = modelManager.getPlanElement(parentViewModel.getParentId());
+                if(planElement instanceof Transition) {
+                    transitionViewModel = (TransitionViewModel) getViewModelElement(planElement);
+                    transitionViewModel.getPreCondition().getQuantifiers().remove(viewModelElement);
+                    return;
+                }
                 switch (parentViewModel.getType()){
                     case Types.PRECONDITION:
                     case Types.RUNTIMECONDITION:
@@ -760,12 +766,14 @@ public class ViewModelManager {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
                         ((PlanViewModel)parentViewModel).setPreCondition((ConditionViewModel) viewModelElement);
+                        viewModelElement.setParentId(parentViewModel.getId());
                         break;
                     case Types.BEHAVIOUR:
                         ((BehaviourViewModel)parentViewModel).setPreCondition((ConditionViewModel) viewModelElement);
                         break;
                     case Types.TRANSITION:
                         ((TransitionViewModel)parentViewModel).setPreCondition((ConditionViewModel) viewModelElement);
+                        viewModelElement.setParentId(parentViewModel.getId());
                         break;
                     default:
                         System.err.println("ViewModelManager: Add Element not supported for preCondition and " + parentViewModel.getType());
@@ -776,6 +784,7 @@ public class ViewModelManager {
                     case Types.PLAN:
                     case Types.MASTERPLAN:
                         ((PlanViewModel)parentViewModel).setRuntimeCondition((ConditionViewModel) viewModelElement);
+                        viewModelElement.setParentId(parentViewModel.getId());
                         break;
                     case Types.BEHAVIOUR:
                         ((BehaviourViewModel)parentViewModel).setRuntimeCondition((ConditionViewModel) viewModelElement);
@@ -792,14 +801,21 @@ public class ViewModelManager {
                     case Types.SUCCESSSTATE:
                     case Types.FAILURESTATE:
                         ((StateViewModel)parentViewModel).setPostCondition((ConditionViewModel) viewModelElement);
+                        viewModelElement.setParentId(parentViewModel.getId());
                         break;
                     default:
                         System.err.println("ViewModelManager: Add Element not supported for postCondition and " + parentViewModel.getType());
                 }
                 break;
             case Types.QUANTIFIER:
-                conditionViewModel = (ConditionViewModel) parentViewModel;
-                conditionViewModel.getQuantifiers().add((QuantifierViewModel) viewModelElement);
+                PlanElement planElement = this.modelManager.getPlanElement(parentViewModel.getParentId());
+                if (planElement instanceof Transition) {
+                    TransitionViewModel transitionViewModel = (TransitionViewModel) getViewModelElement(planElement);
+                    transitionViewModel.getPreCondition().getQuantifiers().add((QuantifierViewModel) viewModelElement);
+                } else {
+                    conditionViewModel = (ConditionViewModel) parentViewModel;
+                    conditionViewModel.getQuantifiers().add((QuantifierViewModel) viewModelElement);
+                }
                 break;
             case Types.TASKREPOSITORY:
             case Types.ROLESET:

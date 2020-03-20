@@ -36,6 +36,8 @@ public class CreateTransition extends UiPositionCommand {
 
         PreCondition preCondition = new PreCondition();
         preCondition.setEnabled(true);
+        this.modelManager.storePlanElement(Types.PRECONDITION, preCondition, false);
+
         transition.setPreCondition(preCondition);
 
         return transition;
