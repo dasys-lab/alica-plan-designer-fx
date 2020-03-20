@@ -559,7 +559,11 @@ public class ViewModelManager {
                 break;
             case Types.VARIABLE:
                 ViewModelElement parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
-                ((AbstractPlanViewModel) parentViewModel).getVariables().remove(viewModelElement);
+                if (parentViewModel instanceof AbstractPlanViewModel) {
+                    ((AbstractPlanViewModel) parentViewModel).getVariables().remove(viewModelElement);
+                } else if (parentViewModel instanceof ConditionViewModel) {
+                    ((ConditionViewModel) parentViewModel).getVariables().remove(viewModelElement);
+                }
                 break;
             case Types.VARIABLEBINDING:
                 parentViewModel = getViewModelElement(modelManager.getPlanElement(parentId));
@@ -745,8 +749,10 @@ public class ViewModelManager {
             case Types.VARIABLE:
                 if (parentViewModel instanceof AbstractPlanViewModel) {
                     ((AbstractPlanViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                    viewModelElement.setParentId(parentViewModel.getId());
                 } else if (parentViewModel instanceof ConditionViewModel) {
                     ((ConditionViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                    viewModelElement.setParentId(parentViewModel.getId());
                 }
                 break;
             case Types.VARIABLEBINDING:
