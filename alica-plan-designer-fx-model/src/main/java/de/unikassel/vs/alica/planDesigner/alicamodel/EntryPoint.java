@@ -8,7 +8,7 @@ public class EntryPoint extends PlanElement {
 
     protected final SimpleBooleanProperty successRequired = new SimpleBooleanProperty(this, "successRequired", false);
     protected final SimpleIntegerProperty minCardinality = new SimpleIntegerProperty(this, "minCardinality", 0);
-    protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty(this, "minCardinality", 0);
+    protected final SimpleIntegerProperty maxCardinality = new SimpleIntegerProperty(this, "maxCardinality", 2147483647);
     protected final SimpleObjectProperty<Task> task = new SimpleObjectProperty<>(this, "task", null);
     protected final SimpleObjectProperty<State> state = new SimpleObjectProperty<>(this, "state", null);
     protected final SimpleObjectProperty<Plan> plan = new SimpleObjectProperty<>(this, "plan", null);

@@ -1,5 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.alicamodel;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,6 +10,7 @@ import java.util.*;
 public class Behaviour extends AbstractPlan {
     protected final SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
     protected final SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
+    protected final SimpleBooleanProperty eventDriven = new SimpleBooleanProperty(this, "eventDriven", false);
 
     protected SimpleObjectProperty<PreCondition> preCondition = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<RuntimeCondition> runtimeCondition = new SimpleObjectProperty<>();
@@ -73,6 +75,16 @@ public class Behaviour extends AbstractPlan {
     }
     public SimpleLongProperty deferringProperty() {
         return this.deferring;
+    }
+
+    public boolean isEventDriven() {
+        return eventDriven.get();
+    }
+    public void setEventDriven(boolean eventDriven) {
+        this.eventDriven.set(eventDriven);
+    }
+    public SimpleBooleanProperty eventDrivenProperty() {
+        return this.eventDriven;
     }
 
     public Map<String, String> getParameters() {
