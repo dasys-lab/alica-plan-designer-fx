@@ -344,9 +344,8 @@ class DefaultTemplate {
         // State: «state.name»
         «var  List<Transition> outTransitions = state.outTransitions»
         «FOR transition : outTransitions»
-            «IF transition.preCondition !== null»
-                «var  List<Variable> variables = transition.preCondition.variables»
-                «IF (transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin" && variables.size > 0)»
+            «IF transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin"»
+                «IF (transition.preCondition.variables.size > 0) || (transition.preCondition.quantifiers.size > 0)»
                     /**
                     * Transition:
                     * - Name: «transition.preCondition.name»
@@ -356,13 +355,15 @@ class DefaultTemplate {
                     * «var  List<AbstractPlan> plans = state.abstractPlans»
                     * Plans in State: «FOR plan : plans»
                     * - Plan Name: «plan.name», PlanID: «plan.id» «ENDFOR»
-                    * Static Variables: «FOR variable : variables»«variable.name» «ENDFOR»
+                    «var  List<Variable> variables =  transition.preCondition.variables»
+                    «IF (variables !== null)»
+                         * Static Variables: «FOR variable : variables»«variable.name» «ENDFOR»
+                    «ENDIF»
                     * Domain Variables:
                     «IF transition.preCondition.quantifiers !== null && transition.preCondition.quantifiers.size > 0»
                         «var  List<Quantifier> quantifiers = transition.preCondition.quantifiers»
-                        «FOR q : quantifiers»
-                            «var  List<String> sorts=  q.sorts»
-                            * forall agents in «q.scope.name» let v = «sorts»
+                        «FOR q : quantifiers»«var  List<String> sorts=  q.sorts»
+                    * forall agents in «q.scope.name» let v = «sorts»
                         «ENDFOR»
                     «ENDIF»
                      */
