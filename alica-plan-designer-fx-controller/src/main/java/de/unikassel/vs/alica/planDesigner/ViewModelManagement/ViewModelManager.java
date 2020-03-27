@@ -562,7 +562,31 @@ public class ViewModelManager {
                 if (parentViewModel instanceof AbstractPlanViewModel) {
                     ((AbstractPlanViewModel) parentViewModel).getVariables().remove(viewModelElement);
                 } else if (parentViewModel instanceof ConditionViewModel) {
-                    ((ConditionViewModel) parentViewModel).getVariables().remove(viewModelElement);
+                    PlanElement planElement = modelManager.getPlanElement(parentViewModel.getParentId());
+                    ViewModelElement parentViewModelElement = getViewModelElement(planElement);
+                    parentPlanElement = modelManager.getPlanElement(parentId);
+                   if (parentViewModelElement instanceof PlanViewModel) {
+                        if (parentPlanElement instanceof PreCondition) {
+                            ((PlanViewModel) parentViewModelElement).getPreCondition().getVariables().remove((VariableViewModel) viewModelElement);
+                        }
+                        if (parentPlanElement instanceof RuntimeCondition) {
+                            ((PlanViewModel) parentViewModelElement).getRuntimeCondition().getVariables().remove((VariableViewModel) viewModelElement);
+                        }
+                    } else if (parentViewModelElement instanceof TransitionViewModel) {
+                        ((TransitionViewModel) parentViewModelElement).getPreCondition().getVariables().remove((VariableViewModel) viewModelElement);
+                    } else if (parentViewModelElement instanceof BehaviourViewModel) {
+                        if (parentPlanElement instanceof PreCondition) {
+                            ((BehaviourViewModel) parentViewModelElement).getPreCondition().getVariables().remove((VariableViewModel) viewModelElement);
+                        }
+                        if (parentPlanElement instanceof PostCondition) {
+                            ((BehaviourViewModel) parentViewModelElement).getPostCondition().getVariables().remove((VariableViewModel) viewModelElement);
+                        }
+                        if (parentPlanElement instanceof RuntimeCondition) {
+                            ((BehaviourViewModel) parentViewModelElement).getRuntimeCondition().getVariables().remove((VariableViewModel) viewModelElement);
+                        }
+                    } else {
+                        ((ConditionViewModel) parentViewModel).getVariables().remove(viewModelElement);
+                    }
                 }
                 break;
             case Types.VARIABLEBINDING:
@@ -749,10 +773,31 @@ public class ViewModelManager {
             case Types.VARIABLE:
                 if (parentViewModel instanceof AbstractPlanViewModel) {
                     ((AbstractPlanViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
-                    viewModelElement.setParentId(parentViewModel.getId());
                 } else if (parentViewModel instanceof ConditionViewModel) {
-                    ((ConditionViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
-                    viewModelElement.setParentId(parentViewModel.getId());
+                    PlanElement planElement = modelManager.getPlanElement(parentViewModel.getParentId());
+                    ViewModelElement parentViewModelElement = getViewModelElement(planElement);
+                    if (parentViewModelElement instanceof PlanViewModel) {
+                        if (parentPlanElement instanceof PreCondition) {
+                            ((PlanViewModel) parentViewModelElement).getPreCondition().getVariables().add((VariableViewModel) viewModelElement);
+                        }
+                        if (parentPlanElement instanceof RuntimeCondition) {
+                            ((PlanViewModel) parentViewModelElement).getRuntimeCondition().getVariables().add((VariableViewModel) viewModelElement);
+                        }
+                    } else if (parentViewModelElement instanceof TransitionViewModel) {
+                        ((TransitionViewModel) parentViewModelElement).getPreCondition().getVariables().add((VariableViewModel) viewModelElement);
+                    } else if (parentViewModelElement instanceof BehaviourViewModel) {
+                        if (parentPlanElement instanceof PreCondition) {
+                            ((BehaviourViewModel) parentViewModelElement).getPreCondition().getVariables().add((VariableViewModel) viewModelElement);
+                        }
+                        if (parentPlanElement instanceof PostCondition) {
+                            ((BehaviourViewModel) parentViewModelElement).getPostCondition().getVariables().add((VariableViewModel) viewModelElement);
+                        }
+                        if (parentPlanElement instanceof RuntimeCondition) {
+                            ((BehaviourViewModel) parentViewModelElement).getRuntimeCondition().getVariables().add((VariableViewModel) viewModelElement);
+                        }
+                    } else {
+                        ((ConditionViewModel) parentViewModel).getVariables().add((VariableViewModel) viewModelElement);
+                    }
                 }
                 break;
             case Types.VARIABLEBINDING:
