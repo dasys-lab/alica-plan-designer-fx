@@ -6,6 +6,9 @@ import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.FailureStateContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.SuccessStateContainer;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaIcon;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
@@ -389,7 +392,8 @@ public final class FileTreeView extends TreeView<File> {
             }
 
             FileTreeCell treeCell = null;
-            if (e.getPickResult().getIntersectedNode().getParent() instanceof Group) {
+            Object pickParent = e.getPickResult().getIntersectedNode().getParent();
+            if (pickParent instanceof Group) {
                 for (Node child : e.getPickResult().getIntersectedNode().getParent().getChildrenUnmodifiable()) {
                     if (child.getBoundsInParent().contains(e.getX(), e.getY(), e.getZ())) {
                         treeCell = (FileTreeCell) child;
@@ -397,7 +401,24 @@ public final class FileTreeView extends TreeView<File> {
                     }
                 }
             } else {
-                treeCell = (FileTreeCell) e.getPickResult().getIntersectedNode().getParent();
+                if (pickParent instanceof FileTreeCell) {
+                    treeCell = (FileTreeCell) e.getPickResult().getIntersectedNode().getParent();
+                } else if (pickParent instanceof StateContainer){
+                    //Add AbstractPlan to State from FileTreeView, except failure- or success State
+                    if(pickParent instanceof FailureStateContainer || pickParent instanceof SuccessStateContainer) {
+                        return;
+                    }
+
+                    StateContainer stateContainer = (StateContainer) e.getPickResult().getIntersectedNode().getParent();
+                    GuiModificationEvent guiModificationEvent = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, draggedItem.getViewModelElement().getType(), draggedItem.getViewModelElement().getName());
+                    guiModificationEvent.setElementId(draggedItem.getViewModelElement().getId());
+                    guiModificationEvent.setParentId(stateContainer.getState().getId());
+                    controller.getInstance().getGuiModificationHandler().handle(guiModificationEvent);
+                    return;
+                } else {
+                    e.consume();
+                    return;
+                }
             }
 
             File parent = treeCell.getTreeItem().getValue();
