@@ -1071,7 +1071,15 @@ public class ViewModelManager {
             if (newValue instanceof Map.Entry || (viewModelElement instanceof  BehaviourViewModel && changedAttribute.equals("parameters"))) {
                 BehaviourViewModel behaviour = (BehaviourViewModel) viewModelElement;
                 behaviour.modifyParameter((Map.Entry<String, String>)newValue, (Map.Entry<String, String>)oldValue);
-            } else {
+            }
+            else if (newValue instanceof HashMap && viewModelElement instanceof RoleViewModel) {
+                RoleViewModel roleViewModel = (RoleViewModel) viewModelElement;
+                for (Map.Entry entry : ((HashMap<Long, Float>) newValue).entrySet()) {
+                    TaskViewModel planElement = (TaskViewModel) this.getViewModelElement(modelManager.getPlanElement((Long) entry.getKey()));
+                    roleViewModel.setTaskPriority(planElement, (Float) entry.getValue());
+                }
+            }
+            else {
                 BeanUtils.setProperty(viewModelElement, changedAttribute, newValue);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {

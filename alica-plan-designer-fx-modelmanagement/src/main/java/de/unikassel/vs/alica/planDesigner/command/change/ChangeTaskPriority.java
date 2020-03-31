@@ -52,7 +52,7 @@ public class ChangeTaskPriority extends Command {
     protected void fireEvent(ModelEventType eventType, PlanElement planElement) {
         ModelEvent event = new ModelEvent(eventType, planElement, mmq.getElementType());
         event.setParentId(mmq.getParentId());
-        event.setChangedAttribute(mmq.getAttributeName());
+        event.setChangedAttribute(mmq.getElementType());
         event.setRelatedObjects(mmq.getRelatedObjects());
         HashMap<Long, Float> taskIdPriorities = new HashMap<>();
         ArrayList<Task> removableItems = new ArrayList<>();
