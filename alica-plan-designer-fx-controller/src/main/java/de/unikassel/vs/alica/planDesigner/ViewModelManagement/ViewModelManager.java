@@ -204,6 +204,7 @@ public class ViewModelManager {
         behaviourViewModel.setRelativeDirectory(behaviour.getRelativeDirectory());
         behaviourViewModel.setFrequency(behaviour.getFrequency());
         behaviourViewModel.setDeferring(behaviour.getDeferring());
+        behaviourViewModel.setEventDriven(behaviour.isEventDriven());
 
         for (Variable variable : behaviour.getVariables()) {
             behaviourViewModel.getVariables().add((VariableViewModel) getViewModelElement(variable));

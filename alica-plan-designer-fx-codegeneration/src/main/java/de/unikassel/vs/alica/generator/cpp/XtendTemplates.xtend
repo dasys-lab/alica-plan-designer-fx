@@ -17,7 +17,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Variable
 
 class XtendTemplates {
 
-    private Map<String, String> protectedRegions;
+    public Map<String, String> protectedRegions;
 
     public def void setProtectedRegions (Map<String, String> regions) {
         protectedRegions = regions;
@@ -892,8 +892,8 @@ namespace alica
 std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(Plan* plan)
 {
    /*PROTECTED REGION ID(«plan.id») ENABLED START*/
-   «IF (protectedRegions.containsKey(plan.id))»
-«protectedRegions.get(plan.id)»
+   «IF (protectedRegions.containsKey(String.valueOf(plan.id)))»
+«protectedRegions.get(String.valueOf(plan.id))»
    «ELSE»
         std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
         return defaultFunction;

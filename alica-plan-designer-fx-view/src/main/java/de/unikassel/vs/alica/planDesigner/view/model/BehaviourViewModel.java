@@ -13,6 +13,7 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     protected SimpleIntegerProperty frequency = new SimpleIntegerProperty(this, "frequency", 0);
     protected SimpleLongProperty deferring = new SimpleLongProperty(this, "deferring", 0);
+    protected SimpleBooleanProperty eventDriven = new SimpleBooleanProperty(this, "eventDriven", false);
 
     protected final SimpleObjectProperty<ConditionViewModel> preCondition = new SimpleObjectProperty<>(this, Types.PRECONDITION, null);
     protected final SimpleObjectProperty<ConditionViewModel> runtimeCondition = new SimpleObjectProperty<>(this, Types.RUNTIMECONDITION, null);
@@ -24,7 +25,7 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
         super(id, name, type);
 
         this.uiPropertyList.clear();
-        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring"));
+        this.uiPropertyList.addAll(Arrays.asList("name", "id", "comment", "relativeDirectory", "frequency", "deferring", "eventDriven"));
 
         this.parameters.put("","");
     }
@@ -36,6 +37,9 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
         });
         deferring.addListener((observable, oldValue, newValue) -> {
             fireGUIAttributeChangeEvent(handler, newValue, deferring.getClass().getSimpleName(), deferring.getName());
+        });
+        eventDriven.addListener((observable, oldValue, newValue) -> {
+            fireGUIAttributeChangeEvent(handler, newValue, eventDriven.getClass().getSimpleName(), eventDriven.getName());
         });
     }
 
@@ -61,6 +65,18 @@ public class BehaviourViewModel  extends AbstractPlanViewModel {
 
     public IntegerProperty frequencyProperty() {
         return frequency;
+    }
+
+    public void setEventDriven(boolean eventDriven) {
+        this.eventDriven.set(eventDriven);
+    }
+
+    public boolean getEventDriven() {
+        return eventDriven.get();
+    }
+
+    public BooleanProperty eventDrivenProperty() {
+        return eventDriven;
     }
 
     public ObjectProperty<ConditionViewModel> preConditionProperty(){
