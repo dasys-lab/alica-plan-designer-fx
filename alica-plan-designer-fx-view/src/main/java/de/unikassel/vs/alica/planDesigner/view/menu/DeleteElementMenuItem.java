@@ -25,7 +25,13 @@ public class DeleteElementMenuItem extends MenuItem {
         setText(i18NRepo.getString("label.menu.delete"));
         setOnAction(e -> delete());
         this.setOnAction(event -> delete());
-        this.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
+
+        if ("Mac OS X".equals(System.getProperty("os.name"))) {
+            this.setAccelerator(new KeyCodeCombination(KeyCode.BACK_SPACE, KeyCodeCombination.META_DOWN));
+        }
+        else {
+            this.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
+        }
     }
 
     /**
