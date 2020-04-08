@@ -71,7 +71,7 @@
         <dependency>
             <!-- https://github.com/dasys-lab/alica-codegen -->
             <groupId>de.unikassel.vs.alica</groupId>
-            <artifactId>codegen-modelmanagement</artifactId>
+            <artifactId>modelmanagement</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
