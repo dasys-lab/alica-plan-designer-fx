@@ -69,7 +69,7 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <!-- https://github.com/dasys-lab/alica-codegen -->
+            <!-- https://github.com/dasys-lab/alica-plan-designer-fx -->
             <groupId>de.unikassel.vs.alica</groupId>
             <artifactId>modelmanagement</artifactId>
             <version>1.0-SNAPSHOT</version>
