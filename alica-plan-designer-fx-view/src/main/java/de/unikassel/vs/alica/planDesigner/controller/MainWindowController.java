@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.planDesigner.controller;
 
 import de.unikassel.vs.alica.planDesigner.events.GuiEventType;
 import de.unikassel.vs.alica.planDesigner.events.GuiModificationEvent;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
@@ -9,12 +10,12 @@ import de.unikassel.vs.alica.planDesigner.view.Types;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTab;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.debugTab.DebugTab;
 import de.unikassel.vs.alica.planDesigner.view.filebrowser.FileTreeView;
 import de.unikassel.vs.alica.planDesigner.view.img.AlicaCursor;
 import de.unikassel.vs.alica.planDesigner.view.menu.EditMenu;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
-import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
-import de.unikassel.vs.alica.planDesigner.view.model.ViewModelElement;
+import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -109,6 +110,7 @@ public class MainWindowController implements Initializable {
     private GlobalsConfWindowController globalsConfWindowController;
     private IGuiStatusHandler guiStatusHandler;
     private IGuiModificationHandler guiModificationHandler;
+    private IAlicaHandler alicaHandler;
 
     //--------------------------------------------------------------------------------------------
 //  GETTER & SETTER
@@ -136,6 +138,10 @@ public class MainWindowController implements Initializable {
 
     public IGuiModificationHandler getGuiModificationHandler() {
         return guiModificationHandler;
+    }
+
+    public IAlicaHandler getAlicaHandler() {
+        return alicaHandler;
     }
 
     public EditorTabPane getEditorTabPane() {
@@ -178,6 +184,9 @@ public class MainWindowController implements Initializable {
         this.guiModificationHandler = creationHandler;
     }
 
+    public void setAlicaHandler(IAlicaHandler alicaHandler) {
+        this.alicaHandler = alicaHandler;
+    }
 
     public Text getStatusText() {
         return statusText;
@@ -206,6 +215,7 @@ public class MainWindowController implements Initializable {
 
         repositoryTabPane.setGuiModificationHandler(guiModificationHandler);
         editorTabPane.setGuiModificationHandler(guiModificationHandler);
+        editorTabPane.setAlicaHandler(alicaHandler);
 
         // propertyAndStatusTabPane.init(editorTabPane);
 
@@ -243,6 +253,15 @@ public class MainWindowController implements Initializable {
         saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileMenu.getItems().add(saveItem);
         fileMenu.setDisable(true);
+
+        // -- DEBUG MENU --
+        MenuItem debugItem = new MenuItem("Debug");
+        debugItem.setOnAction(event -> {
+            AlicaConfigurationViewModel acvm = alicaConfWindowController.getAlicaConfigurationViewModel();
+            GlobalsConfViewModel gcvm = globalsConfWindowController.getGlobalsConfViewModel();
+            openFile(new DebugViewModel(1231231231, DebugTab.DEBUGVIEWNAME, Types.DEBUG, acvm, gcvm));
+        });
+        fileMenu.getItems().addAll(debugItem);
         menus.add(fileMenu);
 
         // ---- EDIT MENU ----

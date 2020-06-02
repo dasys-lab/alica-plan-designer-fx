@@ -146,6 +146,7 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     public void updateExternalTools() {
         configWindowController.setClangFormat(configManager.getClangFormatPath());
         configWindowController.setSourceCodeEditor(configManager.getEditorExecutablePath());
+        configWindowController.setAlicaEngineExecutable(configManager.getAlicaEnginePath());
     }
 
     @Override
@@ -183,6 +184,11 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     @Override
     public void setClangFormatPath(String clangFormatPath) {
         configManager.setClangFormatPath(clangFormatPath);
+    }
+
+    @Override
+    public void setAlicaEngineExecutablePath(String alicaEngineExecutablePath) {
+        configManager.setAlicaEnginePath(alicaEngineExecutablePath);
     }
 
     @Override

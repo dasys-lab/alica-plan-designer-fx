@@ -35,4 +35,5 @@ public class Types {
     public static final String UIEXTENSION = "uiextension";
     public static final String NOTYPE = "";
     public static final String VARIABLEBINDING = "variablebinding";
+    public static final String DEBUG = "debug";
 }

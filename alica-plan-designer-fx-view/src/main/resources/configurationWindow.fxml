@@ -30,6 +30,13 @@
                                         <Button fx:id="clangFormatFileButton" mnemonicParsing="false" text="..." />
                                     </children>
                                 </HBox>
+                                <HBox prefHeight="36.0" prefWidth="905.0" styleClass="cfgHbox">
+                                    <children>
+                                        <Label fx:id="alicaEngineRunnerLabel" styleClass="cfgLabel" text="ALICA Engine Executable:" />
+                                        <TextField fx:id="alicaEngineRunnerTextField" prefHeight="26.0" prefWidth="706.0" />
+                                        <Button fx:id="alicaEngineRunnerFileButton" mnemonicParsing="false" text="..." />
+                                    </children>
+                                </HBox>
                             </children>
                         </VBox>
                     </content>

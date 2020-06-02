@@ -50,6 +50,7 @@ public final class ConfigurationManager {
     private static final String DOMAIN_CONFIGS = "domainConfigs";
     private static final String CLANG_FORMAT_PATH = "clangFormatPath";
     private static final String EDITOR_EXEC_PATH = "editorExecutablePath";
+    private static final String ALICA_ENGINE_PATH = "alicaEngineExecutablePath";
 
     //---- WINDOWCONFIG ----
     private static final String WINDOW_CONFIG_FILENAME = "windowConfig";
@@ -111,6 +112,7 @@ public final class ConfigurationManager {
             // loadFromDisk default values for mainConfig.properties
             mainConfigProperties.setProperty(CLANG_FORMAT_PATH, "clang-format");
             mainConfigProperties.setProperty(EDITOR_EXEC_PATH, "gedit");
+            mainConfigProperties.setProperty(ALICA_ENGINE_PATH, "../devel/lib/test_robots_runner/runner");
             mainConfigProperties.setProperty(DOMAIN_CONFIGS, "");
             mainConfigProperties.setProperty(ACTIVE_DOMAIN_CONF, "");
             generateDefaultConfiguration();
@@ -375,6 +377,18 @@ public final class ConfigurationManager {
             mainConfigProperties.setProperty(EDITOR_EXEC_PATH, "");
         } else {
             mainConfigProperties.setProperty(EDITOR_EXEC_PATH, editorExecutablePath);
+        }
+    }
+
+    public String getAlicaEnginePath() {
+        return mainConfigProperties.getProperty(ALICA_ENGINE_PATH);
+    }
+
+    public void setAlicaEnginePath(String alicaEnginePath) {
+        if (alicaEnginePath == null) {
+            mainConfigProperties.setProperty(ALICA_ENGINE_PATH, "");
+        } else {
+            mainConfigProperties.setProperty(ALICA_ENGINE_PATH, alicaEnginePath);
         }
     }
 

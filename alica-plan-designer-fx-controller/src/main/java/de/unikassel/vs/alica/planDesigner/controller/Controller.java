@@ -17,6 +17,7 @@ import de.unikassel.vs.alica.planDesigner.events.*;
 import de.unikassel.vs.alica.planDesigner.filebrowser.FileSystemEventHandler;
 import de.unikassel.vs.alica.planDesigner.globalsConfiguration.GlobalsConfEventHandler;
 import de.unikassel.vs.alica.planDesigner.globalsConfiguration.GlobalsConfManager;
+import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IAlicaHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiModificationHandler;
 import de.unikassel.vs.alica.planDesigner.handlerinterfaces.IGuiStatusHandler;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
@@ -25,13 +26,17 @@ import de.unikassel.vs.alica.planDesigner.plugin.PluginEventHandler;
 import de.unikassel.vs.alica.planDesigner.uiextensionmodel.BendPoint;
 import de.unikassel.vs.alica.planDesigner.view.I18NRepo;
 import de.unikassel.vs.alica.planDesigner.view.Types;
+import de.unikassel.vs.alica.planDesigner.view.editor.container.StateContainer;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.AbstractPlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.EditorTabPane;
+import de.unikassel.vs.alica.planDesigner.view.editor.tab.planTab.PlanTab;
 import de.unikassel.vs.alica.planDesigner.view.editor.tab.taskRepoTab.TaskRepositoryTab;
 import de.unikassel.vs.alica.planDesigner.view.menu.FileTreeViewContextMenu;
 import de.unikassel.vs.alica.planDesigner.view.model.*;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryTabPane;
 import de.unikassel.vs.alica.planDesigner.view.repo.RepositoryViewModel;
+import de.unikassel.vs.pdDebug.Protocol;
+import de.unikassel.vs.pdDebug.Subscriber;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -42,23 +47,24 @@ import javafx.scene.control.Tab;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.*;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Central class that synchronizes model and view.
  * It is THE CONTROLLER regarding the Model-View-Controller pattern,
  * implemented in the Plan Designer.
  */
-public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler {
+public final class Controller implements IModelEventHandler, IGuiStatusHandler, IGuiModificationHandler, IAlicaHandler {
 
     // Common Objects
     private ConfigurationManager configurationManager;
@@ -102,6 +108,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         mainWindowController = MainWindowController.getInstance();
         mainWindowController.setGuiStatusHandler(this);
         mainWindowController.setGuiModificationHandler(this);
+        mainWindowController.setAlicaHandler(this);
 
         setupConfigGuiStuff();
         setupAlicaConfGuiStuff();
@@ -144,6 +151,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         globalsConfEventHandler = new GlobalsConfEventHandler(globalsConfWindowController, globalsConfManager);
         globalsConfWindowController.setHandler(globalsConfEventHandler);
+        globalsConfWindowController.loadDefaultGlobalsConfNoGui();
 
         mainWindowController.setGlobalsConfWindowController(globalsConfWindowController);
     }
@@ -152,6 +160,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         alicaConfigurationEventHandler = new AlicaConfigurationEventHandler(alicaConfWindowController,alicaConfigurationManager);
         alicaConfWindowController.setHandler(alicaConfigurationEventHandler);
+        alicaConfWindowController.loadDefaultAlicaConfNoGui();
 
         mainWindowController.setAlicaConfWindowController(alicaConfWindowController);
     }
@@ -721,5 +730,285 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         AbstractPlan abstractPlan = (AbstractPlan) this.modelManager.getPlanElement(modelElementId);
         List<File> generatedFilesList = getGeneratedFilesForAbstractPlan(abstractPlan);
         return generatedFilesList.get(1);
+    }
+
+    // ALICA Engine and DebugView stuff
+
+    private Map<Long, String> currentAgents;
+    private Map<Long, Long> agentsTabs;
+
+    private Process roscoreProcess;
+    private List<Process> pdAlicaRunnerProcesses; // needs more than one process
+
+    private String lastAEIMessage;
+    private Thread messageReceiver;
+    private boolean isDebugRunning = false;
+
+    @Override
+    public void handleAlicaMessageReceived(long senderId, String masterPlan, String currentPlan, String currentState, String currentRole, String currentTask, long[] agentsWithMe) {
+        if (currentAgents == null) currentAgents = new HashMap<>();
+        String oldPlan = currentAgents.put(senderId, currentPlan);
+
+        Platform.runLater(() -> {
+            System.out.println("Loading Plan " + currentPlan + " and highlighting state " + currentState + "...");
+
+            // Just open a new tab when we either have a new agent (oldPlan == null) or when the the agent has changed
+            // the plan
+            if (oldPlan == null || !oldPlan.equals(currentPlan)) {
+
+                if (agentsTabs == null) agentsTabs = new HashMap<>();
+
+                if (oldPlan != null) {
+                    // close the old tab for the agent
+                    handleCloseTab(agentsTabs.get(senderId));
+                }
+
+                // Find the plan from the repository that matches the name of the given currentPlan
+                ViewModelElement currentPlanViewModelElement = getRepoViewModel().getPlans().stream()
+                        .filter(v -> v.getName().equals(currentPlan))
+                        .findFirst()
+                        .orElse(null);
+
+                if (currentPlanViewModelElement != null) {
+                    // Open the plan if it was found
+                    SerializableViewModel svm = (SerializableViewModel) currentPlanViewModelElement;
+                    svm.setDebugSenderId("[" + senderId + "] ");
+                    agentsTabs.put(senderId, svm.getId());
+                    mainWindowController.openFile(svm);
+
+                }
+            }
+
+            for (Tab t : mainWindowController.getEditorTabPane().getTabs()) {
+                if (t instanceof PlanTab) {
+                    PlanTab tab = (PlanTab) t;
+
+                    // Find the StateContainer that represents the given currentState within the opened Tab
+                    StateContainer currentlyActiveStateContainer = tab.getPlanEditorGroup().getStateContainers().values().stream()
+                            .filter(sc -> sc.getState().getName().equals(currentState))
+                            .findFirst()
+                            .orElse(null);
+
+                    // and highlight it
+                    if (currentlyActiveStateContainer != null) {
+                        tab.setCurrentDebugContainer(currentlyActiveStateContainer, senderId + "");
+                        currentlyActiveStateContainer.getPlanEditorGroup().relocate(currentlyActiveStateContainer.getLayoutX(), currentlyActiveStateContainer.getLayoutY());
+                    } else {
+                        System.err.println("Could not highlight state: " + currentState);
+                    }
+
+                }
+            }
+
+
+        });
+    }
+
+    @Override
+    public boolean runAlica(String name, String masterPlan, String roleset) {
+        String alicaEnginePath = configurationManager.getAlicaEnginePath();
+        String rolesPath = configurationManager.getActiveConfiguration().getRolesPath();
+        try {
+            // first determine if roscore is already runnig
+            ProcessBuilder pb = new ProcessBuilder("bash", "-c", "pgrep -f roscore");
+            Process rcRunning = pb.start();
+            String rcRunningOutput = "";
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(rcRunning.getInputStream()));
+            boolean isRCRunning = reader.lines().count() > 0;
+            rcRunning.waitFor();
+            rcRunning.destroy();
+            reader.close();
+
+            if (!isRCRunning) {
+                // start roscore, because we still need it
+                pb = new ProcessBuilder("bash", "-c", "echo 'Sourcing setup.bash'; source /opt/ros/melodic/setup.bash; echo 'Starting roscore...'; roscore");
+                pb.environment().put("PATH", pb.environment().get("PATH") + ":/opt/ros/melodic/bin");
+                //pb.inheritIO();
+                roscoreProcess = pb.start();
+            }
+
+            if (pdAlicaRunnerProcesses == null) pdAlicaRunnerProcesses = new ArrayList<>();
+            // Load pd_alica_runner
+            pb = new ProcessBuilder("bash", "-c", "echo Starting AlicaEngine runner...; " +
+                    alicaEnginePath +
+                    " -m " + masterPlan +
+                    " -rd " + rolesPath +
+                    " -r " + roleset +
+                    " -sim");
+            pb.directory(Paths.get(rolesPath).getParent().getParent().toFile());
+            pb.environment().put("PATH", pb.environment().getOrDefault("PATH", "") + ":/opt/ros/melodic/bin");
+            pb.environment().put("ROBOT", name);
+            pb.environment().put("LD_LIBRARY_PATH", "/opt/ros/melodic/lib" + pb.environment().getOrDefault("LD_LIBRARY_PATH", ""));
+            pb.environment().put("ROS_MASTER_URI", "http://localhost:11311");
+            //pb.inheritIO();
+            System.out.println("Starting Agent with name = " + name);
+            pdAlicaRunnerProcesses.add(pb.start());
+
+            // get settings for Subscriber from AlicaCapnzProxy.conf
+            List<String> alicaCapnzeroProxy = Files.readAllLines(Paths.get(Paths.get(rolesPath).getParent().toString(), "AlicaCapnzProxy.conf"));
+            alicaCapnzeroProxy.replaceAll(String::strip);
+            alicaCapnzeroProxy.removeIf(String::isEmpty);
+
+            List<String> topics = alicaCapnzeroProxy.subList(
+                    alicaCapnzeroProxy.indexOf("[Topics]") + 1,
+                    alicaCapnzeroProxy.indexOf("[!Topics]"));
+
+            String alicaEngineInfoTopic = topics.stream()
+                    .filter(s -> s.startsWith("alicaEngineInfoTopic"))
+                    .findFirst()
+                    .orElse("alicaEngineInfoTopic=\"aeinfo\"")
+                    .split("=")[1]
+                    .replaceAll(" ", "")
+                    .replaceAll("\"", "");
+
+            List<String> comm = alicaCapnzeroProxy.subList(
+                    alicaCapnzeroProxy.indexOf("[Communication]") + 1,
+                    alicaCapnzeroProxy.indexOf("[!Communication]"));
+            String url = comm.stream()
+                    .filter(s -> s.startsWith("URL"))
+                    .findFirst()
+                    .orElse("URL=224.0.0.2:5555")
+                    .split("=")[1].strip().replaceAll("\"", "");;
+            int commType = Integer.parseInt(comm.stream()
+                    .filter(s -> s.startsWith("transport"))
+                    .findFirst()
+                    .orElse("transport=0")
+                    .split("=")[1].strip());
+
+            Protocol protocol = Protocol.values()[commType];
+
+            // start listening
+            isDebugRunning = true;
+            messageReceiver = new Thread(() -> {
+                Subscriber sub = new Subscriber();
+                sub.setGroupName(alicaEngineInfoTopic);
+                sub.subscribe(protocol, url);
+
+                while (true) {
+                    if (isDebugRunning) {
+                        try {
+                            Thread.sleep(100);
+                            String message = sub.getSerializedMessage();
+                            if (!message.isEmpty()) {
+                                onAlicaEngineInfoReceived(message);
+                            }
+                        } catch (InterruptedException e) {
+                            // The sleep was probably interrupted by the stopAlica() method in order to stop the loop.
+                            // No need to do anything.
+                        }
+                    } else {
+                        // Stop the Thread when it is not supposed to run (anymore)
+                        return;
+                    }
+                }
+            });
+            messageReceiver.start();
+
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public void stopAlica() throws InterruptedException {
+        if (roscoreProcess == null && pdAlicaRunnerProcesses == null) {
+            return;
+        } else {
+            if (pdAlicaRunnerProcesses != null) {
+
+                // stop the message receiver thread
+                isDebugRunning = false;
+                messageReceiver.interrupt();
+
+                // kill all pd_alica_runners
+                for (Process runner : pdAlicaRunnerProcesses) {
+                    runner.destroyForcibly();
+                    runner.waitFor();
+                }
+
+                pdAlicaRunnerProcesses.clear();
+            }
+            if (roscoreProcess != null) {
+                roscoreProcess.waitFor();
+                roscoreProcess.destroyForcibly();
+                roscoreProcess = null;
+            }
+        }
+    }
+
+    /**
+     * Checks the received message and if it changed from previous call, shows the
+     * appropriate plan.
+     *
+     * @param msg The message received from the ALICA engine, topic AlicaEngineInfo.
+     */
+    private void onAlicaEngineInfoReceived(String msg) {
+        if (msg.length() == 0) return;
+        if (!msg.equals(lastAEIMessage)) {
+            System.out.println(msg);
+            lastAEIMessage = msg;
+            /*
+            msg =
+            (senderId = (value = "\x01\x00\x00\x00", type = 1),
+            masterPlan = "ServeMaster",
+            currentPlan = "ServeMaster",
+            currentState = "Stop",
+            currentRole = "Assistant",
+            currentTask = "DefaultTask",
+            agentIdsWithMe = [(value = "\x01\x00\x00\x00", type = 1)])
+             */
+
+            long senderId = 0;
+            String masterPlan = "", currentPlan = "", currentState = "", currentRole = "", currentTask = "";
+            long[] agentsWithMe = {0};
+            msg = msg.replaceAll(" ", "");
+
+            int endSenderId = msg.indexOf(")");
+
+            String senderKeyValue = msg.substring(1, endSenderId + 1);
+            String senderIdString = senderKeyValue.split("senderId=")[1].split(",")[0].split("=")[1].replaceAll("\"", "");
+            senderIdString = StringEscapeUtils.unescapeJava(senderIdString.replace("\\x", "#"));
+            StringBuilder str = new StringBuilder();
+            List<String> hexes = Arrays.asList(senderIdString.split("#"));
+            Collections.reverse(hexes);
+            for (String hex : hexes) {
+                str.append(hex);
+            }
+            senderId = Long.parseLong(str.toString(), 16);
+
+//            System.out.println(senderId);
+
+            String keyvalues = msg.substring(endSenderId + 2, msg.lastIndexOf("[") - ",agentIdsWithMe=".length());
+
+            for (String keyValue : keyvalues.split(",")) {
+                String[] split = keyValue.split("=");
+                switch (split[0]) {
+                    case "masterPlan":
+                        masterPlan = split[1].replaceAll("\"", "");
+                        break;
+                    case "currentPlan":
+                        currentPlan = split[1].replaceAll("\"", "");
+                        break;
+                    case "currentState":
+                        currentState = split[1].replaceAll("\"", "");
+                        break;
+                    case "currentRole":
+                        currentRole = split[1].replaceAll("\"", "");
+                        break;
+                    case "currentTask":
+                        currentTask = split[1].replaceAll("\"", "");
+                        break;
+                }
+            }
+
+            handleAlicaMessageReceived(senderId, masterPlan, currentPlan, currentState, currentRole, currentTask, agentsWithMe);
+
+        } else {
+            // Message has not changed, do nothing
+        }
     }
 }

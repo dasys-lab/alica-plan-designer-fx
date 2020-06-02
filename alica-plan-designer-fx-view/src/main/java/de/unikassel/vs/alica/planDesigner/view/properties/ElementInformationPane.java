@@ -137,6 +137,11 @@ public class ElementInformationPane extends TitledPane {
                 this.setContent(tabPane);
                 this.tabPane.getTabs().addAll(propertiesTab, preConditionTab);
                 break;
+            case Types.DEBUG:
+                // do not show anything
+                //this.setContent(tabPane);
+                //this.tabPane.getTabs().clear();
+                break;
             default:
                 System.err.println("ElementInformationPane: Unknown element type '" + elementShown.getType() + "' choosen for showing properties stuff!");
                 this.setContent(tabPane);

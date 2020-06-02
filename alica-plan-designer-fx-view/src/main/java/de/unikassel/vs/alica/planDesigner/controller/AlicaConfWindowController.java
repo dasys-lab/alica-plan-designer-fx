@@ -751,6 +751,10 @@ public class AlicaConfWindowController implements Initializable {
         setTasksFolder(mainWindowController.getTasksPath());
     }
 
+    public void loadDefaultAlicaConfNoGui() {
+        alicaConfigurationViewModel = alicaConfigurationEventHandler.setDefaultConfiguration(alicaConfigurationViewModel);
+    }
+
     private void updateGui(AlicaConfigurationViewModel alicaConfigurationViewModel) {
         setPlansFolder(alicaConfigurationViewModel.getPlansFolderViewModel());
         setRolesFolder(alicaConfigurationViewModel.getRolesFolderVieModel());

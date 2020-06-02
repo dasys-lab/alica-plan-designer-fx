@@ -104,6 +104,10 @@ public class GlobalsConfWindowController  implements Initializable {
     private String speed;
 
     // ---- GETTER ----
+    public GlobalsConfViewModel getGlobalsConfViewModel() {
+        return globalsConfViewModel;
+    }
+
     public String getActiveGlobalsTextField() {
         return activeGlobalsTextField.getText();
     }
@@ -254,6 +258,10 @@ public class GlobalsConfWindowController  implements Initializable {
     private void onDefault() {
         globalsConfViewModel = globalsConfEventHandler.setDefaultConfiguration(globalsConfViewModel);
         updateGui(globalsConfViewModel);
+    }
+
+    public void loadDefaultGlobalsConfNoGui() {
+        globalsConfViewModel = globalsConfEventHandler.setDefaultConfiguration(globalsConfViewModel);
     }
 
     private void updateGui(GlobalsConfViewModel globalsConfViewModel) {
