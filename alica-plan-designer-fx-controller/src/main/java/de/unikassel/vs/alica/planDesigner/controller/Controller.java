@@ -51,13 +51,11 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Central class that synchronizes model and view.
@@ -738,7 +736,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private Map<Long, Long> agentsTabs;
 
     private Process roscoreProcess;
-    private List<Process> pdAlicaRunnerProcesses; // needs more than one process
+    private Map<Process, PrintStream> pdAlicaRunnerProcesses; // needs more than one process
 
     private String lastAEIMessage;
     private Thread messageReceiver;
@@ -809,15 +807,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         String alicaEnginePath = configurationManager.getAlicaEnginePath();
         String rolesPath = configurationManager.getActiveConfiguration().getRolesPath();
         try {
+            ProcessBuilder pb;
+
             // first determine if roscore is already runnig
-            ProcessBuilder pb = new ProcessBuilder("bash", "-c", "pgrep -f roscore");
-            Process rcRunning = pb.start();
-            String rcRunningOutput = "";
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(rcRunning.getInputStream()));
-            boolean isRCRunning = reader.lines().count() > 0;
-            rcRunning.waitFor();
-            rcRunning.destroy();
-            reader.close();
+            boolean isRCRunning = !(getRoscorePids().isEmpty());
 
             if (!isRCRunning) {
                 // start roscore, because we still need it
@@ -827,7 +820,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 roscoreProcess = pb.start();
             }
 
-            if (pdAlicaRunnerProcesses == null) pdAlicaRunnerProcesses = new ArrayList<>();
+            if (pdAlicaRunnerProcesses == null) pdAlicaRunnerProcesses = new HashMap<>();
             // Load pd_alica_runner
             pb = new ProcessBuilder("bash", "-c", "echo Starting AlicaEngine runner...; " +
                     alicaEnginePath +
@@ -842,7 +835,10 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             pb.environment().put("ROS_MASTER_URI", "http://localhost:11311");
             //pb.inheritIO();
             System.out.println("Starting Agent with name = " + name);
-            pdAlicaRunnerProcesses.add(pb.start());
+            Process pd = pb.start();
+            PrintStream pdPrintStream = new PrintStream(pd.getOutputStream());
+
+            pdAlicaRunnerProcesses.put(pd, pdPrintStream);
 
             // get settings for Subscriber from AlicaCapnzProxy.conf
             List<String> alicaCapnzeroProxy = Files.readAllLines(Paths.get(Paths.get(rolesPath).getParent().toString(), "AlicaCapnzProxy.conf"));
@@ -925,17 +921,30 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 messageReceiver.interrupt();
 
                 // kill all pd_alica_runners
-                for (Process runner : pdAlicaRunnerProcesses) {
-                    runner.destroyForcibly();
-                    runner.waitFor();
+                for (Map.Entry<Process, PrintStream> entry : pdAlicaRunnerProcesses.entrySet()) {
+                    Process process = entry.getKey();
+                    PrintStream outputStream = entry.getValue();
+
+                    outputStream.print("quit");
+                    process.destroy();
                 }
 
                 pdAlicaRunnerProcesses.clear();
             }
             if (roscoreProcess != null) {
-                roscoreProcess.waitFor();
-                roscoreProcess.destroyForcibly();
-                roscoreProcess = null;
+                try {
+                    List<String> command = getRoscorePids();
+                    command.add(0, "kill");
+
+                    ProcessBuilder pb = new ProcessBuilder(command);
+                    pb.inheritIO();
+                    pb.start();
+                    roscoreProcess.destroyForcibly();
+                    roscoreProcess = null;
+                } catch (IOException e) {
+                    System.err.println("Could not destroy process roscore...");
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -1010,5 +1019,16 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         } else {
             // Message has not changed, do nothing
         }
+    }
+
+    private List<String> getRoscorePids() throws InterruptedException, IOException {
+        ProcessBuilder pb = new ProcessBuilder("bash", "-c", "pgrep -f roscore");
+        Process roscoreProcess = pb.start();
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(roscoreProcess.getInputStream()));
+        List<String> pids = reader.lines().collect(Collectors.toList());
+        roscoreProcess.waitFor();
+        roscoreProcess.destroy();
+        reader.close();
+        return pids;
     }
 }
