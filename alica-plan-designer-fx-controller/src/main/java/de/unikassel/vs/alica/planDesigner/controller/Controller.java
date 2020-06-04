@@ -54,7 +54,6 @@ import org.apache.log4j.Logger;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -732,19 +731,19 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
     // ALICA Engine and DebugView stuff
 
-    private Map<Long, String> currentAgents;
-    private Map<Long, Long> agentsTabs;
+    private Map<Long, String> currentAgents = new HashMap<>();
+    private Map<Long, Long> agentsTabs = new HashMap<>();
 
     private Process roscoreProcess;
     private Map<Process, PrintStream> pdAlicaRunnerProcesses; // needs more than one process
 
     private String lastAEIMessage;
+    private Map<Integer, List<String>> lastAEIMessages = new HashMap<>(); // stores the last parsed AEI for each agent with id
     private Thread messageReceiver;
     private boolean isDebugRunning = false;
 
     @Override
     public void handleAlicaMessageReceived(long senderId, String masterPlan, String currentPlan, String currentState, String currentRole, String currentTask, long[] agentsWithMe) {
-        if (currentAgents == null) currentAgents = new HashMap<>();
         String oldPlan = currentAgents.put(senderId, currentPlan);
 
         Platform.runLater(() -> {
@@ -753,8 +752,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
             // Just open a new tab when we either have a new agent (oldPlan == null) or when the the agent has changed
             // the plan
             if (oldPlan == null || !oldPlan.equals(currentPlan)) {
-
-                if (agentsTabs == null) agentsTabs = new HashMap<>();
 
                 if (oldPlan != null) {
                     // close the old tab for the agent
@@ -770,7 +767,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 if (currentPlanViewModelElement != null) {
                     // Open the plan if it was found
                     SerializableViewModel svm = (SerializableViewModel) currentPlanViewModelElement;
-                    svm.setDebugSenderId("[" + senderId + "] ");
+//                    svm.setDebugSenderId("[" + senderId + "] ");
                     agentsTabs.put(senderId, svm.getId());
                     mainWindowController.openFile(svm);
 
@@ -789,8 +786,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
                     // and highlight it
                     if (currentlyActiveStateContainer != null) {
-                        tab.setCurrentDebugContainer(currentlyActiveStateContainer, senderId + "");
-                        currentlyActiveStateContainer.getPlanEditorGroup().relocate(currentlyActiveStateContainer.getLayoutX(), currentlyActiveStateContainer.getLayoutY());
+                        String stateName = currentlyActiveStateContainer.getState().getName();
+                        tab.addCurrentDebugContainer(currentlyActiveStateContainer, (int)senderId);
+                        //currentlyActiveStateContainer.getPlanEditorGroup().relocate(currentlyActiveStateContainer.getLayoutX(), currentlyActiveStateContainer.getLayoutY());
                     } else {
                         System.err.println("Could not highlight state: " + currentState);
                     }
@@ -937,13 +935,20 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                     command.add(0, "kill");
 
                     ProcessBuilder pb = new ProcessBuilder(command);
-                    pb.inheritIO();
                     pb.start();
                     roscoreProcess.destroyForcibly();
                     roscoreProcess = null;
                 } catch (IOException e) {
                     System.err.println("Could not destroy process roscore...");
                     e.printStackTrace();
+                }
+            }
+
+            // remove highlighting of StateContainers in all opened Tabs (TODO close the tabs?)
+            for (Tab t : mainWindowController.getEditorTabPane().getTabs()) {
+                if (t instanceof PlanTab) {
+                    PlanTab tab = (PlanTab) t;
+                    tab.clearDebugContainers();
                 }
             }
         }
@@ -957,68 +962,69 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      */
     private void onAlicaEngineInfoReceived(String msg) {
         if (msg.length() == 0) return;
-        if (!msg.equals(lastAEIMessage)) {
-            System.out.println(msg);
-            lastAEIMessage = msg;
-            /*
-            msg =
-            (senderId = (value = "\x01\x00\x00\x00", type = 1),
-            masterPlan = "ServeMaster",
-            currentPlan = "ServeMaster",
-            currentState = "Stop",
-            currentRole = "Assistant",
-            currentTask = "DefaultTask",
-            agentIdsWithMe = [(value = "\x01\x00\x00\x00", type = 1)])
-             */
+        /*
+        msg =
+        (senderId = (value = "\x01\x00\x00\x00", type = 1),
+        masterPlan = "ServeMaster",
+        currentPlan = "ServeMaster",
+        currentState = "Stop",
+        currentRole = "Assistant",
+        currentTask = "DefaultTask",
+        agentIdsWithMe = [(value = "\x01\x00\x00\x00", type = 1)])
+         */
 
-            long senderId = 0;
-            String masterPlan = "", currentPlan = "", currentState = "", currentRole = "", currentTask = "";
-            long[] agentsWithMe = {0};
-            msg = msg.replaceAll(" ", "");
+        int senderId = 0;
+        String masterPlan = "", currentPlan = "", currentState = "", currentRole = "", currentTask = "";
+        long[] agentsWithMe = {0};
+        msg = msg.replaceAll(" ", "");
 
-            int endSenderId = msg.indexOf(")");
+        int endSenderId = msg.indexOf(")");
 
-            String senderKeyValue = msg.substring(1, endSenderId + 1);
-            String senderIdString = senderKeyValue.split("senderId=")[1].split(",")[0].split("=")[1].replaceAll("\"", "");
-            senderIdString = StringEscapeUtils.unescapeJava(senderIdString.replace("\\x", "#"));
-            StringBuilder str = new StringBuilder();
-            List<String> hexes = Arrays.asList(senderIdString.split("#"));
-            Collections.reverse(hexes);
-            for (String hex : hexes) {
-                str.append(hex);
-            }
-            senderId = Long.parseLong(str.toString(), 16);
+        String senderKeyValue = msg.substring(1, endSenderId + 1);
+        String senderIdString = senderKeyValue.split("senderId=")[1].split(",")[0].split("=")[1].replaceAll("\"", "");
+        senderIdString = StringEscapeUtils.unescapeJava(senderIdString.replace("\\x", "#"));
+        StringBuilder str = new StringBuilder();
+        List<String> hexes = Arrays.asList(senderIdString.split("#"));
+        Collections.reverse(hexes);
+        for (String hex : hexes) {
+            str.append(hex);
+        }
+        senderId = Integer.parseInt(str.toString(), 16);
 
 //            System.out.println(senderId);
 
-            String keyvalues = msg.substring(endSenderId + 2, msg.lastIndexOf("[") - ",agentIdsWithMe=".length());
+        String keyvalues = msg.substring(endSenderId + 2, msg.lastIndexOf("[") - ",agentIdsWithMe=".length());
 
-            for (String keyValue : keyvalues.split(",")) {
-                String[] split = keyValue.split("=");
-                switch (split[0]) {
-                    case "masterPlan":
-                        masterPlan = split[1].replaceAll("\"", "");
-                        break;
-                    case "currentPlan":
-                        currentPlan = split[1].replaceAll("\"", "");
-                        break;
-                    case "currentState":
-                        currentState = split[1].replaceAll("\"", "");
-                        break;
-                    case "currentRole":
-                        currentRole = split[1].replaceAll("\"", "");
-                        break;
-                    case "currentTask":
-                        currentTask = split[1].replaceAll("\"", "");
-                        break;
-                }
+        for (String keyValue : keyvalues.split(",")) {
+            String[] split = keyValue.split("=");
+            switch (split[0]) {
+                case "masterPlan":
+                    masterPlan = split[1].replaceAll("\"", "");
+                    break;
+                case "currentPlan":
+                    currentPlan = split[1].replaceAll("\"", "");
+                    break;
+                case "currentState":
+                    currentState = split[1].replaceAll("\"", "");
+                    break;
+                case "currentRole":
+                    currentRole = split[1].replaceAll("\"", "");
+                    break;
+                case "currentTask":
+                    currentTask = split[1].replaceAll("\"", "");
+                    break;
             }
-
-            handleAlicaMessageReceived(senderId, masterPlan, currentPlan, currentState, currentRole, currentTask, agentsWithMe);
-
-        } else {
-            // Message has not changed, do nothing
         }
+
+        List<String> parsedValues = Arrays.asList(masterPlan, currentPlan, currentState, currentRole, currentTask);
+        List<String> lastValues = lastAEIMessages.get(senderId);
+        if (lastValues == null || !lastValues.equals(parsedValues)) {
+            System.out.println(parsedValues);
+            lastAEIMessages.put(senderId, parsedValues);
+            handleAlicaMessageReceived(senderId, masterPlan, currentPlan, currentState, currentRole, currentTask, agentsWithMe);
+        }
+
+
     }
 
     private List<String> getRoscorePids() throws InterruptedException, IOException {

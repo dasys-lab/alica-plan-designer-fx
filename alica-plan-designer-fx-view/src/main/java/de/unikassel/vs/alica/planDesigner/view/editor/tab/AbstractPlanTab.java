@@ -8,14 +8,19 @@ import de.unikassel.vs.alica.planDesigner.view.model.PlanViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.SerializableViewModel;
 import de.unikassel.vs.alica.planDesigner.view.model.StateViewModel;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class AbstractPlanTab extends EditorTab {
 
     protected final SimpleObjectProperty<Container> selectedContainer = new SimpleObjectProperty<>();
-    protected final SimpleObjectProperty<Container> currentDebugContainer = new SimpleObjectProperty<>();
+    protected Map<Integer, Container> debugContainers = new HashMap<>();
 
     public AbstractPlanTab(SerializableViewModel serializableViewModel, IGuiModificationHandler handler) {
         super(serializableViewModel, handler);
@@ -47,30 +52,60 @@ public abstract class AbstractPlanTab extends EditorTab {
         this.elementInformationPane.setViewModelElement(containerToSelect.getPlanElementViewModel());
     }
 
-    public void setCurrentDebugContainer(Container container, String senderId) {
-        if (container == currentDebugContainer.get()) return;
+    public void addCurrentDebugContainer(Container container, int senderId) {
+        if (container == debugContainers.get(senderId)) return;
 
         // reset effect from former active debug container
-        Container c = currentDebugContainer.get();
+        Container c = debugContainers.get(senderId);
         if (c != null) {
             c.setEffectToStandard();
+            Node node = c.getChildren().stream()
+                    .filter(n -> n.getId() != null && n.getId().equals("labelSenderId"))
+                    .findFirst().orElse(null);
+            c.getChildren().remove(node);
         }
 
         // remember new active debug container
-        currentDebugContainer.set(container);
+        debugContainers.put(senderId, container);
         if (container != null) {
             // set effect
             container.setCustomEffect(createActiveDebugEffect());
 
-//            Label senderIdLabel = new Label(senderId);
-//            senderIdLabel.setTranslateX(-50);
-//            senderIdLabel.setTranslateY(-50);
-//            senderIdLabel.setUnderline(true);
-//            container.getChildren().add(senderIdLabel);
+            // Label senderId
+            Node node = container.getChildren().stream()
+                    .filter(n -> n.getId() != null && n.getId().equals("labelSenderId"))
+                    .findFirst()
+                    .orElse(null);
+
+            if (node == null) {
+                // Container does not have a Label for the senderId yet, create it
+
+                Label senderIdLabel = new Label("[" + senderId + "]");
+                senderIdLabel.setTranslateX(-10);
+                senderIdLabel.setTranslateY(-60);
+                senderIdLabel.setUnderline(true);
+                senderIdLabel.setId("labelSenderId");
+                container.getChildren().add(senderIdLabel);
+            } else {
+                // Container does already have a Label, add senderId to its text
+                Label label = (Label) node;
+                String oldText = label.getText();
+                if (!oldText.contains(""+senderId)) {
+                    String newText = oldText.substring(0, oldText.length() - 1) + ", " + senderId + "]";
+                    label.setText(newText);
+                }
+            }
         }
 
         // update properties gui
-        this.elementInformationPane.setViewModelElement(container.getPlanElementViewModel());
+        //this.elementInformationPane.setViewModelElement(container.getPlanElementViewModel());
+    }
+
+    public void clearDebugContainers() {
+        for (Container c : debugContainers.values()) {
+            c.setEffectToStandard();
+        }
+        debugContainers.clear();
     }
 
     private DropShadow createSelectedEffect() {
