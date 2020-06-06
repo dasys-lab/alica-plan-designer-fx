@@ -104,6 +104,11 @@ public abstract class AbstractPlanTab extends EditorTab {
     public void clearDebugContainers() {
         for (Container c : debugContainers.values()) {
             c.setEffectToStandard();
+            // get Label senderId
+            c.getChildren().stream()
+                    .filter(n -> n.getId() != null && n.getId().equals("labelSenderId"))
+                    .findFirst()
+                    .ifPresent(node -> c.getChildren().remove(node));
         }
         debugContainers.clear();
     }

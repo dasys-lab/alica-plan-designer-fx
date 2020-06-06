@@ -873,30 +873,33 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
             // start listening
             isDebugRunning = true;
-            messageReceiver = new Thread(() -> {
-                Subscriber sub = new Subscriber();
-                sub.setGroupName(alicaEngineInfoTopic);
-                sub.subscribe(protocol, url);
+            // only start listening if it was not already started (there can only be one instance!)
+            if (messageReceiver == null || !messageReceiver.isAlive()) {
+                messageReceiver = new Thread(() -> {
+                    Subscriber sub = new Subscriber();
+                    sub.setGroupName(alicaEngineInfoTopic);
+                    sub.subscribe(protocol, url);
 
-                while (true) {
-                    if (isDebugRunning) {
-                        try {
-                            Thread.sleep(100);
-                            String message = sub.getSerializedMessage();
-                            if (!message.isEmpty()) {
-                                onAlicaEngineInfoReceived(message);
+                    while (true) {
+                        if (isDebugRunning) {
+                            try {
+                                Thread.sleep(10);
+                                String message = sub.getSerializedMessage();
+                                if (!message.isEmpty()) {
+                                    onAlicaEngineInfoReceived(message);
+                                }
+                            } catch (InterruptedException e) {
+                                // The sleep was probably interrupted by the stopAlica() method in order to stop the loop.
+                                // No need to do anything.
                             }
-                        } catch (InterruptedException e) {
-                            // The sleep was probably interrupted by the stopAlica() method in order to stop the loop.
-                            // No need to do anything.
+                        } else {
+                            // Stop the Thread when it is not supposed to run (anymore)
+                            return;
                         }
-                    } else {
-                        // Stop the Thread when it is not supposed to run (anymore)
-                        return;
                     }
-                }
-            });
-            messageReceiver.start();
+                });
+                messageReceiver.start();
+            }
 
             return true;
 
