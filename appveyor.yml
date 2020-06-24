@@ -16,7 +16,7 @@ branches:
 
 # install without run tests
 build_script:
-  - mvn clean install -DskipTests
+  - mvn clean install -B -DskipTests
 
 # run tests
 test_script:
