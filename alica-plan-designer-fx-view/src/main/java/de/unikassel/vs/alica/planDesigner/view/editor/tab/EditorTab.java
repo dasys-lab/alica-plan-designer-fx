@@ -33,7 +33,7 @@ public abstract class EditorTab extends Tab {
                 setGraphic(new ImageView(new AlicaIcon(newValue, AlicaIcon.Size.SMALL))));
 
         this.serializableViewModel = serializableViewModel;
-        this. guiModificationHandler = handler;
+        this.guiModificationHandler = handler;
         this.i18NRepo = I18NRepo.getInstance();
 
         // The opened SerializableViewModel may be dirty already

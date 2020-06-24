@@ -27,6 +27,7 @@ public class ViewModelManager {
     protected Map<Long, ViewModelElement> viewModelElements;
 
     private TaskRepositoryViewModel taskRepositoryViewModel;
+    private final Map<Condition, ConditionViewModel> conditionViewModelMap = new LinkedHashMap<>();
 
     public ViewModelManager(ModelManager modelManager, IGuiModificationHandler handler) {
         this.modelManager = modelManager;
@@ -250,15 +251,23 @@ public class ViewModelManager {
         return variableBindingViewModel;
     }
 
-    private ConditionViewModel createConditionViewModel(Condition condition) {
-        ConditionViewModel conditionViewModel = null;
-        if (condition instanceof PreCondition) {
-            conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), Types.PRECONDITION);
-        } else if (condition instanceof RuntimeCondition) {
-            conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), Types.RUNTIMECONDITION);
-        } else if (condition instanceof PostCondition) {
-            conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), Types.POSTCONDITION);
+    private ConditionViewModel getOrCreateConditionViewModel(Condition condition) {
+        ConditionViewModel conditionViewModel = conditionViewModelMap.get(condition);
+        if (conditionViewModel == null) {
+            if (condition instanceof PreCondition) {
+                conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), Types.PRECONDITION);
+            } else if (condition instanceof RuntimeCondition) {
+                conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), Types.RUNTIMECONDITION);
+            } else if (condition instanceof PostCondition) {
+                conditionViewModel = new ConditionViewModel(condition.getId(), condition.getName(), Types.POSTCONDITION);
+            }
+            conditionViewModelMap.put(condition, conditionViewModel);
         }
+        return conditionViewModel;
+    }
+
+    private ConditionViewModel createConditionViewModel(Condition condition) {
+        ConditionViewModel conditionViewModel = getOrCreateConditionViewModel(condition);
         conditionViewModel.setConditionString(condition.getConditionString());
         conditionViewModel.setEnabled(condition.getEnabled());
         conditionViewModel.setPluginName(condition.getPluginName());

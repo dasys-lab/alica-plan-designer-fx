@@ -16,7 +16,6 @@ public class EntryPointViewModel extends PlanElementViewModel {
     protected final SimpleObjectProperty<PlanViewModel> plan = new SimpleObjectProperty<>(this, "plan", null);
 
     public EntryPointViewModel(long id, String name, String type) {
-
         super(id, name, type);
 
         this.uiPropertyList.clear();

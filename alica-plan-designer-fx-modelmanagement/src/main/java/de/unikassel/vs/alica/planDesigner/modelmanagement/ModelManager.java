@@ -266,9 +266,6 @@ public class ModelManager implements Observer {
             uiExtension.registerDirtyListeners();
         }
 
-        if (taskRepository != null) {
-        }
-
         if (roleSet != null) {
             fireEvent(new ModelEvent(ModelEventType.ELEMENT_PARSED, roleSet, Types.ROLESET));
         }
@@ -314,7 +311,7 @@ public class ModelManager implements Observer {
     private void loadModelFile(File modelFile, boolean resolveReferences) {
         // 0. check if valid plan ending
         String stringType = FileSystemUtil.getExtension(modelFile);
-        if((stringType == Types.UNSUPPORTED)) {
+        if((stringType.equals(Types.UNSUPPORTED))) {
             return;
         }
 
@@ -326,7 +323,7 @@ public class ModelManager implements Observer {
         }
 
         // Special Case for UIExtension Files
-        if (stringType == Types.UIEXTENSION) {
+        if (stringType.equals(Types.UIEXTENSION)) {
             UiExtension uiExtension = (UiExtension) parsedObject;
             uiExtensionMap.put(uiExtension.getPlan().getId(), uiExtension);
             if (resolveReferences) {
@@ -1047,7 +1044,6 @@ public class ModelManager implements Observer {
                         System.err.println("ModelManager: Creation of unknown model element eventType '" + mmq.getElementType() + "' gets ignored!");
                         return;
                 }
-
                 break;
             case PARSE_ELEMENT:
                 File f = FileSystemUtil.getFile(mmq);
@@ -1549,7 +1545,6 @@ public class ModelManager implements Observer {
         }
         return false;
     }
-
 
     public void fireEvent(ModelEvent event) {
         if (event != null) {

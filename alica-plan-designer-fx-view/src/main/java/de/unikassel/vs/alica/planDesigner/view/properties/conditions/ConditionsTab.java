@@ -158,7 +158,6 @@ public class ConditionsTab extends Tab {
     }
 
     public void setViewModelElement(ViewModelElement viewModelElement){
-
         if(variablesHoldingParent != null) {
             variablesHoldingParent.getVariables().removeListener(allVariablesListener);
         }
@@ -180,7 +179,6 @@ public class ConditionsTab extends Tab {
                         this.variablesHoldingParent = behaviour;
                         conditionProperty = behaviour.preConditionProperty();
                         break;
-
                     case Types.TRANSITION:
                         TransitionViewModel transition = (TransitionViewModel) parentElement;
                         this.variablesHoldingParent = (AbstractPlanViewModel) MainWindowController.getInstance()
@@ -246,7 +244,6 @@ public class ConditionsTab extends Tab {
                 conditionProperty = null;
         }
 
-
         createGui();
         if(conditionProperty != null) {
             setConditionAndListener(conditionProperty);
@@ -259,7 +256,6 @@ public class ConditionsTab extends Tab {
             pluginSelection.getSelectionModel().select(condition.getPluginName());
             updateGuiOnChange(condition.getPluginName());
         }
-
 
         pluginSelection.setOnAction(event -> {
             String newValue = pluginSelection.getValue();
@@ -282,9 +278,7 @@ public class ConditionsTab extends Tab {
     private void updateModelOnChange(String newPlugin){
         IGuiModificationHandler controller = MainWindowController.getInstance().getGuiModificationHandler();
 
-
         if(newPlugin != null && !newPlugin.equals(NONE)){
-
             GuiModificationEvent addNewCondition
                     = new GuiModificationEvent(GuiEventType.ADD_ELEMENT, type, "");
             addNewCondition.setParentId(parentElement.getId());
@@ -293,7 +287,6 @@ public class ConditionsTab extends Tab {
             controller.handle(addNewCondition);
         }
         else if(condition != null) {
-
             GuiModificationEvent removeOldCondition
                     = new GuiModificationEvent(GuiEventType.REMOVE_ELEMENT, type, condition.getName());
             removeOldCondition.setParentId(parentElement.getId());
@@ -312,12 +305,9 @@ public class ConditionsTab extends Tab {
     }
 
     private void setCondition(ConditionViewModel condition){
-
-
         if(condition != null) {
             condition.getQuantifiers().removeListener(quantifierListener);
         }
-
 
         Predicate<PropertyDescriptor> relevantProperties
                 = desc -> Arrays.asList("id", "name", "comment", "enabled", "conditionString").contains(desc.getName());
@@ -339,7 +329,7 @@ public class ConditionsTab extends Tab {
             }
             condition.getQuantifiers().addListener(quantifierListener);
             setPluginSelection(condition.getPluginName());
-        }else {
+        } else {
             setPluginSelection(NONE);
         }
     }

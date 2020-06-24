@@ -49,7 +49,7 @@ public class ParsePlan extends Command {
 
         //Add listeners to newElements isDirty-flag
         ((SerializablePlanElement) newElement).registerDirtyFlag();
-        ((SerializablePlanElement)newElement).dirtyProperty().addListener((observable, oldValue, newValue) -> {
+        ((SerializablePlanElement) newElement).dirtyProperty().addListener((observable, oldValue, newValue) -> {
             ModelEvent event = new ModelEvent(ModelEventType.ELEMENT_ATTRIBUTE_CHANGED, newElement
                     , mmq.getElementType());
             event.setChangedAttribute("dirty");
