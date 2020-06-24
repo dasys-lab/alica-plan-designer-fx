@@ -1,7 +1,6 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.PostCondition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.TerminalState;
 import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;

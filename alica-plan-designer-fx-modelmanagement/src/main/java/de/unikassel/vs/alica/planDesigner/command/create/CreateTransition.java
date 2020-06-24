@@ -7,7 +7,6 @@ import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 
-
 public class CreateTransition extends UiPositionCommand {
     protected State in;
     protected State out;

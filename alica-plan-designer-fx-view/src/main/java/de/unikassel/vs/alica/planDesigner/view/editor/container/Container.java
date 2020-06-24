@@ -20,7 +20,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-
 /**
  * The {@link Container} is a base class for visual representations, with a alicamodel object to hold changes from the visualisation
  * that will be written back to resource later.
