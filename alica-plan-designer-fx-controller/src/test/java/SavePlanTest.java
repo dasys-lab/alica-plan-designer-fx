@@ -347,9 +347,6 @@ public class SavePlanTest extends ApplicationTest {
         moveTo(propertySheetId);
         clickOn(i18NRepo.getString("label.caption.preCondtions"));
 
-        moveTo("enabled");
-        clickOn(".check-box");
-
         TransitionContainer transitionContainer = (TransitionContainer) transition.getParent();
         long transitionId = transitionContainer.getContainedElement().getPreCondition().getId();
 
