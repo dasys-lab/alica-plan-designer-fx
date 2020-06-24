@@ -347,10 +347,6 @@ public class SavePlanTest extends ApplicationTest {
         moveTo(propertySheetId);
         clickOn(i18NRepo.getString("label.caption.preCondtions"));
 
-        clickOn("NONE");
-        type(KeyCode.DOWN);
-        type(KeyCode.ENTER);
-
         moveTo("enabled");
         clickOn(".check-box");
 
