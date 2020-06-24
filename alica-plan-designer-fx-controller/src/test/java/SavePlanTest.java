@@ -315,7 +315,7 @@ public class SavePlanTest extends ApplicationTest {
         clickOn("0");
         write(String.valueOf(EpMinCardinality));
         moveTo("maxCardinality");
-        clickOn("0");
+        clickOn("*");
         write(String.valueOf(EpMaxCardinality));
     }
 

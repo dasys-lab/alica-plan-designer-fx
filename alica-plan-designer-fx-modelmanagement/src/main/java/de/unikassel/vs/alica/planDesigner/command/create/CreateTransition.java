@@ -27,8 +27,8 @@ public class CreateTransition extends UiPositionCommand {
         Transition transition = new Transition();
         transition.setInState(this.in);
         transition.setOutState(this.out);
-        if (mmq.getName() == PlanElement.NO_NAME) {
-            transition.setName("From" + this.in.getName() + "To " + this.out.getName());
+        if (mmq.getName().equals(PlanElement.NO_NAME)) {
+            transition.setName("From" + this.in.getName() + "To" + this.out.getName());
         } else {
             transition.setName(mmq.getName());
         }
