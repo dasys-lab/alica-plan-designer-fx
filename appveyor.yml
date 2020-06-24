@@ -47,15 +47,15 @@ deploy:
       branch: master
       APPVEYOR_REPO_TAG: true
 
-notifications:
-  # slack notification
-  # "Create New App" at https://api.slack.com/apps
-  # auth_token: "OAuth Access Token" from https://api.slack.com/apps/<ID>/oauth
-  - provider: Slack
-    auth_token:
-      secure: sQ5XjjBlOx8DYbuBh7sjsVTqY69K9XnypJucajuCAQHjXNSJJLr2k/s4zC4qX7HvadmbnqlSvTr83o8dRjnR6AHQ7L7ZUw0ZOPjRCwknEyU=
-    channel: '#alica-plan-designer-fx'
-    on_build_success: true
+#notifications:
+#  # slack notification
+#  # "Create New App" at https://api.slack.com/apps
+#  # auth_token: "OAuth Access Token" from https://api.slack.com/apps/<ID>/oauth
+#  - provider: Slack
+#    auth_token:
+#      secure: sQ5XjjBlOx8DYbuBh7sjsVTqY69K9XnypJucajuCAQHjXNSJJLr2k/s4zC4qX7HvadmbnqlSvTr83o8dRjnR6AHQ7L7ZUw0ZOPjRCwknEyU=
+#    channel: '#alica-plan-designer-fx'
+#    on_build_success: true
 
 # RDP for debugging
 # requires encrypted environment variable "APPVEYOR_RDP_PASSWORD"
