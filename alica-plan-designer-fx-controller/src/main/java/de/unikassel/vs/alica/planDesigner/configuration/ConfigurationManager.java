@@ -40,10 +40,10 @@ public final class ConfigurationManager {
     private static final Logger LOG = LogManager.getLogger(ConfigurationManager.class);
 
     //---- CONFIGFOLDER ----
-    private static final String CONFIG_FOLDERNAME = ".planDesigner";
+    public static final String CONFIG_FOLDERNAME = ".planDesigner";
 
     //---- MAINCONFIG ----
-    private static final String MAIN_CONFIG_FILENAME = "mainConfig";
+    public static final String MAIN_CONFIG_FILENAME = "mainConfig";
 
     //-- PROPERTIES --
     private static final String ACTIVE_DOMAIN_CONF = "activeDomainConfig";

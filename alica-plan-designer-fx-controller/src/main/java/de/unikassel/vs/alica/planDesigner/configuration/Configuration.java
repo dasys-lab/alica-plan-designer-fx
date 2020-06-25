@@ -15,7 +15,7 @@ public class Configuration {
     public Configuration(String name, File planDesignerConfigFolder) {
         this.name = name;
         this.properties = new Properties();
-        file = Paths.get(planDesignerConfigFolder.toString(), name+FILE_ENDING).toFile();
+        file = Paths.get(planDesignerConfigFolder.toString(), name + FILE_ENDING).toFile();
     }
 
     public String getName() {
