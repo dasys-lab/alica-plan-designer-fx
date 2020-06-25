@@ -30,7 +30,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Stream;
@@ -93,13 +92,15 @@ public class SavePlanTest extends ApplicationTest {
 
     @BeforeClass
     public static void beforeClass() throws IOException {
-        // create main config file to prevent selection dialog
+        // create main config file if not exists to prevent selection dialog
         String homeDirString = System.getProperty("user.home");
         File planDesignerConfigFolder = Paths.get(homeDirString, ConfigurationManager.CONFIG_FOLDERNAME).toFile();
         planDesignerConfigFolder.mkdirs();
         File configDst = Paths.get(planDesignerConfigFolder.toString(), ConfigurationManager.MAIN_CONFIG_FILENAME + Configuration.FILE_ENDING).toFile();
-        File configSrc = new File(SavePlanTest.class.getResource("mainConfig.properties").getFile());
-        Files.copy(configSrc.toPath(), configDst.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        if (!configDst.isFile()) {
+            File configSrc = new File(SavePlanTest.class.getResource("mainConfig.properties").getFile());
+            Files.copy(configSrc.toPath(), configDst.toPath());
+        }
 
         ConfigurationManager configurationManager = ConfigurationManager.getInstance();
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
