@@ -16,11 +16,11 @@ branches:
 
 # install without run tests
 build_script:
-  - mvn clean install -B -DskipTests
+  - mvn clean install -B -e -DskipTests
 
 # run tests
 test_script:
-  - mvn test -B
+  - mvn test -B -e
 
 # increase screen size
 before_build:
