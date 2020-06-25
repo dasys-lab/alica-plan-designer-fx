@@ -16,11 +16,11 @@ branches:
 
 # install without run tests
 build_script:
-  - mvn clean install -B -e -DskipTests
+  - mvn clean install -B -DskipTests
 
 # run tests
 test_script:
-  - mvn test -B -e
+  - mvn test -B
 
 # increase screen size
 before_build:
@@ -47,22 +47,22 @@ deploy:
       branch: master
       APPVEYOR_REPO_TAG: true
 
-#notifications:
-#  # slack notification
-#  # "Create New App" at https://api.slack.com/apps
-#  # auth_token: "OAuth Access Token" from https://api.slack.com/apps/<ID>/oauth
-#  - provider: Slack
-#    auth_token:
-#      secure: sQ5XjjBlOx8DYbuBh7sjsVTqY69K9XnypJucajuCAQHjXNSJJLr2k/s4zC4qX7HvadmbnqlSvTr83o8dRjnR6AHQ7L7ZUw0ZOPjRCwknEyU=
-#    channel: '#alica-plan-designer-fx'
-#    on_build_success: true
+notifications:
+  # slack notification
+  # "Create New App" at https://api.slack.com/apps
+  # auth_token: "OAuth Access Token" from https://api.slack.com/apps/<ID>/oauth
+  - provider: Slack
+    auth_token:
+      secure: sQ5XjjBlOx8DYbuBh7sjsVTqY69K9XnypJucajuCAQHjXNSJJLr2k/s4zC4qX7HvadmbnqlSvTr83o8dRjnR6AHQ7L7ZUw0ZOPjRCwknEyU=
+    channel: '#alica-plan-designer-fx'
+    on_build_success: true
 
 # RDP for debugging
 # requires encrypted environment variable "APPVEYOR_RDP_PASSWORD"
 # The password must meet the Windows Server requirements
 # more info: https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
-init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#init:
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 # Keep RDP session open on build finish
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
