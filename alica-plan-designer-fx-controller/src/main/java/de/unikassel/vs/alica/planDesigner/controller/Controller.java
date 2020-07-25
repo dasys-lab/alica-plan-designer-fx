@@ -112,7 +112,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         generatedSourcesManager.setEditorExecutablePath(configurationManager.getEditorExecutablePath());
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
-            generatedSourcesManager.setGenSrcPath(activeConfiguration.getGenSrcPath());
+            generatedSourcesManager.setSourcePath(activeConfiguration.getGenSrcPath());
         }
     }
 
@@ -177,7 +177,6 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
                 modelManager.getConditions(),
                 configurationManager.getActiveConfiguration().getGenSrcPath(),
                 generatedSourcesManager);
-        Platform.runLater(() -> generatingText.textProperty().bind(codegenerator.currentFile));
         switch (event.getEventType()) {
             case GENERATE_ELEMENT:
                 codegenerator.generate((AbstractPlan) modelManager.getPlanElement(event.getElementId()));
