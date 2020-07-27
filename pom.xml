@@ -33,7 +33,6 @@
     <modules>
         <module>alica-plan-designer-fx-view</module>
         <module>alica-plan-designer-fx-controller</module>
-        <module>alica-plan-designer-fx-default-plugin</module>
         <module>alica-plan-designer-fx-modelmanagement</module>
     </modules>
     <dependencies>

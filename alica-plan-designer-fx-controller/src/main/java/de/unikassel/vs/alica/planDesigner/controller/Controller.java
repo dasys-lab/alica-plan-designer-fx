@@ -1,9 +1,8 @@
 package de.unikassel.vs.alica.planDesigner.controller;
 
-//import de.unikassel.vs.alica.codegen.CodegeneratorCpp;
-//import de.unikassel.vs.alica.codegen.GeneratedSourcesManagerCpp;
-import de.unikassel.vs.alica.codegen.CodegeneratorJava;
-import de.unikassel.vs.alica.codegen.GeneratedSourcesManagerJava;
+import de.unikassel.vs.alica.codegen.Codegenerator;
+import de.unikassel.vs.alica.codegen.GeneratedSourcesManager;
+import de.unikassel.vs.alica.codegen.plugin.IPlugin;
 import de.unikassel.vs.alica.codegen.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.ViewModelManagement.ViewModelManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
@@ -78,8 +77,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     private ViewModelManager viewModelManager;
 
     // Code Generation Objects
-//    private GeneratedSourcesManagerCpp generatedSourcesManager;
-    private GeneratedSourcesManagerJava generatedSourcesManager;
+    private GeneratedSourcesManager generatedSourcesManager;
 
     public Controller() {
         configurationManager = ConfigurationManager.getInstance();
@@ -107,8 +105,12 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     protected void setupGeneratedSourcesManager() {
-//        generatedSourcesManager = new GeneratedSourcesManagerCpp();
-        generatedSourcesManager = new GeneratedSourcesManagerJava();
+        IPlugin<?> plugin = PluginManager.getInstance().getDefaultPlugin();
+        if (plugin == null) {
+            return;
+        }
+
+        generatedSourcesManager = plugin.getGeneratedSourcesManager();
         generatedSourcesManager.setEditorExecutablePath(configurationManager.getEditorExecutablePath());
         Configuration activeConfiguration = configurationManager.getActiveConfiguration();
         if (activeConfiguration != null) {
@@ -171,18 +173,21 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 //                configurationManager.getClangFormatPath(),
 //                configurationManager.getActiveConfiguration().getGenSrcPath(),
 //                generatedSourcesManager);
-        CodegeneratorJava codegenerator = new CodegeneratorJava(
-                modelManager.getPlans(),
-                modelManager.getBehaviours(),
-                modelManager.getConditions(),
-                configurationManager.getActiveConfiguration().getGenSrcPath(),
-                generatedSourcesManager);
+
+        IPlugin<?> plugin = PluginManager.getInstance().getDefaultPlugin();
+        Codegenerator codeGenerator = plugin.getCodeGenerator();
+        codeGenerator.setPlans(modelManager.getPlans());
+        codeGenerator.setBehaviours(modelManager.getBehaviours());
+        codeGenerator.setConditions(modelManager.getConditions());
+        codeGenerator.setDestination(configurationManager.getActiveConfiguration().getGenSrcPath());
+        codeGenerator.setGeneratedSourcesManager(generatedSourcesManager);
+
         switch (event.getEventType()) {
             case GENERATE_ELEMENT:
-                codegenerator.generate((AbstractPlan) modelManager.getPlanElement(event.getElementId()));
+                codeGenerator.generate((AbstractPlan) modelManager.getPlanElement(event.getElementId()));
                 break;
             case GENERATE_ALL_ELEMENTS:
-                codegenerator.generate();
+                codeGenerator.generate();
                 break;
             default:
                 System.out.println("Controller.generateCode(): Event type " + event.getEventType() + " is not handled.");
