@@ -39,13 +39,6 @@ public class ConfigurationWindowController implements Initializable {
     @FXML
     private Button sourceCodeEditorFileButton;
 
-    @FXML
-    private Label clangFormatLabel;
-    @FXML
-    private TextField clangFormatTextField;
-    @FXML
-    private Button clangFormatFileButton;
-
 
     // ---- CONFIGURATION MANAGEMENT ----
     @FXML
@@ -172,9 +165,6 @@ public class ConfigurationWindowController implements Initializable {
     public void setPluginsFolder(String pluginsFolder) {
         pluginsFolderTextField.setText(pluginsFolder);
     }
-    public void setClangFormat(String clangFormatPath) {
-        clangFormatTextField.setText(clangFormatPath);
-    }
 
     public void setSourceCodeEditor(String sourceCodeEditorPath) {
         sourceCodeEditorTextField.setText(sourceCodeEditorPath);
@@ -191,8 +181,6 @@ public class ConfigurationWindowController implements Initializable {
     public void setExternalToolValue(TextField tf) {
         if (tf == sourceCodeEditorTextField) {
             configEventHandler.setEditorExecutablePath(tf.getText());
-        } else if (tf == clangFormatTextField) {
-            configEventHandler.setClangFormatPath(tf.getText());
         }
     }
 
@@ -235,7 +223,6 @@ public class ConfigurationWindowController implements Initializable {
         initFileChooserButtons();
 
         // external tools
-        clangFormatTextField.setOnKeyReleased(configEventHandler);
         sourceCodeEditorTextField.setOnKeyReleased(configEventHandler);
         configEventHandler.updateExternalTools();
 
@@ -262,7 +249,6 @@ public class ConfigurationWindowController implements Initializable {
         // labels
         I18NRepo i18NRepo = I18NRepo.getInstance();
         externalToolsTitledPane.setText(i18NRepo.getString("label.config.externalTools"));
-        clangFormatLabel.setText(i18NRepo.getString("label.config.clangFormatter") + ":");
         sourceCodeEditorLabel.setText(i18NRepo.getString("label.config.sourceCodeEditor") + ":");
 
         workspaceManagementTitledPane.setText(i18NRepo.getString("label.config.configurationManagement"));
@@ -283,7 +269,6 @@ public class ConfigurationWindowController implements Initializable {
         pluginsFolderFileButton.setText(i18NRepo.getString("label.config.fileButton"));
 
         sourceCodeEditorFileButton.setText(i18NRepo.getString("label.config.fileButton"));
-        clangFormatFileButton.setText(i18NRepo.getString("label.config.fileButton"));
         activeButton.setText(i18NRepo.getString("action.active"));
         saveButton.setText(i18NRepo.getString("action.save"));
         saveAndExitButton.setText(i18NRepo.getString("action.saveExit"));
@@ -295,7 +280,6 @@ public class ConfigurationWindowController implements Initializable {
         tasksFolderFileButton.setOnAction(e -> makeDirectoryChooserField(tasksFolderTextField));
         genSourceFolderFileButton.setOnAction(e -> makeDirectoryChooserField(genSourceFolderTextField));
         sourceCodeEditorFileButton.setOnAction(e -> makeFileChooserField(sourceCodeEditorTextField));
-        clangFormatFileButton.setOnAction(e -> makeFileChooserField(clangFormatTextField));
         pluginsFolderFileButton.setOnAction(e -> {
             makeDirectoryChooserField(pluginsFolderTextField);
             updateAvailablePlugins();

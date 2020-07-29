@@ -144,7 +144,6 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
 
     @Override
     public void updateExternalTools() {
-        configWindowController.setClangFormat(configManager.getClangFormatPath());
         configWindowController.setSourceCodeEditor(configManager.getEditorExecutablePath());
     }
 
@@ -178,11 +177,6 @@ public class ConfigurationEventHandler implements IConfigurationEventHandler<Lis
     @Override
     public void setEditorExecutablePath(String editorExecutablePath) {
         configManager.setEditorExecutablePath(editorExecutablePath);
-    }
-
-    @Override
-    public void setClangFormatPath(String clangFormatPath) {
-        configManager.setClangFormatPath(clangFormatPath);
     }
 
     @Override

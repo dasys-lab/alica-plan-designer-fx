@@ -12,7 +12,6 @@ public interface IConfigurationEventHandler<T extends ListView.EditEvent<String>
     public void save(String confName);
     public void delete(String confName);
     public void setEditorExecutablePath(String editorExecutablePath);
-    public void setClangFormatPath(String clangFormatPath);
     public void showSelectedConfiguration();
     public void updateAvailableConfigurations();
     public void updateExternalTools();
