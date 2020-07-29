@@ -86,7 +86,6 @@
             <artifactId>view</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
             <groupId>org.apache.commons</groupId>
