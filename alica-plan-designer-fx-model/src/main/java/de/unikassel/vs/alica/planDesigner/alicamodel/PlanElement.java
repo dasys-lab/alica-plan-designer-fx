@@ -14,7 +14,7 @@ public class PlanElement {
 
     protected static int PLAN_ELEMENT_COUNTER = 0;
 
-    protected  long id;
+    protected long id;
     protected final SimpleStringProperty name = new SimpleStringProperty(null, "name", "");
     protected final SimpleStringProperty comment = new SimpleStringProperty(null, "comment", "");
 
@@ -28,6 +28,10 @@ public class PlanElement {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     protected long generateId() {

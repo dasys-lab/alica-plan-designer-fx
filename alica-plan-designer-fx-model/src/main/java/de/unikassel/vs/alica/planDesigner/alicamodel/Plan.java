@@ -34,7 +34,7 @@ public class Plan extends AbstractPlan {
      */
     public Plan(long id) {
         this();
-        this.id = id ;
+        this.id = id;
     }
 
     public boolean getMasterPlan() {
