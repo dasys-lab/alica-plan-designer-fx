@@ -261,8 +261,9 @@ public final class ConfigurationManager {
             for (Configuration conf : configurations) {
                 if (conf.getName().equals(confName)) {
                     activeConfiguration = conf;
-                    PluginManager.getInstance().updateAvailablePlugins(conf.getPluginsPath());
-                    PluginManager.getInstance().setDefaultPlugin(conf.getDefaultPluginName());
+                    PluginManager pluginManager = PluginManager.getInstance();
+                    pluginManager.updateAvailablePlugins(conf.getPluginsPath());
+                    pluginManager.setDefaultPlugin(conf.getDefaultPluginName());
                     if (controller != null) {
                         controller.handleConfigurationChanged();
                     }

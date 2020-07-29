@@ -105,7 +105,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
     }
 
     protected void setupGeneratedSourcesManager() {
-        IPlugin<?> plugin = PluginManager.getInstance().getDefaultPlugin();
+        IPlugin plugin = PluginManager.getInstance().getDefaultPlugin();
         if (plugin == null) {
             return;
         }
@@ -166,15 +166,7 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
      * @param event
      */
     public void generateCode(GuiModificationEvent event, Text generatingText) {
-//        CodegeneratorCpp codegenerator = new CodegeneratorCpp(
-//                modelManager.getPlans(),
-//                modelManager.getBehaviours(),
-//                modelManager.getConditions(),
-//                configurationManager.getClangFormatPath(),
-//                configurationManager.getActiveConfiguration().getGenSrcPath(),
-//                generatedSourcesManager);
-
-        IPlugin<?> plugin = PluginManager.getInstance().getDefaultPlugin();
+        IPlugin plugin = PluginManager.getInstance().getDefaultPlugin();
         Codegenerator codeGenerator = plugin.getCodeGenerator();
         codeGenerator.setPlans(modelManager.getPlans());
         codeGenerator.setBehaviours(modelManager.getBehaviours());
@@ -380,6 +372,9 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
 
         modelManager.loadModelFromDisk();
         repoViewModel.initGuiContent();
+
+        // load new plugin
+        setupGeneratedSourcesManager();
     }
 
     /**
