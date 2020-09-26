@@ -93,6 +93,7 @@ public class ConditionsTab extends Tab {
         this.setContent(null);
         pluginUI = new Pane();
         pluginSelection = new ComboBox<>();
+        pluginSelection.setId("ConditionPluginComboBox");
         List<String> availablePlugins = pluginHandler.getAvailablePlugins();
         pluginSelection.getItems().add(NONE);
         pluginSelection.getItems().addAll(availablePlugins);

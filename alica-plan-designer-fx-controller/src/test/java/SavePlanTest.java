@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.*;
 import org.testfx.api.FxAssert;
 import org.testfx.api.FxToolkit;
@@ -65,14 +66,16 @@ public class SavePlanTest extends ApplicationTest {
     private final String configFolderSrc = configFolder + File.separator + "src";
     private final String configFolderPlugin = getPluginsFolder();
 
+    private final String pluginName = "CppPlugin";
+
     private final String state1Name = "State1";
     private final String state2Name = "State2";
     private final String state3Name = "State3";
     private final String successStateName = "SuccessState";
-    private final String precondition1Name = "Precondition1";
-    private final String precondition2Name = "Precondition2";
-    private final String precondition3Name = "Precondition3";
-    private final String precondition4Name = "Precondition4";
+    private final String precondition1Name = "PreCondition1";
+    private final String precondition2Name = "PreCondition2";
+    private final String precondition3Name = "PreCondition3";
+    private final String precondition4Name = "PreCondition4";
 
     private final String entryPointContainerId = "#EntryPointContainerCircle";
     private final String stateContainerId = "#StateContainer";
@@ -149,6 +152,9 @@ public class SavePlanTest extends ApplicationTest {
         System.out.println("configFolderTasks: " + configFolderTasks);
         System.out.println("configFolderSrc: " + configFolderSrc);
         System.out.println("configFolderPlugin: " + configFolderPlugin);
+
+        // check if alica-codegen repo is present
+        Assert.assertTrue(Files.exists(Paths.get(configFolderPlugin)));
 
         // check if configuration is already present
         createConfiguration();
@@ -346,9 +352,8 @@ public class SavePlanTest extends ApplicationTest {
         moveTo(propertySheetId);
         clickOn(i18NRepo.getString("label.caption.preCondtions"));
 
-        clickOn("NONE");
-        type(KeyCode.DOWN);
-        type(KeyCode.ENTER);
+        clickOn("#ConditionPluginComboBox");
+        clickOn(pluginName);
 
         moveTo("enabled");
         clickOn(".check-box");
@@ -401,10 +406,9 @@ public class SavePlanTest extends ApplicationTest {
             type(KeyCode.TAB);
         }
 
-        // activate default plugin
+        // select plugin from the list
         clickOn("#defaultPluginComboBox");
-        type(KeyCode.DOWN);
-        type(KeyCode.ENTER);
+        clickOn(pluginName);
 
         // save and activate
         clickOn("#saveButton");
@@ -433,10 +437,15 @@ public class SavePlanTest extends ApplicationTest {
     }
 
     private String getPluginsFolder() {
+        /*
+        The repo alica-codegen must be in the same root directory as the alica-plan-designer-fx repo!
+        */
+
         Path currentRelativePath = Paths.get("");
-        String projectRoot = currentRelativePath.toAbsolutePath().getParent().toString();
-        String pluginsFolder = projectRoot + File.separator + "alica-plan-designer-fx-default-plugin";
-        return pluginsFolder;
+        Path planDesignerRoot = currentRelativePath.toAbsolutePath().getParent();
+        Path projectsRoot = planDesignerRoot.getParent();
+        Path codegenRoot = Paths.get(projectsRoot.toString(), "alica-codegen");
+        return codegenRoot.toString();
     }
 
     private void createConfigFolders() {
@@ -762,39 +771,69 @@ public class SavePlanTest extends ApplicationTest {
         }
 
         Plan plan = getPlanByName(planName);
-        String planNameId = plan.getName() + plan.getId();
         Plan plan2 = getPlanByName(planName2);
-        String plan2NameId = plan2.getName() + plan2.getId();
         Behaviour behaviour = getBehaviourById(behaviourName);
-        String behaviourNameId = behaviour.getName() + behaviour.getId();
+        Condition preCondition1 = getConditionByName(precondition1Name);
+        Condition preCondition2 = getConditionByName(precondition2Name);
+        Condition preCondition3 = getConditionByName(precondition3Name);
+        Condition preCondition4 = getConditionByName(precondition4Name);
 
+        /* The raw list can be generated with the following command. Ids must be replaced manually afterwards.
+        for FILE in $(find "." -type f); do echo "\"$FILE\"," | sed 's|./||' | sed 's|/|" + File.separator + "|g' ; done
+         */
         List<String> expectedFiles = Arrays.asList(
-                "include" + File.separator + "constraints" + File.separator + planNameId + "Constraints.h",
-                "include" + File.separator + "constraints" + File.separator + plan2NameId + "Constraints.h",
-                "include" + File.separator + "constraints" + File.separator + behaviourNameId + "Constraints.h",
-                "include" + File.separator + "DomainBehaviour.h",
-                "include" + File.separator + "DomainCondition.h",
-                "include" + File.separator + "UtilityFunctionCreator.h",
-                "include" + File.separator + "BehaviourCreator.h",
-                "include" + File.separator + "ConditionCreator.h",
-                "include" + File.separator + "ConstraintCreator.h",
-                "include" + File.separator + planNameId + ".h",
-                "include" + File.separator + plan2NameId + ".h",
-                "include" + File.separator + behaviourNameId + ".h",
-                "include" + File.separator + behaviourName + ".h",
-                "src" + File.separator + "constraints" + File.separator + planNameId + "Constraints.cpp",
-                "src" + File.separator + "constraints" + File.separator + plan2NameId + "Constraints.cpp",
-                "src" + File.separator + "constraints" + File.separator + behaviourNameId + "Constraints.cpp",
-                "src" + File.separator + "DomainBehaviour.cpp",
-                "src" + File.separator + "DomainCondition.cpp",
-                "src" + File.separator + "UtilityFunctionCreator.cpp",
-                "src" + File.separator + "BehaviourCreator.cpp",
-                "src" + File.separator + "ConditionCreator.cpp",
-                "src" + File.separator + "ConstraintCreator.cpp",
-                "src" + File.separator + planNameId + ".cpp",
-                "src" + File.separator + plan2NameId + ".cpp",
-                "src" + File.separator + behaviourNameId + ".cpp",
-                "src" + File.separator + behaviourName + ".cpp"
+                "include" + File.separator + "impl" + File.separator + "domain" + File.separator + "DomainBehaviourImpl.h",
+                "include" + File.separator + "impl" + File.separator + "domain" + File.separator + "DomainConditionImpl.h",
+                "include" + File.separator + "impl" + File.separator + "utilityfunctions" + File.separator + "UtilityFunction" + plan.getId() + "Impl.h",
+                "include" + File.separator + "impl" + File.separator + "utilityfunctions" + File.separator + "UtilityFunction" + plan2.getId() + "Impl.h",
+                "include" + File.separator + "impl" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition1.getId() + "Impl.h",
+                "include" + File.separator + "impl" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition2.getId() + "Impl.h",
+                "include" + File.separator + "impl" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition3.getId() + "Impl.h",
+                "include" + File.separator + "impl" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition4.getId() + "Impl.h",
+                "include" + File.separator + "impl" + File.separator + "behaviours" + File.separator + StringUtils.capitalize(behaviourName) + "Impl.h",
+                "include" + File.separator + "gen" + File.separator + "domain" + File.separator + "DomainBehaviour.h",
+                "include" + File.separator + "gen" + File.separator + "domain" + File.separator + "DomainCondition.h",
+                "include" + File.separator + "gen" + File.separator + "creators" + File.separator + "UtilityFunctionCreator.h",
+                "include" + File.separator + "gen" + File.separator + "creators" + File.separator + "BehaviourCreator.h",
+                "include" + File.separator + "gen" + File.separator + "creators" + File.separator + "ConditionCreator.h",
+                "include" + File.separator + "gen" + File.separator + "creators" + File.separator + "ConstraintCreator.h",
+                "include" + File.separator + "gen" + File.separator + "constraints" + File.separator + StringUtils.capitalize(plan.getName()) + plan.getId() + "Constraints.h",
+                "include" + File.separator + "gen" + File.separator + "constraints" + File.separator + StringUtils.capitalize(plan2.getName()) + plan2.getId() + "Constraints.h",
+                "include" + File.separator + "gen" + File.separator + "constraints" + File.separator + StringUtils.capitalize(behaviour.getName()) + behaviour.getId() + "Constraints.h",
+                "include" + File.separator + "gen" + File.separator + "utilityfunctions" + File.separator + "UtilityFunction" + plan.getId() + ".h",
+                "include" + File.separator + "gen" + File.separator + "utilityfunctions" + File.separator + "UtilityFunction" + plan2.getId() + ".h",
+                "include" + File.separator + "gen" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition1.getId() + ".h",
+                "include" + File.separator + "gen" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition2.getId() + ".h",
+                "include" + File.separator + "gen" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition3.getId() + ".h",
+                "include" + File.separator + "gen" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition4.getId() + ".h",
+                "include" + File.separator + "gen" + File.separator + "behaviours" + File.separator + StringUtils.capitalize(behaviour.getName()) + behaviour.getId() + ".h",
+                "include" + File.separator + "gen" + File.separator + "behaviours" + File.separator + StringUtils.capitalize(behaviourName) + ".h",
+                "src" + File.separator + "impl" + File.separator + "domain" + File.separator + "DomainBehaviourImpl.cpp",
+                "src" + File.separator + "impl" + File.separator + "domain" + File.separator + "DomainConditionImpl.cpp",
+                "src" + File.separator + "impl" + File.separator + "utilityfunctions" + File.separator + "UtilityFunction" + plan.getId() + "Impl.cpp",
+                "src" + File.separator + "impl" + File.separator + "utilityfunctions" + File.separator + "UtilityFunction" + plan2.getId() + "Impl.cpp",
+                "src" + File.separator + "impl" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition1.getId() + "Impl.cpp",
+                "src" + File.separator + "impl" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition2.getId() + "Impl.cpp",
+                "src" + File.separator + "impl" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition3.getId() + "Impl.cpp",
+                "src" + File.separator + "impl" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition4.getId() + "Impl.cpp",
+                "src" + File.separator + "impl" + File.separator + "behaviours" + File.separator + StringUtils.capitalize(behaviourName) + "Impl.cpp",
+                "src" + File.separator + "gen" + File.separator + "domain" + File.separator + "DomainBehaviour.cpp",
+                "src" + File.separator + "gen" + File.separator + "domain" + File.separator + "DomainCondition.cpp",
+                "src" + File.separator + "gen" + File.separator + "creators" + File.separator + "UtilityFunctionCreator.cpp",
+                "src" + File.separator + "gen" + File.separator + "creators" + File.separator + "BehaviourCreator.cpp",
+                "src" + File.separator + "gen" + File.separator + "creators" + File.separator + "ConditionCreator.cpp",
+                "src" + File.separator + "gen" + File.separator + "creators" + File.separator + "ConstraintCreator.cpp",
+                "src" + File.separator + "gen" + File.separator + "constraints" + File.separator + StringUtils.capitalize(plan.getName()) + plan.getId() + "Constraints.cpp",
+                "src" + File.separator + "gen" + File.separator + "constraints" + File.separator + StringUtils.capitalize(plan2.getName()) + plan2.getId() + "Constraints.cpp",
+                "src" + File.separator + "gen" + File.separator + "constraints" + File.separator + StringUtils.capitalize(behaviour.getName()) + behaviour.getId() + "Constraints.cpp",
+                "src" + File.separator + "gen" + File.separator + "utilityfunctions" + File.separator + "UtilityFunction" + plan.getId() + ".cpp",
+                "src" + File.separator + "gen" + File.separator + "utilityfunctions" + File.separator + "UtilityFunction" + plan2.getId() + ".cpp",
+                "src" + File.separator + "gen" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition1.getId() + ".cpp",
+                "src" + File.separator + "gen" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition2.getId() + ".cpp",
+                "src" + File.separator + "gen" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition3.getId() + ".cpp",
+                "src" + File.separator + "gen" + File.separator + "conditions" + File.separator + "PreCondition" + preCondition4.getId() + ".cpp",
+                "src" + File.separator + "gen" + File.separator + "behaviours" + File.separator + StringUtils.capitalize(behaviour.getName()) + behaviour.getId() + ".cpp",
+                "src" + File.separator + "gen" + File.separator + "behaviours" + File.separator + StringUtils.capitalize(behaviourName) + ".cpp"
         );
 
         Assert.assertEquals(expectedFiles.size(), files.size());
@@ -807,7 +846,7 @@ public class SavePlanTest extends ApplicationTest {
     private void checkCppCodeContent() {
         InputStream behaviourCreatorHExpectedStream = this.getClass().getResourceAsStream("BehaviourCreator.h");
         String behaviourCreatorHExpected = readStream(behaviourCreatorHExpectedStream);
-        String behaviourCreatorHActualPath = configFolderSrc + File.separator + "include" + File.separator + "BehaviourCreator.h";
+        String behaviourCreatorHActualPath = configFolderSrc + File.separator + "include" + File.separator + "gen" + File.separator + "creators" + File.separator + "BehaviourCreator.h";
         String behaviourCreatorHActual = readFile(behaviourCreatorHActualPath);
 
         Assert.assertEquals(behaviourCreatorHExpected, behaviourCreatorHActual);
@@ -844,6 +883,15 @@ public class SavePlanTest extends ApplicationTest {
             modelManager.loadModelFromDisk();
         }
         return modelManager;
+    }
+
+    private Condition getConditionByName(String name) {
+        ModelManager modelManager = getModelManager();
+        ArrayList<Condition> conditions = modelManager.getConditions();
+        return conditions.stream()
+                .filter(c -> c.getName().equals(name))
+                .findAny()
+                .get();
     }
 
     private Plan getPlanByName(String name) {

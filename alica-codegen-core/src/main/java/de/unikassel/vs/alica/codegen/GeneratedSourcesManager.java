@@ -29,7 +29,7 @@ public abstract class GeneratedSourcesManager implements IGeneratedSourcesManage
         this.editorExecutablePath = editorExecutablePath;
     }
 
-    String trimFileFromPath(String destinationPath) {
+    public String trimFileFromPath(String destinationPath) {
         if (destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
             return destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
         } else {
