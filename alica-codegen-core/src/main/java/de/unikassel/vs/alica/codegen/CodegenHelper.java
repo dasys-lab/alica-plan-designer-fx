@@ -238,7 +238,7 @@ public class CodegenHelper {
 
     public void createBehaviourConstraints(String filename, Behaviour behaviour) {
         String destinationPathWithoutName = cutDestinationPathToDirectory(behaviour);
-        String srcPath = Paths.get(genPath, destinationPathWithoutName, "constraints", filename).toString();
+        String srcPath = Paths.get(genPath,"constraints", destinationPathWithoutName, filename).toString();
         String fileContentSource = behaviours.constraints(behaviour);
         writeSourceFile(srcPath, fileContentSource);
     }
