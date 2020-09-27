@@ -66,7 +66,7 @@ public class SavePlanTest extends ApplicationTest {
     private final String configFolderSrc = configFolder + File.separator + "src";
     private final String configFolderPlugin = getPluginsFolder();
 
-    private final String pluginName = "CppPlugin";
+    private final String pluginName = "C++ Plugin";
 
     private final String state1Name = "State1";
     private final String state2Name = "State2";
