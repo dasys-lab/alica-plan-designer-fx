@@ -16,12 +16,10 @@ environment:
 # fetch repository as zip archive
 shallow_clone: true
 
-# build alica-plan-designer-fx
-build_script:
-  - mvn clean install -B -q -DskipTests
-
-# build alica-codegen
 install:
+  # build alica-plan-designer-fx
+  - cmd: mvn clean install -B -q -DskipTests
+  # clone and build alica-codegen
   - cmd: |
       cd ..
       git clone --depth 1 https://github.com/dasys-lab/alica-codegen
