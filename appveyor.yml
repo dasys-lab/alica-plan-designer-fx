@@ -5,6 +5,7 @@ branches:
   only:
     - master
     - /.*withci.*/
+    - codegen-module
 
 environment:
   matrix:
