@@ -4,10 +4,15 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +25,8 @@ public class Codegenerator implements ICodegenerator {
     protected List<Condition> conditions;
     protected String destination;
     protected GeneratedSourcesManager generatedSourcesManager;
+
+    public StringProperty currentFile = new SimpleStringProperty();
 
     @Override
     public void generate() {
@@ -60,6 +67,34 @@ public class Codegenerator implements ICodegenerator {
         generator.createBehaviourCreator(behaviours);
         generator.createConstraintsForBehaviour(behaviour);
         generator.createBehaviours(behaviour);
+    }
+
+    public void monitorDestinationFiles(List<String> extensions) {
+        try {
+            if (Files.notExists(Paths.get(destination))) {
+                Files.createDirectories(Paths.get(destination));
+            }
+            Files.walk(Paths.get(destination)).filter(e -> {
+                String fileName = e.getFileName().toString();
+                for (String extension: extensions) {
+                    if (fileName.endsWith(extension)) {
+                        return true;
+                    }
+                }
+                return false;
+            }).forEach(e -> {
+                currentFile.set(e.toString());
+                // without sleep the files are generated too fast to see them in the text field
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+            });
+        } catch (IOException e) {
+            LOG.error("Could not find expression validator path! ", e);
+            throw new RuntimeException(e);
+        }
     }
 
     public void setPlans(List<Plan> plans) {

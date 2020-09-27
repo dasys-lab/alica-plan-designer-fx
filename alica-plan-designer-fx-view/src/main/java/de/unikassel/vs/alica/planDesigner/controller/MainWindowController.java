@@ -323,9 +323,9 @@ public class MainWindowController implements Initializable {
 
     public void waitOnProgressLabel(Runnable toWaitOn) {
         new Thread(() -> {
-            //Ping
+            // Ping
             Platform.runLater(() -> statusText.setVisible(true));
-            //Run generation
+            // Run generation
             toWaitOn.run();
             // Show Message
             Platform.runLater(() -> statusText.setVisible(false));

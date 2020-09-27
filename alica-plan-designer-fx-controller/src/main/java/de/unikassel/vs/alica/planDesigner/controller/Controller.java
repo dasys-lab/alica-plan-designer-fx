@@ -174,6 +174,8 @@ public final class Controller implements IModelEventHandler, IGuiStatusHandler, 
         codeGenerator.setDestination(configurationManager.getActiveConfiguration().getGenSrcPath());
         codeGenerator.setGeneratedSourcesManager(generatedSourcesManager);
 
+        Platform.runLater(() -> generatingText.textProperty().bind(codeGenerator.currentFile));
+
         switch (event.getEventType()) {
             case GENERATE_ELEMENT:
                 codeGenerator.generate((AbstractPlan) modelManager.getPlanElement(event.getElementId()));
