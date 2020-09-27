@@ -20,8 +20,8 @@ shallow_clone: true
 build_script:
   - mvn clean install -B -q -DskipTests
 
-# build alica-codegen
-install:
+# clone and build alica-codegen
+after_build:
   - cmd: |
       cd ..
       git clone --depth 1 https://github.com/dasys-lab/alica-codegen
